@@ -2396,12 +2396,13 @@ var CombatMaster = CombatMaster || (function() {
         return getTurnorder().shift();
     },
 
-    getNextTurnObject = function () {
+    getNextTurnObject = function (skipId=-1) {
         log('getNextTurnObject');
         let returnturn;
         getTurnorder().every((turn, i) => {
             let turnMarker = getOrCreateMarker();
-            if(i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && getObj('graphic',turn.id).get('layer') !== 'gmlayer'){
+            let turnToken = getObj('graphic', turn.id);
+            if(i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && turnToken && turnToken.get('layer') !== 'gmlayer' && turn.id !== skipId){
                 returnturn = turn;
                 return false;
             }else return true
@@ -3337,9 +3338,53 @@ var CombatMaster = CombatMaster || (function() {
         });
     },
 
+    getCurrentTurnObjectOrLastVisibleIfHidden = (idSkip = -1) => {
+        if (debug) {
+            log ('getCurrentTurnObjectOrLastVisibleIfHidden idSkip='+idSkip);
+        }
+        let turns = getTurnorder(), turn = turns.shift(),
+        tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
+        lastVisibleToken;
+        if (tokenObj.get('layer') != 'objects') {
+            do {
+                turn = turns.pop();
+                lastVisibleToken = getObj('graphic', turn.id);
+            } while (turn.id == idSkip || parseInt(turn.pr) == -420 || !lastVisibleToken || lastVisibleToken.get('layer') != 'objects');
+        }
+        return turn;
+    },
+
+    handleGraphicDelete = function (obj) {
+        if (debug) {
+            log ('-------------Handle Graphic Delete-------------');
+            log('obj='+JSON.stringify(obj));
+        }
+ 
+        if(!inFight()) return;
+        
+        let turnorder =  getTurnorder();
+        log('turnorder='+JSON.stringify(turnorder.map(turn => turn.pr)));
+
+        if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
+            log('boop');
+            let curretMarker = getOrCreateMarker(), nextMarker = getOrCreateMarker(markerType.NEXT);
+            if(curretMarker.get('top') === obj.get('top') && curretMarker.get('left') === obj.get('left')){
+                log('Actual Player Deleted !');
+                let currentFocus = getObj('graphic', getCurrentTurnObjectOrLastVisibleIfHidden(obj.get('id')).id);
+                changeMarker(currentFocus);
+                changeMarker(currentFocus, markerType.RANGE);
+                changeMarker(currentFocus, markerType.MAIN);
+            } else if (nextMarker.get('top') === obj.get('top') && nextMarker.get('left') === obj.get('left')) {
+                log('Next Player Deleted !');
+                changeMarker(getObj('graphic', getNextTurnObject(obj.get('id')).id), markerType.NEXT);
+            }
+        }    
+    },
+
     handleGraphicMovement = function (obj /*, prev */) {
         if (debug) {
             log ('-------------Handle Graphic Movement-------------');
+            log('obj='+JSON.stringify(obj));
         }
  
         if(!inFight()) return;
@@ -3347,7 +3392,7 @@ var CombatMaster = CombatMaster || (function() {
         let turnorder =  getTurnorder();
 
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
-            if(getCurrentTurnObject().id === obj.get('id')){
+            if(getCurrentTurnObjectOrLastVisibleIfHidden().id === obj.get('id')){
                 log('Actual Player Moved !');
                 changeMarker(obj);
                 //changeMarker(obj, markerType.RANGE);
@@ -4800,6 +4845,7 @@ var CombatMaster = CombatMaster || (function() {
         on('change:graphic:top', handleGraphicMovement);
         on('change:graphic:left', handleGraphicMovement);
         on('change:graphic:layer', handleGraphicMovement);
+        on('destroy:graphic', handleGraphicDelete);
         on('change:graphic:'+state[combatState].config.concentration.woundBar+'_value', handleConstitutionSave);
 
         if('undefined' !== typeof DeathTracker && DeathTracker.ObserveTokenChange){
