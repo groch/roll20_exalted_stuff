@@ -3198,61 +3198,6 @@ var CombatMaster = CombatMaster || (function() {
             return false
         }  
     },
-//*************************************************************************************************************
-//SPELLS 
-//*************************************************************************************************************	  
-    handleConstitutionSave = function(obj, prev) {
-        if (debug) {
-            log('-------------Handle Constitution Save-------------')
-        }
-        
-        let tokenID = obj.get('id')
-        let found = false
-        state[combatState].conditions.forEach((condition) => {
-            if (condition.id == tokenID && condition.key == 'concentration') {
-                found = true
-            }
-        })
-        
-        if (!found) {
-            return;
-        }
-
-        let conditions = obj.get('statusmarkers').split(',')
-        let condition = state[combatState].conditions.map(id => obj.get('statusmarkers'))
-        let concentration = state[combatState].config.concentration
-        let bar = concentration.woundBar+'_value'
-        let target = concentration.notify
-
-        if(obj.get(bar) < prev[bar]) {
-            let calcDC = Math.floor((prev[bar] - obj.get(bar))/2)
-            let DC = (calcDC > 10) ? calcDC : 10
-            let conSave = parseInt(getAttrByName(obj.get('represents'), concentration.attribute, 'current')) || 0
-            let contents;
-
-            if(target === 'Character'){
-                contents = "Make a Concentration Check - <b>DC " + DC + "</b>.";
-                target = obj.get('name').split(' ').shift()
-            } else if(target === 'Everyone'){
-                contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
-                target = '';
-            }else{
-                contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
-                target = 'gm';
-            }
-            makeAndSendMenu(contents, '', target);
-            // if(concentration.autoRoll){
-            //     roll(obj.get('represents'), DC, conSave, obj.get('name'), target);
-            // }else{
-                // makeAndSendMenu(contents, '', target);
-            // }
-
-            // let length = checked.push(obj.get('represents'));
-            // setTimeout(() => {
-            //     checked.splice(length-1, 1);
-            // }, 1000);
-        }
-    },
 
     // roll = (represents, DC, conSave, name, target) => {
     //     sendChat(script_name, '[[1d20cf<'+(DC-con_save_mod-1)+'cs>'+(DC-con_save_mod-1)+'+'+con_save_mod+']]', results => {
@@ -3308,6 +3253,63 @@ var CombatMaster = CombatMaster || (function() {
     //         }
     //     });
     // },    
+
+    handleConstitutionSave = function(obj, prev) {
+        if (debug) {
+            log('-------------Handle Constitution Save-------------')
+        }
+        
+        let tokenID = obj.get('id')
+        let found = false
+        state[combatState].conditions.forEach((condition) => {
+            if (condition.id == tokenID && condition.key == 'concentration') {
+                found = true
+            }
+        })
+        
+        if (!found) {
+            return;
+        }
+
+        let conditions = obj.get('statusmarkers').split(',')
+        let condition = state[combatState].conditions.map(id => obj.get('statusmarkers'))
+        let concentration = state[combatState].config.concentration
+        let bar = concentration.woundBar+'_value'
+        let target = concentration.notify
+
+        if(obj.get(bar) < prev[bar]) {
+            let calcDC = Math.floor((prev[bar] - obj.get(bar))/2)
+            let DC = (calcDC > 10) ? calcDC : 10
+            let conSave = parseInt(getAttrByName(obj.get('represents'), concentration.attribute, 'current')) || 0
+            let contents;
+
+            if(target === 'Character'){
+                contents = "Make a Concentration Check - <b>DC " + DC + "</b>.";
+                target = obj.get('name').split(' ').shift()
+            } else if(target === 'Everyone'){
+                contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
+                target = '';
+            }else{
+                contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
+                target = 'gm';
+            }
+            makeAndSendMenu(contents, '', target);
+            // if(concentration.autoRoll){
+            //     roll(obj.get('represents'), DC, conSave, obj.get('name'), target);
+            // }else{
+                // makeAndSendMenu(contents, '', target);
+            // }
+
+            // let length = checked.push(obj.get('represents'));
+            // setTimeout(() => {
+            //     checked.splice(length-1, 1);
+            // }, 1000);
+        }
+    },
+
+//*************************************************************************************************************
+//MISC 
+//*************************************************************************************************************	  
     
     inFight = function () {
         return (Campaign().get('initiativepage') !== false);
