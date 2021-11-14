@@ -2545,13 +2545,26 @@ var CombatMaster = CombatMaster || (function() {
             }   
             
             if (state[combatState].config.announcements.announceTurn) {
-                let target
-                if (players[0] != "") {
-                    target = (state[combatState].config.announcements.whisperToGM) ? 'gm' : ''
+                let target;
+                if (tokenObj.get('layer') == 'gmlayer') {
+                    if (players[0] != "") {
+                        players.forEach((playerID) => {
+                            let playerObj = getObj('player', playerID);
+                            if (playerObj) {
+                                makeAndSendMenu(contents,title,playerObj.get('displayname'));
+                            }
+                        });
+                    } else {
+                        makeAndSendMenu(contents,title,'gm');
+                    }    
                 } else {
-                    target = (!state[combatState].config.announcements.showNPCTurns) ? 'gm' : ''
-                }    
-                makeAndSendMenu(contents,title,target);
+                    if (players[0] != "") {
+                        target = (state[combatState].config.announcements.whisperToGM) ? 'gm' : '';
+                    } else {
+                        target = (!state[combatState].config.announcements.showNPCTurns) ? 'gm' : '';
+                    }    
+                    makeAndSendMenu(contents,title,target);
+                }
             }   
         }
     },
