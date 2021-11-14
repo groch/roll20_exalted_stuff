@@ -96,6 +96,11 @@ var CombatMaster = CombatMaster || (function() {
     conditionStyle = "background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
     conditionButtonStyle = "text-decoration: underline; background-color: #fff; color: #000; padding: 0",
     listStyle = 'list-style: none; padding: 0; margin: 0;',
+    mainMarkerName = 'MainMarker',
+    nextMarkerName = 'NextMarker',
+    rangeMarkerName = 'RangeMarker',
+    markerType = {ROUND:'round', MAIN: 'main', NEXT: 'next', RANGE: 'range'},
+    invisibleImage = 'https://s3.amazonaws.com/files.d20.io/images/255367527/BLuBSgz14Tx_IGSPAPM6vw/max.png?1636797848',
 
     icon_image_positions = {red:"#C91010",blue:"#1076C9",green:"#2FC910",brown:"#C97310",purple:"#9510C9",pink:"#EB75E1",yellow:"#E5EB75",dead:"X",skull:0,sleepy:34,"half-heart":68,"half-haze":102,interdiction:136,snail:170,"lightning-helix":204,spanner:238,"chained-heart":272,"chemical-bolt":306,"death-zone":340,"drink-me":374,"edge-crack":408,"ninja-mask":442,stopwatch:476,"fishing-net":510,overdrive:544,strong:578,fist:612,padlock:646,"three-leaves":680,"fluffy-wing":714,pummeled:748,tread:782,arrowed:816,aura:850,"back-pain":884,"black-flag":918,"bleeding-eye":952,"bolt-shield":986,"broken-heart":1020,cobweb:1054,"broken-shield":1088,"flying-flag":1122,radioactive:1156,trophy:1190,"broken-skull":1224,"frozen-orb":1258,"rolling-bomb":1292,"white-tower":1326,grab:1360,screaming:1394,grenade:1428,"sentry-gun":1462,"all-for-one":1496,"angel-outfit":1530,"archery-target":1564},
     ctMarkers = ['blue', 'brown', 'green', 'pink', 'purple', 'red', 'yellow', '-', 'all-for-one', 'angel-outfit', 'archery-target', 'arrowed', 'aura', 'back-pain', 'black-flag', 'bleeding-eye', 'bolt-shield', 'broken-heart', 'broken-shield', 'broken-skull', 'chained-heart', 'chemical-bolt', 'cobweb', 'dead', 'death-zone', 'drink-me', 'edge-crack', 'fishing-net', 'fist', 'fluffy-wing', 'flying-flag', 'frozen-orb', 'grab', 'grenade', 'half-haze', 'half-heart', 'interdiction', 'lightning-helix', 'ninja-mask', 'overdrive', 'padlock', 'pummeled', 'radioactive', 'rolling-bomb', 'screaming', 'sentry-gun', 'skull', 'sleepy', 'snail', 'spanner',   'stopwatch','strong', 'three-leaves', 'tread', 'trophy', 'white-tower'],
@@ -105,7 +110,7 @@ var CombatMaster = CombatMaster || (function() {
     combatState = 'COMBATMASTER',
 
     inputHandler = function(msg_orig) {
-        //log('inputHandler =====!!!!!!!=====');
+        log('-------------inputHandler-------------');
         //log('inputHandler !!!!!!! turnorder=' + JSON.stringify(Campaign().get('turnorder')));
 
         let currentPageID = Campaign().get('playerpageid'),
@@ -526,9 +531,9 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     resetOnslaught = function(tokenObj) {
-        log('!!!resetOnslaught!!!');
+        // log('!!!resetOnslaught!!!');
         let characterObj = getObj('character', tokenObj.get('represents'));
-        log('characterObj=' + JSON.stringify(characterObj));
+        // log('characterObj=' + JSON.stringify(characterObj));
         if (characterObj) {
             setAttrs(characterObj.get('id'), {'onslaught':0});
         }
@@ -1050,7 +1055,9 @@ var CombatMaster = CombatMaster || (function() {
     },
     
     showConditions = function (selectedTokens) {
-        let tokenObj, characterObj, target
+        let tokenObj, characterObj, target;
+
+        log('showConditions ========');
         
         if (selectedTokens) {
             selectedTokens.forEach(token => {
@@ -1614,7 +1621,7 @@ var CombatMaster = CombatMaster || (function() {
         
         setTimeout(function() {
             doRoundCalls()
-            testNewTurnAndHandleIt()
+            nextTurn()
         },2000) 
     },
     
@@ -1827,7 +1834,7 @@ var CombatMaster = CombatMaster || (function() {
         removeMarker(tokenObj, markerType, marker)
         
         setTimeout(() => {
-            let statusMarkers = returnMarkers(tokenObj)
+            let statusMarkers = returnStatusMarkers(tokenObj)
             
             let statusMarker
             if (key == 'dead' || duration <= 0 || duration >= 10 || (duration == 1 && direction == 0)) {
@@ -1858,7 +1865,7 @@ var CombatMaster = CombatMaster || (function() {
             return;
         }
         
-        let statusMarkers = returnMarkers(tokenObj);
+        let statusMarkers = returnStatusMarkers(tokenObj);
         statusMarkers.forEach((a, i) => {
             if (a.indexOf(iconTag) > -420) {
                 statusMarkers.splice(i,1);
@@ -1867,70 +1874,101 @@ var CombatMaster = CombatMaster || (function() {
         tokenObj.set('statusmarkers', statusMarkers.join());
     },
     
-    returnMarkers = function(tokenObj) {
+    returnStatusMarkers = function(tokenObj) {
         return tokenObj.get('statusmarkers').split(',');
     },
     
-    resetMarker = function (next=false) {
-        let marker = getOrCreateMarker(next),
+    resetMarker = function (type=markerType.ROUND) {
+        let marker = getOrCreateMarker(type),
             turnorder = state[combatState].config.turnorder;
         
         if (debug) {
             log('Reset Marker');
         }
+
+        let markerName, imgUrl, markerWidth, markerHeight;
+        switch (type) {
+            case markerType.ROUND:
+                markerName = 'Round ' + round; imgUrl = getCleanImgsrc(turnorder.externalMarkerURL);
+                markerWidth = 2; markerHeight = 2; break;
+            case markerType.MAIN:
+                markerName = mainMarkerName; imgUrl = getCleanImgsrc(invisibleImage);
+                markerWidth = 70; markerHeight = 70; break;
+            case markerType.NEXT:
+                markerName = nextMarkerName; imgUrl = getCleanImgsrc(turnorder.nextExternalMarkerURL);
+                markerWidth = 70; markerHeight = 70; break;
+            case markerType.RANGE:
+                markerName = rangeMarkerName; imgUrl = getCleanImgsrc(turnorder.rangeExternalMarkerURL);
+                markerWidth = turnorder.rangeMarkerWidth; markerHeight = turnorder.rangeMarkerHeight; break;
+        }
         
-        marker.set({
-            name: (next) ? 'NextMarker' : 'Round ' + round,
-            imgsrc: (next) ? getCleanImgsrc(turnorder.nextExternalMarkerURL) : getCleanImgsrc(turnorder.externalMarkerURL),
+        const newMarkerAttr = {
+            name: markerName,
+            imgsrc: imgUrl,
             pageid: Campaign().get('playerpageid'),
             layer: 'gmlayer',
-            left: 35, top: 35,
-            width: 70, height: 70
-        });
+            left: Math.ceil(markerWidth / 2), top: Math.ceil(markerHeight / 2),
+            width: markerWidth, height: markerHeight
+        };
+        log('resetMarker RESETING MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
+        marker.set(newMarkerAttr);
 
         return marker;
     },
 
-    getOrCreateMarker = function (next=false) {
+    getOrCreateMarker = function (type=markerType.ROUND) {
         let pageid    = Campaign().get('playerpageid')
 		let	turnorder = state[combatState].config.turnorder
 		
         if (debug) {
-            log('Get or Create Marker');
+            log('Get or Create Marker type=' + type);
         }	
 		
-		let imgsrc
-		if (turnorder.markerType == 'External URL') {	
-            imgsrc = (next) ? turnorder.nextExternalMarkerURL : turnorder.externalMarkerURL
-		} else {
-			imgsrc = (next) ? turnorder.nextTokenMarkerURL : turnorder.tokenMarkerURL		
-		}
+		let markerName, imgsrc, markerLayer, markerWidth, markerHeight;
+        switch (type) {
+            case markerType.ROUND:
+                markerName = 'Round 1'; markerLayer = 'objects';     imgsrc = (turnorder.markerType == 'External URL') ? turnorder.externalMarkerURL : turnorder.tokenMarkerURL;
+                markerWidth = 2; markerHeight = 2; break;
+            case markerType.MAIN:
+                markerName = mainMarkerName; markerLayer = 'map';   imgsrc = (turnorder.markerType == 'External URL') ? turnorder.externalMarkerURL : turnorder.tokenMarkerURL;
+                markerWidth = 70; markerHeight = 70; break;
+            case markerType.NEXT:
+                markerName = nextMarkerName; markerLayer = 'map';   imgsrc = (turnorder.markerType == 'External URL') ? turnorder.nextExternalMarkerURL : turnorder.nextTokenMarkerURL;
+                markerWidth = 70; markerHeight = 70; break;
+            case markerType.RANGE:
+                markerName = rangeMarkerName; markerLayer = 'map';  imgsrc = turnorder.rangeExternalMarkerURL;
+                markerWidth = turnorder.rangeMarkerWidth; markerHeight = turnorder.rangeMarkerHeight; break;
+        }
 
- 		let markers = (next) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: 'NextMarker'}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)});
+ 		let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
         
-        markers.forEach((marker, i) => {
-            if(i > 0 && !next) marker.remove();
-        });
+        // markers.forEach((marker, i) => {
+        //     if(i > 0 && type === markerType.ROUND) marker.remove();
+        // });
 
         let marker = markers.shift();
         if(!marker) {
-            marker = createObj('graphic', {
-                name: (next) ? 'NextMarker' : 'Round 1',
+            const newMarkerAttr = {
+                name: markerName,
                 imgsrc: getCleanImgsrc(imgsrc),
                 pageid: pageid,
-                layer: 'map',
+                layer: markerLayer,
                 showplayers_name: true,
-                left: 35, top: 35,
-                width: 70, height: 70
-            });
+                left: Math.ceil(markerWidth / 2), top: Math.ceil(markerHeight / 2),
+                width: markerWidth, height: markerHeight
+            };
+            log('getOrCreateMarker CREATING NEW MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
+            marker = createObj('graphic', newMarkerAttr);
         }
         
-        if(!next) insertMarkerTurnIfNotInTurnOrder(marker);
+        if(type === markerType.ROUND) insertMarkerTurnIfNotInTurnOrder(marker);
 
-        if(!next) startMarkerAnimation(marker);
+        if(type === markerType.MAIN) startMarkerAnimation(marker);
         
-        // toBack(marker);
-        toFront(marker);
+        if (markerType.ROUND === type)
+            toBack(marker);
+        else
+            toFront(marker);
 
         return marker;
     },
@@ -1940,7 +1978,7 @@ var CombatMaster = CombatMaster || (function() {
             hasTurn = false;
         
         if (debug) {
-            log ('Check Marker Turn')
+            log ('Check RoundMarker Turn')
         }    
         
         turnorder.forEach(turn => {
@@ -1956,25 +1994,41 @@ var CombatMaster = CombatMaster || (function() {
     removeMarkers = function () {
         stopMarkerAnimation();
         getOrCreateMarker().remove();
-        getOrCreateMarker(true).remove();
+        getOrCreateMarker(markerType.MAIN).remove();
+        getOrCreateMarker(markerType.NEXT).remove();
+        getOrCreateMarker(markerType.RANGE).remove();
     },
     
-   changeMarker = function (token, next=false)  {
-        let marker = getOrCreateMarker(next);
+   changeMarker = function (token, type=markerType.ROUND)  {
+        let typeMarker = getOrCreateMarker(type);
 
         if (debug) {
-            log('Change Marker')
+            log('Change Marker type=' + type)
         }
 
         if(!token){
-            resetMarker(next);
+            log('changeMarker!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)')
+            resetMarker(type);
             return;
+        }
+        let markerWidth, markerHeight;
+        switch (type) {
+            case markerType.ROUND:
+                markerWidth = 2;
+                markerHeight = 2; break;
+            case markerType.RANGE:
+                markerWidth = state[combatState].config.turnorder.rangeMarkerWidth;
+                markerHeight = state[combatState].config.turnorder.rangeMarkerHeight; break;
+            case markerType.MAIN:
+            case markerType.NEXT:
+                markerWidth = token.get('width')*state[combatState].config.turnorder.markerSize;
+                markerHeight = token.get('height')*state[combatState].config.turnorder.markerSize;
         }
         let position = {
             top: token.get('top'),
             left: token.get('left'),
-            width: token.get('width')*state[combatState].config.turnorder.markerSize,
-            height: token.get('height')*state[combatState].config.turnorder.markerSize,
+            width: markerWidth,
+            height: markerHeight,
         };
 
         // ?????????????????????????
@@ -1997,21 +2051,23 @@ var CombatMaster = CombatMaster || (function() {
         //     marker.set(position);
         // }
 
-        if(token.get('layer') !== 'gmlayer' && marker.get('layer') !== 'map') { 
-            setTimeout(() => {
-                if (state[combatState].config.turnorder.useMarker) {
-                    marker.set({ ...position, layer: 'map' });
-                }
-            }, 500);
-        }
+        setTimeout(() => {
+            if (state[combatState].config.turnorder.useMarker) {
+                let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : 'map' };
+                log('changeMarker Moving marker type=' + type + ', pos=' + JSON.stringify(position) + ', setting to=' + JSON.stringify(typeMarkerNewAttributes));
+                typeMarker.set(typeMarkerNewAttributes);
+            }
+        }, 50);
 
-        // toBack(marker);
-        toFront(marker);
+        if (markerType.ROUND === type)
+            toBack(typeMarker);
+        else
+            toFront(typeMarker);
     },
 
     sendPingOnToken = function (token) {
         if(state[combatState].config.turnorder.centerToken) {
-            if (token.get('layer') != 'gmlayer') {
+            if (token.get('layer') == 'objects') {
                 sendPing(token.get('left'), token.get('top'), token.get('pageid'), null, true);
             }    
         }    
@@ -2019,7 +2075,7 @@ var CombatMaster = CombatMaster || (function() {
 
     handleStatusMarkerChange = function (obj, prev) {
         if (debug) {
-            log ('Handle Status Marker Change')
+            log ('-------------Handle Status Marker Change-------------')
         } 
 
         prev.statusmarkers = (typeof prev.get === 'function') ? prev.get('statusmarkers') : prev.statusmarkers;
@@ -2055,8 +2111,8 @@ var CombatMaster = CombatMaster || (function() {
 
     startMarkerAnimation = function(marker) {
         if( !animationHandle && state[combatState].config.turnorder.animateMarker) {
-            animationHandle = animateMarker;
-            setTimeout(function() {animateMarker(marker);}, state[combatState].config.turnorder.animateMarkerWait);                    
+            animationHandle = rotateMarkerCallback;
+            setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);                    
         }                    
     },
 
@@ -2064,7 +2120,7 @@ var CombatMaster = CombatMaster || (function() {
         animationHandle = null;
     },
 
-    animateMarker = function(marker) {
+    rotateMarkerCallback = function(marker) {
         if (!animationHandle) {
              return;
 	    }
@@ -2072,8 +2128,10 @@ var CombatMaster = CombatMaster || (function() {
             animationHandle = null;
             return;
         }
-        marker.set('rotation',parseInt(marker.get('rotation'))+state[combatState].config.turnorder.animateMarkerDegree);
-        setTimeout(function() {animateMarker(marker);}, state[combatState].config.turnorder.animateMarkerWait);
+        //let newRotation = ();
+        //log('new rotation='+newRotation);
+        marker.set('rotation',parseInt(marker.get('rotation'))+parseInt(state[combatState].config.turnorder.animateMarkerDegree));
+        setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
     },
      
 //*************************************************************************************************************
@@ -2099,9 +2157,9 @@ var CombatMaster = CombatMaster || (function() {
         return true;
     },
     
-    testNewTurnAndHandleIt = function (prev=false, delay=false) {
+    nextTurn = function (prev=false, delay=false, turnOrderUnmodified=true, sameFirstTurn=false) {
         if(debug) {
-            log('Do TurnOrder Change')
+            log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         }
         
         let verified    = isCombatActiveAndTriggersIfNot()
@@ -2128,14 +2186,28 @@ var CombatMaster = CombatMaster || (function() {
         }
 
 		if (tokenObj) {
-            toFront(tokenObj);
+            //toFront(tokenObj);
 
             if (state[combatState].config.timer.useTimer) {
                 startTimer(tokenObj);
             }
 
-            changeMarker(tokenObj);
-            announcePlayer(tokenObj, prev, delay);
+            let tmpTurnOrder = getTurnorder(), tmpTurn, lastVisibleToken;
+            do {
+                tmpTurn = tmpTurnOrder.pop();
+                lastVisibleToken = getObj('graphic', tmpTurn.id);
+            } while (parseInt(tmpTurn.pr) == -420 || lastVisibleToken.get('layer') != 'objects');
+
+            log('tmpTurn.pr='+tmpTurn.pr);
+ 
+            if (state[combatState].config.turnorder.useRangeMarker != 'None')
+                changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.RANGE);
+            changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken);
+            changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.MAIN);
+            
+            log('============== sameFirstTurn='+sameFirstTurn);
+            if (!sameFirstTurn)
+                announcePlayer(tokenObj, prev, delay);
             resetOnslaught(tokenObj);
             sendPingOnToken(tokenObj);
             setTimeout(function() {
@@ -2146,40 +2218,47 @@ var CombatMaster = CombatMaster || (function() {
             resetMarker();
         }
 
+        log('beep');
         if (state[combatState].config.turnorder.nextMarkerType != 'None') {
             let nextTurn = getNextTurnObject();
             if (nextTurn) {
                 let nextToken = getObj('graphic', nextTurn.id);
-    
-                if (nextToken) {
-                    toFront(nextToken);
-                    changeMarker(nextToken || false, true);
-                } else {
-                    resetMarker(true);
+                log('turnOrderUnmodified='+turnOrderUnmodified+', nextToken.layer='+JSON.stringify(nextToken.get('layer')));
+                if (nextToken && (turnOrderUnmodified || (!turnOrderUnmodified && nextToken.get('layer') == 'objects' && tokenObj.get('layer') == 'objects'))) {
+                    //toFront(nextToken);
+                    changeMarker(nextToken || false, markerType.NEXT);
                 }
+                // else {
+                //     resetMarker(markerType.NEXT);
+                // }
             }    
         }
-
-        //TODO: new marker here if enabled
     },
     
     handleTurnorderChange = function (obj, prev) {
         if (debug) {
-            log("Handle Turnorder Change")
+            log("-------------Handle Turnorder Change-------------")
         }
         
         if(obj.get('turnorder') === prev.turnorder) return;
 
         let turnorder = (obj.get('turnorder') === "") ? [] : JSON.parse(obj.get('turnorder'));
         let prevTurnorder = (prev.turnorder === "") ? [] : JSON.parse(prev.turnorder);
+        let theoricalNewOrder = [...prevTurnorder];
+        let currentTurn = theoricalNewOrder.shift()
+        theoricalNewOrder.push(currentTurn);
 
         if(obj.get('turnorder') == []){
             stopCombat();
             return;
         }
 
-        if(turnorder.length && prevTurnorder.length && turnorder[0].id !== prevTurnorder[0].id){
-            testNewTurnAndHandleIt();
+        let test= JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder);
+        log('JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)=');
+        log(test);
+
+        if(turnorder.length && prevTurnorder.length){//  && turnorder[0].id !== prevTurnorder[0].id
+            nextTurn(false, false, test, turnorder[0].id === prevTurnorder[0].id);
         }
     },
 
@@ -2227,7 +2306,7 @@ var CombatMaster = CombatMaster || (function() {
         currentTurn = turnorder.shift()
         turnorder.push(currentTurn);
         setTurnorder(turnorder);
-        testNewTurnAndHandleIt();
+        nextTurn();
     },
 
     delayTurn = function () {
@@ -2240,7 +2319,7 @@ var CombatMaster = CombatMaster || (function() {
         let tokenObj    = findObjs({_id:currentTurn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
         if (tokenObj) {
             let characterObj = getObj('character',tokenObj.get('represents'))
-            if (characterObj) {
+            if (tokenObj.get('layer') == 'objects' && characterObj) {
                 let imgurl = tokenObj.get('imgsrc');
                 let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';                
                 // let name        = handleLongString(tokenObj.get('name'));
@@ -2265,7 +2344,7 @@ var CombatMaster = CombatMaster || (function() {
         turnorder.unshift(last_turn);
 
         setTurnorder(turnorder);
-        testNewTurnAndHandleIt(true);
+        nextTurn(true);
     },
 
     handleNextRound = function () {
@@ -2290,7 +2369,7 @@ var CombatMaster = CombatMaster || (function() {
             clearTurnorder();
             insertMarkerTurnIfNotInTurnOrder(marker);
             rollInitiative(turnorder.map(t => { return (t.id) ? { _type: 'graphic', _id: t.id } : false }), initiative);
-            testNewTurnAndHandleIt();
+            nextTurn();
         }else{
             let turnorder, currentTurn;
             if (debug) {
@@ -2305,7 +2384,7 @@ var CombatMaster = CombatMaster || (function() {
             if(state[combatState].config.turnorder.sortTurnOrder){
                 sortTurnorder();
             }
-            testNewTurnAndHandleIt();
+            nextTurn();
         }
     },
 
@@ -2314,10 +2393,11 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     getNextTurnObject = function () {
+        log('getNextTurnObject');
         let returnturn;
         getTurnorder().every((turn, i) => {
             let turnMarker = getOrCreateMarker();
-            if(i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && turn.layer !== 'gmlayer'){
+            if(i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && getObj('graphic',turn.id).get('layer') !== 'gmlayer'){
                 returnturn = turn;
                 return false;
             }else return true
@@ -2693,40 +2773,40 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************
     doRoundCalls = function () {
         if (debug) {
-            log("Do Round Calls")
+            log("Do Round Calls");
         }
 
-        let verified    = isCombatActiveAndTriggersIfNot()
+        let verified    = isCombatActiveAndTriggersIfNot();
         if (!verified) {
-            return
+            return;
         }
         
-        let config     = state[combatState].config.turnorder 
-        let turnorder  = getTurnorder()
-        let tokenObj, characterObj, macro
+        let config     = state[combatState].config.turnorder;
+        let turnorder  = getTurnorder();
+        let tokenObj, characterObj, macro;
 
         turnorder.forEach((turn) => {
             if (turn.id !== getOrCreateMarker().get('id')) {
-                tokenObj     = getObj('graphic',turn.id)
+                tokenObj     = getObj('graphic',turn.id);
                 if (tokenObj) {
-                    characterObj = getObj('character',tokenObj.get('represents'))
+                    characterObj = getObj('character',tokenObj.get('represents'));
                     if (characterObj) {
                         if (!['None',''].includes(config.allRoundMacro)) {
-                            macro = getMacro(tokenObj, config.allRoundMacro)
-                            sendCalltoChat(tokenObj,characterObj,macro.get('action'))
+                            macro = getMacro(tokenObj, config.allRoundMacro);
+                            sendCalltoChat(tokenObj,characterObj,macro.get('action'));
                         }
                         if ( !['None',''].includes(config.characterRoundMacro) && characterObj.get('controlledby') != '') {
-                            macro = getMacro(tokenObj, config.characterRoundMacro)
-                            sendCalltoChat(tokenObj,characterObj,macro.get('action'))
+                            macro = getMacro(tokenObj, config.characterRoundMacro);
+                            sendCalltoChat(tokenObj,characterObj,macro.get('action'));
                         }
                         if (!['None',''].includes(config.roundAPI)) {
-                            sendCalltoChat(tokenObj,characterObj,config.roundAPI)
+                            sendCalltoChat(tokenObj,characterObj,config.roundAPI);
                         }
                         if (!['None',''].includes(config.roundRoll20AM)) {
-                            sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM)
+                            sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
                         }          
                         if (!['None',''].includes(config.roundFX)) {
-                            doFX(tokenObj,config.roundFX)
+                            doFX(tokenObj,config.roundFX);
                         }                     
                     }
                 }    
@@ -3106,7 +3186,7 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************	  
     handleConstitutionSave = function(obj, prev) {
         if (debug) {
-            log('Handle Constitution Save')
+            log('-------------Handle Constitution Save-------------')
         }
         
         let tokenID = obj.get('id')
@@ -3227,6 +3307,9 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     handeIniativePageChange = function (obj,prev) {
+        if (debug) {
+            log ('-------------Handle Initiative Page Change-------------');
+        }
         if((obj.get('initiativepage') !== prev.initiativepage && !obj.get('initiativepage'))){
             //stopCombat();
         }
@@ -3246,18 +3329,23 @@ var CombatMaster = CombatMaster || (function() {
 
     handleGraphicMovement = function (obj /*, prev */) {
         if (debug) {
-            log ('Handle Graphic Movement')
-        } 
+            log ('-------------Handle Graphic Movement-------------');
+        }
  
         if(!inFight()) return;
         
-        let turnorder =  getTurnorder()
+        let turnorder =  getTurnorder();
 
-        if (obj.hasOwnProperty("id") && turnorder.length > 0) {
+        if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
             if(getCurrentTurnObject().id === obj.get('id')){
+                log('Actual Player Moved !');
                 changeMarker(obj);
+                //changeMarker(obj, markerType.RANGE);
+                changeMarker(obj, markerType.MAIN);
+            } else if (getNextTurnObject().id === obj.get('id')) {
+                log('Next Player Moved !');
+                changeMarker(obj, markerType.NEXT);
             }
-            //TODO Inserer detection tour next
         }    
     },
 
@@ -3424,7 +3512,7 @@ var CombatMaster = CombatMaster || (function() {
 					allRoundMacro: 'None',		
                     
                     useRangeMarker: true,
-                    rangeExternalMarkerURL: '',
+                    rangeExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/255451118/q8uTOHojn9ElLDQ-e7qs4g/max.png?1636832705',
                     rangeMarkerWidth: 2000,
                     rangeMarkerHeight: 2000
                 },
@@ -4471,6 +4559,7 @@ var CombatMaster = CombatMaster || (function() {
                                 <li><b>Center Map on Token </b>— Will center the map for all players on the token currently active in the turnorder using the Ping function. This will not center the map if the token is on the GM Layer.<br></li>
                                 <li><b>Use Marker </b>— Determines if the marker is visible to players or always stays on the GM Layer. If visible, the marker will only move to the GM Layer if a token in the turnorder is on the GM Layer. It will do switch layers before moving to that token, and after moving to the next token, so as not to give away the position of any tokens hidden from players.<br></li><li><b>Marker Type </b>— Set to External URL (default) or can be set to Token Marker.  If Token Marker is selected a suitable token must be uploaded to your game.</li><li><b>Marker </b>— A thumbnail of what will be used to highlight the current active character.</li><li><b>Use Next Marker </b>— If set to true will display another marker around the player that is next in the turnorder.  If set to false, then the next player up is not highlighted.</li>
                                 <li><b>Use Next Marker </b>— A thumbnail of what will be used to highlight the next active character. Set to None if you don't need it</li>
+                                <li><b>Use Range Marker </b>— A thumbnail of what will be used to highlight the range under the active character. Set to None if you don't need it</li>
                             </ul>
                         </ul>`
             notes +=    buildExternalCallMenu('<b>Beginning of Each Round</b>')
@@ -4520,7 +4609,7 @@ var CombatMaster = CombatMaster || (function() {
         handout.set({notes:notes}); 
     },      
  
-     buildAnnouncementsMenu = function(handout,setupID) {
+    buildAnnouncementsMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
                             <img src="https://s3.amazonaws.com/files.d20.io/images/152155098/7i1LPHIZ87fVB56cUMcvhw/original.png?15953856105">
@@ -4545,7 +4634,7 @@ var CombatMaster = CombatMaster || (function() {
         handout.set({notes:notes}); 
     },      
 
-     buildMacroMenu = function(handout,setupID) {
+    buildMacroMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes"><p>This menu is for setting up strings to substitute for various types of calls in Macros and APIs. For example, if you want CombatMaster to run a macro that would normally use @{selected|character_id}, you would need to set up a substitution string for CharID, then use that string in place of @{selected|character_id} in the macro itself.</p><p>Substitution strings work best as unique terms that won't be used elsewhere in a command or macro, otherwise CombatMaster may insert a substituted call somewhere it doesn't belong. So you'd want the TokenID substitute to be something like 'tokenidentifier' since that isn't likely to be used anywhere else, whereas 'name' is not a good substitute, because it is a word that is likely to be used in other contexts.</p><p>The PlayerID substitution string is specifically for use in TokenMod commands. If you set the PlayerID substitution to something like 'playeridentifier', then a TokenMod command in CombatMaster would look like this:</p><pre>!token-mod --api-as playeridentifier --ids tokenidentifier --on showname<br></pre>
                         <p>
                             <img src="https://s3.amazonaws.com/files.d20.io/images/152155094/0ZAC_3VwnVxEL_ZLfgo-iA/original.png?15953856105">
@@ -4561,7 +4650,7 @@ var CombatMaster = CombatMaster || (function() {
         handout.set({notes:notes}); 
     },      
 
-     buildStatusMenu = function(handout,setupID) {
+    buildStatusMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
                             <img src="https://s3.amazonaws.com/files.d20.io/images/152155103/WF7QJJUMbfTjTjPWyd8SYQ/original.png?15953856105">
