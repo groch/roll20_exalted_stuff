@@ -2197,8 +2197,13 @@ var CombatMaster = CombatMaster || (function() {
             let tmpTurnOrder = getTurnorder(), tmpTurn, lastVisibleToken;
             do {
                 tmpTurn = tmpTurnOrder.pop();
-                lastVisibleToken = getObj('graphic', tmpTurn.id);
-            } while (parseInt(tmpTurn.pr) == -420 || lastVisibleToken.get('layer') != 'objects');
+                if (tmpTurn) lastVisibleToken = getObj('graphic', tmpTurn.id);
+            } while (tmpTurnOrder.length && (parseInt(tmpTurn.pr) == -420 || lastVisibleToken.get('layer') != 'objects'));
+
+            if (tmpTurnOrder.length == 0 && !tmpTurn) {
+                stopCombat();
+                return;
+            }
 
             log('tmpTurn.pr='+tmpTurn.pr);
  
@@ -3342,14 +3347,18 @@ var CombatMaster = CombatMaster || (function() {
         if (debug) {
             log ('getCurrentTurnObjectOrLastVisibleIfHidden idSkip='+idSkip);
         }
-        let turns = getTurnorder(), turn = turns.shift(),
+        let turns = getTurnorder(), turn = turns.shift(), first = {...turn},
         tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
         lastVisibleToken;
-        if (tokenObj.get('layer') != 'objects') {
+        if (tokenObj && tokenObj.get('layer') != 'objects') {
             do {
                 turn = turns.pop();
-                lastVisibleToken = getObj('graphic', turn.id);
-            } while (turn.id == idSkip || parseInt(turn.pr) == -420 || !lastVisibleToken || lastVisibleToken.get('layer') != 'objects');
+                if (turn) lastVisibleToken = getObj('graphic', turn.id);
+            } while (turns.length && (turn.id == idSkip || parseInt(turn.pr) == -420 || !lastVisibleToken || lastVisibleToken.get('layer') != 'objects'));
+
+            if (turns.length == 0 && !turn) {
+                return first;
+            }
         }
         return turn;
     },
@@ -3365,6 +3374,12 @@ var CombatMaster = CombatMaster || (function() {
         let turnorder =  getTurnorder();
         log('turnorder='+JSON.stringify(turnorder.map(turn => turn.pr)));
 
+        if (turnorder.length == 2) {
+            log('No More Token to Fight with, closing combat !! /!\\');
+            stopCombat();
+            return;
+        }
+
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
             log('boop');
             let curretMarker = getOrCreateMarker(), nextMarker = getOrCreateMarker(markerType.NEXT);
@@ -3376,7 +3391,11 @@ var CombatMaster = CombatMaster || (function() {
                 changeMarker(currentFocus, markerType.MAIN);
             } else if (nextMarker.get('top') === obj.get('top') && nextMarker.get('left') === obj.get('left')) {
                 log('Next Player Deleted !');
-                changeMarker(getObj('graphic', getNextTurnObject(obj.get('id')).id), markerType.NEXT);
+                const nextTurnObject = getNextTurnObject(obj.get('id'));
+                if (!nextTurnObject)
+                    resetMarker(markerType.NEXT);
+                else
+                    changeMarker(getObj('graphic', nextTurnObject.id), markerType.NEXT);
             }
         }    
     },
@@ -3392,12 +3411,13 @@ var CombatMaster = CombatMaster || (function() {
         let turnorder =  getTurnorder();
 
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
+            const nextTurnObject = getNextTurnObject();
             if(getCurrentTurnObjectOrLastVisibleIfHidden().id === obj.get('id')){
                 log('Actual Player Moved !');
                 changeMarker(obj);
                 //changeMarker(obj, markerType.RANGE);
                 changeMarker(obj, markerType.MAIN);
-            } else if (getNextTurnObject().id === obj.get('id')) {
+            } else if (nextTurnObject && nextTurnObject.id === obj.get('id')) {
                 log('Next Player Moved !');
                 changeMarker(obj, markerType.NEXT);
             }
