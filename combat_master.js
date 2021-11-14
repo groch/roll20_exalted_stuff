@@ -781,15 +781,15 @@ var CombatMaster = CombatMaster || (function() {
 		}
     	listItems.push(makeTextButton('Marker Size',turnorder.markerSize, '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (1.35 default)} --show,turnorder'))
 
-        listItems.push(makeTextButton('Use Range Marker',turnorder.useRangeMarker, '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'))
+        listItems.push(makeTextButton('Use Range Marker',turnorder.useRangeMarker, '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL} --show,turnorder')); // |Token Marker,Token Marker|Token Condition,Token Condition
 		if (turnorder.useRangeMarker == 'External URL') {	
 			 listItems.push(makeTextButton('Range Marker', '<img src="'+turnorder.rangeExternalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=rangeExternalMarkerURL,value=?{Image Url} --show,turnorder'))
 		} else if (turnorder.useRangeMarker == 'Token Marker')	{
 		    log('balec');
             //TODO: a voir plus tard
 		}
-    	listItems.push(makeTextButton('Range Marker Width',turnorder.rangeMarkerWidth, '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (2000 default (px))} --show,turnorder'))
-    	listItems.push(makeTextButton('Range Marker Size',turnorder.rangeMarkerHeight, '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (2000 default (px))} --show,turnorder'))
+    	listItems.push(makeTextButton('Range Marker Width',turnorder.rangeMarkerWidth, '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (6000 default (px))} --show,turnorder'))
+    	listItems.push(makeTextButton('Range Marker Size',turnorder.rangeMarkerHeight, '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'))
 
         listItems.push(makeTextButton('Animate Marker',turnorder.animateMarker, '!cmaster --config,turnorder,key=animateMarker,value='+!turnorder.animateMarker + ' --show,turnorder'))    	  
     	listItems.push(makeTextButton('Animation Angle Step',turnorder.animateMarkerDegree, '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (15 default)} --show,turnorder'))      
@@ -1886,7 +1886,7 @@ var CombatMaster = CombatMaster || (function() {
             log('Reset Marker');
         }
 
-        let markerName, imgUrl, markerWidth, markerHeight;
+        let markerName, imgUrl, markerWidth, markerHeight, scale_number = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0].get('scale_number');
         switch (type) {
             case markerType.ROUND:
                 markerName = 'Round ' + round; imgUrl = getCleanImgsrc(turnorder.externalMarkerURL);
@@ -1899,7 +1899,8 @@ var CombatMaster = CombatMaster || (function() {
                 markerWidth = 70; markerHeight = 70; break;
             case markerType.RANGE:
                 markerName = rangeMarkerName; imgUrl = getCleanImgsrc(turnorder.rangeExternalMarkerURL);
-                markerWidth = turnorder.rangeMarkerWidth; markerHeight = turnorder.rangeMarkerHeight; break;
+                markerWidth = parseInt(turnorder.rangeMarkerWidth / scale_number);
+                markerHeight = parseInt(turnorder.rangeMarkerHeight / scale_number); break;
         }
         
         const newMarkerAttr = {
@@ -1917,14 +1918,14 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     getOrCreateMarker = function (type=markerType.ROUND) {
-        let pageid    = Campaign().get('playerpageid')
+        let pageid    = Campaign().get('playerpageid');
 		let	turnorder = state[combatState].config.turnorder
 		
         if (debug) {
             log('Get or Create Marker type=' + type);
         }	
 		
-		let markerName, imgsrc, markerLayer, markerWidth, markerHeight;
+		let markerName, imgsrc, markerLayer, markerWidth, markerHeight, scale_number = findObjs({_id: pageid, type: 'page'})[0].get('scale_number');
         switch (type) {
             case markerType.ROUND:
                 markerName = 'Round 1'; markerLayer = 'objects';     imgsrc = (turnorder.markerType == 'External URL') ? turnorder.externalMarkerURL : turnorder.tokenMarkerURL;
@@ -1937,7 +1938,8 @@ var CombatMaster = CombatMaster || (function() {
                 markerWidth = 70; markerHeight = 70; break;
             case markerType.RANGE:
                 markerName = rangeMarkerName; markerLayer = 'map';  imgsrc = turnorder.rangeExternalMarkerURL;
-                markerWidth = turnorder.rangeMarkerWidth; markerHeight = turnorder.rangeMarkerHeight; break;
+                markerWidth = parseInt(state[combatState].config.turnorder.rangeMarkerWidth / scale_number);
+                markerHeight = parseInt(state[combatState].config.turnorder.rangeMarkerHeight / scale_number); break;
         }
 
  		let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
@@ -2011,14 +2013,14 @@ var CombatMaster = CombatMaster || (function() {
             resetMarker(type);
             return;
         }
-        let markerWidth, markerHeight;
+        let markerWidth, markerHeight, scale_number = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0].get('scale_number');
         switch (type) {
             case markerType.ROUND:
                 markerWidth = 2;
                 markerHeight = 2; break;
             case markerType.RANGE:
-                markerWidth = state[combatState].config.turnorder.rangeMarkerWidth;
-                markerHeight = state[combatState].config.turnorder.rangeMarkerHeight; break;
+                markerWidth = parseInt(state[combatState].config.turnorder.rangeMarkerWidth / scale_number);
+                markerHeight = parseInt(state[combatState].config.turnorder.rangeMarkerHeight / scale_number); break;
             case markerType.MAIN:
             case markerType.NEXT:
                 markerWidth = token.get('width')*state[combatState].config.turnorder.markerSize;
@@ -2224,7 +2226,9 @@ var CombatMaster = CombatMaster || (function() {
             if (nextTurn) {
                 let nextToken = getObj('graphic', nextTurn.id);
                 log('turnOrderUnmodified='+turnOrderUnmodified+', nextToken.layer='+JSON.stringify(nextToken.get('layer')));
-                if (nextToken && (turnOrderUnmodified || (!turnOrderUnmodified && nextToken.get('layer') == 'objects' && tokenObj.get('layer') == 'objects'))) {
+                if (nextToken && turnOrderUnmodified ||
+                    (!turnOrderUnmodified &&   (nextToken.get('top') != getOrCreateMarker(markerType.NEXT).get('top') ||
+                                                nextToken.get('left') != getOrCreateMarker(markerType.NEXT).get('left')))) {
                     //toFront(nextToken);
                     changeMarker(nextToken || false, markerType.NEXT);
                 }
@@ -3513,8 +3517,8 @@ var CombatMaster = CombatMaster || (function() {
                     
                     useRangeMarker: true,
                     rangeExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/255451118/q8uTOHojn9ElLDQ-e7qs4g/max.png?1636832705',
-                    rangeMarkerWidth: 2000,
-                    rangeMarkerHeight: 2000
+                    rangeMarkerWidth: 6000,
+                    rangeMarkerHeight: 6000
                 },
                 timer: {
                     useTimer: true,
