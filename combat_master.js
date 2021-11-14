@@ -2493,11 +2493,11 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************	  
     announcePlayer = function (tokenObj, prev, delay=false, show) {
         if (debug) {
-            log('Announce Player')
+            log('Announce Player');
         }
 
         if (!tokenObj) {
-            return
+            return;
         }
 
         let name        = tokenObj.get('name');
