@@ -2175,37 +2175,37 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
             <div class="sheet-defenses sheet-table sheet-txt-lg sheet-center-table sheet-80pct">
                 <div class="sheet-table-body">
                     <div class="sheet-table-row">
-                        <div class="sheet-table-cell sheet-text-right"><span>Onslaught</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:</div>
                         <div class="sheet-table-cell sheet-text-right"><span>Natural Soak</span>:</div>
                         <div class="sheet-table-cell">
-                            <span name="attr_stamina" style="margin-left: 3px ; margin-right: 3px ; vertical-align: -2px">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px">
+                            <span name="attr_stamina" style="margin-left: 3px ; margin-right: 3px ; vertical-align: -2px" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span>Armored Soak</span>:</div>
                         <div class="sheet-table-cell">
-                            <input type="number" readonly="readonly" name="attr_armorsoak">
+                            <input type="number" readonly="readonly" name="attr_armorsoak" title="Come from your armor">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><strong><span>Total Soak</span>:</strong></div>
+                        <div class="sheet-table-cell sheet-text-right"><strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong></div>
                         <div class="sheet-table-cell">
                             <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Hardness</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:</div>
                         <div class="sheet-table-cell">
-                            <input type="number" readonly="readonly" name="attr_hardness">
+                            <input type="number" readonly="readonly" name="attr_hardness" title="Come from your armor">
                         </div>
                     </div>
                     <div class="sheet-table-row">
                         <div class="sheet-table-cell">
                             <input type="hidden" name="attr_onslaught" id="onslaught-check">
-                            <input type="number" value="0" readonly="readonly" name="attr_onslaught" style="width: 88px;display:block;margin-left: auto;" title="Onslaught is by default penalty to Defenses (Parry&Evade) which reset at your turn" id="onslaught-input">
+                            <input type="number" value="0" readonly="readonly" name="attr_onslaught" style="width: 88px;display:block;margin-left: auto;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit" id="onslaught-input">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Parry</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Parry</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" value="0" readonly="readonly" name="attr_parry" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty">
                             <input type="hidden" value="0" readonly="readonly" name="attr_parry-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty">
                             <input type="number" value="(((@{parry}-@{onslaught}) + abs(@{parry}-@{onslaught}))/2)" disabled="disabled" name="attr_parry-final" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty">
                             <input type="number" value="(((@{parry-specialty}-@{onslaught}) + abs(@{parry-specialty}-@{onslaught}))/2)" disabled="disabled" name="attr_parry-specialty-final" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Evasion</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="Dexterity + Dodge">Evasion</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" value="(@{dexterity} + @{dodge})" disabled="disabled" name="attr_evasion-root">
                             <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
@@ -2215,7 +2215,7 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
                             <input type="hidden" value="(((@{evasion-base-s} - @{onslaught}) + abs(@{evasion-base-s} - @{onslaught}))/2)"  disabled="disabled" name="attr_evasion-final-s">
                             <input type="number" value="(@{evasion-final} + abs(@{evasion-final})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion"><input type="number" value="(@{evasion-final-s} + abs(@{evasion-final-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Resolve</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="Wits + Integrity">Resolve</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
                             <input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
@@ -2223,7 +2223,7 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
                             <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
                             <input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Guile</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="Manipulation + Socialize">Guile</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
                             <input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
@@ -4258,7 +4258,7 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
             <h1><span>Social attributes and abilities</span></h1>
 			<div class="sheet-table-body">
 				<div class="sheet-table-row">
-					<div class="sheet-table-cell sheet-text-right"><span>Resolve</span>:</div>
+					<div class="sheet-table-cell sheet-text-right"><span>Resolve (wits + integrity)</span>:</div>
 					<div class="sheet-table-cell">
 						<input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
 						<input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
@@ -4266,7 +4266,7 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
 						<input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
 						<input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Resolve without specialty" name="attr_resolve" data-formula="(@{resolve-base} + abs(@{resolve-base})) / 2"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width: 27px" title="Resolve with specialty" name="attr_resolve-specialty" data-formula="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2">
 					</div>
-					<div class="sheet-table-cell sheet-text-right"><span>Guile</span>:</div>
+					<div class="sheet-table-cell sheet-text-right"><span>Guile (manipulation + socialize)</span>:</div>
 					<div class="sheet-table-cell">
 						<input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
 						<input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
