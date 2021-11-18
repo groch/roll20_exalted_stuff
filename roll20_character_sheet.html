@@ -86,7 +86,7 @@
                 periEquation = "0";
 				showAnima = 0;
             } else return;
-            
+
             setAttrs({
                 "personal-equation": persEquation,
                 "peripheral-equation": periEquation,
@@ -159,32 +159,6 @@
                 obj['hl'+i+'-damage'] = 'healthy';
             }
             setAttrs(obj);
-        }));
-    }));
-
-    on('sheet:opened', TAS._fn(function upgradeVersion(e) {
-        TAS.debug('Checking version', e);
-        getAttrs(['version', 'exalt-type'], TAS._fn(function versionCheck(values) {
-            var v = parseFloat(values.version);
-
-            if (v !== version) {
-                switch (v) {
-                    default:
-                        if (values['exalt-type'] && values['exalt-type'].length > 0) {
-                            // version 1
-                            upgradeV1toV2();
-                        } else {
-                            // new character
-                        }
-                        // fallthrough
-                    case 2:
-                        // upgrade v2 to v2.1
-                        // fallthrough
-                    case 2.1:
-                        // upgrade v2.1 to v2.2
-                        // fallthrough
-                }
-            }
         }));
     }));
 
