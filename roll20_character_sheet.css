@@ -65,14 +65,24 @@
     margin-right: 10%;
 } */
 
-.charsheet #onslaught-input {
+.charsheet input[type=number][readonly].onslaught-input {
     background-color: red;
     font-weight: bold;
 }
 
-.charsheet #onslaught-check[value="0"] ~ #onslaught-input {
+.charsheet .onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-input {
     background-color: rgba(128, 128, 128, 0.25);
-    font-weight: medium;
+    font-weight: normal;
+}
+
+.charsheet input[type=number][disabled].woundpenalty-input {
+    background-color: red;
+    font-weight: bold;
+}
+
+.charsheet .wound-penalty-check[value="0"] ~ input[type=number][disabled].woundpenalty-input {
+    background-color: rgba(128, 128, 128, 0.25);
+    font-weight: normal;
 }
 
 .charsheet .sheet-table {

@@ -2239,8 +2239,8 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
                     </div>
                     <div class="sheet-table-row">
                         <div class="sheet-table-cell">
-                            <input type="hidden" name="attr_onslaught" id="onslaught-check">
-                            <input type="number" value="0" readonly="readonly" name="attr_onslaught" style="width: 88px;display:block;margin-left: auto;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit" id="onslaught-input">
+                            <input type="hidden" name="attr_onslaught" class="onslaught-check">
+                            <input type="number" value="0" readonly="readonly" name="attr_onslaught" style="width: 88px;display:block;margin-left: auto;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit" class="onslaught-input">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Parry</span>:</div>
                         <div class="sheet-table-cell">
@@ -4320,7 +4320,8 @@ TAS=TAS||function(){"use strict";var e="0.2.4",n=1457098091,t={debug:{key:"debug
 					</div>
 					<div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
 					<div class="sheet-table-cell">
-						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" data-formula="@{wound-penalty}">
+                        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
+						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
 					</div>
 				</div>
 			</div>
