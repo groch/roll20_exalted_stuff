@@ -211,6 +211,24 @@
             }
         }));
     }));
+
+    on('change:qc-appearance', TAS._fn(function quickAppearanceChange(e) {
+        getAttrs(['qc-appearance'], values => setAttrs({'appearance': int(values['qc-appearance'])}) );
+    }));
+
+    on('change:qc-guile', TAS._fn(function quickAppearanceChange(e) {
+        getAttrs(['qc-guile'], values => {
+            setAttrs({'manipulation': int(values['qc-guile'])})
+            setAttrs({'socialize': int(values['qc-guile'])})
+        });
+    }));
+
+    on('change:qc-resolve', TAS._fn(function quickAppearanceChange(e) {
+        getAttrs(['qc-resolve'], values => {
+            setAttrs({'wits': int(values['qc-resolve'])})
+            setAttrs({'integrity': int(values['qc-resolve'])})
+        });
+    }));
 	
     function upgradeV1toV2() {
         TAS.debug('Upgrading from version 1');
