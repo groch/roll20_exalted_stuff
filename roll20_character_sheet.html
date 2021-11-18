@@ -224,15 +224,15 @@
 
     on('change:qc-guile', TAS._fn(function quickAppearanceChange(e) {
         getAttrs(['qc-guile'], values => {
-            setAttrs({'manipulation': int(values['qc-guile'])})
-            setAttrs({'socialize': int(values['qc-guile'])})
+            setAttrs({'manipulation': parseInt(values['qc-guile'])})
+            setAttrs({'socialize': parseInt(values['qc-guile'])})
         });
     }));
 
     on('change:qc-resolve', TAS._fn(function quickAppearanceChange(e) {
         getAttrs(['qc-resolve'], values => {
-            setAttrs({'wits': int(values['qc-resolve'])})
-            setAttrs({'integrity': int(values['qc-resolve'])})
+            setAttrs({'wits': parseInt(values['qc-resolve'])})
+            setAttrs({'integrity': parseInt(values['qc-resolve'])})
         });
     }));
 	
