@@ -133,7 +133,7 @@
             var pen;
 
             for (i = 32; i >= 1; i--) {
-                if (values['hl' + i + '-damage'] && values['hl' + i + '-damage'] !== 'healthy') break;
+                if (values['hl' + i + '-damage'] && (!values['hl' + i + '-damage'] || values['hl' + i + '-damage'] !== 'healthy')) break;
             }
             TAS.debug('Wound penalty at index ' + i, values['hl' + i + '-penalty']);
             if (values['hl' + i + '-penalty']) pen = values['hl' + i + '-penalty'];
@@ -183,6 +183,12 @@
                 'willpower': 5,
                 'willpower-max': 5
             });
+
+            let obj = {};
+            for (i = 32; i >= 1; i--) {
+                obj['hl'+i+'-damage'] = 'healthy';
+            }
+            setAttrs(obj);
         }));
     }));
 
