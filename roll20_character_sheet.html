@@ -153,7 +153,7 @@
             var attrs = {}, indexes = _.times(4, generateRowID);
             if (parseInt(values['init-intimacies']) !== 0) return;
 
-            TAS.debug('Creating new intimacies', indexes);
+            TAS.debug('1st time opening !! Creating new intimacies', indexes);
             _.each(indexes, function(id, k) {
                 var v;
                 if (k === 0) v = 'Defining';
@@ -163,6 +163,26 @@
             });
             attrs['init-intimacies'] = 1;
             setAttrs(attrs);
+
+            setAttrs({
+                'hl1-damage': 'healthy',
+                'hl1-penalty': '0',
+                'hl2-damage': 'healthy',
+                'hl2-penalty': '-1',
+                'hl3-damage': 'healthy',
+                'hl3-penalty': '-1',
+                'hl4-damage': 'healthy',
+                'hl4-penalty': '-2',
+                'hl5-damage': 'healthy',
+                'hl5-penalty': '-2',
+                'hl6-damage': 'healthy',
+                'hl6-penalty': '-4',
+                'hl7-damage': 'healthy',
+                'hl7-penalty': 'I',
+                'onslaught': 0,
+                'willpower': 5,
+                'willpower-max': 5
+            });
         }));
     }));
 
