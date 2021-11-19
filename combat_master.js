@@ -486,48 +486,57 @@ var CombatMaster = CombatMaster || (function() {
         if (debug) {
             log('Add Onslaught to Player');
         }
-        //log('campaign='+ JSON.stringify(Campaign()));
 
-        //log('beep turnorder='+ Campaign().get('turnorder'));
         let turnorder   = getTurnorder();
-        //log('beep turnorder='+ JSON.stringify(turnorder));
         if (!turnorder.length) {
             if (debug) log('No Turn Order1 = QUITTING');
             return;
         }
         let currentTurn = turnorder.shift();
-        //log('beep currentTurn=' + JSON.stringify(currentTurn));
         if (!currentTurn) {
             if (debug) log('No Turn Order2 = QUITTING');
             return;
         }
 
-        //log('beep currentTurn.id=' + currentTurn.id);
-        let tokenObj    = findObjs({_id:currentTurn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
-        //log('beep tokenObj=' + JSON.stringify(tokenObj));
-        if (tokenObj) {
-            let characterObj = getObj('character',tokenObj.get('represents'));
-            //log("characterObj=" + JSON.stringify(characterObj));
-            if (characterObj) {
-                //log('FOREACH msg.selected=' + msg.selected);
-                _.chain(selected).map(function(o){
-                    return getObj('graphic',o._id);
-                }).compact()
-                .each(function(t){
-                    //log('FOREACH SELECTED? t=' + JSON.stringify(t));
+        let tokenNameArray = [];
+        _.chain(selected).map(function(o){
+            return getObj('graphic',o._id);
+        }).compact()
+        .each(function(t){
+            //log('FOREACH SELECTED? t=' + JSON.stringify(t));
 
-                    var finalcharacterObj = getObj('character',t.get('represents'));
-                    //log('finalcharacterObj=' + JSON.stringify(finalcharacterObj));
-                    if (finalcharacterObj) {
-                        let currentOnslaught = parseInt(getAttrByName(finalcharacterObj.get('id'), 'onslaught', 'current'));
-                        //log('currentOnslaught='+currentOnslaught);
-                        currentOnslaught = isNaN(currentOnslaught) ? 1 : currentOnslaught + 1;
-                        //log('nextOnslaught='+currentOnslaught);
-                        setAttrs(finalcharacterObj.get('id'), {'onslaught':currentOnslaught});
-                    }
-                });
+            var finalcharacterObj = getObj('character',t.get('represents'));
+            if (finalcharacterObj) {
+                let currentOnslaught = parseInt(getAttrByName(finalcharacterObj.get('id'), 'onslaught', 'current'));
+                currentOnslaught = isNaN(currentOnslaught) ? 1 : currentOnslaught + 1;
+                setAttrs(finalcharacterObj.get('id'), {'onslaught':currentOnslaught});
+                if (t.get('layer') == 'objects') {
+                    let imgurl = t.get('imgsrc');
+                    let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
+                    tokenNameArray.push({name: t.get('name'), image: image});
+                }
             }
+        });
+
+        if (tokenNameArray.length) {
+            let images = tokenNameArray.map(i => i.image).join(),
+                name_list = tokenNameArray.map(i => '<b>'+i.name+'</b>').join(', ').replace(/, ([^,]*)$/, ' and $1');
+            sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;"><div style="text-align:center;">'+images+'</div><div style="display:inline-block;width:100%;vertical-align:middle;">'+name_list+' ' + ((tokenNameArray.length == 1) ? 'get' : 'got') + ' 1 point of onslaught from the attack</div></div></div>', null, {noarchive:true});
         }
+
+        // let tokenObj    = findObjs({_id:currentTurn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
+        // if (tokenObj) {
+        //     let characterObj = getObj('character',tokenObj.get('represents'));
+        //     //log("characterObj=" + JSON.stringify(characterObj));
+        //     if (characterObj) {
+        //         //log('FOREACH selected=' + selected);
+                
+
+        //         //HERE
+        //     }
+        // }
+
+
     },
 
     resetOnslaught = function(tokenObj) {
