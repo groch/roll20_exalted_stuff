@@ -381,7 +381,6 @@
     text-decoration:overline underline;
 }
 
-
 .charsheet input[type=checkbox] {
     position: absolute;
     opacity: 0.0;
@@ -839,8 +838,7 @@ Shinier Gold
 }
 
 .charsheet .sheet-quick-character[value="0"] ~ div.sheet-tab-character-sheet .sheet-qc-pools,
-.charsheet .sheet-quick-character[value="0"] ~ div.sheet-tab-character-sheet .sheet-qc-defenses,
-.charsheet .sheet-quick-character[value="0"] ~ div.sheet-tab-character-sheet .sheet-qc-health {
+.charsheet .sheet-quick-character[value="0"] ~ div.sheet-tab-character-sheet .sheet-qc-defenses {
     display: none;
 }
 
@@ -848,10 +846,7 @@ Shinier Gold
 .charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-abilities,
 .charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-limit,
 .charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-experience,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-gear,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-health-defenses,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-health-header,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-defenses {
+.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-gear {
     display: none;
 }
 

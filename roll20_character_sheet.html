@@ -1,6 +1,5 @@
 <script type="text/worker">
-    var version = 2.2,
-        TAS, damageWatch = [], damageAttrs = [], i;
+    var version = 2.2, TAS, damageWatch = [], damageAttrs = [], i;
 
     function cleanAttrs(attrs) { return _.mapObject(attrs, function(e) { return e === undefined ? '' : e; }); };
 
@@ -14,42 +13,48 @@
 
 
     initTAS();
-    //TAS.debugMode();
+    TAS.debugMode();
     on('sheet:opened change:dexterity change:brawl change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane '
         + 'change:ma-nightingale change:ma-devil change:ma-claw change:ma-pearl change:ma-steel change:repeating_martialarts remove:repeating_martialarts '
-        + ' change:melee change:repeating_weapon remove:repeating_weapon ' + damageWatch, TAS._fn(function updateParry(e) {
+        + ' change:melee change:repeating_weapon remove:repeating_weapon ', TAS._fn(function updateParry(e) {
         TAS.debug('Updating Parry value', e);
-        TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
-        'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
-            var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
-                attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'], attrs.I['ma-claw'],
-                attrs.I['ma-pearl'], attrs.I['ma-steel']);
+        getAttrs(["qc"], TAS._fn(function determineQC(values){
+            if (values["qc" == 0]) {
+                TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
+                    'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
+                    var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
+                        attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'], attrs.I['ma-claw'],
+                        attrs.I['ma-pearl'], attrs.I['ma-steel']);
 
-            TAS.debug('attrs', attrs, 'rows', rows);
-            _.each(rows, function(v, k) {
-                ma = Math.max(ma, v.I.repmartialarts);
-            });
+                    TAS.debug('attrs', attrs, 'rows', rows);
+                    _.each(rows, function(v, k) {
+                        ma = Math.max(ma, v.I.repmartialarts);
+                    });
 
-            TAS.debug('Max MA', ma);
+                    TAS.debug('Max MA', ma);
 
-            TAS.repeating('weapon').fields('repweapondef').attrs('dexterity', 'brawl', 'melee', 'parry', 'parry-specialty', 'wound-penalty', 'onslaught')
-                .tap(TAS._fn(function getMaxWeaponDef(rows, attrs) {
-                var wep = 0;
+                    TAS.repeating('weapon').fields('repweapondef').attrs('dexterity', 'brawl', 'melee', 'parry', 'parry-specialty', 'wound-penalty', 'onslaught')
+                        .tap(TAS._fn(function getMaxWeaponDef(rows, attrs) {
+                        var wep = 0;
 
-                TAS.debug('attrs', attrs, 'rows', rows);
-                _.each(rows, function(v, k) {
-                    wep = Math.max(wep, v.I.repweapondef);
-                });
-                TAS.debug('Max Weapon Defense', wep);
-                TAS.debug('Parry calc:', 'Math.ceil((' + attrs.I.dexterity + ' + Math.max(' + attrs.I.brawl + ', ' + ma + ', ' + attrs.I.melee + ')) / 2) + ' + wep + ' - ' + Math.abs(attrs.I['wound-penalty']));
-                var newParry = Math.max(0, Math.ceil((attrs.I.dexterity + Math.max(attrs.I.brawl, ma, attrs.I.melee)) / 2) + wep - Math.abs(attrs.I['wound-penalty']));
-                attrs.I.parry = newParry;
-                TAS.debug('Parry w/specialty calc:', 'Math.ceil((' + attrs.I.dexterity + ' + Math.max(' + attrs.I.brawl + ', ' + ma + ', ' + attrs.I.melee + ') + 1) / 2) + ' + wep + ' - ' + Math.abs(attrs.I['wound-penalty']));
-                var newParrySpe = Math.max(0, Math.ceil((attrs.I.dexterity + Math.max(attrs.I.brawl, ma, attrs.I.melee) + 1) / 2) + wep - Math.abs(attrs.I['wound-penalty']));
-                attrs.I['parry-specialty'] = newParrySpe;
-                TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-            })).execute();
-        })).execute();
+                        TAS.debug('attrs', attrs, 'rows', rows);
+                        _.each(rows, function(v, k) {
+                            wep = Math.max(wep, v.I.repweapondef);
+                        });
+                        TAS.debug('Max Weapon Defense', wep);
+                        TAS.debug('Parry calc:', 'Math.ceil((' + attrs.I.dexterity + ' + Math.max(' + attrs.I.brawl + ', ' + ma + ', ' + attrs.I.melee + ')) / 2) + ' + wep + ' - ' + Math.abs(attrs.I['wound-penalty']));
+                        var newParry = Math.max(0, Math.ceil((attrs.I.dexterity + Math.max(attrs.I.brawl, ma, attrs.I.melee)) / 2) + wep - Math.abs(attrs.I['wound-penalty']));
+                        attrs.I.parry = newParry;
+                        TAS.debug('Parry w/specialty calc:', 'Math.ceil((' + attrs.I.dexterity + ' + Math.max(' + attrs.I.brawl + ', ' + ma + ', ' + attrs.I.melee + ') + 1) / 2) + ' + wep + ' - ' + Math.abs(attrs.I['wound-penalty']));
+                        var newParrySpe = Math.max(0, Math.ceil((attrs.I.dexterity + Math.max(attrs.I.brawl, ma, attrs.I.melee) + 1) / 2) + wep - Math.abs(attrs.I['wound-penalty']));
+                        attrs.I['parry-specialty'] = newParrySpe;
+                        TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
+                    })).execute();
+                })).execute();
+            } else {
+                TAS.debug('QC modif ! CANCEL');
+            }
+        }));
     }));
 
     on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels', TAS._fn(function updateBattleGroupMagnitude(e) {
@@ -63,18 +68,18 @@
             var periEquation = "0", persEquation = "0", showAnima = 1,
                 showSupernal = 0,   showLimit = 0;
             if (["Dawn", "Zenith",   "Twilight", "Night", "Eclipse",
-                 "Dusk", "Midnight", "Daybreak", "Day",   "Moonshadow"].includes(values.caste)) {
+                    "Dusk", "Midnight", "Daybreak", "Day",   "Moonshadow"].includes(values.caste)) {
                 persEquation = "@{essence} * 3 + 10";
                 periEquation = "@{essence} * 7 + 26";
-				showSupernal = 1;
-				showLimit = 1;
+                showSupernal = 1;
+                showLimit = 1;
             } else if (["Air", "Earth", "Fire", "Water", "Wood"].includes(values.caste)){
                 persEquation = "@{essence} * 1 + 11";
                 periEquation = "@{essence} * 4 + 23";
             } else if (["Full Moon", "Changing Moon", "No Moon", "Casteless"].includes(values.caste)){
                 persEquation = "@{essence} * 1 + 15";
                 periEquation = "@{essence} * 4 + 34";
-				showLimit = 1;
+                showLimit = 1;
             } else if (["Journeys", "Serenity", "Battles", "Secrets", "Endings"].includes(values.caste)){
                 persEquation = "@{essence} * 2 + 9";
                 periEquation = "@{essence} * 6 + 25";
@@ -84,15 +89,15 @@
             } else if (values.caste == "Mortal"){
                 persEquation = "0";
                 periEquation = "0";
-				showAnima = 0;
+                showAnima = 0;
             } else return;
 
             setAttrs({
                 "personal-equation": persEquation,
                 "peripheral-equation": periEquation,
-				"showanimadiv": showAnima,
-				"showsupdiv": showSupernal,
-				"showlimit": showLimit
+                "showanimadiv": showAnima,
+                "showsupdiv": showSupernal,
+                "showlimit": showLimit
             });
         }));
     }));
@@ -123,7 +128,7 @@
             var attrs = {}, indexes = _.times(4, generateRowID);
             if (parseInt(values['init-intimacies']) !== 0) return;
 
-            TAS.debug('1st time opening !!');
+            // TAS.debug('1st time opening !!', attrs);
             TAS.debug('Creating new intimacies', indexes);
             _.each(indexes, function(id, k) {
                 var v;
@@ -152,7 +157,17 @@
                 'hl7-penalty': 'I',
                 'onslaught': 0,
                 'willpower': 5,
-                'willpower-max': 5
+                'willpower-max': 5,
+                'stamina': 0,
+                'dexterity': 0,
+                'manipulation': 0,
+                'wits': 0,
+                'dodge': 0,
+                'integrity': 0,
+                'socialize': 0,
+                'parry': 0,
+                'naturalsoak': 0,
+                'armorsoak': 0
             });
 
             let obj = {};
@@ -164,21 +179,49 @@
     }));
 
     on('change:qc-appearance', TAS._fn(function quickAppearanceChange(e) {
-        getAttrs(['qc-appearance'], values => setAttrs({'appearance': int(values['qc-appearance'])}) );
+        getAttrs(['qc-appearance'], values => setAttrs({'appearance': parseInt(values['qc-appearance'])}) );
     }));
 
-    on('change:qc-guile', TAS._fn(function quickAppearanceChange(e) {
+    on('change:qc-guile', TAS._fn(function quickGuileChange(e) {
         getAttrs(['qc-guile'], values => {
-            setAttrs({'manipulation': parseInt(values['qc-guile'])})
-            setAttrs({'socialize': parseInt(values['qc-guile'])})
+            let val = parseInt(values['qc-guile']);
+            setAttrs({
+                'manipulation': val,
+                'socialize': val
+            });
         });
     }));
 
-    on('change:qc-resolve', TAS._fn(function quickAppearanceChange(e) {
+    on('change:qc-resolve', TAS._fn(function quickResolveChange(e) {
         getAttrs(['qc-resolve'], values => {
             setAttrs({'wits': parseInt(values['qc-resolve'])})
             setAttrs({'integrity': parseInt(values['qc-resolve'])})
         });
+    }));
+
+    on('change:qc-parry', TAS._fn(function quickParryChange(e) {
+        getAttrs(['qc-parry'], values => setAttrs({
+            'parry': parseInt(values['qc-parry']),
+            'parry-specialty': parseInt(values['qc-parry']) + 1
+        }) );
+    }));
+
+    on('change:qc-evasion', TAS._fn(function quickEvasionChange(e) {
+        getAttrs(['qc-evasion'], values => {
+            let val = parseInt(values['qc-evasion']);
+            setAttrs({
+                'dexterity': val,
+                'dodge': val
+            });
+        });
+    }));
+
+    on('change:qc-soak', TAS._fn(function quickSoakChange(e) {
+        getAttrs(['qc-soak'], values => setAttrs({'naturalsoak': parseInt(values['qc-soak'])}) );
+    }));
+
+    on('change:qc-hardness', TAS._fn(function quickHardnessChange(e) {
+        getAttrs(['qc-hardness'], values => setAttrs({'hardness': parseInt(values['qc-hardness'])}) );
     }));
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
@@ -1671,6 +1714,10 @@
                                     <span>Parry</span>
                                     <input type="number" name="attr_qc-parry">
                                 </div>
+                                <!-- <div class="sheet-trait">
+                                    <span>Parry</span>
+                                    <input type="number" name="attr_parry">
+                                </div> -->
                                 <div class="sheet-trait">
                                     <span>Evasion</span>
                                     <input type="number" name="attr_qc-evasion">
@@ -1679,6 +1726,10 @@
                                     <span>Soak</span>
                                     <input type="number" name="attr_qc-soak">
                                 </div>
+                                <!-- <div class="sheet-trait">
+                                    <span>Soak</span>
+                                    <input type="number" name="attr_naturalsoak">
+                                </div> -->
                                 <div class="sheet-trait">
                                     <span>Hardness</span>
                                     <input type="number" name="attr_qc-hardness">
@@ -1805,7 +1856,6 @@
 
 			<!-- 1.4 JOINED AGAIN = HEALTH & DEFENSE -->
 
-            <h1 class="sheet-qc-health"><span>Health Levels</span></h1>
             <h1 class="sheet-health-defenses"><span>Health &amp; Defense</span></h1>
             <div class="sheet-defenses sheet-table sheet-txt-lg sheet-center-table sheet-80pct">
                 <div class="sheet-table-body">
@@ -1830,15 +1880,19 @@
                     </div>
                     <div class="sheet-table-row">
                         <div class="sheet-table-cell">
-                            <input type="hidden" name="attr_onslaught" class="onslaught-check">
-                            <input type="number" value="0" readonly="readonly" name="attr_onslaught" style="width: 88px;display:block;margin-left: auto;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit" class="onslaught-input">
+                            <div style="display: block; margin-left: auto;width: 88px;">
+                                <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
+                                <input type="hidden" name="attr_onslaught" class="onslaught-check">
+                                <input type="number" value="0" class="onslaught-input" name="attr_onslaught" readonly="readonly" style="width: 71px;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
+                            </div>
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Parry</span>:</div>
                         <div class="sheet-table-cell">
-                            <input type="hidden" value="0" readonly="readonly" name="attr_parry" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty">
-                            <input type="hidden" value="0" readonly="readonly" name="attr_parry-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty">
-                            <input type="number" value="(((@{parry}-@{onslaught}) + abs(@{parry}-@{onslaught}))/2)" disabled="disabled" name="attr_parry-final" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty">
-                            <input type="number" value="(((@{parry-specialty}-@{onslaught}) + abs(@{parry-specialty}-@{onslaught}))/2)" disabled="disabled" name="attr_parry-specialty-final" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty">
+                            <!-- <input type="hidden" value="0" readonly="readonly" name="attr_parry" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty">
+                            <input type="hidden" value="0" readonly="readonly" name="attr_parry-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty"> -->
+                            <input type="hidden" value="(((@{parry} - abs(@{wound-penalty})) + abs(@{parry} - abs(@{wound-penalty}))) / 2)" disabled="disabled" name="attr_parry-base">
+                            <input type="hidden" value="(((@{parry-specialty} - abs(@{wound-penalty})) + abs(@{parry-specialty} - abs(@{wound-penalty}))) / 2)" disabled="disabled" name="attr_parry-base-s">
+                            <input type="number" value="(((@{parry-base}-(@{apply-onslaught} * @{onslaught})) + abs(@{parry-base}-(@{apply-onslaught} * @{onslaught})))/2)" disabled="disabled" name="attr_parry-final" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty"><input type="number" value="(((@{parry-base-s}-(@{apply-onslaught} * @{onslaught})) + abs(@{parry-base-s}-(@{apply-onslaught} * @{onslaught})))/2)" disabled="disabled" name="attr_parry-specialty-final" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Dexterity + Dodge">Evasion</span>:</div>
                         <div class="sheet-table-cell">
@@ -1846,8 +1900,8 @@
                             <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
                             <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base">
                             <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base-s">
-                            <input type="hidden" value="(((@{evasion-base} - @{onslaught}) + abs(@{evasion-base} - @{onslaught}))/2)"  disabled="disabled" name="attr_evasion-final">
-                            <input type="hidden" value="(((@{evasion-base-s} - @{onslaught}) + abs(@{evasion-base-s} - @{onslaught}))/2)"  disabled="disabled" name="attr_evasion-final-s">
+                            <input type="hidden" value="(((@{evasion-base} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final">
+                            <input type="hidden" value="(((@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final-s">
                             <input type="number" value="(@{evasion-final} + abs(@{evasion-final})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion"><input type="number" value="(@{evasion-final-s} + abs(@{evasion-final-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Wits + Integrity">Resolve</span>:</div>
