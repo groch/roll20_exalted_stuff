@@ -19,7 +19,9 @@
         + ' change:melee change:repeating_weapon remove:repeating_weapon ', TAS._fn(function updateParry(e) {
         TAS.debug('Updating Parry value', e);
         getAttrs(["qc"], TAS._fn(function determineQC(values){
-            if (values["qc" == 0]) {
+            TAS.debug('Testing qc=' + values["qc"]);
+            if (values["qc"] == 0) {
+                TAS.debug('!! Updating Parry value !!', e);
                 TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
                     'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
                     var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
@@ -155,6 +157,7 @@
                 'hl6-penalty': '-4',
                 'hl7-damage': 'healthy',
                 'hl7-penalty': 'I',
+                'apply-onslaught': 1,
                 'onslaught': 0,
                 'willpower': 5,
                 'willpower-max': 5,
