@@ -1888,8 +1888,6 @@
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Parry</span>:</div>
                         <div class="sheet-table-cell">
-                            <!-- <input type="hidden" value="0" readonly="readonly" name="attr_parry" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty">
-                            <input type="hidden" value="0" readonly="readonly" name="attr_parry-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty"> -->
                             <input type="hidden" value="(((@{parry} - abs(@{wound-penalty})) + abs(@{parry} - abs(@{wound-penalty}))) / 2)" disabled="disabled" name="attr_parry-base">
                             <input type="hidden" value="(((@{parry-specialty} - abs(@{wound-penalty})) + abs(@{parry-specialty} - abs(@{wound-penalty}))) / 2)" disabled="disabled" name="attr_parry-base-s">
                             <input type="number" value="(((@{parry-base}-(@{apply-onslaught} * @{onslaught})) + abs(@{parry-base}-(@{apply-onslaught} * @{onslaught})))/2)" disabled="disabled" name="attr_parry-final" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty"><input type="number" value="(((@{parry-base-s}-(@{apply-onslaught} * @{onslaught})) + abs(@{parry-base-s}-(@{apply-onslaught} * @{onslaught})))/2)" disabled="disabled" name="attr_parry-specialty-final" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty">
