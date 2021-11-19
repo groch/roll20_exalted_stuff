@@ -65,6 +65,31 @@
     margin-right: 10%;
 } */
 
+.charsheet .sheet-defenses .wound-penalty-check[value="0"] ~ input[type=number][disabled] {
+    background-color: rgba(128, 128, 128, 0.25);
+    font-weight: normal;
+}
+
+.charsheet .sheet-defenses .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+.charsheet .sheet-defenses .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint {
+    background-color: orange;
+    font-weight: bold;
+}
+
+.charsheet .sheet-defenses .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint {
+    background-color: orangered;
+    font-weight: bold;
+}
+
+.charsheet .sheet-defenses .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint {
+    background-color: red;
+    font-weight: bold;
+}
+
 .charsheet input[type=number][readonly].onslaught-input {
     background-color: red;
     font-weight: bold;
