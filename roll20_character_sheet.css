@@ -91,7 +91,7 @@
 }
 
 .charsheet input[type=number][readonly].onslaught-input {
-    background-color: red;
+    background-color: #ea00ff;
     font-weight: bold;
 }
 
