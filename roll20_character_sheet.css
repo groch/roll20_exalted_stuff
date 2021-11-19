@@ -110,11 +110,11 @@
     font-weight: normal;
 }
 
-.charsheet .qc-panel-check {
-    display: initial;
+.charsheet .qc-panel-check[value="1"] ~ .qc-toggle-visibility {
+    visibility: hidden;
 }
 
-.charsheet .qc-panel-check[value="1"] ~ .qc-toggle {
+.charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display {
     display: none;
 }
 

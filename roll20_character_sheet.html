@@ -1846,13 +1846,14 @@
             <div class="sheet-defenses sheet-table sheet-txt-lg sheet-center-table sheet-80pct">
                 <div class="sheet-table-body">
                     <div class="sheet-table-row">
+                        <input type="hidden" name="attr_qc" class="qc-panel-check">
                         <div class="sheet-table-cell sheet-text-right"><span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:</div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Natural Soak</span>:</div>
-                        <div class="sheet-table-cell">
+                        <div class="sheet-table-cell sheet-text-right qc-toggle-visibility"><span>Natural Soak</span>:</div>
+                        <div class="sheet-table-cell qc-toggle-visibility">
                             <span name="attr_stamina" style="margin-left: 3px ; margin-right: 3px ; vertical-align: -2px" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px">
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span>Armored Soak</span>:</div>
-                        <div class="sheet-table-cell">
+                        <div class="sheet-table-cell sheet-text-right qc-toggle-visibility"><span>Armored Soak</span>:</div>
+                        <div class="sheet-table-cell qc-toggle-visibility">
                             <input type="number" readonly="readonly" name="attr_armorsoak" title="Come from your armor">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong></div>
@@ -3964,21 +3965,21 @@
                     <h1><span>Attributes</span></h1>
 					<div class="sheet-table">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-						<div class="sheet-table-row qc-toggle">
+						<div class="sheet-table-row qc-toggle-display">
 						    <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" value="(@{perception})" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Perception" name="attr_perception2" data-formula="(@{perception})"></div>
 						</div>
-						<div class="sheet-table-row qc-toggle">
+						<div class="sheet-table-row qc-toggle-display">
 						    <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" value="@{charisma}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Charisma" name="attr_charisma2" data-formula="@{charisma}"></div>
 						</div>
-						<div class="sheet-table-row qc-toggle">
+						<div class="sheet-table-row qc-toggle-display">
 						    <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" value="@{manipulation}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Manipulation" name="attr_manipulation2" data-formula="@{manipulation}"></div>
 						</div>
 						<div class="sheet-table-row">
 						    <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{appearance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Appearance" name="attr_appearance2" data-formula="@{appearance}"></div>
 						</div>
 					</div>
-					<h1 class="qc-toggle"><span>Abilities</span></h1>
-					<div class="sheet-table qc-toggle">
+					<h1 class="qc-toggle-display"><span>Abilities</span></h1>
+					<div class="sheet-table qc-toggle-display">
 						<div class="sheet-table-row">
 						    <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" value="@{socialize}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Socialize" name="attr_socialize2" data-formula="@{socialize}"></div>
 						</div>
