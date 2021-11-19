@@ -85,6 +85,14 @@
     font-weight: normal;
 }
 
+.charsheet .qc-panel-check {
+    display: initial;
+}
+
+.charsheet .qc-panel-check[value="1"] ~ .qc-toggle {
+    display: none;
+}
+
 .charsheet .sheet-table {
     display: table;
     width: 100%;
@@ -741,18 +749,6 @@ Shinier Gold
    border-top:1px solid #ffffff;
    margin-top:2px;
 }
-
-/*
-.charsheet option[value=Mortal]:checked ~ div.anima-box,
-.charsheet option[value=Mortal]:checked ~ div.supernal-box {
-	visibility: hidden;
-}
-
-.charsheet select.player-caste option:not([value=Mortal]):checked  ~ div.anima-box ,
-.charsheet select.player-caste option:not([value=Mortal]):checked  ~ div.supernal-box {
-	visibility: visible;
-}
-*/
 
 .charsheet input.show-anima[value="1"] ~ div.anima-box,
 .charsheet input.show-sup[value="1"] ~ div.supernal-box,

@@ -3917,34 +3917,36 @@
 			</div>
 			<div class="sheet-3colrow">
 				<div class="sheet-col stat-col">
+                    <input type="hidden" class="qc-panel-check" name="attr_qc">
                     <h1><span>Attributes</span></h1>
 					<div class="sheet-table">
-						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" value="(@{perception})" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Perception" name="attr_perception2" data-formula="(@{perception})"></div>
+                        <input type="hidden" class="qc-panel-check" name="attr_qc">
+						<div class="sheet-table-row qc-toggle">
+						    <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" value="(@{perception})" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Perception" name="attr_perception2" data-formula="(@{perception})"></div>
+						</div>
+						<div class="sheet-table-row qc-toggle">
+						    <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" value="@{charisma}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Charisma" name="attr_charisma2" data-formula="@{charisma}"></div>
+						</div>
+						<div class="sheet-table-row qc-toggle">
+						    <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" value="@{manipulation}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Manipulation" name="attr_manipulation2" data-formula="@{manipulation}"></div>
 						</div>
 						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" value="@{charisma}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Charisma" name="attr_charisma2" data-formula="@{charisma}"></div>
-						</div>
-						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" value="@{manipulation}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Manipulation" name="attr_manipulation2" data-formula="@{manipulation}"></div>
-						</div>
-						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{appearance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Appearance" name="attr_appearance2" data-formula="@{appearance}"></div>
+						    <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{appearance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Appearance" name="attr_appearance2" data-formula="@{appearance}"></div>
 						</div>
 					</div>
-					<h1><span>Abilities</span></h1>
-					<div class="sheet-table">
+					<h1 class="qc-toggle"><span>Abilities</span></h1>
+					<div class="sheet-table qc-toggle">
 						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" value="@{socialize}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Socialize" name="attr_socialize2" data-formula="@{socialize}"></div>
+						    <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" value="@{socialize}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Socialize" name="attr_socialize2" data-formula="@{socialize}"></div>
 						</div>
 						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" value="@{presence}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Presence" name="attr_presence2" data-formula="@{presence}"></div>
+						    <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" value="@{presence}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Presence" name="attr_presence2" data-formula="@{presence}"></div>
 						</div>
 						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{performance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Performance" name="attr_performance2" data-formula="@{performance}"></div>
+						    <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{performance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Performance" name="attr_performance2" data-formula="@{performance}"></div>
 						</div>
 						<div class="sheet-table-row">
-						<div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" value="@{integrity}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Integrity" name="attr_integrity2" data-formula="@{integrity}"></div>
+						    <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" value="@{integrity}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Integrity" name="attr_integrity2" data-formula="@{integrity}"></div>
 						</div>
 					</div>
 				</div>
