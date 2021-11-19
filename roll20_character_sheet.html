@@ -181,10 +181,6 @@
         }));
     }));
 
-    on('change:qc-appearance', TAS._fn(function quickAppearanceChange(e) {
-        getAttrs(['qc-appearance'], values => setAttrs({'appearance': parseInt(values['qc-appearance'])}) );
-    }));
-
     on('change:qc-guile', TAS._fn(function quickGuileChange(e) {
         getAttrs(['qc-guile'], values => {
             let val = parseInt(values['qc-guile']);
@@ -217,14 +213,6 @@
                 'dodge': val
             });
         });
-    }));
-
-    on('change:qc-soak', TAS._fn(function quickSoakChange(e) {
-        getAttrs(['qc-soak'], values => setAttrs({'naturalsoak': parseInt(values['qc-soak'])}) );
-    }));
-
-    on('change:qc-hardness', TAS._fn(function quickHardnessChange(e) {
-        getAttrs(['qc-hardness'], values => setAttrs({'hardness': parseInt(values['qc-hardness'])}) );
     }));
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
@@ -1704,7 +1692,7 @@
                             <div class="sheet-qc-defenses">
                                 <div class="sheet-trait">
                                     <span>Appearance</span>
-                                    <input type="number" name="attr_qc-appearance">
+                                    <input type="number" name="attr_appearance">
                                 </div>
                                 <div class="sheet-trait">
                                     <span>Guile</span>
@@ -1718,25 +1706,17 @@
                                     <span>Parry</span>
                                     <input type="number" name="attr_qc-parry">
                                 </div>
-                                <!-- <div class="sheet-trait">
-                                    <span>Parry</span>
-                                    <input type="number" name="attr_parry">
-                                </div> -->
                                 <div class="sheet-trait">
                                     <span>Evasion</span>
                                     <input type="number" name="attr_qc-evasion">
                                 </div>
                                 <div class="sheet-trait">
                                     <span>Soak</span>
-                                    <input type="number" name="attr_qc-soak">
-                                </div>
-                                <!-- <div class="sheet-trait">
-                                    <span>Soak</span>
                                     <input type="number" name="attr_naturalsoak">
-                                </div> -->
+                                </div>
                                 <div class="sheet-trait">
                                     <span>Hardness</span>
-                                    <input type="number" name="attr_qc-hardness">
+                                    <input type="number" name="attr_hardness">
                                 </div>
                             </div>
                         </div>
