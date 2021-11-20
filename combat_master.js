@@ -3383,7 +3383,7 @@ var CombatMaster = CombatMaster || (function() {
         let turnorder =  getTurnorder();
         log('turnorder='+JSON.stringify(turnorder.map(turn => turn.pr)));
 
-        if (turnorder.length == 2) {
+        if (turnorder.length <= 2) {
             log('No More Token to Fight with, closing combat !! /!\\');
             stopCombat();
             return;
