@@ -95,6 +95,10 @@
     font-weight: bold;
 }
 
+.charsheet .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-input {
+    background-color: rgba(128, 128, 128, 0.25);
+}
+
 .charsheet .onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
