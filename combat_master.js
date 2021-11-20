@@ -1,11 +1,15 @@
 /* 
- * Version 2.44
+ * Version 2.45
  * Original By Robin Kuiper
- * Changes in Version 0.3.0 and greater by Victor B
- * Changes in this version and prior versions by The Aaron
+ * Changes in Version 0.3.0 and before by Victor B
+ * Changes in Version X.X.X to 2.44 by The Aaron
+ * fork from 2.44 to adapt to Exalted 3 by Groch
+ * Changes in Version 2.45 until current version by Groch
  * Discord: Vic#5196H
+ * Discord: Groch#0102
  * Roll20: https://app.roll20.net/users/3135709/victor-b
  * Github: https://github.com/vicberg/CombatMaster
+ * Github: https://github.com/groch/roll20_exalted_stuff
 */
 var CombatMaster = CombatMaster || (function() {
     'use strict';
