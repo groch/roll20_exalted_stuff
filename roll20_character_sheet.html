@@ -165,6 +165,7 @@
                 'dexterity': 0,
                 'manipulation': 0,
                 'wits': 0,
+                'awareness': 0,
                 'dodge': 0,
                 'integrity': 0,
                 'socialize': 0,
@@ -181,6 +182,31 @@
         }));
     }));
 
+    function changeJoinResolve() {
+        getAttrs(['qc-join-battle', 'qc-resolve'], values => {
+            let valJb = parseInt(values['qc-join-battle']),
+                valRes = parseInt(values['qc-resolve']),
+                valWits = 0,
+                valIntegrity = 0,
+                valAwareness = 0;
+            TAS.debug('changeJoinResolve valJb=' + valJb + ', valRes=' + valRes);
+            if (valJb <= valRes) {
+                valWits = valJb;
+                valIntegrity = valWits + (valRes - valJb) * 2;
+            } else {
+                valWits = valRes;
+                valIntegrity = valRes;
+                valAwareness = valJb - valRes;
+            }
+            TAS.debug('set wits=' + valWits + ', integrity=' + valIntegrity + ', awareness=' + valAwareness);
+            setAttrs({
+                'wits': valWits,
+                'integrity': valIntegrity,
+                'awareness': valAwareness
+            });
+        });
+    }
+
     on('change:qc-guile', TAS._fn(function quickGuileChange(e) {
         getAttrs(['qc-guile'], values => {
             let val = parseInt(values['qc-guile']);
@@ -191,18 +217,18 @@
         });
     }));
 
-    on('change:qc-resolve', TAS._fn(function quickResolveChange(e) {
-        getAttrs(['qc-resolve'], values => {
-            setAttrs({'wits': parseInt(values['qc-resolve'])})
-            setAttrs({'integrity': parseInt(values['qc-resolve'])})
-        });
+    on('change:qc-resolve change:qc-join-battle', TAS._fn(function quickResolveChange(e) {
+        changeJoinResolve();
     }));
 
     on('change:qc-parry', TAS._fn(function quickParryChange(e) {
-        getAttrs(['qc-parry'], values => setAttrs({
-            'parry': parseInt(values['qc-parry']),
-            'parry-specialty': parseInt(values['qc-parry']) + 1
-        }) );
+        getAttrs(['qc-parry'], values => {
+            let val = parseInt(values['qc-parry']);
+            setAttrs({
+                'parry': val,
+                'parry-specialty': val + 1
+            });
+        });
     }));
 
     on('change:qc-evasion', TAS._fn(function quickEvasionChange(e) {
@@ -1495,7 +1521,7 @@
                     <h1><span>Actions</span></h1>
                     <div class="sheet-trait">
                         <span>Join Battle</span>
-                        <input type="number" name="attr_awareness">
+                        <input type="number" name="attr_qc-join-battle">
                     </div>
                     <div class="sheet-trait">
                         <span>Combat Movement</span>
