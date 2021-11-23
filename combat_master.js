@@ -1658,19 +1658,20 @@ var CombatMaster = CombatMaster || (function() {
             log('Stop Combat')
         }
 
+        Campaign().set({initiativepage:false});
         clearHold(state[combatState].config.hold)
         
         if (state[combatState].config.status.clearConditions) {
             [...state[combatState].conditions].forEach((condition) => {
                 if (condition.id != getOrCreateMarker(true).get('id') && condition.id != getOrCreateMarker(false).get('id')) {
                     removeConditionFromToken(getObj('graphic',condition.id), condition.key, true)
-                }  
-            }) 
-        }           
+                }
+            })
+        }
         
         removeMarkers();
         stopTimer();
-        Campaign().set({initiativepage:false,turnorder:''});     
+        Campaign().set({turnorder:''});
         round = 1;
         
         setTimeout(function() {
@@ -2238,7 +2239,6 @@ var CombatMaster = CombatMaster || (function() {
             resetMarker();
         }
 
-        log('beep');
         if (state[combatState].config.turnorder.nextMarkerType != 'None') {
             let nextTurn = getNextTurnObject();
             if (nextTurn) {
@@ -3376,6 +3376,15 @@ var CombatMaster = CombatMaster || (function() {
         return turn;
     },
 
+    actualizeNextMarker = (obj) => {
+        log('actualizeNextMarker obj='+JSON.stringify(obj));
+        const nextTurnObject = getNextTurnObject(obj.get('id'));
+        if (!nextTurnObject)
+            resetMarker(markerType.NEXT);
+        else
+            changeMarker(getObj('graphic', nextTurnObject.id), markerType.NEXT);
+    },
+
     handleGraphicDelete = function (obj) {
         if (debug) {
             log ('-------------Handle Graphic Delete-------------');
@@ -3385,16 +3394,22 @@ var CombatMaster = CombatMaster || (function() {
         if(!inFight()) return;
         
         let turnorder =  getTurnorder();
-        log('turnorder='+JSON.stringify(turnorder.map(turn => turn.pr)));
+        const newTurnorder = turnorder.filter(turn => turn.id !== obj.get('_id'));
+        if (JSON.stringify(newTurnorder) != JSON.stringify(turnorder)) { // delete an item which is in the roll20 combat/turnorder
+            if (debug) log('Setting newTurnorder !!! (token deleted was part of turn order) turnorder='+JSON.stringify(newTurnorder.map(turn => turn.pr).filter(turn => turn != -420)));
+            setTurnorder(newTurnorder);
+        }
+        const filteredTurnorder = turnorder.map(turn => turn.pr).filter(turn => turn != -420);
+        log('without turns turnorder='+JSON.stringify(filteredTurnorder));
 
-        if (turnorder.length <= 2) {
+        if (filteredTurnorder.length - 1 <= 1) {
             log('No More Token to Fight with, closing combat !! /!\\');
             stopCombat();
+            log('-----END-----Handle Graphic Delete-----END-----');
             return;
         }
 
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
-            log('boop');
             let curretMarker = getOrCreateMarker(), nextMarker = getOrCreateMarker(markerType.NEXT);
             if(curretMarker.get('top') === obj.get('top') && curretMarker.get('left') === obj.get('left')){
                 log('Actual Player Deleted !');
@@ -3402,13 +3417,13 @@ var CombatMaster = CombatMaster || (function() {
                 changeMarker(currentFocus);
                 changeMarker(currentFocus, markerType.RANGE);
                 changeMarker(currentFocus, markerType.MAIN);
+                if (nextMarker.get('top') === currentFocus.get('top') && nextMarker.get('left') === currentFocus.get('left')) {
+                    log('Main marker will be on NEXT, need to move NEXT !!!');
+                    actualizeNextMarker(obj);
+                }
             } else if (nextMarker.get('top') === obj.get('top') && nextMarker.get('left') === obj.get('left')) {
                 log('Next Player Deleted !');
-                const nextTurnObject = getNextTurnObject(obj.get('id'));
-                if (!nextTurnObject)
-                    resetMarker(markerType.NEXT);
-                else
-                    changeMarker(getObj('graphic', nextTurnObject.id), markerType.NEXT);
+                actualizeNextMarker(obj);
             }
         }    
     },
