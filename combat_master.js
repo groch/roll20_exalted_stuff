@@ -2260,6 +2260,8 @@ var CombatMaster = CombatMaster || (function() {
     handleTurnorderChange = function (obj, prev) {
         if (debug) {
             log("-------------Handle Turnorder Change-------------")
+            // log('obj='+JSON.stringify(obj));
+            // log('prev='+JSON.stringify(prev));
         }
         
         if(obj.get('turnorder') === prev.turnorder) return;
@@ -2270,7 +2272,7 @@ var CombatMaster = CombatMaster || (function() {
         let currentTurn = theoricalNewOrder.shift()
         theoricalNewOrder.push(currentTurn);
 
-        if(obj.get('turnorder') == []){
+        if(obj.get('turnorder') == [] || turnorder.filter(turn => turn.pr != -420).length <= 1){
             stopCombat();
             return;
         }
