@@ -1075,7 +1075,7 @@ var CombatMaster = CombatMaster || (function() {
         if (selectedTokens) {
             selectedTokens.forEach(token => {
                 if (token._type == 'graphic') {
-                    if (token._id != getOrCreateMarker(false).get('id') && token._id != getOrCreateMarker(true).get('id')) {
+                    if (token._id != getOrCreateMarker(false).get('id')) {
                         announcePlayer(getObj('graphic', token._id), false, false, true);
                     }    
                 }
@@ -2228,7 +2228,7 @@ var CombatMaster = CombatMaster || (function() {
             
             log('============== sameFirstTurn='+sameFirstTurn);
             if (!sameFirstTurn)
-                announcePlayer(tokenObj, prev, delay);
+                announcePlayer(tokenObj, prev, delay, false);
             resetOnslaught(tokenObj);
             sendPingOnToken(tokenObj);
             setTimeout(function() {
@@ -2510,7 +2510,7 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************
 //ANNOUNCE 
 //*************************************************************************************************************	  
-    announcePlayer = function (tokenObj, prev, delay=false, show) {
+    announcePlayer = function (tokenObj, prev, delay=false, show=false) {
         if (debug) {
             log('Announce Player');
         }
@@ -2536,15 +2536,17 @@ var CombatMaster = CombatMaster || (function() {
 
         let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>'
         
+        let characterObj = getObj('character', tokenObj.get('represents')),
+        onslaught = getAttrByName(characterObj.id, 'onslaught', 'current');
+        let resetedOnslaughtMessage = ' <b>and reseted his onslaught (was <u>' + onslaught + '</u>) !</b>';
+        
         if (!show) {
-            contents   += '<div style="'+styles.announcePlayer+'">'+name+'\'s Turn</div>'
+            contents   += '<div style="'+styles.announcePlayer+'">'+name+'\'s Turn' + ((onslaught != 0) ? resetedOnslaughtMessage : '') + '</div>';
         } else {
-            contents   += '<div style="'+styles.announcePlayer+'">'+name+'</div>'
+            contents   += '<div style="'+styles.announcePlayer+'">'+name+'</div>';
         }
         
-        contents += conditions
-        
-        let characterObj = getObj('character', tokenObj.get('represents')) 
+        contents += conditions;
 
         if (characterObj) {
             let controlledBy = characterObj.get('controlledby')
