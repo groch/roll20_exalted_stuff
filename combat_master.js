@@ -142,6 +142,7 @@ var CombatMaster = CombatMaster || (function() {
         }
 
         if (msg_orig.content.indexOf('!cmaster')!==0) {
+            log('-------------inputHandler------OUT----');
             return;
         }
         
@@ -183,6 +184,7 @@ var CombatMaster = CombatMaster || (function() {
                 }
         	}
         }
+        log('-------------inputHandler-----END-----');
 	},  
 	
 	//Extracts inline rolls
@@ -286,8 +288,9 @@ var CombatMaster = CombatMaster || (function() {
 	//Processes the commands based on Delay Time (if any)
 	commandHandler = function(cmdDetails,msg,restrict,who,playerID){
 	    if (debug){
-	        log ('Command Handler')
-	        log (cmdDetails.action)
+	        log ('Command Handler cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
+            if (who) log('who=' + JSON.stringify(who));
+            if (playerID) log('playerID=' + JSON.stringify(playerID));
             //log('commandHandler !!!!!!! campaign=' + JSON.stringify(Campaign()));
 	    }
 	    
@@ -2260,8 +2263,8 @@ var CombatMaster = CombatMaster || (function() {
     handleTurnorderChange = function (obj, prev) {
         if (debug) {
             log("-------------Handle Turnorder Change-------------")
-            // log('obj='+JSON.stringify(obj));
-            // log('prev='+JSON.stringify(prev));
+            log('obj='+JSON.stringify(obj));
+            log('prev='+JSON.stringify(prev));
         }
         
         if(obj.get('turnorder') === prev.turnorder) return;
@@ -2271,6 +2274,7 @@ var CombatMaster = CombatMaster || (function() {
         let theoricalNewOrder = [...prevTurnorder];
         let currentTurn = theoricalNewOrder.shift()
         theoricalNewOrder.push(currentTurn);
+
 
         if(obj.get('turnorder') == [] || turnorder.filter(turn => turn.pr != -420).length <= 1){
             stopCombat();
