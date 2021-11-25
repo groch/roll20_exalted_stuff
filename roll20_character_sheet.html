@@ -1607,21 +1607,36 @@
                     <!-- 1.3.3.2 MERITS AREA -->
 					<h1><span>Merits</span></h1>
                     <fieldset class="repeating_merits" style="display: none;">
-						<input class="sheet-short-merit-section" type="text" name="attr_repmerits-name" placeholder="Artifact">
-						
-						<div class="sheet-dots">
-							<input type="radio" class="sheet-dots0" name="attr_repmerits" value="0" checked="checked"><span></span>
-							<input type="radio" class="sheet-dots1" name="attr_repmerits" value="1"><span></span>
-							<input type="radio" class="sheet-dots2" name="attr_repmerits" value="2"><span></span>
-							<input type="radio" class="sheet-dots3" name="attr_repmerits" value="3"><span></span>
-							<input type="radio" class="sheet-dots4" name="attr_repmerits" value="4"><span></span>
-							<input type="radio" class="sheet-dots5" name="attr_repmerits" value="5"><span></span>
-							<input type="radio" class="sheet-dots6" name="attr_repmerits" value="6"><span></span>
-							<input type="radio" class="sheet-dots7" name="attr_repmerits" value="7"><span></span>
-							<input type="radio" class="sheet-dots8" name="attr_repmerits" value="8"><span></span>
-							<input type="radio" class="sheet-dots9" name="attr_repmerits" value="9"><span></span>
-							<input type="radio" class="sheet-dots10" name="attr_repmerits" value="10"><span></span>
-						</div>
+                        <input type="hidden" name="attr_repmerits-toggle-desc" class="merits-toggle-desc" value="0">
+                        <div class="merit-input-area">
+                            <input type="hidden" name="attr_repmerits-toggle-desc" class="merits-toggle-desc" value="0">
+                            <div class="inline-merits-name">
+                                <input class="sheet-short-merit-section" type="text" name="attr_repmerits-name" placeholder="Artifact">
+                            </div>
+                            <div class="inline-merits-desc">
+                                <textarea name="attr_repmerits-desc" class="sheet-limit merit-textarea" placeholder="An item of great power (more info p XXX)."></textarea>
+                            </div>
+                        </div>
+                        <div class="merit-dot-toggle-wrapper">
+                            <div class="sheet-dots merits-dots">
+                                <input type="radio" class="sheet-dots0" name="attr_repmerits" value="0" checked="checked"><span></span>
+                                <input type="radio" class="sheet-dots1" name="attr_repmerits" value="1"><span></span>
+                                <input type="radio" class="sheet-dots2" name="attr_repmerits" value="2"><span></span>
+                                <input type="radio" class="sheet-dots3" name="attr_repmerits" value="3"><span></span>
+                                <input type="radio" class="sheet-dots4" name="attr_repmerits" value="4"><span></span>
+                                <input type="radio" class="sheet-dots5" name="attr_repmerits" value="5"><span></span>
+                                <input type="radio" class="sheet-dots6" name="attr_repmerits" value="6"><span></span>
+                                <input type="radio" class="sheet-dots7" name="attr_repmerits" value="7"><span></span>
+                                <input type="radio" class="sheet-dots8" name="attr_repmerits" value="8"><span></span>
+                                <input type="radio" class="sheet-dots9" name="attr_repmerits" value="9"><span></span>
+                                <input type="radio" class="sheet-dots10" name="attr_repmerits" value="10"><span></span>
+                            </div>
+                            <div class="merits-div-checkbox">
+                                <label>
+                                    <input type="checkbox" name="attr_repmerits-toggle-desc" class="merits-checkbox"><strong></strong>
+                                </label>
+                            </div>
+                        </div>
                     </fieldset>
 					<!-- 1.3.3.3 WILLPOWER & LIMIT AREA; OR QC RIGHT COLUMN -->
                     <div class="sheet-2colrow">

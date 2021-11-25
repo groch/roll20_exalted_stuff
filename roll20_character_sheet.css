@@ -535,7 +535,83 @@
 	display:none;
 }
 
-.charsheet [data-groupname=repeating_merits] input[type=text] { width: calc(100% - 120px); }
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem {
+    display: flex;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merit-input-area {
+    width: calc(100% - 100px - 60px);
+}
+
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-toggle-desc[value="on"] ~ .merit-input-area {
+    flex: 1 1 100%;
+}
+
+.charsheet [data-groupname=repeating_merits] input[type=text],
+.charsheet [data-groupname=repeating_merits] .inline-merits-desc,
+.charsheet .inline-merits-name {
+    width: 100%;
+}
+
+.charsheet [data-groupname=repeating_merits] textarea.merit-textarea {
+    width: 97%;
+    height: 3em;
+}
+
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-dots {
+    position: relative;
+    right: 0px;
+}
+
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-div-checkbox {
+    height: fit-content;
+    width: 50px;
+}
+
+.charsheet .repcontainer[data-groupname="repeating_merits"] .merit-dot-toggle-wrapper {
+    display: flex;
+    align-content: flex-end;
+    flex: 1 1 min-content;
+    flex-flow: wrap-reverse;
+    justify-content: flex-end;
+}
+
+.charsheet .merits-div-checkbox {
+    margin-left: 4px;
+    background-color:#EFEFEF;
+    border-radius:4px;
+    border:1px solid #D0D0D0;
+}
+
+.charsheet .merits-div-checkbox input + strong:before {
+    text-align:center;
+    padding:3px 0px;
+    display:block;
+    content: 'NOM';
+}
+
+.charsheet .merits-div-checkbox label input {
+    position:absolute;
+    top:8px;
+}
+
+.charsheet .merits-div-checkbox input:checked + strong:before {
+    background-color:#911;
+    color:#fff;
+    content: 'DESC';
+}
+
+.charsheet .merits-toggle-desc[value="0"] ~ .inline-merits-name,
+.charsheet .merits-toggle-desc[value="on"] ~ .inline-merits-desc {
+    display: inline-block;
+}
+
+.charsheet .merits-toggle-desc[value="on"] ~ .inline-merits-name,
+.charsheet .merits-toggle-desc[value="0"] ~ .inline-merits-desc {
+    display: none;
+}
 
 .charsheet [data-groupname=repeating_weapon] input[type=text] { width: 100%; }
 .charsheet [data-groupname=repeating_weapon] input[type=number] { width: 40px; }
@@ -879,18 +955,6 @@ Shinier Gold
     display: none;
 }
 
-.charsheet .sheet-long-merit[value="0"] ~ input[type=text] .sheet-long-merit-section,
-.charsheet .sheet-long-merit[value="1"] ~ input[type=text] .sheet-short-merit-section {
-    visibility: hidden;
-	display:none;
-}
-
-.charsheet .sheet-long-merit[value="1"] ~ input[type=text] .sheet-short-merit-section,
-.charsheet .sheet-long-merit[value="0"] ~ input[type=text] .sheet-long-merit-section {
-    visibility: visible;
-    display: inline;
-}
-
 .charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-character-sheet .sheet-battle-group-header,
 .charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-character-sheet .sheet-battle-group-body {
     display: none;
@@ -1026,7 +1090,7 @@ Shinier Gold
 }
 
 .sheet-rolltemplate-exalted3e_cast tr:last-child td{
-    border-bottom-left-radius: 10px;    
+    border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;   
 }
 
