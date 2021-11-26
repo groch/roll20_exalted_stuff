@@ -1078,7 +1078,7 @@ var CombatMaster = CombatMaster || (function() {
         if (selectedTokens) {
             selectedTokens.forEach(token => {
                 if (token._type == 'graphic') {
-                    if (token._id != getOrCreateMarker(false).get('id')) {
+                    if (token._id != getOrCreateMarker().get('id')) {
                         announcePlayer(getObj('graphic', token._id), false, false, true);
                     }    
                 }
@@ -1666,7 +1666,7 @@ var CombatMaster = CombatMaster || (function() {
         
         if (state[combatState].config.status.clearConditions) {
             [...state[combatState].conditions].forEach((condition) => {
-                if (condition.id != getOrCreateMarker(true).get('id') && condition.id != getOrCreateMarker(false).get('id')) {
+                if (condition.id != getOrCreateMarker().get('id')) {
                     removeConditionFromToken(getObj('graphic',condition.id), condition.key, true)
                 }
             })
@@ -1956,7 +1956,7 @@ var CombatMaster = CombatMaster || (function() {
             case markerType.RANGE:
                 markerName = rangeMarkerName; markerLayer = 'map';  imgsrc = turnorder.rangeExternalMarkerURL;
                 markerWidth = parseInt(state[combatState].config.turnorder.rangeMarkerWidth / scale_number);
-                markerHeight = parseInt(state[combatState].config.turnorder.rangeMarkerHeight / scale_number); break;
+                markerHeight = parseInt(state[combatState].config.turnorder.rangeMarkerHeight / scale_number);
         }
 
  		let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
