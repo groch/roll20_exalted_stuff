@@ -16,46 +16,78 @@
     TAS.debugMode();
     on('sheet:opened change:dexterity change:brawl change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane '
         + 'change:ma-nightingale change:ma-devil change:ma-claw change:ma-pearl change:ma-steel change:repeating_martialarts remove:repeating_martialarts '
-        + ' change:melee change:repeating_weapon remove:repeating_weapon ', TAS._fn(function updateParry(e) {
-        TAS.debug('Updating Parry value', e);
-        getAttrs(["qc"], TAS._fn(function determineQC(values){
-            TAS.debug('Testing qc=' + values["qc"]);
-            if (values["qc"] == 0) {
-                TAS.debug('!! Updating Parry value !!', e);
-                TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
-                    'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
-                    var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
-                        attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'], attrs.I['ma-claw'],
-                        attrs.I['ma-pearl'], attrs.I['ma-steel']);
-
-                    TAS.debug('attrs', attrs, 'rows', rows);
-                    _.each(rows, function(v, k) {
-                        ma = Math.max(ma, v.I.repmartialarts);
-                    });
-
-                    TAS.debug('Max MA', ma);
-
-                    TAS.repeating('weapon').fields('repweapondef').attrs('dexterity', 'brawl', 'melee', 'parry', 'parry-specialty', 'wound-penalty', 'onslaught')
-                        .tap(TAS._fn(function getMaxWeaponDef(rows, attrs) {
-                        var wep = 0;
-
-                        TAS.debug('attrs', attrs, 'rows', rows);
-                        _.each(rows, function(v, k) {
-                            wep = Math.max(wep, v.I.repweapondef);
-                        });
-                        TAS.debug('Max Weapon Defense', wep);
-                        TAS.debug('Parry calc:', 'Math.ceil((' + attrs.I.dexterity + ' + Math.max(' + attrs.I.brawl + ', ' + ma + ', ' + attrs.I.melee + ')) / 2) + ' + wep + ' - ' + Math.abs(attrs.I['wound-penalty']));
-                        var newParry = Math.max(0, Math.ceil((attrs.I.dexterity + Math.max(attrs.I.brawl, ma, attrs.I.melee)) / 2) + wep - Math.abs(attrs.I['wound-penalty']));
-                        attrs.I.parry = newParry;
-                        TAS.debug('Parry w/specialty calc:', 'Math.ceil((' + attrs.I.dexterity + ' + Math.max(' + attrs.I.brawl + ', ' + ma + ', ' + attrs.I.melee + ') + 1) / 2) + ' + wep + ' - ' + Math.abs(attrs.I['wound-penalty']));
-                        var newParrySpe = Math.max(0, Math.ceil((attrs.I.dexterity + Math.max(attrs.I.brawl, ma, attrs.I.melee) + 1) / 2) + wep - Math.abs(attrs.I['wound-penalty']));
-                        attrs.I['parry-specialty'] = newParrySpe;
-                        TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-                    })).execute();
-                })).execute();
-            } else {
-                TAS.debug('QC modif ! CANCEL');
+        + ' change:melee change:repeating_weapon remove:repeating_weapon change:onslaught change:apply-onslaught' + damageWatch, TAS._fn(function updateParry(e) {
+        TAS.debug('Updating wound penalty', e);
+        getAttrs(damageAttrs, TAS._fn(function calcPenalty(values) {
+            var pen;
+    
+            for (i = 32; i >= 1; i--) {
+                if (values['hl' + i + '-damage'] && (!values['hl' + i + '-damage'] || values['hl' + i + '-damage'] !== 'healthy')) break;
             }
+            TAS.debug('Wound penalty at index ' + i, values['hl' + i + '-penalty']);
+            if (values['hl' + i + '-penalty']) pen = values['hl' + i + '-penalty'];
+            else pen = 0;
+    
+            if (pen === 'I') pen = -4;
+            if (pen === '') pen = 0;
+            pen = parseInt(pen);
+            TAS.debug('Calculated penalty', pen);
+            setAttrs({ 'wound-penalty': pen });
+
+            TAS.debug('Updating Parry value', e);
+            getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'onslaught', 'apply-onslaught'], TAS._fn(function determineQC(values){
+                TAS.debug('Testing qc=' + values['qc']);
+                if (values['qc'] == 0) {
+                    TAS.debug('!! Updating Parry value !!', e);
+                    TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
+                        'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
+                        var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
+                            attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'], attrs.I['ma-claw'],
+                            attrs.I['ma-pearl'], attrs.I['ma-steel']),
+                            onslaught = (parseInt(values['apply-onslaught'])) ? parseInt(values['onslaught']) : 0,
+                            dex = parseInt(values['dexterity']),
+                            brawl = parseInt(values['brawl']),
+                            melee = parseInt(values['melee']);
+        
+                        TAS.debug('values=' + JSON.stringify(values) + ', attrs', JSON.stringify(attrs), 'rows', JSON.stringify(rows));
+                        _.each(rows, function(v, k) {
+                            ma = Math.max(ma, v.I.repmartialarts);
+                        });
+        
+                        TAS.debug('Max MA', ma);
+                        TAS.debug('Parry calc:', 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2) - ' + pen + ' - ' + onslaught);
+                        var newParry = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + pen - onslaught);
+                        TAS.debug('Parry w/specialty calc:', 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2) + ' + ' - ' + pen + ' - ' + onslaught);
+                        var newParrySpe = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + pen - onslaught);
+                        TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
+                        setAttrs({ 'parry': newParry, 'parry-specialty': newParrySpe });
+        
+                        TAS.debug('Updating Weapon Parry value');
+                        getSectionIDs('weapon', function(idarray) {
+                            // first get the attribute names for all rows in put in one array
+                            const fieldnames = ['onslaught', 'apply-onslaught'];
+                            idarray.forEach(id => fieldnames.push(`repeating_weapon_${id}_repweapondef`));
+                        
+                            getAttrs(fieldnames, valuesSections => {
+                                // create a variable to hold all the attribute values you re going to create.
+                                const attr = {};
+                                // now loop through the rows again
+                                idarray.forEach(id => {
+                                    let row = 'repeating_weapon_' + id,
+                                        def = valuesSections[`${row}_repweapondef`] || 0;
+                                    attr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen - onslaught);
+                                    attr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen - onslaught);
+                                });
+                                console.log('UPDATE WEAPONS PARRY', newParry, newParrySpe, valuesSections, attr);
+                                setAttrs(attr);
+                            });
+                        });
+        
+                    })).execute();
+                } else {
+                    TAS.debug('QC modif ! CANCEL');
+                }
+            }));
         }));
     }));
 
@@ -1828,12 +1860,14 @@
                     <div class="sheet-gear sheet-table">
                         <div class="sheet-table-header">
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell">Weapon</div>
-                                <div class="sheet-table-cell">Accuracy</div>
-                                <div class="sheet-table-cell">Damage</div>
-                                <div class="sheet-table-cell">Defense</div>
+                                <div class="sheet-table-cell">Weapon Name</div>
+                                <div class="sheet-table-cell" title="Accuracy">Acc</div>
+                                <div class="sheet-table-cell" title="Damage">Dmg</div>
+                                <div class="sheet-table-cell" title="Defense">Def</div>
+                                <div class="sheet-table-cell" title="Parry including Defense">Par</div>
+                                <div class="sheet-table-cell" title="Parry with specialty including Defense">ParS</div>
                                 <div class="sheet-table-cell" title="Overwhelming"><span class="sheet-dotted">Over.</span></div>
-                                <div class="sheet-table-cell">Attune</div>
+                                <div class="sheet-table-cell" title="Attune">Att.</div>
                                 <div class="sheet-table-cell">Tags</div>
                             </div>
                         </div>
@@ -1842,6 +1876,16 @@
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="0"></div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweapondef" value="0"></div>
+                            <div class="sheet-table-cell">
+                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+                                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
+                                <input type="number" name="attr_repweaponparry" readonly="readonly" class="wound-taint onslaught-taint">
+                            </div>
+                            <div class="sheet-table-cell">
+                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+                                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
+                                <input type="number" name="attr_repweaponparryspe" readonly="readonly" class="wound-taint onslaught-taint">
+                            </div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
                             <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Lethal, Brawl, Piercing"></div>
@@ -1911,19 +1955,20 @@
                             <div style="display: block; margin-left: auto;width: 88px;">
                                 <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
                                 <input type="hidden" name="attr_onslaught" class="onslaught-check">
-                                <input type="hidden" name="attr_apply-onslaught" class="apply-onslaught-check">
+                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                 <input type="number" value="0" class="onslaught-input" name="attr_onslaught" readonly="readonly" style="width: 71px;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
                             </div>
                         </div>
-                        <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Parry</span>:</div>
+                        <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Unarmed Parry</span>:</div>
                         <div class="sheet-table-cell">
+                            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+                            <input type="hidden" class="onslaught-check" name="attr_onslaught">
                             <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
-                            <input type="hidden" value="(((@{parry} - abs(@{wound-penalty})) + abs(@{parry} - abs(@{wound-penalty}))) / 2)" disabled="disabled" name="attr_parry-base">
-                            <input type="hidden" value="(((@{parry-specialty} - abs(@{wound-penalty})) + abs(@{parry-specialty} - abs(@{wound-penalty}))) / 2)" disabled="disabled" name="attr_parry-base-s">
-                            <input type="number" value="(((@{parry-base}-(@{apply-onslaught} * @{onslaught})) + abs(@{parry-base}-(@{apply-onslaught} * @{onslaught})))/2)" disabled="disabled" name="attr_parry-final" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint"><input type="number" value="(((@{parry-base-s}-(@{apply-onslaught} * @{onslaught})) + abs(@{parry-base-s}-(@{apply-onslaught} * @{onslaught})))/2)" disabled="disabled" name="attr_parry-specialty-final" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint">
+                            <input type="number" readonly="readonly" name="attr_parry" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" readonly="readonly" name="attr_parry-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Dexterity + Dodge">Evasion</span>:</div>
                         <div class="sheet-table-cell">
+                            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                             <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                             <input type="hidden" value="(@{dexterity} + @{dodge})" disabled="disabled" name="attr_evasion-root">
                             <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
@@ -1931,7 +1976,7 @@
                             <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base-s">
                             <input type="hidden" value="(((@{evasion-base} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final">
                             <input type="hidden" value="(((@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final-s">
-                            <input type="number" value="(@{evasion-final} + abs(@{evasion-final})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint"><input type="number" value="(@{evasion-final-s} + abs(@{evasion-final-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint">
+                            <input type="number" value="(@{evasion-final} + abs(@{evasion-final})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="(@{evasion-final-s} + abs(@{evasion-final-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Wits + Integrity">Resolve</span>:</div>
                         <div class="sheet-table-cell">
