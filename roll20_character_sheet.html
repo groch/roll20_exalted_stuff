@@ -16,29 +16,31 @@
     TAS.debugMode();
     on('sheet:opened change:dexterity change:brawl change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane '
         + 'change:ma-nightingale change:ma-devil change:ma-claw change:ma-pearl change:ma-steel change:repeating_martialarts remove:repeating_martialarts '
-        + ' change:melee change:repeating_weapon remove:repeating_weapon change:onslaught change:apply-onslaught' + damageWatch, TAS._fn(function updateParry(e) {
-        TAS.debug('Updating wound penalty', e);
-        getAttrs(damageAttrs, TAS._fn(function calcPenalty(values) {
-            var pen;
-    
+        + ' change:melee change:repeating_weapon:repweapondef remove:repeating_weapon change:onslaught change:apply-onslaught change:onslaught-applied ' + damageWatch, TAS._fn(function updateWoundThenParry(e) {
+        TAS.debug('Updating wound penalty', JSON.stringify(e));
+        getAttrs(damageAttrs, TAS._fn(function calcWoundPenalty(values) {
+            var pen, finalAttr = {};
+
             for (i = 32; i >= 1; i--) {
                 if (values['hl' + i + '-damage'] && (!values['hl' + i + '-damage'] || values['hl' + i + '-damage'] !== 'healthy')) break;
             }
             TAS.debug('Wound penalty at index ' + i, values['hl' + i + '-penalty']);
             if (values['hl' + i + '-penalty']) pen = values['hl' + i + '-penalty'];
             else pen = 0;
-    
+
             if (pen === 'I') pen = -4;
             if (pen === '') pen = 0;
             pen = parseInt(pen);
             TAS.debug('Calculated penalty', pen);
-            setAttrs({ 'wound-penalty': pen });
+            finalAttr = { 'wound-penalty': pen };
 
-            TAS.debug('Updating Parry value', e);
-            getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'onslaught', 'apply-onslaught'], TAS._fn(function determineQC(values){
-                TAS.debug('Testing qc=' + values['qc']);
-                if (values['qc'] == 0) {
-                    TAS.debug('!! Updating Parry value !!', e);
+            TAS.debug('Updating Parry value', JSON.stringify(e));
+            getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'onslaught', 'apply-onslaught'], TAS._fn(function determineIfQC(values){
+                TAS.debug('Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
+                if (values['qc'] == 0 ||
+                    (e.sourceType == 'player' &&
+                        ['sheet:opened', 'apply-onslaught', 'onslaught', ...damageAttrs].includes(e.triggerName))) {
+                    TAS.debug('DO IT !! Updating Parry value !!', e);
                     TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
                         'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
                         var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
@@ -60,12 +62,12 @@
                         TAS.debug('Parry w/specialty calc:', 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2) + ' + ' - ' + pen + ' - ' + onslaught);
                         var newParrySpe = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + pen - onslaught);
                         TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-                        setAttrs({ 'parry': newParry, 'parry-specialty': newParrySpe });
+                        finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe};
         
                         TAS.debug('Updating Weapon Parry value');
                         getSectionIDs('weapon', function(idarray) {
                             // first get the attribute names for all rows in put in one array
-                            const fieldnames = ['onslaught', 'apply-onslaught'];
+                            const fieldnames = [];
                             idarray.forEach(id => fieldnames.push(`repeating_weapon_${id}_repweapondef`));
                         
                             getAttrs(fieldnames, valuesSections => {
@@ -75,17 +77,17 @@
                                 idarray.forEach(id => {
                                     let row = 'repeating_weapon_' + id,
                                         def = valuesSections[`${row}_repweapondef`] || 0;
-                                    attr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen - onslaught);
-                                    attr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen - onslaught);
+                                        finalAttr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen - onslaught);
+                                        finalAttr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen - onslaught);
                                 });
                                 console.log('UPDATE WEAPONS PARRY', newParry, newParrySpe, valuesSections, attr);
-                                setAttrs(attr);
+                                setAttrs(finalAttr);
                             });
                         });
-        
                     })).execute();
                 } else {
-                    TAS.debug('QC modif ! CANCEL');
+                    TAS.debug('QC modif ! Set Wound-Pen only');
+                    setAttrs(finalAttr);
                 }
             }));
         }));
