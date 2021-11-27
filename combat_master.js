@@ -538,7 +538,7 @@ var CombatMaster = CombatMaster || (function() {
         if (tokenNameArray.length) {
             let images = tokenNameArray.map(i => i.image).join(),
                 name_list = tokenNameArray.map(i => '<b>'+i.name+'</b>').join(', ').replace(/, ([^,]*)$/, ' and $1');
-            sendStandardScriptMessage(name_list+' ' + ((tokenNameArray.length == 1) ? 'get' : 'got') + ' 1 point of onslaught from the attack', images, );
+            sendStandardScriptMessage(name_list+' ' + ((tokenNameArray.length == 1) ? 'get' : 'got') + ' 1 point of onslaught from the attack', images, false);
         }
     },
 
@@ -1658,7 +1658,7 @@ var CombatMaster = CombatMaster || (function() {
             log('Stop Combat')
         }
 
-        makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;text-decoration: underline;">End of combat !</span>', ' ');
+        makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;text-decoration: underline;">End of combat !</span>', ' ', undefined, false);
 
         Campaign().set({initiativepage:false});
         clearHold(state[combatState].config.hold)
@@ -2287,7 +2287,7 @@ var CombatMaster = CombatMaster || (function() {
         let callFirstTurn = prevTurnorder.length == 1 && turnorder.length == 2;
 
         if (callFirstTurn) {
-            makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ');
+            makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
         }
 
         if(turnorder.length && prevTurnorder.length){//  && turnorder[0].id !== prevTurnorder[0].id
@@ -2355,7 +2355,7 @@ var CombatMaster = CombatMaster || (function() {
             if (tokenObj.get('layer') == 'objects' && characterObj) {
                 let imgurl = tokenObj.get('imgsrc');
                 let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';                
-                sendStandardScriptMessage(tokenObj.get('name')+' delays her actions', image, 'display:inline-block;width:74%;vertical-align:middle;font-weight:bold;');
+                sendStandardScriptMessage(tokenObj.get('name')+' delays her actions', image, 'display:inline-block;width:74%;vertical-align:middle;font-weight:bold;', false);
             }
         }
 
@@ -2392,7 +2392,7 @@ var CombatMaster = CombatMaster || (function() {
 
         if(state[combatState].config.announcements.announceRound){
             let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
-            makeAndSendMenu(text, ' ');
+            makeAndSendMenu(text, ' ', undefined, false);
         }
 
         if(initiative.rollEachRound){
@@ -2452,7 +2452,7 @@ var CombatMaster = CombatMaster || (function() {
 
         if(state[combatState].config.announcements.announceRound){
             let text = '<span style="font-size: 16pt; font-weight: bold;">'+marker.get('name')+'</span>';
-            makeAndSendMenu(text);
+            makeAndSendMenu(text, '', undefined, false);
         }
 
         changeTurnOrderToPrevious();
@@ -2577,14 +2577,14 @@ var CombatMaster = CombatMaster || (function() {
             if (state[combatState].config.announcements.announceTurn) {
                 let target;
                 if (tokenObj.get('layer') == 'gmlayer') {
-                    makeAndSendMenu(contents,title,'gm');
+                    makeAndSendMenu(contents,title,'gm', false);
                 } else {
                     if (players[0] != "") {
                         target = (state[combatState].config.announcements.whisperToGM) ? 'gm' : '';
                     } else {
                         target = (!state[combatState].config.announcements.showNPCTurns) ? 'gm' : '';
                     }    
-                    makeAndSendMenu(contents,title,target);
+                    makeAndSendMenu(contents,title,target, false);
                 }
             }   
         }
@@ -2661,10 +2661,10 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************
 //MAKES 
 //*************************************************************************************************************	
-    makeAndSendMenu = function (contents, title, whisper) {
+    makeAndSendMenu = function (contents, title = undefined, whisper = undefined, noarchive = true) {
         whisper = (whisper && whisper !== '') ? '/w ' + whisper + ' ' : '';
 		title = makeTitle(title)
-        sendChat(script_name, whisper + '<div style="'+styles.menu+styles.overflow+'">'+title+contents+'</div>', null, {noarchive:true});
+        sendChat(script_name, whisper + '<div style="'+styles.menu+styles.overflow+'">'+title+contents+'</div>', null, {noarchive:noarchive});
     },
 
     makeBanner = function (command,title,previous) {
@@ -3277,8 +3277,8 @@ var CombatMaster = CombatMaster || (function() {
 //MISC 
 //*************************************************************************************************************	  
     
-    sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;') => {
-        sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:true});
+    sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
+        sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
     inFight = function () {
