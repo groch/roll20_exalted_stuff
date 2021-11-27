@@ -285,6 +285,16 @@ var CombatMaster = CombatMaster || (function() {
         };
     },
 
+    checkAuthUserFromMessage = (who, playerID) => {
+        if (debug) log('checkAuthUserFromMessage::IN who='+who+', playerId='+playerID);
+        let currentTurnTokenObj = findObjs({_id:getCurrentTurnObject().id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
+            tokenControlledBy = (getObj('character', currentTurnTokenObj.get('represents')) || currentTurnTokenObj).get('controlledby').split(';');
+        if (!Array.isArray(tokenControlledBy)) tokenControlledBy = [tokenControlledBy];
+        if (debug) log('checkAuthUserFromMessage::tokenControlledBy='+tokenControlledBy);
+        if (debug) log('checkAuthUserFromMessage::OUT ret='+(tokenControlledBy.includes(playerID) || who === 'gm'));
+        return tokenControlledBy.includes(playerID) || who === 'gm';
+    },
+
 	//Processes the commands based on Delay Time (if any)
 	commandHandler = function(cmdDetails,msg,restrict,who,playerID){
 	    if (debug){
@@ -316,10 +326,10 @@ var CombatMaster = CombatMaster || (function() {
         }     
         if (cmdDetails.action == 'turn'){
             if (cmdDetails.details.next) {
-                changeTurnOrderToNext();
+                if (checkAuthUserFromMessage(who, playerID)) changeTurnOrderToNext();
             }
             if (cmdDetails.details.delay) {
-                delayTurn();
+                if (checkAuthUserFromMessage(who, playerID)) delayTurn();
             }                
             if (cmdDetails.details.previous) {
                 changeTurnOrderToPrevious()
