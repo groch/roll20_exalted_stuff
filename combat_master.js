@@ -148,9 +148,9 @@ var CombatMaster = CombatMaster || (function() {
         
         var msg = _.clone(msg_orig),args,restrict,player;
         
-        playerID = msg.playerid
+        playerID = msg.playerid;
         if (playerIsGM(msg.playerid)) {
-              state[combatState].config.gmPlayerID = msg.playerid
+              state[combatState].config.gmPlayerID = msg.playerid;
               who = 'gm';
         } else {
             who = getObj('player', msg.playerid).get('displayname');
@@ -164,7 +164,7 @@ var CombatMaster = CombatMaster || (function() {
 	    let cmdDetails = {
 	        details: {}
 	    }
-        
+
         if (msg.content.indexOf('import') >= 0) {
             cmdDetails.action = 'import';
             msg.content = msg.content.replace('!cmaster ','');
