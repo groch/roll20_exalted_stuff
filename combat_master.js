@@ -3406,6 +3406,7 @@ var CombatMaster = CombatMaster || (function() {
             } else if (nextTurnObject && nextTurnObject.id === obj.get('id')) {
                 log('Next Player Moved !');
                 changeMarker(obj, markerType.NEXT);
+                toFront(getOrCreateMarker(markerType.MAIN));
             }
         }    
     },
