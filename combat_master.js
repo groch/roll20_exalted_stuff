@@ -528,22 +528,8 @@ var CombatMaster = CombatMaster || (function() {
         if (tokenNameArray.length) {
             let images = tokenNameArray.map(i => i.image).join(),
                 name_list = tokenNameArray.map(i => '<b>'+i.name+'</b>').join(', ').replace(/, ([^,]*)$/, ' and $1');
-            sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;"><div style="text-align:center;">'+images+'</div><div style="display:inline-block;width:100%;vertical-align:middle;">'+name_list+' ' + ((tokenNameArray.length == 1) ? 'get' : 'got') + ' 1 point of onslaught from the attack</div></div></div>', null, {noarchive:true});
+            sendStandardScriptMessage(name_list+' ' + ((tokenNameArray.length == 1) ? 'get' : 'got') + ' 1 point of onslaught from the attack', images, );
         }
-
-        // let tokenObj    = findObjs({_id:currentTurn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
-        // if (tokenObj) {
-        //     let characterObj = getObj('character',tokenObj.get('represents'));
-        //     //log("characterObj=" + JSON.stringify(characterObj));
-        //     if (characterObj) {
-        //         //log('FOREACH selected=' + selected);
-                
-
-        //         //HERE
-        //     }
-        // }
-
-
     },
 
     resetOnslaught = function(tokenObj) {
@@ -1637,7 +1623,7 @@ var CombatMaster = CombatMaster || (function() {
         
         setTimeout(function() {
             doRoundCalls()
-            nextTurn()
+            changeToNextTurn()
         },2000) 
     },
     
@@ -2176,9 +2162,9 @@ var CombatMaster = CombatMaster || (function() {
         return true;
     },
     
-    nextTurn = function (prev=false, delay=false, turnOrderUnmodified=true, sameFirstTurn=false) {
+    changeToNextTurn = function (prev=false, delay=false, turnOrderUnmodified=true, preventAnnounceTurn=false) {
         if(debug) {
-            log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!! announceTurn=' + preventAnnounceTurn);
         }
         
         let verified    = isCombatActiveAndTriggersIfNot()
@@ -2229,8 +2215,8 @@ var CombatMaster = CombatMaster || (function() {
             changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken);
             changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.MAIN);
             
-            log('============== sameFirstTurn='+sameFirstTurn);
-            if (!sameFirstTurn)
+            log('============== sameFirstTurn='+preventAnnounceTurn);
+            if (!preventAnnounceTurn)
                 announcePlayer(tokenObj, prev, delay, false);
             resetOnslaught(tokenObj);
             sendPingOnToken(tokenObj);
@@ -2276,7 +2262,7 @@ var CombatMaster = CombatMaster || (function() {
         theoricalNewOrder.push(currentTurn);
 
 
-        if(obj.get('turnorder') == [] || turnorder.filter(turn => turn.pr != -420).length <= 1){
+        if(obj.get('turnorder') == [] || (prevTurnorder.length && turnorder.filter(turn => turn.pr != -420).length <= 1)){
             stopCombat();
             return;
         }
@@ -2285,8 +2271,15 @@ var CombatMaster = CombatMaster || (function() {
         log('JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)=');
         log(test);
 
+        let callFirstTurn = !(prevTurnorder.length == 1 && turnorder.length == 2);
+
+        if (callFirstTurn) {
+            makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ');
+        }
+
         if(turnorder.length && prevTurnorder.length){//  && turnorder[0].id !== prevTurnorder[0].id
-            nextTurn(false, false, test, turnorder[0].id === prevTurnorder[0].id);
+            callFirstTurn = callFirstTurn || turnorder[0].id === prevTurnorder[0].id;
+            changeToNextTurn(false, false, test, callFirstTurn);
         }
     },
 
@@ -2334,7 +2327,7 @@ var CombatMaster = CombatMaster || (function() {
         currentTurn = turnorder.shift()
         turnorder.push(currentTurn);
         setTurnorder(turnorder);
-        nextTurn();
+        changeToNextTurn();
     },
 
     delayTurn = function () {
@@ -2350,9 +2343,7 @@ var CombatMaster = CombatMaster || (function() {
             if (tokenObj.get('layer') == 'objects' && characterObj) {
                 let imgurl = tokenObj.get('imgsrc');
                 let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';                
-                // let name        = handleLongString(tokenObj.get('name'));
-                // name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-                sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;"><div style="display:inline-block;">'+image+'</div><div style="display:inline-block;width:74%;vertical-align:middle;font-weight:bold;">'+tokenObj.get('name')+' delays her actions</div></div></div>', null, {noarchive:true});
+                sendStandardScriptMessage(tokenObj.get('name')+' delays her actions', image, 'display:inline-block;width:74%;vertical-align:middle;font-weight:bold;');
             }
         }
 
@@ -2372,7 +2363,7 @@ var CombatMaster = CombatMaster || (function() {
         turnorder.unshift(last_turn);
 
         setTurnorder(turnorder);
-        nextTurn(true);
+        changeToNextTurn(true);
     },
 
     handleNextRound = function () {
@@ -2397,7 +2388,7 @@ var CombatMaster = CombatMaster || (function() {
             clearTurnorder();
             insertMarkerTurnIfNotInTurnOrder(marker);
             rollInitiative(turnorder.map(t => { return (t.id) ? { _type: 'graphic', _id: t.id } : false }), initiative);
-            nextTurn();
+            changeToNextTurn();
         }else{
             let turnorder, currentTurn;
             if (debug) {
@@ -2412,7 +2403,7 @@ var CombatMaster = CombatMaster || (function() {
             if(state[combatState].config.turnorder.sortTurnOrder){
                 sortTurnorder();
             }
-            nextTurn();
+            changeToNextTurn();
         }
     },
 
@@ -3217,61 +3208,6 @@ var CombatMaster = CombatMaster || (function() {
         }  
     },
 
-    // roll = (represents, DC, conSave, name, target) => {
-    //     sendChat(script_name, '[[1d20cf<'+(DC-con_save_mod-1)+'cs>'+(DC-con_save_mod-1)+'+'+con_save_mod+']]', results => {
-    //         let title = 'Concentration Save <br> <b style="font-size: 10pt; color: gray;">'+name+'</b>',
-    //             advantageRollResult;
-
-    //         let rollresult = results[0].inlinerolls[0].results.rolls[0].results[0].v;
-    //         let result = rollresult;
-
-    //         if(advantage){
-    //             advantageRollResult = randomInteger(20);
-    //             result = (rollresult <= advantageRollResult) ? advantageRollResult : rollresult;
-    //         }
-
-    //         let total = result + con_save_mod;
-
-    //         let success = total >= DC;
-
-    //         let result_text = (success) ? 'Success' : 'Failed',
-    //             result_color = (success) ? 'green' : 'red';
-
-    //         let rollResultString = (advantage) ? rollresult + ' / ' + advantageRollResult : rollresult;
-
-    //         let contents = ' \
-    //         <table style="width: 100%; text-align: left;"> \
-    //             <tr> \
-    //                 <th>DC</th> \
-    //                 <td>'+DC+'</td> \
-    //             </tr> \
-    //             <tr> \
-    //                 <th>Modifier</th> \
-    //                 <td>'+con_save_mod+'</td> \
-    //             </tr> \
-    //             <tr> \
-    //                 <th>Roll Result</th> \
-    //                 <td>'+rollResultString+'</td> \
-    //             </tr> \
-    //         </table> \
-    //         <div style="text-align: center"> \
-    //             <b style="font-size: 16pt;"> \
-    //                 <span style="border: 1px solid '+result_color+'; padding-bottom: 2px; padding-top: 4px;">[['+result+'+'+con_save_mod+']]</span><br><br> \
-    //                 '+result_text+' \
-    //             </b> \
-    //         </div>'
-    //         makeAndSendMenu(contents, title, target);
-
-    //         if(target !== '' && target !== 'gm'){
-    //             makeAndSendMenu(contents, title, 'gm');
-    //         }
-
-    //         if(!success){
-    //             removeMarker(represents);
-    //         }
-    //     });
-    // },    
-
     handleConstitutionSave = function(obj, prev) {
         if (debug) {
             log('-------------Handle Constitution Save-------------')
@@ -3329,6 +3265,10 @@ var CombatMaster = CombatMaster || (function() {
 //MISC 
 //*************************************************************************************************************	  
     
+    sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;') => {
+        sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:true});
+    },
+
     inFight = function () {
         return (Campaign().get('initiativepage') !== false);
     },
