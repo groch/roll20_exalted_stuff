@@ -1658,6 +1658,8 @@ var CombatMaster = CombatMaster || (function() {
             log('Stop Combat')
         }
 
+        makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;text-decoration: underline;">End of combat !</span>', ' ');
+
         Campaign().set({initiativepage:false});
         clearHold(state[combatState].config.hold)
         
