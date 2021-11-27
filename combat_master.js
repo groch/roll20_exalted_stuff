@@ -3411,23 +3411,6 @@ var CombatMaster = CombatMaster || (function() {
         }    
     },
 
-    // ???????????????????????????????????????????????????????????????????
-    // handleShapedSheet = function (characterid, condition, add) {
-    //     if (debug) {
-    //         log ('Handle Shaped Sheet Change')
-    //     } 
-    //     let character = getObj('character', characterid);
-    //     if(character){
-    //         let sheet = getAttrByName(character.get('id'), 'character_sheet', 'current');
-    //         if(!sheet || !sheet.toLowerCase().includes('shaped')) return;
-    //         if(!shaped_conditions.includes(condition)) return;
-
-    //         let attributes = {};
-    //         attributes[condition] = (add) ? '1': '0';
-    //         setAttrs(character.get('id'), attributes);
-    //     }
-    // },
-
     //return an array of objects according to key, value, or key and value matching
     getObjects = function (obj, key, val) {
         var objects = [];
