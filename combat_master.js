@@ -843,8 +843,8 @@ var CombatMaster = CombatMaster || (function() {
     },	
 	
     sendAnnounceMenu = function() {
-        const banner = makeBanner('announcements','Announcements','setup')      
-		let	announcements = state[combatState].config.announcements
+        const banner = makeBanner('announcements','Announcements','setup');
+		let	announcements = state[combatState].config.announcements;
 		
 		let	listItems = [
 				makeTextButton('Announce Rounds', announcements.announceRound, '!cmaster --config,announcements,key=announceRound,value='+!announcements.announceRound + ' --show,announce'),
