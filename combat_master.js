@@ -1677,7 +1677,6 @@ var CombatMaster = CombatMaster || (function() {
         round = 1;
         
         setTimeout(function() {
-            sendMainMenu(who ? who : 'gm')
             state[combatState].conditions = [];
         },2000)         
         
