@@ -2250,6 +2250,7 @@ var CombatMaster = CombatMaster || (function() {
                                                 nextToken.get('left') != getOrCreateMarker(markerType.NEXT).get('left')))) {
                     //toFront(nextToken);
                     changeMarker(nextToken || false, markerType.NEXT);
+                    toFront(getOrCreateMarker(markerType.MAIN));
                 }
                 // else {
                 //     resetMarker(markerType.NEXT);
