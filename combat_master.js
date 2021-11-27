@@ -1609,12 +1609,12 @@ var CombatMaster = CombatMaster || (function() {
         paused = false;
 
         if (hold.held) {
-            restartCombat(hold, who)
+            restartCombat(hold, who);
         } else {
             if(initiative.rollInitiative == 'CombatMaster'){
                 rollInitiative(selectedTokens, initiative);
             } else if (initiative.rollInitiative == 'Group-Init') {
-                rollGroupInit(selectedTokens)
+                rollGroupInit(selectedTokens);
             } else if (!getTurnorder()) {
                 makeAndSendMenu('You must have a populated turnorder before starting Combat Master','');    
                 return
@@ -1622,9 +1622,10 @@ var CombatMaster = CombatMaster || (function() {
         }  
         
         setTimeout(function() {
-            doRoundCalls()
-            changeToNextTurn()
-        },2000) 
+            sortTurnorder();
+            doRoundCalls();
+            changeToNextTurn();
+        },2000);
     },
     
     restartCombat = function (hold,who) {
@@ -2271,15 +2272,14 @@ var CombatMaster = CombatMaster || (function() {
         log('JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)=');
         log(test);
 
-        let callFirstTurn = !(prevTurnorder.length == 1 && turnorder.length == 2);
+        let callFirstTurn = prevTurnorder.length == 1 && turnorder.length == 2;
 
         if (callFirstTurn) {
             makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ');
         }
 
         if(turnorder.length && prevTurnorder.length){//  && turnorder[0].id !== prevTurnorder[0].id
-            callFirstTurn = callFirstTurn || turnorder[0].id === prevTurnorder[0].id;
-            changeToNextTurn(false, false, test, callFirstTurn);
+            changeToNextTurn(false, false, test, callFirstTurn ? false : turnorder[0].id === prevTurnorder[0].id);
         }
     },
 
