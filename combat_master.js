@@ -2451,7 +2451,7 @@ var CombatMaster = CombatMaster || (function() {
         marker.set({ name: 'Round ' + round});
 
         if(state[combatState].config.announcements.announceRound){
-            let text = '<span style="font-size: 16pt; font-weight: bold;">'+marker.get('name')+'</span>';
+            let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
             makeAndSendMenu(text, '', undefined, false);
         }
 
