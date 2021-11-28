@@ -210,7 +210,9 @@
                 'socialize': 0,
                 'parry': 0,
                 'naturalsoak': 0,
-                'armorsoak': 0
+                'armorsoak': 0,
+                'charmwhispergm': 0,
+                'charmwhisperboth': 0
             });
 
             let defaultWeapon = {};
@@ -343,6 +345,8 @@
         <input class="sheet-quick-character" name="attr_qc" type="hidden" value="0">
         <input class="sheet-battle-group" name="attr_battlegroup" type="hidden" value="0">
 		<input class="sheet-long-merit" name="attr_longmerit" type="hidden" value="1">
+        <input class="charm-whismer-gm-check" name="attr_charmwhispergm" type="hidden" value="0">
+        <input class="charm-whismer-both-check" name="attr_charmwhisperboth" type="hidden" value="0">
 
 		<!-- 1 CHARACTER PAGE -->
 
@@ -2631,8 +2635,9 @@
 								<option value="Permanent">Permanent</option>
 							</select>
 							<span>Cost</span><span>: </span> 
-							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die">
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2672,7 +2677,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2712,7 +2718,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2752,7 +2759,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2792,7 +2800,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2832,7 +2841,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2872,7 +2882,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2912,7 +2923,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2952,7 +2964,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -2992,7 +3005,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3032,7 +3046,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3072,7 +3087,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3112,7 +3128,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3152,7 +3169,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3192,7 +3210,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3232,7 +3251,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3272,7 +3292,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3312,7 +3333,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3352,7 +3374,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3392,7 +3415,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3432,7 +3456,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3472,7 +3497,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3512,7 +3538,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3552,7 +3579,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3592,7 +3620,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3641,7 +3670,8 @@
 								</select>
 								<span>Cost</span><span>: </span> 
 								<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-								<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+								<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 							</div> 
 							<div class="sheet-table-row" style="width: 100%">
 								<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3682,7 +3712,8 @@
 								</select>
 								<span>Cost</span><span>: </span> 
 								<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-								<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+								<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 							</div> 
 							<div class="sheet-table-row" style="width: 100%">
 								<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3723,7 +3754,8 @@
 								</select>
 								<span>Cost</span><span>: </span> 
 								<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-								<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+								<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 							</div> 
 							<div class="sheet-table-row" style="width: 100%">
 								<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3764,7 +3796,8 @@
 								</select>
 								<span>Cost</span><span>: </span> 
 								<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-								<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+								<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 							</div> 
 							<div class="sheet-table-row" style="width: 100%">
 								<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3805,7 +3838,8 @@
 								</select>
 								<span>Cost</span><span>: </span> 
 								<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-								<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+								<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 							</div> 
 							<div class="sheet-table-row" style="width: 100%">
 								<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3847,7 +3881,8 @@
 							</select>
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3889,7 +3924,8 @@
 							</select> 
 							<span>Cost</span><span>: </span> 
 							<input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait" placeholder="1m/die"> 
-							<button type="roll" class="sheet-roll btn ui-draggable" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+							<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_CharmCast" value="&amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_CharmCast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{charm-name}}} {{character-name=@{character_name}}} {{skill=@{charm-skill}}} {{keywords=@{charm-keywords}}} {{type=@{charm-type}}} {{cost=@{charm-cost}}} {{duration=@{charm-duration}}} {{description=@{charm-description}}} {{effect=@{charm-effect}}}">to GM</button>
 						</div> 
 						<div class="sheet-table-row" style="width: 100%">
 							<input type="checkbox" name="attr_charm-effect-display" class="sheet-charmeffect" value="1"><span class="sheet-charmeffect" title="Show Description &amp; Effect"></span>
@@ -3969,11 +4005,19 @@
             <div class="sheet-checklist">
                 <label>
                     <input type="checkbox" name="attr_qc" value="1"><span></span>
-                    <span>quick character</span>
+                    <span>Quick Character</span>
                 </label>
                 <label>
                     <input type="checkbox" name="attr_battlegroup" value="1"><span></span>
-                    <span>battle group</span>
+                    <span>Battle Group</span>
+                </label>
+                <label class="sheet-cast-to-gm">
+                    <input type="checkbox" name="attr_charmwhispergm" value="1"><span></span>
+                    <span>Whisper to GM instead of CAST in charm tab</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="attr_charmwhisperboth" value="1"><span></span>
+                    <span>Show both buttons in Charm Tab</span>
                 </label>
 				<!--
                 <label>

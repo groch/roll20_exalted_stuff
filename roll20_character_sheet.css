@@ -157,6 +157,25 @@ tier 2: couleurs
     display: none;
 }
 
+
+
+.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-charm-sheet .gm-whisper {
+    display: none;
+}
+
+.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
+    display: inline-block;
+}
+
+.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-settings-sheet .sheet-cast-to-gm {
+    text-decoration: line-through;
+}
+
+
 .charsheet .sheet-table {
     display: table;
     width: 100%;
