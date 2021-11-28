@@ -527,7 +527,7 @@ var CombatMaster = CombatMaster || (function() {
                 let currentOnslaught = parseInt(getAttrByName(finalcharacterObj.get('id'), 'onslaught', 'current'));
                 currentOnslaught = isNaN(currentOnslaught) ? 1 : currentOnslaught + 1;
                 setAttrs(finalcharacterObj.get('id'), {'onslaught':currentOnslaught});
-                if (t.get('layer') == 'objects') {
+                if (t.get('layer') == 'objects' && !(getObj('character', t.get('represents')).get('name').includes('Vision'))) {
                     let imgurl = t.get('imgsrc');
                     let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
                     tokenNameArray.push({name: t.get('name'), image: image});
