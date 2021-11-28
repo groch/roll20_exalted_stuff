@@ -44,8 +44,8 @@
                     TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
                         'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
                         var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
-                                          attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
-                                          attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']),
+                                             attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
+                                             attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']),
                             onslaught = (parseInt(values['apply-onslaught'])) ? parseInt(values['onslaught']) : 0,
                             dex = parseInt(values['dexterity']),
                             brawl = parseInt(values['brawl']),
@@ -159,14 +159,14 @@
     }));
 
     on('sheet:opened', TAS._fn(function initIntimacies(e) {
-        TAS.debug('Initializing intimacies', e);
+        TAS.debug('Initializing 1st time attributes', e);
         getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
-            var attrs = {}, indexes = _.times(4, generateRowID);
+            var attrs = {}, indexesIntimacies = _.times(4, generateRowID), indexeWeapon = generateRowID();
             if (parseInt(values['init-intimacies']) !== 0) return;
 
             // TAS.debug('1st time opening !!', attrs);
-            TAS.debug('Creating new intimacies', indexes);
-            _.each(indexes, function(id, k) {
+            TAS.debug('Creating new intimacies', indexesIntimacies);
+            _.each(indexesIntimacies, function(id, k) {
                 var v;
                 if (k === 0) v = 'Defining';
                 else if (k === 1) v = 'Major';
@@ -195,10 +195,15 @@
                 'onslaught': 0,
                 'willpower': 5,
                 'willpower_max': 5,
-                'stamina': 0,
-                'dexterity': 0,
-                'manipulation': 0,
-                'wits': 0,
+                'strength': 1,
+                'dexterity': 1,
+                'stamina': 1,
+                'charisma': 1,
+                'manipulation': 1,
+                'appearance': 1,
+                'perception': 1,
+                'intelligence': 1,
+                'wits': 1,
                 'awareness': 0,
                 'dodge': 0,
                 'integrity': 0,
@@ -207,6 +212,18 @@
                 'naturalsoak': 0,
                 'armorsoak': 0
             });
+
+            let defaultWeapon = {};
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponname'] = 'Unarmed';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponacc'] = '4';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondam'] = '7';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondef'] = '0';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparry'] = '0';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparryspe'] = '0';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponov'] = '1';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponatt'] = '0';
+            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapontags'] = 'Bashing, Brawl, Grappling, Natural';
+            setAttrs(defaultWeapon);
 
             let obj = {};
             for (i = 32; i >= 1; i--) {
