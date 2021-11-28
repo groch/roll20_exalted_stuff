@@ -1190,3 +1190,92 @@ Shinier Gold
     font-weight:bold;
     font-size:15px;
 }
+
+/* --- Turns --- NOT USED */
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div {
+    background-color: #fff;
+    border: 1px solid #000;
+    padding: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-condition-div {
+    font-size: 14px;
+    font-weight: bold;
+    background-color: black;
+    padding: 3px ;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-condition-div span.sheet-color-white{
+    color: white;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-condition-div span.sheet-color-white div.sheet-float-right{
+    float: right;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-condition-div span.sheet-color-white div.sheet-float-right div.sheet-condition-item{
+    display: inline-block;
+    margin-right: 3px;
+    padding: 1px;
+    vertical-align: middle;
+}
+
+.sheet-rolltemplate-exalted3e_turn div.sheet-condition-item a.sheet-condition-link{
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid;
+    background-color: transparent;
+}
+
+.sheet-rolltemplate-exalted3e_turn div.sheet-condition-item a.sheet-condition-link span.sheet-condition-span {
+    padding: 0px;
+    font-size: 18px;
+    font-family: 'Pictos';
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div .sheet-center-div {
+    display: flex;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div .sheet-center-div div.sheet-image {
+    display: inline-block;
+    width: 50px;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div .sheet-condition-div div.sheet-condition-item a {
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid;
+    background-color: transparent;
+    font-size: 18px;
+    font-family: 'Pictos';
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div .sheet-center-div div.sheet-image a {
+    margin: 0px;
+    padding: 0px;
+    border: 0px solid;
+    background-color: black;
+    font-size: 18px;
+    font-family: 'Pictos';
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div .sheet-center-div div.sheet-main-content {
+    display: inline-block;
+    width: 100%;
+}
+
+.sheet-rolltemplate-exalted3e_turn .sheet-main-div .sheet-center-div div.sheet-main-content span {
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+}
+
+.sheet-rolltemplate-exalted3e_turn .test-content span {
+    background-color: brown;
+}

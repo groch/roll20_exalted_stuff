@@ -92,7 +92,7 @@ var CombatMaster = CombatMaster || (function() {
         strikethrough: 'text-decoration: strikethrough',
         background: 'background-color:lightgrey',
         buttonRight: 'display:inline-block;float:right;vertical-aligh:middle',
-        announcePlayer: 'display:inline-block;vertical-aligh:middle',
+        announcePlayer: 'display:inline-block;vertical-align:middle;',
     },
     // Styling for the chat responses.
     style = "overflow: hidden; background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
@@ -2550,9 +2550,9 @@ var CombatMaster = CombatMaster || (function() {
         let resetedOnslaughtMessage = ' <b>and reseted his onslaught (was <u>' + onslaught + '</u>) !</b>';
         
         if (!show) {
-            contents   += '<div style="'+styles.announcePlayer+'">'+name+'\'s Turn' + ((onslaught != 0) ? resetedOnslaughtMessage : '') + '</div>';
+            contents   += '<div style="'+styles.announcePlayer+'max-width: 76%;">'+name+'\'s Turn' + ((onslaught != 0) ? resetedOnslaughtMessage : '') + '</div>';
         } else {
-            contents   += '<div style="'+styles.announcePlayer+'">'+name+'</div>';
+            contents   += '<div style="'+styles.announcePlayer+'max-width: 76%;">'+name+'</div>';
         }
         
         contents += conditions;
@@ -2696,7 +2696,7 @@ var CombatMaster = CombatMaster || (function() {
 
     makeImageButton = function(command, image, toolTip, backgroundColor,size,color){
         if (!color) {
-            color = 'black'
+            color = 'black';
         }
         return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>'
     },
@@ -2704,20 +2704,21 @@ var CombatMaster = CombatMaster || (function() {
     makeList = function (items, backButton, extraButton) {
         let list;
         
-        list  = '<ul style="'+styles.reset + styles.list + styles.overflow+'">'
+        list  = '<ul style="'+styles.reset + styles.list + styles.overflow+'">';
 		items.forEach((item) => {
             list += '<li style="'+styles.overflow+'">'+item+'</li>';
         });
 		list += '</ul>'
 		
 		if (extraButton) {
-			list += extraButton
+			list += extraButton;
 		}
-		if(backButton) {
+		if (backButton) {
 			list += '<hr>'+backButton;
 		}
         return list;
-    },    
+    },
+
 //*************************************************************************************************************
 //ICONS 
 //*************************************************************************************************************	        

@@ -4174,3 +4174,55 @@
         </tr>
     </table>
 </rolltemplate>
+
+
+
+<rolltemplate class="sheet-rolltemplate-exalted3e_init">
+    <div style="background-color:#fff;border:1px solid #000;padding:5px;border-radius:5px;">
+        <div style="display:inherit;">
+            <div style="display:inline-block;width:100%;vertical-align:middle;">
+                <b>{{init-character-name}}</b>{{init-message}}
+            </div>
+        </div>
+    </div>
+</rolltemplate>
+
+<!-- --- Turns --- NOT USED -->
+
+<rolltemplate class="sheet-rolltemplate-exalted3e_turn">
+    <div class="main-div">
+        <div class="condition-div">
+            <span class="color-white">Conditions
+                <div class="float-right">
+                    <div class="condition-item">
+                        <a class="condition-link" href="!cmaster --turn&#44;next" title="Done with Round">
+                            <span class="color-white condition-span">3</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="float-right">
+                    <div class="condition-item">
+                        <a class="condition-link" href="!cmaster --turn&#44;delay" title="Delay your Turn">
+                            <span class="color-white condition-span">}</span>
+                        </a>
+                    </div>
+                </div>
+            </span>
+        </div>
+        <div class="center-div">
+            <div class="image">
+                <!-- <img src="{{imgSrc}}" width="50px" height="50px"> -->
+                {{img}}
+            </div>
+            <div class="main-content">
+                {{turn-message}}
+                {{#onslaught}}&nbsp;<b>and reseted his onslaught (was <u>{{onslaught}}</u>) !</b>{{/onslaught}}
+            </div>
+        </div>
+        {{#test}}
+        <div class="test-content">
+            {{test}}
+        </div>
+        {{/test}}
+    </div>
+</rolltemplate>
