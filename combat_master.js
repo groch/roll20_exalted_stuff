@@ -2545,8 +2545,9 @@ var CombatMaster = CombatMaster || (function() {
 
         let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>'
         
-        let characterObj = getObj('character', tokenObj.get('represents')),
-        onslaught = getAttrByName(characterObj.id, 'onslaught', 'current');
+        let characterObj = getObj('character', tokenObj.get('represents'));
+        let onslaught = 0;
+        if (characterObj && characterObj.id) onslaught = getAttrByName(characterObj.id, 'onslaught', 'current');
         let resetedOnslaughtMessage = ' <b>and reseted his onslaught (was <u>' + onslaught + '</u>) !</b>';
         
         if (!show) {
