@@ -267,8 +267,19 @@ tier 2: couleurs
     margin-right: 10px;
 }
 
-.charsheet .sheet-3colrow .sheet-2col.inti-col {
+.charsheet .sheet-3colrow .sheet-3col.inti-col {
     width: calc(100% - 149px);
+    margin-right: 0;
+    display: inline-block;
+}
+
+.charsheet .sheet-3colrow .sheet-3col.inti-col .sheet-table-row > div.sheet-table-cell:first {
+    width: 50px;
+}
+
+
+.charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+    background-color: #faa4a4;
 }
 
 .charsheet .sheet-2col .sheet-2colrow .sheet-col {

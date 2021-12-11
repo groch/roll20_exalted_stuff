@@ -4145,19 +4145,24 @@
 						</div>
 					</div>
 				</div>
-				<div class="sheet-2col inti-col">
+				<div class="sheet-3col inti-col">
 					<h1><span>Intimacies</span></h1>
 					<input type="hidden" value="0" name="attr_init-intimacies">
 					<div class="sheet-table">
 						<div class="sheet-table-header">
 							<div class="sheet-table-row">
+                                <div class="sheet-table-cell" style="width: 50px;">Tainted</div>
 								<div class="sheet-table-cell">Intimacy</div>
 								<div class="sheet-table-cell">Intensity</div>
 							</div>
 						</div>
 						<fieldset class="repeating_intimacies sheet-table-body" style="display: none;">
-							<div class="sheet-table-cell"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
-							<div class="sheet-table-cell">
+                            <input type="hidden" name="attr_intimacyrepeatingtaint" class="intimacy-taint-check" value="0">
+                            <label style="margin-left: 15px;">
+                                <input type="checkbox" name="attr_intimacyrepeatingtaint" value="1"><span></span>
+                            </label>
+							<div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
+							<div class="sheet-table-cell intimacy-taint">
 								<select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
 									<option value="">None</option>
 									<option value="Minor">Minor</option>
