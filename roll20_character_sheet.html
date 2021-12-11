@@ -294,6 +294,16 @@
         });
     }));
 
+    on('change:qc-soak', TAS._fn(function quickSoakChange(e) {
+        getAttrs(['qc-soak'], values => {
+            let val = parseInt(values['qc-soak']);
+            let setVal = (val > 1 ? val : 1);
+            setAttrs({
+                'naturalsoak': setVal-1
+            });
+        });
+    }));
+
     /* ---- BEGIN: TheAaronSheet.js ---- */
     // Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
     // By:       The Aaron, Arcane Scriptomancer
@@ -1799,7 +1809,7 @@
                                 </div>
                                 <div class="sheet-trait">
                                     <span>Soak</span>
-                                    <input type="number" name="attr_naturalsoak">
+                                    <input type="number" name="attr_qc-soak">
                                 </div>
                                 <div class="sheet-trait">
                                     <span>Hardness</span>
@@ -1970,7 +1980,7 @@
                                 <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
                                 <input type="hidden" name="attr_onslaught" class="onslaught-check">
                                 <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                <input type="number" value="0" class="onslaught-input" name="attr_onslaught" readonly="readonly" style="width: 71px;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
+                                <input type="number" value="0" class="onslaught-input" name="attr_onslaught" readonly="readonly" style="width: 70px;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
                             </div>
                         </div>
                         <div class="sheet-table-cell sheet-text-right"><span title="Dex + (Brawl or Melee or Martial Art)">Unarmed Parry</span>:</div>
