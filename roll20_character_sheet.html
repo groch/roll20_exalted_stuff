@@ -1585,12 +1585,20 @@
                 <div class="sheet-qc-pools sheet-col"><!-- 1.3.2 QUICK CHAR LEFT COLUMN -->
                     <h1><span>Actions</span></h1>
                     <div class="sheet-trait">
-                        <span>Join Battle</span>
-                        <input type="number" name="attr_qc-join-battle">
+                        <span>Read Intentions</span>
+                        <input type="number" name="attr_qc-read-intentions">
                     </div>
                     <div class="sheet-trait">
-                        <span>Combat Movement</span>
-                        <input type="number" name="attr_qc-move">
+                        <span>Social Influence</span>
+                        <input type="number" name="attr_qc-social-influence">
+                    </div>
+                    <div class="sheet-trait">
+                        <span>Stealth/Larceny</span>
+                        <input type="number" name="attr_qc-stealth-larc">
+                    </div>
+                    <div class="sheet-trait">
+                        <span>Senses</span>
+                        <input type="number" name="attr_qc-senses">
                     </div>
                     <fieldset class="repeating_qcactions" style="display: none;">
                         <div class="sheet-trait">
@@ -1598,7 +1606,15 @@
                             <input type="number" name="attr_repqcactiondice">
                         </div>
                     </fieldset>
-                    <h1><span>Attacks</span></h1>
+                    <h1><span>Combat</span></h1>
+                    <div class="sheet-trait">
+                        <span>Join Battle</span>
+                        <input type="number" name="attr_qc-join-battle">
+                    </div>
+                    <div class="sheet-trait">
+                        <span>Combat Movement</span>
+                        <input type="number" name="attr_qc-move">
+                    </div>
                     <div class="sheet-trait">
                         <span>Grapple</span>
                         <span>
@@ -1608,7 +1624,7 @@
                     </div>
                     <fieldset class="repeating_qcattacks" style="display: none;">
                         <div class="sheet-trait">
-                            <input type="text" name="attr_repqcattackname" placeholder="Self bow">
+                            <input type="text" name="attr_repqcattackname" placeholder="Unarmed">
                             <span>
                                 <input type="number" name="attr_repqcattackdice">
                                 <input type="number" name="attr_repqcattackdamage">
@@ -1679,7 +1695,7 @@
                                 <input class="sheet-short-merit-section" type="text" name="attr_repmerits-name" placeholder="Artifact">
                             </div>
                             <div class="inline-merits-desc">
-                                <textarea name="attr_repmerits-desc" class="sheet-limit merit-textarea" placeholder="An item of great power (more info p XXX)."></textarea>
+                                <textarea name="attr_repmerits-desc" class="merit-textarea" placeholder="An item of great power (more info p XXX)."></textarea>
                             </div>
                         </div>
                         <div class="merit-dot-toggle-wrapper">
