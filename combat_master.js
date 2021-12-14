@@ -222,7 +222,7 @@ var CombatMaster = CombatMaster || (function() {
         }
 
         //find the action and set the cmdSep Action
-	    cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught/);
+	    cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -478,6 +478,15 @@ var CombatMaster = CombatMaster || (function() {
             }
     		addOnslaughtToPlayer(cmdDetails, msg.selected);
         }
+
+        if (cmdDetails.action == 'toggleVision') {
+            if (!playerIsGM(playerID)) {
+                if (debug) log('toggleVision received but user is not GM');
+                return;
+            }
+            log('commandHandler::before toggleTokenVision');
+    		toggleTokenVision(cmdDetails, msg.selected);
+        }
 	},
 
     clearTokenStatuses = function(selectedTokens) {
@@ -498,6 +507,22 @@ var CombatMaster = CombatMaster || (function() {
 //NEW ACTIONS
 //*************************************************************************************************************
     
+    toggleTokenVision = function(cmdDetails, selected) {
+        log('toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
+        if (debug) {
+            log('toggle Token Vision');
+        }
+
+        _.chain(selected).map(function(o){
+            return getObj('graphic',o._id);
+        }).compact()
+        .each(function(t){
+            var val = t.get('has_bright_light_vision');
+            log('FOREACH SELECTED t.get(\'has_bright_light_vision\')=' + JSON.stringify(val));
+            t.set({'has_bright_light_vision': !val});
+        });
+    },
+
     addOnslaughtToPlayer = function(cmdDetails, selected) {
         log('addOnslaughtToPlayer cmdDetails=' + JSON.stringify(cmdDetails));
         if (debug) {
