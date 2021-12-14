@@ -93,9 +93,10 @@
         }));
     }));
 
-    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels', TAS._fn(function updateBattleGroupMagnitude(e) {
-        getAttrs(["battlegroup-size", "battlegroup-health-levels"], TAS._fn(function determineBattleGroupMagnitude(values) {
-            setAttrs({"battlegroup-magnitude_max": parseInt(values["battlegroup-size"]) + parseInt(values["battlegroup-health-levels"])});
+    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', TAS._fn(function updateBattleGroupMagnitude(e) {
+        getAttrs(["battlegroup-size", "battlegroup-health-levels", "battlegroup-perfect-morale"], TAS._fn(function determineBattleGroupMagnitude(values) {
+            TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
+            setAttrs({"battlegroup-magnitude_max": parseInt(values["battlegroup-size"]) + parseInt(values["battlegroup-health-levels"]) + (parseInt(values["battlegroup-perfect-morale"]) == 1 ? 3 : 0)});
         }));
     }));
 
