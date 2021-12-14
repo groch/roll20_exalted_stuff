@@ -2095,7 +2095,7 @@ var CombatMaster = CombatMaster || (function() {
         // }
 
         setTimeout(() => {
-            if (state[combatState].config.turnorder.useMarker) {
+            if (state[combatState].config.turnorder.useMarker || markerType.RANGE === type) {
                 let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : 'map' };
                 log('changeMarker Moving marker type=' + type + ', pos=' + JSON.stringify(position) + ', setting to=' + JSON.stringify(typeMarkerNewAttributes));
                 typeMarker.set(typeMarkerNewAttributes);
