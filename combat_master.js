@@ -146,7 +146,7 @@ var CombatMaster = CombatMaster || (function() {
             return;
         }
         
-        var msg = _.clone(msg_orig),args,restrict,player;
+        var msg = _.clone(msg_orig),args,restrict;
         
         playerID = msg.playerid;
         if (playerIsGM(msg.playerid)) {
@@ -298,9 +298,9 @@ var CombatMaster = CombatMaster || (function() {
 	//Processes the commands based on Delay Time (if any)
 	commandHandler = function(cmdDetails,msg,restrict,who,playerID){
 	    if (debug){
-	        log ('Command Handler cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
-            if (who) log('who=' + JSON.stringify(who));
-            if (playerID) log('playerID=' + JSON.stringify(playerID));
+	        log ('commandHandler::cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
+            if (who) log('commandHandler::who=' + JSON.stringify(who));
+            if (playerID) log('commandHandler::playerID=' + JSON.stringify(playerID));
             //log('commandHandler !!!!!!! campaign=' + JSON.stringify(Campaign()));
 	    }
 	    
