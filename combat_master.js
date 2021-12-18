@@ -517,10 +517,9 @@ var CombatMaster = CombatMaster || (function() {
             return getObj('graphic',o._id);
         }).compact()
         .each(function(t){
-            var valLight = t.get('has_bright_light_vision'),
-                valNv    = t.get('has_night_vision');
-            log('FOREACH SELECTED t.get(\'has_bright_light_vision\')=' + JSON.stringify(valLight) + ', t.get(\'has_night_vision\')=' + JSON.stringify(valNv));
-            t.set({'has_bright_light_vision': !valLight, 'has_night_vision': !valNv});
+            var valLight = t.get('has_bright_light_vision');
+            log('FOREACH SELECTED t.get(\'has_bright_light_vision\')=' + JSON.stringify(valLight));
+            t.set({'has_bright_light_vision': !valLight, 'has_night_vision': !valLight});
         });
     },
 
