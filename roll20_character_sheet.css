@@ -1278,7 +1278,12 @@ Shinier Gold
     font-weight:bold;
 }
 
+.charsheet .sheet-tab-intimacies-sheet textarea {
+    width: 98.8%;
+    resize: vertical;
+}
 
+/* --- ROLLTEMPLATES --- */
 
 .sheet-rolltemplate-exalted3e_cast table{
     text-align:center;
