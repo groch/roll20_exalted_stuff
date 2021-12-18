@@ -6,6 +6,21 @@
     width: calc(100% - 12px);
 }
 
+.charsheet .solar-style {
+    background-color: black;
+    color: yellow;
+}
+
+.charsheet .lunar-style {
+    background-color: black;
+    color: #CEC6CE;
+}
+
+.charsheet .db-style {
+    background-color: #B56808;
+    color: yellow;
+}
+
 .charsheet .sheet-content {
     height: 100%;
     display: -webkit-flex;
@@ -917,6 +932,7 @@ Shinier Gold
    display: none; 
    border-top:1px solid #ffffff;
    margin-top:2px;
+   width: 100%;
 }
 
 .charsheet input.show-anima[value="1"] ~ div.anima-box,
@@ -934,76 +950,183 @@ Shinier Gold
 }
 
 
-.charsheet input.sheet-tab-character-sheet:checked				~ div.sheet-tab-character-sheet, 
-.charsheet input.sheet-tab-spell-sheet:checked					~ div.sheet-tab-spell-sheet,
-.charsheet input.sheet-tab-charm-sheet:checked					~ div.sheet-tab-charm-sheet,
-.charsheet input.sheet-tab-settings-sheet:checked				~ div.sheet-tab-settings-sheet,
-.charsheet input.sheet-tab-intimacies-sheet:checked				~ div.sheet-tab-intimacies-sheet,
-.charsheet input.sheet-tab-charm-sheet-archery:checked			~ div.sheet-tab-charm-sheet-archery,
-.charsheet input.sheet-tab-charm-sheet-athletics:checked		~ div.sheet-tab-charm-sheet-athletics,
-.charsheet input.sheet-tab-charm-sheet-awareness:checked		~ div.sheet-tab-charm-sheet-awareness,
-.charsheet input.sheet-tab-charm-sheet-brawl:checked			~ div.sheet-tab-charm-sheet-brawl,
-.charsheet input.sheet-tab-charm-sheet-bureaucracy:checked		~ div.sheet-tab-charm-sheet-bureaucracy,
-.charsheet input.sheet-tab-charm-sheet-craft:checked			~ div.sheet-tab-charm-sheet-craft,
-.charsheet input.sheet-tab-charm-sheet-dodge:checked			~ div.sheet-tab-charm-sheet-dodge,
-.charsheet input.sheet-tab-charm-sheet-integrity:checked		~ div.sheet-tab-charm-sheet-integrity,
-.charsheet input.sheet-tab-charm-sheet-investigation:checked	~ div.sheet-tab-charm-sheet-investigation,
-.charsheet input.sheet-tab-charm-sheet-larceny:checked			~ div.sheet-tab-charm-sheet-larceny,
-.charsheet input.sheet-tab-charm-sheet-linguistics:checked		~ div.sheet-tab-charm-sheet-linguistics,
-.charsheet input.sheet-tab-charm-sheet-lore:checked				~ div.sheet-tab-charm-sheet-lore,
-.charsheet input.sheet-tab-charm-sheet-medicine:checked			~ div.sheet-tab-charm-sheet-medicine,
-.charsheet input.sheet-tab-charm-sheet-melee:checked			~ div.sheet-tab-charm-sheet-melee,
-.charsheet input.sheet-tab-charm-sheet-occult:checked			~ div.sheet-tab-charm-sheet-occult,
-.charsheet input.sheet-tab-charm-sheet-performance:checked		~ div.sheet-tab-charm-sheet-performance,
-.charsheet input.sheet-tab-charm-sheet-presence:checked			~ div.sheet-tab-charm-sheet-presence,
-.charsheet input.sheet-tab-charm-sheet-resistance:checked		~ div.sheet-tab-charm-sheet-resistance,
-.charsheet input.sheet-tab-charm-sheet-ride:checked				~ div.sheet-tab-charm-sheet-ride,
-.charsheet input.sheet-tab-charm-sheet-sail:checked				~ div.sheet-tab-charm-sheet-sail,
-.charsheet input.sheet-tab-charm-sheet-socialize:checked		~ div.sheet-tab-charm-sheet-socialize,
-.charsheet input.sheet-tab-charm-sheet-stealth:checked			~ div.sheet-tab-charm-sheet-stealth,
-.charsheet input.sheet-tab-charm-sheet-survival:checked			~ div.sheet-tab-charm-sheet-survival,
-.charsheet input.sheet-tab-charm-sheet-thrown:checked			~ div.sheet-tab-charm-sheet-thrown,
-.charsheet input.sheet-tab-charm-sheet-war:checked				~ div.sheet-tab-charm-sheet-war,
-.charsheet input.sheet-tab-charm-sheet-martialart:checked		~ div.sheet-tab-charm-sheet-martialart,
-.charsheet input.sheet-tab-charm-sheet-evocation:checked		~ div.sheet-tab-charm-sheet-evocation,
-.charsheet input.sheet-tab-charm-sheet-old:checked				~ div.sheet-tab-charm-sheet-old,
-.charsheet input.sheet-tab-charm-sheet-ma1:checked				~ div.sheet-tab-charm-sheet-ma1,
-.charsheet input.sheet-tab-charm-sheet-ma2:checked				~ div.sheet-tab-charm-sheet-ma2,
-.charsheet input.sheet-tab-charm-sheet-ma3:checked				~ div.sheet-tab-charm-sheet-ma3,
-.charsheet input.sheet-tab-charm-sheet-ma4:checked				~ div.sheet-tab-charm-sheet-ma4,
-.charsheet input.sheet-tab-charm-sheet-ma5:checked				~ div.sheet-tab-charm-sheet-ma5
+.charsheet input.sheet-tab-character-sheet:checked				        ~ div.sheet-tab-character-sheet, 
+.charsheet input.sheet-tab-spell-sheet:checked					        ~ div.sheet-tab-spell-sheet,
+.charsheet input.sheet-tab-charm-sheet:checked					        ~ div.sheet-tab-charm-sheet,
+.charsheet input.sheet-tab-settings-sheet:checked				        ~ div.sheet-tab-settings-sheet,
+.charsheet input.sheet-tab-intimacies-sheet:checked				        ~ div.sheet-tab-intimacies-sheet,
+.charsheet input.sheet-tab-charm-sheet-archery:checked			        ~ div.sheet-tab-charm-sheet-archery,
+.charsheet input.sheet-tab-charm-sheet-athletics:checked		        ~ div.sheet-tab-charm-sheet-athletics,
+.charsheet input.sheet-tab-charm-sheet-awareness:checked		        ~ div.sheet-tab-charm-sheet-awareness,
+.charsheet input.sheet-tab-charm-sheet-brawl:checked			        ~ div.sheet-tab-charm-sheet-brawl,
+.charsheet input.sheet-tab-charm-sheet-bureaucracy:checked		        ~ div.sheet-tab-charm-sheet-bureaucracy,
+.charsheet input.sheet-tab-charm-sheet-craft:checked			        ~ div.sheet-tab-charm-sheet-craft,
+.charsheet input.sheet-tab-charm-sheet-dodge:checked			        ~ div.sheet-tab-charm-sheet-dodge,
+.charsheet input.sheet-tab-charm-sheet-integrity:checked		        ~ div.sheet-tab-charm-sheet-integrity,
+.charsheet input.sheet-tab-charm-sheet-investigation:checked	        ~ div.sheet-tab-charm-sheet-investigation,
+.charsheet input.sheet-tab-charm-sheet-larceny:checked			        ~ div.sheet-tab-charm-sheet-larceny,
+.charsheet input.sheet-tab-charm-sheet-linguistics:checked		        ~ div.sheet-tab-charm-sheet-linguistics,
+.charsheet input.sheet-tab-charm-sheet-lore:checked				        ~ div.sheet-tab-charm-sheet-lore,
+.charsheet input.sheet-tab-charm-sheet-medicine:checked			        ~ div.sheet-tab-charm-sheet-medicine,
+.charsheet input.sheet-tab-charm-sheet-melee:checked			        ~ div.sheet-tab-charm-sheet-melee,
+.charsheet input.sheet-tab-charm-sheet-occult:checked			        ~ div.sheet-tab-charm-sheet-occult,
+.charsheet input.sheet-tab-charm-sheet-performance:checked		        ~ div.sheet-tab-charm-sheet-performance,
+.charsheet input.sheet-tab-charm-sheet-presence:checked			        ~ div.sheet-tab-charm-sheet-presence,
+.charsheet input.sheet-tab-charm-sheet-resistance:checked		        ~ div.sheet-tab-charm-sheet-resistance,
+.charsheet input.sheet-tab-charm-sheet-ride:checked				        ~ div.sheet-tab-charm-sheet-ride,
+.charsheet input.sheet-tab-charm-sheet-sail:checked				        ~ div.sheet-tab-charm-sheet-sail,
+.charsheet input.sheet-tab-charm-sheet-socialize:checked		        ~ div.sheet-tab-charm-sheet-socialize,
+.charsheet input.sheet-tab-charm-sheet-stealth:checked			        ~ div.sheet-tab-charm-sheet-stealth,
+.charsheet input.sheet-tab-charm-sheet-survival:checked			        ~ div.sheet-tab-charm-sheet-survival,
+.charsheet input.sheet-tab-charm-sheet-thrown:checked			        ~ div.sheet-tab-charm-sheet-thrown,
+.charsheet input.sheet-tab-charm-sheet-war:checked				        ~ div.sheet-tab-charm-sheet-war,
+.charsheet input.sheet-tab-charm-sheet-str-offense:checked		        ~ div.sheet-tab-charm-sheet-str-offense,
+.charsheet input.sheet-tab-charm-sheet-str-mobility:checked		        ~ div.sheet-tab-charm-sheet-str-mobility,
+.charsheet input.sheet-tab-charm-sheet-str-fos:checked			        ~ div.sheet-tab-charm-sheet-str-fos,
+.charsheet input.sheet-tab-charm-sheet-dex-offensive:checked	        ~ div.sheet-tab-charm-sheet-dex-offensive,
+.charsheet input.sheet-tab-charm-sheet-dex-defense:checked		        ~ div.sheet-tab-charm-sheet-dex-defense,
+.charsheet input.sheet-tab-charm-sheet-dex-subterfuge:checked	        ~ div.sheet-tab-charm-sheet-dex-subterfuge,
+.charsheet input.sheet-tab-charm-sheet-dex-mobility:checked		        ~ div.sheet-tab-charm-sheet-dex-mobility,
+.charsheet input.sheet-tab-charm-sheet-dex-Swam:checked			        ~ div.sheet-tab-charm-sheet-dex-Swam,
+.charsheet input.sheet-tab-charm-sheet-sta-defense:checked		        ~ div.sheet-tab-charm-sheet-sta-defense,
+.charsheet input.sheet-tab-charm-sheet-sta-endurance:checked	        ~ div.sheet-tab-charm-sheet-sta-endurance,
+.charsheet input.sheet-tab-charm-sheet-sta-berserker:checked	        ~ div.sheet-tab-charm-sheet-sta-berserker,
+.charsheet input.sheet-tab-charm-sheet-cha-influence:checked	        ~ div.sheet-tab-charm-sheet-cha-influence,
+.charsheet input.sheet-tab-charm-sheet-cha-territory:checked	        ~ div.sheet-tab-charm-sheet-cha-territory,
+.charsheet input.sheet-tab-charm-sheet-cha-warfare:checked		        ~ div.sheet-tab-charm-sheet-cha-warfare,
+.charsheet input.sheet-tab-charm-sheet-man-influence:checked	        ~ div.sheet-tab-charm-sheet-man-influence,
+.charsheet input.sheet-tab-charm-sheet-man-subterfuge:checked	        ~ div.sheet-tab-charm-sheet-man-subterfuge,
+.charsheet input.sheet-tab-charm-sheet-man-guile:checked		        ~ div.sheet-tab-charm-sheet-man-guile,
+.charsheet input.sheet-tab-charm-sheet-app-influence:checked	        ~ div.sheet-tab-charm-sheet-app-influence,
+.charsheet input.sheet-tab-charm-sheet-app-subterfuge:checked	        ~ div.sheet-tab-charm-sheet-app-subterfuge,
+.charsheet input.sheet-tab-charm-sheet-app-warfare:checked		        ~ div.sheet-tab-charm-sheet-app-warfare,
+.charsheet input.sheet-tab-charm-sheet-per-senses:checked		        ~ div.sheet-tab-charm-sheet-per-senses,
+.charsheet input.sheet-tab-charm-sheet-per-scrutiny:checked		        ~ div.sheet-tab-charm-sheet-per-scrutiny,
+.charsheet input.sheet-tab-charm-sheet-per-mysticism:checked	        ~ div.sheet-tab-charm-sheet-per-mysticism,
+.charsheet input.sheet-tab-charm-sheet-int-knowledge:checked	        ~ div.sheet-tab-charm-sheet-int-knowledge,
+.charsheet input.sheet-tab-charm-sheet-int-mysticism:checked	        ~ div.sheet-tab-charm-sheet-int-mysticism,
+.charsheet input.sheet-tab-charm-sheet-int-crafting:checked		        ~ div.sheet-tab-charm-sheet-int-crafting,
+.charsheet input.sheet-tab-charm-sheet-int-warfare:checked		        ~ div.sheet-tab-charm-sheet-int-warfare,
+.charsheet input.sheet-tab-charm-sheet-int-sorcery:checked		        ~ div.sheet-tab-charm-sheet-int-sorcery,
+.charsheet input.sheet-tab-charm-sheet-wit-resolve:checked		        ~ div.sheet-tab-charm-sheet-wit-resolve,
+.charsheet input.sheet-tab-charm-sheet-wit-animalken:checked	        ~ div.sheet-tab-charm-sheet-wit-animalken,
+.charsheet input.sheet-tab-charm-sheet-wit-navigation:checked	        ~ div.sheet-tab-charm-sheet-wit-navigation,
+.charsheet input.sheet-tab-charm-sheet-wit-cache:checked		        ~ div.sheet-tab-charm-sheet-wit-cache,
+.charsheet input.sheet-tab-charm-sheet-wit-territory:checked	        ~ div.sheet-tab-charm-sheet-wit-territory,
+.charsheet input.sheet-tab-charm-sheet-ma-snake:checked			        ~ div.sheet-tab-charm-sheet-ma-snake,
+.charsheet input.sheet-tab-charm-sheet-ma-tiger:checked			        ~ div.sheet-tab-charm-sheet-ma-tiger,
+.charsheet input.sheet-tab-charm-sheet-ma-spsitv:checked		        ~ div.sheet-tab-charm-sheet-ma-spsitv,
+.charsheet input.sheet-tab-charm-sheet-ma-whitereaper:checked	        ~ div.sheet-tab-charm-sheet-ma-whitereaper,
+.charsheet input.sheet-tab-charm-sheet-ma-ebonshadow:checked	        ~ div.sheet-tab-charm-sheet-ma-ebonshadow,
+.charsheet input.sheet-tab-charm-sheet-ma-crane:checked			        ~ div.sheet-tab-charm-sheet-ma-crane,
+.charsheet input.sheet-tab-charm-sheet-ma-silvervoice:checked	        ~ div.sheet-tab-charm-sheet-ma-silvervoice,
+.charsheet input.sheet-tab-charm-sheet-ma-righteousdevil:checked        ~ div.sheet-tab-charm-sheet-ma-righteousdevil,
+.charsheet input.sheet-tab-charm-sheet-ma-blackclaw:checked		        ~ div.sheet-tab-charm-sheet-ma-blackclaw,
+.charsheet input.sheet-tab-charm-sheet-ma-dreamingpearl:checked	        ~ div.sheet-tab-charm-sheet-ma-dreamingpearl,
+.charsheet input.sheet-tab-charm-sheet-ma-steeldevil:checked	        ~ div.sheet-tab-charm-sheet-ma-steeldevil,
+.charsheet input.sheet-tab-charm-sheet-ma-centipede:checked		        ~ div.sheet-tab-charm-sheet-ma-centipede,
+.charsheet input.sheet-tab-charm-sheet-ma-falcon:checked		        ~ div.sheet-tab-charm-sheet-ma-falcon,
+.charsheet input.sheet-tab-charm-sheet-ma-laughingmonster:checked		~ div.sheet-tab-charm-sheet-ma-laughingmonster,
+.charsheet input.sheet-tab-charm-sheet-ma-swayinggrass:checked			~ div.sheet-tab-charm-sheet-ma-swayinggrass,
+.charsheet input.sheet-tab-charm-sheet-ma-airdragon:checked				~ div.sheet-tab-charm-sheet-ma-airdragon,
+.charsheet input.sheet-tab-charm-sheet-ma-earthdragon:checked			~ div.sheet-tab-charm-sheet-ma-earthdragon,
+.charsheet input.sheet-tab-charm-sheet-ma-firedragon:checked			~ div.sheet-tab-charm-sheet-ma-firedragon,
+.charsheet input.sheet-tab-charm-sheet-ma-waterdragon:checked			~ div.sheet-tab-charm-sheet-ma-waterdragon,
+.charsheet input.sheet-tab-charm-sheet-ma-wooddragon:checked			~ div.sheet-tab-charm-sheet-ma-wooddragon,
+.charsheet input.sheet-tab-charm-sheet-ma-goldenjanissar:checked		~ div.sheet-tab-charm-sheet-ma-goldenjanissar,
+.charsheet input.sheet-tab-charm-sheet-ma-mantis:checked				~ div.sheet-tab-charm-sheet-ma-mantis,
+.charsheet input.sheet-tab-charm-sheet-ma-whiteveil:checked				~ div.sheet-tab-charm-sheet-ma-whiteveil,
+.charsheet input.sheet-tab-charm-sheet-ma-other:checked				    ~ div.sheet-tab-charm-sheet-ma-other,
+.charsheet input.sheet-tab-charm-sheet-evocation:checked		        ~ div.sheet-tab-charm-sheet-evocation,
+.charsheet input.sheet-tab-charm-sheet-old:checked				        ~ div.sheet-tab-charm-sheet-old
 {                                 
    display: block;
 }
 
-.charsheet .sheet-charm-archery[value="0"] 			~ div.sheet-tab-charm-sheet .sheet-tab-charm-archery,
-.charsheet .sheet-charm-athletics[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-athletics,
-.charsheet .sheet-charm-awareness[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-awareness,
-.charsheet .sheet-charm-brawl[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-brawl,
-.charsheet .sheet-charm-bureaucracy[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-bureaucracy,
-.charsheet .sheet-charm-craft[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-craft,
-.charsheet .sheet-charm-dodge[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-dodge,
-.charsheet .sheet-charm-integrity[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-integrity,
-.charsheet .sheet-charm-investigation[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-investigation,
-.charsheet .sheet-charm-larceny[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-larceny,
-.charsheet .sheet-charm-linguistics[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-linguistics,
-.charsheet .sheet-charm-lore[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-lore,
-.charsheet .sheet-charm-medicine[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-medicine,
-.charsheet .sheet-charm-melee[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-melee,
-.charsheet .sheet-charm-occult[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-occult,
-.charsheet .sheet-charm-performance[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-performance,
-.charsheet .sheet-charm-presence[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-presence,
-.charsheet .sheet-charm-resistance[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-resistance,
-.charsheet .sheet-charm-ride[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ride,
-.charsheet .sheet-charm-sail[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-sail,
-.charsheet .sheet-charm-socialize[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-socialize,
-.charsheet .sheet-charm-stealth[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-stealth,
-.charsheet .sheet-charm-survival[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-survival,
-.charsheet .sheet-charm-thrown[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-thrown,
-.charsheet .sheet-charm-war[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-war,
-.charsheet .sheet-charm-martialart[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-martialart,
-.charsheet .sheet-charm-evocation[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-evocation,
-.charsheet .sheet-charm-old[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-old {
+.charsheet .sheet-charm-archery[value="0"] 			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-archery,
+.charsheet .sheet-charm-athletics[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-athletics,
+.charsheet .sheet-charm-awareness[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-awareness,
+.charsheet .sheet-charm-brawl[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-brawl,
+.charsheet .sheet-charm-bureaucracy[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-bureaucracy,
+.charsheet .sheet-charm-craft[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-craft,
+.charsheet .sheet-charm-dodge[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-dodge,
+.charsheet .sheet-charm-integrity[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-integrity,
+.charsheet .sheet-charm-investigation[value="0"]	    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-investigation,
+.charsheet .sheet-charm-larceny[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-larceny,
+.charsheet .sheet-charm-linguistics[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-linguistics,
+.charsheet .sheet-charm-lore[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-lore,
+.charsheet .sheet-charm-medicine[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-medicine,
+.charsheet .sheet-charm-melee[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-melee,
+.charsheet .sheet-charm-occult[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-occult,
+.charsheet .sheet-charm-performance[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-performance,
+.charsheet .sheet-charm-presence[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-presence,
+.charsheet .sheet-charm-resistance[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-resistance,
+.charsheet .sheet-charm-ride[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-ride,
+.charsheet .sheet-charm-sail[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-sail,
+.charsheet .sheet-charm-socialize[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-socialize,
+.charsheet .sheet-charm-stealth[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-stealth,
+.charsheet .sheet-charm-survival[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-survival,
+.charsheet .sheet-charm-thrown[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-thrown,
+.charsheet .sheet-charm-war[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-war,
+.charsheet .sheet-charm-str-offense[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-str-offense,
+.charsheet .sheet-charm-str-mobility[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-str-mobility,
+.charsheet .sheet-charm-str-fos[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-str-fos,
+.charsheet .sheet-charm-dex-offensive[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-offensive,
+.charsheet .sheet-charm-dex-defense[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-defense,
+.charsheet .sheet-charm-dex-subterfuge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-subterfuge,
+.charsheet .sheet-charm-dex-mobility[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-mobility,
+.charsheet .sheet-charm-dex-Swam[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-Swam,
+.charsheet .sheet-charm-sta-defense[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-sta-defense,
+.charsheet .sheet-charm-sta-endurance[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-sta-endurance,
+.charsheet .sheet-charm-sta-berserker[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-sta-berserker,
+.charsheet .sheet-charm-cha-influence[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-cha-influence,
+.charsheet .sheet-charm-cha-territory[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-cha-territory,
+.charsheet .sheet-charm-cha-warfare[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-cha-warfare,
+.charsheet .sheet-charm-man-influence[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-man-influence,
+.charsheet .sheet-charm-man-subterfuge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-man-subterfuge,
+.charsheet .sheet-charm-man-guile[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-man-guile,
+.charsheet .sheet-charm-app-influence[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-app-influence,
+.charsheet .sheet-charm-app-subterfuge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-app-subterfuge,
+.charsheet .sheet-charm-app-warfare[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-app-warfare,
+.charsheet .sheet-charm-per-senses[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-per-senses,
+.charsheet .sheet-charm-per-scrutiny[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-per-scrutiny,
+.charsheet .sheet-charm-per-mysticism[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-per-mysticism,
+.charsheet .sheet-charm-int-knowledge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-knowledge,
+.charsheet .sheet-charm-int-mysticism[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-mysticism,
+.charsheet .sheet-charm-int-crafting[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-crafting,
+.charsheet .sheet-charm-int-warfare[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-warfare,
+.charsheet .sheet-charm-int-sorcery[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-sorcery,
+.charsheet .sheet-charm-wit-resolve[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-resolve,
+.charsheet .sheet-charm-wit-animalken[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-animalken,
+.charsheet .sheet-charm-wit-navigation[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-navigation,
+.charsheet .sheet-charm-wit-cache[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-cache,
+.charsheet .sheet-charm-wit-territory[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-territory,
+.charsheet .sheet-charm-ma-snake[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-snake,
+.charsheet .sheet-charm-ma-tiger[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-tiger,
+.charsheet .sheet-charm-ma-spsitv[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-spsitv,
+.charsheet .sheet-charm-ma-whitereaper[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whitereaper,
+.charsheet .sheet-charm-ma-ebonshadow[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-ebonshadow,
+.charsheet .sheet-charm-ma-crane[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-crane,
+.charsheet .sheet-charm-ma-silvervoice[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-silvervoice,
+.charsheet .sheet-charm-ma-righteousdevil[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-righteousdevil,
+.charsheet .sheet-charm-ma-blackclaw[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-blackclaw,
+.charsheet .sheet-charm-ma-dreamingpearl[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-dreamingpearl,
+.charsheet .sheet-charm-ma-steeldevil[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-steeldevil,
+.charsheet .sheet-charm-ma-centipede[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-centipede,
+.charsheet .sheet-charm-ma-falcon[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-falcon,
+.charsheet .sheet-charm-ma-laughingmonster[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-laughingmonster,
+.charsheet .sheet-charm-ma-swayinggrass[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-swayinggrass,
+.charsheet .sheet-charm-ma-airdragon[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-airdragon,
+.charsheet .sheet-charm-ma-earthdragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-earthdragon,
+.charsheet .sheet-charm-ma-firedragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-firedragon,
+.charsheet .sheet-charm-ma-waterdragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-waterdragon,
+.charsheet .sheet-charm-ma-wooddragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-wooddragon,
+.charsheet .sheet-charm-ma-goldenjanissar[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-goldenjanissar,
+.charsheet .sheet-charm-ma-mantis[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-mantis,
+.charsheet .sheet-charm-ma-whiteveil[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whiteveil,
+.charsheet .sheet-charm-ma-other[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-other,
+.charsheet .sheet-charm-evocation[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-evocation,
+.charsheet .sheet-charm-old[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-old {
 	display: none;
 }
 
@@ -1031,8 +1154,12 @@ Shinier Gold
     display: none;
 }
 
-.charsheet input.sheet-tab {
-   width: 140px;
+.charsheet .charm-tab-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.charsheet input.sheet-tab { 
    height: 30px;
    -webkit-appearance:none;
    -moz-appearance:none;
@@ -1046,14 +1173,13 @@ Shinier Gold
 
 .charsheet input.sheet-tab::before {
    content: attr(title);
-   
+   padding: 0 4px;
    border:1px solid #444;
    border-top:0;
    border-radius:0 0 10px 10px;
    display: block;
    color:#444;
    background:#fff;
-   width: 140px;
    line-height: 30px;
    font-size: 16px;
    text-align:center
@@ -1061,12 +1187,8 @@ Shinier Gold
 
 .charsheet input.sheet-tab-charms::before,
 .charsheet input.sheet-tab-charms {
-    width: 80px;
-}
-
-.charsheet input.sheet-tab-spells::before,
-.charsheet input.sheet-tab-spells {
-    width: 90px;
+    min-width: 40px;
+    flex-grow: 1;
 }
 
 .charsheet input.sheet-tab-settings::before,
@@ -1135,6 +1257,20 @@ Shinier Gold
     font-size: 12px;
 }
 
+.charsheet input.sheet-charms-spells-trait-name{
+    width: 33%;
+    color: #0095c6;
+    font-weight: bold;
+}
+
+.charsheet input.sheet-charms-spells-trait-cost{
+    width: 5em;
+}
+
+.charsheet input.sheet-charms-spells-trait-short-desc{
+    width: 28%;
+}
+
 .charsheet button.sheet-roll{
     height:30px;
     width:50px;
@@ -1156,15 +1292,23 @@ Shinier Gold
 
 .sheet-rolltemplate-exalted3e_cast tr:last-child td{
     border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;   
+    border-bottom-right-radius: 10px;
 }
 
 .sheet-rolltemplate-exalted3e_cast td{
-    padding-top: 10px;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
+.sheet-rolltemplate-exalted3e_cast table tbody tr:first-child,
+.sheet-rolltemplate-exalted3e_cast table tbody tr:first-child td {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.sheet-rolltemplate-exalted3e_cast table tbody tr:first-child td {
+    padding-top: 5px;
+}
 
 .sheet-rolltemplate-exalted3e_cast .sheet-charm-name{
     color:#0095c6;
@@ -1194,25 +1338,36 @@ Shinier Gold
 
 .sheet-rolltemplate-exalted3e_cast .sheet-info{
     width:33%;
-    padding-bottom:5px;
 }
 
 .sheet-rolltemplate-exalted3e_cast .sheet-info:not(:first-child){
     border-left: solid 1px #D3D3D3;
 }
 
-.sheet-rolltemplate-exalted3e_cast .sheet-desc{
-    background-color:#F5F5F5;
-    font-style: italic;
-    text-align:left;
-    padding-bottom:10px;
-
+.sheet-rolltemplate-exalted3e_cast td.sheet-desc,
+.sheet-rolltemplate-exalted3e_cast td.sheet-effect{
+    padding: 0px;
 }
 
-.sheet-rolltemplate-exalted3e_cast .sheet-effect{
-    background-color:#D3D3D3;
+.sheet-rolltemplate-exalted3e_cast div.sheet-desc,
+.sheet-rolltemplate-exalted3e_cast div.sheet-effect{
+    overflow-y: scroll;
+    padding-left: 5px;
+    padding-top: 5px;
     text-align:left;
-    padding-bottom:10px;
+}
+
+.sheet-rolltemplate-exalted3e_cast div.sheet-desc{
+    max-height: 44px;
+    background-color:#F5F5F5;
+    font-style: italic;
+}
+
+.sheet-rolltemplate-exalted3e_cast div.sheet-effect{
+    max-height: 67px;
+    background-color:#D3D3D3;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .sheet-rolltemplate-exalted3e_cast span{
