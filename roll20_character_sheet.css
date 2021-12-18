@@ -1298,6 +1298,7 @@ Shinier Gold
 .sheet-rolltemplate-exalted3e_cast tr:last-child td{
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    overflow: hidden;
 }
 
 .sheet-rolltemplate-exalted3e_cast td{
@@ -1371,8 +1372,6 @@ Shinier Gold
 .sheet-rolltemplate-exalted3e_cast div.sheet-effect{
     max-height: 67px;
     background-color:#D3D3D3;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
 }
 
 .sheet-rolltemplate-exalted3e_cast span{
