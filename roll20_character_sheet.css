@@ -1267,8 +1267,8 @@ Shinier Gold
     width: 5em;
 }
 
-.charsheet input.sheet-charms-spells-trait-short-desc{
-    width: 28%;
+.charsheet input.sheet-charms-spells-trait-short-desc {
+    width: calc(67% - 109px - 5em - 128px - 35px);
 }
 
 .charsheet button.sheet-roll{
