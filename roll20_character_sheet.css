@@ -172,6 +172,23 @@ tier 2: couleurs
     display: none;
 }
 
+.charsheet .qc-panel-check[value="0"] ~ .qc-toggle-display-inv {
+    display: none;
+}
+
+.charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
+    display: table-row;
+}
+
+.charsheet .sheet-qc-pools .sheet-qc-soc-influence-type {
+    width: 6em;
+}
+
+.charsheet .sheet-tab-intimacies-sheet .sheet-qc-soc-influence-type-display {
+    font-size: small;
+    width: 5.5em;
+}
+
 
 
 .charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,

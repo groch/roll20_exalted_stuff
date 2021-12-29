@@ -1639,7 +1639,10 @@
                         <input type="number" name="attr_qc-read-intentions">
                     </div>
                     <div class="sheet-trait">
-                        <span>Social Influence</span>
+                        <div>
+                            <span>S. Infl. :</span>
+                            <input type="text" name="attr_qc-social-influence-type" placeholder="Threaten" class="sheet-qc-soc-influence-type">
+                        </div>
                         <input type="number" name="attr_qc-social-influence">
                     </div>
                     <div class="sheet-trait">
@@ -6521,6 +6524,14 @@
 						<div class="sheet-table-row qc-toggle-display">
 						    <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" value="@{manipulation}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Manipulation" name="attr_manipulation2" data-formula="@{manipulation}"></div>
 						</div>
+                        <div class="sheet-table-row qc-toggle-display-inv">
+                            <div class="sheet-table-cell">
+                                <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-soc-influence-type-display" readonly="readonly">
+                            </div>
+                            <div class="sheet-table-cell">
+                                <input type="number" value="@{qc-social-influence}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="QC Social Influence" name="attr_qc-social-influence2" data-formula="@{qc-social-influence}">
+                            </div>
+                        </div>
 						<div class="sheet-table-row">
 						    <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{appearance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Appearance" name="attr_appearance2" data-formula="@{appearance}"></div>
 						</div>
