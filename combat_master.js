@@ -222,7 +222,7 @@ var CombatMaster = CombatMaster || (function() {
         }
 
         //find the action and set the cmdSep Action
-	    cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision/);
+	    cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -487,6 +487,15 @@ var CombatMaster = CombatMaster || (function() {
             log('commandHandler::before toggleTokenVision');
     		toggleTokenVision(cmdDetails, msg.selected);
         }
+
+        if (cmdDetails.action == 'createDecisiveAbilities') {
+            if (!playerIsGM(playerID)) {
+                if (debug) log('createDecisiveAbilities received but user is not GM');
+                return;
+            }
+            log('commandHandler::before createDecisiveAbilities');
+    		createDecisiveAbilities(cmdDetails, msg.selected);
+        }
 	},
 
     clearTokenStatuses = function(selectedTokens) {
@@ -507,10 +516,53 @@ var CombatMaster = CombatMaster || (function() {
 //NEW ACTIONS
 //*************************************************************************************************************
     
+createDecisiveAbilities = function(cmdDetails, selected) {
+        if (debug) log('createDecisiveAbilities cmdDetails=' + JSON.stringify(cmdDetails));
+
+        _.chain(selected).map(function(o){
+            return getObj('graphic',o._id);
+        }).compact()
+        .each(function(t){
+            var finalcharacterObj = getObj('character',t.get('represents'));
+            var finalcharacterId = finalcharacterObj.get('id');
+            let abilities = findObjs({type:'ability',characterid:finalcharacterId});
+            let expectedAbilities = {
+                    dd:false,
+                    ddGm:false
+                },
+                abilityTemplates = {
+                    dd:{
+                        name:'HLP-Decisive-Damage',
+                        description:'Exalted HLP Decisive Ability:dd',
+                        characterid:finalcharacterId,
+                        action:'/em @{character_name} confirme son attaque Decisive et inflige :\n/r @{tracker|'+finalcharacterObj.get('name')+'}t[noDbl]\n/r 3[RESETING INIT] &{tracker}',
+                        istokenaction:true
+                    },
+                    ddGm:{
+                        name:'HLP-Decisive-Damage-ToGM',
+                        description:'Exalted HLP Decisive Ability:ddGm',
+                        characterid:finalcharacterId,
+                        action:'/w gm @{character_name} confirme son attaque Decisive et inflige :\n/gr @{tracker|'+finalcharacterObj.get('name')+'}t[noDbl]\n/gr 3[RESETING INIT] &{tracker}',
+                        istokenaction:true
+                    }
+                };
+            _.each(abilities,(abi)=>{
+                abi.get('description').replace(/^Exalted HLP Decisive Ability:(.+)/,(match,keyword)=>{
+                    expectedAbilities[keyword]=true;
+                });
+            });
+            _.each(_.keys(expectedAbilities),(key)=>{
+                if(!expectedAbilities[key]){
+                    log('Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
+                    createObj('ability',abilityTemplates[key]);
+                }
+            });
+        });
+    },
+
     toggleTokenVision = function(cmdDetails, selected) {
-        log('toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
         if (debug) {
-            log('toggle Token Vision');
+            log('toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
         }
 
         _.chain(selected).map(function(o){
