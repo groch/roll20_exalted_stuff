@@ -435,6 +435,12 @@ tier 2: couleurs
     padding-left: 30px;
 }
 
+.charsheet [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"] {
+    font-size: 14px;
+    text-align: right;
+    width: 3em;
+}
+
 .charsheet .sheet-trait input[type="number"],
 .charsheet .sheet-motes input[type=number],
 .charsheet .sheet-motes input[type=text],
