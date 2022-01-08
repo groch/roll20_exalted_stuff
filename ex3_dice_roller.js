@@ -1,11 +1,12 @@
 /**
  * Exalted 3rd Edition Dice Roller
  * @author Mike Leavitt
- * @version 1.0
+ * @author Sylvain "Groch" CLIQUOT
+ * @version 1.1
  */
 
 log('-- Loaded EX3Dice! --');
-sendChat('EX3Dice API', 'Thanks for using EX3Dice! For instructions, type <code>!exr -help</code>');
+sendChat('EX3Dice API', 'Thanks for using EX3Dice (Groch Version)! For instructions, type <code>!exr -help</code>');
 
 
 /**
@@ -13,35 +14,25 @@ sendChat('EX3Dice API', 'Thanks for using EX3Dice! For instructions, type <code>
  * the appropriate function for handling.
  */
 on('chat:message', function(msg) {
-
 	var apiWake = '!exr ';
 
 	if (msg.type == 'api' && msg.content.indexOf(apiWake) != -1) {
-
 		var slc = msg.content.slice(msg.content.indexOf(apiWake) + apiWake.length);
 		var rawCmd = slc.trim();
-
 		var patt = /^.*\#/;
 
 		if (patt.test(rawCmd)) {
-
 			parseCmd = rawCmd.replace('#', 'd10>7');
-
 			var rollStr = '/roll ' + parseCmd;
-
 			performRoll(msg, rollStr);
-
 		} else if (rawCmd.indexOf('-help') != -1) {
-
             var outHTML = buildHelp();
-
             sendChat('EX3Dice API', '/w ' + msg.who + ' ' + outHTML);
-
 		} else {
 		    printError(msg, msg.who);
-		} // if
-	} // if
-}); // on
+		}
+	}
+});
 
 
 /**
@@ -54,27 +45,21 @@ on('chat:message', function(msg) {
  * @return void
  */
 function performRoll(msg, cmd) {
-
     sendChat(msg.who, cmd, function(ops) {
-
 	    if (ops[0].type == 'rollresult') {
-
 	        var result = JSON.parse(ops[0].content);
-	        var addSucc = 0;
-
 	        var strSplit = ops[0].origRoll.split('-');
 	        var cmds = [];
 	        _.each(strSplit, parseCmds, cmds);
+            log('performRoll::ops='+JSON.stringify(ops));
+            log('performRoll::result='+ops[0].content);
+            log('performRoll::cmds='+JSON.stringify(cmds));
 
 	        if (!_.isEmpty(cmds)) {
-
 	            processCmds(cmds, result);
-
-	        } else {
-
-				// If there are no commands passed, the script defaults to doubling 10s, which is what this call represents.
+	        } else { // If there are no commands passed, the script defaults to doubling 10s, which is what this call represents.
 	            doDoubles(result, true, 0);
-	        } // if
+	        }
 
 			// This gets the player's color, for styling the roll result HTML output in buildHTML().
 	        var player = getObj("player", msg.playerid);
@@ -82,14 +67,11 @@ function performRoll(msg, cmd) {
 
 			// Passes the final, formatted HTML as a direct message to the chat window.
 	        sendChat(msg.who, '/direct ' + outHTML);
-
-	    } else {
-
-			// Error handling.
+	    } else { // Error handling.
 	        printError(ops[0], msg.who);
-	    } // if
+	    }
 	});
-} // performRoll
+}
 
 
 /**
@@ -102,11 +84,8 @@ function performRoll(msg, cmd) {
  * @return void.
  */
  function parseCmds(item) {
-
      var patt = /^[rRdD](l?\d*)?/i;
-
      if (patt.test(item)) {
-
          var trim = item.trim();
          var cmdArr = trim.split(' ');
 
@@ -119,8 +98,8 @@ function performRoll(msg, cmd) {
 
  	 	// That object is then pushed to the cmd array, above.
         this.push(cmdObj);
-     } // if
- } // parseCmds
+     }
+ }
 
 
 /**
@@ -134,41 +113,35 @@ function performRoll(msg, cmd) {
  * @return void
  */
 function processCmds(cmds, result) {
-
  	// Iterating through the list twice isn't terribly efficient, but this ensures that the rerolls have been completed before the doubled successes
 	// are evaluated. The result argument is passed as the context for the _.each() function here.
     _.each(cmds, function(item) {
-
 		// Defaults to pass to the doRerolls() function.
         var recReroll = false;
         var keepHigh = true;
 
-        switch (item.cmd[0]) {
-
-			// The only thing different about the '-R' command is that it turns on recursion, and turns off the keeping of the higher result.
+        switch (item.cmd[0]) { // The only thing different about the '-R' command is that it turns on recursion, and turns off the keeping of the higher result.
             case 'R':
                 recReroll = true;
                 keepHigh = false;
             case 'r':
-                if (!_.isUndefined(item.cmd[1]) && item.cmd[1] == 'l')
-                	keepHigh = false;
+                if (!_.isUndefined(item.cmd[1]) && item.cmd[1] == 'l') 
+                    keepHigh = false;
                 doRerolls(this, item.args, recReroll, keepHigh);
                 break;
             default:
                 break;
-        } // switch
-    }, result); // _.each
+        }
+    }, result);
 
  	// Makes sure we do the doubles, in case someone passes a reroll command without a double command (the script is supposed to double 10s by default).
     var doneDoubles = false;
     _.each(cmds, function(item) {
-
 		// Again, setting defaults, which are only changed in a few cases in the switch, below.
         var limit = 0;
         var do10s = true;
 
         switch (item.cmd[0]) {
-
             case 'D':
                 do10s = false;
             case 'd':
@@ -179,13 +152,12 @@ function processCmds(cmds, result) {
                 break;
             default:
                 break;
-        } // switch
-    }, result); // _.each
+        }
+    }, result);
 
-    if (!doneDoubles)
-        doDoubles(result, true, 0);
+    if (!doneDoubles) doDoubles(result, true, 0);
 
-} // processCmds
+}
 
 
 /**
@@ -199,7 +171,6 @@ function processCmds(cmds, result) {
  * @return void
  */
 function doRerolls(result, args, rec, keepHigh) {
-
 	// If we don't have values to reroll, then we don't need to waste our time.
     if (_.isEmpty(args))
         return result;
@@ -214,52 +185,39 @@ function doRerolls(result, args, rec, keepHigh) {
 
 		// There's probably a better way to do this, but this made the most sense to me at the time.
         for (var i = 0; i < vals.length; i++) {
-
             _.each(args, function(item) {
-
                 if (this.v == item) {
-
                     var reroll = randomInteger(10);
-
                     this.v = (keepHigh && reroll < this.v) ? this.v : reroll;
-                } // if
-
+                }
             }, vals[i]);
-        } // for
+        }
 
 		// This bit determines if we've run out of values to recursively reroll. In the interest of not wasting time, as soon as
 		// count iterates once, the whole thing breaks out and continues. If count makes it through and is still 0, stop is set to
 		// true, so the while loop will finish.
         if (!stop) {
-
             var count = 0;
             for (var i = 0; i < vals.length; i++) {
-
                 for (var j = 0; j < args.length; j++) {
-
                     if (vals[i].v == args[j]) {
                         count++;
                         break;
-                    } // if
-                } // for
+                    }
+                }
 
-                if (count > 0)
-                    break;
-            } // for
+                if (count > 0) break;
+            }
 
-            if (count == 0)
-                stop = true;
-        } // if
-
-    } while (!stop); // do...while
+            if (count == 0) stop = true;
+        }
+    } while (!stop);
 
 	// Recalculating successes, so we don't end up with phantom successes from before. This awards only one success to any roll above 7, because
 	// this total hasn't yet been passed to the doDoubles() function.
     var newTotal = 0;
     for (var i = 0; i < vals.length; i++) {
-
-        if (vals[i].v >= 7)
-            newTotal++;
+        if (vals[i].v >= 7) newTotal++;
     }
 
 	// Update with the new success total.
@@ -267,7 +225,7 @@ function doRerolls(result, args, rec, keepHigh) {
 
 	// Update the reults with the new values, so doDoubles() has the right ones.
     result.rolls[0].results = vals;
-} //doRerolls
+}
 
 
 /**
@@ -282,63 +240,52 @@ function doRerolls(result, args, rec, keepHigh) {
  * @return void
  */
 function doDoubles(result, do10s, limit, args = null) {
-
 	// Set our count, if we have a limit.
-    if (limit > 0)
-        var count = 0;
+    if (limit > 0) var count = 0;
 
 	// Create an empty array for our values to double.
     var doubles = [];
 
 	// Get 10 in there, if we need it.
-    if (do10s)
-        doubles.push(10);
+    if (do10s) doubles.push(10);
 
 	// Also get the rest of the values. I probably don't have to parseInt() here, but I'm just being safe.
     if (!_.isNull(args) && !_.isEmpty(args))
         _.each(args, function(item) { this.push(parseInt(item)); }, doubles);
 
+    // Storing doubles
+    result.doubles = doubles;
+
 	// As doRerolls(), above, putting the roll results in a container.
     var vals = result.rolls[0].results;
 	
-	if (typeof vals == 'undefined')
-	{
-		return;
-	}
+	if (typeof vals == 'undefined') return;
 
 	// Initializing the number of successes we'll add.
     var addSucc = 0;
 
 	// Assuming we're doubling anything, do that.
     if (!_.isEmpty(doubles)) {
-
 		// The for loops here are so I can break out of them once our count equals our limit.
         for (var i = 0; i < vals.length; i++) {
-
             for (var j = 0; j < doubles.length; j++) {
-
                 if (vals[i].v == doubles[j]) {
-
 					// Some charms allow the doubling of results that aren't normally successes. If so, this one will count them as two extra, rather
 					// than just one.
                     addSucc += (doubles[j] >= 7) ? 1 : 2;
-
 					if (!_.isUndefined(count))
 						count++;
-                } // if
+                }
+                if (!_.isUndefined(count) && count == limit) break;
+            }
 
-                if (!_.isUndefined(count) && count == limit)
-                    break;
-            } // for
-
-            if (!_.isUndefined(count) && count == limit)
-                break;
-        } // for
-    } // if
+            if (!_.isUndefined(count) && count == limit) break;
+        }
+    }
 
 	// Add the extra successes to the total.
     result.total += addSucc;
-} // doDoubles
+}
 
 
 /**
@@ -354,10 +301,17 @@ function doDoubles(result, do10s, limit, args = null) {
  * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
  */
 function buildHTML(result, origCmd, origRoll, color) {
-
 	// Putting everythign in smaller variables that it's easier to type. ;P
     var vals = result.rolls[0].results;
     var succ = result.total;
+
+    // Add manually added successes from original command
+    var patt = /^.*\#(\+([^\s]))?/;
+    var ret;
+    if (ret = origCmd.match(patt)) {
+        log('buildHTML::ret='+JSON.stringify(ret));
+        if (ret[2]) succ += parseInt(ret[2]);
+    }
 
 	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
 	// of them. The Roll20 CSS has some compatible styling for this already, but it's not complete, so we have to do the rest ourselves.
@@ -368,48 +322,57 @@ function buildHTML(result, origCmd, origRoll, color) {
     var innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;";
 
 	// The styling for the .formula class.
-    var formulaStyle = "font-size:inherit;display:inline;padding:4px;background:white;border-radius:3px;";
+    var formulaStyle = "font-size:inherit;background:white;border-radius:3px;";
 	// The styling for the total box at the end of the message.
     var totalStyle = formulaStyle;
-    totalStyle += "border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;";
+    totalStyle += "padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;";
 
 	// The rest of the .formula style.
-    formulaStyle += "border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;";
+    formulaStyle += "padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;";
 	// The styling for the .formattedformula class.
     var formattedFormulaStyle = "display:block;float:left;";
 	// The styling for the .ui-draggable class, though it doesn't work as it would if it were an official roll.
     var uidraggableStyle = "cursor:move";
+
+    var diceBackgroundStyle = "position: absolute; top: -1px; left: 0%;";
+    var diceIconStyle = "top: 5px;";
+    var diceRollStyle = "font-family: 'PlaneWalker'; font-size: 30px; font-weight: bold; letter-spacing: -2px; left: -1px;"
 
 
 	// Building the output.
     var html = "";
     html += "<div style=\"" + outerStyle + "\">";
     html += "<div style=\"" + innerStyle + "\">";
-    html += "<div class=\"formula\" style=\"" + formulaStyle + "\"> rolling " + origRoll + " </div>";
+    html += "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\"> rolling " + origRoll + " </div>";
     html += "<div style=\"clear: both;\"></div>";
 
     html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
-    html += "  <div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
-    html += "  (";
+    html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
+    html +=   "(";
+
+    log('buildHTML::result.doubles='+JSON.stringify(result.doubles));
+    var isDouble;
 
 	// Making a little die result for each die rolled.
     _.each(vals, function(item, idx) {
-
-        html += "    <div data-origindex=\"" + idx + "\" class=\"diceroll d10" + ((item.v == 1) ? " critfail" : "") + ((item.v == 10) ? " critsuccess" : "") + "\" style=\"padding: 0px;\">";
-        html += "      <div class=\"dicon\">"
-        html += "        <div class=\"didroll\">" + item.v + "</div>";
+        isDouble = result.doubles.includes(item.v);
+        html +=     "<div data-origindex=\"" + idx + "\" class=\"diceroll d10" + (isDouble ? " critfail" : "") + ((item.v >= 7 && !isDouble) ? " critsuccess" : "") + "\" style=\"padding: 0px;\">";
+        html +=       "<div class=\"dicon\" style=\"" + diceIconStyle + "\">";
+        html +=         "<div class=\"didroll\" style=\"" + diceRollStyle + "\">" + item.v + "</div>";
 
 		// Normally the little d10-shaped icons in the back are handled with a combination of CSS classes and in the .backing:after pseudo class.
 		// We don't have access to any of that from here, so we have to fudge it. "dicefontd10" is the name of the custom icon font, and "0"
 		// corresponds to the outline used in a normal rollresult.
-        html += "        <div class=\"backing\"><span style=\"font-family: 'dicefontd10'; color: " + color + ";\">0</span></div>";
-        html += "      </div>";
-        html += (idx + 1 != vals.length) ? "    +" : "";
-        html += "    </div>";
+        // html += "        <div class=\"backing\"><span style=\"font-family: 'dicefontd10'; color: " + color + ";\">0</span></div>";
+        html +=         "<div class=\"backing\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
+        html +=       "</div>";
+        html += (idx + 1 != vals.length) ? "+" : "";
+        html +=     "</div>";
     });
 
-    html += "  )";
-    html += "  </div>";
+    html +=   ")";
+    if (ret[1]) html += ret[1];
+    html +=   "</div>";
     html += "</div>";
 
     html += "<div style=\"clear: both;\"></div>";
@@ -420,7 +383,7 @@ function buildHTML(result, origCmd, origRoll, color) {
 
 	// Sending back the complete HTML string.
     return html;
-} // buildHTML
+}
 
 
 /**
@@ -494,11 +457,10 @@ function buildHelp() {
     outhtml3 += '</tbody>';
 
     outhtml3 += '</table>';
-
     outhtml3 += '</div>';
 
     return outhtml + outhtml2 + outhtml3;
-} // buildHelp
+}
 
 
 /**
@@ -513,9 +475,8 @@ function printError(result, sender) {
     log('Error!');
 
     if (result.type == 'error' ) {
-
         sendChat('EX3Dice API', '/w ' + sender + ' I tried, but Roll20 had a problem with this. They said: ' + result.content);
     } else {
         sendChat('EX3Dice API', '/w ' + sender + ' Sorry, I didn\'t understand your input. Please try again.');
-    } // if
-} // printError
+    }
+}
