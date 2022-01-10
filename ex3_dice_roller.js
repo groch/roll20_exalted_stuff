@@ -182,6 +182,7 @@ function doRerolls(result, args, rec, keepHigh) {
     var stop = !rec;
 	// This is one of the few cases where I've found a do...while loop to be just about exactly what I needed. Exciting. :D
     do {
+        // TODO Add reroll to final roll but tagged as reroll
 
 		// There's probably a better way to do this, but this made the most sense to me at the time.
         for (var i = 0; i < vals.length; i++) {
@@ -306,11 +307,11 @@ function buildHTML(result, origCmd, origRoll, color) {
     var succ = result.total;
 
     // Add manually added successes from original command
-    var patt = /^.*\#(\+([^\s]))?/;
+    var patt = /^.*\#(\[.+\])?(\+([^\s]))?/;
     var ret;
     if (ret = origCmd.match(patt)) {
         log('buildHTML::ret='+JSON.stringify(ret));
-        if (ret[2]) succ += parseInt(ret[2]);
+        if (ret[3]) succ += parseInt(ret[3]);
     }
 
 	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
@@ -334,9 +335,15 @@ function buildHTML(result, origCmd, origRoll, color) {
 	// The styling for the .ui-draggable class, though it doesn't work as it would if it were an official roll.
     var uidraggableStyle = "cursor:move";
 
-    var diceBackgroundStyle = "position: absolute; top: -1px; left: 0%;";
-    var diceIconStyle = "top: 5px;";
-    var diceRollStyle = "font-family: 'PlaneWalker'; font-size: 30px; font-weight: bold; letter-spacing: -2px; left: -1px;"
+    var diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;";
+    var diceIconStyle = "";
+    // use font from character sheet
+    var planeWalkerFont = "font-family: 'Planewalker';";
+    var diceRollStyle = planeWalkerFont + " letter-spacing: -2px; top: 4px;"
+    var successColor = "#23b04f";
+    var successColorStyle = " color: "+successColor+"; text-shadow: 0px 0px "+successColor+";";
+    var doubleColor = "#950015";
+    var doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0px 0px "+doubleColor+";";
 
 
 	// Building the output.
@@ -356,9 +363,12 @@ function buildHTML(result, origCmd, origRoll, color) {
 	// Making a little die result for each die rolled.
     _.each(vals, function(item, idx) {
         isDouble = result.doubles.includes(item.v);
-        html +=     "<div data-origindex=\"" + idx + "\" class=\"diceroll d10" + (isDouble ? " critfail" : "") + ((item.v >= 7 && !isDouble) ? " critsuccess" : "") + "\" style=\"padding: 0px;\">";
-        html +=       "<div class=\"dicon\" style=\"" + diceIconStyle + "\">";
-        html +=         "<div class=\"didroll\" style=\"" + diceRollStyle + "\">" + item.v + "</div>";
+        html +=     '<div data-origindex="' + idx + '" class="diceroll d10" style="padding: 3px 0;">';
+        html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + '">';
+        html +=         '<div class="didroll" style="' + diceRollStyle
+                    + (isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ' text-shadow: 0 0 black;'))
+                    + (item.v == 4 ? ' left: 0px;' : ' left: 1px;')
+                    + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
 
 		// Normally the little d10-shaped icons in the back are handled with a combination of CSS classes and in the .backing:after pseudo class.
 		// We don't have access to any of that from here, so we have to fudge it. "dicefontd10" is the name of the custom icon font, and "0"
@@ -371,7 +381,7 @@ function buildHTML(result, origCmd, origRoll, color) {
     });
 
     html +=   ")";
-    if (ret[1]) html += ret[1];
+    if (ret[2]) html += ret[2];
     html +=   "</div>";
     html += "</div>";
 
