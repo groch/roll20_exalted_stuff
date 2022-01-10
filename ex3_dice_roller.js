@@ -83,9 +83,9 @@ function performRoll(msg, cmd) {
  *
  * @return void.
  */
- function parseCmds(item) {
-     var patt = /^[rRdD](l?\d*)?/i;
-     if (patt.test(item)) {
+function parseCmds(item) {
+    var patt = /^[rRdD](l?\d*)?/i;
+    if (patt.test(item)) {
          var trim = item.trim();
          var cmdArr = trim.split(' ');
 
@@ -98,8 +98,43 @@ function performRoll(msg, cmd) {
 
  	 	// That object is then pushed to the cmd array, above.
         this.push(cmdObj);
-     }
- }
+    }
+
+    var trim = item.trim();
+    log('parseCmds::item="' + item + '"');
+    patt = /^(r|R)(l\d*)?$/;
+    var objRet, match = false;
+    if (ret = item.match(patt)) {
+        match = true;
+        log('parseCmds::MATCH1');
+        log('parseCmds::ret='+JSON.stringify(ret));
+        objRet = {
+            cmd: ret[1],
+            args: { limit: ret[2] }
+        };
+    }
+    patt = /^(d)(l\d*)?(?:\s([\d,]+))?$/;
+    if (ret = item.match(patt)) {
+        match = true;
+        log('parseCmds::MATCH2');
+        log('parseCmds::ret='+JSON.stringify(ret));
+        objRet = {
+            cmd: 'doubles',
+            args: { limit: ret[2], doubles: [10, ...ret[3].split(',')] }
+        };
+    }
+    patt = /^(gm|D)$/;
+    if (ret = item.match(patt)) {
+        match = true;
+        log('parseCmds::MATCH3');
+        log('parseCmds::ret='+JSON.stringify(ret));
+        objRet = {
+            cmd: ret[1],
+            args: null
+        };
+    }
+    //if (match) this.push(objRet);
+}
 
 
 /**
