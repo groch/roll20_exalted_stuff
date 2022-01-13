@@ -296,6 +296,9 @@ var CombatMaster = CombatMaster || (function() {
     },
 
 	//Processes the commands based on Delay Time (if any)
+    /*
+     * WHO = STRING     Displayed Name
+     */
 	commandHandler = function(cmdDetails,msg,restrict,who,playerID){
 	    if (debug){
 	        log ('commandHandler::cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
