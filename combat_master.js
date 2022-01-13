@@ -288,7 +288,7 @@ var CombatMaster = CombatMaster || (function() {
     checkAuthUserFromMessage = (who, playerID) => {
         if (debug) log('checkAuthUserFromMessage::IN who='+who+', playerId='+playerID);
         let currentTurnTokenObj = findObjs({_id:getCurrentTurnObject().id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
-            tokenControlledBy = (getObj('character', currentTurnTokenObj.get('represents')) || currentTurnTokenObj).get('controlledby').split(';');
+            tokenControlledBy = (getObj('character', currentTurnTokenObj.get('represents')) || currentTurnTokenObj).get('controlledby').split(',');
         if (!Array.isArray(tokenControlledBy)) tokenControlledBy = [tokenControlledBy];
         if (debug) log('checkAuthUserFromMessage::tokenControlledBy='+tokenControlledBy);
         if (debug) log('checkAuthUserFromMessage::OUT ret='+(tokenControlledBy.includes(playerID) || who === 'gm'));
