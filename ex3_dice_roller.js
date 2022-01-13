@@ -376,9 +376,9 @@ function buildHTML(result, origCmd, origRoll, color) {
     var planeWalkerFont = "font-family: 'Planewalker';";
     var diceRollStyle = planeWalkerFont + " letter-spacing: -2px; top: 4px;"
     var successColor = "#23b04f";
-    var successColorStyle = " color: "+successColor+"; text-shadow: 0px 0px "+successColor+";";
+    var successColorStyle = " color: "+successColor+"; text-shadow: 0px 0px 1px "+successColor+";";
     var doubleColor = "#950015";
-    var doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0px 0px "+doubleColor+";";
+    var doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0px 0px 1px "+doubleColor+";";
 
 
 	// Building the output.
@@ -401,15 +401,15 @@ function buildHTML(result, origCmd, origRoll, color) {
         html +=     '<div data-origindex="' + idx + '" class="diceroll d10" style="padding: 3px 0;">';
         html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + '">';
         html +=         '<div class="didroll" style="' + diceRollStyle
-                    + (isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ' text-shadow: 0 0 black;'))
-                    + (item.v == 4 ? ' left: 0px;' : ' left: 1px;')
+                    + (isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ' text-shadow: 0 0 1px black;'))
+                    + (item.v == 4 ? ' left: 0px;' : ' left: 1.5px;')
                     + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
 
 		// Normally the little d10-shaped icons in the back are handled with a combination of CSS classes and in the .backing:after pseudo class.
 		// We don't have access to any of that from here, so we have to fudge it. "dicefontd10" is the name of the custom icon font, and "0"
 		// corresponds to the outline used in a normal rollresult.
         // html += "        <div class=\"backing\"><span style=\"font-family: 'dicefontd10'; color: " + color + ";\">0</span></div>";
-        html +=         "<div class=\"backing\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
+        html +=         "<div class=\"backing\" style=\"opacity: 1;\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
         html +=       "</div>";
         html += (idx + 1 != vals.length) ? "+" : "";
         html +=     "</div>";
