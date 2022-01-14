@@ -2239,7 +2239,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         state[combatState].turnorder = {};
     },
 
-    isCombatActiveAndTriggersIfNot = function () {
+    isCombatActiveAndTriggerStopIfNot = function () {
         if(debug) {
             log('Verify Turnorder');
         }        
@@ -2255,11 +2255,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
     
     changeToNextTurn = function (prev=false, delay=false, turnOrderUnmodified=true, preventAnnounceTurn=false) {
-        if(debug) {
-            log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!! announceTurn=' + preventAnnounceTurn);
-        }
+        if(debug) log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!! announceTurn=' + preventAnnounceTurn);
         
-        let verified    = isCombatActiveAndTriggersIfNot()
+        let verified    = isCombatActiveAndTriggerStopIfNot()
         if (!verified) {
             return
         }
@@ -2274,11 +2272,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
 
         if (turn.id === marker.id) {
-            if (prev) {
+            if(debug) log('TURN MARKER => Change TURN');
+            if (prev)
                 handlePreviousRound();
-            } else { 
+            else
                 handleNextRound();
-            }    
             return;
         }
 
@@ -2341,9 +2339,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     
     handleTurnorderChange = function (obj, prev) {
         if (debug) {
-            log("-------------Handle Turnorder Change-------------")
-            log('obj='+JSON.stringify(obj));
-            log('prev='+JSON.stringify(prev));
+            log("handleTurnorderChange::-------------Handle Turnorder Change-------------")
+            log('handleTurnorderChange::obj='+JSON.stringify(obj));
+            log('handleTurnorderChange::prev='+JSON.stringify(prev));
         }
         
         if(obj.get('turnorder') === prev.turnorder) return;
@@ -2361,10 +2359,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
 
         let test= JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder);
-        log('JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)=');
-        log(test);
+        if (debug) log('handleTurnorderChange::JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)='+test);
 
-        let callFirstTurn = prevTurnorder.length == 1 && turnorder.length == 2;
+        let callFirstTurn = (prevTurnorder.length === 1 && turnorder.length === 2);
+        if (debug) log(`handleTurnorderChange::prevTurnorder.length=${prevTurnorder.length}, turnorder.length=${turnorder.length}`);
+        if (debug) log(`handleTurnorderChange::callFirstTurn=${callFirstTurn}`);
 
         if (callFirstTurn) {
             makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
@@ -2896,7 +2895,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             log("Do Round Calls");
         }
 
-        let verified    = isCombatActiveAndTriggersIfNot();
+        let verified    = isCombatActiveAndTriggerStopIfNot();
         if (!verified) {
             return;
         }
