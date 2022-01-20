@@ -342,11 +342,21 @@ function buildHTML(result, origCmd, origRoll, color) {
     var succ = result.total;
 
     // Add manually added successes from original command
-    var patt = /^.*\#(\[.+\])?(\+([^\s]))?/;
-    var ret;
+    var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
+    var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
+    var ret, addedSuccess = '';
     if (ret = origCmd.match(patt)) {
-        log('buildHTML::ret='+JSON.stringify(ret));
-        if (ret[3]) succ += parseInt(ret[3]);
+        // log('buildHTML::ret='+JSON.stringify(ret));
+        // log('buildHTML::succ='+succ);
+        if (ret[1]) {
+            // log('buildHTML::ret[1]='+ret[1]);
+            var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
+            // log('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
+            for (const [,,item] of arrayAddedSuccesses) {
+                // log('buildHTML::item='+item);
+                addedSuccess += item;
+            }
+        }
     }
 
 	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
@@ -416,7 +426,7 @@ function buildHTML(result, origCmd, origRoll, color) {
     });
 
     html +=   ")";
-    if (ret[2]) html += ret[2];
+    if (addedSuccess) html += addedSuccess;
     html +=   "</div>";
     html += "</div>";
 
