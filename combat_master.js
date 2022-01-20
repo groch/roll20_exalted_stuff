@@ -538,14 +538,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         name:'HLP-Decisive-Damage',
                         description:'Exalted HLP Decisive Ability:dd',
                         characterid:finalcharacterId,
-                        action:'/em @{character_name} confirme son attaque Decisive et inflige :\n/r @{tracker|'+finalcharacterObj.get('name')+'}t[noDbl]\n/r 3[RESETING INIT] &{tracker}',
+                        action:'/em @{character_name} confirme son attaque Decisive et inflige :\n!exr @{tracker|'+finalcharacterObj.get('name')+'}# -D\n/r 3[RESETING INIT] &{tracker}',
                         istokenaction:true
                     },
                     ddGm:{
                         name:'HLP-Decisive-Damage-ToGM',
                         description:'Exalted HLP Decisive Ability:ddGm',
                         characterid:finalcharacterId,
-                        action:'/w gm @{character_name} confirme son attaque Decisive et inflige :\n/gr @{tracker|'+finalcharacterObj.get('name')+'}t[noDbl]\n/gr 3[RESETING INIT] &{tracker}',
+                        action:'/w gm @{character_name} confirme son attaque Decisive et inflige :\n!exr @{tracker|'+finalcharacterObj.get('name')+'}# -D -gm\n/gr 3[RESETING INIT] &{tracker}',
                         istokenaction:true
                     }
                 };
