@@ -34,6 +34,52 @@ on('chat:message', function(msg) {
 	}
 });
 
+function setSelectedTurnOrder(selected, successes) {
+    log('setTurnOrder::INSIDE !!!');
+    if (!selected || !selected.length) {
+        log('setTurnOrder::NO SELECTEDS ! RETURN');
+        return;
+    }
+    var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
+    log('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
+
+    log('setTurnOrder::selected='+JSON.stringify(selected));
+    var selectedTokenId = selected.map(o => getObj('graphic',o._id)).filter(n => n).map(o => o.get('id'));
+    if (!Array.isArray(selectedTokenId)) selectedTokenId = [selectedTokenId];
+    if (selectedTokenId.length && Array.isArray(selectedTokenId[0])) selectedTokenId.map(o => o[0]);
+    log('setTurnOrder::selectedTokenId='+JSON.stringify(selectedTokenId));
+
+    const idTurnOrder = turnOrder.map(o => o.id);
+    log('setTurnOrder::idTurnOrder=' + JSON.stringify(idTurnOrder));
+    var idTurnToCreate = [];
+
+    for (const id of selectedTokenId) {
+        if (!idTurnOrder.includes(id)) {
+            log('setTurnOrder::adding to include into turnorder id=' + id);
+            idTurnToCreate.push(id);
+        }
+    }
+
+    if (idTurnToCreate.length < idTurnOrder.length) {
+        for (var i = 0; i < turnOrder.length; i++) {
+            if (selectedTokenId.includes(turnOrder[i].id)) {
+                log(`setTurnOrder::setting id=${turnOrder[i].id} to pr=${successes}`);
+                turnOrder[i].pr = successes;
+            }
+        }
+    }
+
+    if (idTurnToCreate.length > 0) {
+        for (const id of idTurnToCreate) {
+            log(`setTurnOrder::pushing to turnorder id=${id}`);
+            turnOrder.push({id:id,pr:successes,custom:''});
+        }
+    }
+
+    log(`setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
+    Campaign().set('turnorder', JSON.stringify(turnOrder));
+}
+
 
 /**
  * The rolling function. Handles making the roll and passing the results to the anonymous callback function. Extracts the commands from
@@ -48,6 +94,9 @@ function performRoll(msg, cmd) {
     sendChat(msg.who, cmd, function(ops) {
 	    if (ops[0].type == 'rollresult') {
 	        var result = JSON.parse(ops[0].content);
+            result.toGm = false;
+            result.setTurn = false;
+
 	        var strSplit = ops[0].origRoll.split('-');
 	        var cmds = [];
 	        _.each(strSplit, parseCmds, cmds);
@@ -66,7 +115,14 @@ function performRoll(msg, cmd) {
 	        var outHTML = buildHTML(result, msg.content, ops[0].origRoll, player.get('color'));
 
 			// Passes the final, formatted HTML as a direct message to the chat window.
-	        sendChat(msg.who, '/direct ' + outHTML);
+            if (result.toGm) {
+                if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${msg.who} ` + outHTML);
+                sendChat(msg.who, '/w gm ' + outHTML);
+            } else
+	            sendChat(msg.who, '/direct ' + outHTML);
+
+            if (result.setTurn)
+                setSelectedTurnOrder(msg.selected, result.total);
 	    } else { // Error handling.
 	        printError(ops[0], msg.who);
 	    }
@@ -84,7 +140,7 @@ function performRoll(msg, cmd) {
  * @return void.
  */
 function parseCmds(item) {
-    var patt = /^[rRdD](l?\d*)?/i;
+    var patt = /^[rRdDgt](l?\d*)?/i;
     if (patt.test(item)) {
          var trim = item.trim();
          var cmdArr = trim.split(' ');
@@ -184,6 +240,13 @@ function processCmds(cmds, result) {
                     limit = (!_.isUndefined(item.cmd[2])) ? item.cmd[2] : 0;
                 doDoubles(result, do10s, limit, item.args);
                 doneDoubles = true;
+                break;
+            case 't':
+                result.setTurn = true;
+                break;
+            case 'g':
+            case 'G':
+                result.toGm = true;
                 break;
             default:
                 break;
