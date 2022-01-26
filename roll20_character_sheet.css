@@ -305,11 +305,6 @@ tier 2: couleurs
     display: inline-block;
 }
 
-.charsheet .sheet-3colrow .sheet-3col.inti-col .sheet-table-row > div.sheet-table-cell:first {
-    width: 50px;
-}
-
-
 .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: #faa4a4;
 }
