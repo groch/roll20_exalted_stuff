@@ -172,28 +172,12 @@ function parseCmds(item) {
     if (!item) return;
     log('parseCmds::item="' + trim + '"');
 
-    var patt = /^[rRdDgt](l?\d*)?/i;
-    if (patt.test(item)) {
-        var cmdArr = trim.split(' ');
-
- 	 	// We end up, here, with an object that has two properties: cmd, which contains the command string, and args, which is an array of number
-		// values that will be used for that command.
-        var cmdObj = {
-            cmd: cmdArr[0],
-            args: (!_.isUndefined(cmdArr[1])) ? cmdArr[1].split(',').map(i => Number(i)) : []
-        };
-
-        log('parseCmds::cmdObj='+JSON.stringify(cmdObj));
- 	 	// That object is then pushed to the cmd array, above.
-        // this.push(cmdObj);
-    }
-
     // patt = /^(r|R)(l\d*)?(?:\s([\d,]+))?$/;
     var objRet, match = false;
-    patt = /^(d|r|R)(l\d*)?(?:\s([\d,]+))?$/;
+    patt = /^(d|r|R|e|E)(l\d*)?(?:\s([\d,]+))?$/;
     if (ret = trim.match(patt)) {
         match = true;
-        log('parseCmds::MATCH1 = rerolls & doubles');
+        log('parseCmds::MATCH1 = rerolls & doubles & explodes');
         log('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -230,7 +214,8 @@ function parseCmds(item) {
 function processCmds(cmds, result) {
     log(`processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
     for (const item of cmds) {
-        var recReroll = false;
+        var recReroll = false,
+            exploIgnore = true;
         switch (String(item.cmd)) {
             case 'R':
                 recReroll = true;
@@ -244,18 +229,27 @@ function processCmds(cmds, result) {
                     });
                 }
                 break;
+            case 'E':
+                exploIgnore = false;
+            case 'e':
+                for (const face of item.faces) {
+                    result.rollSetup.face[face].explosives.push({
+                        limit: item.limit,
+                        done: 0,
+                        ignoreRerolled: exploIgnore
+                    });
+                }
+                break;
             case 'D':
                 result.rollSetup.has10doubled = false;
                 break;
             case 'd':
                 for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
                 break;
-            case 't':
             case 'turn':
             case 'target':
                 result.setTurn = true;
                 break;
-            case 'g':
             case 'gm':
                 result.toGm = true;
                 break;
@@ -430,14 +424,14 @@ function doDoublesNEW(result) {
                 item.doubled = true;
                 faceObj.doubles[0].done++;
                 if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
-                    log(`handleRollTurn::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
+                    log(`doDoublesNEW::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
                     faceObj.doubles.shift();
                 }
             }
         }
     }
 
-    log(`doDoubles::addSucc=${addSucc}`);
+    log(`doDoublesNEW::addSucc=${addSucc}`);
 	// Add the extra successes to the total.
     result.total += addSucc;
 }
@@ -470,9 +464,11 @@ function finalizeRoll(result) {
         face.explosives.sort((a, b) => a.limit - b.limit);
     }
 
+    log(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
+
     var turn = 1;
     do {
-        log('MEGATURN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        log(`MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
         handleRollTurn(result, turn++);
         if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
@@ -500,7 +496,8 @@ function handleRollTurn(result, turn) {
             toNextRollExploded = null,
             tagList = [],
             face = item.v,
-            faceObj = result.rollSetup.face[face];
+            faceObj = result.rollSetup.face[face],
+            titleText = '';
         log(`handleRollTurn::face(${face}).rerolls.length=${faceObj.rerolls.length}`);
         if (faceObj.rerolls.length) {
             log(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
@@ -511,41 +508,49 @@ function handleRollTurn(result, turn) {
                 toNextRollRerolled = {
                     v: reroll,
                     wasRerolled: true,
-                    wasExploded: (item.wasExploded) ? item.wasExploded : false
+                    wasExploded: item.wasExploded || false,
+                    title: `Was a ${face}.`
                 };
             }
             faceObj.rerolls[0].done++;
+            titleText += `Rerolled to a ${reroll}` + (faceObj.rerolls[0].limit != 0 ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).` : '.');
             if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
                 log(`handleRollTurn::REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
                 faceObj.rerolls.shift();
             }
         }
         if (faceObj.explosives.length) {
-            log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO !`);
+            log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
             var newDie = randomInteger(10);
-            exploded = true;
-            toNextRollExploded = {
-                v: newDie,
-                wasRerolled: (item.wasRerolled) ? item.wasRerolled : rerolled,
-                wasExploded: true
-            };
-            faceObj.explosives[0].done++;
-            if (faceObj.explosives[0].limit != 0 && faceObj.explosives[0].limit == faceObj.explosives[0].done) {
-                log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[0])}`)
-                faceObj.explosives.shift();
+            log(`handleRollTurn::EXPLO TEST=${!faceObj.explosives[0].ignoreRerolled || !rerolled || !item.wasRerolled}, part1=${!faceObj.explosives[0].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`)
+            if (!faceObj.explosives[0].ignoreRerolled || (!rerolled && !item.wasRerolled)) {
+                exploded = true;
+                toNextRollExploded = {
+                    v: newDie,
+                    wasRerolled: item.wasRerolled || rerolled,
+                    wasExploded: true,
+                    title: `From a ${face}.`
+                };
+                faceObj.explosives[0].done++;
+                titleText += `Exploded to a ${newDie}` + (faceObj.explosives[0].limit != 0 ? ` (Done${faceObj.explosives[0].done}/${faceObj.explosives[0].limit}).` : '.');
+                if (faceObj.explosives[0].limit != 0 && faceObj.explosives[0].limit == faceObj.explosives[0].done) {
+                    log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[0])}`)
+                    faceObj.explosives.shift();
+                }
             }
         }
-        if (rerolled && exploded) toNextRollRerolled[0].wasExploded = true;
+        if (rerolled && exploded) toNextRollRerolled.wasExploded = true;
         if (rerolled) nextRollsToProcess.push(toNextRollRerolled);
         if (exploded) nextRollsToProcess.push(toNextRollExploded);
         var finalObj = {
             v: face,
-            wasRerolled: (item.wasRerolled) ? item.wasRerolled : false,
-            wasExploded: (item.wasExploded) ? item.wasExploded : false,
+            wasRerolled: item.wasRerolled || false,
+            wasExploded: item.wasExploded || false,
             rerolled: rerolled,
             exploded: exploded,
             doubled: false,
-            tags: tagList
+            tags: tagList,
+            title: (item.title ? item.title + titleText : titleText)
         };
         log(`handleRollTurn::finalObj=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
@@ -641,10 +646,10 @@ function buildHTML(result, origCmd, origRoll, color) {
     _.each(vals, function(item, idx) {
         isDouble = item.doubled;
         html +=     `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
-        html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + '">';
+        html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="'+item.title : '') +'">';
         html +=         '<div class="didroll" style="' + diceRollStyle
                     + (isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ' text-shadow: 0 0 1px black;'))
-                    + (item.v == 4 ? ' left: 0px;' : ' left: 1.5px;')
+                    + ([4,8,10].includes(item.v) ? ' left: 0px;' : ' left: 1.5px;')
                     + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
 
 		// Normally the little d10-shaped icons in the back are handled with a combination of CSS classes and in the .backing:after pseudo class.
