@@ -109,11 +109,11 @@ function performRoll(msg, cmd) {
 
 	        if (!_.isEmpty(cmds)) {
 	            processCmds(cmds, result);
-	        } else { // If there are no commands passed, the script defaults to doubling 10s, which is what this call represents.
-	            doDoubles(result, true, 0);
-	        }
+	        } //else { // If there are no commands passed, the script defaults to doubling 10s, which is what this call represents.
+	        //    doDoubles(result, true, 0);
+	        //}
 
-            //finalizeRoll(result);
+            finalizeRoll(result);
 
 			// This gets the player's color, for styling the roll result HTML output in buildHTML().
 	        var player = getObj("player", msg.playerid);
@@ -185,7 +185,7 @@ function parseCmds(item) {
 
         log('parseCmds::cmdObj='+JSON.stringify(cmdObj));
  	 	// That object is then pushed to the cmd array, above.
-        this.push(cmdObj);
+        // this.push(cmdObj);
     }
 
     // patt = /^(r|R)(l\d*)?(?:\s([\d,]+))?$/;
@@ -213,7 +213,7 @@ function parseCmds(item) {
     }
 
     log('parseCmds::FINAL objRet='+JSON.stringify(objRet));
-    // if (match) this.push(objRet);
+    if (match) this.push(objRet);
 }
 
 
@@ -229,55 +229,26 @@ function parseCmds(item) {
  */
 function processCmds(cmds, result) {
     log(`processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
- 	// Iterating through the list twice isn't terribly efficient, but this ensures that the rerolls have been completed before the doubled successes
-	// are evaluated. The result argument is passed as the context for the _.each() function here.
     for (const item of cmds) {
-		// Defaults to pass to the doRerolls() function.
         var recReroll = false;
-        var keepHigh = true; // remove
-
-        switch (item.cmd[0]) { // The only thing different about the '-R' command is that it turns on recursion, and turns off the keeping of the higher result.
+        switch (String(item.cmd)) {
             case 'R':
                 recReroll = true;
-                keepHigh = false; //remove
             case 'r':
-                if (!_.isUndefined(item.cmd[1]) && item.cmd[1] == 'l') 
-                    keepHigh = false;
-                doRerolls(result, item.args, recReroll, keepHigh);
-                // for (const face of item.faces) {
-                //     result.rollSetup.face[face].rerolls.push({
-                //         limit: item.limit,
-                //         done: 0,
-                //         keepBest: item.keepBest ? item.keepBest : false,
-                //         recursive: recReroll
-                //     });
-                // }
+                for (const face of item.faces) {
+                    result.rollSetup.face[face].rerolls.push({
+                        limit: item.limit,
+                        done: 0,
+                        keepBest: item.keepBest ? item.keepBest : false,
+                        recursive: recReroll
+                    });
+                }
                 break;
-            default:
-                break;
-        }
-    }
-
- 	// Makes sure we do the doubles, in case someone passes a reroll command without a double command (the script is supposed to double 10s by default).
-    var doneDoubles = false;
-    for (const item of cmds) {
-		// Again, setting defaults, which are only changed in a few cases in the switch, below.
-        var limit = 0;
-        var do10s = true;
-
-        // switch (String(item.cmd)) {
-        switch (item.cmd[0]) {
             case 'D':
-                do10s = false;
                 result.rollSetup.has10doubled = false;
+                break;
             case 'd':
-                if (!_.isUndefined(item.cmd[1]) && item.cmd[1] == 'l')
-                    limit = (!_.isUndefined(item.cmd[2])) ? item.cmd[2] : 0;
-                doDoubles(result, do10s, limit, item.args);
-                
-                // for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
-
-                doneDoubles = true;
+                for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
                 break;
             case 't':
             case 'turn':
@@ -293,8 +264,6 @@ function processCmds(cmds, result) {
         }
     }
 
-    log(`processCmds::processCmds before doDoubles`);
-    if (!doneDoubles) doDoubles(result, true, 0);
     log(`processCmds::processCmds END`);
 }
 
@@ -437,54 +406,38 @@ function doDoubles(result, do10s, limit, args = null) {
 function doDoublesNEW(result) {
     log(`doDoublesNEW::doDoublesNEW do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
 
+    var newTotal = 0;
+    for (const dice of result.rollSetup.finalResults)
+        if (dice.v >= 7) newTotal++;
+
+	// Update with the new success total.
+    log(`doDoublesNEW::result.total=${newTotal}`);
+    result.total = newTotal;
+
     if (result.rollSetup.has10doubled) {
-        result.rollSetup.faces[10].doubles.push({limit: 0, done: 0});
+        result.rollSetup.face[10].doubles.push({limit: 0, done: 0});
     }
 	// Create an empty array for our values to double.
-    var doubles = result.rollSetup.faces.filter(i => i).map(i => ({v:i.v, dbl: i.doubles.length ? true : false}));
+    var doubles = result.rollSetup.face.filter(i => i).map(i => ({v:i.v, dbl: i.doubles.length ? true : false}));
     log(`doDoublesNEW::doubles=${JSON.stringify(doubles)}`);
 
-    // TMP
-    // Storing doubles for visual render
-    result.doubles = result.rollSetup.doubles.map(i => i.face);
-    log(`doDoublesNEW::result.doubles=${JSON.stringify(result.doubles)}`);
-
-
-	// Initializing the number of successes we'll add.
     var addSucc = 0;
-
-	// Assuming we're doubling anything, do that.
-    if (!_.isEmpty(doubles)) {
-		// The for loops here are so I can break out of them once our count equals our limit.
+    if (!_.isEmpty(doubles.filter(i => i.dbl))) {
         for (const item of result.rollSetup.finalResults) {
-            if (item.rerolled) {
-                continue;
-            }
-            //
-            // let faceObj = result.rollSetup.faces[item.v];
-            // if (faceObj.double.length) {
-            //     if (!item.rerolled) addSucc += (double >= 7) ? 1 : 2;
-            //     item.doubled = true;
-            //     faceObj.doubles[0].done++;
-            //     if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
-            //         log(`handleRollTurn::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
-            //         faceObj.doubles[0].shift();
-            //     }
-            // }
-            //
-            for (const double of doubles) {
-                if (item.v == double) {
-                    addSucc += (double >= 7) ? 1 : 2;
-					if (!_.isUndefined(count))
-						count++;
+            let faceObj = result.rollSetup.face[item.v];
+            if (faceObj.doubles.length) {
+                if (!item.rerolled) addSucc += (item.v >= 7) ? 1 : 2;
+                item.doubled = true;
+                faceObj.doubles[0].done++;
+                if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
+                    log(`handleRollTurn::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
+                    faceObj.doubles.shift();
                 }
-                if (!_.isUndefined(count) && count == limit) break;
             }
-
-            if (!_.isUndefined(count) && count == limit) break;
         }
     }
 
+    log(`doDoubles::addSucc=${addSucc}`);
 	// Add the extra successes to the total.
     result.total += addSucc;
 }
@@ -508,7 +461,7 @@ function finalizeRoll(result) {
 
     //sort reroll & explosives
     for (var i = 1; i <= 10; i++) {
-        var face = result.rollSetup.faces[i];
+        var face = result.rollSetup.face[i];
         face.rerolls.sort((a, b) => {
             if (a.recursive && !b.recursive) return 1;
             if (!a.recursive && b.recursive) return -1;
@@ -519,10 +472,15 @@ function finalizeRoll(result) {
 
     var turn = 1;
     do {
+        log('MEGATURN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         handleRollTurn(result, turn++);
+        if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
 
     doDoublesNEW(result);
+
+    log(`finalizeRoll::rewriting result.rolls[0].results=${JSON.stringify(result.rollSetup.finalResults)}`);
+    result.rolls[0].results = result.rollSetup.finalResults;
 }
 
 /**
@@ -538,11 +496,11 @@ function handleRollTurn(result, turn) {
     for (const item of result.rollSetup.rollToProcess) {
         var rerolled = false,
             exploded = false,
-            toNextRollRerolled = [],
-            toNextRollExploded = [],
+            toNextRollRerolled = null,
+            toNextRollExploded = null,
             tagList = [],
             face = item.v,
-            faceObj = result.rollSetup.faces[face];
+            faceObj = result.rollSetup.face[face];
         log(`handleRollTurn::face(${face}).rerolls.length=${faceObj.rerolls.length}`);
         if (faceObj.rerolls.length) {
             log(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
@@ -550,36 +508,36 @@ function handleRollTurn(result, turn) {
             if (!(faceObj.rerolls[0].keepBest && reroll < face) &&
                  (faceObj.rerolls[0].recursive || !item.wasRerolled)) {
                 rerolled = true;
-                toNextRolls.push({
-                    v: face,
+                toNextRollRerolled = {
+                    v: reroll,
                     wasRerolled: true,
                     wasExploded: (item.wasExploded) ? item.wasExploded : false
-                });
+                };
             }
             faceObj.rerolls[0].done++;
             if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
                 log(`handleRollTurn::REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
-                faceObj.rerolls[0].shift();
+                faceObj.rerolls.shift();
             }
         }
         if (faceObj.explosives.length) {
             log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO !`);
             var newDie = randomInteger(10);
             exploded = true;
-            nextRollsToProcess.push({
+            toNextRollExploded = {
                 v: newDie,
                 wasRerolled: (item.wasRerolled) ? item.wasRerolled : rerolled,
                 wasExploded: true
-            });
+            };
             faceObj.explosives[0].done++;
             if (faceObj.explosives[0].limit != 0 && faceObj.explosives[0].limit == faceObj.explosives[0].done) {
                 log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[0])}`)
-                faceObj.explosives[0].shift();
+                faceObj.explosives.shift();
             }
         }
         if (rerolled && exploded) toNextRollRerolled[0].wasExploded = true;
-        if (rerolled) nextRollsToProcess.concat(toNextRollRerolled);
-        if (exploded) nextRollsToProcess.concat(toNextRollExploded);
+        if (rerolled) nextRollsToProcess.push(toNextRollRerolled);
+        if (exploded) nextRollsToProcess.push(toNextRollExploded);
         var finalObj = {
             v: face,
             wasRerolled: (item.wasRerolled) ? item.wasRerolled : false,
@@ -593,6 +551,7 @@ function handleRollTurn(result, turn) {
         result.rollSetup.finalResults.push(finalObj);
 
     }
+    log(`handleRollTurn::END nextRollsToProcess=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
 }
 
@@ -613,6 +572,7 @@ function buildHTML(result, origCmd, origRoll, color) {
 	// Putting everythign in smaller variables that it's easier to type. ;P
     var vals = result.rolls[0].results;
     var succ = result.total;
+    log(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
 
     // Add manually added successes from original command
     var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
@@ -676,13 +636,11 @@ function buildHTML(result, origCmd, origRoll, color) {
     html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
     html +=   "(";
 
-    log('buildHTML::result.doubles='+JSON.stringify(result.doubles));
     var isDouble;
-
 	// Making a little die result for each die rolled.
     _.each(vals, function(item, idx) {
-        isDouble = result.doubles.includes(item.v);
-        html +=     '<div data-origindex="' + idx + '" class="diceroll d10" style="padding: 3px 0;">';
+        isDouble = item.doubled;
+        html +=     `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
         html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + '">';
         html +=         '<div class="didroll" style="' + diceRollStyle
                     + (isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ' text-shadow: 0 0 1px black;'))
