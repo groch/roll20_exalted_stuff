@@ -461,7 +461,11 @@ function finalizeRoll(result) {
             if (!a.recursive && b.recursive) return -1;
             return a.limit - b.limit;
         });
-        face.explosives.sort((a, b) => a.limit - b.limit);
+        face.explosives.sort((a, b) => {
+            if (!a.ignoreRerolled && b.ignoreRerolled) return 1;
+            if (a.ignoreRerolled && !b.ignoreRerolled) return -1;
+            return a.limit - b.limit;
+        });
     }
 
     log(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
@@ -522,7 +526,7 @@ function handleRollTurn(result, turn) {
         if (faceObj.explosives.length) {
             log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
             var newDie = randomInteger(10);
-            log(`handleRollTurn::EXPLO TEST=${!faceObj.explosives[0].ignoreRerolled || !rerolled || !item.wasRerolled}, part1=${!faceObj.explosives[0].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`)
+            log(`handleRollTurn::EXPLO TEST=${!faceObj.explosives[0].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[0].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`)
             if (!faceObj.explosives[0].ignoreRerolled || (!rerolled && !item.wasRerolled)) {
                 exploded = true;
                 toNextRollExploded = {
