@@ -140,6 +140,8 @@ function setupRollStructure(result) {
     result.rollSetup = {
         hasRecursiveOrExplosiveFeature: false,
         has10doubled: true,
+        verbosity: 0,
+        colored: false,
         face: [null],
         conditionals: [],
         rollToProcess: [],
@@ -185,10 +187,10 @@ function parseCmds(item) {
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
         };
     }
-    patt = /^(gm|D|target|turn)$/;
+    patt = /^(gm|D|target|turn|v|V|c)$/;
     if (ret = trim.match(patt)) {
         match = true;
-        log('parseCmds::MATCH2 - gm');
+        log('parseCmds::MATCH2 - gm & D & Turn & verbosity & color');
         log('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -215,7 +217,8 @@ function processCmds(cmds, result) {
     log(`processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
     for (const item of cmds) {
         var recReroll = false,
-            exploIgnore = true;
+            exploIgnore = true,
+            verbosityToSet = 1;
         switch (String(item.cmd)) {
             case 'R':
                 recReroll = true;
@@ -253,6 +256,13 @@ function processCmds(cmds, result) {
             case 'gm':
                 result.toGm = true;
                 break;
+            case 'c':
+                result.rollSetup.colored = true;
+                break;
+            case 'V':
+                result.rollSetup.colored = true;
+            case 'v':
+                result.rollSetup.verbosity = verbosityToSet;
             default:
                 break;
         }
@@ -263,133 +273,6 @@ function processCmds(cmds, result) {
 
 
 /**
- * Handles actually performing the rerolls. Rerolls the passed values once, keeping the highest, unless told to do otherwise.
- *
- * @param JavaScript Object Reference	result		The content of the rollresult message, as above.
- * @param Array <string>				args		The array of die values to reroll.
- * @param Boolean						rec			Whether or not the rerolls are recursive.
- * @param Boolean						keepHigh	Whether or not to keep the higher result.
- *
- * @return void
- */
-function doRerolls(result, args, rec, keepHigh) {
-    log(`doRerolls::doRerolls result=${JSON.stringify(result)}, args=${JSON.stringify(args)}, rec=${rec}, keepHigh=${keepHigh}`);
-	// If we don't have values to reroll, then we don't need to waste our time.
-    if (_.isEmpty(args))
-        return result;
-
-	// Put the values in a temporary container, so we can mess with them.
-    var vals = result.rolls[0].results;
-
-	// Setting the stop condition for the loop. If rec is set to false, the loop will run once, then stop.
-    var stop = !rec;
-	// This is one of the few cases where I've found a do...while loop to be just about exactly what I needed. Exciting. :D
-    do {
-        //TODO Add reroll to final roll but tagged as reroll
-
-		// There's probably a better way to do this, but this made the most sense to me at the time.
-        for (var i = 0; i < vals.length; i++) {
-            if (args.includes(vals[i].v)) {
-                var reroll = randomInteger(10);
-                vals[i].v = (keepHigh && reroll < vals[i].v) ? vals[i].v : reroll;
-            }
-        }
-
-		// This bit determines if we've run out of values to recursively reroll. In the interest of not wasting time, as soon as
-		// count iterates once, the whole thing breaks out and continues. If count makes it through and is still 0, stop is set to
-		// true, so the while loop will finish.
-        if (!stop) {
-            var count = 0;
-            for (var i = 0; i < vals.length; i++) {
-                if (args.includes(vals[i].v)) {
-                    count++;
-                    break;
-                }
-            }
-
-            if (count == 0) stop = true;
-        }
-    } while (!stop);
-
-    var newTotal = 0;
-    for (const dice of vals)
-        if (dice.v >= 7) newTotal++;
-
-	// Update with the new success total.
-    log(`doRerolls::result.total=${newTotal}`);
-    result.total = newTotal;
-
-	// Update the reults with the new values, so doDoubles() has the right ones.
-    log(`doRerolls::result.rolls[0].results=${JSON.stringify(vals)}`);
-    result.rolls[0].results = vals;
-}
-
-
-/**
- * This function handles doubling the values. This one is called pretty much every time the script runs, as it's one of the most common things
- * that any roll in Exalted is expected to do.
- *
- * @param JavaScript Object Reference	result		The content of the rollresult message, as above.
- * @param Boolean						do10s		Whether or not to reroll 10s by default.
- * @param integer						limit		The maximum number of doubles to count. "0" means there is no limit.
- * @param Array <string>				args		The values to double. Since this function often doubles just 10s, this can be null.
- *
- * @return void
- */
-function doDoubles(result, do10s, limit, args = null) {
-    log(`doDoubles::doDoubles do10s=${do10s}, limit=${limit}, args=${args}, result=${JSON.stringify(result)}`);
-	// Set our count, if we have a limit.
-    if (limit > 0) var count = 0;
-    log(`doDoubles::limit=${limit}, count=${count}`);
-
-	// Create an empty array for our values to double.
-    var doubles = [];
-
-	// Get 10 in there, if we need it.
-    if (do10s) doubles.push(10);
-
-	// Also get the rest of the values. I probably don't have to parseInt() here, but I'm just being safe.
-    if (!_.isNull(args) && !_.isEmpty(args))
-        _.each(args, function(item) { this.push(Number(item)); }, doubles);
-
-    // Storing doubles for visual render
-    result.doubles = doubles;
-
-	// As doRerolls(), above, putting the roll results in a container.
-    var vals = result.rolls[0].results;
-	
-	if (typeof vals == 'undefined') return;
-
-	// Initializing the number of successes we'll add.
-    var addSucc = 0;
-
-	// Assuming we're doubling anything, do that.
-    if (!_.isEmpty(doubles)) {
-		// The for loops here are so I can break out of them once our count equals our limit.
-        for (var i = 0; i < vals.length; i++) {
-            for (var j = 0; j < doubles.length; j++) {
-                if (vals[i].v == doubles[j]) {
-					// Some charms allow the doubling of results that aren't normally successes. If so, this one will count them as two extra, rather
-					// than just one.
-                    addSucc += (doubles[j] >= 7) ? 1 : 2;
-					if (!_.isUndefined(count))
-						count++;
-                }
-                if (!_.isUndefined(count) && count == limit) break;
-            }
-
-            if (!_.isUndefined(count) && count == limit) break;
-        }
-    }
-
-    log(`doDoubles::addSucc=${addSucc}, count=${count}`);
-
-	// Add the extra successes to the total.
-    result.total += addSucc;
-}
-
-
-/**
  * This function handles doubling the values. This one is called pretty much every time the script runs, as it's one of the most common things
  * that any roll in Exalted is expected to do.
  *
@@ -397,15 +280,15 @@ function doDoubles(result, do10s, limit, args = null) {
  *
  * @return void
  */
-function doDoublesNEW(result) {
-    log(`doDoublesNEW::doDoublesNEW do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
+function doDoubles(result) {
+    log(`doDoubles::doDoubles do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
 
     var newTotal = 0;
     for (const dice of result.rollSetup.finalResults)
         if (dice.v >= 7) newTotal++;
 
 	// Update with the new success total.
-    log(`doDoublesNEW::result.total=${newTotal}`);
+    log(`doDoubles::result.total=${newTotal}`);
     result.total = newTotal;
 
     if (result.rollSetup.has10doubled) {
@@ -413,7 +296,7 @@ function doDoublesNEW(result) {
     }
 	// Create an empty array for our values to double.
     var doubles = result.rollSetup.face.filter(i => i).map(i => ({v:i.v, dbl: i.doubles.length ? true : false}));
-    log(`doDoublesNEW::doubles=${JSON.stringify(doubles)}`);
+    log(`doDoubles::doubles=${JSON.stringify(doubles)}`);
 
     var addSucc = 0;
     if (!_.isEmpty(doubles.filter(i => i.dbl))) {
@@ -424,14 +307,14 @@ function doDoublesNEW(result) {
                 item.doubled = true;
                 faceObj.doubles[0].done++;
                 if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
-                    log(`doDoublesNEW::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
+                    log(`doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
                     faceObj.doubles.shift();
                 }
             }
         }
     }
 
-    log(`doDoublesNEW::addSucc=${addSucc}`);
+    log(`doDoubles::addSucc=${addSucc}`);
 	// Add the extra successes to the total.
     result.total += addSucc;
 }
@@ -477,7 +360,7 @@ function finalizeRoll(result) {
         if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
 
-    doDoublesNEW(result);
+    doDoubles(result);
 
     log(`finalizeRoll::rewriting result.rolls[0].results=${JSON.stringify(result.rollSetup.finalResults)}`);
     result.rolls[0].results = result.rollSetup.finalResults;
@@ -512,12 +395,13 @@ function handleRollTurn(result, turn) {
                 toNextRollRerolled = {
                     v: reroll,
                     wasRerolled: true,
-                    wasExploded: item.wasExploded || false,
-                    title: `Was a ${face}.`
+                    wasEverRerolled: true,
+                    wasExploded: false,
+                    title: `RollTurn (${turn+1 < 10 ? turn+1 + '  ' : turn+1}). R->Face=${reroll < 10 ? reroll + '  ' : reroll}.`
                 };
             }
             faceObj.rerolls[0].done++;
-            titleText += `Rerolled to a ${reroll}` + (faceObj.rerolls[0].limit != 0 ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).` : '.');
+            titleText += `Rerolled to a ${reroll < 10 ? reroll + '  ' : reroll}` + (faceObj.rerolls[0].limit != 0 ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).` : '.');
             if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
                 log(`handleRollTurn::REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
                 faceObj.rerolls.shift();
@@ -526,36 +410,49 @@ function handleRollTurn(result, turn) {
         if (faceObj.explosives.length) {
             log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
             var newDie = randomInteger(10);
-            log(`handleRollTurn::EXPLO TEST=${!faceObj.explosives[0].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[0].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`)
-            if (!faceObj.explosives[0].ignoreRerolled || (!rerolled && !item.wasRerolled)) {
-                exploded = true;
-                toNextRollExploded = {
-                    v: newDie,
-                    wasRerolled: item.wasRerolled || rerolled,
-                    wasExploded: true,
-                    title: `From a ${face}.`
-                };
-                faceObj.explosives[0].done++;
-                titleText += `Exploded to a ${newDie}` + (faceObj.explosives[0].limit != 0 ? ` (Done${faceObj.explosives[0].done}/${faceObj.explosives[0].limit}).` : '.');
-                if (faceObj.explosives[0].limit != 0 && faceObj.explosives[0].limit == faceObj.explosives[0].done) {
-                    log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[0])}`)
-                    faceObj.explosives.shift();
+            var iterator = 0;
+            for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
+            if (iterator == faceObj.explosives.length) {
+                log(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
+            } else {
+                log(`handleRollTurn::EXPLO iterator=${iterator} TEST=${!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[iterator].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`)
+                if (!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)) {
+                    exploded = true;
+                    toNextRollExploded = {
+                        v: newDie,
+                        wasRerolled: false,
+                        wasEverRerolled: item.rerolled || true,
+                        wasExploded: true,
+                        title: `RollTurn (${turn+1 < 10 ? turn+1 + '  ' : turn+1}). E->Face=${newDie < 10 ? newDie + '  ' : newDie}.`
+                    };
+                    faceObj.explosives[iterator].done++;
+                    titleText += `Explode to a ${newDie < 10 ? newDie + '  ' : newDie}` + (faceObj.explosives[iterator].limit != 0 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).` : '.');
+                    if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
+                        log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`)
+                        faceObj.explosives.shift();
+                    }
                 }
             }
         }
-        if (rerolled && exploded) toNextRollRerolled.wasExploded = true;
-        if (rerolled) nextRollsToProcess.push(toNextRollRerolled);
-        if (exploded) nextRollsToProcess.push(toNextRollExploded);
         var finalObj = {
             v: face,
             wasRerolled: item.wasRerolled || false,
+            wasEverRerolled: item.wasEverRerolled || false,
             wasExploded: item.wasExploded || false,
             rerolled: rerolled,
             exploded: exploded,
             doubled: false,
             tags: tagList,
-            title: (item.title ? item.title + titleText : titleText)
+            title: (item.title ? item.title + titleText : `Roll Initial.            Face=${face < 10 ? face + '  ' : face}.${titleText}`)
         };
+        if (rerolled) {
+            toNextRollRerolled.title = finalObj.title + '&#013;&#010;' + toNextRollRerolled.title || '.';
+            nextRollsToProcess.push(toNextRollRerolled);
+        }
+        if (exploded) {
+            toNextRollExploded.title = finalObj.title + '&#013;&#010;' + toNextRollExploded.title || '.';
+            nextRollsToProcess.push(toNextRollExploded);
+        }
         log(`handleRollTurn::finalObj=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
 
@@ -604,34 +501,37 @@ function buildHTML(result, origCmd, origRoll, color) {
 	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
 	// of them. The Roll20 CSS has some compatible styling for this already, but it's not complete, so we have to do the rest ourselves.
 
-	// This will set the QuantumRoll icon in a container div, with a negative margin so it will appear in the right place.
-    var outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px";
-	// This offsets the div immediately inside the one above, so it doesn't overlap the icon.
-    var innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;";
-
-	// The styling for the .formula class.
-    var formulaStyle = "font-size:inherit;background:white;border-radius:3px;";
-	// The styling for the total box at the end of the message.
-    var totalStyle = formulaStyle;
+    var outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
+        innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
+        formulaStyle = "font-size:inherit;background:white;border-radius:3px;",
+        totalStyle = formulaStyle; // The styling for the total box at the end of the message.
     totalStyle += "padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;";
-
-	// The rest of the .formula style.
     formulaStyle += "padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;";
-	// The styling for the .formattedformula class.
-    var formattedFormulaStyle = "display:block;float:left;";
-	// The styling for the .ui-draggable class, though it doesn't work as it would if it were an official roll.
-    var uidraggableStyle = "cursor:move";
-
-    var diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;";
-    var diceIconStyle = "";
+    var formattedFormulaStyle = "display:block;float:left;",
+        uidraggableStyle = "cursor:move",
+        diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
+        diceIconStyle = "";
     // use font from character sheet
-    var planeWalkerFont = "font-family: 'Planewalker';";
-    var diceRollStyle = planeWalkerFont + " letter-spacing: -2px; top: 4px;"
-    var successColor = "#23b04f";
-    var successColorStyle = " color: "+successColor+"; text-shadow: 0px 0px 1px "+successColor+";";
-    var doubleColor = "#950015";
-    var doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0px 0px 1px "+doubleColor+";";
-    var rerolledStyle = 'opacity: 0.4;';
+    var planeWalkerFont = "font-family: 'Planewalker';",
+        diceRollStyle = planeWalkerFont + " letter-spacing: -2px; top: 4px;",
+        // ME
+        baseColor = 'black',
+        successColor = '#23b04f',
+        doubleColor = '#950015',
+        rerolledColor = 'rgba(0, 42, 255, 1)',
+        explodedColor = 'rgba(255, 235, 0, 1)',
+        // KIA
+        // baseColor = '#181e22',
+        // successColor = "#4c872a",
+        // doubleColor = "#86293a",
+        // rerolledColor = '#2547a0',
+        // explodedColor = '#219a7e',
+        successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
+        doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
+        rerolledStyle = 'opacity: 0.4;',
+        rerolledTextShadow = `, 5px -5px 4px ${rerolledColor}`,
+        wasAffectedTextShadow = ', -3px 0 0 ',
+        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`;
 
 
 	// Building the output.
@@ -640,19 +540,29 @@ function buildHTML(result, origCmd, origRoll, color) {
     html += "<div style=\"" + innerStyle + "\">";
     html += "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\"> rolling " + origRoll + " </div>";
     html += "<div style=\"clear: both;\"></div>";
-
     html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
     html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
     html +=   "(";
 
     var isDouble;
-	// Making a little die result for each die rolled.
     _.each(vals, function(item, idx) {
+        if (result.rollSetup.verbosity == 0 && item.rerolled) return;
         isDouble = item.doubled;
+        var affectedTextShadow = '';
+        if (item.wasRerolled || item.wasExploded) {
+            affectedTextShadow = wasAffectedTextShadow
+            if (item.wasRerolled)
+                affectedTextShadow += rerolledColor;
+            else if (item.wasExploded)
+                affectedTextShadow += explodedColor;
+        }
+        if (item.exploded) affectedTextShadow += explodedTextShadow;
+        if (item.rerolled) affectedTextShadow += rerolledTextShadow;
         html +=     `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
         html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="'+item.title : '') +'">';
         html +=         '<div class="didroll" style="' + diceRollStyle
-                    + (isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ' text-shadow: 0 0 1px black;'))
+                    + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
+                        + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
                     + ([4,8,10].includes(item.v) ? ' left: 0px;' : ' left: 1.5px;')
                     + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
 
