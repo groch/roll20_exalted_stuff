@@ -379,6 +379,15 @@ function sortRerollsAndExplosives(result) {
     }
 }
 
+function strFill(number) {
+    return number < 10 ? number + '  ' : number;
+}
+
+function updateTitleAndPushToNextRolls(toNextRoll, finalObj, nextRollsToProcess) {
+    toNextRoll.title = finalObj.title + '&#013;&#010;' + toNextRoll.title || '.';
+    nextRollsToProcess.push(toNextRoll);
+}
+
 /**
  * Perform the roll with settings created during previous steps.
  *
@@ -402,10 +411,10 @@ function handleRollTurn(result, turn) {
             ({ exploded, toNextRollExploded, titleText } = handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText));
         }
         var finalObj = {
-            wasEverRerolled: item.wasEverRerolled || false,     v:          face,
-            wasRerolled:    item.wasRerolled || false,          doubled:    false,
-            wasExploded:    item.wasExploded || false,          tags:       tagList,
-            rerolled:       rerolled,                           exploded:   exploded,
+            wasEverRerolled:    item.wasEverRerolled || false,      v:          face,
+            wasRerolled:        item.wasRerolled || false,          doubled:    false,
+            wasExploded:        item.wasExploded || false,          tags:       tagList,
+            rerolled:           rerolled,                           exploded:   exploded,
             title: (item.title ? item.title + titleText : `Roll Initial.            Face=${strFill(face)}.${titleText}`)
         };
         if (rerolled) updateTitleAndPushToNextRolls(toNextRollRerolled, finalObj, nextRollsToProcess);
@@ -430,7 +439,9 @@ function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, tur
         };
     }
     faceObj.rerolls[0].done++;
-    titleText += `Rerolled to a ${reroll < 10 ? reroll + '  ' : reroll}` + (faceObj.rerolls[0].limit != 0 ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).` : '.');
+    titleText += `Rerolled to a ${reroll < 10 ? reroll + '  ' : reroll}` + (faceObj.rerolls[0].limit != 0
+        ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).`
+        : ` (  Done${faceObj.rerolls[0].done} ).`);
     if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
         log(`handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
         faceObj.rerolls.shift();
@@ -442,8 +453,7 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
     log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
     var newDie = randomInteger(10);
     var iterator = 0;
-    for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++)
-        ;
+    for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
     if (iterator == faceObj.explosives.length) {
         log(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
     } else {
@@ -456,7 +466,9 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
                 title: `RollTurn (${strFill(turn + 1)}). E->Face=${strFill(newDie)}.`
             };
             faceObj.explosives[iterator].done++;
-            titleText += `Explode to a ${strFill(newDie)}` + (faceObj.explosives[iterator].limit != 0 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).` : '.');
+            titleText += `Explode to a ${strFill(newDie)}` + (faceObj.explosives[iterator].limit != 0
+                ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).`
+                : ` (  Done${faceObj.explosives[iterator].done} ).`);
             if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
                 log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
                 faceObj.explosives.shift();
@@ -464,15 +476,6 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
         }
     }
     return { exploded, toNextRollExploded, titleText };
-}
-
-function strFill(number) {
-    return number < 10 ? number + '  ' : number;
-}
-
-function updateTitleAndPushToNextRolls(toNextRoll, finalObj, nextRollsToProcess) {
-    toNextRoll.title = finalObj.title + '&#013;&#010;' + toNextRoll.title || '.';
-    nextRollsToProcess.push(toNextRoll);
 }
 
 const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
