@@ -142,10 +142,12 @@ function setupRollStructure(result) {
         has10doubled: true,
         verbosity: 0,
         colored: false,
+        onlyResult: false,
         face: [null],
         conditionals: [],
         rollToProcess: [],
-        finalResults: []
+        finalResults: [],
+        maxRecursiveAchieved: false
     };
 
     for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
@@ -187,10 +189,10 @@ function parseCmds(item) {
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
         };
     }
-    patt = /^(gm|D|target|turn|v|V|c)$/;
+    patt = /^(gm|D|target|turn|v|V|c|o|onlyResult)$/;
     if (ret = trim.match(patt)) {
         match = true;
-        log('parseCmds::MATCH2 - gm & D & Turn & verbosity & color');
+        log('parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult');
         log('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -256,6 +258,9 @@ function processCmds(cmds, result) {
             case 'gm':
                 result.toGm = true;
                 break;
+            case 'o':
+            case 'onlyResult':
+                result.rollSetup.onlyResult = true;
             case 'c':
                 result.rollSetup.colored = true;
                 break;
@@ -359,6 +364,8 @@ function finalizeRoll(result) {
         handleRollTurn(result, turn++);
         if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
+
+    if (turn >= 42) result.rollSetup.maxRecursiveAchieved = true;
 
     doDoubles(result);
 
@@ -502,7 +509,7 @@ function buildHTML(result, origCmd, origRoll, color) {
     log(`buildHTML::updating total successes=${succ+addedSuccesses}, old=${succ} + ${addedSuccesses}`);
     succ += addedSuccesses;
     if (succ < 0) succ = 0;
-    var succTxt = addedSuccessesLabel ? `(${result.total}+${addedSuccesses})=${succ}` : succ;
+    var succTxt = addedSuccessesLabel ? `${result.total}${addedSuccesses >=0 ? '+'+addedSuccesses : addedSuccesses}=${succ}` : succ;
 
 	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
 	// of them. The Roll20 CSS has some compatible styling for this already, but it's not complete, so we have to do the rest ourselves.
@@ -524,7 +531,8 @@ function buildHTML(result, origCmd, origRoll, color) {
         baseColor = 'black',
         successColor = '#23b04f',
         doubleColor = '#950015',
-        rerolledColor = 'rgba(0, 42, 255, 1)',
+        // rerolledColor = 'rgba(0, 42, 255, 1)',
+        rerolledColor = 'rgba(0, 100, 255, 1)',
         explodedColor = 'rgba(255, 235, 0, 1)',
         // KIA
         // baseColor = '#181e22',
@@ -535,9 +543,10 @@ function buildHTML(result, origCmd, origRoll, color) {
         successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
         doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
         rerolledStyle = 'opacity: 0.4;',
-        rerolledTextShadow = `, 5px -5px 4px ${rerolledColor}`,
-        wasAffectedTextShadow = ', -3px 0 0 ',
-        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`;
+        rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
+        wasAffectedTextShadow = ', -3px 0 0.03em ',
+        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
+        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;';
 
 
 	// Building the output.
@@ -546,48 +555,48 @@ function buildHTML(result, origCmd, origRoll, color) {
     html += "<div style=\"" + innerStyle + "\">";
     html += "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\"> rolling " + origRoll + " </div>";
     html += "<div style=\"clear: both;\"></div>";
-    html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
-    html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
-    html +=   "(";
+    if (!result.rollSetup.onlyResult) {
+        html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
+        html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
+        html +=   "(";
 
-    var isDouble;
-    _.each(vals, function(item, idx) {
-        if (result.rollSetup.verbosity == 0 && item.rerolled) return;
-        isDouble = item.doubled;
-        var affectedTextShadow = '';
-        if (item.wasRerolled || item.wasExploded) {
-            affectedTextShadow = wasAffectedTextShadow
-            if (item.wasRerolled)
-                affectedTextShadow += rerolledColor;
-            else if (item.wasExploded)
-                affectedTextShadow += explodedColor;
-        }
-        if (item.exploded) affectedTextShadow += explodedTextShadow;
-        if (item.rerolled) affectedTextShadow += rerolledTextShadow;
-        html +=     `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
-        html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="'+item.title : '') +'">';
-        html +=         '<div class="didroll" style="' + diceRollStyle
-                    + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
-                        + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
-                    + ([4,8,10].includes(item.v) ? ' left: 0px;' : ' left: 1.5px;')
-                    + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
+        var isDouble;
+        _.each(vals, function(item, idx) {
+            if (result.rollSetup.verbosity == 0 && item.rerolled) return;
+            isDouble = item.doubled;
+            var affectedTextShadow = '';
+            if (item.wasRerolled || item.wasExploded) {
+                affectedTextShadow = wasAffectedTextShadow
+                if (item.wasRerolled)
+                    affectedTextShadow += rerolledColor;
+                else if (item.wasExploded)
+                    affectedTextShadow += explodedColor;
+            }
+            if (item.exploded) affectedTextShadow += explodedTextShadow;
+            if (item.rerolled) affectedTextShadow += rerolledTextShadow;
+            html +=     `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
+            html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="'+item.title : '') +'">';
+            html +=         '<div class="didroll" style="' + diceRollStyle
+                        + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
+                            + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
+                        + ([4,8,10].includes(item.v) ? ' left: 0px;' : ' left: 1.5px;')
+                        + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
+            html +=         "<div class=\"backing\" style=\"opacity: 1;\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
+            html +=       "</div>";
+            html += (idx + 1 != vals.length) ? "+" : "";
+            html +=     "</div>";
+        });
 
-		// Normally the little d10-shaped icons in the back are handled with a combination of CSS classes and in the .backing:after pseudo class.
-		// We don't have access to any of that from here, so we have to fudge it. "dicefontd10" is the name of the custom icon font, and "0"
-		// corresponds to the outline used in a normal rollresult.
-        // html += "        <div class=\"backing\"><span style=\"font-family: 'dicefontd10'; color: " + color + ";\">0</span></div>";
-        html +=         "<div class=\"backing\" style=\"opacity: 1;\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
-        html +=       "</div>";
-        html += (idx + 1 != vals.length) ? "+" : "";
-        html +=     "</div>";
-    });
-
-    html +=   ")";
-    if (addedSuccessesLabel) html += addedSuccessesLabel;
-    html +=   "</div>";
-    html += "</div>";
-
-    html += "<div style=\"clear: both;\"></div>";
+        html +=   ")";
+        if (addedSuccessesLabel) html += addedSuccessesLabel;
+        html +=   "</div>";
+        html += "</div>";
+        html += "<div style=\"clear: both;\"></div>";
+    }
+    if (result.rollSetup.maxRecursiveAchieved) {
+        html += "<p style='"+maxRecursionStyle+"'>MAX RECURSION ACHIEVED</p>";
+        html += "<div style=\"clear: both;\"></div>";
+    }
     html += "<strong> = </strong>";
     html += "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
     html += "</div>";
