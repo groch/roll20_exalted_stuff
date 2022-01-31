@@ -483,7 +483,7 @@ function buildHTML(result, origCmd, origRoll, color) {
     // Add manually added successes from original command
     var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
     var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
-    var ret, addedSuccess = '';
+    var ret, addedSuccessesLabel = '', addedSuccesses = 0;
     if (ret = origCmd.match(patt)) {
         // log('buildHTML::ret='+JSON.stringify(ret));
         // log('buildHTML::succ='+succ);
@@ -493,10 +493,16 @@ function buildHTML(result, origCmd, origRoll, color) {
             // log('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
             for (const [,,item] of arrayAddedSuccesses) {
                 // log('buildHTML::item='+item);
-                addedSuccess += item;
+                addedSuccessesLabel += item;
+                addedSuccesses += Number(item);
             }
         }
     }
+
+    log(`buildHTML::updating total successes=${succ+addedSuccesses}, old=${succ} + ${addedSuccesses}`);
+    succ += addedSuccesses;
+    if (succ < 0) succ = 0;
+    var succTxt = addedSuccessesLabel ? `(${result.total}+${addedSuccesses})=${succ}` : succ;
 
 	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
 	// of them. The Roll20 CSS has some compatible styling for this already, but it's not complete, so we have to do the rest ourselves.
@@ -577,13 +583,13 @@ function buildHTML(result, origCmd, origRoll, color) {
     });
 
     html +=   ")";
-    if (addedSuccess) html += addedSuccess;
+    if (addedSuccessesLabel) html += addedSuccessesLabel;
     html +=   "</div>";
     html += "</div>";
 
     html += "<div style=\"clear: both;\"></div>";
     html += "<strong> = </strong>";
-    html += "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succ + " Success" + ((succ != 1) ? "es" : "") + "</div>";
+    html += "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
     html += "</div>";
     html += "</div>";
 
