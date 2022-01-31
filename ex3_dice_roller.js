@@ -342,35 +342,41 @@ function finalizeRoll(result) {
     }
 
     //sort reroll & explosives
-    for (var i = 1; i <= 10; i++) {
-        var face = result.rollSetup.face[i];
-        face.rerolls.sort((a, b) => {
-            if (a.recursive && !b.recursive) return 1;
-            if (!a.recursive && b.recursive) return -1;
-            return a.limit - b.limit;
-        });
-        face.explosives.sort((a, b) => {
-            if (!a.ignoreRerolled && b.ignoreRerolled) return 1;
-            if (a.ignoreRerolled && !b.ignoreRerolled) return -1;
-            return a.limit - b.limit;
-        });
-    }
+    sortRerollsAndExplosives(result);
 
     log(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
-
     var turn = 1;
     do {
         log(`MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
         handleRollTurn(result, turn++);
         if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
-
     if (turn >= 42) result.rollSetup.maxRecursiveAchieved = true;
 
     doDoubles(result);
 
     log(`finalizeRoll::rewriting result.rolls[0].results=${JSON.stringify(result.rollSetup.finalResults)}`);
     result.rolls[0].results = result.rollSetup.finalResults;
+}
+
+function sortRerollsAndExplosives(result) {
+    for (var i = 1; i <= 10; i++) {
+        var face = result.rollSetup.face[i];
+        face.rerolls.sort((a, b) => {
+            if (a.recursive && !b.recursive)
+                return 1;
+            if (!a.recursive && b.recursive)
+                return -1;
+            return a.limit - b.limit;
+        });
+        face.explosives.sort((a, b) => {
+            if (!a.ignoreRerolled && b.ignoreRerolled)
+                return 1;
+            if (a.ignoreRerolled && !b.ignoreRerolled)
+                return -1;
+            return a.limit - b.limit;
+        });
+    }
 }
 
 /**
@@ -384,82 +390,26 @@ function handleRollTurn(result, turn) {
     log(`handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
     var nextRollsToProcess = [];
     for (const item of result.rollSetup.rollToProcess) {
-        var rerolled = false,
-            exploded = false,
-            toNextRollRerolled = null,
-            toNextRollExploded = null,
-            tagList = [],
-            face = item.v,
-            faceObj = result.rollSetup.face[face],
-            titleText = '';
+        var rerolled = false,           exploded = false,
+            toNextRollRerolled = null,  toNextRollExploded = null,
+            tagList = [],               face = item.v,
+            titleText = '',             faceObj = result.rollSetup.face[face];
         log(`handleRollTurn::face(${face}).rerolls.length=${faceObj.rerolls.length}`);
         if (faceObj.rerolls.length) {
-            log(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
-            var reroll = randomInteger(10);
-            if (!(faceObj.rerolls[0].keepBest && reroll < face) &&
-                 (faceObj.rerolls[0].recursive || !item.wasRerolled)) {
-                rerolled = true;
-                toNextRollRerolled = {
-                    v: reroll,
-                    wasRerolled: true,
-                    wasEverRerolled: true,
-                    wasExploded: false,
-                    title: `RollTurn (${turn+1 < 10 ? turn+1 + '  ' : turn+1}). R->Face=${reroll < 10 ? reroll + '  ' : reroll}.`
-                };
-            }
-            faceObj.rerolls[0].done++;
-            titleText += `Rerolled to a ${reroll < 10 ? reroll + '  ' : reroll}` + (faceObj.rerolls[0].limit != 0 ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).` : '.');
-            if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
-                log(`handleRollTurn::REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
-                faceObj.rerolls.shift();
-            }
+            ({ rerolled, toNextRollRerolled, titleText } = handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText));
         }
         if (faceObj.explosives.length) {
-            log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
-            var newDie = randomInteger(10);
-            var iterator = 0;
-            for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
-            if (iterator == faceObj.explosives.length) {
-                log(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
-            } else {
-                log(`handleRollTurn::EXPLO iterator=${iterator} TEST=${!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[iterator].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`)
-                if (!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)) {
-                    exploded = true;
-                    toNextRollExploded = {
-                        v: newDie,
-                        wasRerolled: false,
-                        wasEverRerolled: item.rerolled || true,
-                        wasExploded: true,
-                        title: `RollTurn (${turn+1 < 10 ? turn+1 + '  ' : turn+1}). E->Face=${newDie < 10 ? newDie + '  ' : newDie}.`
-                    };
-                    faceObj.explosives[iterator].done++;
-                    titleText += `Explode to a ${newDie < 10 ? newDie + '  ' : newDie}` + (faceObj.explosives[iterator].limit != 0 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).` : '.');
-                    if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
-                        log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`)
-                        faceObj.explosives.shift();
-                    }
-                }
-            }
+            ({ exploded, toNextRollExploded, titleText } = handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText));
         }
         var finalObj = {
-            v: face,
-            wasRerolled: item.wasRerolled || false,
-            wasEverRerolled: item.wasEverRerolled || false,
-            wasExploded: item.wasExploded || false,
-            rerolled: rerolled,
-            exploded: exploded,
-            doubled: false,
-            tags: tagList,
-            title: (item.title ? item.title + titleText : `Roll Initial.            Face=${face < 10 ? face + '  ' : face}.${titleText}`)
+            wasEverRerolled: item.wasEverRerolled || false,     v:          face,
+            wasRerolled:    item.wasRerolled || false,          doubled:    false,
+            wasExploded:    item.wasExploded || false,          tags:       tagList,
+            rerolled:       rerolled,                           exploded:   exploded,
+            title: (item.title ? item.title + titleText : `Roll Initial.            Face=${strFill(face)}.${titleText}`)
         };
-        if (rerolled) {
-            toNextRollRerolled.title = finalObj.title + '&#013;&#010;' + toNextRollRerolled.title || '.';
-            nextRollsToProcess.push(toNextRollRerolled);
-        }
-        if (exploded) {
-            toNextRollExploded.title = finalObj.title + '&#013;&#010;' + toNextRollExploded.title || '.';
-            nextRollsToProcess.push(toNextRollExploded);
-        }
+        if (rerolled) updateTitleAndPushToNextRolls(toNextRollRerolled, finalObj, nextRollsToProcess);
+        if (exploded) updateTitleAndPushToNextRolls(toNextRollExploded, finalObj, nextRollsToProcess);
         log(`handleRollTurn::finalObj=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
 
@@ -468,6 +418,92 @@ function handleRollTurn(result, turn) {
     result.rollSetup.rollToProcess = nextRollsToProcess;
 }
 
+function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText) {
+    log(`handleRollTurn::handleFaceReroll face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
+    var reroll = randomInteger(10);
+    if (!(faceObj.rerolls[0].keepBest && reroll < face) && (faceObj.rerolls[0].recursive || !item.wasRerolled)) {
+        rerolled = true;
+        toNextRollRerolled = {
+            v: reroll, wasEverRerolled: true,
+            wasRerolled: true, wasExploded: false,
+            title: `RollTurn (${strFill(turn + 1)}). R->Face=${strFill(reroll)}.`
+        };
+    }
+    faceObj.rerolls[0].done++;
+    titleText += `Rerolled to a ${reroll < 10 ? reroll + '  ' : reroll}` + (faceObj.rerolls[0].limit != 0 ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).` : '.');
+    if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
+        log(`handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
+        faceObj.rerolls.shift();
+    }
+    return { rerolled, toNextRollRerolled, titleText };
+}
+
+function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText) {
+    log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
+    var newDie = randomInteger(10);
+    var iterator = 0;
+    for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++)
+        ;
+    if (iterator == faceObj.explosives.length) {
+        log(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
+    } else {
+        log(`handleRollTurn::EXPLO iterator=${iterator} TEST=${!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[iterator].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`);
+        if (!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)) {
+            exploded = true;
+            toNextRollExploded = {
+                v: newDie, wasEverRerolled: item.rerolled || true,
+                wasRerolled: false, wasExploded: true,
+                title: `RollTurn (${strFill(turn + 1)}). E->Face=${strFill(newDie)}.`
+            };
+            faceObj.explosives[iterator].done++;
+            titleText += `Explode to a ${strFill(newDie)}` + (faceObj.explosives[iterator].limit != 0 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).` : '.');
+            if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
+                log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
+                faceObj.explosives.shift();
+            }
+        }
+    }
+    return { exploded, toNextRollExploded, titleText };
+}
+
+function strFill(number) {
+    return number < 10 ? number + '  ' : number;
+}
+
+function updateTitleAndPushToNextRolls(toNextRoll, finalObj, nextRollsToProcess) {
+    toNextRoll.title = finalObj.title + '&#013;&#010;' + toNextRoll.title || '.';
+    nextRollsToProcess.push(toNextRoll);
+}
+
+const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
+        innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
+        // ME
+        baseColor = 'black',
+        successColor = '#23b04f',
+        doubleColor = '#950015',
+        rerolledColor = 'rgba(0, 100, 255, 1)',
+        explodedColor = 'rgba(255, 235, 0, 1)',
+        // KIA
+        // baseColor = '#181e22',
+        // successColor = "#4c872a",
+        // doubleColor = "#86293a",
+        // rerolledColor = '#2547a0',
+        // explodedColor = '#219a7e',
+        formulaStyleBase = "font-size:inherit;background:white;border-radius:3px;",
+        totalStyle = formulaStyleBase + 'padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;',
+        formulaStyle = formulaStyleBase + 'padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;',
+        formattedFormulaStyle = "display:block;float:left;",
+        uidraggableStyle = "cursor:move",
+        diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
+        planeWalkerFont = "font-family: 'Planewalker';", // use font from character sheet css
+        diceRollStyle = planeWalkerFont + " letter-spacing: -1px; top: 4px;",
+        successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
+        doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
+        rerolledStyle = 'opacity: 0.4;',
+        rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
+        wasAffectedTextShadow = ', -3px 0 0.03em ',
+        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
+        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;';
 
 /**
  * This builds the raw HTML response for the roll message. This is designed to, as much as is possible, mimic the standard roll result, up to and including
@@ -483,71 +519,11 @@ function handleRollTurn(result, turn) {
  */
 function buildHTML(result, origCmd, origRoll, color) {
 	// Putting everythign in smaller variables that it's easier to type. ;P
-    var vals = result.rolls[0].results;
-    var succ = result.total;
+    var vals = result.rolls[0].results, succ = result.total;
     log(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
 
-    // Add manually added successes from original command
-    var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
-    var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
-    var ret, addedSuccessesLabel = '', addedSuccesses = 0;
-    if (ret = origCmd.match(patt)) {
-        // log('buildHTML::ret='+JSON.stringify(ret));
-        // log('buildHTML::succ='+succ);
-        if (ret[1]) {
-            // log('buildHTML::ret[1]='+ret[1]);
-            var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
-            // log('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
-            for (const [,,item] of arrayAddedSuccesses) {
-                // log('buildHTML::item='+item);
-                addedSuccessesLabel += item;
-                addedSuccesses += Number(item);
-            }
-        }
-    }
-
-    log(`buildHTML::updating total successes=${succ+addedSuccesses}, old=${succ} + ${addedSuccesses}`);
-    succ += addedSuccesses;
-    if (succ < 0) succ = 0;
-    var succTxt = addedSuccessesLabel ? `${result.total}${addedSuccesses >=0 ? '+'+addedSuccesses : addedSuccesses}=${succ}` : succ;
-
-	// Roll20 doesn't let us piggyback off of most of their classes. Any script-defined HTML classes automatically have "userscript-" attached to the front
-	// of them. The Roll20 CSS has some compatible styling for this already, but it's not complete, so we have to do the rest ourselves.
-
-    var outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
-        innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
-        formulaStyle = "font-size:inherit;background:white;border-radius:3px;",
-        totalStyle = formulaStyle; // The styling for the total box at the end of the message.
-    totalStyle += "padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;";
-    formulaStyle += "padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;";
-    var formattedFormulaStyle = "display:block;float:left;",
-        uidraggableStyle = "cursor:move",
-        diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
-        diceIconStyle = "";
-    // use font from character sheet
-    var planeWalkerFont = "font-family: 'Planewalker';",
-        diceRollStyle = planeWalkerFont + " letter-spacing: -2px; top: 4px;",
-        // ME
-        baseColor = 'black',
-        successColor = '#23b04f',
-        doubleColor = '#950015',
-        // rerolledColor = 'rgba(0, 42, 255, 1)',
-        rerolledColor = 'rgba(0, 100, 255, 1)',
-        explodedColor = 'rgba(255, 235, 0, 1)',
-        // KIA
-        // baseColor = '#181e22',
-        // successColor = "#4c872a",
-        // doubleColor = "#86293a",
-        // rerolledColor = '#2547a0',
-        // explodedColor = '#219a7e',
-        successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
-        doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
-        rerolledStyle = 'opacity: 0.4;',
-        rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
-        wasAffectedTextShadow = ', -3px 0 0.03em ',
-        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
-        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;';
-
+    var addedSuccessesLabel, succTxt;
+    ({ addedSuccessesLabel, succTxt, succ } = recalculateSuccesses(origCmd, succ, result));
 
 	// Building the output.
     var html = "";
@@ -558,38 +534,9 @@ function buildHTML(result, origCmd, origRoll, color) {
     if (!result.rollSetup.onlyResult) {
         html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
         html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
-        html +=   "(";
-
-        var isDouble;
-        _.each(vals, function(item, idx) {
-            if (result.rollSetup.verbosity == 0 && item.rerolled) return;
-            isDouble = item.doubled;
-            var affectedTextShadow = '';
-            if (item.wasRerolled || item.wasExploded) {
-                affectedTextShadow = wasAffectedTextShadow
-                if (item.wasRerolled)
-                    affectedTextShadow += rerolledColor;
-                else if (item.wasExploded)
-                    affectedTextShadow += explodedColor;
-            }
-            if (item.exploded) affectedTextShadow += explodedTextShadow;
-            if (item.rerolled) affectedTextShadow += rerolledTextShadow;
-            html +=     `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
-            html +=       '<div class="dicon" style="' + diceIconStyle + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="'+item.title : '') +'">';
-            html +=         '<div class="didroll" style="' + diceRollStyle
-                        + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
-                            + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
-                        + ([4,8,10].includes(item.v) ? ' left: 0px;' : ' left: 1.5px;')
-                        + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
-            html +=         "<div class=\"backing\" style=\"opacity: 1;\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
-            html +=       "</div>";
-            html += (idx + 1 != vals.length) ? "+" : "";
-            html +=     "</div>";
-        });
-
-        html +=   ")";
+        html = displayRolls(vals, result, html);
         if (addedSuccessesLabel) html += addedSuccessesLabel;
-        html +=   "</div>";
+        html +=  "</div>";
         html += "</div>";
         html += "<div style=\"clear: both;\"></div>";
     }
@@ -606,6 +553,63 @@ function buildHTML(result, origCmd, origRoll, color) {
     return html;
 }
 
+
+function recalculateSuccesses(origCmd, succ, result) {
+    var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
+    var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
+    var ret, addedSuccessesLabel = '', addedSuccesses = 0;
+    if (ret = origCmd.match(patt)) {
+        // log('buildHTML::ret='+JSON.stringify(ret));
+        // log('buildHTML::succ='+succ);
+        if (ret[1]) {
+            // log('buildHTML::ret[1]='+ret[1]);
+            var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
+            // log('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
+            for (const [, , item] of arrayAddedSuccesses) {
+                // log('buildHTML::item='+item);
+                addedSuccessesLabel += item;
+                addedSuccesses += Number(item);
+            }
+        }
+    }
+
+    log(`recalculateSuccesses::updating total successes=${succ + addedSuccesses}, old=${succ} + ${addedSuccesses}`);
+    succ += addedSuccesses;
+    if (succ < 0)
+        succ = 0;
+    var succTxt = addedSuccessesLabel ? `${result.total}${addedSuccesses >= 0 ? '+' + addedSuccesses : addedSuccesses}=${succ}` : succ;
+    return { addedSuccessesLabel, succTxt, succ };
+}
+
+function displayRolls(vals, result, html) {
+    var isDouble;
+    html += '(';
+    _.each(vals, function (item, idx) {
+        if (result.rollSetup.verbosity == 0 && item.rerolled)
+            return;
+        isDouble = item.doubled;
+        var affectedTextShadow = '';
+        if (item.wasRerolled || item.wasExploded) {
+            affectedTextShadow = wasAffectedTextShadow;
+            if (item.wasRerolled)       affectedTextShadow += rerolledColor;
+            else if (item.wasExploded)  affectedTextShadow += explodedColor;
+        }
+        if (item.exploded) affectedTextShadow += explodedTextShadow;
+        if (item.rerolled) affectedTextShadow += rerolledTextShadow;
+        html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
+        html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="' + item.title : '') + '">';
+        html += '<div class="didroll" style="' + diceRollStyle
+            + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
+                + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
+            + ([1, 10].includes(item.v) ? ' left: 1.5px;' : ' left: 0px;')
+            + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
+        html += "<div class=\"backing\" style=\"opacity: 1;\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
+        html += "</div>";
+        html += (idx + 1 != vals.length) ? "+" : "";
+        html += "</div>";
+    });
+    return html + ')';
+}
 
 /**
  * This builds the HTML for the message that is sent when the user passes the -help command. It's all pretty standard; if you know HTML already, it should
