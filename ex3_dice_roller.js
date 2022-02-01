@@ -107,21 +107,16 @@ function performRoll(msg, cmd) {
             log('performRoll::result='+ops[0].content);
             log('performRoll::cmds='+JSON.stringify(cmds));
 
-	        if (!_.isEmpty(cmds)) {
-	            processCmds(cmds, result);
-	        } //else { // If there are no commands passed, the script defaults to doubling 10s, which is what this call represents.
-	        //    doDoubles(result, true, 0);
-	        //}
-
+	        if (!_.isEmpty(cmds)) processCmds(cmds, result);
             finalizeRoll(result);
 
 			// This gets the player's color, for styling the roll result HTML output in buildHTML().
-	        var player = getObj("player", msg.playerid);
+            const player = getObj("player", msg.playerid);
 	        var outHTML = buildHTML(result, msg.content, ops[0].origRoll, player.get('color'));
 
 			// Passes the final, formatted HTML as a direct message to the chat window.
             if (result.toGm) {
-                if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${msg.who} ${outHTML}`);
+                if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${player.get('displayname')} ${outHTML}`);
                 sendChat(msg.who, '/w gm ' + outHTML);
             } else {
 	            sendChat(msg.who, '/direct ' + outHTML);
@@ -134,7 +129,6 @@ function performRoll(msg, cmd) {
 	    }
 	});
 }
-
 
 function setupRollStructure(result) {
     result.rollSetup = {
