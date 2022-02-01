@@ -5,9 +5,51 @@
  * @version 1.1
  */
 
-log('-- Loaded EX3Dice! --');
-sendChat('EX3Dice API', 'Thanks for using EX3Dice (Groch Version)! For instructions, type <code>!exr -help</code>');
+class LOGLEVEL {
+    static EMERGENCY    = new LOGLEVEL(1);
+    static ALERT        = new LOGLEVEL(2);
+    static CRITICAL     = new LOGLEVEL(3);
+    static ERROR        = new LOGLEVEL(4);
+    static WARNING      = new LOGLEVEL(5);
+    static NOTICE       = new LOGLEVEL(6);
+    static INFO         = new LOGLEVEL(7);
+    static DEBUG        = new LOGLEVEL(8);
 
+    constructor(value) {
+        this.value = value;
+    }
+    toString() {
+        return `${this.value}`;
+    }
+}
+// CONSTANTS
+const LogLvl = LOGLEVEL.DEBUG,
+  DefaultRollSetup = {
+    hasRecursiveOrExplosiveFeature: false,
+    has10doubled: true,
+    verbosity: 0,
+    colored: false,
+    onlyResult: false,
+    revertTitleOrder: false,
+    face: [null],
+    conditionals: [],
+    rollToProcess: [],
+    finalResults: [],
+    maxRecursiveAchieved: false
+};
+
+function logger(level, ...logged) {
+    if (!(level instanceof LOGLEVEL)) {
+        logged.unshift(level);
+        level = LOGLEVEL.DEBUG;
+    }
+
+    if (level <= LogLvl)
+        log(...logged);
+}
+
+logger('-- Loaded EX3Dice! --');
+sendChat('EX3Dice API', 'Thanks for using EX3Dice (Groch Version)! For instructions, type <code>!exr -help</code>');
 
 /**
  * The core functionality of the script. Intercepts API messages meant for it, extracts the core of the command, and passes it to
@@ -35,27 +77,27 @@ on('chat:message', function(msg) {
 });
 
 function setSelectedTurnOrder(selected, successes) {
-    log('setTurnOrder::INSIDE !!!');
+    logger('setTurnOrder::INSIDE !!!');
     if (!selected || !selected.length) {
-        log('setTurnOrder::NO SELECTEDS ! RETURN');
+        logger('setTurnOrder::NO SELECTEDS ! RETURN');
         return;
     }
     var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
-    log('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
+    logger('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
 
-    log('setTurnOrder::selected='+JSON.stringify(selected));
+    logger('setTurnOrder::selected='+JSON.stringify(selected));
     var selectedTokenId = selected.map(o => getObj('graphic',o._id)).filter(n => n).map(o => o.get('id'));
     if (!Array.isArray(selectedTokenId)) selectedTokenId = [selectedTokenId];
     if (selectedTokenId.length && Array.isArray(selectedTokenId[0])) selectedTokenId.map(o => o[0]);
-    log('setTurnOrder::selectedTokenId='+JSON.stringify(selectedTokenId));
+    logger('setTurnOrder::selectedTokenId='+JSON.stringify(selectedTokenId));
 
     const idTurnOrder = turnOrder.map(o => o.id);
-    log('setTurnOrder::idTurnOrder=' + JSON.stringify(idTurnOrder));
+    logger('setTurnOrder::idTurnOrder=' + JSON.stringify(idTurnOrder));
     var idTurnToCreate = [];
 
     for (const id of selectedTokenId) {
         if (!idTurnOrder.includes(id)) {
-            log('setTurnOrder::adding to include into turnorder id=' + id);
+            logger('setTurnOrder::adding to include into turnorder id=' + id);
             idTurnToCreate.push(id);
         }
     }
@@ -63,7 +105,7 @@ function setSelectedTurnOrder(selected, successes) {
     if (idTurnToCreate.length < idTurnOrder.length) {
         for (var i = 0; i < turnOrder.length; i++) {
             if (selectedTokenId.includes(turnOrder[i].id)) {
-                log(`setTurnOrder::setting id=${turnOrder[i].id} to pr=${successes}`);
+                logger(`setTurnOrder::setting id=${turnOrder[i].id} to pr=${successes}`);
                 turnOrder[i].pr = successes;
             }
         }
@@ -71,12 +113,12 @@ function setSelectedTurnOrder(selected, successes) {
 
     if (idTurnToCreate.length > 0) {
         for (const id of idTurnToCreate) {
-            log(`setTurnOrder::pushing to turnorder id=${id}`);
+            logger(`setTurnOrder::pushing to turnorder id=${id}`);
             turnOrder.push({id:id,pr:successes,custom:''});
         }
     }
 
-    log(`setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
+    logger(`setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
     Campaign().set('turnorder', JSON.stringify(turnOrder));
 }
 
@@ -102,10 +144,10 @@ function performRoll(msg, cmd) {
 	        var strSplit = ops[0].origRoll.split('-');
 	        var cmds = [];
 	        _.each(strSplit, parseCmds, cmds);
-            log('performRoll::parseCmds DONE !');
-            log('performRoll::ops='+JSON.stringify(ops));
-            log('performRoll::result='+ops[0].content);
-            log('performRoll::cmds='+JSON.stringify(cmds));
+            logger('performRoll::parseCmds DONE !');
+            logger('performRoll::ops='+JSON.stringify(ops));
+            logger('performRoll::result='+ops[0].content);
+            logger('performRoll::cmds='+JSON.stringify(cmds));
 
 	        if (!_.isEmpty(cmds)) processCmds(cmds, result);
             finalizeRoll(result);
@@ -131,19 +173,7 @@ function performRoll(msg, cmd) {
 }
 
 function setupRollStructure(result) {
-    result.rollSetup = {
-        hasRecursiveOrExplosiveFeature: false,
-        has10doubled: true,
-        verbosity: 0,
-        colored: false,
-        onlyResult: false,
-        revertTitleOrder: false,
-        face: [null],
-        conditionals: [],
-        rollToProcess: [],
-        finalResults: [],
-        maxRecursiveAchieved: false
-    };
+    result.rollSetup = DefaultRollSetup;
 
     for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
         result.rollSetup.face.push({
@@ -154,7 +184,7 @@ function setupRollStructure(result) {
         });
     }
 
-    log(`setupRollStructure::result.rollSetup=${JSON.stringify(result.rollSetup)}`);
+    logger(`setupRollStructure::result.rollSetup=${JSON.stringify(result.rollSetup)}`);
 }
 
 /**
@@ -169,15 +199,15 @@ function setupRollStructure(result) {
 function parseCmds(item) {
     var trim = item.trim();
     if (!item) return;
-    log('parseCmds::item="' + trim + '"');
+    logger('parseCmds::item="' + trim + '"');
 
     // patt = /^(r|R)(l\d*)?(?:\s([\d,]+))?$/;
     var objRet, match = false;
     patt = /^(d|r|R|e|E)(l\d*)?(?:\s([\d,]+))?$/;
     if (ret = trim.match(patt)) {
         match = true;
-        log('parseCmds::MATCH1 = rerolls & doubles & explodes');
-        log('parseCmds::ret='+JSON.stringify(ret));
+        logger('parseCmds::MATCH1 = rerolls & doubles & explodes');
+        logger('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
             faces: [...ret[3].split(',').filter(i => i).map(i => Number(i))],
@@ -187,15 +217,15 @@ function parseCmds(item) {
     patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/;
     if (ret = trim.match(patt)) {
         match = true;
-        log('parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
-        log('parseCmds::ret='+JSON.stringify(ret));
+        logger('parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
+        logger('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
             args: null
         };
     }
 
-    log('parseCmds::FINAL objRet='+JSON.stringify(objRet));
+    logger('parseCmds::FINAL objRet='+JSON.stringify(objRet));
     if (match) this.push(objRet);
 }
 
@@ -211,7 +241,7 @@ function parseCmds(item) {
  * @return void
  */
 function processCmds(cmds, result) {
-    log(`processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
+    logger(`processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
     for (const item of cmds) {
         var recReroll = false,
             exploIgnore = true,
@@ -274,7 +304,7 @@ function processCmds(cmds, result) {
         }
     }
 
-    log(`processCmds::processCmds END`);
+    logger(`processCmds::processCmds END`);
 }
 
 
@@ -287,14 +317,14 @@ function processCmds(cmds, result) {
  * @return void
  */
 function doDoubles(result) {
-    log(`doDoubles::doDoubles do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
+    logger(`doDoubles::doDoubles do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
 
     var newTotal = 0;
     for (const dice of result.rollSetup.finalResults)
         if (dice.v >= 7) newTotal++;
 
 	// Update with the new success total.
-    log(`doDoubles::result.total=${newTotal}`);
+    logger(`doDoubles::result.total=${newTotal}`);
     result.total = newTotal;
 
     if (result.rollSetup.has10doubled) {
@@ -302,7 +332,7 @@ function doDoubles(result) {
     }
 	// Create an empty array for our values to double.
     var doubles = result.rollSetup.face.filter(i => i).map(i => ({v:i.v, dbl: i.doubles.length ? true : false}));
-    log(`doDoubles::doubles=${JSON.stringify(doubles)}`);
+    logger(`doDoubles::doubles=${JSON.stringify(doubles)}`);
 
     var addSucc = 0;
     if (!_.isEmpty(doubles.filter(i => i.dbl))) {
@@ -313,14 +343,14 @@ function doDoubles(result) {
                 item.doubled = true;
                 faceObj.doubles[0].done++;
                 if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
-                    log(`doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
+                    logger(`doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
                     faceObj.doubles.shift();
                 }
             }
         }
     }
 
-    log(`doDoubles::addSucc=${addSucc}`);
+    logger(`doDoubles::addSucc=${addSucc}`);
 	// Add the extra successes to the total.
     result.total += addSucc;
 }
@@ -332,23 +362,23 @@ function doDoubles(result) {
  *														accurately calculated.
  */
 function finalizeRoll(result) {
-    log(`finalizeRoll::finalizeRoll result=${JSON.stringify(result)}`);
+    logger(`finalizeRoll::finalizeRoll result=${JSON.stringify(result)}`);
 
     // copy rolls
     result.rollSetup.rollToProcess = result.rolls[0].results;
-    log(`finalizeRoll::finalizeRoll rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
+    logger(`finalizeRoll::finalizeRoll rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
 	if (typeof result.rollSetup.rollToProcess == 'undefined') {
-        log(`finalizeRoll::finalizeRoll ERROR QUITTING !!!!`);
+        logger(`finalizeRoll::finalizeRoll ERROR QUITTING !!!!`);
         return;
     }
 
     //sort reroll & explosives
     sortRerollsAndExplosives(result);
 
-    log(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
+    logger(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
     var turn = 1;
     do {
-        log(`MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+        logger(`MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
         handleRollTurn(result, turn++);
         if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
@@ -356,7 +386,7 @@ function finalizeRoll(result) {
 
     doDoubles(result);
 
-    log(`finalizeRoll::rewriting result.rolls[0].results=${JSON.stringify(result.rollSetup.finalResults)}`);
+    logger(`finalizeRoll::rewriting result.rolls[0].results=${JSON.stringify(result.rollSetup.finalResults)}`);
     result.rolls[0].results = result.rollSetup.finalResults;
 }
 
@@ -385,7 +415,7 @@ function strFill(number) {
 }
 
 function updateTitleAndPushToNextRolls(result, toNextRoll, finalObj, nextRollsToProcess) {
-    // log(`updateTitleAndPushToNextRolls::revert=${result.rollSetup.revertTitleOrder}, pushing:${finalObj.title}, to:${toNextRoll.title}`);
+    // logger(`updateTitleAndPushToNextRolls::revert=${result.rollSetup.revertTitleOrder}, pushing:${finalObj.title}, to:${toNextRoll.title}`);
     if (result.rollSetup.revertTitleOrder)
         toNextRoll.title.unshift(...finalObj.title);
     else
@@ -408,14 +438,14 @@ function makeNewTitleFromOld(result, prevItem, actionsOfThisRoll) {
  * @param Number                        turn        number for turn, 1 = initial roll
  */
 function handleRollTurn(result, turn) {
-    log(`handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
+    logger(`handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
     var nextRollsToProcess = [];
     for (const item of result.rollSetup.rollToProcess) {
         var rerolled = false,           exploded = false,
             toNextRollRerolled = null,  toNextRollExploded = null,
             tagList = [],               face = item.v,
             titleText = '',             faceObj = result.rollSetup.face[face];
-        // log(`handleRollTurn::face(${face}) rerolls.length=${faceObj.rerolls.length}, explosives.length=${faceObj.explosives.length}`);
+        // logger(`handleRollTurn::face(${face}) rerolls.length=${faceObj.rerolls.length}, explosives.length=${faceObj.explosives.length}`);
         if (faceObj.rerolls.length) {
             ({ rerolled, toNextRollRerolled, titleText } = handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText));
         }
@@ -433,16 +463,16 @@ function handleRollTurn(result, turn) {
         };
         if (rerolled) updateTitleAndPushToNextRolls(result, toNextRollRerolled, finalObj, nextRollsToProcess);
         if (exploded) updateTitleAndPushToNextRolls(result, toNextRollExploded, finalObj, nextRollsToProcess);
-        log(`handleRollTurn::face(${face}) =>finalObj=${finalObj.v} rerolled=${rerolled} exploded=${exploded} FULL=${JSON.stringify(finalObj)}`);
+        logger(`handleRollTurn::face(${face}) =>finalObj=${finalObj.v} rerolled=${rerolled} exploded=${exploded} FULL=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
 
     }
-    log(`handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
+    logger(`handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
 }
 
 function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText) {
-    log(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
+    logger(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
     var reroll = randomInteger(10);
     if (!(faceObj.rerolls[0].keepBest && reroll < face) && (faceObj.rerolls[0].recursive || !item.wasRerolled)) {
         rerolled = true;
@@ -457,21 +487,21 @@ function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, tur
         ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).`
         : ` (  Done${faceObj.rerolls[0].done} ).`);
     if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
-        log(`handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
+        logger(`handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
         faceObj.rerolls.shift();
     }
     return { rerolled, toNextRollRerolled, titleText };
 }
 
 function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText) {
-    log(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
+    logger(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
     var newDie = randomInteger(10);
     var iterator = 0;
     for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
     if (iterator == faceObj.explosives.length) {
-        log(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
+        logger(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
     } else {
-        log(`handleRollTurn::EXPLO iterator=${iterator} TEST=${!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[iterator].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`);
+        logger(`handleRollTurn::EXPLO iterator=${iterator} TEST=${!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasRerolled)}, part1=${!faceObj.explosives[iterator].ignoreRerolled}, part2=${!rerolled}, part3=${!item.wasRerolled}`);
         if (!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)) {
             exploded = true;
             toNextRollExploded = {
@@ -484,7 +514,7 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
                 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).`
                 : ` (  Done${faceObj.explosives[iterator].done} ).`);
             if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
-                log(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
+                logger(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
                 faceObj.explosives.shift();
             }
         }
@@ -527,21 +557,21 @@ function recalculateSuccesses(origCmd, succ, result) {
     var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
     var ret, addedSuccessesLabel = '', addedSuccesses = 0;
     if (ret = origCmd.match(patt)) {
-        // log('buildHTML::ret='+JSON.stringify(ret));
-        // log('buildHTML::succ='+succ);
+        // logger('buildHTML::ret='+JSON.stringify(ret));
+        // logger('buildHTML::succ='+succ);
         if (ret[1]) {
-            // log('buildHTML::ret[1]='+ret[1]);
+            // logger('buildHTML::ret[1]='+ret[1]);
             var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
-            // log('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
+            // logger('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
             for (const [, , item] of arrayAddedSuccesses) {
-                // log('buildHTML::item='+item);
+                // logger('buildHTML::item='+item);
                 addedSuccessesLabel += item;
                 addedSuccesses += Number(item);
             }
         }
     }
 
-    log(`recalculateSuccesses::updating total successes=${succ + addedSuccesses}, old=${succ} + ${addedSuccesses}`);
+    logger(`recalculateSuccesses::updating total successes=${succ + addedSuccesses}, old=${succ} + ${addedSuccesses}`);
     succ += addedSuccesses;
     if (succ < 0)
         succ = 0;
@@ -563,7 +593,7 @@ function recalculateSuccesses(origCmd, succ, result) {
  */
 function buildHTML(result, origCmd, origRoll, color) {
     var vals = result.rolls[0].results, succ = result.total;
-    log(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
+    logger(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
 
     var addedSuccessesLabel, succTxt;
     ({ addedSuccessesLabel, succTxt, succ } = recalculateSuccesses(origCmd, succ, result));
@@ -607,7 +637,7 @@ function displayRolls(vals, result, html) {
         if (item.exploded) affectedTextShadow += explodedTextShadow;
         if (item.rerolled) affectedTextShadow += rerolledTextShadow;
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
-        // log(`displayRolls::title = ${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
+        // logger(`displayRolls::title = ${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
         html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
         html += '<div class="didroll" style="' + diceRollStyle
             + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
@@ -708,7 +738,7 @@ function buildHelp() {
  * @return void
  */
 function printError(result, sender) {
-    log('Error!');
+    logger('Error!');
 
     if (result.type == 'error' ) {
         sendChat('EX3Dice API', '/w ' + sender + ' I tried, but Roll20 had a problem with this. They said: ' + result.content);
