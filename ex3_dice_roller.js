@@ -143,6 +143,7 @@ function setupRollStructure(result) {
         verbosity: 0,
         colored: false,
         onlyResult: false,
+        revertTitleOrder: false,
         face: [null],
         conditionals: [],
         rollToProcess: [],
@@ -189,10 +190,10 @@ function parseCmds(item) {
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
         };
     }
-    patt = /^(gm|D|target|turn|v|V|c|o|onlyResult)$/;
+    patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/;
     if (ret = trim.match(patt)) {
         match = true;
-        log('parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult');
+        log('parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
         log('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -255,12 +256,18 @@ function processCmds(cmds, result) {
             case 'target':
                 result.setTurn = true;
                 break;
+            case 'g':
             case 'gm':
                 result.toGm = true;
                 break;
             case 'o':
             case 'onlyResult':
                 result.rollSetup.onlyResult = true;
+                break;
+            case 'rev':
+            case 'reverseTitle':
+                result.rollSetup.revertTitleOrder = true;
+                break;
             case 'c':
                 result.rollSetup.colored = true;
                 break;
@@ -383,9 +390,20 @@ function strFill(number) {
     return number < 10 ? number + '  ' : number;
 }
 
-function updateTitleAndPushToNextRolls(toNextRoll, finalObj, nextRollsToProcess) {
-    toNextRoll.title = finalObj.title + '&#013;&#010;' + toNextRoll.title || '.';
+function updateTitleAndPushToNextRolls(result, toNextRoll, finalObj, nextRollsToProcess) {
+    // log(`updateTitleAndPushToNextRolls::revert=${result.rollSetup.revertTitleOrder}, pushing:${finalObj.title}, to:${toNextRoll.title}`);
+    if (result.rollSetup.revertTitleOrder)
+        toNextRoll.title.unshift(...finalObj.title);
+    else
+        toNextRoll.title.push(...finalObj.title);
     nextRollsToProcess.push(toNextRoll);
+}
+
+function makeNewTitleFromOld(result, prevItem, actionsOfThisRoll) {
+    var ret = prevItem, lastItem = prevItem.length - 1;
+    var titleToChange = result.rollSetup.revertTitleOrder ? lastItem : 0;
+    ret[titleToChange] = ret[titleToChange]+actionsOfThisRoll;
+    return ret;
 }
 
 /**
@@ -403,7 +421,7 @@ function handleRollTurn(result, turn) {
             toNextRollRerolled = null,  toNextRollExploded = null,
             tagList = [],               face = item.v,
             titleText = '',             faceObj = result.rollSetup.face[face];
-        log(`handleRollTurn::face(${face}).rerolls.length=${faceObj.rerolls.length}`);
+        // log(`handleRollTurn::face(${face}) rerolls.length=${faceObj.rerolls.length}, explosives.length=${faceObj.explosives.length}`);
         if (faceObj.rerolls.length) {
             ({ rerolled, toNextRollRerolled, titleText } = handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText));
         }
@@ -415,27 +433,29 @@ function handleRollTurn(result, turn) {
             wasRerolled:        item.wasRerolled || false,          doubled:    false,
             wasExploded:        item.wasExploded || false,          tags:       tagList,
             rerolled:           rerolled,                           exploded:   exploded,
-            title: (item.title ? item.title + titleText : `Roll Initial.            Face=${strFill(face)}.${titleText}`)
+            title: (item.title
+                ? makeNewTitleFromOld(result, item.title, titleText)
+                : [`Roll Initial.            Face=${strFill(face)}.${titleText}`])
         };
-        if (rerolled) updateTitleAndPushToNextRolls(toNextRollRerolled, finalObj, nextRollsToProcess);
-        if (exploded) updateTitleAndPushToNextRolls(toNextRollExploded, finalObj, nextRollsToProcess);
-        log(`handleRollTurn::finalObj=${JSON.stringify(finalObj)}`);
+        if (rerolled) updateTitleAndPushToNextRolls(result, toNextRollRerolled, finalObj, nextRollsToProcess);
+        if (exploded) updateTitleAndPushToNextRolls(result, toNextRollExploded, finalObj, nextRollsToProcess);
+        log(`handleRollTurn::face(${face}) =>finalObj=${finalObj.v} rerolled=${rerolled} exploded=${exploded} FULL=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
 
     }
-    log(`handleRollTurn::END nextRollsToProcess=${JSON.stringify(nextRollsToProcess)}`);
+    log(`handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
 }
 
 function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText) {
-    log(`handleRollTurn::handleFaceReroll face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
+    log(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
     var reroll = randomInteger(10);
     if (!(faceObj.rerolls[0].keepBest && reroll < face) && (faceObj.rerolls[0].recursive || !item.wasRerolled)) {
         rerolled = true;
         toNextRollRerolled = {
             v: reroll, wasEverRerolled: true,
             wasRerolled: true, wasExploded: false,
-            title: `RollTurn (${strFill(turn + 1)}). R->Face=${strFill(reroll)}.`
+            title: [`RollTurn (${strFill(turn + 1)}). R->Face=${strFill(reroll)}.`]
         };
     }
     faceObj.rerolls[0].done++;
@@ -463,7 +483,7 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
             toNextRollExploded = {
                 v: newDie, wasEverRerolled: item.rerolled || true,
                 wasRerolled: false, wasExploded: true,
-                title: `RollTurn (${strFill(turn + 1)}). E->Face=${strFill(newDie)}.`
+                title: [`RollTurn (${strFill(turn + 1)}). E->Face=${strFill(newDie)}.`]
             };
             faceObj.explosives[iterator].done++;
             titleText += `Explode to a ${strFill(newDie)}` + (faceObj.explosives[iterator].limit != 0
@@ -508,55 +528,6 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
         explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
         maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;';
 
-/**
- * This builds the raw HTML response for the roll message. This is designed to, as much as is possible, mimic the standard roll result, up to and including
- * adding the d10-shaped result backing in the player's color.
- *
- * @param JavaScript Object reference	result		The content of the rollresult message, as above; now in its final version, with all rolls and successes
- *														accurately calculated.
- * @param string						origCmd		The original API command. Used for debug purposes; currently not in use.
- * @param string						origRoll	The original roll executed by Roll20, for display in the result.
- * @param string						color		The hexadecimal value of the player's selected color.
- *
- * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
- */
-function buildHTML(result, origCmd, origRoll, color) {
-	// Putting everythign in smaller variables that it's easier to type. ;P
-    var vals = result.rolls[0].results, succ = result.total;
-    log(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
-
-    var addedSuccessesLabel, succTxt;
-    ({ addedSuccessesLabel, succTxt, succ } = recalculateSuccesses(origCmd, succ, result));
-
-	// Building the output.
-    var html = "";
-    html += "<div style=\"" + outerStyle + "\">";
-    html += "<div style=\"" + innerStyle + "\">";
-    html += "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\"> rolling " + origRoll + " </div>";
-    html += "<div style=\"clear: both;\"></div>";
-    if (!result.rollSetup.onlyResult) {
-        html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
-        html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
-        html = displayRolls(vals, result, html);
-        if (addedSuccessesLabel) html += addedSuccessesLabel;
-        html +=  "</div>";
-        html += "</div>";
-        html += "<div style=\"clear: both;\"></div>";
-    }
-    if (result.rollSetup.maxRecursiveAchieved) {
-        html += "<p style='"+maxRecursionStyle+"'>MAX RECURSION ACHIEVED</p>";
-        html += "<div style=\"clear: both;\"></div>";
-    }
-    html += "<strong> = </strong>";
-    html += "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
-    html += "</div>";
-    html += "</div>";
-
-	// Sending back the complete HTML string.
-    return html;
-}
-
-
 function recalculateSuccesses(origCmd, succ, result) {
     var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
     var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
@@ -584,6 +555,48 @@ function recalculateSuccesses(origCmd, succ, result) {
     return { addedSuccessesLabel, succTxt, succ };
 }
 
+/**
+ * This builds the raw HTML response for the roll message. This is designed to, as much as is possible, mimic the standard roll result, up to and including
+ * adding the d10-shaped result backing in the player's color.
+ *
+ * @param JavaScript Object reference	result		The content of the rollresult message, as above; now in its final version, with all rolls and successes
+ *														accurately calculated.
+ * @param string						origCmd		The original API command. Used for debug purposes; currently not in use.
+ * @param string						origRoll	The original roll executed by Roll20, for display in the result.
+ * @param string						color		The hexadecimal value of the player's selected color.
+ *
+ * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
+ */
+function buildHTML(result, origCmd, origRoll, color) {
+    var vals = result.rolls[0].results, succ = result.total;
+    log(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
+
+    var addedSuccessesLabel, succTxt;
+    ({ addedSuccessesLabel, succTxt, succ } = recalculateSuccesses(origCmd, succ, result));
+
+    var html = "";
+    html += "<div style=\"" + outerStyle + "\"><div style=\"" + innerStyle + "\">";
+    html +=   "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\"> rolling " + origRoll + " </div>";
+    html +=     "<div style=\"clear: both;\"></div>";
+    if (!result.rollSetup.onlyResult) {
+        html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
+        html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
+        html = displayRolls(vals, result, html);
+        if (addedSuccessesLabel) html += addedSuccessesLabel;
+        html +=   "</div>";
+        html += "</div>";
+        html += "<div style=\"clear: both;\"></div>";
+    }
+    if (result.rollSetup.maxRecursiveAchieved) {
+        html += "<p style='"+maxRecursionStyle+"'>MAX RECURSION ACHIEVED</p>";
+        html += "<div style=\"clear: both;\"></div>";
+    }
+    html +=     "<strong> = </strong>";
+    html +=   "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
+    html += "</div></div>";
+    return html;
+}
+
 function displayRolls(vals, result, html) {
     var isDouble;
     html += '(';
@@ -600,7 +613,8 @@ function displayRolls(vals, result, html) {
         if (item.exploded) affectedTextShadow += explodedTextShadow;
         if (item.rerolled) affectedTextShadow += rerolledTextShadow;
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
-        html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title ? '" title="' + item.title : '') + '">';
+        // log(`displayRolls::title = ${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
+        html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
         html += '<div class="didroll" style="' + diceRollStyle
             + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
                 + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
