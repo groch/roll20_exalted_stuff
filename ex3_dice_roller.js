@@ -23,7 +23,7 @@ class LOGLEVEL {
     }
 }
 // CONSTANTS
-const LogLvl = LOGLEVEL.DEBUG,
+const LogLvl = LOGLEVEL.INFO,
   DefaultRollSetup = {
     hasRecursiveOrExplosiveFeature: false,
     has10doubled: true,
@@ -77,15 +77,15 @@ on('chat:message', function(msg) {
 });
 
 function setSelectedTurnOrder(selected, successes) {
-    logger('setTurnOrder::INSIDE !!!');
+    logger(LOGLEVEL.INFO, 'setTurnOrder::INSIDE !!!');
     if (!selected || !selected.length) {
-        logger('setTurnOrder::NO SELECTEDS ! RETURN');
+        logger(LOGLEVEL.WARNING, 'setTurnOrder::NO SELECTEDS ! RETURN');
         return;
     }
     var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
     logger('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
 
-    logger('setTurnOrder::selected='+JSON.stringify(selected));
+    logger(LOGLEVEL.INFO, 'setTurnOrder::selected='+JSON.stringify(selected));
     var selectedTokenId = selected.map(o => getObj('graphic',o._id)).filter(n => n).map(o => o.get('id'));
     if (!Array.isArray(selectedTokenId)) selectedTokenId = [selectedTokenId];
     if (selectedTokenId.length && Array.isArray(selectedTokenId[0])) selectedTokenId.map(o => o[0]);
@@ -113,12 +113,12 @@ function setSelectedTurnOrder(selected, successes) {
 
     if (idTurnToCreate.length > 0) {
         for (const id of idTurnToCreate) {
-            logger(`setTurnOrder::pushing to turnorder id=${id}`);
+            logger(LOGLEVEL.INFO, `setTurnOrder::pushing to turnorder id=${id} pr=${successes}`);
             turnOrder.push({id:id,pr:successes,custom:''});
         }
     }
 
-    logger(`setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
+    logger(LOGLEVEL.INFO, `setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
     Campaign().set('turnorder', JSON.stringify(turnOrder));
 }
 
@@ -144,7 +144,7 @@ function performRoll(msg, cmd) {
 	        var strSplit = ops[0].origRoll.split('-');
 	        var cmds = [];
 	        _.each(strSplit, parseCmds, cmds);
-            logger('performRoll::parseCmds DONE !');
+            logger(LOGLEVEL.NOTICE, 'performRoll::parseCmds DONE !');
             logger('performRoll::ops='+JSON.stringify(ops));
             logger('performRoll::result='+ops[0].content);
             logger('performRoll::cmds='+JSON.stringify(cmds));
@@ -152,11 +152,9 @@ function performRoll(msg, cmd) {
 	        if (!_.isEmpty(cmds)) processCmds(cmds, result);
             finalizeRoll(result);
 
-			// This gets the player's color, for styling the roll result HTML output in buildHTML().
             const player = getObj("player", msg.playerid);
 	        var outHTML = buildHTML(result, msg.content, ops[0].origRoll, player.get('color'));
 
-			// Passes the final, formatted HTML as a direct message to the chat window.
             if (result.toGm) {
                 if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${player.get('displayname')} ${outHTML}`);
                 sendChat(msg.who, '/w gm ' + outHTML);
@@ -166,14 +164,14 @@ function performRoll(msg, cmd) {
 
             if (result.setTurn)
                 setSelectedTurnOrder(msg.selected, result.total);
-	    } else { // Error handling.
+	    } else {
 	        printError(ops[0], msg.who);
 	    }
 	});
 }
 
 function setupRollStructure(result) {
-    result.rollSetup = DefaultRollSetup;
+    result.rollSetup = JSON.parse(JSON.stringify(DefaultRollSetup));
 
     for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
         result.rollSetup.face.push({
@@ -199,14 +197,25 @@ function setupRollStructure(result) {
 function parseCmds(item) {
     var trim = item.trim();
     if (!item) return;
-    logger('parseCmds::item="' + trim + '"');
+    logger(LOGLEVEL.INFO, 'parseCmds::item="' + trim + '"');
 
-    // patt = /^(r|R)(l\d*)?(?:\s([\d,]+))?$/;
     var objRet, match = false;
-    patt = /^(d|r|R|e|E)(l\d*)?(?:\s([\d,]+))?$/;
+    var patt = /^(r|R)(l\d*)?(k|K)?(?:\s([\d,]+))?$/;
     if (ret = trim.match(patt)) {
         match = true;
-        logger('parseCmds::MATCH1 = rerolls & doubles & explodes');
+        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH1 = rerolls');
+        logger('parseCmds::ret='+JSON.stringify(ret));
+        objRet = {
+            cmd: ret[1],
+            faces: [...ret[4].split(',').filter(i => i).map(i => Number(i))],
+            limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0,
+            keepBest: ret[3] ? true : false
+        };
+    }
+    patt = /^(d|e|E)(l\d*)?(?:\s([\d,]+))?$/;
+    if (ret = trim.match(patt)) {
+        match = true;
+        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH1 = doubles & explodes');
         logger('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -217,7 +226,7 @@ function parseCmds(item) {
     patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/;
     if (ret = trim.match(patt)) {
         match = true;
-        logger('parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
+        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
         logger('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -225,7 +234,7 @@ function parseCmds(item) {
         };
     }
 
-    logger('parseCmds::FINAL objRet='+JSON.stringify(objRet));
+    logger(LOGLEVEL.INFO, 'parseCmds::FINAL objRet='+JSON.stringify(objRet));
     if (match) this.push(objRet);
 }
 
@@ -241,7 +250,7 @@ function parseCmds(item) {
  * @return void
  */
 function processCmds(cmds, result) {
-    logger(`processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
+    logger(LOGLEVEL.INFO, `processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
     for (const item of cmds) {
         var recReroll = false,
             exploIgnore = true,
@@ -251,6 +260,7 @@ function processCmds(cmds, result) {
                 recReroll = true;
             case 'r':
                 for (const face of item.faces) {
+                    logger(LOGLEVEL.INFO, `processCmds::adding reroll on face=${face}, limit=${item.limit}, rec=${item.recReroll}, keepBest=${item.keepBest}`);
                     result.rollSetup.face[face].rerolls.push({
                         limit: item.limit,
                         done: 0,
@@ -263,6 +273,7 @@ function processCmds(cmds, result) {
                 exploIgnore = false;
             case 'e':
                 for (const face of item.faces) {
+                    logger(LOGLEVEL.INFO, `processCmds::adding explode on face=${face}, limit=${item.limit}, exploIgnore=${item.exploIgnore}`);
                     result.rollSetup.face[face].explosives.push({
                         limit: item.limit,
                         done: 0,
@@ -274,6 +285,7 @@ function processCmds(cmds, result) {
                 result.rollSetup.has10doubled = false;
                 break;
             case 'd':
+                logger(LOGLEVEL.INFO, `processCmds::adding doubles on faces=${item.faces}, limit=${item.limit}`);
                 for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
                 break;
             case 'turn':
@@ -317,14 +329,13 @@ function processCmds(cmds, result) {
  * @return void
  */
 function doDoubles(result) {
-    logger(`doDoubles::doDoubles do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
+    logger(LOGLEVEL.INFO, `doDoubles::doDoubles do10s=${result.rollSetup.has10doubled}, result=${JSON.stringify(result)}`);
 
     var newTotal = 0;
     for (const dice of result.rollSetup.finalResults)
         if (dice.v >= 7) newTotal++;
 
-	// Update with the new success total.
-    logger(`doDoubles::result.total=${newTotal}`);
+    logger(LOGLEVEL.INFO, `doDoubles::NEW result.total=${newTotal}`);
     result.total = newTotal;
 
     if (result.rollSetup.has10doubled) {
@@ -334,24 +345,32 @@ function doDoubles(result) {
     var doubles = result.rollSetup.face.filter(i => i).map(i => ({v:i.v, dbl: i.doubles.length ? true : false}));
     logger(`doDoubles::doubles=${JSON.stringify(doubles)}`);
 
-    var addSucc = 0;
+    var addSucc = 0, finalResultsWithDoubleSections = [];
     if (!_.isEmpty(doubles.filter(i => i.dbl))) {
         for (const item of result.rollSetup.finalResults) {
+            finalResultsWithDoubleSections.push(item);
+            if (item.v === 'SECTIONDONE') continue;
             let faceObj = result.rollSetup.face[item.v];
             if (faceObj.doubles.length) {
                 if (!item.rerolled) addSucc += (item.v >= 7) ? 1 : 2;
                 item.doubled = true;
                 faceObj.doubles[0].done++;
                 if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
-                    logger(`doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
+                    logger(LOGLEVEL.NOTICE, `doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
+                    finalResultsWithDoubleSections.push({
+                        v: 'SECTIONDONE',
+                        sectionType: 'Double',
+                        details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.doubles[0].limit}`
+                    });
                     faceObj.doubles.shift();
                 }
             }
         }
+        log(`doDoubles::setting new finalResults=${finalResultsWithDoubleSections}`);
+        result.rollSetup.finalResults = finalResultsWithDoubleSections;
     }
 
-    logger(`doDoubles::addSucc=${addSucc}`);
-	// Add the extra successes to the total.
+    logger(LOGLEVEL.INFO, `doDoubles::addSucc=${addSucc}`);
     result.total += addSucc;
 }
 
@@ -362,13 +381,13 @@ function doDoubles(result) {
  *														accurately calculated.
  */
 function finalizeRoll(result) {
-    logger(`finalizeRoll::finalizeRoll result=${JSON.stringify(result)}`);
+    logger(LOGLEVEL.INFO, `finalizeRoll::finalizeRoll result=${JSON.stringify(result)}`);
 
     // copy rolls
     result.rollSetup.rollToProcess = result.rolls[0].results;
     logger(`finalizeRoll::finalizeRoll rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
 	if (typeof result.rollSetup.rollToProcess == 'undefined') {
-        logger(`finalizeRoll::finalizeRoll ERROR QUITTING !!!!`);
+        logger(LOGLEVEL.ERROR, `finalizeRoll::finalizeRoll ERROR QUITTING !!!!`);
         return;
     }
 
@@ -378,7 +397,7 @@ function finalizeRoll(result) {
     logger(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
     var turn = 1;
     do {
-        logger(`MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
+        logger(LOGLEVEL.NOTICE, `MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
         handleRollTurn(result, turn++);
         if (turn > 42) break;
     } while (result.rollSetup.rollToProcess.length > 0)
@@ -394,17 +413,13 @@ function sortRerollsAndExplosives(result) {
     for (var i = 1; i <= 10; i++) {
         var face = result.rollSetup.face[i];
         face.rerolls.sort((a, b) => {
-            if (a.recursive && !b.recursive)
-                return 1;
-            if (!a.recursive && b.recursive)
-                return -1;
+            if (a.recursive && !b.recursive) return 1;
+            if (!a.recursive && b.recursive) return -1;
             return a.limit - b.limit;
         });
         face.explosives.sort((a, b) => {
-            if (!a.ignoreRerolled && b.ignoreRerolled)
-                return 1;
-            if (a.ignoreRerolled && !b.ignoreRerolled)
-                return -1;
+            if (!a.ignoreRerolled && b.ignoreRerolled) return 1;
+            if (a.ignoreRerolled && !b.ignoreRerolled) return -1;
             return a.limit - b.limit;
         });
     }
@@ -414,13 +429,15 @@ function strFill(number) {
     return number < 10 ? number + '  ' : number;
 }
 
-function updateTitleAndPushToNextRolls(result, toNextRoll, finalObj, nextRollsToProcess) {
-    // logger(`updateTitleAndPushToNextRolls::revert=${result.rollSetup.revertTitleOrder}, pushing:${finalObj.title}, to:${toNextRoll.title}`);
+function updateTitleAndPushToNextRolls(result, toNextRoll, finalObj, nextRollsToProcess, sectionDone) {
+    logger(`updateTitleAndPushToNextRolls::revert=${result.rollSetup.revertTitleOrder}, pushing:${finalObj.title}, to:${toNextRoll.title}`);
     if (result.rollSetup.revertTitleOrder)
         toNextRoll.title.unshift(...finalObj.title);
     else
         toNextRoll.title.push(...finalObj.title);
     nextRollsToProcess.push(toNextRoll);
+    if (sectionDone)
+        result.rollSetup.finalResults.push(sectionDone);
 }
 
 function makeNewTitleFromOld(result, prevItem, actionsOfThisRoll) {
@@ -438,65 +455,72 @@ function makeNewTitleFromOld(result, prevItem, actionsOfThisRoll) {
  * @param Number                        turn        number for turn, 1 = initial roll
  */
 function handleRollTurn(result, turn) {
-    logger(`handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
+    logger(LOGLEVEL.INFO, `handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
     var nextRollsToProcess = [];
     for (const item of result.rollSetup.rollToProcess) {
         var rerolled = false,           exploded = false,
             toNextRollRerolled = null,  toNextRollExploded = null,
             tagList = [],               face = item.v,
-            titleText = '',             faceObj = result.rollSetup.face[face];
-        // logger(`handleRollTurn::face(${face}) rerolls.length=${faceObj.rerolls.length}, explosives.length=${faceObj.explosives.length}`);
+            titleText = '',             faceObj = result.rollSetup.face[face],
+            rerollSectionDone = null,   explodeSectionDone = null,
+            rerollSnapshot = null;
+        logger(`handleRollTurn::face(${face}) rerolls.length=${faceObj.rerolls.length}, explosives.length=${faceObj.explosives.length}`);
         if (faceObj.rerolls.length) {
-            ({ rerolled, toNextRollRerolled, titleText } = handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText));
+            rerollSnapshot = faceObj.rerolls[0];
+            ({ rerolled, toNextRollRerolled, titleText, rerollSectionDone } = handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText));
         }
-        if (faceObj.explosives.length) {
-            ({ exploded, toNextRollExploded, titleText } = handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText));
-        }
+        if (faceObj.explosives.length)
+            ({ exploded, toNextRollExploded, titleText, explodeSectionDone } = handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText));
         var finalObj = {
             wasEverRerolled:    item.wasEverRerolled || false,      v:          face,
             wasRerolled:        item.wasRerolled || false,          doubled:    false,
             wasExploded:        item.wasExploded || false,          tags:       tagList,
             rerolled:           rerolled,                           exploded:   exploded,
-            title: (item.title
-                ? makeNewTitleFromOld(result, item.title, titleText)
-                : [`Roll Initial.            Face=${strFill(face)}.${titleText}`])
+            title: item.title ? makeNewTitleFromOld(result, item.title, titleText) : [`Roll Initial.            Face=${strFill(face)}.${titleText}`]
         };
-        if (rerolled) updateTitleAndPushToNextRolls(result, toNextRollRerolled, finalObj, nextRollsToProcess);
-        if (exploded) updateTitleAndPushToNextRolls(result, toNextRollExploded, finalObj, nextRollsToProcess);
-        logger(`handleRollTurn::face(${face}) =>finalObj=${finalObj.v} rerolled=${rerolled} exploded=${exploded} FULL=${JSON.stringify(finalObj)}`);
+        logger(LOGLEVEL.NOTICE, `handleRollTurn::face(${face}) =>finalObj=${finalObj.v} rerolled=${rerolled} exploded=${exploded} FULL=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
-
+        if (rerolled || rerollSnapshot && rerollSnapshot.recursive) updateTitleAndPushToNextRolls(result, toNextRollRerolled, finalObj, nextRollsToProcess, rerollSectionDone);
+        if (exploded)                                               updateTitleAndPushToNextRolls(result, toNextRollExploded, finalObj, nextRollsToProcess, explodeSectionDone);
     }
-    logger(`handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
+    logger(LOGLEVEL.INFO, `handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
 }
 
 function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText) {
-    logger(`handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
     var reroll = randomInteger(10);
-    if (!(faceObj.rerolls[0].keepBest && reroll < face) && (faceObj.rerolls[0].recursive || !item.wasRerolled)) {
-        rerolled = true;
+    if (faceObj.rerolls[0].recursive || (!(faceObj.rerolls[0].keepBest && reroll < face) && !item.wasRerolled)) {
+        rerolled = !faceObj.rerolls[0].keepBest || reroll > face;
+        var rerolledVal = (faceObj.rerolls[0].keepBest && reroll < face) ? face : reroll;
         toNextRollRerolled = {
-            v: reroll, wasEverRerolled: true,
+            v: rerolledVal, wasEverRerolled: true,
             wasRerolled: true, wasExploded: false,
-            title: [`RollTurn (${strFill(turn + 1)}). R->Face=${strFill(reroll)}.`]
+            title: [`RollTurn (${strFill(turn + 1)}). R->Face=${strFill(rerolledVal)}.`]
         };
     }
     faceObj.rerolls[0].done++;
-    titleText += `Rerolled to a ${reroll < 10 ? reroll + '  ' : reroll}` + (faceObj.rerolls[0].limit != 0
-        ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).`
-        : ` (  Done${faceObj.rerolls[0].done} ).`);
+    titleText += `${rerolled ? 'Rerolled to a' : 'Not Reroll to'} ${reroll < 10 ? reroll + '  ' : reroll}`
+        + (faceObj.rerolls[0].limit != 0
+            ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).`
+            : ` (  Done${faceObj.rerolls[0].done} ).`);
+    var rerollSectionDone;
     if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
-        logger(`handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
+        logger(LOGLEVEL.NOTICE, `handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
+        rerollSectionDone = {
+            v: 'SECTIONDONE',
+            sectionType: 'Reroll',
+            details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.rerolls[0].limit}&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`
+        };
         faceObj.rerolls.shift();
     }
-    return { rerolled, toNextRollRerolled, titleText };
+    return { rerolled, toNextRollRerolled, titleText, rerollSectionDone };
 }
 
 function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText) {
-    logger(`handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
     var newDie = randomInteger(10);
-    var iterator = 0;
+    var iterator = 0, explodeSectionDone;
     for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
     if (iterator == faceObj.explosives.length) {
         logger(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(faceObj.explosives)}`);
@@ -514,12 +538,17 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
                 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).`
                 : ` (  Done${faceObj.explosives[iterator].done} ).`);
             if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
-                logger(`handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
+                logger(LOGLEVEL.NOTICE, `handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
+                explodeSectionDone = {
+                    v: 'SECTIONDONE',
+                    sectionType: 'Explode',
+                    details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.explosives[iterator].limit}&#013;&#010; ignoreRerolled: ${faceObj.explosives[iterator].ignoreRerolled}`
+                };
                 faceObj.explosives.shift();
             }
         }
     }
-    return { exploded, toNextRollExploded, titleText };
+    return { exploded, toNextRollExploded, titleText, explodeSectionDone };
 }
 
 const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
@@ -550,28 +579,29 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
         rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
         wasAffectedTextShadow = ', -3px 0 0.03em ',
         explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
-        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;';
+        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;',
+        sectionDoneStyle = 'position:relative;padding: 3px 0;width: 3px;height:1em;top:0.33em;border-radius:1em;border: 1px solid black;';
 
 function recalculateSuccesses(origCmd, succ, result) {
     var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
     var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
     var ret, addedSuccessesLabel = '', addedSuccesses = 0;
     if (ret = origCmd.match(patt)) {
-        // logger('buildHTML::ret='+JSON.stringify(ret));
-        // logger('buildHTML::succ='+succ);
+        logger('recalculateSuccesses::ret='+JSON.stringify(ret));
+        logger('recalculateSuccesses::succ='+succ);
         if (ret[1]) {
-            // logger('buildHTML::ret[1]='+ret[1]);
+            logger('recalculateSuccesses::ret[1]='+ret[1]);
             var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
-            // logger('buildHTML::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
+            logger('recalculateSuccesses::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
             for (const [, , item] of arrayAddedSuccesses) {
-                // logger('buildHTML::item='+item);
+                logger('recalculateSuccesses::item='+item);
                 addedSuccessesLabel += item;
                 addedSuccesses += Number(item);
             }
         }
     }
 
-    logger(`recalculateSuccesses::updating total successes=${succ + addedSuccesses}, old=${succ} + ${addedSuccesses}`);
+    logger(LOGLEVEL.INFO, `recalculateSuccesses::updating total successes=${succ + addedSuccesses}, old=${succ} + ${addedSuccesses}`);
     succ += addedSuccesses;
     if (succ < 0)
         succ = 0;
@@ -593,7 +623,7 @@ function recalculateSuccesses(origCmd, succ, result) {
  */
 function buildHTML(result, origCmd, origRoll, color) {
     var vals = result.rolls[0].results, succ = result.total;
-    logger(`buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
+    logger(LOGLEVEL.INFO, `buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
 
     var addedSuccessesLabel, succTxt;
     ({ addedSuccessesLabel, succTxt, succ } = recalculateSuccesses(origCmd, succ, result));
@@ -625,6 +655,15 @@ function displayRolls(vals, result, html) {
     var isDouble;
     html += '(';
     _.each(vals, function (item, idx) {
+        if (item.v === 'SECTIONDONE') {
+            if (result.rollSetup.verbosity == 0) return;
+            var sectionColor;
+            if      (item.sectionType === 'Double')  sectionColor = doubleColor;
+            else if (item.sectionType === 'Reroll')  sectionColor = rerolledColor;
+            else if (item.sectionType === 'Explode') sectionColor = explodedColor;
+            html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${sectionColor};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
+            return;
+        }
         if (result.rollSetup.verbosity == 0 && item.rerolled)
             return;
         isDouble = item.doubled;
@@ -637,7 +676,7 @@ function displayRolls(vals, result, html) {
         if (item.exploded) affectedTextShadow += explodedTextShadow;
         if (item.rerolled) affectedTextShadow += rerolledTextShadow;
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
-        // logger(`displayRolls::title = ${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
+        logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
         html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
         html += '<div class="didroll" style="' + diceRollStyle
             + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
@@ -738,7 +777,7 @@ function buildHelp() {
  * @return void
  */
 function printError(result, sender) {
-    logger('Error!');
+    logger(LOGLEVEL.ERROR, 'Error!');
 
     if (result.type == 'error' ) {
         sendChat('EX3Dice API', '/w ' + sender + ' I tried, but Roll20 had a problem with this. They said: ' + result.content);
