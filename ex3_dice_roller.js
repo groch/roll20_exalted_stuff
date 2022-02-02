@@ -541,7 +541,7 @@ function handleFaceReroll(faceObj, item, turn, titleText, condiLength) {
             : ` ( Done${strFill(faceObj.rerolls[0].done)} ).`);
     var rerollSectionDone;
     if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
-        rerollSectionDone = removeFirstRerollSection(faceObj, item);
+        rerollSectionDone = removeFirstRerollSection(faceObj);
     }
     return { rerolled, toNextRollRerolled, titleText, rerollSectionDone };
 }
@@ -567,7 +567,7 @@ function handleFaceExplode(faceObj, item, rerolled, turn, titleText, condiLength
                 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit} ).`
                 : ` ( Done${strFill(faceObj.explosives[iterator].done)} ).`);
             if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
-                explodeSectionDone = removeIteratorExplodeSection(faceObj, iterator, item);
+                explodeSectionDone = removeIteratorExplodeSection(faceObj, iterator);
             }
         }
     }
