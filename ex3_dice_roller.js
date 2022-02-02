@@ -24,6 +24,19 @@ class LOGLEVEL {
 }
 // CONSTANTS
 const LogLvl = LOGLEVEL.INFO,
+  ConditionalList = {
+    '1MotD': {
+        faceTrigger: (face, result, condIterator) => [7,8,9,10].includes(face),
+        diceCheckMethod: handleFaceCondition1MotD, //f(result, condIterator, item, rerolled, exploded, turn, titleText)
+        defaultConditionObj: {
+            name: '1MotD',
+            status: [,,,,,,,0,0,0,0],
+            remainingToDo: 0,
+            statusTotal: [,,,,,,,0,0,0,0],
+            totalRerolled: 0
+        }
+    }
+  },
   DefaultRollSetup = {
     hasRecursiveOrExplosiveFeature: false,
     has10doubled: true,
@@ -32,7 +45,7 @@ const LogLvl = LOGLEVEL.INFO,
     onlyResult: false,
     revertTitleOrder: false,
     face: [null],
-    conditionals: [],
+    conditionalActivated: [],
     rollToProcess: [],
     finalResults: [],
     maxRecursiveAchieved: false
@@ -200,7 +213,7 @@ function parseCmds(item) {
     logger(LOGLEVEL.INFO, 'parseCmds::item="' + trim + '"');
 
     var objRet, match = false;
-    var patt = /^(r|R)(l\d*)?(k|K)?(?:\s([\d,]+))?$/;
+    var patt = /^(r|R)(l\d*)?(k|K)?(?:\s([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/;
     if (ret = trim.match(patt)) {
         match = true;
         logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH1 = rerolls');
@@ -209,7 +222,8 @@ function parseCmds(item) {
             cmd: ret[1],
             faces: [...ret[4].split(',').filter(i => i).map(i => Number(i))],
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0,
-            keepBest: ret[3] ? true : false
+            keepBest: ret[3] ? true : false,
+            tagList: ret[5] ? [...ret[5].split(',').filter(i => i)] : []
         };
     }
     patt = /^(d|e|E)(l\d*)?(?:\s([\d,]+))?$/;
@@ -223,7 +237,7 @@ function parseCmds(item) {
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
         };
     }
-    patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/;
+    patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|1MotD)$/;
     if (ret = trim.match(patt)) {
         match = true;
         logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH2 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
@@ -260,12 +274,13 @@ function processCmds(cmds, result) {
                 recReroll = true;
             case 'r':
                 for (const face of item.faces) {
-                    logger(LOGLEVEL.INFO, `processCmds::adding reroll on face=${face}, limit=${item.limit}, rec=${item.recReroll}, keepBest=${item.keepBest}`);
+                    logger(LOGLEVEL.INFO, `processCmds::adding reroll on face=${face}, limit=${item.limit}, rec=${item.recReroll}, keepBest=${item.keepBest}, tags='${item.tagList}'`);
                     result.rollSetup.face[face].rerolls.push({
                         limit: item.limit,
                         done: 0,
                         keepBest: item.keepBest ? item.keepBest : false,
-                        recursive: recReroll
+                        recursive: recReroll,
+                        tagList: item.tagList
                     });
                 }
                 break;
@@ -287,6 +302,9 @@ function processCmds(cmds, result) {
             case 'd':
                 logger(LOGLEVEL.INFO, `processCmds::adding doubles on faces=${item.faces}, limit=${item.limit}`);
                 for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
+                break;
+            case '1MotD':
+                result.rollSetup.conditionalActivated.push(JSON.parse(JSON.stringify(ConditionalList['1MotD'].defaultConditionObj)));
                 break;
             case 'turn':
             case 'target':
@@ -431,13 +449,30 @@ function strFill(number) {
 
 function updateTitleAndPushToNextRolls(result, toNextRoll, finalObj, nextRollsToProcess, sectionDone) {
     logger(`updateTitleAndPushToNextRolls::revert=${result.rollSetup.revertTitleOrder}, pushing:${finalObj.title}, to:${toNextRoll.title}`);
+    if (Array.isArray(toNextRoll)) {
+        for (const item of toNextRoll) updateTitle(result, item, finalObj);
+    } else {
+        updateTitle(result, toNextRoll, finalObj);
+    }
+
+    if (Array.isArray(toNextRoll))
+        nextRollsToProcess.push(...toNextRoll);
+    else
+        nextRollsToProcess.push(toNextRoll);
+
+    if (sectionDone) {
+        if (Array.isArray(sectionDone))
+            result.rollSetup.finalResults.push(...sectionDone);
+        else
+            result.rollSetup.finalResults.push(sectionDone);
+    }
+}
+
+function updateTitle(result, toNextRoll, finalObj) {
     if (result.rollSetup.revertTitleOrder)
         toNextRoll.title.unshift(...finalObj.title);
     else
         toNextRoll.title.push(...finalObj.title);
-    nextRollsToProcess.push(toNextRoll);
-    if (sectionDone)
-        result.rollSetup.finalResults.push(sectionDone);
 }
 
 function makeNewTitleFromOld(result, prevItem, actionsOfThisRoll) {
@@ -458,68 +493,72 @@ function handleRollTurn(result, turn) {
     logger(LOGLEVEL.INFO, `handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
     var nextRollsToProcess = [];
     for (const item of result.rollSetup.rollToProcess) {
-        var rerolled = false,           exploded = false,
-            toNextRollRerolled = null,  toNextRollExploded = null,
-            tagList = [],               face = item.v,
-            titleText = '',             faceObj = result.rollSetup.face[face],
-            rerollSectionDone = null,   explodeSectionDone = null,
+        var rerolled = false,           exploded = false,           face = item.v,          producedADie = false,
+            toNextRollRerolled = null,  toNextRollExploded = null,  toNextRollCondi = [],
+            tagList = [],               titleText = '',             faceObj = result.rollSetup.face[face],            
+            rerollSectionDone = null,   explodeSectionDone = null,  condiSectionDone = [],
             rerollSnapshot = null;
         logger(`handleRollTurn::face(${face}) rerolls.length=${faceObj.rerolls.length}, explosives.length=${faceObj.explosives.length}`);
         if (faceObj.rerolls.length) {
             rerollSnapshot = faceObj.rerolls[0];
-            ({ rerolled, toNextRollRerolled, titleText, rerollSectionDone } = handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText));
+            ({ rerolled, toNextRollRerolled, titleText, rerollSectionDone } = handleFaceReroll(faceObj, item, turn, titleText, result.rollSetup.conditionalActivated.length));
         }
         if (faceObj.explosives.length)
-            ({ exploded, toNextRollExploded, titleText, explodeSectionDone } = handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText));
+            ({ exploded, toNextRollExploded, titleText, explodeSectionDone } = handleFaceExplode(faceObj, item, rerolled, turn, titleText, result.rollSetup.conditionalActivated.length));
+        if (result.rollSetup.conditionalActivated.length) {
+            ({ producedADie, titleText } = handleFaceConditionals(result, rerolled, exploded, titleText, item, turn, toNextRollCondi, condiSectionDone));
+        }
         var finalObj = {
             wasEverRerolled:    item.wasEverRerolled || false,      v:          face,
             wasRerolled:        item.wasRerolled || false,          doubled:    false,
-            wasExploded:        item.wasExploded || false,          tags:       tagList,
-            rerolled:           rerolled,                           exploded:   exploded,
-            title: item.title ? makeNewTitleFromOld(result, item.title, titleText) : [`Roll Initial.            Face=${strFill(face)}.${titleText}`]
+            wasExploded:        item.wasExploded || false,          tags:       tagList,    wasConditionallyAffected:   item.wasConditionallyAffected || false,
+            rerolled:           rerolled,                           exploded:   exploded,   condTriggered:              producedADie,
+            title: item.title ? makeNewTitleFromOld(result, item.title, titleText) : [`Roll Initial.${result.rollSetup.conditionalActivated.length ? condiPadder : ''}            Face=${strFill(face)}.${titleText}`]
         };
         logger(LOGLEVEL.NOTICE, `handleRollTurn::face(${face}) =>finalObj=${finalObj.v} rerolled=${rerolled} exploded=${exploded} FULL=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
         if (rerolled || rerollSnapshot && rerollSnapshot.recursive) updateTitleAndPushToNextRolls(result, toNextRollRerolled, finalObj, nextRollsToProcess, rerollSectionDone);
         if (exploded)                                               updateTitleAndPushToNextRolls(result, toNextRollExploded, finalObj, nextRollsToProcess, explodeSectionDone);
+        if (producedADie)                                           updateTitleAndPushToNextRolls(result, toNextRollCondi,    finalObj, nextRollsToProcess, condiSectionDone);
     }
     logger(LOGLEVEL.INFO, `handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
+    if (turn === 1) result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: 'Initial Roll', details: ''});
 }
 
-function handleFaceReroll(face, faceObj, item, rerolled, toNextRollRerolled, turn, titleText) {
+function handleFaceReroll(faceObj, item, turn, titleText, condiLength) {
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
-    var reroll = randomInteger(10);
+    var reroll = randomInteger(10), face = item.v, toNextRollRerolled, rerolled = false;
     if (faceObj.rerolls[0].recursive || (!(faceObj.rerolls[0].keepBest && reroll < face) && !item.wasRerolled)) {
         rerolled = !faceObj.rerolls[0].keepBest || reroll > face;
         var rerolledVal = (faceObj.rerolls[0].keepBest && reroll < face) ? face : reroll;
         toNextRollRerolled = {
             v: rerolledVal, wasEverRerolled: true,
-            wasRerolled: true, wasExploded: false,
-            title: [`RollTurn (${strFill(turn + 1)}). R->Face=${strFill(rerolledVal)}.`]
+            wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
+            title: [`RollTurn (${strFill(turn + 1)}). R${condiLength ? condiPadder : ''} ->Face=${strFill(rerolledVal)}.`]
         };
     }
     faceObj.rerolls[0].done++;
-    titleText += `${rerolled ? 'Rerolled to a' : 'Not Reroll to'} ${reroll < 10 ? reroll + '  ' : reroll}`
+    titleText += `${rerolled ? 'Rerolled to a' : 'Not Reroll to'} ${strFill(reroll)} `
         + (faceObj.rerolls[0].limit != 0
-            ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit}).`
-            : ` (  Done${faceObj.rerolls[0].done} ).`);
+            ? ` (Done${faceObj.rerolls[0].done}/${faceObj.rerolls[0].limit} ).`
+            : ` ( Done${strFill(faceObj.rerolls[0].done)} ).`);
     var rerollSectionDone;
     if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
         logger(LOGLEVEL.NOTICE, `handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
         rerollSectionDone = {
             v: 'SECTIONDONE',
             sectionType: 'Reroll',
-            details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.rerolls[0].limit}&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`
+            details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.rerolls[0].limit}&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'`
         };
         faceObj.rerolls.shift();
     }
     return { rerolled, toNextRollRerolled, titleText, rerollSectionDone };
 }
 
-function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollExploded, turn, titleText) {
+function handleFaceExplode(faceObj, item, rerolled, turn, titleText, condiLength) {
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
-    var newDie = randomInteger(10);
+    var newDie = randomInteger(10), face = item.v, toNextRollExploded, exploded = false;
     var iterator = 0, explodeSectionDone;
     for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
     if (iterator == faceObj.explosives.length) {
@@ -530,13 +569,13 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
             exploded = true;
             toNextRollExploded = {
                 v: newDie, wasEverRerolled: item.rerolled || true,
-                wasRerolled: false, wasExploded: true,
-                title: [`RollTurn (${strFill(turn + 1)}). E->Face=${strFill(newDie)}.`]
+                wasRerolled: false, wasExploded: true, wasConditionallyAffected: false,
+                title: [`RollTurn (${strFill(turn + 1)}). E${condiLength ? condiPadder : ''} ->Face=${strFill(newDie)}.`]
             };
             faceObj.explosives[iterator].done++;
-            titleText += `Explode to a ${strFill(newDie)}` + (faceObj.explosives[iterator].limit != 0
-                ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit}).`
-                : ` (  Done${faceObj.explosives[iterator].done} ).`);
+            titleText += ` Explode to a ${strFill(newDie)} ` + (faceObj.explosives[iterator].limit != 0
+                ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit} ).`
+                : ` ( Done${strFill(faceObj.explosives[iterator].done)} ).`);
             if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
                 logger(LOGLEVEL.NOTICE, `handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
                 explodeSectionDone = {
@@ -551,20 +590,73 @@ function handleFaceExplode(face, faceObj, rerolled, item, exploded, toNextRollEx
     return { exploded, toNextRollExploded, titleText, explodeSectionDone };
 }
 
+function handleFaceConditionals(result, rerolled, exploded, titleText, item, turn, toNextRollCondi, condiSectionDone) {
+    var face = item.v, producedADie = false;
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) CONDITIONAL-ALL-TESTS ! rerolled=${rerolled} exploded=${exploded}`);
+    for (var condIterator = 0; condIterator < result.rollSetup.conditionalActivated.length; condIterator++) {
+        var condConfig = ConditionalList[result.rollSetup.conditionalActivated[condIterator].name];
+        logger(`handleRollTurn::face(${face}) section=${JSON.stringify(condConfig)}`);
+        var localProducedADie = false, localCondiSectionDone, localToNextRollCondi = null;
+        if (condConfig && condConfig.faceTrigger(face, result, condIterator)) {
+            ({ localProducedADie, localToNextRollCondi, titleText, localCondiSectionDone } = condConfig.diceCheckMethod(result, condIterator, item, rerolled, exploded, turn, titleText));
+            logger(`handleRollTurn::after diceCheckMethod, localToNextRollCondi=${JSON.stringify(localToNextRollCondi)}`);
+            if (localProducedADie) {
+                producedADie = true;
+                toNextRollCondi.push(localToNextRollCondi);
+            }
+            if (localCondiSectionDone)
+                condiSectionDone.push(localCondiSectionDone);
+        }
+    }
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) END CONDITIONAL-ALL-TESTS ! toNextRollCondi.length=${toNextRollCondi.length}`);
+    return { producedADie, titleText };
+}
+
+function handleFaceCondition1MotD(result, condIterator, item, rerolled, exploded, turn, titleText) {
+    var face = item.v, faceObj = result.rollSetup.face[face], toNextRollCondi = null, producedADie = false;
+    var condiSectionDone = null, cond = result.rollSetup.conditionalActivated[condIterator];
+    logger(LOGLEVEL.INFO, `handleFaceCondition1MotD::face(${face}) CONDITIONAL-1MotD TO DO ! rerolled=${rerolled} exploded=${exploded} section=${JSON.stringify(cond)}`);
+    cond.status[face]++;
+    logger(`handleFaceCondition1MotD::CONDI (cond.status[${face}]=${cond.status[face]} === 3)=${cond.status[face] === 3}`);
+    if (cond.status[face] === 3) {
+        cond.status[face] = 0;
+        cond.remainingToDo++;
+    }
+    if (cond.remainingToDo) {
+        logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::remainingToDo=${cond.remainingToDo}`);
+        for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+            const dieTesting = result.rollSetup.finalResults[i];
+            if (dieTesting.v < 7 && !dieTesting.rerolled) {
+                logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${i} dieTesting=${JSON.stringify(dieTesting)}`);
+                producedADie = true;
+                toNextRollCondi = {
+                    v: 10, wasEverRerolled: true,
+                    wasRerolled: true, wasExploded: false, wasConditionallyAffected: true,
+                    title: [`RollTurn (${strFill(turn + 1)}). C(1MotD) ->Face=10.`]
+                };
+                result.rollSetup.finalResults[i].condTriggered = false; //1MotD produce normal reroll
+                result.rollSetup.finalResults[i].rerolled = true;
+                result.rollSetup.finalResults[i].wasEverRerolled = true;
+                cond.remainingToDo--;
+                cond.statusTotal[face]++;
+                cond.totalRerolled++;
+                titleText += `1MotD created a 10 (` + (cond.remainingToDo != 0 ? `Remaining:${cond.remainingToDo}, ` : '') + `Total=${cond.statusTotal[face]}(${face})/${cond.totalRerolled}).`;
+            }
+        }
+    }
+    logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::QUITTING ! producedADie=${producedADie}, titleText="${titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
+    return { localProducedADie: producedADie, localToNextRollCondi: toNextRollCondi, titleText, localCondiSectionDone: condiSectionDone };
+}
+
 const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
         innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
-        // ME
         baseColor = 'black',
         successColor = '#23b04f',
         doubleColor = '#950015',
         rerolledColor = 'rgba(0, 100, 255, 1)',
         explodedColor = 'rgba(255, 235, 0, 1)',
-        // KIA
-        // baseColor = '#181e22',
-        // successColor = "#4c872a",
-        // doubleColor = "#86293a",
-        // rerolledColor = '#2547a0',
-        // explodedColor = '#219a7e',
+        conditionalColor = 'cyan',
+        initialRollColor = '#f06292',
         formulaStyleBase = "font-size:inherit;background:white;border-radius:3px;",
         totalStyle = formulaStyleBase + 'padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;',
         formulaStyle = formulaStyleBase + 'padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;',
@@ -576,11 +668,13 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
         successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
         doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
         rerolledStyle = 'opacity: 0.4;',
-        rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
         wasAffectedTextShadow = ', -3px 0 0.03em ',
+        rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
         explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
+        condTriggeredTextShadow = `, 0.15em 0em 2px ${conditionalColor}`,
         maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;',
-        sectionDoneStyle = 'position:relative;padding: 3px 0;width: 3px;height:1em;top:0.33em;border-radius:1em;border: 1px solid black;';
+        sectionDoneStyle = 'position:relative;padding: 3px 0;width: 3px;height:1em;top:0.33em;border-radius:1em;border: 1px solid black;',
+        condiPadder = '              ';
 
 function recalculateSuccesses(origCmd, succ, result) {
     var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
@@ -658,9 +752,11 @@ function displayRolls(vals, result, html) {
         if (item.v === 'SECTIONDONE') {
             if (result.rollSetup.verbosity == 0) return;
             var sectionColor;
-            if      (item.sectionType === 'Double')  sectionColor = doubleColor;
-            else if (item.sectionType === 'Reroll')  sectionColor = rerolledColor;
-            else if (item.sectionType === 'Explode') sectionColor = explodedColor;
+            if      (item.sectionType === 'Double')         sectionColor = doubleColor;
+            else if (item.sectionType === 'Reroll')         sectionColor = rerolledColor;
+            else if (item.sectionType === 'Explode')        sectionColor = explodedColor;
+            else if (item.sectionType === 'Conditinal')     sectionColor = conditionalColor;
+            else if (item.sectionType === 'Initial Roll')   sectionColor = initialRollColor;
             html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${sectionColor};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
             return;
         }
@@ -670,11 +766,12 @@ function displayRolls(vals, result, html) {
         var affectedTextShadow = '';
         if (item.wasRerolled || item.wasExploded) {
             affectedTextShadow = wasAffectedTextShadow;
-            if (item.wasRerolled)       affectedTextShadow += rerolledColor;
-            else if (item.wasExploded)  affectedTextShadow += explodedColor;
+            if (item.wasRerolled)       affectedTextShadow += item.wasConditionallyAffected ? conditionalColor : rerolledColor;
+            else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? conditionalColor : explodedColor;
         }
-        if (item.exploded) affectedTextShadow += explodedTextShadow;
-        if (item.rerolled) affectedTextShadow += rerolledTextShadow;
+        if (item.exploded)      affectedTextShadow += explodedTextShadow;
+        if (item.rerolled)      affectedTextShadow += rerolledTextShadow;
+        if (item.condTriggered) affectedTextShadow += condTriggeredTextShadow;
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
         logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
         html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
