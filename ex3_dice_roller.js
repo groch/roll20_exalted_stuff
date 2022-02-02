@@ -288,7 +288,7 @@ function processCmds(cmds, result) {
                 exploIgnore = false;
             case 'e':
                 for (const face of item.faces) {
-                    logger(LOGLEVEL.INFO, `processCmds::adding explode on face=${face}, limit=${item.limit}, exploIgnore=${item.exploIgnore}`);
+                    logger(LOGLEVEL.INFO, `processCmds::adding explode on face=${face}, limit=${item.limit}, exploIgnore=${exploIgnore}`);
                     result.rollSetup.face[face].explosives.push({
                         limit: item.limit,
                         done: 0,
@@ -374,13 +374,7 @@ function doDoubles(result) {
                 item.doubled = true;
                 faceObj.doubles[0].done++;
                 if (faceObj.doubles[0].limit != 0 && faceObj.doubles[0].limit == faceObj.doubles[0].done) {
-                    logger(LOGLEVEL.NOTICE, `doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`)
-                    finalResultsWithDoubleSections.push({
-                        v: 'SECTIONDONE',
-                        sectionType: 'Double',
-                        details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.doubles[0].limit}`
-                    });
-                    faceObj.doubles.shift();
+                    finalResultsWithDoubleSections.push(removeFirstDoubleSection(faceObj));
                 }
             }
         }
@@ -401,7 +395,6 @@ function doDoubles(result) {
 function finalizeRoll(result) {
     logger(LOGLEVEL.INFO, `finalizeRoll::finalizeRoll result=${JSON.stringify(result)}`);
 
-    // copy rolls
     result.rollSetup.rollToProcess = result.rolls[0].results;
     logger(`finalizeRoll::finalizeRoll rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
 	if (typeof result.rollSetup.rollToProcess == 'undefined') {
@@ -409,7 +402,6 @@ function finalizeRoll(result) {
         return;
     }
 
-    //sort reroll & explosives
     sortRerollsAndExplosives(result);
 
     logger(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
@@ -422,6 +414,7 @@ function finalizeRoll(result) {
     if (turn >= 42) result.rollSetup.maxRecursiveAchieved = true;
 
     doDoubles(result);
+    handleSectionCleaning(result, true);
 
     logger(`finalizeRoll::rewriting result.rolls[0].results=${JSON.stringify(result.rollSetup.finalResults)}`);
     result.rolls[0].results = result.rollSetup.finalResults;
@@ -510,7 +503,7 @@ function handleRollTurn(result, turn) {
         }
         var finalObj = {
             wasEverRerolled:    item.wasEverRerolled || false,      v:          face,
-            wasRerolled:        item.wasRerolled || false,          doubled:    false,
+            wasRerolled:        item.wasRerolled || false,          doubled:    false,      condRerolled:               false,
             wasExploded:        item.wasExploded || false,          tags:       tagList,    wasConditionallyAffected:   item.wasConditionallyAffected || false,
             rerolled:           rerolled,                           exploded:   exploded,   condTriggered:              producedADie,
             title: item.title ? makeNewTitleFromOld(result, item.title, titleText) : [`Roll Initial.${result.rollSetup.conditionalActivated.length ? condiPadder : ''}            Face=${strFill(face)}.${titleText}`]
@@ -523,12 +516,15 @@ function handleRollTurn(result, turn) {
     }
     logger(LOGLEVEL.INFO, `handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
-    if (turn === 1) result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: 'Initial Roll', details: ''});
+    if (turn === 1) {
+        result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: 'Initial Roll', color: initialRollColor, details: ''});
+        handleSectionCleaning(result);
+    }
 }
 
 function handleFaceReroll(faceObj, item, turn, titleText, condiLength) {
-    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
     var reroll = randomInteger(10), face = item.v, toNextRollRerolled, rerolled = false;
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) REROLL TO DO ! section=${JSON.stringify(faceObj.rerolls[0])}`);
     if (faceObj.rerolls[0].recursive || (!(faceObj.rerolls[0].keepBest && reroll < face) && !item.wasRerolled)) {
         rerolled = !faceObj.rerolls[0].keepBest || reroll > face;
         var rerolledVal = (faceObj.rerolls[0].keepBest && reroll < face) ? face : reroll;
@@ -545,20 +541,14 @@ function handleFaceReroll(faceObj, item, turn, titleText, condiLength) {
             : ` ( Done${strFill(faceObj.rerolls[0].done)} ).`);
     var rerollSectionDone;
     if (faceObj.rerolls[0].limit != 0 && faceObj.rerolls[0].limit == faceObj.rerolls[0].done) {
-        logger(LOGLEVEL.NOTICE, `handleRollTurn::handleFaceReroll REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
-        rerollSectionDone = {
-            v: 'SECTIONDONE',
-            sectionType: 'Reroll',
-            details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.rerolls[0].limit}&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'`
-        };
-        faceObj.rerolls.shift();
+        rerollSectionDone = removeFirstRerollSection(faceObj, item);
     }
     return { rerolled, toNextRollRerolled, titleText, rerollSectionDone };
 }
 
 function handleFaceExplode(faceObj, item, rerolled, turn, titleText, condiLength) {
-    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
     var newDie = randomInteger(10), face = item.v, toNextRollExploded, exploded = false;
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${face}) EXPLOSIVE TO DO ! section=${JSON.stringify(faceObj.explosives[0])} rerolled=${rerolled}`);
     var iterator = 0, explodeSectionDone;
     for (; iterator < faceObj.explosives.length && !(!faceObj.explosives[iterator].ignoreRerolled || (!rerolled && !item.wasEverRerolled)); iterator++);
     if (iterator == faceObj.explosives.length) {
@@ -577,13 +567,7 @@ function handleFaceExplode(faceObj, item, rerolled, turn, titleText, condiLength
                 ? ` (Done${faceObj.explosives[iterator].done}/${faceObj.explosives[iterator].limit} ).`
                 : ` ( Done${strFill(faceObj.explosives[iterator].done)} ).`);
             if (faceObj.explosives[iterator].limit != 0 && faceObj.explosives[iterator].limit == faceObj.explosives[iterator].done) {
-                logger(LOGLEVEL.NOTICE, `handleRollTurn::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
-                explodeSectionDone = {
-                    v: 'SECTIONDONE',
-                    sectionType: 'Explode',
-                    details: `&#013;&#010; face: ${item.v}&#013;&#010; limit: ${faceObj.explosives[iterator].limit}&#013;&#010; ignoreRerolled: ${faceObj.explosives[iterator].ignoreRerolled}`
-                };
-                faceObj.explosives.shift();
+                explodeSectionDone = removeIteratorExplodeSection(faceObj, iterator, item);
             }
         }
     }
@@ -634,9 +618,10 @@ function handleFaceCondition1MotD(result, condIterator, item, rerolled, exploded
                     wasRerolled: true, wasExploded: false, wasConditionallyAffected: true,
                     title: [`RollTurn (${strFill(turn + 1)}). C(1MotD) ->Face=10.`]
                 };
-                result.rollSetup.finalResults[i].condTriggered = false; //1MotD produce normal reroll
-                result.rollSetup.finalResults[i].rerolled = true;
-                result.rollSetup.finalResults[i].wasEverRerolled = true;
+                dieTesting.condTriggered = false; //1MotD produce normal reroll but tagging for clarity
+                dieTesting.rerolled = true;
+                dieTesting.condRerolled = true;
+                dieTesting.wasEverRerolled = true;
                 cond.remainingToDo--;
                 cond.statusTotal[face]++;
                 cond.totalRerolled++;
@@ -648,6 +633,68 @@ function handleFaceCondition1MotD(result, condIterator, item, rerolled, exploded
     return { localProducedADie: producedADie, localToNextRollCondi: toNextRollCondi, titleText, localCondiSectionDone: condiSectionDone };
 }
 
+/* SECTION CLEANING */
+function handleSectionCleaning(result, lastTurnClean = false) {
+    logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING REROLLS & EXPLODES !');
+        for (const faceClearing of [1,2,3,4,5,6,7,8,9,10]) {
+            var faceObj = result.rollSetup.face[faceClearing];
+            // remove non recursive reroll && push section accordingly
+            while (faceObj.rerolls.length && (!faceObj.rerolls[0].recursive || lastTurnClean))
+                result.rollSetup.finalResults.push(removeFirstRerollSection(faceObj, true));
+            // remove non ignore reroll && push section accordingly
+            var i;
+            do {
+                for (i = 0; i < faceObj.explosives.length; i++) {
+                    if (lastTurnClean || faceObj.explosives[i].ignoreRerolled) {
+                        result.rollSetup.finalResults.push(removeIteratorExplodeSection(faceObj, i, true));
+                        i = 0;
+                        break;
+                    }
+                }
+            } while (i != faceObj.explosives.length);
+            // remove doubles && push section accordingly
+            while (lastTurnClean && faceObj.doubles.length)
+                result.rollSetup.finalResults.push(removeFirstDoubleSection(faceObj, true));
+        }
+}
+
+function removeFirstDoubleSection(faceObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `doDoubles::DOUBLE SECTION DONE=${JSON.stringify(faceObj.doubles[0])}`);
+    var removedDoubleSection = {
+        v: 'SECTIONDONE',
+        sectionType: 'Double',
+        color: doubleColor,
+        details: `&#013;&#010; face: ${faceObj.face}&#013;&#010; limit: ${showDone ? faceObj.doubles[0].done + '/' + faceObj.doubles[0].limit : faceObj.doubles[0].limit}`
+    };
+    faceObj.doubles.shift();
+    return removedDoubleSection;
+}
+
+function removeFirstRerollSection(faceObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `removeFirstRerollSection::REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
+    var rerollSectionDone = {
+        v: 'SECTIONDONE',
+        sectionType: 'Reroll',
+        color: rerolledColor,
+        details: `&#013;&#010; face: ${faceObj.face}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'`
+    };
+    faceObj.rerolls.shift();
+    return rerollSectionDone;
+}
+
+function removeIteratorExplodeSection(faceObj, iterator, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `removeIteratorExplodeSection::EXPLOSIVE SECTION DONE=${JSON.stringify(faceObj.explosives[iterator])}`);
+    var explodeSectionDone = {
+        v: 'SECTIONDONE',
+        sectionType: 'Explode',
+        color: explodedColor,
+        details: `&#013;&#010; face: ${faceObj.face}&#013;&#010; limit: ${showDone ? faceObj.explosives[iterator].done + '/' + faceObj.explosives[iterator].limit : faceObj.explosives[iterator].limit}&#013;&#010; ignoreRerolled: ${faceObj.explosives[iterator].ignoreRerolled}`
+    };
+    faceObj.explosives.splice(iterator);
+    return explodeSectionDone;
+}
+
+/* Build HTML */
 const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
         innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
         baseColor = 'black',
@@ -669,7 +716,7 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
         doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
         rerolledStyle = 'opacity: 0.4;',
         wasAffectedTextShadow = ', -3px 0 0.03em ',
-        rerolledTextShadow = `, 5px -5px 3px ${rerolledColor}`,
+        rerolledTextShadow = `, 5px -5px 3px `,
         explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
         condTriggeredTextShadow = `, 0.15em 0em 2px ${conditionalColor}`,
         maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;',
@@ -751,13 +798,7 @@ function displayRolls(vals, result, html) {
     _.each(vals, function (item, idx) {
         if (item.v === 'SECTIONDONE') {
             if (result.rollSetup.verbosity == 0) return;
-            var sectionColor;
-            if      (item.sectionType === 'Double')         sectionColor = doubleColor;
-            else if (item.sectionType === 'Reroll')         sectionColor = rerolledColor;
-            else if (item.sectionType === 'Explode')        sectionColor = explodedColor;
-            else if (item.sectionType === 'Conditinal')     sectionColor = conditionalColor;
-            else if (item.sectionType === 'Initial Roll')   sectionColor = initialRollColor;
-            html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${sectionColor};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
+            html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${item.color};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
             return;
         }
         if (result.rollSetup.verbosity == 0 && item.rerolled)
@@ -770,7 +811,7 @@ function displayRolls(vals, result, html) {
             else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? conditionalColor : explodedColor;
         }
         if (item.exploded)      affectedTextShadow += explodedTextShadow;
-        if (item.rerolled)      affectedTextShadow += rerolledTextShadow;
+        if (item.rerolled)      affectedTextShadow += rerolledTextShadow + (item.condRerolled ? conditionalColor : rerolledColor) + ';';
         if (item.condTriggered) affectedTextShadow += condTriggeredTextShadow;
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
         logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
