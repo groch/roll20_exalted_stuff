@@ -672,10 +672,12 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
     }
     if (cond.remainingToDo) {
         logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::remainingToDo=${cond.remainingToDo}`);
+        var diceNb = 1;
         for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
             const dieTesting = result.rollSetup.finalResults[i];
+            if (dieTesting.v === 'SECTIONDONE') continue;
             if (!dieTesting.success && !dieTesting.rerolled) {
-                logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${i} dieTesting=${JSON.stringify(dieTesting)}`);
+                logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
                 setup.producedADie = true;
                 toNextRollCondi = {
                     v: 10, wasEverRerolled: true,
@@ -684,6 +686,7 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
                 };
                 dieTesting.condTriggered = false; //1MotD produce normal reroll but tagging for clarity
                 dieTesting.rerolled = true, dieTesting.condRerolled = true, dieTesting.wasEverRerolled = true;
+                logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
                 cond.remainingToDo--,       cond.statusTotal[setup.face]++, cond.totalRerolled++;
                 setup.titleText += `1MotD created a 10 (` + (cond.remainingToDo != 0 ? `Remaining:${cond.remainingToDo}, ` : '') + `Total=${cond.statusTotal[setup.face]}(${setup.face})/${cond.totalRerolled}).`;
             }
@@ -898,6 +901,7 @@ function displayRolls(vals, result, html) {
     var isDouble;
     html += '(';
     _.each(vals, function (item, idx) {
+        logger(`displayRolls::item=${item}`);
         if (item.v === 'SECTIONDONE') {
             if (result.rollSetup.verbosity == 0) return;
             html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${item.color};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
