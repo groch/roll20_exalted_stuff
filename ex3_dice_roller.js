@@ -47,6 +47,17 @@ const LogLvl = LOGLEVEL.DEBUG,
             }
             return obj;
         }
+    },
+    'DIT': {
+        faceTrigger: (setup, result, condIterator) => setup.success || setup.doubled,
+        diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
+        getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
+        defaultConditionObj: {
+            name: 'DIT',
+            status: 0,
+            done: 0
+        },
+        finalizeDefaultConditionObj: obj => obj
     }
   },
   DefaultRollSetup = {
@@ -288,7 +299,7 @@ function parseCmds(item) {
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
         };
     }
-    patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|1MotD)$/;
+    patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/;
     if (ret = trim.match(patt)) {
         match = true;
         logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH4 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
@@ -297,6 +308,18 @@ function parseCmds(item) {
             cmd: ret[1],
             args: null
         };
+    }
+    for (const condItem of Object.keys(ConditionalList)) {
+        patt = new RegExp(`^(${condItem})$`);
+        if (ret = trim.match(patt)) {
+            match = true;
+            logger(LOGLEVEL.NOTICE, `parseCmds::MATCH5 - Conditional Item = ${condItem}`);
+            logger('parseCmds::ret='+JSON.stringify(ret));
+            objRet = {
+                cmd: ret[1],
+                args: null
+            };
+        }
     }
 
     logger(LOGLEVEL.INFO, 'parseCmds::FINAL objRet='+JSON.stringify(objRet));
@@ -316,7 +339,6 @@ function parseCmds(item) {
  */
 function processCmds(cmds, result) {
     logger(LOGLEVEL.INFO, `processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
-    var conditionalListKeys = Object.keys(ConditionalList);
     for (const item of cmds) {
         var recReroll = false,
             exploIgnore = true,
@@ -390,7 +412,7 @@ function processCmds(cmds, result) {
 
     for (const item of cmds) {
         // create Conditional Default Item + Init
-        if (conditionalListKeys.includes(item.cmd)) {
+        if (Object.keys(ConditionalList).includes(item.cmd)) {
             var dupedDefaultConditionObj = JSON.parse(JSON.stringify(ConditionalList[item.cmd].defaultConditionObj));
             dupedDefaultConditionObj = ConditionalList[item.cmd].finalizeDefaultConditionObj(dupedDefaultConditionObj, result);
             logger(LOGLEVEL.NOTICE, `processCmds::COND ENABLING obj=${JSON.stringify(dupedDefaultConditionObj)}`);
@@ -438,9 +460,9 @@ function finalizeRoll(result) {
     do {
         logger(LOGLEVEL.NOTICE, `MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
         handleRollTurn(result, turn++);
-        if (turn > 42) break;
+        if (turn > 420) break;
     } while (result.rollSetup.rollToProcess.length > 0)
-    if (turn >= 42) result.rollSetup.maxRecursiveAchieved = true;
+    if (turn >= 420) result.rollSetup.maxRecursiveAchieved = true;
 
     handleSectionCleaning(result, true);
     recountSuccesses(result);
@@ -526,7 +548,7 @@ function handleRollTurn(result, turn) {
     var nextRollsToProcess = [];
     for (const item of result.rollSetup.rollToProcess) {
         var setup = JSON.parse(JSON.stringify(DefaultRollHandlingSetup));
-        setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face];
+        setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face], setup.wasConditionallyAffected = item.wasConditionallyAffected;
         handleRoll(result, setup, item, turn);
         var finalObj = {
             v:                  setup.face,                    tags:                     setup.tagList,
@@ -697,13 +719,40 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
     return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
 }
 
+function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
+    var toNextRollCondi, condiSectionDone = null, cond = result.rollSetup.conditionalActivated[condIterator];
+    logger(LOGLEVEL.INFO, `handleFaceConditionDIT::face(${setup.face}) CONDITIONAL-DIT TO DO ! success=${setup.success} doubled=${setup.doubled} section=${JSON.stringify(cond)}`);
+    cond.status += setup.doubled ? 2 : 1;
+    logger(`handleFaceConditionDIT::CONDI after cond.status=${cond.status} cond.done${cond.done}`);
+    var createDie = false;
+    if (cond.status >= 3) {
+        cond.status -= 3;
+        createDie = true;
+    }
+    if (createDie) {
+        var newDie = randomInteger(10);
+        logger(LOGLEVEL.EMERGENCY, `handleFaceConditionDIT::newDie=${newDie}`);
+        setup.producedADie = true;
+        toNextRollCondi = {
+            v: newDie, wasEverRerolled: false,
+            wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`]
+        };
+        cond.done++;
+        setup.titleText += `DIT created a ${newDie} done=${cond.done}.`;
+    }
+    // if (condition of removing section) condiSectionDone = removeIteratorCondSectionMethod(result, condIterator, true);
+    logger(LOGLEVEL.EMERGENCY, `handleFaceConditionDIT::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
+    return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
+}
+
 /**
  * 
  * SECTION CLEANING
  * 
  */
 function handleSectionCleaning(result, lastTurnClean = false) {
-    logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING REROLLS & EXPLODES !');
+    logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING !');
     for (const faceClearing of [1,2,3,4,5,6,7,8,9,10]) {
         var faceObj = result.rollSetup.face[faceClearing];
         // remove non recursive reroll && push section accordingly
@@ -724,6 +773,7 @@ function handleSectionCleaning(result, lastTurnClean = false) {
         } while (i != faceObj.explosives.length);
     }
     // remove condActivated && push section accordingly
+    logger(LOGLEVEL.INFO, `handleSectionCleaning::CLEANING COND ! length=${result.rollSetup.conditionalActivated.length}, full=${JSON.stringify(result.rollSetup.conditionalActivated)}`);
     while (lastTurnClean && result.rollSetup.conditionalActivated.length)
         result.rollSetup.finalResults.push(removeIteratorCondSectionMethod(result, 0, true));
 }
@@ -772,20 +822,20 @@ function removeIteratorExplodeSection(faceObj, iterator, showDone = false) {
         color: explodedColor,
         details: `&#013;&#010; face: ${faceObj.face}&#013;&#010; limit: ${showDone ? faceObj.explosives[iterator].done + '/' + faceObj.explosives[iterator].limit : faceObj.explosives[iterator].limit}&#013;&#010; ignoreRerolled: ${faceObj.explosives[iterator].ignoreRerolled}`
     };
-    faceObj.explosives.splice(iterator);
+    faceObj.explosives.splice(iterator, 1);
     return explodeSectionDone;
 }
 
 function removeIteratorCondSectionMethod(result, iterator, showDone = false) {
     var condObj = result.rollSetup.conditionalActivated[iterator];
-    logger(LOGLEVEL.NOTICE, `removeIteratorCondSectionMethod::Global COND SECTION to Remove=${JSON.stringify(condObj)}`);
+    logger(LOGLEVEL.NOTICE, `removeIteratorCondSectionMethod::Global COND SECTION id=${iterator} to Remove=${JSON.stringify(condObj)}`);
     var condSectionDone = {
         v: 'SECTIONDONE',
         sectionType: `Cond-${condObj.name}`,
         color: conditionalColor,
         details: ConditionalList[condObj.name].getDetailMethod(condObj, showDone)
     };
-    result.rollSetup.conditionalActivated.splice(iterator);
+    result.rollSetup.conditionalActivated.splice(iterator, 1);
     return condSectionDone;
 }
 
@@ -796,6 +846,12 @@ function detailsCond1MotDSectionDone(condObj, showDone = false) {
     logger(`detailsCond1MotDSectionDone::faceList=${faceList}`);
     if (showDone)
         for (const i of faceList) detail += `&#013;&#010; ${strFill(i)}: ${condObj.status[i]}/3-RerollTriggered=${condObj.statusTotal[i]}`;
+    return detail;
+}
+
+function detailsCondDITSectionDone(condObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-DIT Detail SECTION DONE=${JSON.stringify(condObj)}`);
+    var detail = `&#013;&#010; Success stocked=${condObj.status}/3&#013;&#010; Total generated =${condObj.done}`;
     return detail;
 }
 
@@ -829,7 +885,7 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
         condiPadder = '              ';
 
 function recalculateSuccesses(origCmd, succ, result) {
-    var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+[^\]]*\]?)+)?/;
+    var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+(?:\[[^\]+-]*\]?)?)*)/;
     var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
     var ret, addedSuccessesLabel = '', addedSuccesses = 0;
     if (ret = origCmd.match(patt)) {
@@ -898,15 +954,17 @@ function buildHTML(result, origCmd, origRoll, color) {
 }
 
 function displayRolls(vals, result, html) {
-    var isDouble;
+    var isDouble, diceNumber = 1;
     html += '(';
     _.each(vals, function (item, idx) {
-        logger(`displayRolls::item=${item}`);
+        logger(`displayRolls::item=${JSON.stringify(item)}`);
         if (item.v === 'SECTIONDONE') {
+            logger(LOGLEVEL.INFO, `displayRolls::item(${strFill(diceNumber++)})=SECTION ${item.sectionType}, verbosity=${result.rollSetup.verbosity}`);
             if (result.rollSetup.verbosity == 0) return;
             html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${item.color};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
             return;
-        }
+        } else 
+            logger(LOGLEVEL.INFO, `displayRolls::item(${strFill(diceNumber++)})=${item.v}, full=${JSON.stringify(item)}`);
         if (result.rollSetup.verbosity == 0 && item.rerolled)
             return;
         isDouble = item.doubled;
