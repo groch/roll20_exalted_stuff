@@ -26,7 +26,7 @@ class LOGLEVEL {
 const LogLvl = LOGLEVEL.DEBUG,
   ConditionalList = {
     '1MotD': {
-        faceTrigger: (face, result, condIterator) => [7,8,9,10].includes(face),
+        faceTrigger: (setup, result, condIterator) => !setup.rerolled && setup.successSnapshot,
         diceCheckMethod: handleFaceCondition1MotD, //(result, setup, item, turn, condIterator)
         getDetailMethod: detailsCond1MotDSectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
@@ -35,6 +35,17 @@ const LogLvl = LOGLEVEL.DEBUG,
             remainingToDo: 0,
             statusTotal: [,,,,,,,0,0,0,0],
             totalRerolled: 0
+        },
+        finalizeDefaultConditionObj: (obj, result) => {
+            logger('finalizeDefaultConditionObj::Cond 1MotD')
+            for (var i = 1; i < result.rollSetup.face.length; i++) {
+                if (result.rollSetup.face[i].successes.length) {
+                    logger(`finalizeDefaultConditionObj::1MotD - SETTING DEFAULT FOR i=${i}, obj=${obj}`);
+                    obj.status[i] = 0;
+                    obj.statusTotal[i] = 0;
+                }
+            }
+            return obj;
         }
     }
   },
@@ -58,6 +69,7 @@ const LogLvl = LOGLEVEL.DEBUG,
     tagList: [],
     rerolled: false,
     exploded: false,
+    success: false,
     doubled: false,
     producedADie: false,
     toNextRollRerolled: null,
@@ -65,7 +77,11 @@ const LogLvl = LOGLEVEL.DEBUG,
     toNextRollCondi: [],
     rerollSnapshot: null,
     rerollSectionDone: null,
+    successSnapshot: null,
+    successSectionDone: null,
+    doubleSnapshot: null,
     doubleSectionDone: null,
+    explodeSnapshot: null,
     explodeSectionDone: null,
     condiSectionDone: []
   };
@@ -78,9 +94,13 @@ function setupRollStructure(result) {
             face: i,
             rerolls: [],
             explosives: [],
+            successes: [],
             doubles: []
         });
     }
+
+    for (const i of [7, 8, 9, 10])
+        result.rollSetup.face[i].successes.push({limit: 0, done: 0});
 
     logger(`setupRollStructure::result.rollSetup=${JSON.stringify(result.rollSetup)}`);
 }
@@ -257,10 +277,21 @@ function parseCmds(item) {
             limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
         };
     }
+    patt = /^(s)(l\d*)?(?:\s([\d,]+))?$/;
+    if (ret = trim.match(patt)) {
+        match = true;
+        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH3 = success');
+        logger('parseCmds::ret='+JSON.stringify(ret));
+        objRet = {
+            cmd: ret[1],
+            faces: [...ret[3].split(',').filter(i => i).map(i => Number(i))],
+            limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
+        };
+    }
     patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|1MotD)$/;
     if (ret = trim.match(patt)) {
         match = true;
-        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH3 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
+        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH4 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
         logger('parseCmds::ret='+JSON.stringify(ret));
         objRet = {
             cmd: ret[1],
@@ -285,10 +316,12 @@ function parseCmds(item) {
  */
 function processCmds(cmds, result) {
     logger(LOGLEVEL.INFO, `processCmds::processCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
+    var conditionalListKeys = Object.keys(ConditionalList);
     for (const item of cmds) {
         var recReroll = false,
             exploIgnore = true,
             verbosityToSet = 1;
+        // else default Parsing
         switch (String(item.cmd)) {
             case 'R':
                 recReroll = true;
@@ -323,8 +356,9 @@ function processCmds(cmds, result) {
                 logger(LOGLEVEL.INFO, `processCmds::adding doubles on faces=${item.faces}, limit=${item.limit}`);
                 for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
                 break;
-            case '1MotD':
-                result.rollSetup.conditionalActivated.push(JSON.parse(JSON.stringify(ConditionalList['1MotD'].defaultConditionObj)));
+            case 's':
+                logger(LOGLEVEL.INFO, `processCmds::adding success on faces=${item.faces}, limit=${item.limit}`);
+                for (const face of item.faces) result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
                 break;
             case 'turn':
             case 'target':
@@ -354,6 +388,17 @@ function processCmds(cmds, result) {
         }
     }
 
+    for (const item of cmds) {
+        // create Conditional Default Item + Init
+        if (conditionalListKeys.includes(item.cmd)) {
+            var dupedDefaultConditionObj = JSON.parse(JSON.stringify(ConditionalList[item.cmd].defaultConditionObj));
+            dupedDefaultConditionObj = ConditionalList[item.cmd].finalizeDefaultConditionObj(dupedDefaultConditionObj, result);
+            logger(LOGLEVEL.NOTICE, `processCmds::COND ENABLING obj=${JSON.stringify(dupedDefaultConditionObj)}`);
+            result.rollSetup.conditionalActivated.push(dupedDefaultConditionObj);
+            continue;
+        }
+    }
+
     logger(`processCmds::processCmds END`);
 }
 
@@ -363,8 +408,8 @@ function recountSuccesses(result) {
     var newTotal = 0, addSucc = 0;
     for (const item of result.rollSetup.finalResults) {
         if (item.v === 'SECTIONDONE') continue;
-        if (item.v >= 7) newTotal++;
-        if (item.doubled) addSucc += (item.v >= 7) ? 1 : 2;
+        if (!item.rerolled && item.success) newTotal++;
+        if (!item.rerolled && item.doubled) addSucc += 1;
     }
     logger(LOGLEVEL.INFO, `doDoubles::NEW result.total=${newTotal} + ${addSucc}`);
     result.total = newTotal + addSucc;
@@ -408,13 +453,23 @@ function sortRerollsAndExplosives(result) {
     for (var i = 1; i <= 10; i++) {
         var face = result.rollSetup.face[i];
         face.rerolls.sort((a, b) => {
-            if (a.recursive && !b.recursive) return 1;
-            if (!a.recursive && b.recursive) return -1;
+            if ((a.recursive && !b.recursive) || (!a.limit && b.limit)) return 1;
+            if ((!a.recursive && b.recursive) || (a.limit && !b.limit)) return -1;
             return a.limit - b.limit;
         });
         face.explosives.sort((a, b) => {
-            if (!a.ignoreRerolled && b.ignoreRerolled) return 1;
-            if (a.ignoreRerolled && !b.ignoreRerolled) return -1;
+            if ((!a.ignoreRerolled && b.ignoreRerolled) || (!a.limit && b.limit)) return 1;
+            if ((a.ignoreRerolled && !b.ignoreRerolled) || (a.limit && !b.limit)) return -1;
+            return a.limit - b.limit;
+        });
+        face.successes.sort((a, b) => {
+            if (!a.limit && b.limit) return 1;
+            if (a.limit && !b.limit) return -1;
+            return a.limit - b.limit;
+        });
+        face.doubles.sort((a, b) => {
+            if (!a.limit && b.limit) return 1;
+            if (a.limit && !b.limit) return -1;
             return a.limit - b.limit;
         });
     }
@@ -475,7 +530,7 @@ function handleRollTurn(result, turn) {
         handleRoll(result, setup, item, turn);
         var finalObj = {
             v:                  setup.face,                    tags:                     setup.tagList,
-            success:            (setup.face >= 7),             doubled:                  setup.doubled,
+            success:            setup.success,                 doubled:                  setup.doubled,
             wasEverRerolled:    item.wasEverRerolled || false, wasRerolled:              item.wasRerolled || false,
             wasExploded:        item.wasExploded || false,     wasConditionallyAffected: item.wasConditionallyAffected || false,
             rerolled:           setup.rerolled,                exploded:                 setup.exploded,
@@ -485,6 +540,7 @@ function handleRollTurn(result, turn) {
         logger(LOGLEVEL.NOTICE, `handleRollTurn::face(${setup.face}) =>finalObj=${finalObj.v} rerolled=${setup.rerolled} exploded=${setup.exploded} FULL=${JSON.stringify(finalObj)}`);
         result.rollSetup.finalResults.push(finalObj);
         if (setup.rerolled || setup.rerollSnapshot && setup.rerollSnapshot.recursive) updateTitleAndPushToNextRolls(result, setup.toNextRollRerolled, finalObj, nextRollsToProcess, setup.rerollSectionDone);
+        if (setup.successSectionDone)                                                 result.rollSetup.finalResults.push(setup.successSectionDone);
         if (setup.doubleSectionDone)                                                  result.rollSetup.finalResults.push(setup.doubleSectionDone);
         if (setup.exploded)                                                           updateTitleAndPushToNextRolls(result, setup.toNextRollExploded, finalObj, nextRollsToProcess, setup.explodeSectionDone);
         if (setup.producedADie && setup.toNextRollCondi)                              updateTitleAndPushToNextRolls(result, setup.toNextRollCondi,    finalObj, nextRollsToProcess, setup.condiSectionDone);
@@ -499,16 +555,12 @@ function handleRollTurn(result, turn) {
 
 function handleRoll(result, setup, item, turn) {
     logger(`handleRollTurn::face(${setup.face}) rerolls.length=${setup.faceObj.rerolls.length}, explosives.length=${setup.faceObj.explosives.length}, doubles.length=${setup.faceObj.doubles.length}, conditionalActivated.length=${result.rollSetup.conditionalActivated.length}`);
-    if (setup.faceObj.rerolls.length) {
-        setup.rerollSnapshot = setup.faceObj.rerolls[0];
+    if (setup.faceObj.rerolls.length)
         handleFaceReroll(setup, item, turn, result.rollSetup.conditionalActivated.length);
-    }
-    if (setup.faceObj.doubles.length && !setup.rerolled) {
-        setup.doubled = true;
-        setup.faceObj.doubles[0].done++;
-        if (setup.faceObj.doubles[0].limit != 0 && setup.faceObj.doubles[0].limit == setup.faceObj.doubles[0].done)
-            setup.doubleSectionDone = removeFirstDoubleSection(setup.faceObj);
-    }
+    if (!setup.rerolled && setup.faceObj.successes.length)
+        handleFaceSuccess(setup);
+    if (setup.faceObj.doubles.length && !setup.rerolled)
+        handleFaceDouble(setup);
     if (setup.faceObj.explosives.length)
         handleFaceExplode(setup, item, turn, result.rollSetup.conditionalActivated.length);
     if (result.rollSetup.conditionalActivated.length)
@@ -516,6 +568,7 @@ function handleRoll(result, setup, item, turn) {
 }
 
 function handleFaceReroll(setup, item, turn, condiLength) {
+    setup.rerollSnapshot = setup.faceObj.rerolls[0];
     var reroll = randomInteger(10);
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) REROLL TO DO ! section=${JSON.stringify(setup.faceObj.rerolls[0])}`);
     if (setup.faceObj.rerolls[0].recursive || (!(setup.faceObj.rerolls[0].keepBest && reroll < setup.face) && !item.wasRerolled)) {
@@ -537,6 +590,24 @@ function handleFaceReroll(setup, item, turn, condiLength) {
     }
 }
 
+function handleFaceSuccess(setup) {
+    setup.successSnapshot = setup.faceObj.successes[0];
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) SUCCESS ! section=${JSON.stringify(setup.faceObj.successes[0])}`);
+    setup.success = true;
+    setup.faceObj.successes[0].done++;
+    if (setup.faceObj.successes[0].limit != 0 && setup.faceObj.successes[0].limit == setup.faceObj.successes[0].done)
+        setup.successSectionDone = removeFirstSuccessSection(setup.faceObj);
+}
+
+function handleFaceDouble(setup) {
+    setup.doubleSnapshot = setup.faceObj.successes[0];
+    logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) DOUBLE  ! section=${JSON.stringify(setup.faceObj.doubles[0])}`);
+    setup.doubled = true;
+    setup.faceObj.doubles[0].done++;
+    if (setup.faceObj.doubles[0].limit != 0 && setup.faceObj.doubles[0].limit == setup.faceObj.doubles[0].done)
+        setup.doubleSectionDone = removeFirstDoubleSection(setup.faceObj);
+}
+
 function handleFaceExplode(setup, item, turn, condiLength) {
     var newDie = randomInteger(10);
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) EXPLOSIVE TO DO ! section=${JSON.stringify(setup.faceObj.explosives[0])} rerolled=${setup.rerolled}`);
@@ -545,6 +616,7 @@ function handleFaceExplode(setup, item, turn, condiLength) {
     if (iterator == setup.faceObj.explosives.length) {
         logger(`handleRollTurn::NO EXPLO MATCHING IN ${iterator} ITEMS. explosives=${JSON.stringify(setup.faceObj.explosives)}`);
     } else {
+        setup.explodeSnapshot = setup.faceObj.explosives[iterator];
         logger(`handleRollTurn::EXPLO iterator=${iterator} TEST=${!setup.faceObj.explosives[iterator].ignoreRerolled || (!setup.rerolled && !item.wasRerolled)}, part1=${!setup.faceObj.explosives[iterator].ignoreRerolled}, part2=${!setup.rerolled}, part3=${!item.wasRerolled}`);
         if (!setup.faceObj.explosives[iterator].ignoreRerolled || (!setup.rerolled && !item.wasEverRerolled)) {
             setup.exploded = true;
@@ -573,7 +645,7 @@ function handleFaceConditionals(result, setup, item, turn) {
             var condConfig = ConditionalList[result.rollSetup.conditionalActivated[condIterator].name];
             logger(`handleRollTurn::face(${setup.face}) section=${JSON.stringify(condConfig)}`);
             var localToNextRollCondi = null, localCondiSectionDone;
-            if (condConfig && condConfig.faceTrigger(setup.face, result, condIterator)) {
+            if (condConfig && condConfig.faceTrigger(setup, result, condIterator)) {
                 ({ localToNextRollCondi, localCondiSectionDone } = condConfig.diceCheckMethod(result, setup, item, turn, condIterator));
                 logger(`handleRollTurn::after diceCheckMethod, localToNextRollCondi=${JSON.stringify(localToNextRollCondi)}`);
                 if (setup.producedADie && localToNextRollCondi)
@@ -602,7 +674,7 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
         logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::remainingToDo=${cond.remainingToDo}`);
         for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
             const dieTesting = result.rollSetup.finalResults[i];
-            if (dieTesting.v < 7 && !dieTesting.rerolled) {
+            if (!dieTesting.success && !dieTesting.rerolled) {
                 logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${i} dieTesting=${JSON.stringify(dieTesting)}`);
                 setup.producedADie = true;
                 toNextRollCondi = {
@@ -622,7 +694,11 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
     return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
 }
 
-/* SECTION CLEANING */
+/**
+ * 
+ * SECTION CLEANING
+ * 
+ */
 function handleSectionCleaning(result, lastTurnClean = false) {
     logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING REROLLS & EXPLODES !');
     for (const faceClearing of [1,2,3,4,5,6,7,8,9,10]) {
@@ -647,6 +723,18 @@ function handleSectionCleaning(result, lastTurnClean = false) {
     // remove condActivated && push section accordingly
     while (lastTurnClean && result.rollSetup.conditionalActivated.length)
         result.rollSetup.finalResults.push(removeIteratorCondSectionMethod(result, 0, true));
+}
+
+function removeFirstSuccessSection(faceObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `doDoubles::SUCCESS SECTION DONE=${JSON.stringify(faceObj.successes[0])}`);
+    var removedSuccessSection = {
+        v: 'SECTIONDONE',
+        sectionType: 'Success',
+        color: successColor,
+        details: `&#013;&#010; face: ${faceObj.face}&#013;&#010; limit: ${showDone ? faceObj.successes[0].done + '/' + faceObj.successes[0].limit : faceObj.successes[0].limit}`
+    };
+    faceObj.successes.shift();
+    return removedSuccessSection;
 }
 
 function removeFirstDoubleSection(faceObj, showDone = false) {
@@ -701,8 +789,10 @@ function removeIteratorCondSectionMethod(result, iterator, showDone = false) {
 function detailsCond1MotDSectionDone(condObj, showDone = false) {
     logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-1MotD Detail SECTION DONE=${JSON.stringify(condObj)}`);
     var detail = `&#013;&#010; Remaining To DO=${condObj.remainingToDo}&#013;&#010; Total Rerolled =${condObj.totalRerolled}`;
+    const faceList = condObj.statusTotal.map((i, index) => Number.isInteger(i) ? index : null).filter(i => i);
+    logger(`detailsCond1MotDSectionDone::faceList=${faceList}`);
     if (showDone)
-        for (const i of [7,8,9,10]) detail += `&#013;&#010; ${strFill(i)}: ${condObj.status[i]}/3-RerollTriggered=${condObj.statusTotal[i]}`;
+        for (const i of faceList) detail += `&#013;&#010; ${strFill(i)}: ${condObj.status[i]}/3-RerollTriggered=${condObj.statusTotal[i]}`;
     return detail;
 }
 
@@ -829,7 +919,7 @@ function displayRolls(vals, result, html) {
         logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
         html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
         html += '<div class="didroll" style="' + diceRollStyle
-            + ((isDouble ? doubleColorStyle : ((item.v >= 7) ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
+            + ((item.doubled ? doubleColorStyle : (item.success ? successColorStyle : ` text-shadow: 0 0 0.03em ${baseColor}`))
                 + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
             + ([1, 10].includes(item.v) ? ' left: 1.5px;' : ' left: 0px;')
             + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
