@@ -95,7 +95,36 @@ const LogLvl = LOGLEVEL.DEBUG,
     explodeSnapshot: null,
     explodeSectionDone: null,
     condiSectionDone: []
-  };
+  },
+  ParserConfig = [{
+        categoryName: 'Rerolls',
+        pattern: /^(r|R)(l\d*)?(k|K)?(?:\s([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
+        getCmdObj: (matchReturn) => ({
+          cmd:      matchReturn[1],
+          limit:    matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
+          keepBest: matchReturn[3] ? true : false,
+          faces:    [...matchReturn[4].split(',').filter(i => i).map(i => Number(i))],
+          tagList:  matchReturn[5] ? [...matchReturn[5].split(',').filter(i => i)] : []})
+    },{
+        categoryName: 'Doubles & Explodes',
+        pattern: /^(d|e|E)(l\d*)?(?:\s([\d,]+))?$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:    matchReturn[1],
+            limit:  matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
+            faces:  [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
+    },{
+        categoryName: 'Successes',
+        pattern: /^(s)(l\d*)?(?:\s([\d,]+))?$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:    matchReturn[1],
+            limit:  matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
+            faces:  [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
+    },{
+        categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle',
+        pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:    matchReturn[1]})
+    }];
 
 function setupRollStructure(result) {
     result.rollSetup = JSON.parse(JSON.stringify(DefaultRollSetup));
@@ -264,61 +293,25 @@ function parseCmds(item) {
     logger(LOGLEVEL.INFO, 'parseCmds::item="' + trim + '"');
 
     var objRet, match = false;
-    var patt = /^(r|R)(l\d*)?(k|K)?(?:\s([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/;
-    if (ret = trim.match(patt)) {
-        match = true;
-        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH1 = rerolls');
-        logger('parseCmds::ret='+JSON.stringify(ret));
-        objRet = {
-            cmd: ret[1],
-            faces: [...ret[4].split(',').filter(i => i).map(i => Number(i))],
-            limit: ret[2] ? Number(ret[2].substring(1)) : 0, // ret[1] == 'r' ? 1 : 0,
-            keepBest: ret[3] ? true : false,
-            tagList: ret[5] ? [...ret[5].split(',').filter(i => i)] : []
-        };
-    }
-    patt = /^(d|e|E)(l\d*)?(?:\s([\d,]+))?$/;
-    if (ret = trim.match(patt)) {
-        match = true;
-        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH2 = doubles & explodes');
-        logger('parseCmds::ret='+JSON.stringify(ret));
-        objRet = {
-            cmd: ret[1],
-            faces: [...ret[3].split(',').filter(i => i).map(i => Number(i))],
-            limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
-        };
-    }
-    patt = /^(s)(l\d*)?(?:\s([\d,]+))?$/;
-    if (ret = trim.match(patt)) {
-        match = true;
-        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH3 = success');
-        logger('parseCmds::ret='+JSON.stringify(ret));
-        objRet = {
-            cmd: ret[1],
-            faces: [...ret[3].split(',').filter(i => i).map(i => Number(i))],
-            limit: ret[2] ? Number(ret[2].substring(1)) : ret[1] == 'r' ? 1 : 0
-        };
-    }
-    patt = /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/;
-    if (ret = trim.match(patt)) {
-        match = true;
-        logger(LOGLEVEL.NOTICE, 'parseCmds::MATCH4 - gm & D & Turn & verbosity & color & onlyResult & reverseTitle');
-        logger('parseCmds::ret='+JSON.stringify(ret));
-        objRet = {
-            cmd: ret[1],
-            args: null
-        };
-    }
-    for (const condItem of Object.keys(ConditionalList)) {
-        patt = new RegExp(`^(${condItem})$`);
-        if (ret = trim.match(patt)) {
+    for (var i = 0; i < ParserConfig.length; i++) {
+        if (ret = trim.match(ParserConfig[i].pattern)) {
             match = true;
-            logger(LOGLEVEL.NOTICE, `parseCmds::MATCH5 - Conditional Item = ${condItem}`);
+            logger(LOGLEVEL.NOTICE, `parseCmds::MATCH${i+1} = ${ParserConfig[i].categoryName}`);
             logger('parseCmds::ret='+JSON.stringify(ret));
-            objRet = {
-                cmd: ret[1],
-                args: null
-            };
+            objRet = ParserConfig[i].getCmdObj(ret);
+            break;
+        }
+    }
+
+    if (!match) {
+        for (const condItem of Object.keys(ConditionalList)) {
+            patt = new RegExp(`^(${condItem})$`);
+            if (ret = trim.match(patt)) {
+                match = true;
+                logger(LOGLEVEL.NOTICE, `parseCmds::MATCH - Conditional Item = ${condItem}`);
+                logger('parseCmds::ret='+JSON.stringify(ret));
+                objRet = {cmd: ret[1]};
+            }
         }
     }
 
