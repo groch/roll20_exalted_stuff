@@ -917,6 +917,8 @@ function recalculateSuccesses(origCmd, succ, result) {
  * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
  */
 function buildHTML(result, origCmd, origRoll, color) {
+    if (result.rollSetup.verbosity == 0) result.rolls[0].results = result.rolls[0].results.filter(item => item.v !== 'SECTIONDONE');
+
     var vals = result.rolls[0].results, succ = result.total;
     logger(LOGLEVEL.INFO, `buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
 
