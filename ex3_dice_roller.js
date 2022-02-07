@@ -59,13 +59,13 @@ const LogLvl = LOGLEVEL.DEBUG,
         },
         finalizeDefaultConditionObj: finalizeDefaultConditionObjDIT
     },
-    'DITv2': {
+    'HMU': {
         faceTrigger: (setup, result, condIterator) => setup.success || setup.doubled,
         diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
         turnHook: handleTurnConditionalHookDITv2, //f(result, turn, nextRollsToProcess, condIterator)
         getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
-            name: 'DITv2',
+            name: 'HMU',
             status: 0,
             done: 0
         },
