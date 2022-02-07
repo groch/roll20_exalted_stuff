@@ -57,7 +57,13 @@ const LogLvl = LOGLEVEL.DEBUG,
             status: 0,
             done: 0
         },
-        finalizeDefaultConditionObj: obj => obj
+        finalizeDefaultConditionObj: (obj, result) => {
+            if (result.addedSuccesses) {
+                obj.status = result.addedSuccesses;
+                result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
+            }
+            return obj;
+        }
     }
   },
   DefaultRollSetup = {
@@ -256,12 +262,14 @@ function performRoll(msg, cmd) {
             logger('performRoll::result='+ops[0].content);
             logger('performRoll::cmds='+JSON.stringify(cmds));
 
+            parseAddedSuccesses(result, msg.content);
+
 	        if (!_.isEmpty(cmds)) processCmds(cmds, result);
             if (result.rollSetup.has10doubled) result.rollSetup.face[10].doubles.push({limit: 0, done: 0});
             finalizeRoll(result);
 
             const player = getObj("player", msg.playerid);
-	        var outHTML = buildHTML(result, msg.content, ops[0].origRoll, player.get('color'));
+	        var outHTML = buildHTML(result, ops[0].origRoll, player.get('color'));
 
             if (result.toGm) {
                 if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${player.get('displayname')} ${outHTML}`);
@@ -562,8 +570,8 @@ function handleRollTurn(result, turn) {
     }
     logger(LOGLEVEL.INFO, `handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
-    if (turn === 1) {
-        result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: 'Initial Roll', color: initialRollColor, details: ''});
+    if (turn === 1 || result.rollSetup.verbosity >= 1) {
+        result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: (turn === 1 ? 'Initial Roll' : `Additional Rolls n${turn-1}`), color: initialRollColor, details: ''});
         handleSectionCleaning(result);
     }
 }
@@ -822,12 +830,7 @@ function removeIteratorExplodeSection(faceObj, iterator, showDone = false) {
 function removeIteratorCondSectionMethod(result, iterator, showDone = false) {
     var condObj = result.rollSetup.conditionalActivated[iterator];
     logger(LOGLEVEL.NOTICE, `removeIteratorCondSectionMethod::Global COND SECTION id=${iterator} to Remove=${JSON.stringify(condObj)}`);
-    var condSectionDone = {
-        v: 'SECTIONDONE',
-        sectionType: `Cond-${condObj.name}`,
-        color: conditionalColor,
-        details: ConditionalList[condObj.name].getDetailMethod(condObj, showDone)
-    };
+    var condSectionDone = makeSectionDoneObj(`Cond-${condObj.name}`, conditionalColor, ConditionalList[condObj.name].getDetailMethod(condObj, showDone));
     result.rollSetup.conditionalActivated.splice(iterator, 1);
     return condSectionDone;
 }
@@ -846,6 +849,10 @@ function detailsCondDITSectionDone(condObj, showDone = false) {
     logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-DIT Detail SECTION DONE=${JSON.stringify(condObj)}`);
     var detail = `&#013;&#010; Success stocked=${condObj.status}/3&#013;&#010; Total generated =${condObj.done}`;
     return detail;
+}
+
+function makeSectionDoneObj(typeTxt, color, detailsTxt = '') {
+    return {v: 'SECTIONDONE', sectionType: typeTxt, color: color, details: detailsTxt};
 }
 
 /* Build HTML */
@@ -877,31 +884,39 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
         sectionDoneStyle = 'position:relative;padding: 3px 0;width: 3px;height:1em;top:0.33em;border-radius:1em;border: 1px solid black;',
         condiPadder = '              ';
 
-function recalculateSuccesses(origCmd, succ, result) {
+function parseAddedSuccesses(result, origCmd) {
+    logger(`parseAddedSuccesses::parseAddedSuccesses origCmd=${origCmd}, result=${JSON.stringify(result)}`);
     var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+(?:\[[^\]+-]*\]?)?)*)/;
     var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
-    var ret, addedSuccessesLabel = '', addedSuccesses = 0;
+    var ret, succ = result.total, addedSuccessesLabel = '', addedSuccesses = 0;
     if (ret = origCmd.match(patt)) {
-        logger('recalculateSuccesses::ret='+JSON.stringify(ret));
-        logger('recalculateSuccesses::succ='+succ);
+        logger('parseAddedSuccesses::ret='+JSON.stringify(ret));
+        logger('parseAddedSuccesses::succ='+succ);
         if (ret[1]) {
-            logger('recalculateSuccesses::ret[1]='+ret[1]);
+            logger('parseAddedSuccesses::ret[1]='+ret[1]);
             var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
-            logger('recalculateSuccesses::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
+            logger('parseAddedSuccesses::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
             for (const [, , item] of arrayAddedSuccesses) {
-                logger('recalculateSuccesses::item='+item);
+                logger('parseAddedSuccesses::item='+item);
                 addedSuccessesLabel += item;
                 addedSuccesses += Number(item);
             }
         }
     }
+    if (addedSuccesses !== 0 || addedSuccessesLabel !== '') {
+        result.addedSuccesses = addedSuccesses;
+        result.addedSuccessesLabel = addedSuccessesLabel;
+    }
+}
 
-    logger(LOGLEVEL.INFO, `recalculateSuccesses::updating total successes=${succ + addedSuccesses}, old=${succ} + ${addedSuccesses}`);
-    succ += addedSuccesses;
+function recalculateSuccesses(result) {
+    var succ = result.total;
+    logger(LOGLEVEL.INFO, `recalculateSuccesses::updating total successes=${succ + result.addedSuccesses}, old=${succ} + ${result.addedSuccesses}`);
+    succ += result.addedSuccesses;
     if (succ < 0)
         succ = 0;
-    var succTxt = addedSuccessesLabel ? `${result.total}${addedSuccesses >= 0 ? '+' + addedSuccesses : addedSuccesses}=${succ}` : succ;
-    return { addedSuccessesLabel, succTxt, succ };
+    var succTxt = result.addedSuccessesLabel ? `${result.total}${result.addedSuccesses >= 0 ? '+' + result.addedSuccesses : result.addedSuccesses}=${succ}` : succ;
+    return { succTxt, succ };
 }
 
 /**
@@ -910,20 +925,19 @@ function recalculateSuccesses(origCmd, succ, result) {
  *
  * @param JavaScript Object reference	result		The content of the rollresult message, as above; now in its final version, with all rolls and successes
  *														accurately calculated.
- * @param string						origCmd		The original API command. Used for debug purposes; currently not in use.
  * @param string						origRoll	The original roll executed by Roll20, for display in the result.
  * @param string						color		The hexadecimal value of the player's selected color.
  *
  * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
  */
-function buildHTML(result, origCmd, origRoll, color) {
+function buildHTML(result, origRoll, color) {
     if (result.rollSetup.verbosity == 0) result.rolls[0].results = result.rolls[0].results.filter(item => item.v !== 'SECTIONDONE');
 
     var vals = result.rolls[0].results, succ = result.total;
     logger(LOGLEVEL.INFO, `buildHTML::buildHTML vals=${vals.map(i => i.v)}, succ=${succ}`);
 
-    var addedSuccessesLabel, succTxt;
-    ({ addedSuccessesLabel, succTxt, succ } = recalculateSuccesses(origCmd, succ, result));
+    var succTxt;
+    ({ succTxt, succ } = recalculateSuccesses(result));
 
     var html = "";
     html += "<div style=\"" + outerStyle + "\"><div style=\"" + innerStyle + "\">";
@@ -933,7 +947,7 @@ function buildHTML(result, origCmd, origRoll, color) {
         html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
         html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
         html = displayRolls(vals, result, html);
-        if (addedSuccessesLabel) html += addedSuccessesLabel;
+        if (result.addedSuccessesLabel) html += result.addedSuccessesLabel;
         html +=   "</div>";
         html += "</div>";
         html += "<div style=\"clear: both;\"></div>";
