@@ -45,25 +45,31 @@ const LogLvl = LOGLEVEL.DEBUG,
                     obj.statusTotal[i] = 0;
                 }
             }
-            return obj;
         }
     },
     'DIT': {
         faceTrigger: (setup, result, condIterator) => setup.success || setup.doubled,
         diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
+        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
         getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
             name: 'DIT',
             status: 0,
             done: 0
         },
-        finalizeDefaultConditionObj: (obj, result) => {
-            if (result.addedSuccesses) {
-                obj.status = result.addedSuccesses;
-                result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
-            }
-            return obj;
-        }
+        finalizeDefaultConditionObj: finalizeDefaultConditionObjDIT
+    },
+    'DITv2': {
+        faceTrigger: (setup, result, condIterator) => setup.success || setup.doubled,
+        diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
+        turnHook: handleTurnConditionalHookDITv2, //f(result, turn, nextRollsToProcess, condIterator)
+        getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
+        defaultConditionObj: {
+            name: 'DITv2',
+            status: 0,
+            done: 0
+        },
+        finalizeDefaultConditionObj: finalizeDefaultConditionObjDIT
     }
   },
   DefaultRollSetup = {
@@ -149,6 +155,28 @@ function setupRollStructure(result) {
         result.rollSetup.face[i].successes.push({limit: 0, done: 0});
 
     logger(`setupRollStructure::result.rollSetup=${JSON.stringify(result.rollSetup)}`);
+}
+
+/**
+ * FINALIZE DEFAULT CONDITION OBJECTS
+ */
+function finalizeDefaultConditionObjDIT(obj, result, nextRollsToProcess) {
+    if (result.addedSuccesses) {
+        obj.status = result.addedSuccesses;
+        result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
+        while (obj.status >= 3) {
+            obj.status -= 3;
+            var newDie = randomInteger(10);
+            logger(`finalizeDefaultConditionObjDIT::newDie=${newDie}`);
+            nextRollsToProcess.push({
+                v: newDie, wasEverRerolled: false,
+                wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+                title: [`RollTurn (2  ). DIT            ->Face=${strFill(newDie)}.`],
+                tagList: ['DIT']
+            });
+            obj.done++;
+        }
+    }
 }
 
 function logger(level, ...logged) {
@@ -415,7 +443,6 @@ function processCmds(cmds, result) {
         // create Conditional Default Item + Init
         if (Object.keys(ConditionalList).includes(item.cmd)) {
             var dupedDefaultConditionObj = JSON.parse(JSON.stringify(ConditionalList[item.cmd].defaultConditionObj));
-            dupedDefaultConditionObj = ConditionalList[item.cmd].finalizeDefaultConditionObj(dupedDefaultConditionObj, result);
             logger(LOGLEVEL.NOTICE, `processCmds::COND ENABLING obj=${JSON.stringify(dupedDefaultConditionObj)}`);
             result.rollSetup.conditionalActivated.push(dupedDefaultConditionObj);
             continue;
@@ -547,9 +574,15 @@ function makeNewTitleFromOld(result, prevItem, actionsOfThisRoll) {
 function handleRollTurn(result, turn) {
     logger(LOGLEVEL.INFO, `handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
     var nextRollsToProcess = [];
+
+    if (turn === 1)
+        for (const confObj of result.rollSetup.conditionalActivated)
+            if (ConditionalList[confObj.name].finalizeDefaultConditionObj) ConditionalList[confObj.name].finalizeDefaultConditionObj(confObj, result, nextRollsToProcess);
+
     for (const item of result.rollSetup.rollToProcess) {
         var setup = JSON.parse(JSON.stringify(DefaultRollHandlingSetup));
         setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face], setup.wasConditionallyAffected = item.wasConditionallyAffected;
+        if (item.tagList && item.tagList.length) for (const tag of item.tagList) setup.tagList.push(tag);
         handleRoll(result, setup, item, turn);
         var finalObj = {
             v:                  setup.face,                    tags:                     setup.tagList,
@@ -568,11 +601,53 @@ function handleRollTurn(result, turn) {
         if (setup.exploded)                                                           updateTitleAndPushToNextRolls(result, setup.toNextRollExploded, finalObj, nextRollsToProcess, setup.explodeSectionDone);
         if (setup.producedADie && setup.toNextRollCondi)                              updateTitleAndPushToNextRolls(result, setup.toNextRollCondi,    finalObj, nextRollsToProcess, setup.condiSectionDone);
     }
+
+    if (turn === 1 || result.rollSetup.verbosity >= 1)
+        result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: (turn === 1 ? 'Initial Roll' : `Additional Rolls n${turn-1}`), color: initialRollColor, details: ''});
+
+    handleTurnConditionalHook(result, turn, nextRollsToProcess);
+
     logger(LOGLEVEL.INFO, `handleRollTurn::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
     result.rollSetup.rollToProcess = nextRollsToProcess;
-    if (turn === 1 || result.rollSetup.verbosity >= 1) {
-        result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: (turn === 1 ? 'Initial Roll' : `Additional Rolls n${turn-1}`), color: initialRollColor, details: ''});
+    if (turn === 1 || result.rollSetup.verbosity >= 1)
         handleSectionCleaning(result);
+}
+
+function handleTurnConditionalHook(result, turn, nextRollsToProcess) {
+    logger(LOGLEVEL.INFO, `handleTurnConditionalHook::TURN CONDITIONAL-ALL-TESTS !`);
+
+    var condIterator = 0;
+    do {
+        for (; condIterator < result.rollSetup.conditionalActivated.length; condIterator++) {
+            var condConfig = ConditionalList[result.rollSetup.conditionalActivated[condIterator].name];
+            logger(`handleRollTurn::testing section=${JSON.stringify(condConfig)}`);
+            if (condConfig.turnHook) {
+                logger(LOGLEVEL.INFO ,`handleRollTurn::HANDLING TURN ON Section=${JSON.stringify(condConfig)}`);
+                condConfig.turnHook(result, turn, nextRollsToProcess, condIterator);
+            }
+        }
+    } while (condIterator != result.rollSetup.conditionalActivated.length);
+
+    logger(LOGLEVEL.INFO, `handleTurnConditionalHook::END TURN CONDITIONAL-ALL-TESTS`);
+}
+
+function handleTurnConditionalHookDITv2(result, turn, nextRollsToProcess, condIterator) {
+    if (turn !== 1) return;
+    var cond = result.rollSetup.conditionalActivated[condIterator],countDITsuccess = 0;
+    for (const die of nextRollsToProcess)
+        if (die.tagList && die.tagList.includes('DIT')) countDITsuccess++;
+    if (countDITsuccess >= 3) {
+        result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DITv2', conditionalColor, `&#013;&#010; DIT generated 3 or more success => Adding 3 dices`));
+        for (var i = 0; i < 3; i++) {
+            newDie = randomInteger(10);
+            nextRollsToProcess.push({
+                v: newDie, wasEverRerolled: false,
+                wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+                title: [`RollTurn (${strFill(turn + 1)}). C(DITv2)    ->Face=${strFill(newDie)}.`],
+                tagList: ['DITv2']
+            });
+            cond.done++;
+        }
     }
 }
 
@@ -694,13 +769,13 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
         cond.remainingToDo++;
     }
     if (cond.remainingToDo) {
-        logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::remainingToDo=${cond.remainingToDo}`);
+        logger(LOGLEVEL.INFO, `handleFaceCondition1MotD::remainingToDo=${cond.remainingToDo}`);
         var diceNb = 1;
         for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
             const dieTesting = result.rollSetup.finalResults[i];
             if (dieTesting.v === 'SECTIONDONE') continue;
             if (!dieTesting.success && !dieTesting.rerolled) {
-                logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
+                logger(LOGLEVEL.INFO, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
                 setup.producedADie = true;
                 toNextRollCondi = {
                     v: 10, wasEverRerolled: true,
@@ -709,7 +784,7 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
                 };
                 dieTesting.condTriggered = false; //1MotD produce normal reroll but tagging for clarity
                 dieTesting.rerolled = true, dieTesting.condRerolled = true, dieTesting.wasEverRerolled = true;
-                logger(LOGLEVEL.EMERGENCY, `handleFaceCondition1MotD::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
+                logger(`handleFaceCondition1MotD::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
                 cond.remainingToDo--,       cond.statusTotal[setup.face]++, cond.totalRerolled++;
                 setup.titleText += `1MotD created a 10 (` + (cond.remainingToDo != 0 ? `Remaining:${cond.remainingToDo}, ` : '') + `Total=${cond.statusTotal[setup.face]}(${setup.face})/${cond.totalRerolled}).`;
             }
@@ -732,25 +807,24 @@ function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
     }
     if (createDie) {
         var newDie = randomInteger(10);
-        logger(LOGLEVEL.EMERGENCY, `handleFaceConditionDIT::newDie=${newDie}`);
+        logger(`handleFaceConditionDIT::newDie=${newDie}`);
         setup.producedADie = true;
         toNextRollCondi = {
             v: newDie, wasEverRerolled: false,
             wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
-            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`]
+            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`],
+            tagList: ['DIT']
         };
         cond.done++;
         setup.titleText += `DIT created a ${newDie} done=${cond.done}.`;
     }
     // if (condition of removing section) condiSectionDone = removeIteratorCondSectionMethod(result, condIterator, true);
-    logger(LOGLEVEL.EMERGENCY, `handleFaceConditionDIT::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
+    logger(LOGLEVEL.INFO, `handleFaceConditionDIT::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
     return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
 }
 
 /**
- * 
  * SECTION CLEANING
- * 
  */
 function handleSectionCleaning(result, lastTurnClean = false) {
     logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING !');
