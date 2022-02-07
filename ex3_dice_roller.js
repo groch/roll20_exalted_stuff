@@ -57,7 +57,7 @@ const LogLvl = LOGLEVEL.DEBUG,
             status: 0,
             done: 0
         },
-        finalizeDefaultConditionObj: finalizeDefaultConditionObjDIT
+        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
     },
     'HMU': {
         faceTrigger: (setup, result, condIterator) => setup.success || setup.doubled,
@@ -69,7 +69,7 @@ const LogLvl = LOGLEVEL.DEBUG,
             status: 0,
             done: 0
         },
-        finalizeDefaultConditionObj: finalizeDefaultConditionObjDIT
+        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
     }
   },
   DefaultRollSetup = {
@@ -351,7 +351,7 @@ function parseCmds(item) {
         }
     }
 
-    logger(LOGLEVEL.INFO, 'parseCmds::FINAL objRet='+JSON.stringify(objRet));
+    logger(LOGLEVEL.INFO, `parseCmds::FINAL match=${match} objRet=${JSON.stringify(objRet)}`);
     if (match) this.push(objRet);
 }
 
@@ -986,7 +986,7 @@ function parseAddedSuccesses(result, origCmd) {
 function recalculateSuccesses(result) {
     var succ = result.total;
     logger(LOGLEVEL.INFO, `recalculateSuccesses::updating total successes=${succ + result.addedSuccesses}, old=${succ} + ${result.addedSuccesses}`);
-    succ += result.addedSuccesses;
+    if (result.addedSuccesses) succ += result.addedSuccesses;
     if (succ < 0)
         succ = 0;
     var succTxt = result.addedSuccessesLabel ? `${result.total}${result.addedSuccesses >= 0 ? '+' + result.addedSuccesses : result.addedSuccesses}=${succ}` : succ;
