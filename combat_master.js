@@ -1,5 +1,5 @@
 /* 
- * Version 2.45
+ * Version 2.46
  * Original By Robin Kuiper
  * Changes in Version 0.3.0 and before by Victor B
  * Changes in Version X.X.X to 2.44 by The Aaron
@@ -15,7 +15,7 @@ var CombatMaster = CombatMaster || (function() {
     'use strict';
 
     let round = 1,
-	    version = '2.44',
+	    version = '2.46',
         timerObj,
         intervalHandle,
         debug = true,
@@ -117,8 +117,8 @@ var CombatMaster = CombatMaster || (function() {
         log('-------------inputHandler-------------');
         //log('inputHandler !!!!!!! turnorder=' + JSON.stringify(Campaign().get('turnorder')));
 
-        let currentPageID = Campaign().get('playerpageid'),
-        currentPage = getObj('page', currentPageID);
+        // let currentPageID = Campaign().get('playerpageid'),
+        // currentPage = getObj('page', currentPageID);
         //log ('currentPageID=' + currentPageID + ' + currentPage=' + JSON.stringify(currentPage));
 
         let status = state[combatState].config.status;
@@ -871,7 +871,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 		    listItems.push(makeTextButton('Next Marker Name',turnorder.nextTokenMarkerName, '!cmaster --config,turnorder,key=nextTokenMarkerName,value=?{Next Marker Name|} --show,turnorder'))
             listItems.push(getDefaultIcon('Token Marker', turnorder.nextTokenMarkerName))
 		}
-    	listItems.push(makeTextButton('Marker Size',turnorder.markerSize, '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (1.35 default)} --show,turnorder'))
+    	listItems.push(makeTextButton('Marker Size',turnorder.markerSize, '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (2.1 default)} --show,turnorder'))
 
         listItems.push(makeTextButton('Use Range Marker',turnorder.useRangeMarker, '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL} --show,turnorder')); // |Token Marker,Token Marker|Token Condition,Token Condition
 		if (turnorder.useRangeMarker == 'External URL') {	
@@ -884,8 +884,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     	listItems.push(makeTextButton('Range Marker Size',turnorder.rangeMarkerHeight, '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'))
 
         listItems.push(makeTextButton('Animate Marker',turnorder.animateMarker, '!cmaster --config,turnorder,key=animateMarker,value='+!turnorder.animateMarker + ' --show,turnorder'))    	  
-    	listItems.push(makeTextButton('Animation Angle Step',turnorder.animateMarkerDegree, '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (15 default)} --show,turnorder'))      
-    	listItems.push(makeTextButton('Animation Angle Wait',turnorder.animateMarkerWait, '!cmaster --config,turnorder,key=animateMarkerWait,value=?{milliseconds per tick (250 default)} --show,turnorder'))         
+    	listItems.push(makeTextButton('Animation Angle Step',turnorder.animateMarkerDegree, '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (1 default)} --show,turnorder'))      
+    	listItems.push(makeTextButton('Animation Angle Wait',turnorder.animateMarkerWait, '!cmaster --config,turnorder,key=animateMarkerWait,value=?{milliseconds per tick (25 default)} --show,turnorder'))         
 
 		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Round</b></i></div>' )
         listItems.push(makeTextButton('API',turnorder.roundAPI, '!cmaster --config,turnorder,key=roundAPI,value={{?{API Command|}}} --show,turnorder'))
@@ -3605,7 +3605,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				    round: 1
 				},	
 				initiative: {
-                    rollInitiative: 'CombatMaster',
+                    rollInitiative: 'None',
                     initiativeDie: 20,
 					initiativeAttributes: 'initiative_bonus',					
                     showInitiative: false,
@@ -3615,19 +3615,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 turnorder: {
                     useMarker: true,
 					markerType: 'External URL',
-					externalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/52550079/U-3U950B3wk_KRtspSPyuw/thumb.png?1524507826',
+					externalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/257728638/PJfoTQlIm5B_VVYz4zWnsw/max.png?1638083794',
 					nextMarkerType: 'External URL',
-					nextExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/66352183/90UOrT-_Odg2WvvLbKOthw/thumb.png?1541422636',
+					nextExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/258296907/KnaGUNbcaB9r-JMQ2RvX1g/max.png?1638419188',
 					tokenMarkerName: 'None',
 					tokenMarkerURL: null,
 					nextTokenMarkerName: 'None',
 					nextTokenMarkerURL: null,
-					markerSize: 1.35,
+					markerSize: 2.1,
 					animateMarker: true,
-					animateMarkerDegree: 15,
-					animateMarkerWait: 250,
+					animateMarkerDegree: 1,
+					animateMarkerWait: 25,
 	                sortTurnOrder: true,
-					centerToken: true,	
+					centerToken: false,	
 					turnAPI: 'None',
 					turnRoll20AM: 'None',
 					turnFX: 'None',
@@ -3639,13 +3639,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					characterRoundMacro: 'None',
 					allRoundMacro: 'None',		
                     
-                    useRangeMarker: true,
-                    rangeExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/255451118/q8uTOHojn9ElLDQ-e7qs4g/max.png?1636832705',
+                    useRangeMarker: 'External URL',
+                    rangeExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/255451119/sO9vPVGw6S_B-lq-PIgGTA/max.png?1636832705',
                     rangeMarkerWidth: 6000,
                     rangeMarkerHeight: 6000
                 },
                 timer: {
-                    useTimer: true,
+                    useTimer: false,
                     time: 120,
                     skipTurn: true,
                     sendTimerToChat: true,
