@@ -1,4 +1,7 @@
-/* 
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-undef */
+
+/*
  * Version 2.46
  * Original By Robin Kuiper
  * Changes in Version 0.3.0 and before by Victor B
@@ -15,7 +18,7 @@ var CombatMaster = CombatMaster || (function() {
     'use strict';
 
     let round = 1,
-	    version = '2.46',
+        version = '2.46',
         timerObj,
         intervalHandle,
         debug = true,
@@ -27,29 +30,30 @@ var CombatMaster = CombatMaster || (function() {
         observers = {
             tokenChange: []
         },
-		whisper, handled = [],
-        extensions = {
-            StatusInfo: true // This will be set to true automatically if you have StatusInfo
-        },
+		whisper,
+        // handled = [],
+        // extensions = {
+        //     StatusInfo: true // This will be set to true automatically if you have StatusInfo
+        // },
         startImage = '4',
 		pauseImage = '5',
         stopImage = '6',
         tagImage = '3',
-        noTagImage = 'd',
+        // noTagImage = 'd',
         deleteImage = '#',
-        shuffleImage = ';',
-        randomSingleImage = '`',
-        randomLoopImage = '?',
-        togetherImage = 'J',
-        loopImage = 'r',
+        // shuffleImage = ';',
+        // randomSingleImage = '`',
+        // randomLoopImage = '?',
+        // togetherImage = 'J',
+        // loopImage = 'r',
         sortImage = '1',
-        lockImage = ')',
-        unlockImage = '(',
+        // lockImage = ')',
+        // unlockImage = '(',
         backImage = 'y',
         nextImage = ']',
         prevImage = '[',
-        decreaseImage = '<',
-        increaseImage = '>',
+        // decreaseImage = '<',
+        // increaseImage = '>',
         timerImage = 't',
         favoriteImage = 'S',
         allConditionsImage = 'G',
@@ -57,30 +61,30 @@ var CombatMaster = CombatMaster || (function() {
         doneImage = '3',
         showImage = 'v',
         delayImage = '}',
-        sortConditionsImage = '0',
+        // sortConditionsImage = '0',
         holdImage = 'L',
-        helpImage = 'i',
-        conditionsImage = ':',
-        spellsImage = 'C';
-        
+        helpImage = 'i';
+        // conditionsImage = ':',
+        // spellsImage = 'C';
+
     //Styling for the chat responses.
     const styles = {
         reset: 'padding: 0; margin: 0;',
         menu:  'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
- 		title: 'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
- 		titleText: 'color:white',
- 		titleSpacer: 'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
- 		version:'font-size:10px;',
- 		header: 'margin-top:10px;margin-bottom:5px;font-weight:bold;font-style:italic;display:inline-block;',
+        title: 'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+        titleText: 'color:white',
+        titleSpacer: 'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
+        version:'font-size:10px;',
+        header: 'margin-top:10px;margin-bottom:5px;font-weight:bold;font-style:italic;display:inline-block;',
         button: 'background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center;width:100%',
         textButton: 'background-color:#fff; color: #000; text-align: center; float: right;',
         conditionButton: 'background-color:#fff; color: #000;margin-left:1px;',
- 		linkButton: 'background-color:#fff; color: #000; text-align: center;vertical-align:middle',
- 		textLabel: 'background-color:#fff;float:left;text-align:center;margin-top:8px',
- 		bigButton: 'width:80%;border-radius:5px;text-align:center;margin-left:15px',
+        linkButton: 'background-color:#fff; color: #000; text-align: center;vertical-align:middle',
+        textLabel: 'background-color:#fff;float:left;text-align:center;margin-top:8px',
+        bigButton: 'width:80%;border-radius:5px;text-align:center;margin-left:15px',
         bigButtonLink: 'background-color:#000000; border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:100%',
         wrapBox: ' border: 1px solid #292929; border-radius: 3px;margin-top:3px;margin-bottom:3px',
- 		body: 'background-color:#fff',
+        body: 'background-color:#fff',
         list: 'list-style: none;padding:2px',
         float: {
             right: 'float: right;',
@@ -95,11 +99,11 @@ var CombatMaster = CombatMaster || (function() {
         announcePlayer: 'display:inline-block;vertical-align:middle;',
     },
     // Styling for the chat responses.
-    style = "overflow: hidden; background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
-    buttonStyle = "background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center; float: right;",
-    conditionStyle = "background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
-    conditionButtonStyle = "text-decoration: underline; background-color: #fff; color: #000; padding: 0",
-    listStyle = 'list-style: none; padding: 0; margin: 0;',
+    // style = "overflow: hidden; background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
+    // buttonStyle = "background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center; float: right;",
+    // conditionStyle = "background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
+    // conditionButtonStyle = "text-decoration: underline; background-color: #fff; color: #000; padding: 0",
+    // listStyle = 'list-style: none; padding: 0; margin: 0;',
     mainMarkerName = 'MainMarker',
     nextMarkerName = 'NextMarker',
     rangeMarkerName = 'RangeMarker',
@@ -107,7 +111,7 @@ var CombatMaster = CombatMaster || (function() {
     invisibleImage = 'https://s3.amazonaws.com/files.d20.io/images/255367527/BLuBSgz14Tx_IGSPAPM6vw/max.png?1636797848',
     icon_image_positions = {red:"#C91010",blue:"#1076C9",green:"#2FC910",brown:"#C97310",purple:"#9510C9",pink:"#EB75E1",yellow:"#E5EB75",dead:"X",skull:0,sleepy:34,"half-heart":68,"half-haze":102,interdiction:136,snail:170,"lightning-helix":204,spanner:238,"chained-heart":272,"chemical-bolt":306,"death-zone":340,"drink-me":374,"edge-crack":408,"ninja-mask":442,stopwatch:476,"fishing-net":510,overdrive:544,strong:578,fist:612,padlock:646,"three-leaves":680,"fluffy-wing":714,pummeled:748,tread:782,arrowed:816,aura:850,"back-pain":884,"black-flag":918,"bleeding-eye":952,"bolt-shield":986,"broken-heart":1020,cobweb:1054,"broken-shield":1088,"flying-flag":1122,radioactive:1156,trophy:1190,"broken-skull":1224,"frozen-orb":1258,"rolling-bomb":1292,"white-tower":1326,grab:1360,screaming:1394,grenade:1428,"sentry-gun":1462,"all-for-one":1496,"angel-outfit":1530,"archery-target":1564},
     ctMarkers = ['blue', 'brown', 'green', 'pink', 'purple', 'red', 'yellow', '-', 'all-for-one', 'angel-outfit', 'archery-target', 'arrowed', 'aura', 'back-pain', 'black-flag', 'bleeding-eye', 'bolt-shield', 'broken-heart', 'broken-shield', 'broken-skull', 'chained-heart', 'chemical-bolt', 'cobweb', 'dead', 'death-zone', 'drink-me', 'edge-crack', 'fishing-net', 'fist', 'fluffy-wing', 'flying-flag', 'frozen-orb', 'grab', 'grenade', 'half-haze', 'half-heart', 'interdiction', 'lightning-helix', 'ninja-mask', 'overdrive', 'padlock', 'pummeled', 'radioactive', 'rolling-bomb', 'screaming', 'sentry-gun', 'skull', 'sleepy', 'snail', 'spanner',   'stopwatch','strong', 'three-leaves', 'tread', 'trophy', 'white-tower'],
-    shaped_conditions = ['blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'],
+    // shaped_conditions = ['blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'],
     script_name = 'CombatMaster',
     combatState = 'COMBATMASTER',
 
@@ -123,29 +127,27 @@ var CombatMaster = CombatMaster || (function() {
         if (status.autoAddSpells) {
             if (status.sheet == 'OGL') {
                 if (msg_orig && (msg_orig.rolltemplate && msg_orig.rolltemplate === 'spell') ) {
-                    if (debug) {
-                        log(msg_orig);
-                    }    
+                    if (debug) log(msg_orig);
                     handleSpellCast(msg_orig);
                 }
             } else if (status.sheet == 'Shaped')  {
                 if (msg_orig && msg_orig.content.includes("{{spell=1}}")) {
                     handleSpellCast(msg_orig);
-                }              
+                }
             }  else if (status.sheet == 'PF2')  {
                 if (msg_orig && msg_orig.content.includes("{cast}")) {
                     handleSpellCast(msg_orig);
-                }              
-            } 
+                }
+            }
         }
 
         if (msg_orig.content.indexOf('!cmaster')!==0) {
             log('-------------inputHandler------OUT----');
             return;
         }
-        
+
         var msg = _.clone(msg_orig),args,restrict;
-        
+
         playerID = msg.playerid;
         if (playerIsGM(msg.playerid)) {
               state[combatState].config.gmPlayerID = msg.playerid;
@@ -157,11 +159,11 @@ var CombatMaster = CombatMaster || (function() {
 		if(_.has(msg,'inlinerolls')) {//calculates inline rolls
 			msg.content = inlineExtract(msg);
 		}
-		
+
 		//splits the message contents into discrete arguments, special handling for import
-	    let cmdDetails = {
-	        details: {}
-	    }
+        let cmdDetails = {
+            details: {}
+        };
 
         if (msg.content.indexOf('import') >= 0) {
             cmdDetails.action = 'import';
@@ -169,25 +171,23 @@ var CombatMaster = CombatMaster || (function() {
             cmdDetails.details['config'] = msg.content.replace('--import,','');
             commandHandler(cmdDetails,msg,restrict,who,playerID);
         } else {
-    		args = msg.content.split(/\s+--/);
-    	    if(args[0] === '!cmaster'){
+            args = msg.content.split(/\s+--/);
+            if(args[0] === '!cmaster'){
                 if(args[1]){
                     _.each(_.rest(args,1),(cmd) =>{
                         cmdDetails = cmdExtract(cmd);
-                        if (debug){
-                            log(cmdDetails);
-                        }
+                        if (debug) log(cmdDetails);
                         commandHandler(cmdDetails,msg,restrict,who,playerID);
-                    })    
+                    });
                 }
-        	}
+            }
         }
         log('-------------inputHandler-----END-----');
-	},  
+	},
 
 	//Extracts inline rolls
 	inlineExtract = function(msg){
-	    return _.chain(msg.inlinerolls)
+        return _.chain(msg.inlinerolls)
 				.reduce(function(m,v,k){
 					m['$[['+k+']]']=v.results.total || 0;
 					return m;
@@ -198,45 +198,43 @@ var CombatMaster = CombatMaster || (function() {
 				.value();
 	},
 
-    //Extracts the command details from a command string passed from handleInput	
+    //Extracts the command details from a command string passed from handleInput
 	cmdExtract = function(cmd){
-	    var cmdSep = {
-	        details: {}
-	    },
-	    vars,
-	    temp,
-	    details;
-	    if (debug) {
-            log(cmd)
-	    }    
+        var cmdSep = {
+            details: {}
+        },
+        vars,
+        temp;
+        // details;
+        if (debug) log(cmd);
         //special handling of import is required
-        
-        let values = parseLine(cmd)
-        let lookup = values.lookup
-        let tokens = values.tokens
+
+        let values = parseLine(cmd);
+        let lookup = values.lookup;
+        let tokens = values.tokens;
         if (debug) {
-            log('Lookup:' + lookup)
-            log('Tokens:' + tokens)
+            log('Lookup:' + lookup);
+            log('Tokens:' + tokens);
         }
 
         //find the action and set the cmdSep Action
-	    cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
         //split additional command actions
-	    _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|)(?:\:|=)([^,]+)/) || null;
+        _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|)(?::|=)([^,]+)/) || null;
             if(vars) {
                 if (vars[2].includes('INDEX')) {
-                    let key, result, temp
+                    let key, result;
                     for (key in lookup) {
-                        result = lookup[key].replace(/{/g, '')  
-                        result = result.replace(/}/g, '') 
-                        vars[2] = vars[2].replace('{INDEX:' + key + '}',result)
+                        result = lookup[key].replace(/{/g, '');
+                        result = result.replace(/}/g, '');
+                        vars[2] = vars[2].replace('{INDEX:' + key + '}',result);
                     }
-                }                        
-                temp = (vars[2] === 'true') ? true : (vars[2] === 'false') ? false : vars[2]
+                }
+                temp = (vars[2] === 'true') ? true : (vars[2] === 'false') ? false : vars[2];
                 cmdSep.details[vars[1]]=temp;
             } else {
                 cmdSep.details[d]=d;
@@ -252,12 +250,12 @@ var CombatMaster = CombatMaster || (function() {
         let lastc = '';
         let capture = '';
         let line = '';
-    
+
         [...cmd].forEach((c,i,o)=>{
-    
+
             if('{' === lastc && '{' === c) {
                 ++depth;
-            } 
+            }
             if('}' === lastc && '}' === c) {
                 --depth;
                 if(!depth && capture.length){
@@ -266,16 +264,16 @@ var CombatMaster = CombatMaster || (function() {
                     capture='';
                 }
             }
-    
+
             if(depth){
                 capture+=c;
             } else {
                 line+=c;
             }
-    
+
             lastc = c;
         });
-        
+
         let tokens = line.split(/\s+--/);
         return {
             lookup,
@@ -298,178 +296,178 @@ var CombatMaster = CombatMaster || (function() {
      * WHO = STRING     Displayed Name
      */
 	commandHandler = function(cmdDetails,msg,restrict,who,playerID){
-	    if (debug){
-	        log ('commandHandler::cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
+        if (debug){
+            log ('commandHandler::cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
             if (who) log('commandHandler::who=' + JSON.stringify(who));
             if (playerID) log('commandHandler::playerID=' + JSON.stringify(playerID));
             //log('commandHandler !!!!!!! campaign=' + JSON.stringify(Campaign()));
-	    }
-	    
+        }
+
         if (cmdDetails.action == 'back'){
             if (cmdDetails.details.setup) {
-                cmdDetails.action = 'show'
-                cmdDetails.details['setup'] = true
+                cmdDetails.action = 'show';
+                cmdDetails.details['setup'] = true;
             } else if (cmdDetails.details.tracker) {
-                cmdDetails.action = 'main'
+                cmdDetails.action = 'main';
             } else {
                 if (state[combatState].config.previousPage == 'main') {
-                    cmdDetails.action = 'main'
+                    cmdDetails.action = 'main';
                  } else {
-	                cmdDetails.action = 'show'
-	                cmdDetails.details['conditions'] = true  
+                   cmdDetails.action = 'show';
+                   cmdDetails.details['conditions'] = true;
 
                  }
-            }           
-        }    	        
-        
+            }
+        }
+
         if (cmdDetails.action == 'main' || !cmdDetails.action){
-            sendMainMenu(who)
-        }     
+            sendMainMenu(who);
+        }
         if (cmdDetails.action == 'turn'){
             if (cmdDetails.details.next) {
                 if (checkAuthUserFromMessage(who, playerID)) changeTurnOrderToNext();
             }
             if (cmdDetails.details.delay) {
                 if (checkAuthUserFromMessage(who, playerID)) delayTurn();
-            }                
+            }
             if (cmdDetails.details.previous) {
-                changeTurnOrderToPrevious()
-            }      
+                changeTurnOrderToPrevious();
+            }
             if (cmdDetails.details.start) {
                 startCombat(msg.selected, who);
-            }        
+            }
             if (cmdDetails.details.stop) {
                 stopCombat(who);
-            }  
+            }
             if (cmdDetails.details.hold) {
                 holdCombat(who);
-            }               
+            }
             if (cmdDetails.details.timer == 'pause') {
                 pauseTimer();
-            }   
+            }
             if (cmdDetails.details.timer == 'stop') {
                 stopTimer();
-            }  
+            }
             if (cmdDetails.details.sort) {
                 sortTurnorder();
-            }    
+            }
         }
-        
+
         if (cmdDetails.action == 'show'){
             if (cmdDetails.details.view) {
                 editShowState(cmdDetails.details.value);
-            } 
+            }
             if (cmdDetails.details.setup) {
                 sendConfigMenu();
-            }    
+            }
             if (cmdDetails.details.initiative) {
                 sendInitiativeMenu();
-            }   
+            }
             if (cmdDetails.details.turnorder) {
                 sendTurnorderMenu();
-            }  
+            }
             if (cmdDetails.details.timer) {
                 sendTimerMenu();
-            }    
+            }
             if (cmdDetails.details.announce) {
                 sendAnnounceMenu();
-            }   
+            }
             if (cmdDetails.details.macro) {
                 sendMacroMenu();
-            }  
+            }
             if (cmdDetails.details.status) {
-                sendStatusMenu()
-            }   
+                sendStatusMenu();
+            }
             if (cmdDetails.details.concentration) {
-                sendConcentrationMenu()
-            }             
+                sendConcentrationMenu();
+            }
             if (cmdDetails.details.conditions) {
-                sendConditionsMenu()
-            }   
+                sendConditionsMenu();
+            }
             if (cmdDetails.details.export) {
-                exportConditions()
-            }      
+                exportConditions();
+            }
             if (cmdDetails.details.condition) {
                 if (cmdDetails.details.addAPI) {
-                    sendConditionAddAPIMenu(cmdDetails.details.condition)
+                    sendConditionAddAPIMenu(cmdDetails.details.condition);
                 } else if (cmdDetails.details.remAPI) {
-                    sendConditionRemAPIMenu(cmdDetails.details.condition)
+                    sendConditionRemAPIMenu(cmdDetails.details.condition);
                 } else {
-                    sendConditionMenu(cmdDetails.details.condition)
-                }    
-            }    
+                    sendConditionMenu(cmdDetails.details.condition);
+                }
+            }
             if (cmdDetails.details.assigned) {
-                showConditions(msg.selected)
-            }      
+                showConditions(msg.selected);
+            }
             if (cmdDetails.details.description) {
-                sendConditionToChat(cmdDetails.details.key)
-            }              
-        }   
-        
+                sendConditionToChat(cmdDetails.details.key);
+            }
+        }
+
         if (cmdDetails.action == 'add') {
             if (cmdDetails.details.target) {
-                addTargetsToCondition(msg.selected,cmdDetails.details.id,cmdDetails.details.condition)
+                addTargetsToCondition(msg.selected,cmdDetails.details.id,cmdDetails.details.condition);
             } else if (cmdDetails.details.condition) {
-                addCondition(cmdDetails,msg.selected,playerID)
+                addCondition(cmdDetails,msg.selected,playerID);
             }
         }
-        
+
         if (cmdDetails.action == 'remove') {
             if (cmdDetails.details.condition) {
-                removeCondition(cmdDetails, msg.selected)
-            }            
-        }    
-        
-        if (cmdDetails.action == 'config'){
-            editCombatState(cmdDetails)   
-        }    
-        
-        if (cmdDetails.action == 'new'){
-            if (cmdDetails.details.condition) {
-                newCondition(cmdDetails.details.condition)  
-            } else if (cmdDetails.details.macro) {
-                newSubstitution(cmdDetails)
-            }                
-        }  
-        
-        if (cmdDetails.action == 'delete'){
-            if (cmdDetails.details.condition) {
-                deleteCondition(cmdDetails.details.condition,cmdDetails.details.confirm)   
-            } else if (cmdDetails.details.macro) {
-                removeSubstitution(cmdDetails)
-            }    
-        }      
-        
-        if (cmdDetails.action == 'import') {
-            importCombatMaster(cmdDetails.details.config)
-        }
-        
-        if (cmdDetails.action == 'spell') {
-            if (cmdDetails.details.confirm) {
-                addSpell(cmdDetails.details.key)    
-            } else {
-                ignoreSpell(cmdDetails.details.key)   
+                removeCondition(cmdDetails, msg.selected);
             }
         }
-        
+
+        if (cmdDetails.action == 'config'){
+            editCombatState(cmdDetails);
+        }
+
+        if (cmdDetails.action == 'new'){
+            if (cmdDetails.details.condition) {
+                newCondition(cmdDetails.details.condition);
+            } else if (cmdDetails.details.macro) {
+                newSubstitution(cmdDetails);
+            }
+        }
+
+        if (cmdDetails.action == 'delete'){
+            if (cmdDetails.details.condition) {
+                deleteCondition(cmdDetails.details.condition,cmdDetails.details.confirm);
+            } else if (cmdDetails.details.macro) {
+                removeSubstitution(cmdDetails);
+            }
+        }
+
+        if (cmdDetails.action == 'import') {
+            importCombatMaster(cmdDetails.details.config);
+        }
+
+        if (cmdDetails.action == 'spell') {
+            if (cmdDetails.details.confirm) {
+                addSpell(cmdDetails.details.key);
+            } else {
+                ignoreSpell(cmdDetails.details.key);
+            }
+        }
+
         if (cmdDetails.action == 'reset') {
 			state[combatState] = {};
 			setDefaults(true);
-			sendMainMenu(who)
+			sendMainMenu(who);
         }
 
         if (cmdDetails.action == 'ignore') {
 			state[combatState].ignores = [];
-			sendMainMenu(who)
+			sendMainMenu(who);
         }
 
         if (cmdDetails.action == 'clear') {
-			clearTokenStatuses(msg.selected)
-			sendMainMenu(who)
+			clearTokenStatuses(msg.selected);
+			sendMainMenu(who);
         }
 
         if (cmdDetails.action == 'help') {
-    		showHelp(cmdDetails)
+            showHelp(cmdDetails);
         }
 
         if (cmdDetails.action == 'onslaught') {
@@ -477,7 +475,7 @@ var CombatMaster = CombatMaster || (function() {
                 if (debug) log('onslaught received but user is not GM');
                 return;
             }
-    		addOnslaughtToPlayer(cmdDetails, msg.selected);
+            addOnslaughtToPlayer(cmdDetails, msg.selected);
         }
 
         if (cmdDetails.action == 'toggleVision') {
@@ -486,7 +484,7 @@ var CombatMaster = CombatMaster || (function() {
                 return;
             }
             log('commandHandler::before toggleTokenVision');
-    		toggleTokenVision(cmdDetails, msg.selected);
+            toggleTokenVision(cmdDetails, msg.selected);
         }
 
         if (cmdDetails.action == 'createDecisiveAbilities') {
@@ -495,28 +493,26 @@ var CombatMaster = CombatMaster || (function() {
                 return;
             }
             log('commandHandler::before createDecisiveAbilities');
-    		createDecisiveAbilities(cmdDetails, msg.selected);
+            createDecisiveAbilities(cmdDetails, msg.selected);
         }
 	},
 
     clearTokenStatuses = function(selectedTokens) {
-        let tokenObj
-        if (selectedTokens ) {
+        let tokenObj;
+        if (selectedTokens) {
             selectedTokens.forEach(token => {
                 if (token._type == 'graphic') {
                     tokenObj        = getObj('graphic', token._id);
-                    if (tokenObj) {
-                        tokenObj.set('statusmarkers', "")
-                    }
+                    if (tokenObj) tokenObj.set('statusmarkers', "");
                 }
-            })    
+            });
         }
     },
-    
+
 //*************************************************************************************************************
 //NEW ACTIONS
 //*************************************************************************************************************
-    
+
 createDecisiveAbilities = function(cmdDetails, selected) {
         if (debug) log('createDecisiveAbilities cmdDetails=' + JSON.stringify(cmdDetails));
 
@@ -562,9 +558,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     toggleTokenVision = function(cmdDetails, selected) {
-        if (debug) {
-            log('toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
-        }
+        if (debug) log('toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
 
         _.chain(selected).map(function(o){
             return getObj('graphic',o._id);
@@ -578,9 +572,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
     addOnslaughtToPlayer = function(cmdDetails, selected) {
         log('addOnslaughtToPlayer cmdDetails=' + JSON.stringify(cmdDetails));
-        if (debug) {
-            log('Add Onslaught to Player');
-        }
+        if (debug) log('Add Onslaught to Player');
+
 
         let turnorder   = getTurnorder();
         if (!turnorder.length) {
@@ -633,202 +626,201 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //MENUS
 //*************************************************************************************************************
     sendMainMenu = function(who) {
-        if (debug) {
-            log('Send Main Menu')
-        }
-        
-        let nextButton          = makeImageButton('!cmaster --turn,next',nextImage,'Next Turn','transparent',18)
-        let prevButton          = makeImageButton('!cmaster --turn,previous',prevImage,'Previous Turn','transparent',18)
-        let stopButton          = makeImageButton('!cmaster --turn,stop --main',stopImage,'Stop Combat','transparent',18)
-        let holdButton          = makeImageButton('!cmaster --turn,hold',holdImage,'Hold Combat','transparent',18)
-        let startButton         = makeImageButton('!cmaster --turn,start --main',startImage,'Start Combat','transparent',18)
-        let pauseTimerButton    = makeImageButton('!cmaster --turn,timer=pause',pauseImage,'Pause Timer','transparent',18)
-        let stopTimerButton     = makeImageButton('!cmaster --turn,timer=stop',timerImage,'Stop Timer','transparent',18)
-        let configButton        = makeImageButton('!cmaster --show,setup',backImage,'Show Setup','transparent',18)
-        let showButton          = makeImageButton('!cmaster --show,assigned',showImage,'Show Conditions','transparent',18)
-        let sortButton          = makeImageButton('!cmaster --turn,sort',sortImage,'Sort Turnorder','transparent',18)
-        let helpButton
-        
+        if (debug) log('Send Main Menu');
+
+
+        let nextButton          = makeImageButton('!cmaster --turn,next',nextImage,'Next Turn','transparent',18);
+        let prevButton          = makeImageButton('!cmaster --turn,previous',prevImage,'Previous Turn','transparent',18);
+        let stopButton          = makeImageButton('!cmaster --turn,stop --main',stopImage,'Stop Combat','transparent',18);
+        let holdButton          = makeImageButton('!cmaster --turn,hold',holdImage,'Hold Combat','transparent',18);
+        let startButton         = makeImageButton('!cmaster --turn,start --main',startImage,'Start Combat','transparent',18);
+        let pauseTimerButton    = makeImageButton('!cmaster --turn,timer=pause',pauseImage,'Pause Timer','transparent',18);
+        let stopTimerButton     = makeImageButton('!cmaster --turn,timer=stop',timerImage,'Stop Timer','transparent',18);
+        let configButton        = makeImageButton('!cmaster --show,setup',backImage,'Show Setup','transparent',18);
+        let showButton          = makeImageButton('!cmaster --show,assigned',showImage,'Show Conditions','transparent',18);
+        let sortButton          = makeImageButton('!cmaster --turn,sort',sortImage,'Sort Turnorder','transparent',18);
+        let helpButton;
+
         if (state[combatState].config.hold.held) {
-            helpButton          = makeImageButton('!cmaster --help,held',helpImage,'Help','transparent',18,'white')
-        } else if (inFight() ) { 
-            helpButton          = makeImageButton('!cmaster --help,started',helpImage,'Help','transparent',18,'white')
+            helpButton          = makeImageButton('!cmaster --help,held',helpImage,'Help','transparent',18,'white');
+        } else if (inFight() ) {
+            helpButton          = makeImageButton('!cmaster --help,started',helpImage,'Help','transparent',18,'white');
         } else {
-            helpButton          = makeImageButton('!cmaster --help,stopped',helpImage,'Help','transparent',18,'white')
-        }    
-        
-        let listItems           = []
-        let titleText           = 'CombatMaster Menu<span style="'+styles.version+'"> ('+version+')</span>'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>'
+            helpButton          = makeImageButton('!cmaster --help,stopped',helpImage,'Help','transparent',18,'white');
+        }
+
+        let listItems           = [];
+        let titleText           = 'CombatMaster Menu<span style="'+styles.version+'"> ('+version+')</span>'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
         let contents, key, condition, conditions, conditionButton, addButton, removeButton, favoriteButton, listContents, rowCount=1;
 
         if (state[combatState].config.hold.held) {
-            contents = '<div style="background-color:yellow">'+startButton
+            contents = '<div style="background-color:yellow">'+startButton;
         } else if (inFight() ) {
-            contents = '<div style="background-color:green;width:100%;padding:2px;vertical-align:middle">'+stopButton + holdButton + prevButton + nextButton + pauseTimerButton + stopTimerButton + showButton + sortButton 
+            contents = '<div style="background-color:green;width:100%;padding:2px;vertical-align:middle">'+stopButton + holdButton + prevButton + nextButton + pauseTimerButton + stopTimerButton + showButton + sortButton;
         } else {
-            contents = '<div style="background-color:red">'+startButton
+            contents = '<div style="background-color:red">'+startButton;
         }
 
-        contents += configButton
-        contents += '</div>'
-        
-        conditions = sortObject(state[combatState].config.conditions)
-        
+        contents += configButton;
+        contents += '</div>';
+
+        conditions = sortObject(state[combatState].config.conditions);
+
         for (key in conditions) {
-            condition       = getConditionByKey(key)
-            
-            let installed = verifyInstalls(condition.iconType)
+            condition       = getConditionByKey(key);
+
+            let installed = verifyInstalls(condition.iconType);
             if (!installed) {
-                return
+                return;
             }
-            
-            conditionButton = makeImageButton('!cmaster --show,condition='+key,backImage,'Edit Condition','transparent',12)
-            removeButton    = makeImageButton('!cmaster --remove,condition='+key,deleteImage,'Remove Condition','transparent',12)
+
+            conditionButton = makeImageButton('!cmaster --show,condition='+key,backImage,'Edit Condition','transparent',12);
+            removeButton    = makeImageButton('!cmaster --remove,condition='+key,deleteImage,'Remove Condition','transparent',12);
 
             if (condition.override) {
                 if (state[combatState].config.status.useMessage) {
-                    addButton = makeImageButton('!cmaster --add,condition='+key +',duration=?{Duration|'+condition.duration+'},direction=?{Direction|'+condition.direction + '},message=?{Message}',addImage,'Add Condition','transparent',12)
-                } else {  
-                    addButton = makeImageButton('!cmaster --add,condition='+key +',duration=?{Duration|'+condition.duration+'},direction=?{Direction|'+condition.direction + '}',addImage,'Add Condition','transparent',12)
-                }    
+                    addButton = makeImageButton('!cmaster --add,condition='+key +',duration=?{Duration|'+condition.duration+'},direction=?{Direction|'+condition.direction + '},message=?{Message}',addImage,'Add Condition','transparent',12);
+                } else {
+                    addButton = makeImageButton('!cmaster --add,condition='+key +',duration=?{Duration|'+condition.duration+'},direction=?{Direction|'+condition.direction + '}',addImage,'Add Condition','transparent',12);
+                }
             } else {
                 if (state[combatState].config.status.useMessage) {
-                    addButton = makeImageButton('!cmaster --add,condition='+key+',duration='+condition.duration+',direction='+condition.direction+',message='+condition.message,addImage,'Add Condition','transparent',12)
+                    addButton = makeImageButton('!cmaster --add,condition='+key+',duration='+condition.duration+',direction='+condition.direction+',message='+condition.message,addImage,'Add Condition','transparent',12);
                  } else {
-                    addButton = makeImageButton('!cmaster --add,condition='+key+',duration='+condition.duration+',direction='+condition.direction,addImage,'Add Condition','transparent',12)
-                 }    
+                    addButton = makeImageButton('!cmaster --add,condition='+key+',duration='+condition.duration+',direction='+condition.direction,addImage,'Add Condition','transparent',12);
+                 }
             }
 
             if (condition.favorite) {
-                favoriteButton = makeImageButton('!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --tracker',favoriteImage,'Remove from Favorites','transparent',12)
+                favoriteButton = makeImageButton('!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --tracker',favoriteImage,'Remove from Favorites','transparent',12);
             } else {
-                favoriteButton = makeImageButton('!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --tracker',allConditionsImage,'Add to Favorites','transparent',12)
+                favoriteButton = makeImageButton('!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --tracker',allConditionsImage,'Add to Favorites','transparent',12);
             }
-            
+
 			if (rowCount == 1) {
-                listContents = '<div>'
-                rowCount = 2
+                listContents = '<div>';
+                rowCount = 2;
 			} else {
-			   listContents = '<div style='+styles.background+'>'
-			   rowCount = 1
-			}   
-            listContents += getDefaultIcon(condition.iconType,condition.icon,'display:inline-block;margin-right:3px')
-            listContents += '<span style="vertical-align:middle">'+condition.name+'</span>'
+                listContents = '<div style='+styles.background+'>';
+                rowCount = 1;
+			}
+            listContents += getDefaultIcon(condition.iconType,condition.icon,'display:inline-block;margin-right:3px');
+            listContents += '<span style="vertical-align:middle">'+condition.name+'</span>';
             if (state[combatState].config.status.userChanges && who != 'gm') {
-                listContents += '<span style="float:right;vertical-align:middle">'+addButton+removeButton+'</span>'
+                listContents += '<span style="float:right;vertical-align:middle">'+addButton+removeButton+'</span>';
             } else {
-                listContents += '<span style="float:right;vertical-align:middle">'+addButton+removeButton+favoriteButton+conditionButton+'</span>'
+                listContents += '<span style="float:right;vertical-align:middle">'+addButton+removeButton+favoriteButton+conditionButton+'</span>';
             }
-            listContents += '</div>'
-            
+            listContents += '</div>';
+
             if (state[combatState].config.status.showConditions == 'favorites') {
                 if (condition.favorite) {
                     listItems.push(listContents);
                 }
-            } 
+            }
             if (state[combatState].config.status.showConditions == 'conditions') {
                 if (condition.type == 'Condition') {
                     listItems.push(listContents);
                 }
-            } 
+            }
             if (state[combatState].config.status.showConditions == 'spells') {
                 if (condition.type == 'Spell') {
                     listItems.push(listContents);
                 }
-            } 
+            }
             if (state[combatState].config.status.showConditions == 'all') {
                 listItems.push(listContents);
             }
         }
-        
-        let viewButton = makeBigButton('Change View', '!cmaster --show,view,value=?{View|All,all|Conditions,conditions|Spells,spells|Favorites,favorites} --main')
 
-        state[combatState].config.previousPage = 'main'
-        
+        let viewButton = makeBigButton('Change View', '!cmaster --show,view,value=?{View|All,all|Conditions,conditions|Spells,spells|Favorites,favorites} --main');
+
+        state[combatState].config.previousPage = 'main';
+
         if (state[combatState].config.status.access && who != 'None' && who != 'gm') {
             let playerIDs = state[combatState].config.status.access.split(',');
             playerIDs.forEach((player) => {
-                makeAndSendMenu(contents+makeList(listItems)+viewButton,titleText,player);    
-            })
+                makeAndSendMenu(contents+makeList(listItems)+viewButton,titleText,player);
+            });
         }
-        
+
         if (who == 'gm' || who == 'None') {
             makeAndSendMenu(contents+makeList(listItems)+viewButton,titleText,'gm');
         } else {
             makeAndSendMenu(makeList(listItems)+viewButton,titleText,who);
-        }    
+        }
     },
-    
+
     sortObject = function (obj) {
         return Object.keys(obj).sort().reduce(function (result, key) {
             result[key] = obj[key];
             return result;
         }, {});
-    },    
+    },
 
     sendConfigMenu = function() {
-		let configIntiativeButton       = makeBigButton('Initiative', '!cmaster --show,initiative')
-	    let configTurnorderButton       = makeBigButton('Turnorder', '!cmaster --show,turnorder')
-		let	configTimerButton           = makeBigButton('Timer', '!cmaster --show,timer')
-		let	configAnnouncementsButton   = makeBigButton('Announce', '!cmaster --show,announce')
-		let	configMacroButton           = makeBigButton('Macro & API', '!cmaster --show,macro')
-		let	configConcentrationButton   = makeBigButton('Concentration', '!cmaster --show,concentration')
-		let	configStatusButton          = makeBigButton('Status', '!cmaster --show,status')
-		let	configConditionButton       = makeBigButton('Conditions', '!cmaster --show,conditions')
-		let	exportButton                = makeBigButton('Export', '!cmaster --show,export')
-		let	importButton                = makeBigButton('Import', '!cmaster --import,config=?{Config}')	
-		let	resetButton                 = makeBigButton('Reset', '!cmaster --reset')
-		let	ignoreButton                = makeBigButton('Remove Ignores', '!cmaster --ignore')
-		let	clearButton                 = makeBigButton('Clear Token Statuses', '!cmaster --clear')
-		let helpButton                  = makeImageButton('!cmaster --help,setup',helpImage,'Help','transparent',18,'white')
-		let	backToTrackerButton         = makeBigButton('Back', '!cmaster --back,tracker')
-		let	titleText                   = 'Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>'
-		let	combatHeaderText            = '<div style="'+styles.header+'">Combat Setup</div>'
-		let	statusHeadersText           = '<div style="'+styles.header+'">Status Setup</div>'
-		let	resetHeaderText             = '<div style="'+styles.header+'">Reset CombatMaster</div>'	
-		let	backToTrackerText           = '<div style="'+styles.header+'">Return</div>'	
-		let contents	
-		
-	 	contents  = combatHeaderText
-		contents += configIntiativeButton
-		contents += configTurnorderButton			
-		contents += configTimerButton
-		contents += configAnnouncementsButton
-		contents += configMacroButton
-		contents += statusHeadersText 
-		contents += configStatusButton
-		contents += configConditionButton
-		contents += configConcentrationButton
-		contents += exportButton
-		contents += importButton
-		contents += resetHeaderText
-		contents += resetButton
-		contents += ignoreButton
-		contents += clearButton
-	    contents += backToTrackerText
-	    contents += backToTrackerButton
+		let configIntiativeButton       = makeBigButton('Initiative', '!cmaster --show,initiative');
+        let configTurnorderButton       = makeBigButton('Turnorder', '!cmaster --show,turnorder');
+		let	configTimerButton           = makeBigButton('Timer', '!cmaster --show,timer');
+		let	configAnnouncementsButton   = makeBigButton('Announce', '!cmaster --show,announce');
+		let	configMacroButton           = makeBigButton('Macro & API', '!cmaster --show,macro');
+		let	configConcentrationButton   = makeBigButton('Concentration', '!cmaster --show,concentration');
+		let	configStatusButton          = makeBigButton('Status', '!cmaster --show,status');
+		let	configConditionButton       = makeBigButton('Conditions', '!cmaster --show,conditions');
+		let	exportButton                = makeBigButton('Export', '!cmaster --show,export');
+		let	importButton                = makeBigButton('Import', '!cmaster --import,config=?{Config}');
+		let	resetButton                 = makeBigButton('Reset', '!cmaster --reset');
+		let	ignoreButton                = makeBigButton('Remove Ignores', '!cmaster --ignore');
+		let	clearButton                 = makeBigButton('Clear Token Statuses', '!cmaster --clear');
+		let helpButton                  = makeImageButton('!cmaster --help,setup',helpImage,'Help','transparent',18,'white');
+		let	backToTrackerButton         = makeBigButton('Back', '!cmaster --back,tracker');
+		let	titleText                   = 'Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
+		let	combatHeaderText            = '<div style="'+styles.header+'">Combat Setup</div>';
+		let	statusHeadersText           = '<div style="'+styles.header+'">Status Setup</div>';
+		let	resetHeaderText             = '<div style="'+styles.header+'">Reset CombatMaster</div>';
+		let	backToTrackerText           = '<div style="'+styles.header+'">Return</div>';
+		let contents;
+
+        contents  = combatHeaderText;
+		contents += configIntiativeButton;
+		contents += configTurnorderButton;
+		contents += configTimerButton;
+		contents += configAnnouncementsButton;
+		contents += configMacroButton;
+		contents += statusHeadersText;
+		contents += configStatusButton;
+		contents += configConditionButton;
+		contents += configConcentrationButton;
+		contents += exportButton;
+		contents += importButton;
+		contents += resetHeaderText;
+		contents += resetButton;
+		contents += ignoreButton;
+		contents += clearButton;
+        contents += backToTrackerText;
+        contents += backToTrackerButton;
 
         makeAndSendMenu(contents, titleText, 'gm');
     },
 
     sendInitiativeMenu = function() {
-        const banner = makeBanner('initiative','Initiative','setup')
-        let listItems  = []
+        const banner = makeBanner('initiative','Initiative','setup');
+        let listItems  = [];
         let initiative = state[combatState].config.initiative;
-		
-		listItems.push(makeTextButton('Roll Initiative', initiative.rollInitiative, '!cmaster --config,initiative,key=rollInitiative,value=?{Initiative|None,None|CombatMaster,CombatMaster|Group-Init,Group-Init} --show,initiative'))
-        listItems.push(makeTextButton('Roll Each Round', initiative.rollEachRound, '!cmaster --config,initiative,key=rollEachRound,value='+!initiative.rollEachRound + ' --show,initiative')) 
-        
+
+		listItems.push(makeTextButton('Roll Initiative', initiative.rollInitiative, '!cmaster --config,initiative,key=rollInitiative,value=?{Initiative|None,None|CombatMaster,CombatMaster|Group-Init,Group-Init} --show,initiative'));
+        listItems.push(makeTextButton('Roll Each Round', initiative.rollEachRound, '!cmaster --config,initiative,key=rollEachRound,value='+!initiative.rollEachRound + ' --show,initiative'));
+
         if (initiative.rollInitiative == 'CombatMaster') {
-            listItems.push(makeTextButton('Initiative Attr', initiative.initiativeAttributes, '!cmaster --config,initiative,key=initiativeAttributes,value=?{Attribute|'+initiative.initiativeAttributes+'} --show,initiative'))
-            listItems.push(makeTextButton('Initiative Die', 'd' + initiative.initiativeDie, '!cmaster --config,initiative,key=initiativeDie,value=?{Die (without the d)'+initiative.initiativeDie+'} --show,initiative'))
-            listItems.push(makeTextButton('Show Initiative in Chat', initiative.showInitiative, '!cmaster --config,initiative,key=showInitiative,value='+!initiative.showInitiative + ' --show,initiative'))
+            listItems.push(makeTextButton('Initiative Attr', initiative.initiativeAttributes, '!cmaster --config,initiative,key=initiativeAttributes,value=?{Attribute|'+initiative.initiativeAttributes+'} --show,initiative'));
+            listItems.push(makeTextButton('Initiative Die', 'd' + initiative.initiativeDie, '!cmaster --config,initiative,key=initiativeDie,value=?{Die (without the d)'+initiative.initiativeDie+'} --show,initiative'));
+            listItems.push(makeTextButton('Show Initiative in Chat', initiative.showInitiative, '!cmaster --config,initiative,key=showInitiative,value='+!initiative.showInitiative + ' --show,initiative'));
         }
-        
-		if (initiative.rollInitiative == 'Group-Init') {	
-			listItems.push(makeTextButton('Target Tokens', initiative.apiTargetTokens, '!cmaster --config,initiative,key=apiTargetTokens,value=?{Target Tokens|} --show,initiative'))
+
+		if (initiative.rollInitiative == 'Group-Init') {
+			listItems.push(makeTextButton('Target Tokens', initiative.apiTargetTokens, '!cmaster --config,initiative,key=apiTargetTokens,value=?{Target Tokens|} --show,initiative'));
             if (!initiative.apiTargetTokens > '') {
-                listItems.push('<div>'+initiative.apiTargetTokens+'</div>')
+                listItems.push('<div>'+initiative.apiTargetTokens+'</div>');
             }
 		}
 
@@ -836,129 +828,129 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
 	sendTurnorderMenu = function() {
-        const banner = makeBanner('turnorder','Turnorder','setup')
-        let listItems = []
-        let turnorder = state[combatState].config.turnorder
+        const banner = makeBanner('turnorder','Turnorder','setup');
+        let listItems = [];
+        let turnorder = state[combatState].config.turnorder;
 
-        let installed 
-        installed = verifyInstalls(turnorder.nextMarkerType)
+        let installed;
+        installed = verifyInstalls(turnorder.nextMarkerType);
         if (!installed) {
-            return
-        }	
-        installed = verifyInstalls(turnorder.markerType)
+            return;
+        }
+        installed = verifyInstalls(turnorder.markerType);
         if (!installed) {
-            return
-        }        
-        
-		listItems.push(makeTextButton('Sort Turnorder',turnorder.sortTurnOrder, '!cmaster --config,turnorder,key=sortTurnOrder,value='+!turnorder.sortTurnOrder + ' --show,turnorder'))
-        listItems.push(makeTextButton('Center Map on Token', turnorder.centerToken, '!cmaster --config,turnorder,key=centerToken,value='+!turnorder.centerToken + ' --show,turnorder'))
+            return;
+        }
 
-        listItems.push(makeTextButton('Use Marker',turnorder.useMarker, '!cmaster --config,turnorder,key=useMarker,value='+!turnorder.useMarker + ' --show,turnorder'))
-    	listItems.push(makeTextButton('Marker Type',turnorder.markerType, '!cmaster --config,turnorder,key=markerType,value=?{Marker Type|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'))
+		listItems.push(makeTextButton('Sort Turnorder',turnorder.sortTurnOrder, '!cmaster --config,turnorder,key=sortTurnOrder,value='+!turnorder.sortTurnOrder + ' --show,turnorder'));
+        listItems.push(makeTextButton('Center Map on Token', turnorder.centerToken, '!cmaster --config,turnorder,key=centerToken,value='+!turnorder.centerToken + ' --show,turnorder'));
+
+        listItems.push(makeTextButton('Use Marker',turnorder.useMarker, '!cmaster --config,turnorder,key=useMarker,value='+!turnorder.useMarker + ' --show,turnorder'));
+        listItems.push(makeTextButton('Marker Type',turnorder.markerType, '!cmaster --config,turnorder,key=markerType,value=?{Marker Type|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
         if (turnorder.markerType == 'External URL') {
-            listItems.push(makeTextButton('Marker', '<img src="'+turnorder.externalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=externalMarkerURL,value=?{Image Url} --show,turnorder'))
+            listItems.push(makeTextButton('Marker', '<img src="'+turnorder.externalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=externalMarkerURL,value=?{Image Url} --show,turnorder'));
         }  else if (turnorder.markerType == 'Token Marker')	{
-		    listItems.push(makeTextButton('Marker Name',turnorder.tokenMarkerName, '!cmaster --config,turnorder,key=tokenMarkerName,value=?{Marker Name|} --show,turnorder'))
-            listItems.push(getDefaultIcon('Token Marker',turnorder.tokenMarkerName))
-		}		
-		
-		listItems.push(makeTextButton('Use Next Marker',turnorder.nextMarkerType, '!cmaster --config,turnorder,key=nextMarkerType,value=?{Next Marker Type|None,None|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'))
-		if (turnorder.nextMarkerType == 'External URL') {	
-			 listItems.push(makeTextButton('Next Marker', '<img src="'+turnorder.nextExternalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=nextExternalMarkerURL,value=?{Image Url} --show,turnorder'))
-		} else if (turnorder.nextMarkerType == 'Token Marker')	{
-		    listItems.push(makeTextButton('Next Marker Name',turnorder.nextTokenMarkerName, '!cmaster --config,turnorder,key=nextTokenMarkerName,value=?{Next Marker Name|} --show,turnorder'))
-            listItems.push(getDefaultIcon('Token Marker', turnorder.nextTokenMarkerName))
+            listItems.push(makeTextButton('Marker Name',turnorder.tokenMarkerName, '!cmaster --config,turnorder,key=tokenMarkerName,value=?{Marker Name|} --show,turnorder'));
+            listItems.push(getDefaultIcon('Token Marker',turnorder.tokenMarkerName));
 		}
-    	listItems.push(makeTextButton('Marker Size',turnorder.markerSize, '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (2.1 default)} --show,turnorder'))
+
+		listItems.push(makeTextButton('Use Next Marker',turnorder.nextMarkerType, '!cmaster --config,turnorder,key=nextMarkerType,value=?{Next Marker Type|None,None|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
+		if (turnorder.nextMarkerType == 'External URL') {
+            listItems.push(makeTextButton('Next Marker', '<img src="'+turnorder.nextExternalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=nextExternalMarkerURL,value=?{Image Url} --show,turnorder'));
+		} else if (turnorder.nextMarkerType == 'Token Marker')	{
+            listItems.push(makeTextButton('Next Marker Name',turnorder.nextTokenMarkerName, '!cmaster --config,turnorder,key=nextTokenMarkerName,value=?{Next Marker Name|} --show,turnorder'));
+            listItems.push(getDefaultIcon('Token Marker', turnorder.nextTokenMarkerName));
+		}
+        listItems.push(makeTextButton('Marker Size',turnorder.markerSize, '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (2.1 default)} --show,turnorder'));
 
         listItems.push(makeTextButton('Use Range Marker',turnorder.useRangeMarker, '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL} --show,turnorder')); // |Token Marker,Token Marker|Token Condition,Token Condition
-		if (turnorder.useRangeMarker == 'External URL') {	
-			 listItems.push(makeTextButton('Range Marker', '<img src="'+turnorder.rangeExternalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=rangeExternalMarkerURL,value=?{Image Url} --show,turnorder'))
+		if (turnorder.useRangeMarker == 'External URL') {
+            listItems.push(makeTextButton('Range Marker', '<img src="'+turnorder.rangeExternalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=rangeExternalMarkerURL,value=?{Image Url} --show,turnorder'));
 		} else if (turnorder.useRangeMarker == 'Token Marker')	{
-		    log('balec');
+            log('balec');
             //TODO: a voir plus tard
 		}
-    	listItems.push(makeTextButton('Range Marker Width',turnorder.rangeMarkerWidth, '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (6000 default (px))} --show,turnorder'))
-    	listItems.push(makeTextButton('Range Marker Size',turnorder.rangeMarkerHeight, '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'))
+        listItems.push(makeTextButton('Range Marker Width',turnorder.rangeMarkerWidth, '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (6000 default (px))} --show,turnorder'));
+        listItems.push(makeTextButton('Range Marker Size',turnorder.rangeMarkerHeight, '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'));
 
-        listItems.push(makeTextButton('Animate Marker',turnorder.animateMarker, '!cmaster --config,turnorder,key=animateMarker,value='+!turnorder.animateMarker + ' --show,turnorder'))    	  
-    	listItems.push(makeTextButton('Animation Angle Step',turnorder.animateMarkerDegree, '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (1 default)} --show,turnorder'))      
-    	listItems.push(makeTextButton('Animation Angle Wait',turnorder.animateMarkerWait, '!cmaster --config,turnorder,key=animateMarkerWait,value=?{milliseconds per tick (25 default)} --show,turnorder'))         
+        listItems.push(makeTextButton('Animate Marker',turnorder.animateMarker, '!cmaster --config,turnorder,key=animateMarker,value='+!turnorder.animateMarker + ' --show,turnorder'));
+        listItems.push(makeTextButton('Animation Angle Step',turnorder.animateMarkerDegree, '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (1 default)} --show,turnorder'));
+        listItems.push(makeTextButton('Animation Angle Wait',turnorder.animateMarkerWait, '!cmaster --config,turnorder,key=animateMarkerWait,value=?{milliseconds per tick (25 default)} --show,turnorder'));
 
-		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Round</b></i></div>' )
-        listItems.push(makeTextButton('API',turnorder.roundAPI, '!cmaster --config,turnorder,key=roundAPI,value={{?{API Command|}}} --show,turnorder'))
-        listItems.push(makeTextButton('Roll20AM',turnorder.roundRoll20AM, '!cmaster --config,turnorder,key=roundRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'))
-        listItems.push(makeTextButton('FX',turnorder.roundFX, '!cmaster --config,turnorder,key=roundFX,value=?{FX Command|} --show,turnorder'))
-        listItems.push(makeTextButton('Characters Macro',turnorder.characterRoundMacro, '!cmaster --config,turnorder,key=characterRoundMacro,value=?{Macro Name|} --show,turnorder'))
-        listItems.push(makeTextButton('All Tokens Macro',turnorder.allRoundMacro, '!cmaster --config,turnorder,key=allRoundMacro,value=?{Macro Name|} --show,turnorder'))
-        
-		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Turn</b></i></div>' )
-        listItems.push(makeTextButton('API',turnorder.turnAPI, '!cmaster --config,turnorder,key=turnAPI,value={{?{API Command|}}} --show,turnorder'))
-        listItems.push(makeTextButton('Roll20AM',turnorder.turnRoll20AM, '!cmaster --config,turnorder,key=turnRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'))
-        listItems.push(makeTextButton('FX',turnorder.turnFX, '!cmaster --config,turnorder,key=turnFX,value=?{FX Command|} --show,turnorder'))
-        listItems.push(makeTextButton('Macro',turnorder.turnMacro, '!cmaster --config,turnorder,key=turnMacro,value=?{Macro Name|} --show,turnorder'))
+		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Round</b></i></div>' );
+        listItems.push(makeTextButton('API',turnorder.roundAPI, '!cmaster --config,turnorder,key=roundAPI,value={{?{API Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('Roll20AM',turnorder.roundRoll20AM, '!cmaster --config,turnorder,key=roundRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('FX',turnorder.roundFX, '!cmaster --config,turnorder,key=roundFX,value=?{FX Command|} --show,turnorder'));
+        listItems.push(makeTextButton('Characters Macro',turnorder.characterRoundMacro, '!cmaster --config,turnorder,key=characterRoundMacro,value=?{Macro Name|} --show,turnorder'));
+        listItems.push(makeTextButton('All Tokens Macro',turnorder.allRoundMacro, '!cmaster --config,turnorder,key=allRoundMacro,value=?{Macro Name|} --show,turnorder'));
+
+		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Turn</b></i></div>' );
+        listItems.push(makeTextButton('API',turnorder.turnAPI, '!cmaster --config,turnorder,key=turnAPI,value={{?{API Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('Roll20AM',turnorder.turnRoll20AM, '!cmaster --config,turnorder,key=turnRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('FX',turnorder.turnFX, '!cmaster --config,turnorder,key=turnFX,value=?{FX Command|} --show,turnorder'));
+        listItems.push(makeTextButton('Macro',turnorder.turnMacro, '!cmaster --config,turnorder,key=turnMacro,value=?{Macro Name|} --show,turnorder'));
 
         makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
-	
+
     sendTimerMenu = function() {
-        const banner = makeBanner('timer','Timer','setup')
-        let listItems = []
-        let timer = state[combatState].config.timer
+        const banner = makeBanner('timer','Timer','setup');
+        let listItems = [];
+        let timer = state[combatState].config.timer;
 
-        listItems.push(makeTextButton('Turn Timer', timer.useTimer, '!cmaster --config,timer,key=useTimer,value='+!timer.useTimer + ' --show,timer'))
-        
+        listItems.push(makeTextButton('Turn Timer', timer.useTimer, '!cmaster --config,timer,key=useTimer,value='+!timer.useTimer + ' --show,timer'));
+
         if (timer.useTimer) {
-            listItems.push(makeTextButton('Time', timer.time, '!cmaster --config,timer,key=time,value=?{Time|'+timer.time+'} --show,timer'))
-            listItems.push(makeTextButton('Skip Turn', timer.skipTurn, '!cmaster --config,timer,key=skipTurn,value='+!timer.skipTurn + ' --show,timer'))
-            listItems.push(makeTextButton('Send to Chat', timer.sendTimerToChat, '!cmaster --config,timer,key=sendTimerToChat,value='+!timer.sendTimerToChat + ' --show,timer'))
-            listItems.push(makeTextButton('Show on Token', timer.showTokenTimer, '!cmaster --config,timer,key=showTokenTimer,value='+!timer.showTokenTimer + ' --show,timer'))
-            listItems.push(makeTextButton('Token Font', timer.timerFont, '!cmaster --config,timer,key=timerFont,value=?{Font|Arial|Patrick Hand|Contrail|Light|Candal} --show,timer'))
-            listItems.push(makeTextButton('Token Font Size',timer.timerFontSize, '!cmaster --config,timer,key=timerFontSize,value=?{Font Size|'+timer.timerFontSize+'} --show,timer'))
+            listItems.push(makeTextButton('Time', timer.time, '!cmaster --config,timer,key=time,value=?{Time|'+timer.time+'} --show,timer'));
+            listItems.push(makeTextButton('Skip Turn', timer.skipTurn, '!cmaster --config,timer,key=skipTurn,value='+!timer.skipTurn + ' --show,timer'));
+            listItems.push(makeTextButton('Send to Chat', timer.sendTimerToChat, '!cmaster --config,timer,key=sendTimerToChat,value='+!timer.sendTimerToChat + ' --show,timer'));
+            listItems.push(makeTextButton('Show on Token', timer.showTokenTimer, '!cmaster --config,timer,key=showTokenTimer,value='+!timer.showTokenTimer + ' --show,timer'));
+            listItems.push(makeTextButton('Token Font', timer.timerFont, '!cmaster --config,timer,key=timerFont,value=?{Font|Arial|Patrick Hand|Contrail|Light|Candal} --show,timer'));
+            listItems.push(makeTextButton('Token Font Size',timer.timerFontSize, '!cmaster --config,timer,key=timerFontSize,value=?{Font Size|'+timer.timerFontSize+'} --show,timer'));
         }
-            
+
         makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
-	
+
     sendAnnounceMenu = function() {
         const banner = makeBanner('announcements','Announcements','setup');
 		let	announcements = state[combatState].config.announcements;
-		
+
 		let	listItems = [
 				makeTextButton('Announce Rounds', announcements.announceRound, '!cmaster --config,announcements,key=announceRound,value='+!announcements.announceRound + ' --show,announce'),
 				makeTextButton('Announce Turns', announcements.announceTurn, '!cmaster --config,announcements,key=announceTurn,value='+!announcements.announceTurn + ' --show,announce'),
 				makeTextButton('Whisper GM Only', announcements.whisperToGM, '!cmaster --config,announcements,key=whisperToGM,value='+!announcements.whisperToGM + ' --show,announce'),
 				makeTextButton('Shorten Long Names', announcements.handleLongName, '!cmaster --config,announcements,key=handleLongName,value='+!announcements.handleLongName + ' --show,announce'),
-                makeTextButton('Show NPC Conditions', announcements.showNPCTurns, '!cmaster --config,announcements,key=showNPCTurns,value='+!announcements.showNPCTurns + ' --show,announce'),				
-			]
-		
+                makeTextButton('Show NPC Conditions', announcements.showNPCTurns, '!cmaster --config,announcements,key=showNPCTurns,value='+!announcements.showNPCTurns + ' --show,announce'),
+			];
+
 		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
-	
+
 	sendMacroMenu = function() {
-	    const banner = makeBanner('macro','Macro & API','setup') 
-        let addButton = makeBigButton('Add Substiution', '!cmaster --new,macro,type=?{Type|CharID,CharID|CharName,CharName|TokenID,TokenID|PlayerID,PlayerID},action=?{Action|}')
-        let substitutions = state[combatState].config.macro.substitutions
-        let listItems=[],contents,deleteButton,listContents
-  
+        const banner = makeBanner('macro','Macro & API','setup');
+        let addButton = makeBigButton('Add Substiution', '!cmaster --new,macro,type=?{Type|CharID,CharID|CharName,CharName|TokenID,TokenID|PlayerID,PlayerID},action=?{Action|}');
+        let substitutions = state[combatState].config.macro.substitutions;
+        let listItems=[],deleteButton,listContents;
+
         substitutions.forEach((substitution) => {
-            deleteButton = makeImageButton('!cmaster --delete,macro,action='+substitution.action,deleteImage,'Delete Substitution','transparent',12)
-            
-            listContents ='<div>'
-            listContents +='<span style="vertical-align:middle">'+substitution.type+ '-'+substitution.action+'</span>'
-            listContents +='<span style="float:right;vertical-align:middle">'+deleteButton+'</span>'
-            listContents +='</div>'
-            
-            listItems.push(listContents)
-        }) 
+            deleteButton = makeImageButton('!cmaster --delete,macro,action='+substitution.action,deleteImage,'Delete Substitution','transparent',12);
+
+            listContents ='<div>';
+            listContents +='<span style="vertical-align:middle">'+substitution.type+ '-'+substitution.action+'</span>';
+            listContents +='<span style="float:right;vertical-align:middle">'+deleteButton+'</span>';
+            listContents +='</div>';
+
+            listItems.push(listContents);
+        });
 
         makeAndSendMenu(addButton+makeList(listItems,banner.backButton),banner.titleText,'gm');
 	},
-	
+
 	sendStatusMenu = function() {
-	    const banner = makeBanner('status','Status','setup') 
-        let	status = state[combatState].config.status
-        
+        const banner = makeBanner('status','Status','setup');
+        let	status = state[combatState].config.status;
+
         let listItems = [
 				makeTextButton('Whisper GM Only', status.sendOnlyToGM, '!cmaster --config,status,key=sendOnlyToGM,value='+!status.sendOnlyToGM+' --show,status'),
 				makeTextButton('Player Allowed Changes', status.userChanges, '!cmaster --config,status,key=userChanges,value='+!status.userChanges+' --show,status'),
@@ -966,68 +958,70 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				makeTextButton('Clear Conditions on Close', status.clearConditions, '!cmaster --config,status,key=clearConditions,value='+!status.clearConditions + ' --show,status'),
 				makeTextButton('Use Messages', status.useMessage, '!cmaster --config,status,key=useMessage,value='+!status.useMessage + ' --show,status'),
 				makeTextButton('Auto Add Spells', status.autoAddSpells, '!cmaster --config,status,key=autoAddSpells,value='+!status.autoAddSpells+' --show,status'),
-		]	
+		];
 
         if (status.autoAddSpells) {
-            listItems.push(makeTextButton('Sheet', status.sheet, '!cmaster --config,status,key=sheet,value=?{Sheet|D&D5E OGL,OGL|D&D5E Shaped,Shaped|PF2,PF2|} --show,status'))
+            listItems.push(makeTextButton('Sheet', status.sheet, '!cmaster --config,status,key=sheet,value=?{Sheet|D&D5E OGL,OGL|D&D5E Shaped,Shaped|PF2,PF2|} --show,status'));
         }
-        
-		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');	
+
+		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
 	},
 
 	sendConcentrationMenu = function() {
-	    const banner = makeBanner('concentration','Concentration','setup') 
-        let	concentration = state[combatState].config.concentration
-        let listItems = []
+        const banner = makeBanner('concentration','Concentration','setup');
+        let	concentration = state[combatState].config.concentration;
+        let listItems = [];
 
-		listItems.push(makeTextButton('Use Concentration (5E)', concentration.useConcentration, '!cmaster --config,concentration,key=useConcentration,value='+!concentration.useConcentration + ' --show,concentration'))
-		
+		listItems.push(makeTextButton('Use Concentration (5E)', concentration.useConcentration, '!cmaster --config,concentration,key=useConcentration,value='+!concentration.useConcentration + ' --show,concentration'));
+
 		if (concentration.useConcentration) {
-		    listItems.push(makeTextButton('Add Marker', concentration.autoAdd, '!cmaster --config,concentration,key=autoAdd,value='+!concentration.autoAdd+' --show,concentration'))	            
-		    listItems.push(makeTextButton('Check for Save', concentration.autoRoll, '!cmaster --config,concentration,key=autoRoll,value='+!concentration.autoRoll+' --show,concentration'))  
-		    listItems.push(makeTextButton('Notify', concentration.notify, '!cmaster --config,concentration,key=notify,value=?{Notify|Everyone,Everyone|Character,Character|GM,GM} --show,concentration'))
-		 }
-		
+            listItems.push(makeTextButton('Add Marker', concentration.autoAdd, '!cmaster --config,concentration,key=autoAdd,value='+!concentration.autoAdd+' --show,concentration'));
+            listItems.push(makeTextButton('Check for Save', concentration.autoRoll, '!cmaster --config,concentration,key=autoRoll,value='+!concentration.autoRoll+' --show,concentration'));
+            listItems.push(makeTextButton('Notify', concentration.notify, '!cmaster --config,concentration,key=notify,value=?{Notify|Everyone,Everyone|Character,Character|GM,GM} --show,concentration'));
+        }
+
 		if (concentration.autoRoll) {
-		    listItems.push(makeTextButton('Wound Bar', concentration.woundBar, '!cmaster --config,concentration,key=woundBar,value=?{Wound Bar|Bar1,bar1|Bar2,bar2|Bar3,bar3} --show,concentration'))  
-		    listItems.push(makeTextButton('Attribute', concentration.attribute, '!cmaster --config,concentration,key=attribute,value=?{Attribute|} --show,concentration'))  
-		    
+            listItems.push(makeTextButton('Wound Bar', concentration.woundBar, '!cmaster --config,concentration,key=woundBar,value=?{Wound Bar|Bar1,bar1|Bar2,bar2|Bar3,bar3} --show,concentration'));
+            listItems.push(makeTextButton('Attribute', concentration.attribute, '!cmaster --config,concentration,key=attribute,value=?{Attribute|} --show,concentration'));
+
 		}
 
-		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');	
+		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
 	},
-	
+
     sendConditionsMenu = function(message) {
-        let key, condition, conditionButton, favorite, icon, output, rowCount=1
-        let backButton = makeBigButton('Back', '!cmaster --back,setup')
-		let	addButton = makeBigButton('Add Condition', '!cmaster --new,condition=?{Name}')
-        let helpButton = makeImageButton('!cmaster --help,conditions',helpImage,'Help','transparent',18,'white')
-        let	titleText  = 'Conditions Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>'      
-		let	listItems = []
-		let	listContents
-        let icons = []
-        let check = true
-			
+        let key, condition, conditionButton,
+        // favorite, icon, output,
+        rowCount=1;
+        let backButton = makeBigButton('Back', '!cmaster --back,setup');
+		let	addButton = makeBigButton('Add Condition', '!cmaster --new,condition=?{Name}');
+        let helpButton = makeImageButton('!cmaster --help,conditions',helpImage,'Help','transparent',18,'white');
+        let	titleText  = 'Conditions Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
+		let	listItems = [];
+		let	listContents;
+        let icons = [];
+        let check = true;
+
         for (key in state[combatState].config.conditions) {
-            condition       = getConditionByKey(key)
-            let installed = verifyInstalls(condition.iconType)
+            condition       = getConditionByKey(key);
+            let installed = verifyInstalls(condition.iconType);
             if (!installed) {
-                return
-            }            
-			conditionButton = makeImageButton('!cmaster --show,condition=' + key,backImage,'Edit Condition','transparent',12)
-			
+                return;
+            }
+			conditionButton = makeImageButton('!cmaster --show,condition=' + key,backImage,'Edit Condition','transparent',12);
+
 			if (rowCount == 1) {
-                listContents = '<div>'
-                rowCount = 2
+                listContents = '<div>';
+                rowCount = 2;
 			} else {
-			   listContents = '<div style='+styles.background+'>'
-			   rowCount = 1
-			}    
-			
-            listContents += getDefaultIcon(condition.iconType,condition.icon,'display:inline-block;margin-right:3px')
-            listContents += '<span style="vertical-align:middle">'+condition.name+'</span>'
-            listContents += '<span style="float:right;vertical-align:middle">'+conditionButton+'</span>'
-            listContents += '</div>'              
+                listContents = '<div style='+styles.background+'>';
+                rowCount = 1;
+			}
+
+            listContents += getDefaultIcon(condition.iconType,condition.icon,'display:inline-block;margin-right:3px');
+            listContents += '<span style="vertical-align:middle">'+condition.name+'</span>';
+            listContents += '<span style="float:right;vertical-align:middle">'+conditionButton+'</span>';
+            listContents += '</div>';
 
             listItems.push(listContents);
 
@@ -1039,189 +1033,186 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         message = (message) ? '<p style="color: red">'+message+'</p>' : '';
         let contents = message + makeList(listItems, backButton, addButton);
-        
-        state[combatState].config.previousPage = 'conditions'
-        makeAndSendMenu(contents,titleText,'gm');	
+
+        state[combatState].config.previousPage = 'conditions';
+        makeAndSendMenu(contents,titleText,'gm');
     },
 
     sendConditionMenu = function(key) {
-        let condition  = state[combatState].config.conditions[key]
-        let listItems = []
-        let markerDropdown = ''
-        let helpButton = makeImageButton('!cmaster --help,condition',helpImage,'Help','transparent',18,'white')
-        let	titleText  = 'Condition Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>'  
+        let condition  = state[combatState].config.conditions[key];
+        let listItems = [];
+        // let markerDropdown = '';
+        let helpButton = makeImageButton('!cmaster --help,condition',helpImage,'Help','transparent',18,'white');
+        let	titleText  = 'Condition Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
 
         if (typeof condition.description == 'undefined') {
-            condition.description = ' '
+            condition.description = ' ';
         }
-        
-	    let removeButton        = makeBigButton('Delete Condition', '!cmaster --delete,condition='+key+',confirm=?{Are you sure?|Yes,yes|No,no}')
-		let descriptionButton   = makeBigButton('Edit Description', '!cmaster --config,condition='+key+',key=description,value={{?{Description|'+condition.description+'}}} --show,condition='+key)
-		let backButton          = makeBigButton('Back', '!cmaster --back')	 
 
-		listItems.push(makeTextButton('Name', condition.name, '!cmaster --config,condition='+key+',key=name,value=?{Name}'))
-		listItems.push(makeTextButton('Type', condition.type, '!cmaster --config,condition='+key+',key=type,value=?{Type|Condition,Condition|Spell,Spell} --show,condition='+key))
-		listItems.push(makeTextButton('Icon Type', condition.iconType, '!cmaster --config,condition='+key+',key=iconType,value=?{Icon Type|Combat Master,Combat Master|Token Marker,Token Marker|Token Condition,Token Condition} --show,condition='+key))
-        
-        let installed = verifyInstalls(condition.iconType)
+        let removeButton        = makeBigButton('Delete Condition', '!cmaster --delete,condition='+key+',confirm=?{Are you sure?|Yes,yes|No,no}');
+		let descriptionButton   = makeBigButton('Edit Description', '!cmaster --config,condition='+key+',key=description,value={{?{Description|'+condition.description+'}}} --show,condition='+key);
+		let backButton          = makeBigButton('Back', '!cmaster --back');
+
+		listItems.push(makeTextButton('Name', condition.name, '!cmaster --config,condition='+key+',key=name,value=?{Name}'));
+		listItems.push(makeTextButton('Type', condition.type, '!cmaster --config,condition='+key+',key=type,value=?{Type|Condition,Condition|Spell,Spell} --show,condition='+key));
+		listItems.push(makeTextButton('Icon Type', condition.iconType, '!cmaster --config,condition='+key+',key=iconType,value=?{Icon Type|Combat Master,Combat Master|Token Marker,Token Marker|Token Condition,Token Condition} --show,condition='+key));
+
+        let installed = verifyInstalls(condition.iconType);
         if (!installed) {
-            return
-        }   
+            return;
+        }
 
         if (condition.iconType == 'Token Condition') {
-            listItems.push(makeTextButton('Icon', condition.icon, '!cmaster --config,condition='+key+',key=icon,value=?{Token Condition|} --show,condition='+key))				
-        } else {     
-	        listItems.push(makeTextButton('Icon', getDefaultIcon(condition.iconType,condition.icon), '!cmaster --config,condition='+key+',key=icon,value='+buildMarkerDropdown(condition.iconType)+' --show,condition='+key))				
+            listItems.push(makeTextButton('Icon', condition.icon, '!cmaster --config,condition='+key+',key=icon,value=?{Token Condition|} --show,condition='+key));
+        } else {
+            listItems.push(makeTextButton('Icon', getDefaultIcon(condition.iconType,condition.icon), '!cmaster --config,condition='+key+',key=icon,value='+buildMarkerDropdown(condition.iconType)+' --show,condition='+key));
         }
-        
-		listItems.push(makeTextButton('Duration', condition.duration, '!cmaster --config,condition='+key+',key=duration,value=?{Duration|1} --show,condition='+key))
-		listItems.push(makeTextButton('Direction', condition.direction, '!cmaster --config,condition='+key+',key=direction,value=?{Direction|0} --show,condition='+key))
-		listItems.push(makeTextButton('Override', condition.override, '!cmaster --config,condition='+key+',key=override,value='+!condition.override+' --show,condition='+key))
-		listItems.push(makeTextButton('Favorites', condition.favorite, '!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --show,condition='+key))
-		listItems.push(makeTextButton('Message', condition.message, '!cmaster --config,condition='+key+',key=message,value={{?{Message}}} --show,condition='+key))
-        listItems.push(makeTextButton('Targeted', condition.targeted, '!cmaster --config,condition='+key+',key=targeted,value='+!condition.targeted+' --show,condition='+key))
-        if (condition.targeted) {
-            listItems.push(makeTextButton('Targeted API', condition.targetedAPI, '!cmaster --config,condition='+key+',key=targetedAPI,value=?{Targeted API|Caster&Targets,casterTargets|Targets(Only),targets} --show,condition='+key))
-        }
-        listItems.push(makeTextButton('Concentration', condition.concentration, '!cmaster --config,condition='+key+',key=concentration,value='+!condition.concentration+' --show,condition='+key))
-        listItems.push('<div style="margin-top:3px"><i><b>Adding Condition</b></i></div>' )
-		listItems.push(makeBigButton('Add APIs', '!cmaster --show,condition='+key+',addAPI'))
-        listItems.push('<div style="margin-top:3px"><i><b>Removing Condition</b></i></div>' )
-		listItems.push(makeBigButton('Remove APIs', '!cmaster --show,condition='+key+',remAPI'))
 
-		let contents = makeList(listItems)+'<hr>'+descriptionButton+'<b>Description:</b>'+condition.description+removeButton+'<hr>'+backButton 	
+		listItems.push(makeTextButton('Duration', condition.duration, '!cmaster --config,condition='+key+',key=duration,value=?{Duration|1} --show,condition='+key));
+		listItems.push(makeTextButton('Direction', condition.direction, '!cmaster --config,condition='+key+',key=direction,value=?{Direction|0} --show,condition='+key));
+		listItems.push(makeTextButton('Override', condition.override, '!cmaster --config,condition='+key+',key=override,value='+!condition.override+' --show,condition='+key));
+		listItems.push(makeTextButton('Favorites', condition.favorite, '!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --show,condition='+key));
+		listItems.push(makeTextButton('Message', condition.message, '!cmaster --config,condition='+key+',key=message,value={{?{Message}}} --show,condition='+key));
+        listItems.push(makeTextButton('Targeted', condition.targeted, '!cmaster --config,condition='+key+',key=targeted,value='+!condition.targeted+' --show,condition='+key));
+        if (condition.targeted) {
+            listItems.push(makeTextButton('Targeted API', condition.targetedAPI, '!cmaster --config,condition='+key+',key=targetedAPI,value=?{Targeted API|Caster&Targets,casterTargets|Targets(Only),targets} --show,condition='+key));
+        }
+        listItems.push(makeTextButton('Concentration', condition.concentration, '!cmaster --config,condition='+key+',key=concentration,value='+!condition.concentration+' --show,condition='+key));
+        listItems.push('<div style="margin-top:3px"><i><b>Adding Condition</b></i></div>' );
+		listItems.push(makeBigButton('Add APIs', '!cmaster --show,condition='+key+',addAPI'));
+        listItems.push('<div style="margin-top:3px"><i><b>Removing Condition</b></i></div>' );
+		listItems.push(makeBigButton('Remove APIs', '!cmaster --show,condition='+key+',remAPI'));
+
+		let contents = makeList(listItems)+'<hr>'+descriptionButton+'<b>Description:</b>'+condition.description+removeButton+'<hr>'+backButton;
         makeAndSendMenu(contents,titleText,'gm');
     },
-    
+
     sendConditionAddAPIMenu = function (key) {
-        const banner = makeBanner('addAPI','Add API','condition='+key)
-        let listItems = []
-        let condition  = state[combatState].config.conditions[key]
+        const banner = makeBanner('addAPI','Add API','condition='+key);
+        let listItems = [];
+        let condition  = state[combatState].config.conditions[key];
 
         listItems = [
-		    makeTextButton('API', condition.addAPI, '!cmaster --config,condition='+key+',key=addAPI,value=?{API Command|} --show,condition='+key),
-    		makeTextButton('Roll20AM', condition.addRoll20AM, '!cmaster --config,condition='+key+',key=addRoll20AM,value=?{Roll20AM Command|} --show,condition='+key),
-		    makeTextButton('FX', condition.addFX, '!cmaster --config,condition='+key+',key=addFX,value=?{FX|} --show,condition='+key),
-		    makeTextButton('Macro', condition.addMacro, '!cmaster --config,condition='+key+',key=addMacro,value=?{Macro|} --show,condition='+key),
-		    makeTextButton('Persistent Macro', condition.addPersistentMacro, '!cmaster --config,condition='+key+',key=addPersistentMacro,value='+!condition.addPersistentMacro+' --show,condition='+key)
-		]
-		
+            makeTextButton('API', condition.addAPI, '!cmaster --config,condition='+key+',key=addAPI,value=?{API Command|} --show,condition='+key),
+            makeTextButton('Roll20AM', condition.addRoll20AM, '!cmaster --config,condition='+key+',key=addRoll20AM,value=?{Roll20AM Command|} --show,condition='+key),
+            makeTextButton('FX', condition.addFX, '!cmaster --config,condition='+key+',key=addFX,value=?{FX|} --show,condition='+key),
+            makeTextButton('Macro', condition.addMacro, '!cmaster --config,condition='+key+',key=addMacro,value=?{Macro|} --show,condition='+key),
+            makeTextButton('Persistent Macro', condition.addPersistentMacro, '!cmaster --config,condition='+key+',key=addPersistentMacro,value='+!condition.addPersistentMacro+' --show,condition='+key)
+		];
+
 		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
 
     sendConditionRemAPIMenu = function (key) {
-        const banner = makeBanner('remAPI','Remove API','condition='+key)
-        let listItems = []
-        let condition  = state[combatState].config.conditions[key]
-        
+        const banner = makeBanner('remAPI','Remove API','condition='+key);
+        let listItems = [];
+        let condition  = state[combatState].config.conditions[key];
+
         listItems = [
-		    makeTextButton('API', condition.remAPI, '!cmaster --config,condition='+key+',key=remAPI,value=?{API Command|} --show,condition='+key),
-		    makeTextButton('Roll20AM', condition.remRoll20AM, '!cmaster --config,condition='+key+',key=remRoll20AM,value=?{Roll20AM Command|} --show,condition='+key),
-		    makeTextButton('FX', condition.remFX, '!cmaster --config,condition='+key+',key=remFX,value=?{FX|} --show,condition='+key),
-		    makeTextButton('Macro', condition.remMacro, '!cmaster --config,condition='+key+',key=remMacro,value=?{Macro|} --show,condition='+key)
-		]
-		
-		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');        
+            makeTextButton('API', condition.remAPI, '!cmaster --config,condition='+key+',key=remAPI,value=?{API Command|} --show,condition='+key),
+            makeTextButton('Roll20AM', condition.remRoll20AM, '!cmaster --config,condition='+key+',key=remRoll20AM,value=?{Roll20AM Command|} --show,condition='+key),
+            makeTextButton('FX', condition.remFX, '!cmaster --config,condition='+key+',key=remFX,value=?{FX|} --show,condition='+key),
+            makeTextButton('Macro', condition.remMacro, '!cmaster --config,condition='+key+',key=remMacro,value=?{Macro|} --show,condition='+key)
+		];
+
+		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
-    
+
     buildMarkerDropdown = function (iconType) {
         let markerDropdown = '?{Marker';
-        
+
         if (iconType == 'Combat Master') {
             ctMarkers.forEach((marker) => {
-                markerDropdown += '|'+ucFirst(marker).replace(/-/g, ' ')+','+marker
-            })
+                markerDropdown += '|'+ucFirst(marker).replace(/-/g, ' ')+','+marker;
+            });
         } else if (iconType == 'Token Marker') {
             if (markers.length == 0) {
-    	        markers = getTokenMarkers();
+                markers = getTokenMarkers();
             }
             markers.forEach((marker) => {
-                markerDropdown += '|'+marker.name+','+marker.name
-            })
-        } 
-        markerDropdown += '}';   
-        
-        return markerDropdown
+                markerDropdown += '|'+marker.name+','+marker.name;
+            });
+        }
+        markerDropdown += '}';
+
+        return markerDropdown;
     },
-    
+
     showConditions = function (selectedTokens) {
-        let tokenObj, characterObj, target;
+        // let tokenObj, characterObj, target;
 
         log('showConditions ========');
-        
+
         if (selectedTokens) {
             selectedTokens.forEach(token => {
                 if (token._type == 'graphic') {
                     if (token._id != getOrCreateMarker().get('id')) {
                         announcePlayer(getObj('graphic', token._id), false, false, true);
-                    }    
+                    }
                 }
-            })    
-        }    
+            });
+        }
     },
-    
+
     importCombatMaster = function (config) {
-        let json 
+        let json;
         let backButton = makeBigButton('Back', '!cmaster --back,setup');
-        
+
         json = JSON.parse(config.replace('config=',''));
         if (['cmaster','cm'].includes(json.command)) {
-            state[combatState].config = json
+            state[combatState].config = json;
             state[combatState].conditions = [];
-            setDefaults()
+            setDefaults();
             makeAndSendMenu('Current Combat Master detected and imported.' + backButton, 'Import Setup');
         } else if (json.config.command == 'condition') {
-            state[combatState].config.conditions = json.conditions
-            setDefaults()
+            state[combatState].config.conditions = json.conditions;
+            setDefaults();
             makeAndSendMenu('Prior Combat Tracker detected and conditions were imported.' + backButton, 'Import Setup');
         }
     },
-    
+
     exportConditions = function () {
-        const banner = makeBanner('export','Export CM','setup')
+        const banner = makeBanner('export','Export CM','setup');
         makeAndSendMenu('<p>Copy the entire content above and save it on your pc.</p><pre>'+HE(JSON.stringify(state[combatState].config))+'</pre><div>'+banner.backButton+'</div>', banner.titleText);
     },
-    
+
     targetedCondition = function (id, key) {
-        if (debug) {
-            log('Targeted Condition')
-        }
-        let condition    = getConditionByKey(key)
-        let title        = 'Select Targets'
-        let addButton    = makeImageButton('!cmaster --add,target,id='+id+',condition='+key,tagImage,'Targeted Icons','transparent',18,'white')
-        title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>'     
-        let contents     = 'Select target tokens to assign **' + condition.name + '** and hit the button above when ready'
+        if (debug) log('Targeted Condition');
+
+        let condition    = getConditionByKey(key);
+        let title        = 'Select Targets';
+        let addButton    = makeImageButton('!cmaster --add,target,id='+id+',condition='+key,tagImage,'Targeted Icons','transparent',18,'white');
+        title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>';
+        let contents     = 'Select target tokens to assign **' + condition.name + '** and hit the button above when ready';
         makeAndSendMenu(contents,title,'gm');
     },
 
     targetedSpell = function (key) {
-        if (debug) {
-            log('Targeted Spell')
-        }
-        let condition    = getConditionByKey(key)
-        let title        = 'Select Origin'
-        let addButton    = makeImageButton(`!cmaster --add,condition=${key},duration=${condition.duration},direction=${condition.direction}`,tagImage,'Spell Targets','transparent',18,'white')
-        title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>'     
-        let contents     = 'Select the token to track the duration of **' + condition.name + '** and hit the button above when ready'
+        if (debug) log('Targeted Spell');
+
+        let condition    = getConditionByKey(key);
+        let title        = 'Select Origin';
+        let addButton    = makeImageButton(`!cmaster --add,condition=${key},duration=${condition.duration},direction=${condition.direction}`,tagImage,'Spell Targets','transparent',18,'white');
+        title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>';
+        let contents     = 'Select the token to track the duration of **' + condition.name + '** and hit the button above when ready';
         makeAndSendMenu(contents,title,'gm');
     },
-    
-    targetedCaster = function (key,duration,direction,message) {
-        if (debug) {
-            log('Targeted Caster')
-        }
 
-        let title        = 'Select Caster'
-        let condition    = getConditionByKey(key)
-        let addButton    = makeImageButton(`!cmaster --add,condition=${key},duration=${duration},direction=${direction},message=${message}`,tagImage,'Spell Caster','transparent',18,'white')
-        title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>'     
-        let contents     = 'Select the caster to assign concentration and hit the button above when ready'
+    targetedCaster = function (key,duration,direction,message) {
+        if (debug) log('Targeted Caster');
+
+
+        let title        = 'Select Caster';
+        // let condition    = getConditionByKey(key);
+        let addButton    = makeImageButton(`!cmaster --add,condition=${key},duration=${duration},direction=${direction},message=${message}`,tagImage,'Spell Caster','transparent',18,'white');
+        title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>';
+        let contents     = 'Select the caster to assign concentration and hit the button above when ready';
         makeAndSendMenu(contents,title,'gm');
-    },    
-    
+    },
+
 //*************************************************************************************************************
 //SESSION STATE MAINTENANCE
-//*************************************************************************************************************	
+//*************************************************************************************************************
 	editCombatState = function (cmdDetails) {
 		if(cmdDetails.details.initiative){
 			state[combatState].config.initiative[cmdDetails.details.key] = cmdDetails.details.value;
@@ -1229,7 +1220,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 			state[combatState].config.timer[cmdDetails.details.key] = cmdDetails.details.value;
 		} else if (cmdDetails.details.turnorder){
 			if (cmdDetails.details.key === 'initiativeDie') {
-				cmdDetails.details.value = parseInt(value);
+				cmdDetails.details.value = parseInt(cmdDetails.details.value);
 			}
 			state[combatState].config.turnorder[cmdDetails.details.key] = cmdDetails.details.value;
 		} else if (cmdDetails.details.announcements){
@@ -1239,33 +1230,32 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 		} else if (cmdDetails.details.concentration){
 			state[combatState].config.concentration[cmdDetails.details.key] = cmdDetails.details.value;
 		} else {
-    		if (cmdDetails.details.key === 'name' && cmdDetails.details.value.replace(/\s/g, '').toLowerCase() !== state[combatState].config.conditions[cmdDetails.details.condition]) { 
-      			state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()] = state[combatState].config.conditions[cmdDetails.details.condition];
-      			state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()].key = cmdDetails.details.value.toLowerCase()
-      			state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()].name = cmdDetails.details.value
-      			delete state[combatState].config.conditions[cmdDetails.details.condition];
-      			sendConditionMenu(cmdDetails.details.value.toLowerCase())
-    	    } else {
-    	        if (cmdDetails.details.key == 'description') {
-    	            cmdDetails.details.value = cmdDetails.details.value
-    	        }
-		        state[combatState].config.conditions[cmdDetails.details.condition][cmdDetails.details.key] = cmdDetails.details.value;
-    	    }      
+            if (cmdDetails.details.key === 'name' && cmdDetails.details.value.replace(/\s/g, '').toLowerCase() !== state[combatState].config.conditions[cmdDetails.details.condition]) {
+                state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()] = state[combatState].config.conditions[cmdDetails.details.condition];
+                state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()].key = cmdDetails.details.value.toLowerCase();
+                state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()].name = cmdDetails.details.value;
+                delete state[combatState].config.conditions[cmdDetails.details.condition];
+                sendConditionMenu(cmdDetails.details.value.toLowerCase());
+            } else {
+                // if (cmdDetails.details.key == 'description') {
+                //     cmdDetails.details.value = cmdDetails.details.value;
+                // }
+                state[combatState].config.conditions[cmdDetails.details.condition][cmdDetails.details.key] = cmdDetails.details.value;
+            }
 		}
 	},
-    
+
 	editShowState = function (value) {
 		state[combatState].config.status.showConditions = value;
 	},
-	
+
 //*************************************************************************************************************
-//CONDITIONS 
-//*************************************************************************************************************		
+//CONDITIONS
+//*************************************************************************************************************
 	newCondition = function (name, type='Condition', concentration=false, description='None') {
-        if (debug) {
-            log ('Create Condition')
-        }	
-        
+        if (debug) log ('Create Condition');
+
+
 		if(!name){
 			sendConditionsMenu('You didn\'t give a condition name, eg. <i>!cmaster --new,condition=Prone</i>.');
 		} else if (state[combatState].config.conditions[name.toLowerCase()]) {
@@ -1282,8 +1272,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				direction: 0,
 				message: 'None',
 				concentration: concentration,
-				description: description,
-				tageted: false,
+				targeted: false,
 				addAPI: 'None',
 				addRoll20AM: 'None',
 				addFX: 'None',
@@ -1292,16 +1281,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				remAPI: 'None',
 				remRoll20AM: 'None',
 				remFX: 'None',
-				remMacro: 'None'				
-			}	
-		    sendConditionMenu(name.toLowerCase());		
-		}		
+				remMacro: 'None'
+			};
+            sendConditionMenu(name.toLowerCase());
+		}
 	},
-	
-	deleteCondition = function (key, confirm) {	
-        if (debug) {
-            log ('Delete Condition')
-        }	
+
+	deleteCondition = function (key, confirm) {
+        if (debug) log ('Delete Condition');
+
 
 		if (confirm === 'yes') {
 			if(!key){
@@ -1312,150 +1300,145 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				delete state[combatState].config.conditions[key];
 				sendConditionsMenu('The condition `'+key+'` is removed.');
 			}
-		}	
-		sendConditionsMenu('Condition was deleted')
+		}
+		sendConditionsMenu('Condition was deleted');
 	},
 
     getConditionByMarker = function (marker) {
-        if (debug) {
-            log('Get Condition By Marker')
-        }
-        
-        let key
+        if (debug) log('Get Condition By Marker');
+
+
+        let key;
         for (key in state[combatState].config.conditions) {
             if (marker.includes(state[combatState].config.conditions[key].icon)) {
-                return state[combatState].config.conditions[key]
+                return state[combatState].config.conditions[key];
             }
         }
-        return false;  
+        return false;
     },
 
     getConditionByKey = function(key) {
         return state[combatState].config.conditions[key];
     },
-    
+
     getConditions = function () {
         return state[combatState].config.conditions;
-    }, 	
-
-    findAssignedCondition = function (id, key) {
-        return state[combatState].conditions.filter(el => el.key == key && el.id == id)
     },
 
+    // findAssignedCondition = function (id, key) {
+    //     return state[combatState].conditions.filter(el => el.key == key && el.id == id);
+    // },
+
     verifyCondition = function(token,key) {
-        let condition  = getConditionByKey(key)
-        
-        if (debug) {
-            log('Verify Condition')
-        }
+        let condition  = getConditionByKey(key);
+
+        if (debug) log('Verify Condition');
+
         if (!condition) {
-            return true
+            return true;
         }
         if (typeof condition.direction == 'undefined' || typeof condition.duration == 'undefined') {
 			makeAndSendMenu('The condition you are trying to use has not be setup yet', '', 'gm');
-			return false;            
+			return false;
         }
 		if (!key) {
 			makeAndSendMenu('No condition name was given.', '', 'gm');
 			return false;
 		}
-		if (!token || !token.length) {		
+		if (!token || !token.length) {
 			makeAndSendMenu('No tokens were selected.', '', 'gm');
 			return false;
         }
-        if (token == getOrCreateMarker().get('id')) {
-            return false;
-        }
-        if (token == getOrCreateMarker(true).get('id')) {
-            return false;
-        }      
+        // if (token == getOrCreateMarker().get('id')) {
+        //     return false;
+        // }
+        // if (token == getOrCreateMarker(true).get('id')) {
+        //     return false;
+        // }
         return true;
     },
-    
+
     addCondition = function(cmdDetails,selectedTokens,playerID) {
-        if (debug) {
-            log('Add Condition')
-        }
-        let condition
+        if (debug) log('Add Condition');
+
+        // let condition;
         if (selectedTokens) {
-        	selectedTokens.forEach(token => {
-        	    if (token._type == 'graphic') {
-    			    addConditionToToken(getObj(token._type, token._id),cmdDetails.details.condition,cmdDetails.details.duration,cmdDetails.details.direction,cmdDetails.details.message)    
-        	    }
-        	});	 	
+            selectedTokens.forEach(token => {
+                if (token._type == 'graphic') {
+                    addConditionToToken(getObj(token._type, token._id),cmdDetails.details.condition,cmdDetails.details.duration,cmdDetails.details.direction,cmdDetails.details.message);
+                }
+            });
         } else {
             makeAndSendMenu('No tokens were selected.', '', 'gm');
-        }   
+        }
     },
 
      removeCondition = function (cmdDetails,selectedTokens) {
-        if (debug) {
-            log('Remove Condition')
-        }
+        if (debug) log('Remove Condition');
+
 
         if (cmdDetails.details.id) {
-            removeConditionFromToken(getObj('graphic', cmdDetails.details.id), cmdDetails.details.condition, true)  
+            removeConditionFromToken(getObj('graphic', cmdDetails.details.id), cmdDetails.details.condition, true);
         } else if (selectedTokens) {
-        	selectedTokens.forEach(token => {
-        	    if (token._type == 'graphic') {
-    			    removeConditionFromToken(getObj(token._type, token._id),cmdDetails.details.condition, true)  
-        	    }    
-        	});	 	
-        }	
+            selectedTokens.forEach(token => {
+                if (token._type == 'graphic') {
+                    removeConditionFromToken(getObj(token._type, token._id),cmdDetails.details.condition, true);
+                }
+            });
+        }
     },
-    
+
     addConditionToToken = function(tokenObj,key,duration,direction,message) {
-	    let	defaultCondition = getConditionByKey(key)
-	    let newCondition = {}
+        let	defaultCondition = getConditionByKey(key);
+        let newCondition = {};
 
         if (!tokenObj) {
-            return
+            return;
         }
-        
-        if (debug) {
-            log('Add Condition To Token')
-        } 
+
+        if (debug) log('Add Condition To Token');
+
 
         if (verifyCondition(tokenObj.get("_id"), key)) {
-            
-            let remove = removeConditionFromToken(tokenObj, key, false);   
 
-            newCondition.id                 = tokenObj.get("_id")
-            newCondition.key                = key
-            newCondition.target             = remove.targets
-            newCondition.tokenConditionID   = null
-            
+            let remove = removeConditionFromToken(tokenObj, key, false);
+
+            newCondition.id                 = tokenObj.get("_id");
+            newCondition.key                = key;
+            newCondition.target             = remove.targets;
+            newCondition.tokenConditionID   = null;
+
             if (defaultCondition) {
-                newCondition.name               = defaultCondition.name
-                newCondition.icon               = defaultCondition.icon
-                newCondition.iconType           = defaultCondition.iconType
-                newCondition.addMacro           = defaultCondition.addMacro
-                newCondition.addPersistentMacro = defaultCondition.addPersistentMacro
-                newCondition.concentration      = defaultCondition.concentration
-                newCondition.override           = defaultCondition.override
-                newCondition.message            = defaultCondition.message
-                newCondition.type               = defaultCondition.type
-                newCondition.targeted           = defaultCondition.targeted
-                newCondition.targetedAPI        = defaultCondition.targetedAPI
+                newCondition.name               = defaultCondition.name;
+                newCondition.icon               = defaultCondition.icon;
+                newCondition.iconType           = defaultCondition.iconType;
+                newCondition.addMacro           = defaultCondition.addMacro;
+                newCondition.addPersistentMacro = defaultCondition.addPersistentMacro;
+                newCondition.concentration      = defaultCondition.concentration;
+                newCondition.override           = defaultCondition.override;
+                newCondition.message            = defaultCondition.message;
+                newCondition.type               = defaultCondition.type;
+                newCondition.targeted           = defaultCondition.targeted;
+                newCondition.targetedAPI        = defaultCondition.targetedAPI;
             } else {
-                newCondition.name               = key
-                newCondition.icon               = null
-                newCondition.iconType           = null
-                newCondition.addMacro           = null
-                newCondition.addPersistentMacro = null
-                newCondition.concentration      = false
-                newCondition.override           = false             
-                newCondition.message            = null
-                newCondition.type               = 'Condition'
-                newCondition.targeted           = false
-                newCondition.targetedAPI        = null                
+                newCondition.name               = key;
+                newCondition.icon               = null;
+                newCondition.iconType           = null;
+                newCondition.addMacro           = null;
+                newCondition.addPersistentMacro = null;
+                newCondition.concentration      = false;
+                newCondition.override           = false;
+                newCondition.message            = null;
+                newCondition.type               = 'Condition';
+                newCondition.targeted           = false;
+                newCondition.targetedAPI        = null;
             }
 
             if (newCondition.iconType == 'Token Condition') {
                 let characterObj = findObjs({name: newCondition.icon, _type: 'character'})[0];
                 characterObj.get("defaulttoken", function(defaulttoken) {
 
-                    let newToken = JSON.parse(defaulttoken)
+                    let newToken = JSON.parse(defaulttoken);
                     let condition = createObj('graphic', {
                                         subtype:'token',
                                         name: newToken.name,
@@ -1467,64 +1450,64 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                                         top: tokenObj.get('top'),
                                         width: tokenObj.get('width'),
                                         height: tokenObj.get('height')
-                                    });   
+                                    });
                     let result = TokenCondition.AttachConditionToToken(condition.id,tokenObj.id);
-        			if(result.success) {
-        				newCondition.tokenConditionID = condition.id
-        			} else {
-        				log(`Attach failed. Message: ${result.reason}`);
-        			}                                        
+                    if(result.success) {
+                        newCondition.tokenConditionID = condition.id;
+                    } else {
+                        log(`Attach failed. Message: ${result.reason}`);
+                    }
                 });
             }
-            
-            if (!duration && defaultCondition) {
-                newCondition.duration = parseInt(defaultCondition.duration)
-            } else {
-                newCondition.duration = parseInt(duration)
-            }   
-            
-            if (!direction && defaultCondition) {
-                newCondition.direction = parseInt(defaultCondition.direction)
-            } else {    
-                newCondition.direction = parseInt(direction)
-            }    
-   
-            if (!message && defaultCondition) {
-                newCondition.message = defaultCondition.message
-            } else {   
-                newCondition.message = message
-            }   
-            
-            setTimeout(function() {
-                 state[combatState].conditions.push(newCondition)
-            },500) 
 
-            addMarker(tokenObj, newCondition.iconType, newCondition.icon, newCondition.duration, newCondition.direction, newCondition.key)
+            if (!duration && defaultCondition) {
+                newCondition.duration = parseInt(defaultCondition.duration);
+            } else {
+                newCondition.duration = parseInt(duration);
+            }
+
+            if (!direction && defaultCondition) {
+                newCondition.direction = parseInt(defaultCondition.direction);
+            } else {
+                newCondition.direction = parseInt(direction);
+            }
+
+            if (!message && defaultCondition) {
+                newCondition.message = defaultCondition.message;
+            } else {
+                newCondition.message = message;
+            }
+
+            setTimeout(function() {
+                 state[combatState].conditions.push(newCondition);
+            },500);
+
+            addMarker(tokenObj, newCondition.iconType, newCondition.icon, newCondition.duration, newCondition.direction, newCondition.key);
 
             if (newCondition.target.length > 0) {
-                newCondition.target.forEach((targets) => {    
-                    if (newCondition.key != 'dead') { 
-                        addMarker(getObj('graphic', targets),newCondition.iconType,newCondition.icon,newCondition.duration, newCondition.direction, newCondition.key)
-                    }   
-                })    
+                newCondition.target.forEach((targets) => {
+                    if (newCondition.key != 'dead') {
+                        addMarker(getObj('graphic', targets),newCondition.iconType,newCondition.icon,newCondition.duration, newCondition.direction, newCondition.key);
+                    }
+                });
             }
-             
-            if (!remove.removed) { 
+
+            if (!remove.removed) {
                 if (state[combatState].config.status.sendConditions && defaultCondition) {
-                    sendConditionToChat(newCondition.key)
-                }  
-                if (newCondition.targeted) {
-                    targetedCondition(newCondition.id, key)
-                }    
-                if (newCondition.concentration == true && newCondition.override == true) {
-                    targetedCaster('concentration',newCondition.duration,newCondition.direction,'Concentrating on ' + newCondition.name)
+                    sendConditionToChat(newCondition.key);
                 }
-     		    if (!newCondition.targeted || (newCondition.targeted && newCondition.targetedAPI == 'casterTargets')) {
-    			    doAddConditionCalls(tokenObj,key)
-    			}  
+                if (newCondition.targeted) {
+                    targetedCondition(newCondition.id, key);
+                }
+                if (newCondition.concentration == true && newCondition.override == true) {
+                    targetedCaster('concentration',newCondition.duration,newCondition.direction,'Concentrating on ' + newCondition.name);
+                }
+                if (!newCondition.targeted || (newCondition.targeted && newCondition.targetedAPI == 'casterTargets')) {
+                    doAddConditionCalls(tokenObj,key);
+                }
             }
-        }    
-    },  
+        }
+    },
 
     getCleanImgsrc =  function (imgsrc) {
         let parts = imgsrc.match(/(.*\/images\/.*)(thumb|med|original|max)([^?]*)(\?[^?]+)?$/);
@@ -1533,94 +1516,90 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
         return;
     },
-    
+
     removeConditionFromToken = function(tokenObj,key,removeAPI) {
-        if (debug) {
-            log('Remove Condition From Token')
-        } 
-          
+        if (debug) log('Remove Condition From Token');
+
+
         if (!tokenObj) {
             return;
-        }  
-        
-        let removed = false
+        }
+
+        let removed = false;
         let targets = [];
-        let target;
-        
+        // let target;
+
         [...state[combatState].conditions].forEach((condition, i) => {
             if (condition.id == tokenObj.get('_id') && condition.key == key) {
                 if (condition.hasOwnProperty('target')) {
                     if (condition.target.length > 0) {
-                        targets = condition.target
+                        targets = condition.target;
                         targets.forEach((target, j) => {
                             if (condition.iconType == 'Token Condition') {
-                                removeTokenCondition(condition.tokenConditionID)
+                                removeTokenCondition(condition.tokenConditionID);
                             } else {
-                                removeMarker(getObj('graphic', target), condition.iconType, condition.icon)
-                			    if (condition.targeted && removeAPI) {
-                			        doRemoveConditionCalls(getObj('graphic', target),condition.key)
-                			    }                                    
-                            }  
-                        })    
+                                removeMarker(getObj('graphic', target), condition.iconType, condition.icon);
+                                if (condition.targeted && removeAPI) {
+                                    doRemoveConditionCalls(getObj('graphic', target),condition.key);
+                                }
+                            }
+                        });
                     }
-                }    
+                }
 
                 if (condition.iconType == 'Token Condition') {
-                    removeTokenCondition(condition.tokenConditionID)
-                } else {            
-                    removeMarker(tokenObj, condition.iconType, condition.icon)
-                }  
+                    removeTokenCondition(condition.tokenConditionID);
+                } else {
+                    removeMarker(tokenObj, condition.iconType, condition.icon);
+                }
                 if (condition.concentration == true) {
-                    let concentration = getConditionByKey('concentration')
-                    removeMarker(tokenObj, concentration.iconType, concentration.icon)                    
-                }   
-			    if (!condition.targeted || (condition.targeted && condition.targetedAPI == 'casterTargets')) {
-			        if (removeAPI) {
-			            doRemoveConditionCalls(tokenObj,condition.key)
-			        }       
-			    }  
-			    
-                state[combatState].conditions.splice(i,1)
-                removed = true
-            }      
-        });  
- 
-        
+                    let concentration = getConditionByKey('concentration');
+                    removeMarker(tokenObj, concentration.iconType, concentration.icon);
+                }
+                if (!condition.targeted || (condition.targeted && condition.targetedAPI == 'casterTargets')) {
+                    if (removeAPI) {
+                        doRemoveConditionCalls(tokenObj,condition.key);
+                    }
+                }
+
+                state[combatState].conditions.splice(i,1);
+                removed = true;
+            }
+        });
+
+
         return {
             removed,
             targets
-        }; 
+        };
     },
 
     removeTokenCondition = function (id) {
-        if (debug) {
-            log('Remove Token Condition')
-        }
+        if (debug) log('Remove Token Condition');
+
         let conditionToken = findObjs({_id:id,_pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
-        conditionToken.remove()
+        conditionToken.remove();
     },
-    
+
     sendConditionToChat = function (key) {
-        if (debug) {
-            log("Send Condition To Chat")
-        }
-        
-        let condition = getConditionByKey(key)
+        if (debug) log("Send Condition To Chat");
+
+
+        let condition = getConditionByKey(key);
         if (!condition) {
-            return
+            return;
         }
-        
-        let icon
+
+        let icon;
         if (['Combat Master','Token Marker'].includes(condition.iconType)) {
             icon  = getDefaultIcon(condition.iconType,condition.icon, 'margin-right: 5px; margin-top: 5px; display: inline-block;');
-        }    
+        }
         makeAndSendMenu(condition.description,icon+condition.name,(state[combatState].config.status.sendOnlyToGM) ? 'gm' : '');
     },
-  
+
     addTargetsToCondition = function(selectedTokens,id,key) {
-        if (debug) {
-            log("Add Targets to Condition");
-        }
+        if (debug) log("Add Targets to Condition");
+
         if (!selectedTokens || selectedTokens.length == 0) {
             makeAndSendMenu('No tokens selected.  Condition not added',' ', whisper);
             return;
@@ -1628,30 +1607,29 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         [...state[combatState].conditions].forEach((condition,i) => {
             if (condition.id == id && condition.key == key) {
                 selectedTokens.forEach(token => {
-                    state[combatState].conditions[i].target.push(token._id)
-                    addMarker(getObj('graphic', token._id), condition.iconType, condition.icon, condition.duration, condition.direction, condition.key)
-                    doAddConditionCalls(getObj('graphic', token._id), condition.key)
-                })    
-            }   
-        });   
-        makeAndSendMenu('Selected Tokens Added',"Selected Tokens",'gm'); 
+                    state[combatState].conditions[i].target.push(token._id);
+                    addMarker(getObj('graphic', token._id), condition.iconType, condition.icon, condition.duration, condition.direction, condition.key);
+                    doAddConditionCalls(getObj('graphic', token._id), condition.key);
+                });
+            }
+        });
+        makeAndSendMenu('Selected Tokens Added',"Selected Tokens",'gm');
     },
-    
+
 //*************************************************************************************************************
 //START/STOP COMBAT
-//*************************************************************************************************************	
+//*************************************************************************************************************
     verifyCombatSetup = function(selectedTokens, initiative) {
         let turnorder, whisper, characterObj, verified=true, tokenObj;
- 
-        if (debug) {
-            log('Verify Setup');
-        }
-        
+
+        if (debug) log('Verify Setup');
+
+
         if ((!selectedTokens || selectedTokens.length == 0) && !state[combatState].config.hold.held) {
-            makeAndSendMenu('No tokens selected.  Combat not started',' ', whisper);   
+            makeAndSendMenu('No tokens selected.  Combat not started',' ', whisper);
             return false;
         }
-        
+
         if (initiative.rollInitiative == 'None') {
             turnorder = getTurnorder();
             if (turnorder.length == 0) {
@@ -1668,31 +1646,28 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     if (tokenObj) {
                         whisper         = (tokenObj.layer == 'gmlayer') ? 'gm ' : '';
                         characterObj    = getObj('character', tokenObj.get('represents'));
-        				if (!characterObj) {
-                             makeAndSendMenu('A token was found not assigned to a character sheet',' ', whisper);   
-                        } 
-                    }    
-                }    
-			})    
-        }  
-        
+                        if (!characterObj) makeAndSendMenu('A token was found not assigned to a character sheet',' ', whisper);
+                    }
+                }
+			});
+        }
+
         return verified;
     },
 
     startCombat = function (selectedTokens, who) {
-        if (debug) {
-            log('Start Combat');
-        }
-        
+        if (debug) log('Start Combat');
+
+
         let initiative  = state[combatState].config.initiative;
-        let turnorder   = state[combatState].config.turnorder;
+        // let turnorder   = state[combatState].config.turnorder;
         let verified    = verifyCombatSetup(selectedTokens, initiative);
         let hold        = state[combatState].config.hold;
-        
+
         if (!verified && !hold.held) {
             return;
         }
-        
+
         Campaign().set('initiativepage', Campaign().get('playerpageid'));
         paused = false;
 
@@ -1704,150 +1679,146 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             } else if (initiative.rollInitiative == 'Group-Init') {
                 rollGroupInit(selectedTokens);
             } else if (!getTurnorder()) {
-                makeAndSendMenu('You must have a populated turnorder before starting Combat Master','');    
-                return
+                makeAndSendMenu('You must have a populated turnorder before starting Combat Master','');
+                return;
             }
-        }  
-        
+        }
+
         setTimeout(function() {
             sortTurnorder();
             doRoundCalls();
             changeToNextTurn();
         },2000);
     },
-    
+
     restartCombat = function (hold,who) {
-        if (debug) {
-            log('Restart Combat')
-        }
+        if (debug) log('Restart Combat');
+
 
         round = hold.round;
         setTurnorder(hold.turnorder);
-        state[combatState].conditions = hold.conditions
+        state[combatState].conditions = hold.conditions;
 
         setTimeout(function() {
-            clearHold(hold)
-            sendMainMenu(who)
-        },2000) 
+            clearHold(hold);
+            sendMainMenu(who);
+        },2000);
     },
-    
+
     stopCombat = function (who) {
-        if (debug) {
-            log('Stop Combat')
-        }
+        if (debug) log('Stop Combat');
+
 
         makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;text-decoration: underline;">End of combat !</span>', ' ', undefined, false);
 
         Campaign().set({initiativepage:false});
-        clearHold(state[combatState].config.hold)
-        
+        clearHold(state[combatState].config.hold);
+
         if (state[combatState].config.status.clearConditions) {
             [...state[combatState].conditions].forEach((condition) => {
                 if (condition.id != getOrCreateMarker().get('id')) {
-                    removeConditionFromToken(getObj('graphic',condition.id), condition.key, true)
+                    removeConditionFromToken(getObj('graphic',condition.id), condition.key, true);
                 }
-            })
+            });
         }
-        
+
         removeMarkers();
         stopTimer();
         Campaign().set({turnorder:''});
         round = 1;
-        
+
         setTimeout(function() {
             state[combatState].conditions = [];
-        },2000)         
-        
+        },2000);
+
     },
-    
+
     holdCombat = function (who) {
-        if (debug) {
-            log('Hold Combat')
-        }
-        
-        let hold        = state[combatState].config.hold
+        if (debug) log('Hold Combat');
+
+
+        let hold        = state[combatState].config.hold;
         hold.held       = true;
         hold.turnorder  = getTurnorder();
         hold.round      = round;
-        hold.conditions = [...state[combatState].conditions]
+        hold.conditions = [...state[combatState].conditions];
 
-        Campaign().set({initiativepage:false,turnorder:''});     
-        pauseTimer()
-            
+        Campaign().set({initiativepage:false,turnorder:''});
+        pauseTimer();
+
         setTimeout(function() {
             state[combatState].conditions = [];
-            sendMainMenu(who)
-        },2000)   
+            sendMainMenu(who);
+        },2000);
     },
 
     clearHold = function (hold) {
-        if (debug) {
-            log('Clear Hold')
-        }
-        
-        hold.held = false
-        hold.round = 1
-        hold.turnorder = []
-        hold.conditions = []
+        if (debug) log('Clear Hold');
+
+
+        hold.held = false;
+        hold.round = 1;
+        hold.turnorder = [];
+        hold.conditions = [];
     },
-    
+
     rollInitiative = function (selectedTokens, initiative) {
-        let tokenObj, whisper, initiativeTemp, initiativeRoll, characterObj, initAttributes, initiativeMod, i, advantageAttrib, initiativeAdv1, initiativeAdv2
-        
+        let tokenObj, whisper, initiativeTemp, initiativeRoll, characterObj, initAttributes, initiativeMod, advantageAttrib, initiativeAdv1, initiativeAdv2;
+
         //loop through selected tokens
         selectedTokens.forEach(token => {
             if (token._type == 'graphic') {
-                tokenObj        = getObj('graphic', token._id)
+                tokenObj        = getObj('graphic', token._id);
                 if (tokenObj) {
-                    characterObj    = getObj('character', tokenObj.get('represents'))
-    
+                    characterObj    = getObj('character', tokenObj.get('represents'));
+
                     if (characterObj) {
-                        whisper         = (tokenObj.get('layer') === 'gmlayer') ? 'gm ' : ''
+                        whisper         = (tokenObj.get('layer') === 'gmlayer') ? 'gm ' : '';
                         initiativeRoll  = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
-                        initAttributes  = initiative.initiativeAttributes.split(',')
-                        initiativeMod   = 0
-    
+                        initAttributes  = initiative.initiativeAttributes.split(',');
+                        initiativeMod   = 0;
+
                         initAttributes.forEach((attributes) => {
-                            initiativeTemp  = getAttrByName(characterObj.id,attributes,'current') 
-                            initiativeMod  += parseFloat(initiativeTemp)                        
-                        })
-    
+                            initiativeTemp  = getAttrByName(characterObj.id,attributes,'current');
+                            initiativeMod  += parseFloat(initiativeTemp);
+                        });
+
                         //check for advantage initiative rolling (OGL)
-                        advantageAttrib   = getAttrByName(characterObj.id, 'initiative_style', 'current');  
+                        advantageAttrib   = getAttrByName(characterObj.id, 'initiative_style', 'current');
                         if (typeof advantageAttrib != 'undefined') {
                             // roll advantage for initiative
-                            initiativeAdv1 = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0; 
+                            initiativeAdv1 = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
                             initiativeAdv2 = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
                             // this is the value if in OGL if rolling advantage
                             if (advantageAttrib == '{@{d20},@{d20}}kh1') {
                                 //determine which value is higher
                                 if (initiativeAdv1 >= initiativeAdv2) {
-                                    initiativeRoll = initiativeAdv1
+                                    initiativeRoll = initiativeAdv1;
                                 } else {
-                                    initiativeRoll = initiativeAdv2
+                                    initiativeRoll = initiativeAdv2;
                                 }
                                 //pass in both values and modifier for display
                                 if (initiative.showInitiative) {
-                                    sendInitiativeChat(tokenObj.get('name'),initiativeAdv1,initiativeMod,initiativeAdv2,whisper)                            
+                                    sendInitiativeChat(tokenObj.get('name'),initiativeAdv1,initiativeMod,initiativeAdv2,whisper);
                                 }
-                            } else if (initiative.showInitiative) { 
+                            } else if (initiative.showInitiative) {
                                 // if not rolling advantage, use first roll
-                                initiativeRoll = initiativeAdv1
-                                sendInitiativeChat(tokenObj.get('name'),initiativeRoll,initiativeMod,null,whisper)                              
-                            }    
-                        }  else if (initiative.showInitiative) { 
+                                initiativeRoll = initiativeAdv1;
+                                sendInitiativeChat(tokenObj.get('name'),initiativeRoll,initiativeMod,null,whisper);
+                            }
+                        }  else if (initiative.showInitiative) {
                             // if everything else then pass in for display
-                             sendInitiativeChat(tokenObj.get('name'),initiativeRoll,initiativeMod,null,whisper)   
-                        }  
-                        //add to turnorder 
+                             sendInitiativeChat(tokenObj.get('name'),initiativeRoll,initiativeMod,null,whisper);
+                        }
+                        //add to turnorder
                         if (Number.isInteger(initiativeMod+initiativeRoll)) {
                             addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll),custom:'',_pageid:tokenObj.get("pageid")});
                         } else {
                             addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll).toFixed(2),custom:'',_pageid:tokenObj.get("pageid")});
-                        }    
-                    }   
-                }    
-            }    
+                        }
+                    }
+                }
+            }
         });
 
         if(state[combatState].config.turnorder.sortTurnOrder){
@@ -1856,19 +1827,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     rollGroupInit = function (selectedTokens) {
-        let giRoll = () => sendChat('',`/w gm <code>GroupInitiative.RollForTokenIDs()</code> is not supported.`);    	
-        
+        // let giRoll = () => sendChat('',`/w gm <code>GroupInitiative.RollForTokenIDs()</code> is not supported.`);
 
-    	if('undefined' !== typeof GroupInitiative && GroupInitiative.RollForTokenIDs){
+
+        if('undefined' !== typeof GroupInitiative && GroupInitiative.RollForTokenIDs){
 			GroupInitiative.RollForTokenIDs(
 				(selectedTokens||[]).map(s=>s._id),{manualBonus: 0}
-			);   
-    	} 	
+			);
+        }
     },
-    
-    sendInitiativeChat = function (name,rollInit,bonus,rollInit1,whisper) { 
-        let contents = ''
-        
+
+    sendInitiativeChat = function (name,rollInit,bonus,rollInit1,whisper) {
+        let contents = '';
+
         if (rollInit1) {
             contents = '<table style="width: 50%; text-align: left; float: left;"> \
                             <tr> \
@@ -1885,7 +1856,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <b style="font-size: 10pt;"> \
                                 <span style="border: 1px solid red; padding-bottom: 2px; padding-top: 4px;">[['+rollInit1+'+'+bonus+']]</span><br><br> \
                             </b> \
-                        </div>'   
+                        </div>';
         } else {
              contents = '<table style="width: 50%; text-align: left; float: left;"> \
                             <tr> \
@@ -1897,47 +1868,47 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <b style="font-size: 14pt;"> \
                                 <span style="border: 1px solid green; padding-bottom: 2px; padding-top: 4px;">[['+rollInit+'+'+bonus+']]</span><br><br> \
                             </b> \
-                        </div>'
-           
-        }  
-        
-        makeAndSendMenu(contents, name + ' Initiative', whisper);    
+                        </div>';
+
+        }
+
+        makeAndSendMenu(contents, name + ' Initiative', whisper);
     },
 
 //*************************************************************************************************************
 //MARKERS
-//*************************************************************************************************************	    
+//*************************************************************************************************************
     addMarker = function(tokenObj, markerType, marker, duration, direction, key) {
         if (debug) {
             log('Add Marker');
             log(marker);
         }
-        
-        let installed = verifyInstalls(markerType)
+
+        let installed = verifyInstalls(markerType);
         if (!installed) {
              makeAndSendMenu('You are missing an API required by an Icon Type you are using.  Install libTokenMarker or TokenConditions.');
              return;
         }
-        
-        let icon = getIconTag(markerType, marker)
+
+        let icon = getIconTag(markerType, marker);
         if (!icon) {
             return;
         }
 
-        removeMarker(tokenObj, markerType, marker)
-        
+        removeMarker(tokenObj, markerType, marker);
+
         setTimeout(() => {
-            let statusMarkers = returnStatusMarkers(tokenObj)
-            
-            let statusMarker
+            let statusMarkers = returnStatusMarkers(tokenObj);
+
+            let statusMarker;
             if (key == 'dead' || duration <= 0 || duration >= 10 || (duration == 1 && direction == 0)) {
-                statusMarker = icon
+                statusMarker = icon;
             } else {
-                statusMarker = icon+'@'+duration
-            }    
-    
-            statusMarkers.push(statusMarker)
-            tokenObj.set('statusmarkers', statusMarkers.join())
+                statusMarker = icon+'@'+duration;
+            }
+
+            statusMarkers.push(statusMarker);
+            tokenObj.set('statusmarkers', statusMarkers.join());
         }, 500);
     },
 
@@ -1946,38 +1917,37 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             log('Remove Marker');
             log(marker);
         }
-        
+
         let installed = verifyInstalls(markerType);
         if (!installed) {
              makeAndSendMenu('You are missing an API required by an Icon Type you are using.  Install libTokenMarker or TokenConditions.');
              return;
         }
-        
+
         let iconTag = getIconTag(markerType, marker);
         if (!iconTag) {
             return;
         }
-        
+
         let statusMarkers = returnStatusMarkers(tokenObj);
         statusMarkers.forEach((a, i) => {
             if (a.indexOf(iconTag) > -420) {
                 statusMarkers.splice(i,1);
-            }  
-        });       
+            }
+        });
         tokenObj.set('statusmarkers', statusMarkers.join());
     },
-    
+
     returnStatusMarkers = function(tokenObj) {
         return tokenObj.get('statusmarkers').split(',');
     },
-    
+
     resetMarker = function (type=markerType.ROUND) {
         let marker = getOrCreateMarker(type),
             turnorder = state[combatState].config.turnorder;
-        
-        if (debug) {
-            log('Reset Marker');
-        }
+
+        if (debug) log('Reset Marker');
+
 
         let markerName, imgUrl, markerWidth, markerHeight, scale_number = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0].get('scale_number');
         switch (type) {
@@ -1995,7 +1965,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 markerWidth = parseInt(turnorder.rangeMarkerWidth / scale_number);
                 markerHeight = parseInt(turnorder.rangeMarkerHeight / scale_number); break;
         }
-        
+
         const newMarkerAttr = {
             name: markerName,
             imgsrc: imgUrl,
@@ -2012,16 +1982,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
     getOrCreateMarker = function (type=markerType.ROUND) {
         let pageid    = Campaign().get('playerpageid');
-		let	turnorder = state[combatState].config.turnorder
-		
-        if (debug) {
-            log('Get or Create Marker type=' + type);
-        }	
-		
+		let	turnorder = state[combatState].config.turnorder;
+
+        if (debug) log('Get or Create Marker type=' + type);
+
 		let markerName, imgsrc, markerLayer, markerWidth, markerHeight, scale_number = findObjs({_id: pageid, type: 'page'})[0].get('scale_number');
         switch (type) {
             case markerType.ROUND:
-                markerName = 'Round 1'; markerLayer = 'objects';     imgsrc = (turnorder.markerType == 'External URL') ? turnorder.externalMarkerURL : turnorder.tokenMarkerURL;
+                markerName = 'Round 1'; markerLayer = 'objects';    imgsrc = (turnorder.markerType == 'External URL') ? turnorder.externalMarkerURL : turnorder.tokenMarkerURL;
                 markerWidth = 2; markerHeight = 2; break;
             case markerType.MAIN:
                 markerName = mainMarkerName; markerLayer = 'map';   imgsrc = (turnorder.markerType == 'External URL') ? turnorder.externalMarkerURL : turnorder.tokenMarkerURL;
@@ -2035,8 +2003,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 markerHeight = parseInt(state[combatState].config.turnorder.rangeMarkerHeight / scale_number);
         }
 
- 		let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
-        
+        if (debug) log('imgsrc=' + imgsrc);
+        let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
+
         // markers.forEach((marker, i) => {
         //     if(i > 0 && type === markerType.ROUND) marker.remove();
         // });
@@ -2055,11 +2024,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             log('getOrCreateMarker CREATING NEW MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
             marker = createObj('graphic', newMarkerAttr);
         }
-        
+
         if(type === markerType.ROUND) insertMarkerTurnIfNotInTurnOrder(marker);
 
         if(type === markerType.MAIN) startMarkerAnimation(marker);
-        
+
         if (markerType.ROUND === type)
             toBack(marker);
         else
@@ -2071,11 +2040,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     insertMarkerTurnIfNotInTurnOrder = function (marker) {
         let turnorder = getTurnorder(),
             hasTurn = false;
-        
-        if (debug) {
-            log ('Check RoundMarker Turn')
-        }    
-        
+
+        if (debug) log ('Check RoundMarker Turn');
+
+
         turnorder.forEach(turn => {
             if(turn.id === marker.get('id')) hasTurn = true;
         });
@@ -2085,7 +2053,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             Campaign().set('turnorder', JSON.stringify(turnorder));
         }
     },
-    
+
     removeMarkers = function () {
         stopMarkerAnimation();
         getOrCreateMarker().remove();
@@ -2093,16 +2061,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         getOrCreateMarker(markerType.NEXT).remove();
         getOrCreateMarker(markerType.RANGE).remove();
     },
-    
+
    changeMarker = function (token, type=markerType.ROUND)  {
         let typeMarker = getOrCreateMarker(type);
 
-        if (debug) {
-            log('Change Marker type=' + type)
-        }
+        if (debug) log('Change Marker type=' + type);
+
 
         if(!token){
-            log('changeMarker!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)')
+            log('changeMarker!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)');
             resetMarker(type);
             return;
         }
@@ -2128,15 +2095,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         // ?????????????????????????
         // if(token.get('layer') !== marker.get('layer')) {
-        //     if(marker.get('layer') === 'gmlayer') { 
+        //     if(marker.get('layer') === 'gmlayer') {
         //         marker.set(position);
         //         setTimeout(() => {
         //             if (state[combatState].config.turnorder.useMarker) {
         //                 // marker.set({ layer: 'objects' });
         //                 marker.set({ layer: 'map' });
-        //             }    
+        //             }
         //         }, 500);
-        //     } else { 
+        //     } else {
         //         marker.set({ layer: 'gmlayer' });
         //         setTimeout(() => {
         //             marker.set(position);
@@ -2164,14 +2131,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         if(state[combatState].config.turnorder.centerToken) {
             if (token.get('layer') == 'objects') {
                 sendPing(token.get('left'), token.get('top'), token.get('pageid'), null, true);
-            }    
-        }    
+            }
+        }
     },
 
     handleStatusMarkerChange = function (obj, prev) {
-        if (debug) {
-            log ('-------------Handle Status Marker Change-------------')
-        } 
+        if (debug) log ('-------------Handle Status Marker Change-------------');
+
 
         prev.statusmarkers = (typeof prev.get === 'function') ? prev.get('statusmarkers') : prev.statusmarkers;
 
@@ -2188,18 +2154,18 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         if(marker !== '' && !newstatusmarkers.includes(marker)){
                             removeConditionFromToken(obj, condition.key, true);
                         }
-                    })
-                }    
-                
+                    });
+                }
+
                 if (newstatusmarkers.length > 0 ) {
                     newstatusmarkers.forEach(function(marker){
-                        let condition = getConditionByMarker(marker)
+                        let condition = getConditionByMarker(marker);
                         if(!condition) return;
                         if(marker !== "" && !prevstatusmarkers.includes(marker)){
                             addConditionToToken(obj,condition.key,condition.duration,condition.direction,condition.message);
                         }
                     });
-                }    
+                }
             }
         }
     },
@@ -2207,8 +2173,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     startMarkerAnimation = function(marker) {
         if( !animationHandle && state[combatState].config.turnorder.animateMarker) {
             animationHandle = rotateMarkerCallback;
-            setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);                    
-        }                    
+            setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
+        }
     },
 
     stopMarkerAnimation = function() {
@@ -2218,7 +2184,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     rotateMarkerCallback = function(marker) {
         if (!animationHandle) {
              return;
-	    }
+            }
         if (!state[combatState].config.turnorder.animateMarker) {
             animationHandle = null;
             return;
@@ -2228,10 +2194,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         marker.set('rotation',parseInt(marker.get('rotation'))+parseInt(state[combatState].config.turnorder.animateMarkerDegree));
         setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
     },
-     
+
 //*************************************************************************************************************
 //TURNORDER
-//*************************************************************************************************************	      
+//*************************************************************************************************************
     clearTurnorder = function () {
         Campaign().set({ turnorder: '' });
         state[combatState].turnorder = {};
@@ -2240,7 +2206,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     isCombatActiveAndTriggerStopIfNot = function () {
         if(debug) {
             log('Verify Turnorder');
-        }        
+        }
         let turnorder = getTurnorder();
 
         if (turnorder.length == 0) {
@@ -2248,23 +2214,23 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             stopCombat();
             return false;
         }
-        
+
         return true;
     },
-    
+
     changeToNextTurn = function (prev=false, delay=false, turnOrderUnmodified=true, preventAnnounceTurn=false) {
         if(debug) log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!! announceTurn=' + preventAnnounceTurn);
-        
-        let verified    = isCombatActiveAndTriggerStopIfNot()
+
+        let verified    = isCombatActiveAndTriggerStopIfNot();
         if (!verified) {
-            return
+            return;
         }
-        let turn        = getCurrentTurnObject()
-        let marker      = getOrCreateMarker()
+        let turn        = getCurrentTurnObject();
+        let marker      = getOrCreateMarker();
         let tokenObj    = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
 
-        if (turn.id === '-420') { 
-            doRoundCalls()
+        if (turn.id === '-420') {
+            doRoundCalls();
             changeTurnOrderToNext();
             return;
         }
@@ -2297,21 +2263,21 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             }
 
             log('tmpTurn.pr='+tmpTurn.pr);
- 
+
             if (state[combatState].config.turnorder.useRangeMarker != 'None')
                 changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.RANGE);
             changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken);
             changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.MAIN);
-            
+
             log('============== sameFirstTurn='+preventAnnounceTurn);
             if (!preventAnnounceTurn)
                 announcePlayer(tokenObj, prev, delay, false);
             resetOnslaught(tokenObj);
             sendPingOnToken(tokenObj);
             setTimeout(function() {
-                 doTurnCalls(tokenObj) 
-            },1000)             
-                      
+                 doTurnCalls(tokenObj);
+            },1000);
+
         } else {
             resetMarker();
         }
@@ -2331,23 +2297,23 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 // else {
                 //     resetMarker(markerType.NEXT);
                 // }
-            }    
+            }
         }
     },
-    
+
     handleTurnorderChange = function (obj, prev) {
         if (debug) {
-            log("handleTurnorderChange::-------------Handle Turnorder Change-------------")
+            log("handleTurnorderChange::-------------Handle Turnorder Change-------------");
             log('handleTurnorderChange::obj='+JSON.stringify(obj));
             log('handleTurnorderChange::prev='+JSON.stringify(prev));
         }
-        
+
         if(obj.get('turnorder') === prev.turnorder) return;
 
         let turnorder = (obj.get('turnorder') === "") ? [] : JSON.parse(obj.get('turnorder'));
         let prevTurnorder = (prev.turnorder === "") ? [] : JSON.parse(prev.turnorder);
         let theoricalNewOrder = [...prevTurnorder];
-        let currentTurn = theoricalNewOrder.shift()
+        let currentTurn = theoricalNewOrder.shift();
         theoricalNewOrder.push(currentTurn);
 
 
@@ -2375,7 +2341,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     sortTurnorder = function (order='DESC') {
         let turnorder = getTurnorder();
 
-        turnorder.sort((a,b) => { 
+        turnorder.sort((a,b) => {
             return (order === 'ASC') ? a.pr - b.pr : b.pr - a.pr;
         });
 
@@ -2391,7 +2357,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let turnorder = getTurnorder();
 
         if (debug) log('Add to Turnorder');
-        
+
         turnorder.push(turn);
         setTurnorder(turnorder);
     },
@@ -2402,16 +2368,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
 //*************************************************************************************************************
 //TURNS
-//*************************************************************************************************************	          
+//*************************************************************************************************************
     changeTurnOrderToNext = function() {
-        let turnorder, currentTurn
-      
-        if (debug) {
-            log('changeTurnOrderToNext')
-        }
-        
+        let turnorder, currentTurn;
+
+        if (debug) log('changeTurnOrderToNext');
+
+
         turnorder   = getTurnorder(),
-        currentTurn = turnorder.shift()
+        currentTurn = turnorder.shift();
         turnorder.push(currentTurn);
         setTurnorder(turnorder);
         changeToNextTurn();
@@ -2420,33 +2385,32 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     delayTurn = function () {
         let turnorder, currentTurn;
 
-        turnorder   = getTurnorder()
+        turnorder   = getTurnorder();
         currentTurn = turnorder.shift();
         currentTurn.pr = currentTurn.pr - 2;
 
         let tokenObj    = findObjs({_id:currentTurn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
         if (tokenObj) {
-            let characterObj = getObj('character',tokenObj.get('represents'))
+            let characterObj = getObj('character',tokenObj.get('represents'));
             if (tokenObj.get('layer') == 'objects' && characterObj) {
                 let imgurl = tokenObj.get('imgsrc');
-                let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';                
+                let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
                 sendStandardScriptMessage(tokenObj.get('name')+' delays her actions', image, 'display:inline-block;width:74%;vertical-align:middle;font-weight:bold;', false);
             }
         }
 
         turnorder.unshift(currentTurn);
         setTurnorder(turnorder);
-        
-        if (debug) {
-            log('Delay Turn')
-        }
-      
+
+        if (debug) log('Delay Turn');
+
+
         changeTurnOrderToNext();
     },
 
     changeTurnOrderToPrevious = function() {
         let turnorder = getTurnorder(),
-            last_turn = turnorder.pop();        
+            last_turn = turnorder.pop();
         turnorder.unshift(last_turn);
 
         setTurnorder(turnorder);
@@ -2456,11 +2420,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     handleNextRound = function () {
         let marker     = getOrCreateMarker(),
             initiative = state[combatState].config.initiative;
-         
-        if (debug) {
-            log('Next Round');
-        }
-        
+
+        if (debug) log('Next Round');
+
+
         round++;
         marker.set({ name: 'Round ' + round});
 
@@ -2474,19 +2437,18 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             let turnorder = getTurnorder();
             clearTurnorder();
             insertMarkerTurnIfNotInTurnOrder(marker);
-            rollInitiative(turnorder.map(t => { return (t.id) ? { _type: 'graphic', _id: t.id } : false }), initiative);
+            rollInitiative(turnorder.map(t => { return (t.id) ? { _type: 'graphic', _id: t.id } : false; }), initiative);
             changeToNextTurn();
         }else{
             let turnorder, currentTurn;
-            if (debug) {
-                log('Next Turn');
-            }
-            
+            if (debug) log('Next Turn');
+
+
             turnorder   = getTurnorder(),
             currentTurn = turnorder.shift();
             turnorder.push(currentTurn);
             setTurnorder(turnorder);
-            
+
             if(state[combatState].config.turnorder.sortTurnOrder){
                 sortTurnorder();
             }
@@ -2507,19 +2469,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             if(i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && turnToken && turnToken.get('layer') !== 'gmlayer' && turn.id !== skipId){
                 returnturn = turn;
                 return false;
-            }else return true
+            }else return true;
         });
         return returnturn;
     },
-    
-    getVeryNextTurn = function () {
-        let turnorder, turn;
-        turnorder = getTurnorder();
-        turn = turnorder.shift()
-        turn = turnorder.shift()
-        return turn;
-    },  
-    
+
+    // getVeryNextTurn = function () {
+    //     let turnorder, turn;
+    //     turnorder = getTurnorder();
+    //     turn = turnorder.shift();
+    //     turn = turnorder.shift();
+    //     return turn;
+    // },
+
     handlePreviousRound = function () {
         let marker = getOrCreateMarker();
         round--;
@@ -2533,17 +2495,17 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         changeTurnOrderToPrevious();
     },
 //*************************************************************************************************************
-//TIMER 
-//*************************************************************************************************************	
+//TIMER
+//*************************************************************************************************************
     startTimer = function (token) {
         let timer = state[combatState].config.timer,
             config_time = parseInt(timer.time),
             time = config_time;
 
         paused = false;
-        
+
         clearInterval(intervalHandle);
-        
+
         if(timerObj) timerObj.remove();
 
 
@@ -2592,12 +2554,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         paused = !paused;
     },
 //*************************************************************************************************************
-//ANNOUNCE 
-//*************************************************************************************************************	  
+//ANNOUNCE
+//*************************************************************************************************************
     announcePlayer = function (tokenObj, prev, delay=false, show=false) {
-        if (debug) {
-            log('Announce Player');
-        }
+        if (debug) log('Announce Player');
+
 
         if (!tokenObj) {
             return;
@@ -2606,50 +2567,50 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let name        = tokenObj.get('name');
         let imgurl      = tokenObj.get('imgsrc');
         let conditions  = getAnnounceConditions(tokenObj, prev, delay, show);
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : ''
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name
-        
-        let title         = 'Conditions'
-        let doneButton    = makeImageButton('!cmaster --turn,next',doneImage,'Done with Round','transparent',18,'white')
+        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
+        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+
+        let title         = 'Conditions';
+        let doneButton    = makeImageButton('!cmaster --turn,next',doneImage,'Done with Round','transparent',18,'white');
         let delayButton   = makeImageButton('!cmaster --turn,delay',delayImage,'Delay your Turn','transparent',18, 'white');
-        
+
         if (!show) {
-            title   += '<div style="'+styles.buttonRight+'">'+doneButton+'</div>'
-            title   += '<div style="'+styles.buttonRight+'">'+delayButton+'</div>'
+            title   += '<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
+            title   += '<div style="'+styles.buttonRight+'">'+delayButton+'</div>';
         }
 
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>'
-        
+        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
+
         let characterObj = getObj('character', tokenObj.get('represents'));
         let onslaught = 0;
         if (characterObj && characterObj.id) onslaught = getAttrByName(characterObj.id, 'onslaught', 'current');
         let resetedOnslaughtMessage = ' <b>and reseted his onslaught (was <u>' + onslaught + '</u>) !</b>';
-        
+
         if (!show) {
             contents   += '<div style="'+styles.announcePlayer+'max-width: 76%;">'+name+'\'s Turn' + ((onslaught != 0) ? resetedOnslaughtMessage : '') + '</div>';
         } else {
             contents   += '<div style="'+styles.announcePlayer+'max-width: 76%;">'+name+'</div>';
         }
-        
+
         contents += conditions;
 
         if (characterObj) {
-            let controlledBy = characterObj.get('controlledby')
-            let players      = controlledBy.split(",")        
-        
+            let controlledBy = characterObj.get('controlledby');
+            let players      = controlledBy.split(",");
+
             if (state[combatState].config.status.userChanges) {
                 if (players.length > 1) {
-                    let playerObj, displayName
+                    let playerObj, displayName;
                     players.forEach((playerID) => {
-                        playerObj = getObj('player', playerID)
+                        playerObj = getObj('player', playerID);
                         if (playerObj) {
-                            displayName = playerObj.get('displayname')
-                            sendMainMenu(displayName)
-                        }    
-                    })
-                }            
-            }   
-            
+                            displayName = playerObj.get('displayname');
+                            sendMainMenu(displayName);
+                        }
+                    });
+                }
+            }
+
             if (state[combatState].config.announcements.announceTurn) {
                 let target;
                 if (tokenObj.get('layer') == 'gmlayer') {
@@ -2659,105 +2620,104 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         target = (state[combatState].config.announcements.whisperToGM) ? 'gm' : '';
                     } else {
                         target = (!state[combatState].config.announcements.showNPCTurns) ? 'gm' : '';
-                    }    
+                    }
                     makeAndSendMenu(contents,title,target, false);
                 }
-            }   
+            }
         }
     },
 
     getAnnounceConditions = function (tokenObj, prev, delay, show) {
-        if (debug) {
-            log('Announce Condition') 
-        }
-        
-        let removeButton
-        let descriptionButton
-        let removed = false
-        let output = '<div>'
-        let target     
-        
+        if (debug) log('Announce Condition');
+
+
+        let removeButton;
+        let descriptionButton;
+        let removed = false;
+        let output = '<div>';
+        let target;
+
         if (state[combatState].conditions) {
             [... state[combatState].conditions].forEach(condition => {
                 if (condition.id == tokenObj.get("_id") || condition.target.includes(tokenObj.get("_id"))) {
                     if (condition.target.includes(tokenObj.get("_id"))){
-                        target = true
-                    }    
-                    
-                    descriptionButton = makeButton(condition.name, '!cmaster --show,description,key='+condition.key) 
+                        target = true;
+                    }
+
+                    descriptionButton = makeButton(condition.name, '!cmaster --show,description,key='+condition.key);
                     if (!target) {
                         if (!delay && !show) {
                             if (!prev) {
-                                condition.duration = condition.duration + condition.direction
+                                condition.duration = condition.duration + condition.direction;
                             } else {
-                                condition.duration = condition.duration - condition.direction
+                                condition.duration = condition.duration - condition.direction;
                             }
-                        }    
-                    }    
-                    
+                        }
+                    }
+
                     if (condition.duration <= 0 && condition.direction != 0) {
                         output += '<div style="display:inline-block;"><strong>'+descriptionButton+'</strong> removed</div>';
                         if (!delay && !show && !target) {
-                            removeConditionFromToken(tokenObj, condition.key, true); 
-                            removed = true
-                        }    
+                            removeConditionFromToken(tokenObj, condition.key, true);
+                            removed = true;
+                        }
                     } else if (condition.duration > 0 && condition.direction != 0) {
                         output += '<div style="display:inline-block;"><strong>'+descriptionButton+'</strong> '+condition.duration+' Rounds Left</div>';
 
                         if (!delay && !show && !target) {
                             // addMarker(tokenObj, condition.iconType, condition.icon, condition.duration, condition.direction, condition.key)
-                            addConditionToToken(tokenObj,condition.key,condition.duration,condition.direction,condition.message)
-                        }   
-			            if (condition.hasOwnProperty('message')) {
-				            if (condition.message != 'None' && condition.message.length > 0) {
-				                output += '<div style="display:inline-block;"><strong>Message: </strong>'+condition.message + '</div>';
-				            }    
-		                }    
+                            addConditionToToken(tokenObj,condition.key,condition.duration,condition.direction,condition.message);
+                        }
+                        if (condition.hasOwnProperty('message')) {
+                            if (condition.message != 'None' && condition.message.length > 0) {
+                                output += '<div style="display:inline-block;"><strong>Message: </strong>'+condition.message + '</div>';
+                            }
+                        }
                     } else if (condition.direction == 0) {
                         output += '<div style="display:inline-block;"><strong>'+descriptionButton+'</strong> '+condition.duration+' Permanent</div>';
                         if (condition.hasOwnProperty('message')) {
                             if (condition.message != 'None' && condition.message.length > 0) {
                                 output += '<div style="display:inline-block;"<strong>Message: </strong> '+condition.message+ '</div>';
-                            }  
-                        }    
+                            }
+                        }
                     }
-                    
-                    if (!removed) {
-                        removeButton  = makeImageButton('!cmaster --remove,condition='+condition.key+',id='+tokenObj.get("_id"),deleteImage,'Remove Condition','transparent',18)
-                        output += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+removeButton+'</div>'
-                    }
-                }   
 
-            })
-        }  
-        output += '</div>'
- 
+                    if (!removed) {
+                        removeButton  = makeImageButton('!cmaster --remove,condition='+condition.key+',id='+tokenObj.get("_id"),deleteImage,'Remove Condition','transparent',18);
+                        output += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+removeButton+'</div>';
+                    }
+                }
+
+            });
+        }
+        output += '</div>';
+
         return output;
-    },    
+    },
 //*************************************************************************************************************
-//MAKES 
-//*************************************************************************************************************	
+//MAKES
+//*************************************************************************************************************
     makeAndSendMenu = function (contents, title = undefined, whisper = undefined, noarchive = true) {
         whisper = (whisper && whisper !== '') ? '/w ' + whisper + ' ' : '';
-		title = makeTitle(title)
+		title = makeTitle(title);
         sendChat(script_name, whisper + '<div style="'+styles.menu+styles.overflow+'">'+title+contents+'</div>', null, {noarchive:noarchive});
     },
 
     makeBanner = function (command,title,previous) {
-        let backButton = makeBigButton('Back', '!cmaster --back,'+previous)
-        let helpButton = makeImageButton('!cmaster --help,'+command,helpImage,'Help','transparent',18,'white')
-        let titleText  = title+' Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>'         
-        
+        let backButton = makeBigButton('Back', '!cmaster --back,'+previous);
+        let helpButton = makeImageButton('!cmaster --help,'+command,helpImage,'Help','transparent',18,'white');
+        let titleText  = title+' Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
+
         return {
             backButton,
             titleText
         };
     },
-    
+
 	makeTitle = function (title) {
-		return '<div style="'+styles.title+'"><span style='+styles.titleText+'>'+title+'</span></div>'
+		return '<div style="'+styles.title+'"><span style='+styles.titleText+'>'+title+'</span></div>';
 	},
-	
+
     makeBigButton = function (title, href) {
         return '<div style="'+styles.bigButton+'"><a style="'+styles.bigButtonLink+'" href="'+href+'">'+title+'</a></div>';
     },
@@ -2774,18 +2734,18 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         if (!color) {
             color = 'black';
         }
-        return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>'
+        return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>';
     },
-	
+
     makeList = function (items, backButton, extraButton) {
         let list;
-        
+
         list  = '<ul style="'+styles.reset + styles.list + styles.overflow+'">';
 		items.forEach((item) => {
             list += '<li style="'+styles.overflow+'">'+item+'</li>';
         });
-		list += '</ul>'
-		
+		list += '</ul>';
+
 		if (extraButton) {
 			list += extraButton;
 		}
@@ -2796,106 +2756,104 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
 //*************************************************************************************************************
-//ICONS 
-//*************************************************************************************************************	        
+//ICONS
+//*************************************************************************************************************
     getDefaultIcon = function (iconType, icon, style='', height, width) {
         if (iconType == 'None') {
-            return 'None'
+            return 'None';
         }
-        
-        let installed = verifyInstalls(iconType)
-        
+
+        let installed = verifyInstalls(iconType);
+
         if (iconType == 'Token Marker' && installed) {
             return libTokenMarkers.getStatus(icon).getHTML(1.7);
-        } else if (iconType == 'Combat Master') {   
+        } else if (iconType == 'Combat Master') {
             let X = '';
-            let iconStyle = ''
-            let iconSize = ''
-    
+            let iconStyle = '';
+            // let iconSize = '';
+
             if(typeof icon_image_positions[icon] === 'undefined') return false;
-    
+
             if (width) {
                 iconStyle += 'width: '+width+'px;height: '+height+'px;';
             } else {
                 iconStyle += 'width: 24px; height: 24px;';
-            }      
-            
+            }
+
             if(Number.isInteger(icon_image_positions[icon])){
-                iconStyle += 'background-image: url(https://roll20.net/images/statussheet.png);'
-                iconStyle += 'background-repeat: no-repeat;'
-                iconStyle += 'background-position: -'+icon_image_positions[icon]+'px 0;'
+                iconStyle += 'background-image: url(https://roll20.net/images/statussheet.png);';
+                iconStyle += 'background-repeat: no-repeat;';
+                iconStyle += 'background-position: -'+icon_image_positions[icon]+'px 0;';
             }else if(icon_image_positions[icon] === 'X'){
                 iconStyle += 'color: red; margin-right: 0px;';
                 X = 'X';
             }else{
                 iconStyle += 'background-color: ' + icon_image_positions[icon] + ';';
-                iconStyle += 'border: 1px solid white; border-radius: 50%;'
+                iconStyle += 'border: 1px solid white; border-radius: 50%;';
             }
-    
+
             iconStyle += style;
-    
+
             return '<div style="vertical-align:middle;'+iconStyle+'">'+X+'</div>';
         } else if (iconType == 'Token Condition') {
-            return '<b>TC </b> '
-        }    
+            return '<b>TC </b> ';
+        }
     },
-    
+
     getTokenMarkers = function () {
         return libTokenMarkers.getOrderedList();
-    },    
- 
-    findIcon = function (icon) {
-        markers.forEach((marker) => {
-            if (marker.name == icon) {
-                return marker.url
-            }
-        })
     },
+
+    // findIcon = function (icon) {
+    //     markers.forEach((marker) => {
+    //         if (marker.name == icon) {
+    //             return marker.url;
+    //         }
+    //     });
+    // },
 
     getIconTag = function (iconType,iconName) {
-        if (debug) {
-            log('Get Icon Tag')
-        }
-        
-        let installed = verifyInstalls(iconType)
-        if (!installed) {
-            return
-        }
-        
-        let iconTag = null
-        if (iconType == 'Token Marker') {
-            iconTag = libTokenMarkers.getStatus(iconName).getTag()
-        } else if (iconType == 'Combat Master') {
-            iconTag = iconName
-        }    
+        if (debug) log('Get Icon Tag');
 
-        return iconTag
+
+        let installed = verifyInstalls(iconType);
+        if (!installed) {
+            return;
+        }
+
+        let iconTag = null;
+        if (iconType == 'Token Marker') {
+            iconTag = libTokenMarkers.getStatus(iconName).getTag();
+        } else if (iconType == 'Combat Master') {
+            iconTag = iconName;
+        }
+
+        return iconTag;
     },
-    
+
     verifyInstalls = function(iconType) {
         if (iconType == 'Token Marker' && 'undefined' == typeof libTokenMarkers) {
             makeAndSendMenu('libTokenMarker API must be installed if using Custom Icons.', '', 'gm');
-            return false
+            return false;
         } else if (iconType == 'Token Condition' && 'undefined' == typeof TokenCondition) {
             makeAndSendMenu('Token Condition API must be installed if using Token Condition.', '', 'gm');
-            return false
-        }       
-        return true
+            return false;
+        }
+        return true;
     },
-    
+
 //*************************************************************************************************************
-//EXTERNAL CALLS 
+//EXTERNAL CALLS
 //*************************************************************************************************************
     doRoundCalls = function () {
-        if (debug) {
-            log("Do Round Calls");
-        }
+        if (debug) log("Do Round Calls");
+
 
         let verified    = isCombatActiveAndTriggerStopIfNot();
         if (!verified) {
             return;
         }
-        
+
         let config     = state[combatState].config.turnorder;
         let turnorder  = getTurnorder();
         let tokenObj, characterObj, macro;
@@ -2919,331 +2877,324 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         }
                         if (!['None',''].includes(config.roundRoll20AM)) {
                             sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
-                        }          
+                        }
                         if (!['None',''].includes(config.roundFX)) {
                             doFX(tokenObj,config.roundFX);
-                        }                     
+                        }
                     }
-                }    
+                }
             }
         });
     },
- 
+
     doTurnCalls = function (tokenObj) {
-        if (debug) {
-            log("Do Turn External Calls")
-        }
-        
-        let config = state[combatState].config.turnorder
+        if (debug) log("Do Turn External Calls");
+
+
+        let config = state[combatState].config.turnorder;
         let characterObj = getObj('character',tokenObj.get('represents'));
-        let key, condition, ability, macro
+        let key, condition, ability, macro;
 
         if (characterObj) {
             if (Object.entries(characterObj).length > 0) {
                 if (!['None',''].includes(config.turnMacro)) {
-                    ability = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:config.turnMacro})[0]
+                    ability = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:config.turnMacro})[0];
                     if (ability) {
-                        sendCalltoChat(tokenObj,characterObj,ability.get('action'))
+                        sendCalltoChat(tokenObj,characterObj,ability.get('action'));
                     } else {
-                        macro = findObjs({_type:'macro', name:config.turnMacro})[0]
+                        macro = findObjs({_type:'macro', name:config.turnMacro})[0];
                         if (macro) {
-                            sendCalltoChat(tokenObj,characterObj,macro.get('action'))
-                        }                    
+                            sendCalltoChat(tokenObj,characterObj,macro.get('action'));
+                        }
                     }
                 }
-    
+
                 for (key in state[combatState].conditions) {
-                    condition = state[combatState].conditions[key]
+                    condition = state[combatState].conditions[key];
                     if (tokenObj.get('_id') == condition.id && condition.addPersistentMacro) {
-                        ability = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:condition.addMacro})[0]
+                        ability = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:condition.addMacro})[0];
                         if (ability) {
-                            sendCalltoChat(tokenObj,characterObj,ability.get('action'))
+                            sendCalltoChat(tokenObj,characterObj,ability.get('action'));
                         } else {
-                            macro = findObjs({_type:'macro', name:condition.addMacro})[0]
+                            macro = findObjs({_type:'macro', name:condition.addMacro})[0];
                             if (macro) {
-                                sendCalltoChat(tokenObj,characterObj,macro.get('action'))
-                            }                    
+                                sendCalltoChat(tokenObj,characterObj,macro.get('action'));
+                            }
                         }
                     }
                 }
                 if (!['None',''].includes(config.turnAPI)) {
-                    sendCalltoChat(tokenObj,characterObj,config.turnAPI)
+                    sendCalltoChat(tokenObj,characterObj,config.turnAPI);
                 }
                 if (!['None',''].includes(config.turnRoll20AM)) {
-                    sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM)
-                }          
+                    sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
+                }
                 if (!['None',''].includes(config.turnFX)) {
-                    doFX(tokenObj,config.turnFX)
-                }                     
+                    doFX(tokenObj,config.turnFX);
+                }
             }
-            
-        }        
+
+        }
     },
- 
+
     doAddConditionCalls = function (tokenObj,key) {
-        if (debug) {
-            log("Do Add Condition Calls")
+        if (debug) log("Do Add Condition Calls");
+
+
+        let condition = getConditionByKey(key);
+        if (!condition) {
+            return;
         }
 
-        let condition = getConditionByKey(key)
-        if (!condition) {
-            return
-        }
-        
         let characterObj = getObj('character',tokenObj.get('represents'));
-        let macro
-        
+        let macro;
+
         if (characterObj) {
             if (!['None',''].includes(condition.addMacro)) {
-                macro = findObjs({_type:'macro', name:condition.addMacro})[0]
+                macro = findObjs({_type:'macro', name:condition.addMacro})[0];
                 if (macro) {
-                    sendCalltoChat(tokenObj,characterObj,macro.get('action'))
-                }   
+                    sendCalltoChat(tokenObj,characterObj,macro.get('action'));
+                }
             }
             if (!['None',''].includes(condition.addAPI)) {
-                sendCalltoChat(tokenObj,characterObj,condition.addAPI)
+                sendCalltoChat(tokenObj,characterObj,condition.addAPI);
             }
             if (!['None',''].includes(condition.addRoll20AM)) {
-                sendCalltoChat(tokenObj,characterObj,condition.addRoll20AM)
-            }    
+                sendCalltoChat(tokenObj,characterObj,condition.addRoll20AM);
+            }
             if (!['None',''].includes(condition.addFX)) {
-                doFX(tokenObj,condition.addFX)
-            }  
+                doFX(tokenObj,condition.addFX);
+            }
         }
     },
-  
+
     doRemoveConditionCalls = function (tokenObj,key) {
-        if (debug) {
-            log("Do Remove Condition Calls")
-        }
-        
-        let condition = getConditionByKey(key)
+        if (debug) log("Do Remove Condition Calls");
+
+
+        let condition = getConditionByKey(key);
         if (!condition) {
-            return
+            return;
         }
-        
+
         let characterObj = getObj('character',tokenObj.get('represents'));
-        let macro
-        
+        let macro;
+
         if (characterObj) {
             if (!['None',''].includes(condition.remMacro)) {
-                macro = findObjs({_type:'macro', name:condition.remMacro})[0]
+                macro = findObjs({_type:'macro', name:condition.remMacro})[0];
                 if (macro) {
-                    sendCalltoChat(tokenObj,characterObj,macro.get('action'))
-                }   
+                    sendCalltoChat(tokenObj,characterObj,macro.get('action'));
+                }
             }
             if (!['None',''].includes(condition.remAPI)) {
-                sendCalltoChat(tokenObj,characterObj,condition.remAPI)
+                sendCalltoChat(tokenObj,characterObj,condition.remAPI);
             }
             if (!['None',''].includes(condition.remRoll20AM)) {
-                sendCalltoChat(tokenObj,characterObj,condition.remRoll20AM)
-            }    
+                sendCalltoChat(tokenObj,characterObj,condition.remRoll20AM);
+            }
             if (!['None',''].includes(condition.remFX)) {
-                doFX(tokenObj,condition.remFX)
-            }                       
+                doFX(tokenObj,condition.remFX);
+            }
         }
-    },    
+    },
 
     sendCalltoChat = function(tokenObj,characterObj,action) {
-        if (debug) {
-            log("sendCalltoChat")
-        }
+        if (debug) log("sendCalltoChat");
 
-        let substitutions = state[combatState].config.macro.substitutions
-        let replaceString
-        
+
+        let substitutions = state[combatState].config.macro.substitutions;
+        let replaceString;
+
         if (substitutions) {
             substitutions.forEach((substitution) => {
-                replaceString = new RegExp(substitution.action, "g");                
+                replaceString = new RegExp(substitution.action, "g");
                 if (substitution.type == 'CharName') {
-                    action = action.replace(replaceString, characterObj.get('name'), 'g');  
+                    action = action.replace(replaceString, characterObj.get('name'), 'g');
                 } else if (substitution.type == 'CharID') {
-                    action = action.replace(replaceString, characterObj.get('_id'), 'g')
+                    action = action.replace(replaceString, characterObj.get('_id'), 'g');
                 } else if (substitution.type == 'TokenID') {
-                    action = action.replace(replaceString, tokenObj.get('_id'), 'g')
+                    action = action.replace(replaceString, tokenObj.get('_id'), 'g');
                 } else if (substitution.type == 'PlayerID') {
-                    action = action.replace(replaceString, state[combatState].config.gmPlayerID, 'g')
-                }                  
-            })
-        } 
+                    action = action.replace(replaceString, state[combatState].config.gmPlayerID, 'g');
+                }
+            });
+        }
 
         sendChat(tokenObj.get('name'), action, null, {noarchive:true});
     },
-    
+
     doFX = function (tokenObj, fx) {
         if(tokenObj.get('layer') === 'gmlayer') return;
 
         let pos = {x: tokenObj.get('left'), y: tokenObj.get('top')};
         spawnFxBetweenPoints(pos, pos, fx, tokenObj.get('pageid'));
     },
-    
+
     getMacro = function(tokenObj, name) {
-        let macro = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:name})[0]
+        let macro = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:name})[0];
         if (!action) {
-            macro = findObjs({_type:'macro', name:config.turnMacro})[0]
-        }    
-        return macro
-    },    
-    
-//*************************************************************************************************************
-//SUBSTITUTIONS 
-//*************************************************************************************************************	   
-    newSubstitution = function(cmdDetails) {
-        if (debug) {
-            log('Add Substitution')
+            macro = findObjs({_type:'macro', name:config.turnMacro})[0];
         }
-        
+        return macro;
+    },
+
+//*************************************************************************************************************
+//SUBSTITUTIONS
+//*************************************************************************************************************
+    newSubstitution = function(cmdDetails) {
+        if (debug) log('Add Substitution');
+
+
         let substitution = {
             type: cmdDetails.details.type,
             action: cmdDetails.details.action
-        }
-        
-        state[combatState].config.macro.substitutions.push(substitution)
-        
-		sendMacroMenu();		
-    },  
-    
+        };
+
+        state[combatState].config.macro.substitutions.push(substitution);
+
+		sendMacroMenu();
+    },
+
     removeSubstitution = function(cmdDetails) {
-        if (debug) {
-            log('Remove Substitution')
-        }
-        
+        if (debug) log('Remove Substitution');
+
+
         state[combatState].config.macro.substitutions.forEach((substitution, i) => {
             if (substitution.action == cmdDetails.details.action) {
-                state[combatState].config.macro.substitutions.splice(i,1)
+                state[combatState].config.macro.substitutions.splice(i,1);
             }
-        })
+        });
 		sendMacroMenu();
-    },      
+    },
 //*************************************************************************************************************
-//SPELLS 
-//*************************************************************************************************************	  
+//SPELLS
+//*************************************************************************************************************
     handleSpellCast = function(msg) {
         if (debug) {
-            log('Handle Spell Cast')
-            log(msg)
+            log('Handle Spell Cast');
+            log(msg);
         }
-        
+
         let status          = state[combatState].config.status;
         let concentration   = state[combatState].config.concentration;
-        let spellName
-        let description
-        let concentrate     = false
-        let spellLevel 
-        let duration        = 1
-        let durationmult
-        let direction       = 0
-        
+        let spellName;
+        let description;
+        let concentrate     = false;
+        let spellLevel;
+        let duration        = 1;
+        let durationmult;
+        let direction       = 0;
+
         if (status.sheet == 'OGL') {
-            spellName    = msg.content.match(/name=([^\n{}]*[^"\n{}])/);  
-            spellName    = RegExp.$1;     
-            description  = msg.content.match(/description=([^\n{}]*[^"\n{}])/)  
-            description  = RegExp.$1;  
-            spellLevel   = msg.content.match(/spelllevel=([^\n{}]*[^"\n{}])/)  
-            spellLevel   = RegExp.$1;  
-            durationmult = 1
+            spellName    = msg.content.match(/name=([^\n{}]*[^"\n{}])/);
+            spellName    = RegExp.$1;
+            description  = msg.content.match(/description=([^\n{}]*[^"\n{}])/);
+            description  = RegExp.$1;
+            spellLevel   = msg.content.match(/spelllevel=([^\n{}]*[^"\n{}])/);
+            spellLevel   = RegExp.$1;
+            durationmult = 1;
             if (msg.content.includes("{{concentration=1}}")) {
-                concentrate = true
-            } 
+                concentrate = true;
+            }
 
             if (!spellLevel && !concentrate) {
                 return;
-            }            
+            }
         } else if (status.sheet == 'Shaped') {
-            spellName    = msg.content.match(/title=([^\n{}]*[^"\n{}])/);  
-            spellName    = RegExp.$1;         
-            description  = msg.content.match(/{{content=([^\n{}]*[^"\n{}])/);  
+            spellName    = msg.content.match(/title=([^\n{}]*[^"\n{}])/);
+            spellName    = RegExp.$1;
+            description  = msg.content.match(/{{content=([^\n{}]*[^"\n{}])/);
             description  = RegExp.$1;
             duration     = msg.content.match(/duration=[^}\d]*([0-9]+)_([A-Z]+[^"\n{}_ ])/);
             duration     = RegExp.$1;
             durationmult = msg.content.match(/duration=[^}\d]*([0-9]+)_([A-Z]+[^"\n{}_ ])/);
             durationmult = RegExp.$2;
             if (durationmult.includes("ROUND")) {
-                durationmult = 1
+                durationmult = 1;
             } else if (durationmult.includes("MINUTE")) {
-                durationmult = 10
+                durationmult = 10;
             } else {
-                durationmult = 0 //ONLY ACCOUNT FOR ROUND AND MINUTE DURATIONS, EVERYTHING ELSE IS 0
+                durationmult = 0; //ONLY ACCOUNT FOR ROUND AND MINUTE DURATIONS, EVERYTHING ELSE IS 0
             }
             if (durationmult == 0) {
-                duration = 1
+                duration = 1;
             } else {
                 duration = (duration * durationmult);
-            }    
+            }
             if (msg.content.includes("CONCENTRATION")) {
-                concentrate = true
-            }             
+                concentrate = true;
+            }
         } else if (status.sheet == 'PF2') {
-            spellName    = msg.content.match(/header=([^\n{}]*[^"\n{}])/);  
-            spellName    = RegExp.$1;         
-            description  = msg.content.match(/desc=([^\n{}]*[^"\n{}])/)  
-            description  = RegExp.$1;   
-        }     
+            spellName    = msg.content.match(/header=([^\n{}]*[^"\n{}])/);
+            spellName    = RegExp.$1;
+            description  = msg.content.match(/desc=([^\n{}]*[^"\n{}])/);
+            description  = RegExp.$1;
+        }
 
         if (!spellName) {
-            return
+            return;
         }
-        
+
         if (debug) {
-            log('Spell Name:'+spellName)
-            log('Description:'+description)
-            log('Concentrate:'+concentrate)
-            log('Duration:'+duration)
-            log('Duration Multiplier:'+durationmult)            
+            log('Spell Name:'+spellName);
+            log('Description:'+description);
+            log('Concentrate:'+concentrate);
+            log('Duration:'+duration);
+            log('Duration Multiplier:'+durationmult);
         }
         if (!description) {
-            description = 'None'
+            description = 'None';
         }
         if (!duration) {
-            duration = 1
+            duration = 1;
         }
-        
+
         if (!direction) {
-            direction = 0
-        }        
-        if (status.autoAddSpells) {     
-            let key = spellName.toLowerCase()
-            let condition = getConditionByKey(key)
+            direction = 0;
+        }
+        if (status.autoAddSpells) {
+            let key = spellName.toLowerCase();
+            let condition = getConditionByKey(key);
             if (duration >= 1) {
-                direction = -1
+                direction = -1;
             }
             else {
-                direction = 0
-            }            
+                direction = 0;
+            }
             if (typeof condition == 'undefined' && !getIgnoresByKey(key)) {
                 state[combatState].spells[key] = {
-                				name: spellName,
-                				key: key,
-                				type: 'Spell',
-                				icon: 'red',
-                				iconType: 'Combat Master',
-                				description: description,
-                				duration: duration,
-                				direction: direction,
-                				message: 'None',
-                				targeted: false,
-                				favorite: false,
-                				concentration: concentrate,
-                				description: description,
-                				addAPI: 'None',
-                				addRoll20AM: 'None',
-                				addFX: 'None',
-                				addMacro: 'None',
-                				addPersistentMacro: false,
-                				remAPI: 'None',
-                				remRoll20AM: 'None',
-                				remFX: 'None',
-                				remMacro: 'None'				
-                } 
-			
-                let addSpellButton = makeBigButton(`Add Spell to Combat Master`, `!cmaster --spell,confirm=true,key=${key}`)
-                let ignoreSpellButton = makeBigButton(`Ignore this Spell`, `!cmaster --spell,confirm=false,key=${key}`)
-                makeAndSendMenu(`A new spell - ${spellName} - was detected<br>`+addSpellButton+ignoreSpellButton ,`New Spell Found`,`gm`)
-                
+                    name: spellName,
+                    key: key,
+                    type: 'Spell',
+                    icon: 'red',
+                    iconType: 'Combat Master',
+                    description: description,
+                    duration: duration,
+                    direction: direction,
+                    message: 'None',
+                    targeted: false,
+                    favorite: false,
+                    concentration: concentrate,
+                    addAPI: 'None',
+                    addRoll20AM: 'None',
+                    addFX: 'None',
+                    addMacro: 'None',
+                    addPersistentMacro: false,
+                    remAPI: 'None',
+                    remRoll20AM: 'None',
+                    remFX: 'None',
+                    remMacro: 'None'
+                };
+
+                let addSpellButton = makeBigButton(`Add Spell to Combat Master`, `!cmaster --spell,confirm=true,key=${key}`);
+                let ignoreSpellButton = makeBigButton(`Ignore this Spell`, `!cmaster --spell,confirm=false,key=${key}`);
+                makeAndSendMenu(`A new spell - ${spellName} - was detected<br>`+addSpellButton+ignoreSpellButton ,`New Spell Found`,`gm`);
+
             }  else if (condition) {
-                targetedSpell(key)
-                if (concentration.useConcentration && concentrate == true && condition.override == false) {     
-                    let characterName
+                targetedSpell(key);
+                if (concentration.useConcentration && concentrate == true && condition.override == false) {
+                    let characterName;
                     if (status.sheet == 'OGL') {
                         characterName = msg.content.match(/charname=([^\n{}]*[^"\n{}])/);
                         characterName = RegExp.$1;
@@ -3252,83 +3203,82 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         characterName = msg.content.match(/{{character_name=([\w\d ]+[^"\n{}]?)/);
                         characterName = RegExp.$1;
                     }
-                    let characterID     = findObjs({ name: characterName, _type: 'character' }).shift().get('id')    
-                    let tokenObj        = findObjs({ represents: characterID, _pageid:Campaign().get("playerpageid"), _type: 'graphic' })[0]
-                    addConditionToToken(tokenObj,'concentration',condition.duration,condition.direction,'Concentrating on ' +spellName)
-                }                   
+                    let characterID     = findObjs({ name: characterName, _type: 'character' }).shift().get('id');
+                    let tokenObj        = findObjs({ represents: characterID, _pageid:Campaign().get("playerpageid"), _type: 'graphic' })[0];
+                    addConditionToToken(tokenObj,'concentration',condition.duration,condition.direction,'Concentrating on ' +spellName);
+                }
             }
         }
     },
-    
+
     addSpell = function(key) {
         if (debug) {
-            log('Add Spell')
-            log(key)
-        }        
-        state[combatState].config.conditions[key] = state[combatState].spells[key] 
+            log('Add Spell');
+            log(key);
+        }
+        state[combatState].config.conditions[key] = state[combatState].spells[key];
         let index = state[combatState].spells.indexOf(key);
         if (index > -1) {
             state[combatState].spells.splice(index, 1);
         }
         sendConditionMenu(key);
     },
- 
+
     ignoreSpell = function(key) {
         if (debug) {
-            log('Ignore Spell')
-            log(key)
-        }  
-        
-       state[combatState].ignores.push(key)
+            log('Ignore Spell');
+            log(key);
+        }
+
+       state[combatState].ignores.push(key);
        makeAndSendMenu('Spell has been added to Ignore List','Spell Ignored','gm');
     },
-    
+
     getIgnoresByKey = function(key) {
         if (debug) {
-            log('Get Ignores By Key')
-            log('Key:'+key)
-            log('Exists:'+state[combatState].ignores.includes(key))
-        }  
-        
+            log('Get Ignores By Key');
+            log('Key:'+key);
+            log('Exists:'+state[combatState].ignores.includes(key));
+        }
+
         if (state[combatState].ignores.includes(key)) {
-            return true
+            return true;
         } else {
-            return false
-        }  
+            return false;
+        }
     },
 
     handleConstitutionSave = function(obj, prev) {
-        if (debug) {
-            log('-------------Handle Constitution Save-------------')
-        }
-        
-        let tokenID = obj.get('id')
-        let found = false
+        if (debug) log('-------------Handle Constitution Save-------------');
+
+
+        let tokenID = obj.get('id');
+        let found = false;
         state[combatState].conditions.forEach((condition) => {
             if (condition.id == tokenID && condition.key == 'concentration') {
-                found = true
+                found = true;
             }
-        })
-        
+        });
+
         if (!found) {
             return;
         }
 
-        let conditions = obj.get('statusmarkers').split(',')
-        let condition = state[combatState].conditions.map(id => obj.get('statusmarkers'))
-        let concentration = state[combatState].config.concentration
-        let bar = concentration.woundBar+'_value'
-        let target = concentration.notify
+        // let conditions = obj.get('statusmarkers').split(',');
+        // let condition = state[combatState].conditions.map(id => obj.get('statusmarkers'));
+        let concentration = state[combatState].config.concentration;
+        let bar = concentration.woundBar+'_value';
+        let target = concentration.notify;
 
         if(obj.get(bar) < prev[bar]) {
-            let calcDC = Math.floor((prev[bar] - obj.get(bar))/2)
-            let DC = (calcDC > 10) ? calcDC : 10
-            let conSave = parseInt(getAttrByName(obj.get('represents'), concentration.attribute, 'current')) || 0
+            let calcDC = Math.floor((prev[bar] - obj.get(bar))/2);
+            let DC = (calcDC > 10) ? calcDC : 10;
+            // let conSave = parseInt(getAttrByName(obj.get('represents'), concentration.attribute, 'current')) || 0;
             let contents;
 
             if(target === 'Character'){
                 contents = "Make a Concentration Check - <b>DC " + DC + "</b>.";
-                target = obj.get('name').split(' ').shift()
+                target = obj.get('name').split(' ').shift();
             } else if(target === 'Everyone'){
                 contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
                 target = '';
@@ -3351,9 +3301,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
 //*************************************************************************************************************
-//MISC 
-//*************************************************************************************************************	  
-    
+//MISC
+//*************************************************************************************************************
+
     sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
@@ -3362,20 +3312,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         return (Campaign().get('initiativepage') !== false);
     },
 
-    
+
     handleLongString = function (str, max=8) {
         str = str.split(' ')[0];
         return (str.length > max) ? str.slice(0, max) + '...' : str;
     },
 
-    randomBetween = function (min, max) {
-        return Math.floor(Math.random()*(max-min+1)+min);
-    },
+    // randomBetween = function (min, max) {
+    //     return Math.floor(Math.random()*(max-min+1)+min);
+    // },
 
     handeIniativePageChange = function (obj,prev) {
-        if (debug) {
-            log (`-------------Handle Initiative Page Change------------- turnorder=${JSON.stringify(getTurnorder())}`);
-        }
+        if (debug) log (`-------------Handle Initiative Page Change------------- turnorder=${JSON.stringify(getTurnorder())}`);
+
         if((obj.get('initiativepage') !== prev.initiativepage && !obj.get('initiativepage'))){
             //stopCombat();
         }
@@ -3387,16 +3336,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
     },
 
-    notifyObservers = function(event,obj,prev){
-        _.each(observers[event],function(handler){
-            handler(obj,prev);
-        });
-    },
+    // notifyObservers = function(event,obj,prev){
+    //     _.each(observers[event],function(handler){
+    //         handler(obj,prev);
+    //     });
+    // },
 
     getCurrentTurnObjectOrLastVisibleIfHidden = (idSkip = -1) => {
-        if (debug) {
-            log ('getCurrentTurnObjectOrLastVisibleIfHidden idSkip='+idSkip);
-        }
+        if (debug) log ('getCurrentTurnObjectOrLastVisibleIfHidden idSkip='+idSkip);
+
         let turns = getTurnorder(), turn = turns.shift(), first = {...turn},
         tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
         lastVisibleToken;
@@ -3427,9 +3375,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             log ('-------------Handle Graphic Delete-------------');
             log('obj='+JSON.stringify(obj));
         }
- 
+
         if(!inFight()) return;
-        
+
         let turnorder =  getTurnorder();
         const newTurnorder = turnorder.filter(turn => turn.id !== obj.get('_id'));
         if (JSON.stringify(newTurnorder) != JSON.stringify(turnorder)) { // delete an item which is in the roll20 combat/turnorder
@@ -3462,7 +3410,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 log('Next Player Deleted !');
                 actualizeNextMarker(obj);
             }
-        }    
+        }
     },
 
     handleGraphicMovement = function (obj /*, prev */) {
@@ -3470,9 +3418,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             log ('-------------Handle Graphic Movement-------------');
             log('obj='+JSON.stringify(obj));
         }
- 
+
         if(!inFight()) return;
-        
+
         let turnorder =  getTurnorder();
 
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
@@ -3487,31 +3435,31 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 changeMarker(obj, markerType.NEXT);
                 toFront(getOrCreateMarker(markerType.MAIN));
             }
-        }    
+        }
     },
 
     //return an array of objects according to key, value, or key and value matching
-    getObjects = function (obj, key, val) {
-        var objects = [];
-        for (var i in obj) {
-            if (!obj.hasOwnProperty(i)) continue;
-            if (typeof obj[i] == 'object') {
-                objects = objects.concat(getObjects(obj[i], key, val));    
-            } else 
-            //if key matches and value matches or if key matches and value is not passed (eliminating the case where key matches but passed value does not)
-            if (i == key && obj[i] == val || i == key && val == '') { //
-                objects.push(obj);
-            } else if (obj[i] == val && key == ''){
-                //only add if the object is not already in the array
-                if (objects.lastIndexOf(obj) == -420){
-                    objects.push(obj);
-                }
-            }
-        }
-        return objects;
-    },
+    // getObjects = function (obj, key, val) {
+    //     var objects = [];
+    //     for (var i in obj) {
+    //         if (!obj.hasOwnProperty(i)) continue;
+    //         if (typeof obj[i] == 'object') {
+    //             objects = objects.concat(getObjects(obj[i], key, val));
+    //         } else
+    //         //if key matches and value matches or if key matches and value is not passed (eliminating the case where key matches but passed value does not)
+    //         if (i == key && obj[i] == val || i == key && val == '') { //
+    //             objects.push(obj);
+    //         } else if (obj[i] == val && key == ''){
+    //             //only add if the object is not already in the array
+    //             if (objects.lastIndexOf(obj) == -420){
+    //                 objects.push(obj);
+    //             }
+    //         }
+    //     }
+    //     return objects;
+    // },
 
-    
+
     esRE = function (s) {
         var escapeForRegexp = /(\\|\/|\[|\]|\(|\)|\{|\}|\?|\+|\*|\||\.|\^|\$)/g;
         return s.replace(escapeForRegexp,"\\$1");
@@ -3541,23 +3489,22 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     ucFirst = function (string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     },
-    
-    buildPartyList = function(){
-		var partyList = '|All,all';
-        _.each(findObjs({type:'player'}),player=>{
-            let who = getObj('player', player.id).get('displayname');
-            if (playerIsGM(player.id)){
-              who = 'gm'
-            }            
-            partyList += '|'+who+','+who
-        });
-        return partyList;
-    },
+
+    // buildPartyList = function(){
+	// 	var partyList = '|All,all';
+    //     _.each(findObjs({type:'player'}),player=>{
+    //         let who = getObj('player', player.id).get('displayname');
+    //         if (playerIsGM(player.id)){
+    //           who = 'gm';
+    //         }
+    //         partyList += '|'+who+','+who;
+    //     });
+    //     return partyList;
+    // },
 
     testAndSetDefault = (propertyName, state, defaults) => {
-        if (debug) {
-            log ('testAndSetDefault')
-        }
+        if (debug) log ('testAndSetDefault');
+
 
         if(!state[combatState].config.hasOwnProperty(propertyName)){
             state[combatState].config[propertyName] = defaults.config[propertyName];
@@ -3570,43 +3517,41 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             return;
         }
 
-        if (debug) {
-            log ('testAndSetDefaults list=' + JSON.stringify(propertyList));
-        }
+        if (debug) log ('testAndSetDefaults list=' + JSON.stringify(propertyList));
+
 
         propertyList.forEach(prop => testAndSetDefault(prop, state, defaults));
     },
 
     setDefaults = function (reset) {
-        let key, condition   
-        
-        if (debug) {
-            log ('Set Defaults')
-        }
-        
+        let key, condition;
+
+        if (debug) log ('Set Defaults');
+
+
         const combatDefaults = {
             conditions: [],
             ignores: [],
             spells: [],
 			config: {
-                command: 'cmaster',		
+                command: 'cmaster',
 				duration: false,
 				favorite: false,
-				previousPage: null,			
+				previousPage: null,
 				gmPlayerID: null,
 				hold: {
-				    held: false,
-				    turnorder: [],
-				    conditions: [],
-				    round: 1
+                    held: false,
+                    turnorder: [],
+                    conditions: [],
+                    round: 1
 				},
 				initiative: {
                     rollInitiative: 'None',
                     initiativeDie: 20,
-					initiativeAttributes: 'initiative_bonus',					
+					initiativeAttributes: 'initiative_bonus',
                     showInitiative: false,
                     rollEachRound: false,
-                    apiTargetTokens: 'None'				
+                    apiTargetTokens: 'None'
 				},
                 turnorder: {
                     useMarker: true,
@@ -3622,7 +3567,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					animateMarker: true,
 					animateMarkerDegree: 1,
 					animateMarkerWait: 25,
-	                sortTurnOrder: true,
+                    sortTurnOrder: true,
 					centerToken: false,
 					turnAPI: 'None',
 					turnRoll20AM: 'None',
@@ -3633,8 +3578,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					roundFX: 'None',
 					roundMacro: 'None',
 					characterRoundMacro: 'None',
-					allRoundMacro: 'None',		
-                    
+					allRoundMacro: 'None',
+
                     useRangeMarker: 'External URL',
                     rangeExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/255451119/sO9vPVGw6S_B-lq-PIgGTA/max.png?1636832705',
                     rangeMarkerWidth: 6000,
@@ -3659,7 +3604,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 },
                 macro: {
                     substitutions: [],
-                },				
+                },
 				status: {
 					userAllowed: false,
 					userChanges: false,
@@ -3679,8 +3624,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					autoRoll: false,
 					woundBar: 'Bar1',
 					attribute: 'None'
-				},					
-			    conditions: {
+				},
+                conditions: {
 					blinded: {
 						name: 'Blinded',
 						key: 'blinded',
@@ -3755,7 +3700,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remRoll20AM: 'None',
 						remFX: 'None',
 						remMacro: 'None',
-					},					
+					},
 					deafened: {
 						name: 'Deafened',
 						key: 'deafened',
@@ -3829,7 +3774,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',					
+						remMacro: 'None',
 					},
 					incapacitated: {
 						name: 'Incapacitated',
@@ -3854,7 +3799,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',						
+						remMacro: 'None',
 					},
 					inspiration: {
 						name: 'Inspiration',
@@ -4080,47 +4025,47 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remRoll20AM: 'None',
 						remFX: 'None',
 						remMacro: 'None',
-					},				
+					},
 				},
             },
         };
 
-        
+
         if(!state[combatState].config || typeof state[combatState].config == 'undefined' || reset) {
             state[combatState].config = combatDefaults.config;
         } else {
-		
+
             if(!state[combatState].config.hasOwnProperty('command')){
                 state[combatState].config.command = combatDefaults.config.command;
             }
 			if(!state[combatState].config.hasOwnProperty('favorite')){
 				state[combatState].config.favorite = combatDefaults.config.favorite;
-			}  			
+			}
 			if(!state[combatState].config.hasOwnProperty('previousPage')){
 				state[combatState].config.previousPage = combatDefaults.config.previousPage;
-			}  
+			}
             if(!state[combatState].config.hasOwnProperty('hold')){
                 state[combatState].config.hold = combatDefaults.config.hold;
             } else {
                 if(!state[combatState].config.hold.hasOwnProperty('held')){
-                    state[combatState].config.hold.held = combatDefaults.config.hold.held;    
-                }                 
+                    state[combatState].config.hold.held = combatDefaults.config.hold.held;
+                }
                 if(!state[combatState].config.hold.hasOwnProperty('turnorder')){
-                    state[combatState].config.hold.turnorder = combatDefaults.config.hold.turnorder;    
-                }  
+                    state[combatState].config.hold.turnorder = combatDefaults.config.hold.turnorder;
+                }
                 if(!state[combatState].config.hold.hasOwnProperty('conditions')){
-                    state[combatState].config.hold.conditions = combatDefaults.config.hold.conditions;    
-                }    
+                    state[combatState].config.hold.conditions = combatDefaults.config.hold.conditions;
+                }
                 if(!state[combatState].config.hold.hasOwnProperty('round')){
-                    state[combatState].config.hold.round = combatDefaults.config.hold.round;    
-                }                    
-            }				
+                    state[combatState].config.hold.round = combatDefaults.config.hold.round;
+                }
+            }
             if(!state[combatState].config.hasOwnProperty('initiative')){
                 state[combatState].config.initiative = combatDefaults.config.initiative;
-            } else {		
+            } else {
 				if(!state[combatState].config.initiative.hasOwnProperty('initiativeAttributes')){
 					state[combatState].config.initiative.initiativeAttributes = combatDefaults.config.initiative.initiativeAttributes;
-				}			
+				}
                 if(!state[combatState].config.initiative.hasOwnProperty('rollInitiative')){
                     state[combatState].config.initiative.rollInitiative = combatDefaults.config.initiative.rollInitiative;
                 }
@@ -4133,18 +4078,18 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 }
                 if(!state[combatState].config.initiative.hasOwnProperty('apiTargetTokens')){
                     state[combatState].config.initiative.apiTargetTokens = combatDefaults.config.initiative.apiTargetTokens;
-                }  
-			}			
-						
+                }
+			}
+
             if(!state[combatState].config.hasOwnProperty('turnorder')){
                 state[combatState].config.turnorder = combatDefaults.config.turnorder;
             } else {
 				if(!state[combatState].config.turnorder.hasOwnProperty('useMarker')){
 					state[combatState].config.turnorder.useMarker = combatDefaults.config.turnorder.useMarker;
-				}     
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('markerType')){
 					state[combatState].config.turnorder.markerType = combatDefaults.config.turnorder.markerType;
-				}  				
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('externalMarkerURL')){
 					state[combatState].config.turnorder.externalMarkerURL = combatDefaults.config.turnorder.externalMarkerURL;
 				}
@@ -4156,19 +4101,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('tokenMarkerName')){
 					state[combatState].config.turnorder.tokenMarkerName = combatDefaults.config.turnorder.tokenMarkerName;
-				} 
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('tokenMarkerURL')){
 					state[combatState].config.turnorder.tokenMarkerURL = combatDefaults.config.turnorder.tokenMarkerURL;
-				} 				
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('nextTokenMarkerName')){
 					state[combatState].config.turnorder.nextTokenMarkerName = combatDefaults.config.turnorder.nextTokenMarkerName;
-				}	
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('nextTokenMarkerURL')){
 					state[combatState].config.turnorder.nextTokenMarkerURL = combatDefaults.config.turnorder.nextTokenMarkerURL;
-				}				
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('markerSize')){
 					state[combatState].config.turnorder.markerSize = combatDefaults.config.turnorder.markerSize;
-				}				
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('animateMarker')){
 					state[combatState].config.turnorder.animateMarker = combatDefaults.config.turnorder.animateMarker;
 				}
@@ -4177,31 +4122,31 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('animateMarkerWait')){
 					state[combatState].config.turnorder.animateMarkerWait = combatDefaults.config.turnorder.animateMarkerWait;
-				}				
+				}
 				if(!state[combatState].config.turnorder.hasOwnProperty('centerToken')){
 					state[combatState].config.turnorder.centerToken = combatDefaults.config.turnorder.centerToken;
-				}	
+				}
                 if(!state[combatState].config.turnorder.hasOwnProperty('sortTurnOrder')){
                     state[combatState].config.turnorder.sortTurnOrder = combatDefaults.config.turnorder.sortTurnOrder;
-                }	
+                }
                 if(!state[combatState].config.turnorder.hasOwnProperty('turnAPI')){
                     state[combatState].config.turnorder.turnAPI = combatDefaults.config.turnorder.turnAPI;
-                }		
+                }
                 if(!state[combatState].config.turnorder.hasOwnProperty('turnRoll20AM')){
                     state[combatState].config.turnorder.turnRoll20AM = combatDefaults.config.turnorder.turnRoll20AM;
-                }				
+                }
                 if(!state[combatState].config.turnorder.hasOwnProperty('turnFX')){
                     state[combatState].config.turnorder.turnFX = combatDefaults.config.turnorder.turnFX;
                 }
                 if(!state[combatState].config.turnorder.hasOwnProperty('turnMacro')){
                     state[combatState].config.turnorder.turnMacro = combatDefaults.config.turnorder.turnMacro;
-                }    
+                }
                 if(!state[combatState].config.turnorder.hasOwnProperty('roundAPI')){
                     state[combatState].config.turnorder.roundAPI = combatDefaults.config.turnorder.roundAPI;
-                }		
+                }
                 if(!state[combatState].config.turnorder.hasOwnProperty('roundRoll20AM')){
                     state[combatState].config.turnorder.roundRoll20AM = combatDefaults.config.turnorder.roundRoll20AM;
-                }				
+                }
                 if(!state[combatState].config.turnorder.hasOwnProperty('roundFX')){
                     state[combatState].config.turnorder.roundFX = combatDefaults.config.turnorder.roundFX;
                 }
@@ -4232,7 +4177,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     'rangeMarkerHeight'
                 ], state, combatDefaults);
             }
-			
+
             if(!state[combatState].config.hasOwnProperty('timer')){
                 state[combatState].config.timer = combatDefaults.config.timer;
             } else {
@@ -4261,7 +4206,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     state[combatState].config.timer.timerFontColor = combatDefaults.config.timer.timerFontColor;
                 }
             }
-			
+
             if(!state[combatState].config.hasOwnProperty('announcements')){
                 state[combatState].config.announcements = combatDefaults.config.announcements;
             } else {
@@ -4279,13 +4224,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 }
 				if(!state[combatState].config.announcements.hasOwnProperty('showNPCTurns')){
 					state[combatState].config.announcements.showNPCTurns = combatDefaults.config.announcements.showNPCTurns;
-				}                
+				}
 			}
 
             if(!state[combatState].config.hasOwnProperty('macro')){
                 state[combatState].config.macro = combatDefaults.config.macro;
             }
-            
+
 			if(!state[combatState].config.hasOwnProperty('status')) {
 				state[combatState].config.status = combatDefaults.config.status;
 			} else {
@@ -4297,27 +4242,27 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				}
 				if(!state[combatState].config.status.hasOwnProperty('sendConditions')){
 					state[combatState].config.status.sendConditions = combatDefaults.config.status.sendConditions;
-				}           
+				}
 				if(!state[combatState].config.status.hasOwnProperty('clearConditions')){
 					state[combatState].config.status.clearConditions = combatDefaults.config.status.clearConditions;
-				}      
+				}
 				if(!state[combatState].config.status.hasOwnProperty('useMessage')){
 					state[combatState].config.status.useMessage = combatDefaults.config.status.useMessage;
 				}
 				if(!state[combatState].config.status.hasOwnProperty('showConditions')){
 					state[combatState].config.status.showConditions = combatDefaults.config.status.showConditions;
-				}	
+				}
 				if(!state[combatState].config.status.hasOwnProperty('access')){
 					state[combatState].config.status.access = combatDefaults.config.status.access;
-				}	
+				}
 				if(!state[combatState].config.status.hasOwnProperty('autoAddSpells')){
 					state[combatState].config.status.autoAddSpells = combatDefaults.config.status.autoAddSpells;
-				}	
+				}
 				if(!state[combatState].config.status.hasOwnProperty('sheet')){
 					state[combatState].config.status.sheet = combatDefaults.config.status.sheet;
-				}				
+				}
             }
-            
+
 			if(!state[combatState].config.hasOwnProperty('concentration')) {
 				state[combatState].config.concentration = combatDefaults.config.concentration;
 			} else {
@@ -4326,7 +4271,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				}
 				if(!state[combatState].config.concentration.hasOwnProperty('notify')){
 					state[combatState].config.concentration.notify = combatDefaults.config.concentration.notify;
-				}      
+				}
 				if(!state[combatState].config.concentration.hasOwnProperty('autoAdd')){
 					state[combatState].config.concentration.autoAdd = combatDefaults.config.concentration.autoAdd;
 				}
@@ -4335,93 +4280,93 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				}
 				if(!state[combatState].config.concentration.hasOwnProperty('woundBar')){
 					state[combatState].config.concentration.woundBar = combatDefaults.config.concentration.woundBar;
-				}	
+				}
 				if(!state[combatState].config.concentration.hasOwnProperty('attribute')){
 					state[combatState].config.concentration.attribute = combatDefaults.config.concentration.attribute;
-				}					
-            }            
+				}
+            }
         }
-        
+
         if(!state[combatState].hasOwnProperty('conditions')){
             state[combatState].conditions = [];
-        } 
+        }
 
         if(!state[combatState].hasOwnProperty('ignores')){
             state[combatState].ignores = [];
-        } 
+        }
 
         if(!state[combatState].hasOwnProperty('spells')){
             state[combatState].spells = [];
-        } 
-        
-        if(state[combatState].config.hasOwnProperty('conditions') && !reset){        
+        }
+
+        if(state[combatState].config.hasOwnProperty('conditions') && !reset){
             for (key in state[combatState].config.conditions) {
-                condition = getConditionByKey(key)
+                condition = getConditionByKey(key);
                 if (!condition.hasOwnProperty('key')) {
-                    condition.key = key
-                }  
+                    condition.key = key;
+                }
                 if (!condition.hasOwnProperty('type')) {
-                    condition.type = 'Condition'
-                }                  
+                    condition.type = 'Condition';
+                }
                 if (!condition.hasOwnProperty('duration')) {
-                    condition.duration = 1
+                    condition.duration = 1;
                 }
                 if (!condition.hasOwnProperty('direction')) {
-                    condition.direction = 0
+                    condition.direction = 0;
                 }
                 if (!condition.hasOwnProperty('override')) {
-                    condition.override = true
+                    condition.override = true;
                 }
                 if (!condition.hasOwnProperty('favorite')) {
-                    condition.favorite = false
+                    condition.favorite = false;
                 }
                 if (!condition.hasOwnProperty('message')) {
-                    condition.message = 'None'
+                    condition.message = 'None';
                 }
                 if (!condition.hasOwnProperty('targeted')) {
-                    condition.targeted = false
-                }     
+                    condition.targeted = false;
+                }
                 if (!condition.hasOwnProperty('targetedAPI')) {
-                    condition.targetedAPI = 'casterTargets'
-                }                     
+                    condition.targetedAPI = 'casterTargets';
+                }
                 if (!condition.hasOwnProperty('concentration')) {
-                    condition.concentration = false
-                }                       
+                    condition.concentration = false;
+                }
                 if (!condition.hasOwnProperty('iconType')) {
-                    condition.iconType = 'Combat Master'
-                }   
+                    condition.iconType = 'Combat Master';
+                }
                 if (!condition.hasOwnProperty('addAPI')) {
-                    condition.addAPI = 'None'
-                }                  
+                    condition.addAPI = 'None';
+                }
                 if (!condition.hasOwnProperty('addRoll20AM')) {
-                    condition.addRoll20AM = 'None'
-                }  
+                    condition.addRoll20AM = 'None';
+                }
                 if (!condition.hasOwnProperty('addFX')) {
-                    condition.addFX = 'None'
-                }      
+                    condition.addFX = 'None';
+                }
                 if (!condition.hasOwnProperty('addMacro')) {
-                    condition.addMacro = 'None'
-                }  
+                    condition.addMacro = 'None';
+                }
                 if (!condition.hasOwnProperty('addPersistentMacro')) {
-                    condition.addPersistentMacro = false
-                }                  
+                    condition.addPersistentMacro = false;
+                }
                 if (!condition.hasOwnProperty('remAPI')) {
-                    condition.remAPI = 'None'
-                }    
+                    condition.remAPI = 'None';
+                }
                 if (!condition.hasOwnProperty('remRoll20AM')) {
-                    condition.remRoll20AM = 'None'
-                }  
+                    condition.remRoll20AM = 'None';
+                }
                 if (!condition.hasOwnProperty('remFX')) {
-                    condition.remFX = 'None'
-                }      
+                    condition.remFX = 'None';
+                }
                 if (!condition.hasOwnProperty('remMacro')) {
-                    condition.remMacro = 'None'
-                }  
-            };
-        } else if (!state[combatState].config.hasOwnProperty('conditions') || reset) {    
+                    condition.remMacro = 'None';
+                }
+            }
+        } else if (!state[combatState].config.hasOwnProperty('conditions') || reset) {
             state[combatState].config.conditions = combatDefaults.config.conditions;
         }
-        
+
         if (!state[combatState].config.conditions.hasOwnProperty('concentration') && state[combatState].config.concentration.useConcentration) {
             state[combatState].config.conditions.concentration = combatDefaults.config.conditions.concentration;
         }
@@ -4431,107 +4376,107 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let handout;
         let title;
         if (cmdDetails.details.held) {
-            title = 'Main Menu Held'
+            title = 'Main Menu Held';
         } else if (cmdDetails.details.started) {
-            title = 'Main Menu Started'
+            title = 'Main Menu Started';
         } else if (cmdDetails.details.stopped) {
-            title = 'Main Menu Stopped'
+            title = 'Main Menu Stopped';
         } else if (cmdDetails.details.setup) {
-            title = 'Setup Menu'
+            title = 'Setup Menu';
         } else if (cmdDetails.details.initiative) {
-            title = 'Initiative Menu'
+            title = 'Initiative Menu';
         } else if (cmdDetails.details.turnorder) {
-            title = 'Turnorder Menu'
+            title = 'Turnorder Menu';
         } else if (cmdDetails.details.timer) {
-            title = 'Timer Menu'
+            title = 'Timer Menu';
         } else if (cmdDetails.details.announcements) {
-            title = 'Announcements Menu'
+            title = 'Announcements Menu';
         } else if (cmdDetails.details.macro) {
-            title = 'Macro & API Menu'
+            title = 'Macro & API Menu';
         } else if (cmdDetails.details.status) {
-            title = 'Status Menu'
+            title = 'Status Menu';
         } else if (cmdDetails.details.concentration) {
-            title = 'Concentration Menu'            
+            title = 'Concentration Menu';
         } else if (cmdDetails.details.conditions) {
-            title = 'Conditions Menu'
+            title = 'Conditions Menu';
         } else if (cmdDetails.details.condition) {
-            title = 'Condition Menu'
+            title = 'Condition Menu';
         } else if (cmdDetails.details.addAPI) {
-            title = 'Add API Menu'
+            title = 'Add API Menu';
         } else if (cmdDetails.details.remAPI) {
-            title = 'Remove API Menu'            
+            title = 'Remove API Menu';
         } else if (cmdDetails.details.export) {
-            title = 'Export Menu'
-        } 
-        handout = findHandout(title) 
-        makeAndSendMenu(`<a href="http://journal.roll20.net/handout/${handout[0].id}">View Help</a>`,title,'gm')         
+            title = 'Export Menu';
+        }
+        handout = findHandout(title);
+        makeAndSendMenu(`<a href="http://journal.roll20.net/handout/${handout[0].id}">View Help</a>`,title,'gm');
     },
-    
+
     buildHelp = function() {
-        log('Building Help')
-        
-        let mainStarted         = createHandout('Main Menu Started')
-        let mainStopped         = createHandout('Main Menu Stopped')
-        let mainHeld            = createHandout('Main Menu Held')
-        let menuSetup           = createHandout('Setup Menu')
-        let menuInitiative      = createHandout('Initiative Menu')
-        let menuTurnorder       = createHandout('Turnorder Menu')
-        let menuTimer           = createHandout('Timer Menu')
-        let menuAnnouncements   = createHandout('Announcements Menu')
-        let menuMacro           = createHandout('Macro & API Menu')
-        let menuStatus          = createHandout('Status Menu')
-        let menuConcentration   = createHandout('Concentration Menu')
-        let menuConditions      = createHandout('Conditions Menu')
-        let menuCondition       = createHandout('Condition Menu')
-        let menuAddAPI          = createHandout('Add API Menu')
-        let menuRemoveAPI       = createHandout('Remove API Menu')
-        let menuExport          = createHandout('Export Menu')
-        
+        log('Building Help');
+
+        let mainStarted         = createHandout('Main Menu Started');
+        let mainStopped         = createHandout('Main Menu Stopped');
+        let mainHeld            = createHandout('Main Menu Held');
+        let menuSetup           = createHandout('Setup Menu');
+        let menuInitiative      = createHandout('Initiative Menu');
+        let menuTurnorder       = createHandout('Turnorder Menu');
+        let menuTimer           = createHandout('Timer Menu');
+        let menuAnnouncements   = createHandout('Announcements Menu');
+        let menuMacro           = createHandout('Macro & API Menu');
+        let menuStatus          = createHandout('Status Menu');
+        let menuConcentration   = createHandout('Concentration Menu');
+        let menuConditions      = createHandout('Conditions Menu');
+        let menuCondition       = createHandout('Condition Menu');
+        let menuAddAPI          = createHandout('Add API Menu');
+        let menuRemoveAPI       = createHandout('Remove API Menu');
+        let menuExport          = createHandout('Export Menu');
+
         setTimeout(function() {
-            buildMainMenuStarted(mainStarted,menuSetup.id,menuCondition.id)
-            buildMainMenuStopped(mainStopped,menuSetup.id,menuCondition.id)
-            buildMainMenuHeld(mainHeld,menuSetup.id,menuCondition.id)
-            buildSetupMenu(menuSetup,menuInitiative.id,menuTurnorder.id,menuTimer.id,menuAnnouncements.id,menuMacro.id,menuStatus.id,menuConcentration.id,menuConditions.id,menuExport.id)
-            buildInitiativeMenu(menuInitiative,menuSetup.id)
-            buildTurnorderMenu(menuTurnorder,menuSetup.id)
-            buildTimerMenu(menuTimer,menuSetup.id)
-            buildAnnouncementsMenu(menuAnnouncements,menuSetup.id)
-            buildMacroMenu(menuMacro,menuSetup.id)
-            buildStatusMenu(menuStatus,menuSetup.id)
-            buildConcentrationMenu(menuConcentration,menuSetup.id)
-            buildConditionsMenu(menuConditions,menuSetup.id)
-            buildConditionMenu(menuCondition,menuSetup.id)
-            buildAddAPIMenu(menuAddAPI)
-            buildRemoveAPIMenu(menuRemoveAPI)
-            buildExportMenu(menuExport)
-        },1000)    
-        
+            buildMainMenuStarted(mainStarted,menuSetup.id,menuCondition.id);
+            buildMainMenuStopped(mainStopped,menuSetup.id,menuCondition.id);
+            buildMainMenuHeld(mainHeld,menuSetup.id,menuCondition.id);
+            buildSetupMenu(menuSetup,menuInitiative.id,menuTurnorder.id,menuTimer.id,menuAnnouncements.id,menuMacro.id,menuStatus.id,menuConcentration.id,menuConditions.id,menuExport.id);
+            buildInitiativeMenu(menuInitiative,menuSetup.id);
+            buildTurnorderMenu(menuTurnorder,menuSetup.id);
+            buildTimerMenu(menuTimer,menuSetup.id);
+            buildAnnouncementsMenu(menuAnnouncements,menuSetup.id);
+            buildMacroMenu(menuMacro,menuSetup.id);
+            buildStatusMenu(menuStatus,menuSetup.id);
+            buildConcentrationMenu(menuConcentration,menuSetup.id);
+            buildConditionsMenu(menuConditions,menuSetup.id);
+            buildConditionMenu(menuCondition,menuSetup.id);
+            buildAddAPIMenu(menuAddAPI);
+            buildRemoveAPIMenu(menuRemoveAPI);
+            buildExportMenu(menuExport);
+        },1000);
+
     },
-    
+
     findHandout = function (title) {
-        let handout = findObjs({_type:'handout', name:title})
-        
-        return handout
+        let handout = findObjs({_type:'handout', name:title});
+
+        return handout;
     },
-    
+
     createHandout = function (title) {
-        let handout = findHandout(title)
+        let handout = findHandout(title);
 
         if (handout[0]) {
-            handout[0].remove()
+            handout[0].remove();
         }
-        
+
         handout   = createObj('handout', {
                         name:title,
                         archived:true
-                    })
-        
-        return handout  
+                    });
+
+        return handout;
     },
 
     buildMainMenuStarted = function(handout,setupID,conditionID) {
-        let notes
-        
+        let notes;
+
         notes = `<div class="content note-editor notes">
                     <p>
                         <img src="https://s3.amazonaws.com/files.d20.io/images/152155102/i5BnjEmv8VSsfpoK44jaKw/original.png?15953856105">
@@ -4547,16 +4492,16 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         <li><b>Show Conditions </b>— Shows all Conditions assigned to all Players & NPCs</li>
                         <li><b>Sort Turnorder </b>— Sorts Turnorder in ascending sequence</li>
                         <li><b>Setup  </b>— Shows the <a href="http://journal.roll20.net/handout/${setupID}">Setup Menu</a></li>
-                    </ul>`
-        notes += buildMainConditions('https://s3.amazonaws.com/files.d20.io/images/133804430/JJ--U559pOgsd9UBpUb06g/original.png?15892970605',conditionID)
-        notes += `</div>`
+                    </ul>`;
+        notes += buildMainConditions('https://s3.amazonaws.com/files.d20.io/images/133804430/JJ--U559pOgsd9UBpUb06g/original.png?15892970605',conditionID);
+        notes += `</div>`;
 
-        handout.set({notes:notes});    
+        handout.set({notes:notes});
     },
- 
+
     buildMainMenuStopped = function(handout,setupID,conditionID) {
-        let notes
-        
+        let notes;
+
         notes = `<div class="content note-editor notes">
                     <p>
                         <img src="https://s3.amazonaws.com/files.d20.io/images/152155096/Yb0jQ-AqPsjXPAN4F0OHVA/original.png?15953856105">
@@ -4565,16 +4510,16 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     <ul>
                         <li><b>Start Combat </b>— Starts up combat. Must have tokens selected if using CM to roll initiative.</li>
                         <li><b>Setup </b>— Shows the <a href="http://journal.roll20.net/handout/${setupID}">Setup Menu</a>.</li>
-                    </ul>`
-        notes += buildMainConditions('https://s3.amazonaws.com/files.d20.io/images/133804645/pmJuadcB01opW3Lg8lyOYA/original.png?15892970725',conditionID)
-        notes += `</div>`
-                
-        handout.set({notes:notes});         
+                    </ul>`;
+        notes += buildMainConditions('https://s3.amazonaws.com/files.d20.io/images/133804645/pmJuadcB01opW3Lg8lyOYA/original.png?15892970725',conditionID);
+        notes += `</div>`;
+
+        handout.set({notes:notes});
     },
 
     buildMainMenuHeld = function(handout,setupID,conditionID) {
-        let notes
-        
+        let notes;
+
         notes = `<div class="content note-editor notes">
                     <p>
                         <img src="https://s3.amazonaws.com/files.d20.io/images/152155100/DcEfpVBdzKz9t-SS23KZhA/original.png?15953856105">
@@ -4583,13 +4528,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     <ul>
                         <li><b>Start Combat </b>— Restarts Combat from where it was previous held</li>
                         <li><b>Setup </b>— Shows the <a href="http://journal.roll20.net/handout/${setupID}">Setup Menu</a>.</li>
-                    </ul>`
-        notes += buildMainConditions('https://s3.amazonaws.com/files.d20.io/images/133804415/0Te1DEzFMolSiIj7DfZfTw/original.png?15892970575', conditionID)
-        notes += `</div>`
-        
-        handout.set({notes:notes});         
-    },    
-       
+                    </ul>`;
+        notes += buildMainConditions('https://s3.amazonaws.com/files.d20.io/images/133804415/0Te1DEzFMolSiIj7DfZfTw/original.png?15892970575', conditionID);
+        notes += `</div>`;
+
+        handout.set({notes:notes});
+    },
+
     buildMainConditions = function(image,conditionID) {
         let notes = `<h4><i>Conditions</i> - From Left to Right </h4>
                     <ul>
@@ -4605,11 +4550,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         <li><b>Conditions </b>— Shows all Conditions (Condition Type = Condition)</li>
                         <li><b>Spells </b>— Shows all Spells (Condition Type = Spell)</li>
                         <li><b>Favorites </b>— Shows all Favorites</li>
-                    </ul>`
-                    
-        return notes            
+                    </ul>`;
+
+        return notes;
     },
-        
+
     buildSetupMenu = function(handout,initiativeID,turnorderID,timerID,announceID,macroID,statusID,concentrationID,conditionsID,exportID) {
         let notes = `<div class="content note-editor notes">
                         <p>
@@ -4635,16 +4580,16 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                                 <li><b>Import </b>— Import your configuration from another game.<br><b>NOTE:</b> <i>If migrating from CombatMaster to another CombatMaster, it will copy the entire CombatMaster configuration.  If coming from CombatTracker, it will only copy the conditions and you’ll have to reconfigure everything else. Importing from StatusInfo is not supported.<br></i></li>
                             </ul>
                         </ul>
-                        <h4><i>Resets</i></h4>                      
+                        <h4><i>Resets</i></h4>
                         <ul>
                             <li><b>Reset </b>— This resets the entire session state. It defaults the conditions to D&amp;D 5e.<br></li>
                             <li><b>Remove Ignores </b>— This Removes all Spells from the ignore list<br></li>
                             <li><b>Clear Token Statuses</b>— This Removes all Conditions/Spells assigned to selected tokens<br></li>
                         </ul>
-                    </div>`
-                    
-        handout.set({notes:notes}); 
-    },   
+                    </div>`;
+
+        handout.set({notes:notes});
+    },
 
     buildInitiativeMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
@@ -4666,16 +4611,16 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                                 <li><b>Target Tokens </b>— Not functional yet></li>
                             </ul>
                         </ul>
-                    </div>`
+                    </div>`;
 
-        handout.set({notes:notes});     
-    },     
+        handout.set({notes:notes});
+    },
 
     buildTurnorderMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
                             <img src="https://s3.amazonaws.com/files.d20.io/images/152155089/ITDSxgaL_xtJ7w_jiNg0gA/original.png?15953856105">
-                        </p>    
+                        </p>
                         <h4><i>Turnorder Setup</i></h4>
                         <ul>
                             <ul>
@@ -4685,35 +4630,35 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                                 <li><b>Use Next Marker </b>— A thumbnail of what will be used to highlight the next active character. Set to None if you don't need it</li>
                                 <li><b>Use Range Marker </b>— A thumbnail of what will be used to highlight the range under the active character. Set to None if you don't need it</li>
                             </ul>
-                        </ul>`
-            notes +=    buildExternalCallMenu('<b>Beginning of Each Round</b>')
-            notes +=    buildExternalCallMenu("<b>Beginning of Each Turn</b>")
-            notes +=    `</div>`
-        
-        handout.set({notes:notes}); 
-    },      
-    
+                        </ul>`;
+            notes +=    buildExternalCallMenu('<b>Beginning of Each Round</b>');
+            notes +=    buildExternalCallMenu("<b>Beginning of Each Turn</b>");
+            notes +=    `</div>`;
+
+        handout.set({notes:notes});
+    },
+
     buildExternalCallMenu = function(title,round,condition) {
         let notes = `<h4><i>${title}</i></h4>
                      <h5><i> Set various external calls which will be invoked</i></h5>
                     <ul>
                         <li><b>API </b>— Must be a full API command. You must use brackets {{ and }} around the command and around each parameter when entering the command. Any inline rolls must be written like [#[1d6]#] instead of [[1d6]].</li>
                         <li><b>Roll20AM </b>— Must be a full Roll20AM command. You must use brackets {{ and }} around the command and around each parameter when entering the command.</li>
-                        <li><b>FX </b>— Must be a valid FX command.</li>`
+                        <li><b>FX </b>— Must be a valid FX command.</li>`;
         if (round) {
             notes +=    `<li><b>Characters Macro </b>— This uses a global macro substituting in all player characters on the map. Follows other macro rules (see below)</li>
-                         <li><b>All Tokens Macro </b>— This uses a global macro substituting in all tokens on the map. Follows other macro rules (see below)</li>`
+                         <li><b>All Tokens Macro </b>— This uses a global macro substituting in all tokens on the map. Follows other macro rules (see below)</li>`;
         } else {
-            notes +=    `<li><b>Macro </b>— Must be the full macro name (without the #). Any inline rolls within the macro must be written like [#[1d6]#] instead of [[1d6]].</li>`
+            notes +=    `<li><b>Macro </b>— Must be the full macro name (without the #). Any inline rolls within the macro must be written like [#[1d6]#] instead of [[1d6]].</li>`;
         }
         if (condition) {
-            notes +=    `<li><b>Persistent Macro</b> — Determines if the assigned macro is repeated at the start of an affected token's turn.`    
+            notes +=    `<li><b>Persistent Macro</b> — Determines if the assigned macro is repeated at the start of an affected token's turn.`;
         }
-        notes +=    `</ul>`
+        notes +=    `</ul>`;
 
-        return notes  
-    },    
-    
+        return notes;
+    },
+
     buildTimerMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
@@ -4728,11 +4673,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Token Font </b>— Set the font for the displayed timer.<br></li>
                             <li><b>Token Font Size </b>—  Set the font size for the displayed timer.</li>
                         </ul>
-                    </div>`
-                    
-        handout.set({notes:notes}); 
-    },      
- 
+                    </div>`;
+
+        handout.set({notes:notes});
+    },
+
     buildAnnouncementsMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
@@ -4748,15 +4693,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                                     <li><b>CheckBox Icon </b>— Ends Player Turn.</li>
                                     <li><b>Condition Name </b>— Click on it to view Condition Description.</li>
                                     <li><b>Trashcan Icon </b>— Click on it to remove Condition from Token.</li>
-                                </ul>    
+                                </ul>
                             </li>
                             <li><b>Whisper GM Only </b>— Choose whether all announcements are only sent to the GM.<br></li>
                             <li><b>Shorten Long Names </b>— Shortens the token name as displayed in the turn announcement.<br></li>
                             <li><b>Show NPC Conditions </b>— Choose whether NPC turn announcements are only sent to the GM.<br></li>
                         </ul>
-                    </div>`
-        handout.set({notes:notes}); 
-    },      
+                    </div>`;
+        handout.set({notes:notes});
+    },
 
     buildMacroMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes"><p>This menu is for setting up strings to substitute for various types of calls in Macros and APIs. For example, if you want CombatMaster to run a macro that would normally use @{selected|character_id}, you would need to set up a substitution string for CharID, then use that string in place of @{selected|character_id} in the macro itself.</p><p>Substitution strings work best as unique terms that won't be used elsewhere in a command or macro, otherwise CombatMaster may insert a substituted call somewhere it doesn't belong. So you'd want the TokenID substitute to be something like 'tokenidentifier' since that isn't likely to be used anywhere else, whereas 'name' is not a good substitute, because it is a word that is likely to be used in other contexts.</p><p>The PlayerID substitution string is specifically for use in TokenMod commands. If you set the PlayerID substitution to something like 'playeridentifier', then a TokenMod command in CombatMaster would look like this:</p><pre>!token-mod --api-as playeridentifier --ids tokenidentifier --on showname<br></pre>
@@ -4770,9 +4715,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Delete </b>— Delete the substitution on this line.<br></li>
                             <li><b>Add Substitution </b>— Create a new substitution string.<br></li>
                         </ul>
-                    </div>`
-        handout.set({notes:notes}); 
-    },      
+                    </div>`;
+        handout.set({notes:notes});
+    },
 
     buildStatusMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
@@ -4789,10 +4734,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Auto Add Spells </b>— Enables Combat Master to detect spells and add them to Combat Master.  Note: Not all spells can be detected due to programming of that sheet<br></li>
                             <li><b>Sheet </b>— Current Supported Sheets (OGL, Shaped, PF2, PF1)<br></li>
                         </ul>
-                    </div>`
-        handout.set({notes:notes});    
-    },   
-    
+                    </div>`;
+        handout.set({notes:notes});
+    },
+
     buildConcentrationMenu = function(handout,setupID) {
          let notes = `<div class="content note-editor notes">
                         <p>
@@ -4808,10 +4753,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Auto Add Spells </b>— Enables Combat Master to detect spells and add them to Combat Master.  Note: Not all spells can be detected due to programming of that sheet<br></li>
                             <li><b>Sheet </b>— Current Supported Character Sheet (OGL, Shaped, PF2, PF1)<br></li>
                         </ul>
-                    </div>`   
-        handout.set({notes:notes});             
-    },    
-    
+                    </div>`;
+        handout.set({notes:notes});
+    },
+
     buildConditionsMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
@@ -4823,11 +4768,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Edit </b>— Shows the <a href="http://journal.roll20.net/handout/-M5yiGl9bj-bn0V-72pd">Condition Editing Menu</a> for that condition.</li>
                             <li><b>Add Condition </b>— Create a new condition. You will first be prompted for a condition name, then it will show you the new condition's Editing Menu.<br></li>
                         </ul>
-                    </div>`
-        handout.set({notes:notes});             
-        
-    },      
-    
+                    </div>`;
+        handout.set({notes:notes});
+
+    },
+
     buildConditionMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes">
                         <p>
@@ -4856,31 +4801,31 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Edit Description </b>— Add a description to condition.  Use {{ }} if there's periods or commas in descrription<br></li>
                             <li><b>Delete Condition </b>— Delete the condition from CombatMaster.<br></li>
                         </ul>
-                     </div>`
-                
-        handout.set({notes:notes});  
-    },      
-    
+                     </div>`;
+
+        handout.set({notes:notes});
+    },
+
     buildAddAPIMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes"><p>Use the Macro & API menu to setup Substitution Strings if needed. For example, if you want CombatMaster to run a macro that would normally use @{selected|character_id}, you would need to set up a substitution string for CharID, then use that string in place of @{selected|character_id} in the macro itself.</p><p>Substitution strings work best as unique terms that won't be used elsewhere in a command or macro, otherwise CombatMaster may insert a substituted call somewhere it doesn't belong. So you'd want the TokenID substitute to be something like 'tokenidentifier' since that isn't likely to be used anywhere else, whereas 'name' is not a good substitute, because it is a word that is likely to be used in other contexts.</p><p>The PlayerID substitution string is specifically for use in TokenMod commands. If you set the PlayerID substitution to something like 'playeridentifier', then a TokenMod command in CombatMaster would look like this:</p><pre>!token-mod --api-as playeridentifier --ids tokenidentifier --on showname<br></pre>
                         <p>
                             <img src="https://s3.amazonaws.com/files.d20.io/images/152155097/fpdZk-v1a2C7miDJmJ1NIA/original.png?15953856105">
-                        </p>`
-            notes +=    buildExternalCallMenu('<b>Add API</b>')              
+                        </p>`;
+            notes +=    buildExternalCallMenu('<b>Add API</b>');
 
-        handout.set({notes:notes});  
-    },      
+        handout.set({notes:notes});
+    },
 
     buildRemoveAPIMenu = function(handout,setupID) {
         let notes = `<div class="content note-editor notes"><p>Use the Macro & API menu to setup Substitution Strings if needed. For example, if you want CombatMaster to run a macro that would normally use @{selected|character_id}, you would need to set up a substitution string for CharID, then use that string in place of @{selected|character_id} in the macro itself.</p><p>Substitution strings work best as unique terms that won't be used elsewhere in a command or macro, otherwise CombatMaster may insert a substituted call somewhere it doesn't belong. So you'd want the TokenID substitute to be something like 'tokenidentifier' since that isn't likely to be used anywhere else, whereas 'name' is not a good substitute, because it is a word that is likely to be used in other contexts.</p><p>The PlayerID substitution string is specifically for use in TokenMod commands. If you set the PlayerID substitution to something like 'playeridentifier', then a TokenMod command in CombatMaster would look like this:</p><pre>!token-mod --api-as playeridentifier --ids tokenidentifier --on showname<br></pre>
                         <p>
                             <img src="https://s3.amazonaws.com/files.d20.io/images/152155093/xt61MIhDuu93ZCOu7Tt8xA/original.png?15953856105">
-                        </p>`
-            notes +=    buildExternalCallMenu('<b>Remove API</b>')              
+                        </p>`;
+            notes +=    buildExternalCallMenu('<b>Remove API</b>');
 
-        handout.set({notes:notes});  
-    },     
-    
+        handout.set({notes:notes});
+    },
+
     buildExportMenu = function(handout) {
         let notes = `<div class="content note-editor notes">
                         <p>
@@ -4889,11 +4834,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         <h4><i>Export Menu</i></h4>
                         <p>This configuration code can be copied so you can import your conditions and settings into another game with CombatMaster. Simply triple-click the code to select it entirely (this also avoids selecting anything outside the code block). Save it in a handout to easily transmogrify to other games, or save it as a file on your computer.</p>
                         <p><b>NOTE:</b> <i>If migrating from CombatMaster to another CombatMaster, it will copy the entire CombatMaster configuration.  If coming from CombatTracker, it will only copy the conditions and you’ll have to reconfigure everything else. Importing from StatusInfo is not supported.</i></p>
-                    </div>`
-                    
-        handout.set({notes:notes});            
+                    </div>`;
+
+        handout.set({notes:notes});
     },
-    
+
     checkInstall = function () {
         if(!_.has(state, combatState)){
             state[combatState] = state[combatState] || {};
@@ -4901,8 +4846,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         setDefaults();
         buildHelp();
         log(script_name + ' Ready! Command: !cmaster --main');
-    },    
-    
+    },
+
     registerEventHandlers = function() {
         //log('registerEventHandlers !!!');
         //log('registerEventHandlers turnorder=' + JSON.stringify(Campaign().get('turnorder')));
@@ -4928,25 +4873,25 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 handleStatusMarkerChange(obj,prev);
             });
         }
-        
-        if('undefined' !== typeof TokenMod && TokenMod.ObserveTokenChange) {             
+
+        if('undefined' !== typeof TokenMod && TokenMod.ObserveTokenChange) {
             TokenMod.ObserveTokenChange(function(obj,prev) {
                 handleStatusMarkerChange(obj,prev);
-            });    
-        }       
+            });
+        }
     };
-    
+
     return {
         CheckInstall: checkInstall,
         RegisterEventHandlers: registerEventHandlers,
         ObserveTokenChange: observeTokenChange,
         addConditionToToken,
         removeConditionFromToken,
-	    addTargetsToCondition,
+        addTargetsToCondition,
         getConditions,
         getConditionByKey,
         sendConditionToChat,
-        getDefaultIcon	
+        getDefaultIcon
     };
 })();
 
@@ -4955,5 +4900,5 @@ on('ready',function() {
 
     CombatMaster.CheckInstall();
     CombatMaster.RegisterEventHandlers();
- 	        
+
 });

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-sparse-arrays */
 /**
  * Exalted 3rd Edition Dice Roller
  * @author Mike Leavitt
@@ -161,24 +163,25 @@ function setupRollStructure(result) {
 /**
  * FINALIZE DEFAULT CONDITION OBJECTS
  */
-function finalizeDefaultConditionObjDIT(obj, result, nextRollsToProcess) {
-    if (result.addedSuccesses) {
-        obj.status = result.addedSuccesses;
-        result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
-        while (obj.status >= 3) {
-            obj.status -= 3;
-            var newDie = randomInteger(10);
-            logger(`finalizeDefaultConditionObjDIT::newDie=${newDie}`);
-            nextRollsToProcess.push({
-                v: newDie, wasEverRerolled: false,
-                wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
-                title: [`RollTurn (2  ). DIT            ->Face=${strFill(newDie)}.`],
-                tagList: ['DIT']
-            });
-            obj.done++;
-        }
-    }
-}
+// function finalizeDefaultConditionObjDIT(obj, result, nextRollsToProcess) {
+//     if (result.addedSuccesses) {
+//         obj.status = result.addedSuccesses;
+//         result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
+//         while (obj.status >= 3) {
+//             obj.status -= 3;
+//             // eslint-disable-next-line no-undef
+//             var newDie = randomInteger(10);
+//             logger(`finalizeDefaultConditionObjDIT::newDie=${newDie}`);
+//             nextRollsToProcess.push({
+//                 v: newDie, wasEverRerolled: false,
+//                 wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+//                 title: [`RollTurn (2  ). DIT            ->Face=${strFill(newDie)}.`],
+//                 tagList: ['DIT']
+//             });
+//             obj.done++;
+//         }
+//     }
+// }
 
 function logger(level, ...logged) {
     if (!(level instanceof LOGLEVEL)) {
@@ -203,17 +206,17 @@ on('chat:message', function(msg) {
 	if (msg.type == 'api' && msg.content.indexOf(apiWake) != -1) {
 		var slc = msg.content.slice(msg.content.indexOf(apiWake) + apiWake.length);
 		var rawCmd = slc.trim();
-		var patt = /^.*\#/;
+		var patt = /^.*#/;
 
 		if (patt.test(rawCmd)) {
-			parseCmd = rawCmd.replace('#', 'd10>7');
+			var parseCmd = rawCmd.replace('#', 'd10>7');
 			var rollStr = '/roll ' + parseCmd;
 			performRoll(msg, rollStr);
 		} else if (rawCmd.indexOf('-help') != -1) {
             var outHTML = buildHelp();
             sendChat('EX3Dice API', '/w ' + msg.who + ' ' + outHTML);
 		} else {
-		    printError(msg, msg.who);
+            printError(msg, msg.who);
 		}
 	}
 });
@@ -277,16 +280,16 @@ function setSelectedTurnOrder(selected, successes) {
  */
 function performRoll(msg, cmd) {
     sendChat(msg.who, cmd, function(ops) {
-	    if (ops[0].type == 'rollresult') {
-	        var result = JSON.parse(ops[0].content);
+        if (ops[0].type == 'rollresult') {
+            var result = JSON.parse(ops[0].content);
             result.toGm = false;
             result.setTurn = false;
             
             setupRollStructure(result);
 
-	        var strSplit = ops[0].origRoll.split('-');
-	        var cmds = [];
-	        _.each(strSplit, parseCmds, cmds);
+            var strSplit = ops[0].origRoll.split('-');
+            var cmds = [];
+            _.each(strSplit, parseCmds, cmds);
             logger(LOGLEVEL.NOTICE, 'performRoll::parseCmds DONE !');
             logger('performRoll::ops='+JSON.stringify(ops));
             logger('performRoll::result='+ops[0].content);
@@ -294,25 +297,25 @@ function performRoll(msg, cmd) {
 
             parseAddedSuccesses(result, msg.content);
 
-	        if (!_.isEmpty(cmds)) processCmds(cmds, result);
+            if (!_.isEmpty(cmds)) processCmds(cmds, result);
             if (result.rollSetup.has10doubled) result.rollSetup.face[10].doubles.push({limit: 0, done: 0});
             finalizeRoll(result);
 
             const player = getObj("player", msg.playerid);
-	        var outHTML = buildHTML(result, ops[0].origRoll, player.get('color'));
+            var outHTML = buildHTML(result, ops[0].origRoll, player.get('color'));
 
             if (result.toGm) {
                 if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${player.get('displayname')} ${outHTML}`);
                 sendChat(msg.who, '/w gm ' + outHTML);
             } else {
-	            sendChat(msg.who, '/direct ' + outHTML);
+                sendChat(msg.who, '/direct ' + outHTML);
             }
 
             if (result.setTurn)
                 setSelectedTurnOrder(msg.selected, result.total);
-	    } else {
-	        printError(ops[0], msg.who);
-	    }
+        } else {
+            printError(ops[0], msg.who);
+        }
 	});
 }
 
@@ -330,9 +333,9 @@ function parseCmds(item) {
     if (!item) return;
     logger(LOGLEVEL.INFO, 'parseCmds::item="' + trim + '"');
 
-    var objRet, match = false;
+    var objRet, match = false, ret, patt;
     for (var i = 0; i < ParserConfig.length; i++) {
-        if (ret = trim.match(ParserConfig[i].pattern)) {
+        if ((ret = trim.match(ParserConfig[i].pattern))) {
             match = true;
             logger(LOGLEVEL.NOTICE, `parseCmds::MATCH${i+1} = ${ParserConfig[i].categoryName}`);
             logger('parseCmds::ret='+JSON.stringify(ret));
@@ -344,7 +347,7 @@ function parseCmds(item) {
     if (!match) {
         for (const condItem of Object.keys(ConditionalList)) {
             patt = new RegExp(`^(${condItem})$`);
-            if (ret = trim.match(patt)) {
+            if ((ret = trim.match(patt))) {
                 match = true;
                 logger(LOGLEVEL.NOTICE, `parseCmds::MATCH - Conditional Item = ${condItem}`);
                 logger('parseCmds::ret='+JSON.stringify(ret));
@@ -377,7 +380,7 @@ function processCmds(cmds, result) {
         // else default Parsing
         switch (String(item.cmd)) {
             case 'R':
-                recReroll = true;
+                recReroll = true; // break omitted because same treatment
             case 'r':
                 for (const face of item.faces) {
                     logger(LOGLEVEL.INFO, `processCmds::adding reroll on face=${face}, limit=${item.limit}, rec=${item.recReroll}, keepBest=${item.keepBest}, tags='${item.tagList}'`);
@@ -391,7 +394,7 @@ function processCmds(cmds, result) {
                 }
                 break;
             case 'E':
-                exploIgnore = false;
+                exploIgnore = false; // break omitted because same treatment
             case 'e':
                 for (const face of item.faces) {
                     logger(LOGLEVEL.INFO, `processCmds::adding explode on face=${face}, limit=${item.limit}, exploIgnore=${exploIgnore}`);
@@ -433,9 +436,9 @@ function processCmds(cmds, result) {
                 result.rollSetup.colored = true;
                 break;
             case 'V':
-                result.rollSetup.colored = true;
+                result.rollSetup.colored = true; // break omitted because same treatment
             case 'v':
-                result.rollSetup.verbosity = verbosityToSet;
+                result.rollSetup.verbosity = verbosityToSet; // break omitted because default rule fallback
             default:
                 break;
         }
@@ -639,7 +642,7 @@ function handleTurnConditionalHookHMU(result, turn, nextRollsToProcess, condIter
     if (cond.firstTurnSuccesses >= 3) {
         result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-HMU', conditionalColor, `&#013;&#010; HMU generated 3 or more success (${cond.firstTurnSuccesses}) => Adding 3 dices`));
         for (var i = 0; i < 3; i++) {
-            newDie = randomInteger(10);
+            var newDie = randomInteger(10);
             nextRollsToProcess.push({
                 v: newDie, wasEverRerolled: false,
                 wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
@@ -961,10 +964,10 @@ const   outerStyle = "background: url('https://app.roll20.net/images/quantumroll
 
 function parseAddedSuccesses(result, origCmd) {
     logger(`parseAddedSuccesses::parseAddedSuccesses origCmd=${origCmd}, result=${JSON.stringify(result)}`);
-    var patt = /^.*\#(?:\[[^\]]+\])?((?:[\+-]\d+(?:\[[^\]+-]*\]?)?)*)/;
-    var innerPatt = /(([\+-]\d+)(?:[^\]\+-]*\]?))/g;
+    var patt = /^.*#(?:\[[^\]]+\])?((?:[+-]\d+(?:\[[^\]+-]*\]?)?)*)/;
+    var innerPatt = /(([+-]\d+)(?:[^\]+-]*\]?))/g;
     var ret, succ = result.total, addedSuccessesLabel = '', addedSuccesses = 0;
-    if (ret = origCmd.match(patt)) {
+    if ((ret = origCmd.match(patt))) {
         logger('parseAddedSuccesses::ret='+JSON.stringify(ret));
         logger('parseAddedSuccesses::succ='+succ);
         if (ret[1]) {
@@ -1039,7 +1042,7 @@ function buildHTML(result, origRoll, color) {
 }
 
 function displayRolls(vals, result, html) {
-    var isDouble, diceNumber = 1;
+    var diceNumber = 1;
     html += '(';
     _.each(vals, function (item, idx) {
         logger(`displayRolls::item=${JSON.stringify(item)}`);
@@ -1052,7 +1055,6 @@ function displayRolls(vals, result, html) {
             logger(LOGLEVEL.INFO, `displayRolls::item(${strFill(diceNumber++)})=${item.v}, full=${JSON.stringify(item)}`);
         if (result.rollSetup.verbosity == 0 && item.rerolled)
             return;
-        isDouble = item.doubled;
         var affectedTextShadow = '';
         if (item.wasRerolled || item.wasExploded) {
             affectedTextShadow = wasAffectedTextShadow;
