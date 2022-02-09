@@ -253,10 +253,11 @@ function setSelectedTurnOrder(selected, successes) {
         }
     }
 
+    var pageId = getObj('graphic', selectedTokenId[0]).get('pageid');
     if (idTurnToCreate.length > 0) {
         for (const id of idTurnToCreate) {
             logger(LOGLEVEL.INFO, `setTurnOrder::pushing to turnorder id=${id} pr=${successes}`);
-            turnOrder.push({id:id,pr:successes,custom:''});
+            turnOrder.push({id:id,pr:successes,custom:'',_pageid:pageId});
         }
     }
 
@@ -990,6 +991,7 @@ function recalculateSuccesses(result) {
     if (succ < 0)
         succ = 0;
     var succTxt = result.addedSuccessesLabel ? `${result.total}${result.addedSuccesses >= 0 ? '+' + result.addedSuccesses : result.addedSuccesses}=${succ}` : succ;
+    if (result.total !== succ) result.total = succ;
     return { succTxt, succ };
 }
 

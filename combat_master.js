@@ -27,7 +27,7 @@ var CombatMaster = CombatMaster || (function() {
         observers = {
             tokenChange: []
         },
-		whisper, handled = [],	
+		whisper, handled = [],
         extensions = {
             StatusInfo: true // This will be set to true automatically if you have StatusInfo
         },
@@ -53,7 +53,7 @@ var CombatMaster = CombatMaster || (function() {
         timerImage = 't',
         favoriteImage = 'S',
         allConditionsImage = 'G',
-        addImage = '&',		
+        addImage = '&',
         doneImage = '3',
         showImage = 'v',
         delayImage = '}',
@@ -105,11 +105,9 @@ var CombatMaster = CombatMaster || (function() {
     rangeMarkerName = 'RangeMarker',
     markerType = {ROUND:'round', MAIN: 'main', NEXT: 'next', RANGE: 'range'},
     invisibleImage = 'https://s3.amazonaws.com/files.d20.io/images/255367527/BLuBSgz14Tx_IGSPAPM6vw/max.png?1636797848',
-
     icon_image_positions = {red:"#C91010",blue:"#1076C9",green:"#2FC910",brown:"#C97310",purple:"#9510C9",pink:"#EB75E1",yellow:"#E5EB75",dead:"X",skull:0,sleepy:34,"half-heart":68,"half-haze":102,interdiction:136,snail:170,"lightning-helix":204,spanner:238,"chained-heart":272,"chemical-bolt":306,"death-zone":340,"drink-me":374,"edge-crack":408,"ninja-mask":442,stopwatch:476,"fishing-net":510,overdrive:544,strong:578,fist:612,padlock:646,"three-leaves":680,"fluffy-wing":714,pummeled:748,tread:782,arrowed:816,aura:850,"back-pain":884,"black-flag":918,"bleeding-eye":952,"bolt-shield":986,"broken-heart":1020,cobweb:1054,"broken-shield":1088,"flying-flag":1122,radioactive:1156,trophy:1190,"broken-skull":1224,"frozen-orb":1258,"rolling-bomb":1292,"white-tower":1326,grab:1360,screaming:1394,grenade:1428,"sentry-gun":1462,"all-for-one":1496,"angel-outfit":1530,"archery-target":1564},
     ctMarkers = ['blue', 'brown', 'green', 'pink', 'purple', 'red', 'yellow', '-', 'all-for-one', 'angel-outfit', 'archery-target', 'arrowed', 'aura', 'back-pain', 'black-flag', 'bleeding-eye', 'bolt-shield', 'broken-heart', 'broken-shield', 'broken-skull', 'chained-heart', 'chemical-bolt', 'cobweb', 'dead', 'death-zone', 'drink-me', 'edge-crack', 'fishing-net', 'fist', 'fluffy-wing', 'flying-flag', 'frozen-orb', 'grab', 'grenade', 'half-haze', 'half-heart', 'interdiction', 'lightning-helix', 'ninja-mask', 'overdrive', 'padlock', 'pummeled', 'radioactive', 'rolling-bomb', 'screaming', 'sentry-gun', 'skull', 'sleepy', 'snail', 'spanner',   'stopwatch','strong', 'three-leaves', 'tread', 'trophy', 'white-tower'],
     shaped_conditions = ['blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'],
-
     script_name = 'CombatMaster',
     combatState = 'COMBATMASTER',
 
@@ -186,7 +184,7 @@ var CombatMaster = CombatMaster || (function() {
         }
         log('-------------inputHandler-----END-----');
 	},  
-	
+
 	//Extracts inline rolls
 	inlineExtract = function(msg){
 	    return _.chain(msg.inlinerolls)
@@ -199,7 +197,7 @@ var CombatMaster = CombatMaster || (function() {
 				},msg.content)
 				.value();
 	},
-	
+
     //Extracts the command details from a command string passed from handleInput	
 	cmdExtract = function(cmd){
 	    var cmdSep = {
@@ -246,7 +244,7 @@ var CombatMaster = CombatMaster || (function() {
         });
 
         return cmdSep;
-	},	   
+	},
 
     parseLine = function(cmd) {
         let lookup = [];
@@ -920,7 +918,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
             
         makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
-    },	
+    },
 	
     sendAnnounceMenu = function() {
         const banner = makeBanner('announcements','Announcements','setup');
@@ -964,7 +962,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let listItems = [
 				makeTextButton('Whisper GM Only', status.sendOnlyToGM, '!cmaster --config,status,key=sendOnlyToGM,value='+!status.sendOnlyToGM+' --show,status'),
 				makeTextButton('Player Allowed Changes', status.userChanges, '!cmaster --config,status,key=userChanges,value='+!status.userChanges+' --show,status'),
-				makeTextButton('Send Changes to Chat', status.sendConditions, '!cmaster --config,status,key=sendConditions,value='+!status.sendConditions+' --show,status'),	
+				makeTextButton('Send Changes to Chat', status.sendConditions, '!cmaster --config,status,key=sendConditions,value='+!status.sendConditions+' --show,status'),
 				makeTextButton('Clear Conditions on Close', status.clearConditions, '!cmaster --config,status,key=clearConditions,value='+!status.clearConditions + ' --show,status'),
 				makeTextButton('Use Messages', status.useMessage, '!cmaster --config,status,key=useMessage,value='+!status.useMessage + ' --show,status'),
 				makeTextButton('Auto Add Spells', status.autoAddSpells, '!cmaster --config,status,key=autoAddSpells,value='+!status.autoAddSpells+' --show,status'),
@@ -1465,9 +1463,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                                         pageid: tokenObj.get('pageid'),
                                         represents: characterObj.id,
                                         layer: tokenObj.get('layer'),
-                                        left: tokenObj.get('left'), 
+                                        left: tokenObj.get('left'),
                                         top: tokenObj.get('top'),
-                                        width: tokenObj.get('width'), 
+                                        width: tokenObj.get('width'),
                                         height: tokenObj.get('height')
                                     });   
                     let result = TokenCondition.AttachConditionToToken(condition.id,tokenObj.id);
@@ -1843,9 +1841,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         }  
                         //add to turnorder 
                         if (Number.isInteger(initiativeMod+initiativeRoll)) {
-                            addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll),custom:'',pageid:tokenObj.get("pageid")});
+                            addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll),custom:'',_pageid:tokenObj.get("pageid")});
                         } else {
-                            addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll).toFixed(2),custom:'',pageid:tokenObj.get("pageid")});
+                            addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll).toFixed(2),custom:'',_pageid:tokenObj.get("pageid")});
                         }    
                     }   
                 }    
@@ -2083,7 +2081,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         });
 
         if(!hasTurn){
-            turnorder.push({ id: marker.get('id'), pr: -420, custom: '', pageid: marker.get('pageid') });
+            turnorder.push({ id: marker.get('id'), pr: -420, custom: '', _pageid: marker.get('pageid') });
             Campaign().set('turnorder', JSON.stringify(turnorder));
         }
     },
@@ -2392,9 +2390,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     addToTurnorder = function (turn) {
         let turnorder = getTurnorder();
 
-        if (debug) {
-            log('Add to Turnorder')
-        }
+        if (debug) log('Add to Turnorder');
         
         turnorder.push(turn);
         setTurnorder(turnorder);
@@ -3378,7 +3374,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
     handeIniativePageChange = function (obj,prev) {
         if (debug) {
-            log ('-------------Handle Initiative Page Change-------------');
+            log (`-------------Handle Initiative Page Change------------- turnorder=${JSON.stringify(getTurnorder())}`);
         }
         if((obj.get('initiativepage') !== prev.initiativepage && !obj.get('initiativepage'))){
             //stopCombat();
@@ -3603,7 +3599,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				    turnorder: [],
 				    conditions: [],
 				    round: 1
-				},	
+				},
 				initiative: {
                     rollInitiative: 'None',
                     initiativeDie: 20,
@@ -3627,7 +3623,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					animateMarkerDegree: 1,
 					animateMarkerWait: 25,
 	                sortTurnOrder: true,
-					centerToken: false,	
+					centerToken: false,
 					turnAPI: 'None',
 					turnRoll20AM: 'None',
 					turnFX: 'None',
@@ -3635,7 +3631,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					roundAPI: 'None',
 					roundRoll20AM: 'None',
 					roundFX: 'None',
-					roundMacro: 'None',	
+					roundMacro: 'None',
 					characterRoundMacro: 'None',
 					allRoundMacro: 'None',		
                     
@@ -3659,7 +3655,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     whisperToGM: false,
                     announceRound: true,
                     handleLongName: true,
-					showNPCTurns: false,                    
+					showNPCTurns: true,
                 },
                 macro: {
                     substitutions: [],
@@ -3675,7 +3671,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 					access: 'None',
 					autoAddSpells: false,
 					sheet: 'OGL',
-				},	
+				},
 				concentration: {
 					useConcentration: false,
 					notify: 'GM',
@@ -3883,7 +3879,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					invisibility: {
 						name: 'Invisibility',
@@ -3908,7 +3904,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					paralyzed: {
 						name: 'Paralyzed',
@@ -3933,7 +3929,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					petrified: {
 						name: 'Petrified',
@@ -3958,7 +3954,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					poisoned: {
 						name: 'Poisoned',
@@ -3983,7 +3979,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					prone: {
 						name: 'Prone',
@@ -4008,7 +4004,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					restrained: {
 						name: 'Restrained',
@@ -4033,7 +4029,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					stunned: {
 						name: 'Stunned',
@@ -4058,7 +4054,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},
 					unconscious: {
 						name: 'Unconscious',
@@ -4083,9 +4079,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 						remAPI: 'None',
 						remRoll20AM: 'None',
 						remFX: 'None',
-						remMacro: 'None',	
+						remMacro: 'None',
 					},				
-				},	
+				},
             },
         };
 
