@@ -3,7 +3,10 @@
 /**
  * Exalted 3rd Edition Dice Roller
  * @author Mike Leavitt
+ * Forked after 1.0 to modify heavily
  * @author Sylvain "Groch" CLIQUOT
+ * Discord: Groch#0102
+ * Github: https://github.com/groch/roll20_exalted_stuff
  * @version 1.1
  */
 

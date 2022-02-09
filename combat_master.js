@@ -2093,24 +2093,24 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             height: markerHeight,
         };
 
-        // ?????????????????????????
-        // if(token.get('layer') !== marker.get('layer')) {
-        //     if(marker.get('layer') === 'gmlayer') {
-        //         marker.set(position);
+        // DETECT IF TOKEN (should be ROUND type only) IS ON CORRECT LAYER
+        // if(token.get('layer') !== typeMarker.get('layer')) {
+        //     if(typeMarker.get('layer') === 'gmlayer') {
+        //         typeMarker.set(position);
         //         setTimeout(() => {
         //             if (state[combatState].config.turnorder.useMarker) {
-        //                 // marker.set({ layer: 'objects' });
-        //                 marker.set({ layer: 'map' });
+        //                 // typeMarker.set({ layer: 'objects' });
+        //                 typeMarker.set({ layer: 'map' });
         //             }
         //         }, 500);
         //     } else {
-        //         marker.set({ layer: 'gmlayer' });
+        //         typeMarker.set({ layer: 'gmlayer' });
         //         setTimeout(() => {
-        //             marker.set(position);
+        //             typeMarker.set(position);
         //         }, 500);
         //     }
         // } else {
-        //     marker.set(position);
+        //     typeMarker.set(position);
         // }
 
         setTimeout(() => {
