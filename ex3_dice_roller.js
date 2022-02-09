@@ -303,6 +303,10 @@ function performRoll(msg, cmd) {
 
             const player = getObj("player", msg.playerid);
             var outHTML = buildHTML(result, ops[0].origRoll, player.get('color'));
+            if (!outHTML) {
+                logger(LOGLEVEL.EMERGENCY, 'performRoll:: !!!!!!!!! outHTML IS NULL OR EMPTY !!!!!!!!!!');
+                return;
+            }
 
             if (result.toGm) {
                 if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${player.get('displayname')} ${outHTML}`);
@@ -1010,6 +1014,10 @@ function recalculateSuccesses(result) {
  * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
  */
 function buildHTML(result, origRoll, color) {
+    if (!result.rolls[0].results) {
+        logger(LOGLEVEL.EMERGENCY, 'buildHTML:: !!!!!! result.rolls[0].results IS EMPTY !?!?!?!??!?!?! !!!!!!!!!');
+        return;
+    }
     if (result.rollSetup.verbosity == 0) result.rolls[0].results = result.rolls[0].results.filter(item => item.v !== 'SECTIONDONE');
 
     var vals = result.rolls[0].results, succ = result.total;
