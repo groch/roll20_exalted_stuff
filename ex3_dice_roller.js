@@ -822,7 +822,7 @@ function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
         setup.producedADie = true;
         toNextRollCondi = {
             v: newDie, wasEverRerolled: false,
-            wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+            wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
             title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`],
             tagList: ['DIT']
         };
@@ -1073,8 +1073,10 @@ function displayRolls(vals, result, html) {
             else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? conditionalColor : explodedColor;
         }
         if (item.exploded)      affectedTextShadow += explodedTextShadow;
-        if (item.rerolled)      affectedTextShadow += rerolledTextShadow + (item.condRerolled ? conditionalColor : rerolledColor) + ';';
+        if (item.rerolled)      affectedTextShadow += rerolledTextShadow + (item.condRerolled ? conditionalColor : rerolledColor);
         if (item.condTriggered) affectedTextShadow += condTriggeredTextShadow;
+        if (item.exploded || item.rerolled || item.condTriggered)
+            affectedTextShadow += ';';
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
         logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
         html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
