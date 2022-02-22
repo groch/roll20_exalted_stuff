@@ -17,11 +17,28 @@
 var CombatMaster = CombatMaster || (function() {
     'use strict';
 
+    class LOGLEVEL {
+        static EMERGENCY    = new LOGLEVEL(1);
+        static ALERT        = new LOGLEVEL(2);
+        static CRITICAL     = new LOGLEVEL(3);
+        static ERROR        = new LOGLEVEL(4);
+        static WARNING      = new LOGLEVEL(5);
+        static NOTICE       = new LOGLEVEL(6);
+        static INFO         = new LOGLEVEL(7);
+        static DEBUG        = new LOGLEVEL(8);
+    
+        constructor(value) {
+            this.value = value;
+        }
+        toString() {
+            return `${this.value}`;
+        }
+    }
+
     let round = 1,
         version = '2.46',
         timerObj,
         intervalHandle,
-        debug = true,
         animationHandle,
         paused = false,
         who = 'gm',
@@ -68,7 +85,17 @@ var CombatMaster = CombatMaster || (function() {
         // spellsImage = 'C';
 
     //Styling for the chat responses.
-    const styles = {
+    const LogLvl = LOGLEVEL.DEBUG,
+    logger = function (level, ...logged) {
+        if (!(level instanceof LOGLEVEL)) {
+            logged.unshift(level);
+            level = LOGLEVEL.DEBUG;
+        }
+    
+        if (level <= LogLvl)
+            log(...logged);
+    },
+    styles = {
         reset: 'padding: 0; margin: 0;',
         menu:  'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
         title: 'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
@@ -116,33 +143,28 @@ var CombatMaster = CombatMaster || (function() {
     combatState = 'COMBATMASTER',
 
     inputHandler = function(msg_orig) {
-        log('-------------inputHandler-------------');
-        //log('inputHandler !!!!!!! turnorder=' + JSON.stringify(Campaign().get('turnorder')));
+        logger('inputHandler::inputHandler turnorder=' + JSON.stringify(Campaign().get('turnorder')));
 
         // let currentPageID = Campaign().get('playerpageid'),
         // currentPage = getObj('page', currentPageID);
-        //log ('currentPageID=' + currentPageID + ' + currentPage=' + JSON.stringify(currentPage));
+        //logger('currentPageID=' + currentPageID + ' + currentPage=' + JSON.stringify(currentPage));
 
         let status = state[combatState].config.status;
         if (status.autoAddSpells) {
             if (status.sheet == 'OGL') {
                 if (msg_orig && (msg_orig.rolltemplate && msg_orig.rolltemplate === 'spell') ) {
-                    if (debug) log(msg_orig);
+                    logger(`inputHandler::msg_orig=${msg_orig}`);
                     handleSpellCast(msg_orig);
                 }
             } else if (status.sheet == 'Shaped')  {
-                if (msg_orig && msg_orig.content.includes("{{spell=1}}")) {
-                    handleSpellCast(msg_orig);
-                }
-            }  else if (status.sheet == 'PF2')  {
-                if (msg_orig && msg_orig.content.includes("{cast}")) {
-                    handleSpellCast(msg_orig);
-                }
+                if (msg_orig && msg_orig.content.includes("{{spell=1}}"))   handleSpellCast(msg_orig);
+            } else if (status.sheet == 'PF2')  {
+                if (msg_orig && msg_orig.content.includes("{cast}"))        handleSpellCast(msg_orig);
             }
         }
 
         if (msg_orig.content.indexOf('!cmaster')!==0) {
-            log('-------------inputHandler------OUT----');
+            logger('inputHandler::inputHandler NOT OUR MESSAGE ==> OUT');
             return;
         }
 
@@ -150,20 +172,17 @@ var CombatMaster = CombatMaster || (function() {
 
         playerID = msg.playerid;
         if (playerIsGM(msg.playerid)) {
-              state[combatState].config.gmPlayerID = msg.playerid;
-              who = 'gm';
+            state[combatState].config.gmPlayerID = msg.playerid;
+            who = 'gm';
         } else {
             who = getObj('player', msg.playerid).get('displayname');
         }
 
-		if(_.has(msg,'inlinerolls')) {//calculates inline rolls
+		if (_.has(msg,'inlinerolls')) //calculates inline rolls
 			msg.content = inlineExtract(msg);
-		}
 
 		//splits the message contents into discrete arguments, special handling for import
-        let cmdDetails = {
-            details: {}
-        };
+        let cmdDetails = {details: {}};
 
         if (msg.content.indexOf('import') >= 0) {
             cmdDetails.action = 'import';
@@ -172,17 +191,15 @@ var CombatMaster = CombatMaster || (function() {
             commandHandler(cmdDetails,msg,restrict,who,playerID);
         } else {
             args = msg.content.split(/\s+--/);
-            if(args[0] === '!cmaster'){
-                if(args[1]){
-                    _.each(_.rest(args,1),(cmd) =>{
-                        cmdDetails = cmdExtract(cmd);
-                        if (debug) log(cmdDetails);
-                        commandHandler(cmdDetails,msg,restrict,who,playerID);
-                    });
-                }
+            if (args[0] === '!cmaster' && args[1]){
+                _.each(_.rest(args,1),(cmd) =>{
+                    cmdDetails = cmdExtract(cmd);
+                    logger(cmdDetails);
+                    commandHandler(cmdDetails,msg,restrict,who,playerID);
+                });
             }
         }
-        log('-------------inputHandler-----END-----');
+        logger('inputHandler::inputHandler END');
 	},
 
 	//Extracts inline rolls
@@ -200,22 +217,14 @@ var CombatMaster = CombatMaster || (function() {
 
     //Extracts the command details from a command string passed from handleInput
 	cmdExtract = function(cmd){
-        var cmdSep = {
-            details: {}
-        },
-        vars,
-        temp;
-        // details;
-        if (debug) log(cmd);
-        //special handling of import is required
+        var cmdSep = {details: {}}, vars, temp;
+        logger(`cmdExtract::cmdExtract cmd=${cmd}`);
 
         let values = parseLine(cmd);
         let lookup = values.lookup;
         let tokens = values.tokens;
-        if (debug) {
-            log('Lookup:' + lookup);
-            log('Tokens:' + tokens);
-        }
+        logger('cmdExtract::Lookup:' + lookup);
+        logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
         cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities/);
@@ -225,7 +234,7 @@ var CombatMaster = CombatMaster || (function() {
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
             vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|)(?::|=)([^,]+)/) || null;
-            if(vars) {
+            if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
                     for (key in lookup) {
@@ -236,9 +245,8 @@ var CombatMaster = CombatMaster || (function() {
                 }
                 temp = (vars[2] === 'true') ? true : (vars[2] === 'false') ? false : vars[2];
                 cmdSep.details[vars[1]]=temp;
-            } else {
+            } else
                 cmdSep.details[d]=d;
-            }
         });
 
         return cmdSep;
@@ -252,42 +260,32 @@ var CombatMaster = CombatMaster || (function() {
         let line = '';
 
         [...cmd].forEach((c,i,o)=>{
-
-            if('{' === lastc && '{' === c) {
-                ++depth;
-            }
-            if('}' === lastc && '}' === c) {
-                --depth;
-                if(!depth && capture.length){
+            if ('{' === lastc && '{' === c) ++depth;
+            if ('}' === lastc && '}' === c) {
+                if (!--depth && capture.length) {
                     line+=`INDEX:${lookup.length}`;
                     lookup.push(capture);
                     capture='';
                 }
             }
 
-            if(depth){
-                capture+=c;
-            } else {
-                line+=c;
-            }
+            if (depth)  capture+=c;
+            else        line+=c;
 
             lastc = c;
         });
 
         let tokens = line.split(/\s+--/);
-        return {
-            lookup,
-            tokens
-        };
+        return {lookup, tokens};
     },
 
     checkAuthUserFromMessage = (who, playerID) => {
-        if (debug) log('checkAuthUserFromMessage::IN who='+who+', playerId='+playerID);
+        logger('checkAuthUserFromMessage::IN who='+who+', playerId='+playerID);
         let currentTurnTokenObj = findObjs({_id:getCurrentTurnObject().id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
             tokenControlledBy = (getObj('character', currentTurnTokenObj.get('represents')) || currentTurnTokenObj).get('controlledby').split(',');
         if (!Array.isArray(tokenControlledBy)) tokenControlledBy = [tokenControlledBy];
-        if (debug) log('checkAuthUserFromMessage::tokenControlledBy='+tokenControlledBy);
-        if (debug) log('checkAuthUserFromMessage::OUT ret='+(tokenControlledBy.includes(playerID) || who === 'gm'));
+        logger('checkAuthUserFromMessage::tokenControlledBy='+tokenControlledBy);
+        logger('checkAuthUserFromMessage::OUT ret='+(tokenControlledBy.includes(playerID) || who === 'gm'));
         return tokenControlledBy.includes(playerID) || who === 'gm';
     },
 
@@ -296,14 +294,12 @@ var CombatMaster = CombatMaster || (function() {
      * WHO = STRING     Displayed Name
      */
 	commandHandler = function(cmdDetails,msg,restrict,who,playerID){
-        if (debug){
-            log ('commandHandler::cmdDetails=' + JSON.stringify(cmdDetails) + ', msg=' + JSON.stringify(msg));
-            if (who) log('commandHandler::who=' + JSON.stringify(who));
-            if (playerID) log('commandHandler::playerID=' + JSON.stringify(playerID));
-            //log('commandHandler !!!!!!! campaign=' + JSON.stringify(Campaign()));
-        }
+        logger(`commandHandler::commandHandler cmdDetails=${JSON.stringify(cmdDetails)}, msg=${JSON.stringify(msg)}`);
+        if (who)        logger('commandHandler::who=' + JSON.stringify(who));
+        if (playerID)   logger('commandHandler::playerID=' + JSON.stringify(playerID));
+        //logger('commandHandler !!!!!!! campaign=' + JSON.stringify(Campaign()));
 
-        if (cmdDetails.action == 'back'){
+        if (cmdDetails.action == 'back') {
             if (cmdDetails.details.setup) {
                 cmdDetails.action = 'show';
                 cmdDetails.details['setup'] = true;
@@ -312,167 +308,94 @@ var CombatMaster = CombatMaster || (function() {
             } else {
                 if (state[combatState].config.previousPage == 'main') {
                     cmdDetails.action = 'main';
-                 } else {
-                   cmdDetails.action = 'show';
-                   cmdDetails.details['conditions'] = true;
-
-                 }
-            }
-        }
-
-        if (cmdDetails.action == 'main' || !cmdDetails.action){
-            sendMainMenu(who);
-        }
-        if (cmdDetails.action == 'turn'){
-            if (cmdDetails.details.next) {
-                if (checkAuthUserFromMessage(who, playerID)) changeTurnOrderToNext();
-            }
-            if (cmdDetails.details.delay) {
-                if (checkAuthUserFromMessage(who, playerID)) delayTurn();
-            }
-            if (cmdDetails.details.previous) {
-                changeTurnOrderToPrevious();
-            }
-            if (cmdDetails.details.start) {
-                startCombat(msg.selected, who);
-            }
-            if (cmdDetails.details.stop) {
-                stopCombat(who);
-            }
-            if (cmdDetails.details.hold) {
-                holdCombat(who);
-            }
-            if (cmdDetails.details.timer == 'pause') {
-                pauseTimer();
-            }
-            if (cmdDetails.details.timer == 'stop') {
-                stopTimer();
-            }
-            if (cmdDetails.details.sort) {
-                sortTurnorder();
-            }
-        }
-
-        if (cmdDetails.action == 'show'){
-            if (cmdDetails.details.view) {
-                editShowState(cmdDetails.details.value);
-            }
-            if (cmdDetails.details.setup) {
-                sendConfigMenu();
-            }
-            if (cmdDetails.details.initiative) {
-                sendInitiativeMenu();
-            }
-            if (cmdDetails.details.turnorder) {
-                sendTurnorderMenu();
-            }
-            if (cmdDetails.details.timer) {
-                sendTimerMenu();
-            }
-            if (cmdDetails.details.announce) {
-                sendAnnounceMenu();
-            }
-            if (cmdDetails.details.macro) {
-                sendMacroMenu();
-            }
-            if (cmdDetails.details.status) {
-                sendStatusMenu();
-            }
-            if (cmdDetails.details.concentration) {
-                sendConcentrationMenu();
-            }
-            if (cmdDetails.details.conditions) {
-                sendConditionsMenu();
-            }
-            if (cmdDetails.details.export) {
-                exportConditions();
-            }
-            if (cmdDetails.details.condition) {
-                if (cmdDetails.details.addAPI) {
-                    sendConditionAddAPIMenu(cmdDetails.details.condition);
-                } else if (cmdDetails.details.remAPI) {
-                    sendConditionRemAPIMenu(cmdDetails.details.condition);
                 } else {
-                    sendConditionMenu(cmdDetails.details.condition);
+                    cmdDetails.action = 'show';
+                    cmdDetails.details['conditions'] = true;
                 }
             }
-            if (cmdDetails.details.assigned) {
-                showConditions(msg.selected);
+        }
+
+        if (cmdDetails.action == 'main' || !cmdDetails.action)
+            sendMainMenu(who);
+        if (cmdDetails.action == 'turn') {
+            if (cmdDetails.details.next && checkAuthUserFromMessage(who, playerID))
+                changeTurnOrderToNext();
+            if (cmdDetails.details.delay && checkAuthUserFromMessage(who, playerID))
+                delayTurn();
+            if (cmdDetails.details.previous)            changeTurnOrderToPrevious();
+            if (cmdDetails.details.start)               startCombat(msg.selected, who);
+            if (cmdDetails.details.stop)                stopCombat(who);
+            if (cmdDetails.details.hold)                holdCombat(who);
+            if (cmdDetails.details.timer == 'pause')    pauseTimer();
+            if (cmdDetails.details.timer == 'stop')     stopTimer();
+            if (cmdDetails.details.sort)                sortTurnorder();
+        }
+
+        if (cmdDetails.action == 'show') {
+            if (cmdDetails.details.view)            editShowState(cmdDetails.details.value);
+            if (cmdDetails.details.setup)           sendConfigMenu();
+            if (cmdDetails.details.initiative)      sendInitiativeMenu();
+            if (cmdDetails.details.turnorder)       sendTurnorderMenu();
+            if (cmdDetails.details.timer)           sendTimerMenu();
+            if (cmdDetails.details.announce)        sendAnnounceMenu();
+            if (cmdDetails.details.macro)           sendMacroMenu();
+            if (cmdDetails.details.status)          sendStatusMenu();
+            if (cmdDetails.details.concentration)   sendConcentrationMenu();
+            if (cmdDetails.details.conditions)      sendConditionsMenu();
+            if (cmdDetails.details.export)          exportConditions();
+            if (cmdDetails.details.condition) {
+                if (cmdDetails.details.addAPI)
+                    sendConditionAddAPIMenu(cmdDetails.details.condition);
+                else if (cmdDetails.details.remAPI)
+                    sendConditionRemAPIMenu(cmdDetails.details.condition);
+                else
+                    sendConditionMenu(cmdDetails.details.condition);
             }
-            if (cmdDetails.details.description) {
-                sendConditionToChat(cmdDetails.details.key);
-            }
+            if (cmdDetails.details.assigned)    showConditions(msg.selected);
+            if (cmdDetails.details.description) sendConditionToChat(cmdDetails.details.key);
         }
 
         if (cmdDetails.action == 'add') {
-            if (cmdDetails.details.target) {
+            if (cmdDetails.details.target)
                 addTargetsToCondition(msg.selected,cmdDetails.details.id,cmdDetails.details.condition);
-            } else if (cmdDetails.details.condition) {
+            else if (cmdDetails.details.condition)
                 addCondition(cmdDetails,msg.selected,playerID);
-            }
         }
 
-        if (cmdDetails.action == 'remove') {
-            if (cmdDetails.details.condition) {
-                removeCondition(cmdDetails, msg.selected);
-            }
-        }
-
-        if (cmdDetails.action == 'config'){
+        if (cmdDetails.action == 'remove' && cmdDetails.details.condition)
+            removeCondition(cmdDetails, msg.selected);
+        if (cmdDetails.action == 'config')
             editCombatState(cmdDetails);
-        }
-
         if (cmdDetails.action == 'new'){
-            if (cmdDetails.details.condition) {
-                newCondition(cmdDetails.details.condition);
-            } else if (cmdDetails.details.macro) {
-                newSubstitution(cmdDetails);
-            }
+            if (cmdDetails.details.condition)   newCondition(cmdDetails.details.condition);
+            else if (cmdDetails.details.macro)  newSubstitution(cmdDetails);
         }
-
         if (cmdDetails.action == 'delete'){
-            if (cmdDetails.details.condition) {
-                deleteCondition(cmdDetails.details.condition,cmdDetails.details.confirm);
-            } else if (cmdDetails.details.macro) {
-                removeSubstitution(cmdDetails);
-            }
+            if (cmdDetails.details.condition)   deleteCondition(cmdDetails.details.condition,cmdDetails.details.confirm);
+            else if (cmdDetails.details.macro)  removeSubstitution(cmdDetails);
         }
-
-        if (cmdDetails.action == 'import') {
-            importCombatMaster(cmdDetails.details.config);
-        }
-
+        if (cmdDetails.action == 'import')      importCombatMaster(cmdDetails.details.config);
         if (cmdDetails.action == 'spell') {
-            if (cmdDetails.details.confirm) {
-                addSpell(cmdDetails.details.key);
-            } else {
-                ignoreSpell(cmdDetails.details.key);
-            }
+            if (cmdDetails.details.confirm)     addSpell(cmdDetails.details.key);
+            else                                ignoreSpell(cmdDetails.details.key);
         }
-
         if (cmdDetails.action == 'reset') {
 			state[combatState] = {};
 			setDefaults(true);
 			sendMainMenu(who);
         }
-
         if (cmdDetails.action == 'ignore') {
 			state[combatState].ignores = [];
 			sendMainMenu(who);
         }
-
         if (cmdDetails.action == 'clear') {
 			clearTokenStatuses(msg.selected);
 			sendMainMenu(who);
         }
-
-        if (cmdDetails.action == 'help') {
-            showHelp(cmdDetails);
-        }
-
+        if (cmdDetails.action == 'help')        showHelp(cmdDetails);
         if (cmdDetails.action == 'onslaught') {
             if (!playerIsGM(playerID)) {
-                if (debug) log('onslaught received but user is not GM');
+                logger(LOGLEVEL.NOTICE, 'commandHandler::onslaught received but user is not GM');
                 return;
             }
             addOnslaughtToPlayer(cmdDetails, msg.selected);
@@ -480,41 +403,39 @@ var CombatMaster = CombatMaster || (function() {
 
         if (cmdDetails.action == 'toggleVision') {
             if (!playerIsGM(playerID)) {
-                if (debug) log('toggleVision received but user is not GM');
+                logger(LOGLEVEL.NOTICE, 'commandHandler::toggleVision received but user is not GM');
                 return;
             }
-            log('commandHandler::before toggleTokenVision');
+            logger('commandHandler::before toggleTokenVision');
             toggleTokenVision(cmdDetails, msg.selected);
         }
 
         if (cmdDetails.action == 'createDecisiveAbilities') {
             if (!playerIsGM(playerID)) {
-                if (debug) log('createDecisiveAbilities received but user is not GM');
+                logger(LOGLEVEL.NOTICE, 'commandHandler::createDecisiveAbilities received but user is not GM');
                 return;
             }
-            log('commandHandler::before createDecisiveAbilities');
+            logger('commandHandler::before createDecisiveAbilities');
             createDecisiveAbilities(cmdDetails, msg.selected);
         }
 	},
 
     clearTokenStatuses = function(selectedTokens) {
+        if (!selectedTokens) return;
         let tokenObj;
-        if (selectedTokens) {
-            selectedTokens.forEach(token => {
-                if (token._type == 'graphic') {
-                    tokenObj        = getObj('graphic', token._id);
-                    if (tokenObj) tokenObj.set('statusmarkers', "");
-                }
-            });
-        }
+        selectedTokens.forEach(token => {
+            if (token._type == 'graphic') {
+                tokenObj = getObj('graphic', token._id);
+                if (tokenObj) tokenObj.set('statusmarkers', "");
+            }
+        });
     },
 
 //*************************************************************************************************************
 //NEW ACTIONS
 //*************************************************************************************************************
-
 createDecisiveAbilities = function(cmdDetails, selected) {
-        if (debug) log('createDecisiveAbilities cmdDetails=' + JSON.stringify(cmdDetails));
+        logger('createDecisiveAbilities::createDecisiveAbilities cmdDetails=' + JSON.stringify(cmdDetails));
 
         _.chain(selected).map(function(o){
             return getObj('graphic',o._id);
@@ -549,8 +470,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 });
             });
             _.each(_.keys(expectedAbilities),(key)=>{
-                if(!expectedAbilities[key]){
-                    log('Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
+                if (!expectedAbilities[key]){
+                    logger(LOGLEVEL.INFO, 'createDecisiveAbilities::Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
                     createObj('ability',abilityTemplates[key]);
                 }
             });
@@ -558,31 +479,31 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     toggleTokenVision = function(cmdDetails, selected) {
-        if (debug) log('toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
+        logger('toggleTokenVision::toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
 
         _.chain(selected).map(function(o){
             return getObj('graphic',o._id);
         }).compact()
         .each(function(t){
             var valLight = t.get('has_bright_light_vision');
-            log('FOREACH SELECTED t.get(\'has_bright_light_vision\')=' + JSON.stringify(valLight));
+            logger('toggleTokenVision::FOREACH SELECTED t.get(\'has_bright_light_vision\')=' + JSON.stringify(valLight));
             t.set({'has_bright_light_vision': !valLight, 'has_night_vision': !valLight});
         });
     },
 
     addOnslaughtToPlayer = function(cmdDetails, selected) {
-        log('addOnslaughtToPlayer cmdDetails=' + JSON.stringify(cmdDetails));
-        if (debug) log('Add Onslaught to Player');
+        logger('addOnslaughtToPlayer::addOnslaughtToPlayer cmdDetails=' + JSON.stringify(cmdDetails));
+        logger(LOGLEVEL.INFO, 'addOnslaughtToPlayer::Add Onslaught to Player');
 
 
         let turnorder   = getTurnorder();
         if (!turnorder.length) {
-            if (debug) log('No Turn Order1 = QUITTING');
+            logger(LOGLEVEL.INFO, 'addOnslaughtToPlayer::No Turn Order1 = QUITTING');
             return;
         }
         let currentTurn = turnorder.shift();
         if (!currentTurn) {
-            if (debug) log('No Turn Order2 = QUITTING');
+            logger(LOGLEVEL.INFO, 'addOnslaughtToPlayer::No Turn Order2 = QUITTING');
             return;
         }
 
@@ -591,7 +512,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             return getObj('graphic',o._id);
         }).compact()
         .each(function(t){
-            //log('FOREACH SELECTED? t=' + JSON.stringify(t));
+            //logger('FOREACH SELECTED? t=' + JSON.stringify(t));
 
             var finalcharacterObj = getObj('character',t.get('represents'));
             if (finalcharacterObj) {
@@ -614,20 +535,17 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     resetOnslaught = function(tokenObj) {
-        // log('!!!resetOnslaught!!!');
+        logger('resetOnslaught::resetOnslaught');
         let characterObj = getObj('character', tokenObj.get('represents'));
-        // log('characterObj=' + JSON.stringify(characterObj));
-        if (characterObj) {
-            setAttrs(characterObj.get('id'), {'onslaught':0});
-        }
+        logger('resetOnslaught::characterObj=' + JSON.stringify(characterObj));
+        if (characterObj) setAttrs(characterObj.get('id'), {'onslaught':0});
     },
 
 //*************************************************************************************************************
 //MENUS
 //*************************************************************************************************************
     sendMainMenu = function(who) {
-        if (debug) log('Send Main Menu');
-
+        logger('Send Main Menu');
 
         let nextButton          = makeImageButton('!cmaster --turn,next',nextImage,'Next Turn','transparent',18);
         let prevButton          = makeImageButton('!cmaster --turn,previous',prevImage,'Previous Turn','transparent',18);
@@ -641,25 +559,23 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let sortButton          = makeImageButton('!cmaster --turn,sort',sortImage,'Sort Turnorder','transparent',18);
         let helpButton;
 
-        if (state[combatState].config.hold.held) {
+        if (state[combatState].config.hold.held)
             helpButton          = makeImageButton('!cmaster --help,held',helpImage,'Help','transparent',18,'white');
-        } else if (inFight() ) {
+        else if (inFight())
             helpButton          = makeImageButton('!cmaster --help,started',helpImage,'Help','transparent',18,'white');
-        } else {
+        else
             helpButton          = makeImageButton('!cmaster --help,stopped',helpImage,'Help','transparent',18,'white');
-        }
 
         let listItems           = [];
         let titleText           = 'CombatMaster Menu<span style="'+styles.version+'"> ('+version+')</span>'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
         let contents, key, condition, conditions, conditionButton, addButton, removeButton, favoriteButton, listContents, rowCount=1;
 
-        if (state[combatState].config.hold.held) {
+        if (state[combatState].config.hold.held)
             contents = '<div style="background-color:yellow">'+startButton;
-        } else if (inFight() ) {
+        else if (inFight())
             contents = '<div style="background-color:green;width:100%;padding:2px;vertical-align:middle">'+stopButton + holdButton + prevButton + nextButton + pauseTimerButton + stopTimerButton + showButton + sortButton;
-        } else {
+        else
             contents = '<div style="background-color:red">'+startButton;
-        }
 
         contents += configButton;
         contents += '</div>';
@@ -670,32 +586,26 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             condition       = getConditionByKey(key);
 
             let installed = verifyInstalls(condition.iconType);
-            if (!installed) {
-                return;
-            }
-
+            if (!installed) return;
             conditionButton = makeImageButton('!cmaster --show,condition='+key,backImage,'Edit Condition','transparent',12);
             removeButton    = makeImageButton('!cmaster --remove,condition='+key,deleteImage,'Remove Condition','transparent',12);
 
             if (condition.override) {
-                if (state[combatState].config.status.useMessage) {
+                if (state[combatState].config.status.useMessage)
                     addButton = makeImageButton('!cmaster --add,condition='+key +',duration=?{Duration|'+condition.duration+'},direction=?{Direction|'+condition.direction + '},message=?{Message}',addImage,'Add Condition','transparent',12);
-                } else {
+                else
                     addButton = makeImageButton('!cmaster --add,condition='+key +',duration=?{Duration|'+condition.duration+'},direction=?{Direction|'+condition.direction + '}',addImage,'Add Condition','transparent',12);
-                }
             } else {
-                if (state[combatState].config.status.useMessage) {
+                if (state[combatState].config.status.useMessage)
                     addButton = makeImageButton('!cmaster --add,condition='+key+',duration='+condition.duration+',direction='+condition.direction+',message='+condition.message,addImage,'Add Condition','transparent',12);
-                 } else {
+                else
                     addButton = makeImageButton('!cmaster --add,condition='+key+',duration='+condition.duration+',direction='+condition.direction,addImage,'Add Condition','transparent',12);
-                 }
             }
 
-            if (condition.favorite) {
+            if (condition.favorite)
                 favoriteButton = makeImageButton('!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --tracker',favoriteImage,'Remove from Favorites','transparent',12);
-            } else {
+            else
                 favoriteButton = makeImageButton('!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --tracker',allConditionsImage,'Add to Favorites','transparent',12);
-            }
 
 			if (rowCount == 1) {
                 listContents = '<div>';
@@ -706,31 +616,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 			}
             listContents += getDefaultIcon(condition.iconType,condition.icon,'display:inline-block;margin-right:3px');
             listContents += '<span style="vertical-align:middle">'+condition.name+'</span>';
-            if (state[combatState].config.status.userChanges && who != 'gm') {
+            if (state[combatState].config.status.userChanges && who != 'gm')
                 listContents += '<span style="float:right;vertical-align:middle">'+addButton+removeButton+'</span>';
-            } else {
+            else
                 listContents += '<span style="float:right;vertical-align:middle">'+addButton+removeButton+favoriteButton+conditionButton+'</span>';
-            }
             listContents += '</div>';
 
-            if (state[combatState].config.status.showConditions == 'favorites') {
-                if (condition.favorite) {
-                    listItems.push(listContents);
-                }
-            }
-            if (state[combatState].config.status.showConditions == 'conditions') {
-                if (condition.type == 'Condition') {
-                    listItems.push(listContents);
-                }
-            }
-            if (state[combatState].config.status.showConditions == 'spells') {
-                if (condition.type == 'Spell') {
-                    listItems.push(listContents);
-                }
-            }
-            if (state[combatState].config.status.showConditions == 'all') {
+            if (state[combatState].config.status.showConditions == 'favorites' && condition.favorite)
                 listItems.push(listContents);
-            }
+            if (state[combatState].config.status.showConditions == 'conditions' && condition.type == 'Condition')
+                listItems.push(listContents);
+            if (state[combatState].config.status.showConditions == 'spells' && condition.type == 'Spell')
+                listItems.push(listContents);
+            if (state[combatState].config.status.showConditions == 'all') listItems.push(listContents);
         }
 
         let viewButton = makeBigButton('Change View', '!cmaster --show,view,value=?{View|All,all|Conditions,conditions|Spells,spells|Favorites,favorites} --main');
@@ -744,11 +642,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             });
         }
 
-        if (who == 'gm' || who == 'None') {
+        if (who == 'gm' || who == 'None')
             makeAndSendMenu(contents+makeList(listItems)+viewButton,titleText,'gm');
-        } else {
+        else
             makeAndSendMenu(makeList(listItems)+viewButton,titleText,who);
-        }
     },
 
     sortObject = function (obj) {
@@ -819,9 +716,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
 		if (initiative.rollInitiative == 'Group-Init') {
 			listItems.push(makeTextButton('Target Tokens', initiative.apiTargetTokens, '!cmaster --config,initiative,key=apiTargetTokens,value=?{Target Tokens|} --show,initiative'));
-            if (!initiative.apiTargetTokens > '') {
-                listItems.push('<div>'+initiative.apiTargetTokens+'</div>');
-            }
+            if (!initiative.apiTargetTokens > '') listItems.push('<div>'+initiative.apiTargetTokens+'</div>');
 		}
 
         makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
@@ -834,16 +729,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         let installed;
         installed = verifyInstalls(turnorder.nextMarkerType);
-        if (!installed) {
-            return;
-        }
+        if (!installed) return;
         installed = verifyInstalls(turnorder.markerType);
-        if (!installed) {
-            return;
-        }
-
+        if (!installed) return;
 		listItems.push(makeTextButton('Sort Turnorder',turnorder.sortTurnOrder, '!cmaster --config,turnorder,key=sortTurnOrder,value='+!turnorder.sortTurnOrder + ' --show,turnorder'));
         listItems.push(makeTextButton('Center Map on Token', turnorder.centerToken, '!cmaster --config,turnorder,key=centerToken,value='+!turnorder.centerToken + ' --show,turnorder'));
+        listItems.push(makeTextButton('Add Motes to Exalteds', turnorder.addMotesEachTurnToNonMortal, '!cmaster --config,turnorder,key=addMotesEachTurnToNonMortal,value='+!turnorder.addMotesEachTurnToNonMortal + ' --show,turnorder'));
 
         listItems.push(makeTextButton('Use Marker',turnorder.useMarker, '!cmaster --config,turnorder,key=useMarker,value='+!turnorder.useMarker + ' --show,turnorder'));
         listItems.push(makeTextButton('Marker Type',turnorder.markerType, '!cmaster --config,turnorder,key=markerType,value=?{Marker Type|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
@@ -864,12 +755,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         listItems.push(makeTextButton('Marker Size',turnorder.markerSize, '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (2.1 default)} --show,turnorder'));
 
         listItems.push(makeTextButton('Use Range Marker',turnorder.useRangeMarker, '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL} --show,turnorder')); // |Token Marker,Token Marker|Token Condition,Token Condition
-		if (turnorder.useRangeMarker == 'External URL') {
+		if (turnorder.useRangeMarker == 'External URL')
             listItems.push(makeTextButton('Range Marker', '<img src="'+turnorder.rangeExternalMarkerURL+'" width="20px" height="20px" />', '!cmaster --config,turnorder,key=rangeExternalMarkerURL,value=?{Image Url} --show,turnorder'));
-		} else if (turnorder.useRangeMarker == 'Token Marker')	{
-            log('balec');
-            //TODO: a voir plus tard
-		}
+		else if (turnorder.useRangeMarker == 'Token Marker')
+            logger('balec'); //LEGACYTODO: a voir plus tard > ????
         listItems.push(makeTextButton('Range Marker Width',turnorder.rangeMarkerWidth, '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (6000 default (px))} --show,turnorder'));
         listItems.push(makeTextButton('Range Marker Size',turnorder.rangeMarkerHeight, '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'));
 
@@ -922,6 +811,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				makeTextButton('Whisper GM Only', announcements.whisperToGM, '!cmaster --config,announcements,key=whisperToGM,value='+!announcements.whisperToGM + ' --show,announce'),
 				makeTextButton('Shorten Long Names', announcements.handleLongName, '!cmaster --config,announcements,key=handleLongName,value='+!announcements.handleLongName + ' --show,announce'),
                 makeTextButton('Show NPC Conditions', announcements.showNPCTurns, '!cmaster --config,announcements,key=showNPCTurns,value='+!announcements.showNPCTurns + ' --show,announce'),
+                makeTextButton('Announce Mote Regen', announcements.announceMoteRegen, '!cmaster --config,announcements,key=announceMoteRegen,value='+!announcements.announceMoteRegen + ' --show,announce'),
 			];
 
 		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
@@ -960,10 +850,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 				makeTextButton('Auto Add Spells', status.autoAddSpells, '!cmaster --config,status,key=autoAddSpells,value='+!status.autoAddSpells+' --show,status'),
 		];
 
-        if (status.autoAddSpells) {
-            listItems.push(makeTextButton('Sheet', status.sheet, '!cmaster --config,status,key=sheet,value=?{Sheet|D&D5E OGL,OGL|D&D5E Shaped,Shaped|PF2,PF2|} --show,status'));
-        }
-
+        if (status.autoAddSpells) listItems.push(makeTextButton('Sheet', status.sheet, '!cmaster --config,status,key=sheet,value=?{Sheet|D&D5E OGL,OGL|D&D5E Shaped,Shaped|PF2,PF2|} --show,status'));
 		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
 	},
 
@@ -1004,10 +891,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         for (key in state[combatState].config.conditions) {
             condition       = getConditionByKey(key);
-            let installed = verifyInstalls(condition.iconType);
-            if (!installed) {
-                return;
-            }
+            if (!verifyInstalls(condition.iconType)) return;
+
 			conditionButton = makeImageButton('!cmaster --show,condition=' + key,backImage,'Edit Condition','transparent',12);
 
 			if (rowCount == 1) {
@@ -1025,8 +910,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
             listItems.push(listContents);
 
-            if(check && icons.includes(condition.icon)){
-                message = message || '' + '<br>Multiple conditions use the same icon';
+            if (check && icons.includes(condition.icon)){
+                message || (message = '' + '<br>Multiple conditions use the same icon');
                 check = false;
             }
         }
@@ -1045,10 +930,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let helpButton = makeImageButton('!cmaster --help,condition',helpImage,'Help','transparent',18,'white');
         let	titleText  = 'Condition Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
 
-        if (typeof condition.description == 'undefined') {
-            condition.description = ' ';
-        }
-
+        if (typeof condition.description == 'undefined') condition.description = ' ';
         let removeButton        = makeBigButton('Delete Condition', '!cmaster --delete,condition='+key+',confirm=?{Are you sure?|Yes,yes|No,no}');
 		let descriptionButton   = makeBigButton('Edit Description', '!cmaster --config,condition='+key+',key=description,value={{?{Description|'+condition.description+'}}} --show,condition='+key);
 		let backButton          = makeBigButton('Back', '!cmaster --back');
@@ -1057,16 +939,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 		listItems.push(makeTextButton('Type', condition.type, '!cmaster --config,condition='+key+',key=type,value=?{Type|Condition,Condition|Spell,Spell} --show,condition='+key));
 		listItems.push(makeTextButton('Icon Type', condition.iconType, '!cmaster --config,condition='+key+',key=iconType,value=?{Icon Type|Combat Master,Combat Master|Token Marker,Token Marker|Token Condition,Token Condition} --show,condition='+key));
 
-        let installed = verifyInstalls(condition.iconType);
-        if (!installed) {
-            return;
-        }
+        if (!verifyInstalls(condition.iconType)) return;
 
-        if (condition.iconType == 'Token Condition') {
+        if (condition.iconType == 'Token Condition')
             listItems.push(makeTextButton('Icon', condition.icon, '!cmaster --config,condition='+key+',key=icon,value=?{Token Condition|} --show,condition='+key));
-        } else {
+        else
             listItems.push(makeTextButton('Icon', getDefaultIcon(condition.iconType,condition.icon), '!cmaster --config,condition='+key+',key=icon,value='+buildMarkerDropdown(condition.iconType)+' --show,condition='+key));
-        }
 
 		listItems.push(makeTextButton('Duration', condition.duration, '!cmaster --config,condition='+key+',key=duration,value=?{Duration|1} --show,condition='+key));
 		listItems.push(makeTextButton('Direction', condition.direction, '!cmaster --config,condition='+key+',key=direction,value=?{Direction|0} --show,condition='+key));
@@ -1074,9 +952,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 		listItems.push(makeTextButton('Favorites', condition.favorite, '!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --show,condition='+key));
 		listItems.push(makeTextButton('Message', condition.message, '!cmaster --config,condition='+key+',key=message,value={{?{Message}}} --show,condition='+key));
         listItems.push(makeTextButton('Targeted', condition.targeted, '!cmaster --config,condition='+key+',key=targeted,value='+!condition.targeted+' --show,condition='+key));
-        if (condition.targeted) {
+        if (condition.targeted)
             listItems.push(makeTextButton('Targeted API', condition.targetedAPI, '!cmaster --config,condition='+key+',key=targetedAPI,value=?{Targeted API|Caster&Targets,casterTargets|Targets(Only),targets} --show,condition='+key));
-        }
+
         listItems.push(makeTextButton('Concentration', condition.concentration, '!cmaster --config,condition='+key+',key=concentration,value='+!condition.concentration+' --show,condition='+key));
         listItems.push('<div style="margin-top:3px"><i><b>Adding Condition</b></i></div>' );
 		listItems.push(makeBigButton('Add APIs', '!cmaster --show,condition='+key+',addAPI'));
@@ -1126,9 +1004,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 markerDropdown += '|'+ucFirst(marker).replace(/-/g, ' ')+','+marker;
             });
         } else if (iconType == 'Token Marker') {
-            if (markers.length == 0) {
-                markers = getTokenMarkers();
-            }
+            if (markers.length == 0) markers = getTokenMarkers();
             markers.forEach((marker) => {
                 markerDropdown += '|'+marker.name+','+marker.name;
             });
@@ -1141,15 +1017,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     showConditions = function (selectedTokens) {
         // let tokenObj, characterObj, target;
 
-        log('showConditions ========');
+        logger('showConditions::showConditions');
 
         if (selectedTokens) {
             selectedTokens.forEach(token => {
-                if (token._type == 'graphic') {
-                    if (token._id != getOrCreateMarker().get('id')) {
-                        announcePlayer(getObj('graphic', token._id), false, false, true);
-                    }
-                }
+                if (token._type == 'graphic' && token._id != getOrCreateMarker().get('id'))
+                    announcePlayer(getObj('graphic', token._id), false, false, true);
             });
         }
     },
@@ -1177,7 +1050,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     targetedCondition = function (id, key) {
-        if (debug) log('Targeted Condition');
+        logger('targetedCondition::targetedCondition');
 
         let condition    = getConditionByKey(key);
         let title        = 'Select Targets';
@@ -1188,7 +1061,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     targetedSpell = function (key) {
-        if (debug) log('Targeted Spell');
+        logger('targetedSpell::targetedSpell');
 
         let condition    = getConditionByKey(key);
         let title        = 'Select Origin';
@@ -1199,7 +1072,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     targetedCaster = function (key,duration,direction,message) {
-        if (debug) log('Targeted Caster');
+        logger('targetedCaster::targetedCaster');
 
 
         let title        = 'Select Caster';
@@ -1214,14 +1087,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //SESSION STATE MAINTENANCE
 //*************************************************************************************************************
 	editCombatState = function (cmdDetails) {
-		if(cmdDetails.details.initiative){
+		if (cmdDetails.details.initiative){
 			state[combatState].config.initiative[cmdDetails.details.key] = cmdDetails.details.value;
-		} else if(cmdDetails.details.timer){
+		} else if (cmdDetails.details.timer){
 			state[combatState].config.timer[cmdDetails.details.key] = cmdDetails.details.value;
 		} else if (cmdDetails.details.turnorder){
-			if (cmdDetails.details.key === 'initiativeDie') {
-				cmdDetails.details.value = parseInt(cmdDetails.details.value);
-			}
+			if (cmdDetails.details.key === 'initiativeDie') cmdDetails.details.value = parseInt(cmdDetails.details.value);
 			state[combatState].config.turnorder[cmdDetails.details.key] = cmdDetails.details.value;
 		} else if (cmdDetails.details.announcements){
 			state[combatState].config.announcements[cmdDetails.details.key] = cmdDetails.details.value;
@@ -1253,14 +1124,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //CONDITIONS
 //*************************************************************************************************************
 	newCondition = function (name, type='Condition', concentration=false, description='None') {
-        if (debug) log ('Create Condition');
+        logger('Create Condition');
 
 
-		if(!name){
+		if (!name)
 			sendConditionsMenu('You didn\'t give a condition name, eg. <i>!cmaster --new,condition=Prone</i>.');
-		} else if (state[combatState].config.conditions[name.toLowerCase()]) {
+		else if (state[combatState].config.conditions[name.toLowerCase()])
 			sendConditionsMenu('The condition `'+name+'` already exists.');
-		} else {
+		else {
 			state[combatState].config.conditions[name.toLowerCase()] = {
 				name: name,
 				key: name.toLowerCase(),
@@ -1288,13 +1159,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 	},
 
 	deleteCondition = function (key, confirm) {
-        if (debug) log ('Delete Condition');
+        logger('deleteCondition::deleteCondition');
 
 
 		if (confirm === 'yes') {
-			if(!key){
+			if (!key){
 				sendConditionsMenu('You didn\'t give a condition name, eg. <i>!cmaster --delete,condition=Prone</i>.');
-			} else if( !state[combatState].config.conditions[key]){
+			} else if ( !state[combatState].config.conditions[key]){
 				sendConditionsMenu('The condition `'+key+'` does\'t exist.');
 			} else {
 				delete state[combatState].config.conditions[key];
@@ -1305,14 +1176,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 	},
 
     getConditionByMarker = function (marker) {
-        if (debug) log('Get Condition By Marker');
+        logger('getConditionByMarker::getConditionByMarker');
 
 
         let key;
         for (key in state[combatState].config.conditions) {
-            if (marker.includes(state[combatState].config.conditions[key].icon)) {
+            if (marker.includes(state[combatState].config.conditions[key].icon))
                 return state[combatState].config.conditions[key];
-            }
         }
         return false;
     },
@@ -1332,11 +1202,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     verifyCondition = function(token,key) {
         let condition  = getConditionByKey(key);
 
-        if (debug) log('Verify Condition');
+        logger('verifyCondition::verifyCondition');
 
-        if (!condition) {
-            return true;
-        }
+        if (!condition) return true;
         if (typeof condition.direction == 'undefined' || typeof condition.duration == 'undefined') {
 			makeAndSendMenu('The condition you are trying to use has not be setup yet', '', 'gm');
 			return false;
@@ -1359,31 +1227,28 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     addCondition = function(cmdDetails,selectedTokens,playerID) {
-        if (debug) log('Add Condition');
+        logger('addCondition::addCondition');
 
         // let condition;
         if (selectedTokens) {
             selectedTokens.forEach(token => {
-                if (token._type == 'graphic') {
+                if (token._type == 'graphic')
                     addConditionToToken(getObj(token._type, token._id),cmdDetails.details.condition,cmdDetails.details.duration,cmdDetails.details.direction,cmdDetails.details.message);
-                }
             });
-        } else {
+        } else
             makeAndSendMenu('No tokens were selected.', '', 'gm');
-        }
     },
 
      removeCondition = function (cmdDetails,selectedTokens) {
-        if (debug) log('Remove Condition');
+        logger('removeCondition::removeCondition');
 
 
-        if (cmdDetails.details.id) {
+        if (cmdDetails.details.id)
             removeConditionFromToken(getObj('graphic', cmdDetails.details.id), cmdDetails.details.condition, true);
-        } else if (selectedTokens) {
+        else if (selectedTokens) {
             selectedTokens.forEach(token => {
-                if (token._type == 'graphic') {
+                if (token._type == 'graphic')
                     removeConditionFromToken(getObj(token._type, token._id),cmdDetails.details.condition, true);
-                }
             });
         }
     },
@@ -1392,11 +1257,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let	defaultCondition = getConditionByKey(key);
         let newCondition = {};
 
-        if (!tokenObj) {
-            return;
-        }
-
-        if (debug) log('Add Condition To Token');
+        if (!tokenObj) return;
+        logger('addConditionToToken::addConditionToToken');
 
 
         if (verifyCondition(tokenObj.get("_id"), key)) {
@@ -1437,46 +1299,30 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             if (newCondition.iconType == 'Token Condition') {
                 let characterObj = findObjs({name: newCondition.icon, _type: 'character'})[0];
                 characterObj.get("defaulttoken", function(defaulttoken) {
-
                     let newToken = JSON.parse(defaulttoken);
                     let condition = createObj('graphic', {
-                                        subtype:'token',
-                                        name: newToken.name,
-                                        imgsrc: getCleanImgsrc(newToken.imgsrc),
-                                        pageid: tokenObj.get('pageid'),
-                                        represents: characterObj.id,
-                                        layer: tokenObj.get('layer'),
-                                        left: tokenObj.get('left'),
-                                        top: tokenObj.get('top'),
-                                        width: tokenObj.get('width'),
-                                        height: tokenObj.get('height')
-                                    });
+                        subtype:'token',
+                        name: newToken.name,
+                        imgsrc: getCleanImgsrc(newToken.imgsrc),
+                        pageid: tokenObj.get('pageid'),
+                        represents: characterObj.id,
+                        layer: tokenObj.get('layer'),
+                        left: tokenObj.get('left'),
+                        top: tokenObj.get('top'),
+                        width: tokenObj.get('width'),
+                        height: tokenObj.get('height')
+                    });
                     let result = TokenCondition.AttachConditionToToken(condition.id,tokenObj.id);
-                    if(result.success) {
+                    if (result.success)
                         newCondition.tokenConditionID = condition.id;
-                    } else {
-                        log(`Attach failed. Message: ${result.reason}`);
-                    }
+                    else
+                        logger(LOGLEVEL.CRITICAL, `addConditionToToken::Attach failed. Message: ${result.reason}`);
                 });
             }
 
-            if (!duration && defaultCondition) {
-                newCondition.duration = parseInt(defaultCondition.duration);
-            } else {
-                newCondition.duration = parseInt(duration);
-            }
-
-            if (!direction && defaultCondition) {
-                newCondition.direction = parseInt(defaultCondition.direction);
-            } else {
-                newCondition.direction = parseInt(direction);
-            }
-
-            if (!message && defaultCondition) {
-                newCondition.message = defaultCondition.message;
-            } else {
-                newCondition.message = message;
-            }
+            newCondition.duration = parseInt((!duration && defaultCondition) ? defaultCondition.duration : duration);
+            newCondition.direction = parseInt((!direction && defaultCondition) ? defaultCondition.direction : direction);
+            newCondition.message = (!message && defaultCondition) ? defaultCondition.message : message;
 
             setTimeout(function() {
                  state[combatState].conditions.push(newCondition);
@@ -1486,81 +1332,63 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
             if (newCondition.target.length > 0) {
                 newCondition.target.forEach((targets) => {
-                    if (newCondition.key != 'dead') {
-                        addMarker(getObj('graphic', targets),newCondition.iconType,newCondition.icon,newCondition.duration, newCondition.direction, newCondition.key);
-                    }
+                    if (newCondition.key != 'dead')
+                    	addMarker(getObj('graphic', targets),newCondition.iconType,newCondition.icon,newCondition.duration, newCondition.direction, newCondition.key);
                 });
             }
 
             if (!remove.removed) {
-                if (state[combatState].config.status.sendConditions && defaultCondition) {
-                    sendConditionToChat(newCondition.key);
-                }
-                if (newCondition.targeted) {
-                    targetedCondition(newCondition.id, key);
-                }
-                if (newCondition.concentration == true && newCondition.override == true) {
-                    targetedCaster('concentration',newCondition.duration,newCondition.direction,'Concentrating on ' + newCondition.name);
-                }
-                if (!newCondition.targeted || (newCondition.targeted && newCondition.targetedAPI == 'casterTargets')) {
-                    doAddConditionCalls(tokenObj,key);
-                }
+                if (state[combatState].config.status.sendConditions && defaultCondition)
+                	sendConditionToChat(newCondition.key);
+                if (newCondition.targeted)
+                	targetedCondition(newCondition.id, key);
+                if (newCondition.concentration == true && newCondition.override == true)
+                	targetedCaster('concentration',newCondition.duration,newCondition.direction,'Concentrating on ' + newCondition.name);
+                if (!newCondition.targeted || (newCondition.targeted && newCondition.targetedAPI == 'casterTargets'))
+                	doAddConditionCalls(tokenObj,key);
             }
         }
     },
 
     getCleanImgsrc =  function (imgsrc) {
         let parts = imgsrc.match(/(.*\/images\/.*)(thumb|med|original|max)([^?]*)(\?[^?]+)?$/);
-        if(parts) {
-            return parts[1]+'thumb'+parts[3]+(parts[4]?parts[4]:`?${Math.round(Math.random()*9999999)}`);
-        }
+        if (parts) return parts[1]+'thumb'+parts[3]+(parts[4]?parts[4]:`?${Math.round(Math.random()*9999999)}`);
         return;
     },
 
     removeConditionFromToken = function(tokenObj,key,removeAPI) {
-        if (debug) log('Remove Condition From Token');
+        logger('removeConditionFromToken::removeConditionFromToken');
 
-
-        if (!tokenObj) {
-            return;
-        }
-
+        if (!tokenObj) return;
         let removed = false;
         let targets = [];
         // let target;
 
         [...state[combatState].conditions].forEach((condition, i) => {
             if (condition.id == tokenObj.get('_id') && condition.key == key) {
-                if (condition.hasOwnProperty('target')) {
-                    if (condition.target.length > 0) {
-                        targets = condition.target;
-                        targets.forEach((target, j) => {
-                            if (condition.iconType == 'Token Condition') {
-                                removeTokenCondition(condition.tokenConditionID);
-                            } else {
-                                removeMarker(getObj('graphic', target), condition.iconType, condition.icon);
-                                if (condition.targeted && removeAPI) {
-                                    doRemoveConditionCalls(getObj('graphic', target),condition.key);
-                                }
-                            }
-                        });
-                    }
+                if (condition.hasOwnProperty('target') && condition.target.length > 0) {
+                    targets = condition.target;
+                    targets.forEach((target, j) => {
+                        if (condition.iconType == 'Token Condition')
+                            removeTokenCondition(condition.tokenConditionID);
+                        else {
+                            removeMarker(getObj('graphic', target), condition.iconType, condition.icon);
+                            if (condition.targeted && removeAPI)
+                                doRemoveConditionCalls(getObj('graphic', target),condition.key);
+                        }
+                    });
                 }
 
-                if (condition.iconType == 'Token Condition') {
+                if (condition.iconType == 'Token Condition')
                     removeTokenCondition(condition.tokenConditionID);
-                } else {
+                else
                     removeMarker(tokenObj, condition.iconType, condition.icon);
-                }
                 if (condition.concentration == true) {
                     let concentration = getConditionByKey('concentration');
                     removeMarker(tokenObj, concentration.iconType, concentration.icon);
                 }
-                if (!condition.targeted || (condition.targeted && condition.targetedAPI == 'casterTargets')) {
-                    if (removeAPI) {
-                        doRemoveConditionCalls(tokenObj,condition.key);
-                    }
-                }
+                if ((!condition.targeted || (condition.targeted && condition.targetedAPI == 'casterTargets')) && removeAPI)
+                    doRemoveConditionCalls(tokenObj,condition.key);
 
                 state[combatState].conditions.splice(i,1);
                 removed = true;
@@ -1568,37 +1396,30 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         });
 
 
-        return {
-            removed,
-            targets
-        };
+        return {removed, targets};
     },
 
     removeTokenCondition = function (id) {
-        if (debug) log('Remove Token Condition');
+        logger('Remove Token Condition');
 
         let conditionToken = findObjs({_id:id,_pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
         conditionToken.remove();
     },
 
     sendConditionToChat = function (key) {
-        if (debug) log("Send Condition To Chat");
+        logger("Send Condition To Chat");
 
 
         let condition = getConditionByKey(key);
-        if (!condition) {
-            return;
-        }
-
+        if (!condition) return;
         let icon;
-        if (['Combat Master','Token Marker'].includes(condition.iconType)) {
-            icon  = getDefaultIcon(condition.iconType,condition.icon, 'margin-right: 5px; margin-top: 5px; display: inline-block;');
-        }
+        if (['Combat Master','Token Marker'].includes(condition.iconType))
+        	icon  = getDefaultIcon(condition.iconType,condition.icon, 'margin-right: 5px; margin-top: 5px; display: inline-block;');
         makeAndSendMenu(condition.description,icon+condition.name,(state[combatState].config.status.sendOnlyToGM) ? 'gm' : '');
     },
 
     addTargetsToCondition = function(selectedTokens,id,key) {
-        if (debug) log("Add Targets to Condition");
+        logger("Add Targets to Condition");
 
         if (!selectedTokens || selectedTokens.length == 0) {
             makeAndSendMenu('No tokens selected.  Condition not added',' ', whisper);
@@ -1620,10 +1441,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //START/STOP COMBAT
 //*************************************************************************************************************
     verifyCombatSetup = function(selectedTokens, initiative) {
+        logger('verifyCombatSetup::verifyCombatSetup');
         let turnorder, whisper, characterObj, verified=true, tokenObj;
-
-        if (debug) log('Verify Setup');
-
 
         if ((!selectedTokens || selectedTokens.length == 0) && !state[combatState].config.hold.held) {
             makeAndSendMenu('No tokens selected.  Combat not started',' ', whisper);
@@ -1656,7 +1475,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     startCombat = function (selectedTokens, who) {
-        if (debug) log('Start Combat');
+        logger('startCombat::startCombat');
 
 
         let initiative  = state[combatState].config.initiative;
@@ -1664,21 +1483,18 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let verified    = verifyCombatSetup(selectedTokens, initiative);
         let hold        = state[combatState].config.hold;
 
-        if (!verified && !hold.held) {
-            return;
-        }
-
+        if (!verified && !hold.held) return;
         Campaign().set('initiativepage', Campaign().get('playerpageid'));
         paused = false;
 
-        if (hold.held) {
+        if (hold.held)
             restartCombat(hold, who);
-        } else {
-            if(initiative.rollInitiative == 'CombatMaster'){
+        else {
+            if (initiative.rollInitiative == 'CombatMaster')
                 rollInitiative(selectedTokens, initiative);
-            } else if (initiative.rollInitiative == 'Group-Init') {
+            else if (initiative.rollInitiative == 'Group-Init')
                 rollGroupInit(selectedTokens);
-            } else if (!getTurnorder()) {
+            else if (!getTurnorder()) {
                 makeAndSendMenu('You must have a populated turnorder before starting Combat Master','');
                 return;
             }
@@ -1692,8 +1508,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     restartCombat = function (hold,who) {
-        if (debug) log('Restart Combat');
-
+        logger('restartCombat::restartCombat');
 
         round = hold.round;
         setTurnorder(hold.turnorder);
@@ -1706,7 +1521,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     stopCombat = function (who) {
-        if (debug) log('Stop Combat');
+        logger('stopCombat::stopCombat');
 
 
         makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;text-decoration: underline;">End of combat !</span>', ' ', undefined, false);
@@ -1716,9 +1531,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         if (state[combatState].config.status.clearConditions) {
             [...state[combatState].conditions].forEach((condition) => {
-                if (condition.id != getOrCreateMarker().get('id')) {
-                    removeConditionFromToken(getObj('graphic',condition.id), condition.key, true);
-                }
+                if (condition.id != getOrCreateMarker().get('id'))
+                	removeConditionFromToken(getObj('graphic',condition.id), condition.key, true);
             });
         }
 
@@ -1734,7 +1548,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     holdCombat = function (who) {
-        if (debug) log('Hold Combat');
+        logger('holdCombat::holdCombat');
 
 
         let hold        = state[combatState].config.hold;
@@ -1753,7 +1567,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     clearHold = function (hold) {
-        if (debug) log('Clear Hold');
+        logger('clearHold::clearHold');
 
 
         hold.held = false;
@@ -1785,43 +1599,27 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
                         //check for advantage initiative rolling (OGL)
                         advantageAttrib   = getAttrByName(characterObj.id, 'initiative_style', 'current');
-                        if (typeof advantageAttrib != 'undefined') {
-                            // roll advantage for initiative
+                        if (typeof advantageAttrib != 'undefined') { // roll advantage for initiative
                             initiativeAdv1 = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
                             initiativeAdv2 = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
-                            // this is the value if in OGL if rolling advantage
-                            if (advantageAttrib == '{@{d20},@{d20}}kh1') {
-                                //determine which value is higher
-                                if (initiativeAdv1 >= initiativeAdv2) {
-                                    initiativeRoll = initiativeAdv1;
-                                } else {
-                                    initiativeRoll = initiativeAdv2;
-                                }
+                            
+                            if (advantageAttrib == '{@{d20},@{d20}}kh1') { // this is the value if in OGL if rolling advantage
+                                initiativeRoll = (initiativeAdv1 >= initiativeAdv2) ? initiativeAdv1 : initiativeAdv2;
                                 //pass in both values and modifier for display
-                                if (initiative.showInitiative) {
-                                    sendInitiativeChat(tokenObj.get('name'),initiativeAdv1,initiativeMod,initiativeAdv2,whisper);
-                                }
-                            } else if (initiative.showInitiative) {
-                                // if not rolling advantage, use first roll
+                                if (initiative.showInitiative) sendInitiativeChat(tokenObj.get('name'),initiativeAdv1,initiativeMod,initiativeAdv2,whisper);
+                            } else if (initiative.showInitiative) { // if not rolling advantage, use first roll
                                 initiativeRoll = initiativeAdv1;
                                 sendInitiativeChat(tokenObj.get('name'),initiativeRoll,initiativeMod,null,whisper);
                             }
-                        }  else if (initiative.showInitiative) {
-                            // if everything else then pass in for display
+                        }  else if (initiative.showInitiative) // if everything else then pass in for display
                              sendInitiativeChat(tokenObj.get('name'),initiativeRoll,initiativeMod,null,whisper);
-                        }
-                        //add to turnorder
-                        if (Number.isInteger(initiativeMod+initiativeRoll)) {
-                            addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll),custom:'',_pageid:tokenObj.get("pageid")});
-                        } else {
-                            addToTurnorder({id:tokenObj.id,pr:(initiativeMod+initiativeRoll).toFixed(2),custom:'',_pageid:tokenObj.get("pageid")});
-                        }
+                        addToTurnorder({id:tokenObj.id,pr:Number.isInteger(initiativeMod+initiativeRoll) ? (initiativeMod+initiativeRoll) : (initiativeMod+initiativeRoll).toFixed(2),custom:'',_pageid:tokenObj.get("pageid")});
                     }
                 }
             }
         });
 
-        if(state[combatState].config.turnorder.sortTurnOrder){
+        if (state[combatState].config.turnorder.sortTurnOrder){
             sortTurnorder();
         }
     },
@@ -1829,8 +1627,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     rollGroupInit = function (selectedTokens) {
         // let giRoll = () => sendChat('',`/w gm <code>GroupInitiative.RollForTokenIDs()</code> is not supported.`);
 
-
-        if('undefined' !== typeof GroupInitiative && GroupInitiative.RollForTokenIDs){
+        if ('undefined' !== typeof GroupInitiative && GroupInitiative.RollForTokenIDs){
 			GroupInitiative.RollForTokenIDs(
 				(selectedTokens||[]).map(s=>s._id),{manualBonus: 0}
 			);
@@ -1879,33 +1676,23 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //MARKERS
 //*************************************************************************************************************
     addMarker = function(tokenObj, markerType, marker, duration, direction, key) {
-        if (debug) {
-            log('Add Marker');
-            log(marker);
-        }
+        logger('addMarker::addMarker');
+        logger(marker);
 
-        let installed = verifyInstalls(markerType);
-        if (!installed) {
+        if (!verifyInstalls(markerType)) {
              makeAndSendMenu('You are missing an API required by an Icon Type you are using.  Install libTokenMarker or TokenConditions.');
              return;
         }
 
         let icon = getIconTag(markerType, marker);
-        if (!icon) {
-            return;
-        }
-
+        if (!icon) return;
         removeMarker(tokenObj, markerType, marker);
 
         setTimeout(() => {
-            let statusMarkers = returnStatusMarkers(tokenObj);
-
-            let statusMarker;
-            if (key == 'dead' || duration <= 0 || duration >= 10 || (duration == 1 && direction == 0)) {
-                statusMarker = icon;
-            } else {
-                statusMarker = icon+'@'+duration;
-            }
+            let statusMarkers = returnStatusMarkers(tokenObj), statusMarker;
+            statusMarker = icon;
+            if (!(key == 'dead' || duration <= 0 || duration >= 10 || (duration == 1 && direction == 0)))
+                statusMarker += '@'+duration;
 
             statusMarkers.push(statusMarker);
             tokenObj.set('statusmarkers', statusMarkers.join());
@@ -1913,10 +1700,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     removeMarker = function(tokenObj, markerType, marker) {
-        if (debug) {
-            log('Remove Marker');
-            log(marker);
-        }
+        logger('removeMarker::removeMarker');
+        logger(marker);
 
         let installed = verifyInstalls(markerType);
         if (!installed) {
@@ -1925,15 +1710,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
 
         let iconTag = getIconTag(markerType, marker);
-        if (!iconTag) {
-            return;
-        }
-
+        if (!iconTag) return;
         let statusMarkers = returnStatusMarkers(tokenObj);
         statusMarkers.forEach((a, i) => {
-            if (a.indexOf(iconTag) > -420) {
-                statusMarkers.splice(i,1);
-            }
+            if (a.indexOf(iconTag) > -420) statusMarkers.splice(i,1);
         });
         tokenObj.set('statusmarkers', statusMarkers.join());
     },
@@ -1946,7 +1726,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let marker = getOrCreateMarker(type),
             turnorder = state[combatState].config.turnorder;
 
-        if (debug) log('Reset Marker');
+        logger('resetMarker::resetMarker');
 
 
         let markerName, imgUrl, markerWidth, markerHeight, scale_number = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0].get('scale_number');
@@ -1967,14 +1747,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
 
         const newMarkerAttr = {
-            name: markerName,
+            name:   markerName,
             imgsrc: imgUrl,
             pageid: Campaign().get('playerpageid'),
-            layer: 'gmlayer',
-            left: Math.ceil(markerWidth / 2), top: Math.ceil(markerHeight / 2),
-            width: markerWidth, height: markerHeight
+            layer:  'gmlayer',
+            left:   Math.ceil(markerWidth / 2), top: Math.ceil(markerHeight / 2),
+            width:  markerWidth, height: markerHeight
         };
-        log('resetMarker RESETING MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
+        logger('resetMarker::RESETING MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
         marker.set(newMarkerAttr);
 
         return marker;
@@ -1984,7 +1764,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let pageid    = Campaign().get('playerpageid');
 		let	turnorder = state[combatState].config.turnorder;
 
-        if (debug) log('Get or Create Marker type=' + type);
+        logger('getOrCreateMarker::getOrCreateMarker type=' + type);
 
 		let markerName, imgsrc, markerLayer, markerWidth, markerHeight, scale_number = findObjs({_id: pageid, type: 'page'})[0].get('scale_number');
         switch (type) {
@@ -2003,15 +1783,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 markerHeight = parseInt(state[combatState].config.turnorder.rangeMarkerHeight / scale_number);
         }
 
-        if (debug) log('imgsrc=' + imgsrc);
+        logger('getOrCreateMarker::imgsrc=' + imgsrc);
         let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
 
         // markers.forEach((marker, i) => {
-        //     if(i > 0 && type === markerType.ROUND) marker.remove();
+        //     if (i > 0 && type === markerType.ROUND) marker.remove();
         // });
 
         let marker = markers.shift();
-        if(!marker) {
+        if (!marker) {
             const newMarkerAttr = {
                 name: markerName,
                 imgsrc: getCleanImgsrc(imgsrc),
@@ -2021,18 +1801,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 left: Math.ceil(markerWidth / 2), top: Math.ceil(markerHeight / 2),
                 width: markerWidth, height: markerHeight
             };
-            log('getOrCreateMarker CREATING NEW MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
+            logger(LOGLEVEL.INFO, 'getOrCreateMarker::CREATING NEW MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
             marker = createObj('graphic', newMarkerAttr);
         }
 
-        if(type === markerType.ROUND) insertMarkerTurnIfNotInTurnOrder(marker);
+        if (type === markerType.ROUND)   insertMarkerTurnIfNotInTurnOrder(marker);
+        if (type === markerType.MAIN)    startMarkerAnimation(marker);
 
-        if(type === markerType.MAIN) startMarkerAnimation(marker);
-
-        if (markerType.ROUND === type)
-            toBack(marker);
-        else
-            toFront(marker);
+        if (markerType.ROUND === type)  toBack(marker);
+        else                            toFront(marker);
 
         return marker;
     },
@@ -2041,14 +1818,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let turnorder = getTurnorder(),
             hasTurn = false;
 
-        if (debug) log ('Check RoundMarker Turn');
+        logger('insertMarkerTurnIfNotInTurnOrder::insertMarkerTurnIfNotInTurnOrder');
 
 
         turnorder.forEach(turn => {
-            if(turn.id === marker.get('id')) hasTurn = true;
+            if (turn.id === marker.get('id')) hasTurn = true;
         });
 
-        if(!hasTurn){
+        if (!hasTurn){
             turnorder.push({ id: marker.get('id'), pr: -420, custom: '', _pageid: marker.get('pageid') });
             Campaign().set('turnorder', JSON.stringify(turnorder));
         }
@@ -2065,11 +1842,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
    changeMarker = function (token, type=markerType.ROUND)  {
         let typeMarker = getOrCreateMarker(type);
 
-        if (debug) log('Change Marker type=' + type);
+        logger('changeMarker::changeMarker type=' + type);
 
 
-        if(!token){
-            log('changeMarker!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)');
+        if (!token){
+            logger(LOGLEVEL.CRITICAL, 'changeMarker::!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)');
             resetMarker(type);
             return;
         }
@@ -2094,8 +1871,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         };
 
         // DETECT IF TOKEN (should be ROUND type only) IS ON CORRECT LAYER
-        // if(token.get('layer') !== typeMarker.get('layer')) {
-        //     if(typeMarker.get('layer') === 'gmlayer') {
+        // if (token.get('layer') !== typeMarker.get('layer')) {
+        //     if (typeMarker.get('layer') === 'gmlayer') {
         //         typeMarker.set(position);
         //         setTimeout(() => {
         //             if (state[combatState].config.turnorder.useMarker) {
@@ -2116,33 +1893,30 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         setTimeout(() => {
             if (state[combatState].config.turnorder.useMarker || markerType.RANGE === type) {
                 let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : 'map' };
-                log('changeMarker Moving marker type=' + type + ', pos=' + JSON.stringify(position) + ', setting to=' + JSON.stringify(typeMarkerNewAttributes));
+                logger('changeMarker::Moving marker type=' + type + ', pos=' + JSON.stringify(position) + ', setting to=' + JSON.stringify(typeMarkerNewAttributes));
                 typeMarker.set(typeMarkerNewAttributes);
             }
         }, 50);
 
-        if (markerType.ROUND === type)
-            toBack(typeMarker);
-        else
-            toFront(typeMarker);
+        if (markerType.ROUND === type)  toBack(typeMarker);
+        else                            toFront(typeMarker);
     },
 
     sendPingOnToken = function (token) {
-        if(state[combatState].config.turnorder.centerToken) {
-            if (token.get('layer') == 'objects') {
-                sendPing(token.get('left'), token.get('top'), token.get('pageid'), null, true);
-            }
+        if (state[combatState].config.turnorder.centerToken) {
+            if (token.get('layer') == 'objects') sendPing(token.get('left'), token.get('top'), token.get('pageid'), null, true);
         }
     },
 
     handleStatusMarkerChange = function (obj, prev) {
-        if (debug) log ('-------------Handle Status Marker Change-------------');
+        logger(LOGLEVEL.INFO, '-------------Handle Status Marker Change-------------');
+        logger('handleStatusMarkerChange::handleStatusMarkerChange');
 
 
         prev.statusmarkers = (typeof prev.get === 'function') ? prev.get('statusmarkers') : prev.statusmarkers;
 
-        if(typeof prev.statusmarkers === 'string'){
-            if(obj.get('statusmarkers') !== prev.statusmarkers){
+        if (typeof prev.statusmarkers === 'string'){
+            if (obj.get('statusmarkers') !== prev.statusmarkers){
 
                 var prevstatusmarkers = prev.statusmarkers.split(",");
                 var newstatusmarkers = obj.get('statusmarkers').split(",");
@@ -2150,8 +1924,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 if (prevstatusmarkers.length > 0) {
                     prevstatusmarkers.forEach((marker) => {
                         let condition = getConditionByMarker(marker);
-                        if(!condition) return;
-                        if(marker !== '' && !newstatusmarkers.includes(marker)){
+                        if (!condition) return;
+                        if (marker !== '' && !newstatusmarkers.includes(marker)){
                             removeConditionFromToken(obj, condition.key, true);
                         }
                     });
@@ -2160,8 +1934,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 if (newstatusmarkers.length > 0 ) {
                     newstatusmarkers.forEach(function(marker){
                         let condition = getConditionByMarker(marker);
-                        if(!condition) return;
-                        if(marker !== "" && !prevstatusmarkers.includes(marker)){
+                        if (!condition) return;
+                        if (marker !== "" && !prevstatusmarkers.includes(marker)){
                             addConditionToToken(obj,condition.key,condition.duration,condition.direction,condition.message);
                         }
                     });
@@ -2171,7 +1945,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     startMarkerAnimation = function(marker) {
-        if( !animationHandle && state[combatState].config.turnorder.animateMarker) {
+        if ( !animationHandle && state[combatState].config.turnorder.animateMarker) {
             animationHandle = rotateMarkerCallback;
             setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
         }
@@ -2182,15 +1956,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     rotateMarkerCallback = function(marker) {
-        if (!animationHandle) {
-             return;
-            }
+        if (!animationHandle) return;
         if (!state[combatState].config.turnorder.animateMarker) {
             animationHandle = null;
             return;
         }
         //let newRotation = ();
-        //log('new rotation='+newRotation);
+        //logger('new rotation='+newRotation);
         marker.set('rotation',parseInt(marker.get('rotation'))+parseInt(state[combatState].config.turnorder.animateMarkerDegree));
         setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
     },
@@ -2204,10 +1976,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     isCombatActiveAndTriggerStopIfNot = function () {
-        if(debug) {
-            log('Verify Turnorder');
-        }
+        logger('isCombatActiveAndTriggerStopIfNot::isCombatActiveAndTriggerStopIfNot');
         let turnorder = getTurnorder();
+        logger(`isCombatActiveAndTriggerStopIfNot::return=${(turnorder.length == 0) ? false : true}`);
 
         if (turnorder.length == 0) {
             makeAndSendMenu('The Turnorder is empty.  Combat not started',null,'gm');
@@ -2219,12 +1990,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     changeToNextTurn = function (prev=false, delay=false, turnOrderUnmodified=true, preventAnnounceTurn=false) {
-        if(debug) log('Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!! announceTurn=' + preventAnnounceTurn);
+        logger('changeToNextTurn::changeToNextTurn Do TurnOrder Change !!!!!!!!!!!!!!!!!!!!!!!!!!!! announceTurn=' + preventAnnounceTurn);
 
         let verified    = isCombatActiveAndTriggerStopIfNot();
-        if (!verified) {
-            return;
-        }
+        if (!verified) return;
         let turn        = getCurrentTurnObject();
         let marker      = getOrCreateMarker();
         let tokenObj    = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
@@ -2236,21 +2005,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
 
         if (turn.id === marker.id) {
-            if(debug) log('TURN MARKER => Change TURN');
-            if (prev)
-                handlePreviousRound();
-            else
-                handleNextRound();
+            logger(LOGLEVEL.INFO, 'changeToNextTurn::TURN MARKER => Change TURN');
+            if (prev)   handlePreviousRound();
+            else        handleNextRound();
             return;
         }
 
 		if (tokenObj) {
-            //toFront(tokenObj);
-
-            if (state[combatState].config.timer.useTimer) {
-                startTimer(tokenObj);
-            }
-
+            if (state[combatState].config.timer.useTimer) startTimer(tokenObj);
             let tmpTurnOrder = getTurnorder(), tmpTurn, lastVisibleToken;
             do {
                 tmpTurn = tmpTurnOrder.pop();
@@ -2262,14 +2024,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 return;
             }
 
-            log('tmpTurn.pr='+tmpTurn.pr);
+            logger('changeToNextTurn::tmpTurn.pr='+tmpTurn.pr);
 
             if (state[combatState].config.turnorder.useRangeMarker != 'None')
                 changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.RANGE);
             changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken);
             changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.MAIN);
 
-            log('============== sameFirstTurn='+preventAnnounceTurn);
+            logger('changeToNextTurn::============== sameFirstTurn='+preventAnnounceTurn);
             if (!preventAnnounceTurn)
                 announcePlayer(tokenObj, prev, delay, false);
             resetOnslaught(tokenObj);
@@ -2286,29 +2048,23 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             let nextTurn = getNextTurnObject();
             if (nextTurn) {
                 let nextToken = getObj('graphic', nextTurn.id);
-                log('turnOrderUnmodified='+turnOrderUnmodified+', nextToken.layer='+JSON.stringify(nextToken.get('layer')));
+                logger('changeToNextTurn::turnOrderUnmodified='+turnOrderUnmodified+', nextToken.layer='+JSON.stringify(nextToken.get('layer')));
                 if (nextToken && turnOrderUnmodified ||
-                    (!turnOrderUnmodified &&   (nextToken.get('top') != getOrCreateMarker(markerType.NEXT).get('top') ||
+                    (!turnOrderUnmodified &&   (nextToken.get('top')  != getOrCreateMarker(markerType.NEXT).get('top') ||
                                                 nextToken.get('left') != getOrCreateMarker(markerType.NEXT).get('left')))) {
-                    //toFront(nextToken);
                     changeMarker(nextToken || false, markerType.NEXT);
                     toFront(getOrCreateMarker(markerType.MAIN));
                 }
-                // else {
-                //     resetMarker(markerType.NEXT);
-                // }
             }
         }
     },
 
     handleTurnorderChange = function (obj, prev) {
-        if (debug) {
-            log("handleTurnorderChange::-------------Handle Turnorder Change-------------");
-            log('handleTurnorderChange::obj='+JSON.stringify(obj));
-            log('handleTurnorderChange::prev='+JSON.stringify(prev));
-        }
+        logger(LOGLEVEL.INFO, "handleTurnorderChange::-------------Handle Turnorder Change-------------");
+        logger('handleTurnorderChange::obj='+JSON.stringify(obj));
+        logger('handleTurnorderChange::prev='+JSON.stringify(prev));
 
-        if(obj.get('turnorder') === prev.turnorder) return;
+        if (obj.get('turnorder') === prev.turnorder) return;
 
         let turnorder = (obj.get('turnorder') === "") ? [] : JSON.parse(obj.get('turnorder'));
         let prevTurnorder = (prev.turnorder === "") ? [] : JSON.parse(prev.turnorder);
@@ -2317,23 +2073,20 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         theoricalNewOrder.push(currentTurn);
 
 
-        if(obj.get('turnorder') == [] || (prevTurnorder.length && turnorder.filter(turn => turn.pr != -420).length <= 1)){
+        if (obj.get('turnorder') == [] || (prevTurnorder.length && turnorder.filter(turn => turn.pr != -420).length <= 1)){
             stopCombat();
             return;
         }
 
         let test= JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder);
-        if (debug) log('handleTurnorderChange::JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)='+test);
+        logger('handleTurnorderChange::JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)='+test);
 
         let callFirstTurn = (prevTurnorder.length === 1 && turnorder.length === 2);
-        if (debug) log(`handleTurnorderChange::prevTurnorder.length=${prevTurnorder.length}, turnorder.length=${turnorder.length}`);
-        if (debug) log(`handleTurnorderChange::callFirstTurn=${callFirstTurn}`);
+        logger(`handleTurnorderChange::prevTurnorder.length=${prevTurnorder.length}, turnorder.length=${turnorder.length}`);
+        logger(`handleTurnorderChange::callFirstTurn=${callFirstTurn}`);
 
-        if (callFirstTurn) {
-            makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
-        }
-
-        if(turnorder.length && prevTurnorder.length){//  && turnorder[0].id !== prevTurnorder[0].id
+        if (callFirstTurn) makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
+        if (turnorder.length && prevTurnorder.length){//  && turnorder[0].id !== prevTurnorder[0].id
             changeToNextTurn(false, false, test, callFirstTurn ? false : turnorder[0].id === prevTurnorder[0].id);
         }
     },
@@ -2356,7 +2109,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     addToTurnorder = function (turn) {
         let turnorder = getTurnorder();
 
-        if (debug) log('Add to Turnorder');
+        logger('addToTurnorder::addToTurnorder');
 
         turnorder.push(turn);
         setTurnorder(turnorder);
@@ -2372,7 +2125,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     changeTurnOrderToNext = function() {
         let turnorder, currentTurn;
 
-        if (debug) log('changeTurnOrderToNext');
+        logger('changeTurnOrderToNext::changeTurnOrderToNext');
 
 
         turnorder   = getTurnorder(),
@@ -2387,7 +2140,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         turnorder   = getTurnorder();
         currentTurn = turnorder.shift();
-        currentTurn.pr = currentTurn.pr - 2;
+        currentTurn.pr -= 2;
 
         let tokenObj    = findObjs({_id:currentTurn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
         if (tokenObj) {
@@ -2402,8 +2155,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         turnorder.unshift(currentTurn);
         setTurnorder(turnorder);
 
-        if (debug) log('Delay Turn');
-
+        logger('delayTurn::delayTurn');
 
         changeTurnOrderToNext();
     },
@@ -2421,19 +2173,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let marker     = getOrCreateMarker(),
             initiative = state[combatState].config.initiative;
 
-        if (debug) log('Next Round');
+        logger('handleNextRound::handleNextRound');
 
 
         round++;
         marker.set({ name: 'Round ' + round});
 
 
-        if(state[combatState].config.announcements.announceRound){
+        if (state[combatState].config.announcements.announceRound){
             let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
             makeAndSendMenu(text, ' ', undefined, false);
         }
 
-        if(initiative.rollEachRound){
+        if (initiative.rollEachRound){
             let turnorder = getTurnorder();
             clearTurnorder();
             insertMarkerTurnIfNotInTurnOrder(marker);
@@ -2441,17 +2193,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             changeToNextTurn();
         }else{
             let turnorder, currentTurn;
-            if (debug) log('Next Turn');
-
 
             turnorder   = getTurnorder(),
             currentTurn = turnorder.shift();
             turnorder.push(currentTurn);
             setTurnorder(turnorder);
 
-            if(state[combatState].config.turnorder.sortTurnOrder){
+            if (state[combatState].config.turnorder.sortTurnOrder)
                 sortTurnorder();
-            }
             changeToNextTurn();
         }
     },
@@ -2461,12 +2210,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     getNextTurnObject = function (skipId=-1) {
-        log('getNextTurnObject');
+        logger('getNextTurnObject::getNextTurnObject');
         let returnturn;
         getTurnorder().every((turn, i) => {
             let turnMarker = getOrCreateMarker();
             let turnToken = getObj('graphic', turn.id);
-            if(i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && turnToken && turnToken.get('layer') !== 'gmlayer' && turn.id !== skipId){
+            if (i > 0 && turn.id !== '-420' && turn.id !== turnMarker.get('id') && turnToken && turnToken.get('layer') !== 'gmlayer' && turn.id !== skipId){
                 returnturn = turn;
                 return false;
             }else return true;
@@ -2487,7 +2236,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         round--;
         marker.set({ name: 'Round ' + round});
 
-        if(state[combatState].config.announcements.announceRound){
+        if (state[combatState].config.announcements.announceRound){
             let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
             makeAndSendMenu(text, '', undefined, false);
         }
@@ -2506,10 +2255,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
         clearInterval(intervalHandle);
 
-        if(timerObj) timerObj.remove();
+        if (timerObj) timerObj.remove();
 
 
-        if(token && timer.showTokenTimer){
+        if (token && timer.showTokenTimer){
             timerObj = createObj('text', {
                 text: 'Timer: ' + time,
                 font_size: timer.timerFontSize,
@@ -2521,24 +2270,24 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         }
 
         intervalHandle = setInterval(() => {
-            if(paused) return;
+            if (paused) return;
 
-            if(timerObj && timer.showTokenTimer) timerObj.set({
+            if (timerObj && timer.showTokenTimer) timerObj.set({
                 top: token.get('top')+token.get('width')/2+40,
                 left: token.get('left'),
                 text: 'Timer: ' + time,
                 layer: token.get('layer')
             });
 
-            if(state[combatState].config.timer.sendTimerToChat && (time === config_time || config_time/2 === time || config_time/4 === time || time === 10 || time === 5)){
+            if (state[combatState].config.timer.sendTimerToChat && (time === config_time || config_time/2 === time || config_time/4 === time || time === 10 || time === 5)){
                 makeAndSendMenu('', 'Time Remaining: ' + time);
             }
 
-            if(time <= 0){
-                if(timerObj) timerObj.remove();
+            if (time <= 0){
+                if (timerObj) timerObj.remove();
                 clearInterval(intervalHandle);
-                if(timer.skipTurn) changeTurnOrderToNext();
-                else if(token.get('layer') !== 'gmlayer') makeAndSendMenu(token.get('name') + "'s time ran out!", '');
+                if (timer.skipTurn) changeTurnOrderToNext();
+                else if (token.get('layer') !== 'gmlayer') makeAndSendMenu(token.get('name') + "'s time ran out!", '');
             }
 
             time--;
@@ -2547,7 +2296,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
     stopTimer = function () {
         clearInterval(intervalHandle);
-        if(timerObj) timerObj.remove();
+        if (timerObj) timerObj.remove();
     },
 
     pauseTimer = function () {
@@ -2557,13 +2306,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //ANNOUNCE
 //*************************************************************************************************************
     announcePlayer = function (tokenObj, prev, delay=false, show=false) {
-        if (debug) log('Announce Player');
+        logger('announcePlayer::announcePlayer');
 
 
-        if (!tokenObj) {
-            return;
-        }
-
+        if (!tokenObj) return;
         let name        = tokenObj.get('name');
         let imgurl      = tokenObj.get('imgsrc');
         let conditions  = getAnnounceConditions(tokenObj, prev, delay, show);
@@ -2628,7 +2374,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     getAnnounceConditions = function (tokenObj, prev, delay, show) {
-        if (debug) log('Announce Condition');
+        logger('getAnnounceConditions::getAnnounceConditions');
 
 
         let removeButton;
@@ -2640,17 +2386,14 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         if (state[combatState].conditions) {
             [... state[combatState].conditions].forEach(condition => {
                 if (condition.id == tokenObj.get("_id") || condition.target.includes(tokenObj.get("_id"))) {
-                    if (condition.target.includes(tokenObj.get("_id"))){
-                        target = true;
-                    }
-
+                    if (condition.target.includes(tokenObj.get("_id"))) target = true;
                     descriptionButton = makeButton(condition.name, '!cmaster --show,description,key='+condition.key);
                     if (!target) {
                         if (!delay && !show) {
                             if (!prev) {
-                                condition.duration = condition.duration + condition.direction;
+                                condition.duration += condition.direction;
                             } else {
-                                condition.duration = condition.duration - condition.direction;
+                                condition.duration -= condition.direction;
                             }
                         }
                     }
@@ -2668,18 +2411,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             // addMarker(tokenObj, condition.iconType, condition.icon, condition.duration, condition.direction, condition.key)
                             addConditionToToken(tokenObj,condition.key,condition.duration,condition.direction,condition.message);
                         }
-                        if (condition.hasOwnProperty('message')) {
-                            if (condition.message != 'None' && condition.message.length > 0) {
-                                output += '<div style="display:inline-block;"><strong>Message: </strong>'+condition.message + '</div>';
-                            }
-                        }
+                        if (condition.hasOwnProperty('message') && condition.message != 'None' && condition.message.length > 0)
+                            output += '<div style="display:inline-block;"><strong>Message: </strong>'+condition.message + '</div>';
                     } else if (condition.direction == 0) {
                         output += '<div style="display:inline-block;"><strong>'+descriptionButton+'</strong> '+condition.duration+' Permanent</div>';
-                        if (condition.hasOwnProperty('message')) {
-                            if (condition.message != 'None' && condition.message.length > 0) {
-                                output += '<div style="display:inline-block;"<strong>Message: </strong> '+condition.message+ '</div>';
-                            }
-                        }
+                        if (condition.hasOwnProperty('message') && condition.message != 'None' && condition.message.length > 0)
+                            output += '<div style="display:inline-block;"<strong>Message: </strong> '+condition.message+ '</div>';
                     }
 
                     if (!removed) {
@@ -2731,9 +2468,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     makeImageButton = function(command, image, toolTip, backgroundColor,size,color){
-        if (!color) {
-            color = 'black';
-        }
+        if (!color) color = 'black';
         return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>';
     },
 
@@ -2746,12 +2481,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         });
 		list += '</ul>';
 
-		if (extraButton) {
-			list += extraButton;
-		}
-		if (backButton) {
-			list += '<hr>'+backButton;
-		}
+		if (extraButton) list += extraButton;
+		if (backButton) list += '<hr>'+backButton;
         return list;
     },
 
@@ -2759,10 +2490,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //ICONS
 //*************************************************************************************************************
     getDefaultIcon = function (iconType, icon, style='', height, width) {
-        if (iconType == 'None') {
-            return 'None';
-        }
-
+        if (iconType == 'None') return 'None';
         let installed = verifyInstalls(iconType);
 
         if (iconType == 'Token Marker' && installed) {
@@ -2772,7 +2500,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             let iconStyle = '';
             // let iconSize = '';
 
-            if(typeof icon_image_positions[icon] === 'undefined') return false;
+            if (typeof icon_image_positions[icon] === 'undefined') return false;
 
             if (width) {
                 iconStyle += 'width: '+width+'px;height: '+height+'px;';
@@ -2780,11 +2508,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 iconStyle += 'width: 24px; height: 24px;';
             }
 
-            if(Number.isInteger(icon_image_positions[icon])){
+            if (Number.isInteger(icon_image_positions[icon])){
                 iconStyle += 'background-image: url(https://roll20.net/images/statussheet.png);';
                 iconStyle += 'background-repeat: no-repeat;';
                 iconStyle += 'background-position: -'+icon_image_positions[icon]+'px 0;';
-            }else if(icon_image_positions[icon] === 'X'){
+            }else if (icon_image_positions[icon] === 'X'){
                 iconStyle += 'color: red; margin-right: 0px;';
                 X = 'X';
             }else{
@@ -2813,14 +2541,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     // },
 
     getIconTag = function (iconType,iconName) {
-        if (debug) log('Get Icon Tag');
+        logger('getIconTag::getIconTag');
 
 
         let installed = verifyInstalls(iconType);
-        if (!installed) {
-            return;
-        }
-
+        if (!installed) return;
         let iconTag = null;
         if (iconType == 'Token Marker') {
             iconTag = libTokenMarkers.getStatus(iconName).getTag();
@@ -2846,14 +2571,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //EXTERNAL CALLS
 //*************************************************************************************************************
     doRoundCalls = function () {
-        if (debug) log("Do Round Calls");
+        logger("doRoundCalls::doRoundCalls");
 
 
         let verified    = isCombatActiveAndTriggerStopIfNot();
-        if (!verified) {
-            return;
-        }
-
+        if (!verified) return;
         let config     = state[combatState].config.turnorder;
         let turnorder  = getTurnorder();
         let tokenObj, characterObj, macro;
@@ -2872,15 +2594,12 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             macro = getMacro(tokenObj, config.characterRoundMacro);
                             sendCalltoChat(tokenObj,characterObj,macro.get('action'));
                         }
-                        if (!['None',''].includes(config.roundAPI)) {
-                            sendCalltoChat(tokenObj,characterObj,config.roundAPI);
-                        }
-                        if (!['None',''].includes(config.roundRoll20AM)) {
-                            sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
-                        }
-                        if (!['None',''].includes(config.roundFX)) {
-                            doFX(tokenObj,config.roundFX);
-                        }
+                        if (!['None',''].includes(config.roundAPI))
+                        	sendCalltoChat(tokenObj,characterObj,config.roundAPI);
+                        if (!['None',''].includes(config.roundRoll20AM))
+                        	sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
+                        if (!['None',''].includes(config.roundFX))
+                        	doFX(tokenObj,config.roundFX);
                     }
                 }
             }
@@ -2888,7 +2607,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     doTurnCalls = function (tokenObj) {
-        if (debug) log("Do Turn External Calls");
+        logger("doTurnCalls::doTurnCalls Do Turn External Calls");
 
 
         let config = state[combatState].config.turnorder;
@@ -2903,9 +2622,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                         sendCalltoChat(tokenObj,characterObj,ability.get('action'));
                     } else {
                         macro = findObjs({_type:'macro', name:config.turnMacro})[0];
-                        if (macro) {
-                            sendCalltoChat(tokenObj,characterObj,macro.get('action'));
-                        }
+                        if (macro) sendCalltoChat(tokenObj,characterObj,macro.get('action'));
                     }
                 }
 
@@ -2917,90 +2634,60 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             sendCalltoChat(tokenObj,characterObj,ability.get('action'));
                         } else {
                             macro = findObjs({_type:'macro', name:condition.addMacro})[0];
-                            if (macro) {
-                                sendCalltoChat(tokenObj,characterObj,macro.get('action'));
-                            }
+                            if (macro) sendCalltoChat(tokenObj,characterObj,macro.get('action'));
                         }
                     }
                 }
-                if (!['None',''].includes(config.turnAPI)) {
-                    sendCalltoChat(tokenObj,characterObj,config.turnAPI);
-                }
-                if (!['None',''].includes(config.turnRoll20AM)) {
-                    sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
-                }
-                if (!['None',''].includes(config.turnFX)) {
-                    doFX(tokenObj,config.turnFX);
-                }
+                if (!['None',''].includes(config.turnAPI)) sendCalltoChat(tokenObj,characterObj,config.turnAPI);
+                if (!['None',''].includes(config.turnRoll20AM)) sendCalltoChat(tokenObj,characterObj,config.roundRoll20AM);
+                if (!['None',''].includes(config.turnFX)) doFX(tokenObj,config.turnFX);
             }
 
         }
     },
 
     doAddConditionCalls = function (tokenObj,key) {
-        if (debug) log("Do Add Condition Calls");
+        logger("doAddConditionCalls::doAddConditionCalls");
 
 
         let condition = getConditionByKey(key);
-        if (!condition) {
-            return;
-        }
-
+        if (!condition) return;
         let characterObj = getObj('character',tokenObj.get('represents'));
         let macro;
 
         if (characterObj) {
             if (!['None',''].includes(condition.addMacro)) {
                 macro = findObjs({_type:'macro', name:condition.addMacro})[0];
-                if (macro) {
-                    sendCalltoChat(tokenObj,characterObj,macro.get('action'));
-                }
+                if (macro) sendCalltoChat(tokenObj,characterObj,macro.get('action'));
             }
-            if (!['None',''].includes(condition.addAPI)) {
-                sendCalltoChat(tokenObj,characterObj,condition.addAPI);
-            }
-            if (!['None',''].includes(condition.addRoll20AM)) {
-                sendCalltoChat(tokenObj,characterObj,condition.addRoll20AM);
-            }
-            if (!['None',''].includes(condition.addFX)) {
-                doFX(tokenObj,condition.addFX);
-            }
+            if (!['None',''].includes(condition.addAPI)) sendCalltoChat(tokenObj,characterObj,condition.addAPI);
+            if (!['None',''].includes(condition.addRoll20AM)) sendCalltoChat(tokenObj,characterObj,condition.addRoll20AM);
+            if (!['None',''].includes(condition.addFX)) doFX(tokenObj,condition.addFX);
         }
     },
 
     doRemoveConditionCalls = function (tokenObj,key) {
-        if (debug) log("Do Remove Condition Calls");
+        logger("doRemoveConditionCalls::doRemoveConditionCalls");
 
 
         let condition = getConditionByKey(key);
-        if (!condition) {
-            return;
-        }
-
+        if (!condition) return;
         let characterObj = getObj('character',tokenObj.get('represents'));
         let macro;
 
         if (characterObj) {
             if (!['None',''].includes(condition.remMacro)) {
                 macro = findObjs({_type:'macro', name:condition.remMacro})[0];
-                if (macro) {
-                    sendCalltoChat(tokenObj,characterObj,macro.get('action'));
-                }
+                if (macro) sendCalltoChat(tokenObj,characterObj,macro.get('action'));
             }
-            if (!['None',''].includes(condition.remAPI)) {
-                sendCalltoChat(tokenObj,characterObj,condition.remAPI);
-            }
-            if (!['None',''].includes(condition.remRoll20AM)) {
-                sendCalltoChat(tokenObj,characterObj,condition.remRoll20AM);
-            }
-            if (!['None',''].includes(condition.remFX)) {
-                doFX(tokenObj,condition.remFX);
-            }
+            if (!['None',''].includes(condition.remAPI)) sendCalltoChat(tokenObj,characterObj,condition.remAPI);
+            if (!['None',''].includes(condition.remRoll20AM)) sendCalltoChat(tokenObj,characterObj,condition.remRoll20AM);
+            if (!['None',''].includes(condition.remFX)) doFX(tokenObj,condition.remFX);
         }
     },
 
     sendCalltoChat = function(tokenObj,characterObj,action) {
-        if (debug) log("sendCalltoChat");
+        logger("sendCalltoChat::sendCalltoChat");
 
 
         let substitutions = state[combatState].config.macro.substitutions;
@@ -3025,7 +2712,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     doFX = function (tokenObj, fx) {
-        if(tokenObj.get('layer') === 'gmlayer') return;
+        if (tokenObj.get('layer') === 'gmlayer') return;
 
         let pos = {x: tokenObj.get('left'), y: tokenObj.get('top')};
         spawnFxBetweenPoints(pos, pos, fx, tokenObj.get('pageid'));
@@ -3033,9 +2720,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
     getMacro = function(tokenObj, name) {
         let macro = findObjs({_characterid:tokenObj.get('represents'), _type:'ability', name:name})[0];
-        if (!action) {
-            macro = findObjs({_type:'macro', name:config.turnMacro})[0];
-        }
+        if (!action) macro = findObjs({_type:'macro', name:config.turnMacro})[0];
         return macro;
     },
 
@@ -3043,7 +2728,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //SUBSTITUTIONS
 //*************************************************************************************************************
     newSubstitution = function(cmdDetails) {
-        if (debug) log('Add Substitution');
+        logger('newSubstitution::newSubstitution');
 
 
         let substitution = {
@@ -3057,13 +2742,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     removeSubstitution = function(cmdDetails) {
-        if (debug) log('Remove Substitution');
+        logger('removeSubstitution::removeSubstitution');
 
 
         state[combatState].config.macro.substitutions.forEach((substitution, i) => {
-            if (substitution.action == cmdDetails.details.action) {
-                state[combatState].config.macro.substitutions.splice(i,1);
-            }
+            if (substitution.action == cmdDetails.details.action) state[combatState].config.macro.substitutions.splice(i,1);
         });
 		sendMacroMenu();
     },
@@ -3071,10 +2754,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 //SPELLS
 //*************************************************************************************************************
     handleSpellCast = function(msg) {
-        if (debug) {
-            log('Handle Spell Cast');
-            log(msg);
-        }
+        logger('handleSpellCast::handleSpellCast');
+        logger(msg);
 
         let status          = state[combatState].config.status;
         let concentration   = state[combatState].config.concentration;
@@ -3094,13 +2775,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             spellLevel   = msg.content.match(/spelllevel=([^\n{}]*[^"\n{}])/);
             spellLevel   = RegExp.$1;
             durationmult = 1;
-            if (msg.content.includes("{{concentration=1}}")) {
-                concentrate = true;
-            }
-
-            if (!spellLevel && !concentrate) {
-                return;
-            }
+            if (msg.content.includes("{{concentration=1}}")) concentrate = true;
+            if (!spellLevel && !concentrate) return;
         } else if (status.sheet == 'Shaped') {
             spellName    = msg.content.match(/title=([^\n{}]*[^"\n{}])/);
             spellName    = RegExp.$1;
@@ -3122,9 +2798,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             } else {
                 duration = (duration * durationmult);
             }
-            if (msg.content.includes("CONCENTRATION")) {
-                concentrate = true;
-            }
+            if (msg.content.includes("CONCENTRATION")) concentrate = true;
         } else if (status.sheet == 'PF2') {
             spellName    = msg.content.match(/header=([^\n{}]*[^"\n{}])/);
             spellName    = RegExp.$1;
@@ -3132,33 +2806,20 @@ createDecisiveAbilities = function(cmdDetails, selected) {
             description  = RegExp.$1;
         }
 
-        if (!spellName) {
-            return;
-        }
+        if (!spellName) return;
 
-        if (debug) {
-            log('Spell Name:'+spellName);
-            log('Description:'+description);
-            log('Concentrate:'+concentrate);
-            log('Duration:'+duration);
-            log('Duration Multiplier:'+durationmult);
-        }
-        if (!description) {
-            description = 'None';
-        }
-        if (!duration) {
-            duration = 1;
-        }
-
-        if (!direction) {
-            direction = 0;
-        }
+        logger('handleSpellCast::Spell Name:'+spellName);
+        logger('handleSpellCast::Description:'+description);
+        logger('handleSpellCast::Concentrate:'+concentrate);
+        logger('handleSpellCast::Duration:'+duration);
+        logger('handleSpellCast::Duration Multiplier:'+durationmult);
+        description || (description = 'None');
+        duration    || (duration    = 1);
+        direction   || (direction   = 0);
         if (status.autoAddSpells) {
             let key = spellName.toLowerCase();
             let condition = getConditionByKey(key);
-            if (duration >= 1) {
-                direction = -1;
-            }
+            if (duration >= 1) direction = -1;
             else {
                 direction = 0;
             }
@@ -3212,57 +2873,43 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     addSpell = function(key) {
-        if (debug) {
-            log('Add Spell');
-            log(key);
-        }
+        logger('addSpell::addSpell');
+        logger(key);
         state[combatState].config.conditions[key] = state[combatState].spells[key];
         let index = state[combatState].spells.indexOf(key);
-        if (index > -1) {
-            state[combatState].spells.splice(index, 1);
-        }
+        if (index > -1) state[combatState].spells.splice(index, 1);
         sendConditionMenu(key);
     },
 
     ignoreSpell = function(key) {
-        if (debug) {
-            log('Ignore Spell');
-            log(key);
-        }
+        logger('ignoreSpell::ignoreSpell');
+        logger(key);
 
        state[combatState].ignores.push(key);
        makeAndSendMenu('Spell has been added to Ignore List','Spell Ignored','gm');
     },
 
     getIgnoresByKey = function(key) {
-        if (debug) {
-            log('Get Ignores By Key');
-            log('Key:'+key);
-            log('Exists:'+state[combatState].ignores.includes(key));
-        }
+        logger('getIgnoresByKey::getIgnoresByKey');
+        logger('getIgnoresByKey::Key:'+key);
+        logger('getIgnoresByKey::Exists:'+state[combatState].ignores.includes(key));
 
-        if (state[combatState].ignores.includes(key)) {
+        if (state[combatState].ignores.includes(key))
             return true;
-        } else {
+        else
             return false;
-        }
     },
 
     handleConstitutionSave = function(obj, prev) {
-        if (debug) log('-------------Handle Constitution Save-------------');
+        logger(LOGLEVEL.INFO, 'handleConstitutionSave::handleConstitutionSave-------------Handle Constitution Save-------------');
 
-
-        let tokenID = obj.get('id');
-        let found = false;
+        let tokenID = obj.get('id'), found = false;
         state[combatState].conditions.forEach((condition) => {
-            if (condition.id == tokenID && condition.key == 'concentration') {
+            if (condition.id == tokenID && condition.key == 'concentration')
                 found = true;
-            }
         });
 
-        if (!found) {
-            return;
-        }
+        if (!found) return;
 
         // let conditions = obj.get('statusmarkers').split(',');
         // let condition = state[combatState].conditions.map(id => obj.get('statusmarkers'));
@@ -3270,24 +2917,24 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         let bar = concentration.woundBar+'_value';
         let target = concentration.notify;
 
-        if(obj.get(bar) < prev[bar]) {
+        if (obj.get(bar) < prev[bar]) {
             let calcDC = Math.floor((prev[bar] - obj.get(bar))/2);
             let DC = (calcDC > 10) ? calcDC : 10;
             // let conSave = parseInt(getAttrByName(obj.get('represents'), concentration.attribute, 'current')) || 0;
             let contents;
 
-            if(target === 'Character'){
+            if (target === 'Character') {
                 contents = "Make a Concentration Check - <b>DC " + DC + "</b>.";
                 target = obj.get('name').split(' ').shift();
-            } else if(target === 'Everyone'){
+            } else if (target === 'Everyone') {
                 contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
                 target = '';
-            }else{
+            } else {
                 contents = '<b>'+obj.get('name')+'</b> must make a Concentration Check - <b>DC ' + DC + '</b>.';
                 target = 'gm';
             }
             makeAndSendMenu(contents, '', target);
-            // if(concentration.autoRoll){
+            // if (concentration.autoRoll){
             //     roll(obj.get('represents'), DC, conSave, obj.get('name'), target);
             // }else{
                 // makeAndSendMenu(contents, '', target);
@@ -3323,15 +2970,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     // },
 
     handeIniativePageChange = function (obj,prev) {
-        if (debug) log (`-------------Handle Initiative Page Change------------- turnorder=${JSON.stringify(getTurnorder())}`);
+        logger(`handeIniativePageChange::handeIniativePageChange -------------Handle Initiative Page Change------------- turnorder=${JSON.stringify(getTurnorder())}`);
 
-        if((obj.get('initiativepage') !== prev.initiativepage && !obj.get('initiativepage'))){
+        if ((obj.get('initiativepage') !== prev.initiativepage && !obj.get('initiativepage'))){
             //stopCombat();
         }
     },
 
     observeTokenChange = function(handler){
-        if(handler && _.isFunction(handler)){
+        if (handler && _.isFunction(handler)){
             observers.tokenChange.push(handler);
         }
     },
@@ -3343,7 +2990,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     // },
 
     getCurrentTurnObjectOrLastVisibleIfHidden = (idSkip = -1) => {
-        if (debug) log ('getCurrentTurnObjectOrLastVisibleIfHidden idSkip='+idSkip);
+        logger('getCurrentTurnObjectOrLastVisibleIfHidden::getCurrentTurnObjectOrLastVisibleIfHidden idSkip='+idSkip);
 
         let turns = getTurnorder(), turn = turns.shift(), first = {...turn},
         tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
@@ -3354,15 +3001,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                 if (turn) lastVisibleToken = getObj('graphic', turn.id);
             } while (turns.length && (turn.id == idSkip || parseInt(turn.pr) == -420 || !lastVisibleToken || lastVisibleToken.get('layer') != 'objects'));
 
-            if (turns.length == 0 && !turn) {
-                return first;
-            }
+            if (turns.length == 0 && !turn) return first;
         }
         return turn;
     },
 
     actualizeNextMarker = (obj) => {
-        log('actualizeNextMarker obj='+JSON.stringify(obj));
+        logger('actualizeNextMarker::actualizeNextMarker obj='+JSON.stringify(obj));
         const nextTurnObject = getNextTurnObject(obj.get('id'));
         if (!nextTurnObject)
             resetMarker(markerType.NEXT);
@@ -3371,67 +3016,64 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     handleGraphicDelete = function (obj) {
-        if (debug) {
-            log ('-------------Handle Graphic Delete-------------');
-            log('obj='+JSON.stringify(obj));
-        }
+        logger(LOGLEVEL.INFO, '-------------Handle Graphic Delete-------------');
+        logger('handleGraphicDelete::handleGraphicDelete');
+        logger('handleGraphicDelete::obj='+JSON.stringify(obj));
 
-        if(!inFight()) return;
+        if (!inFight()) return;
 
         let turnorder =  getTurnorder();
         const newTurnorder = turnorder.filter(turn => turn.id !== obj.get('_id'));
         if (JSON.stringify(newTurnorder) != JSON.stringify(turnorder)) { // delete an item which is in the roll20 combat/turnorder
-            if (debug) log('Setting newTurnorder !!! (token deleted was part of turn order) turnorder='+JSON.stringify(newTurnorder.map(turn => turn.pr).filter(turn => turn != -420)));
+            logger('handleGraphicDelete::Setting newTurnorder !!! (token deleted was part of turn order) turnorder='+JSON.stringify(newTurnorder.map(turn => turn.pr).filter(turn => turn != -420)));
             setTurnorder(newTurnorder);
         }
         const filteredTurnorder = turnorder.map(turn => turn.pr).filter(turn => turn != -420);
-        log('without turns turnorder='+JSON.stringify(filteredTurnorder));
+        logger('handleGraphicDelete::without turns turnorder='+JSON.stringify(filteredTurnorder));
 
         if (filteredTurnorder.length - 1 <= 1) {
-            log('No More Token to Fight with, closing combat !! /!\\');
+            logger('handleGraphicDelete::No More Token to Fight with, closing combat !! /!\\');
             stopCombat();
-            log('-----END-----Handle Graphic Delete-----END-----');
+            logger('handleGraphicDelete::-----END-----');
             return;
         }
 
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
             let curretMarker = getOrCreateMarker(), nextMarker = getOrCreateMarker(markerType.NEXT);
-            if(curretMarker.get('top') === obj.get('top') && curretMarker.get('left') === obj.get('left')){
-                log('Actual Player Deleted !');
+            if (curretMarker.get('top') === obj.get('top') && curretMarker.get('left') === obj.get('left')){
+                logger('handleGraphicDelete::Actual Player Deleted !');
                 let currentFocus = getObj('graphic', getCurrentTurnObjectOrLastVisibleIfHidden(obj.get('id')).id);
                 changeMarker(currentFocus);
                 changeMarker(currentFocus, markerType.RANGE);
                 changeMarker(currentFocus, markerType.MAIN);
                 if (nextMarker.get('top') === currentFocus.get('top') && nextMarker.get('left') === currentFocus.get('left')) {
-                    log('Main marker will be on NEXT, need to move NEXT !!!');
+                    logger('handleGraphicDelete::Main marker will be on NEXT, need to move NEXT !!!');
                     actualizeNextMarker(obj);
                 }
             } else if (nextMarker.get('top') === obj.get('top') && nextMarker.get('left') === obj.get('left')) {
-                log('Next Player Deleted !');
+                logger('handleGraphicDelete::Next Player Deleted !');
                 actualizeNextMarker(obj);
             }
         }
     },
 
-    handleGraphicMovement = function (obj /*, prev */) {
-        if (debug) {
-            log ('-------------Handle Graphic Movement-------------');
-            log('obj='+JSON.stringify(obj));
-        }
+    handleGraphicMovement = function (obj) { //(obj, prev )
+        logger(LOGLEVEL.INFO, '-------------Handle Graphic Movement-------------');
+        logger('handleGraphicMovement::handleGraphicMovement');
+        logger('handleGraphicMovement::obj='+JSON.stringify(obj));
 
-        if(!inFight()) return;
+        if (!inFight()) return;
 
         let turnorder =  getTurnorder();
-
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
             const nextTurnObject = getNextTurnObject();
-            if(getCurrentTurnObjectOrLastVisibleIfHidden().id === obj.get('id')){
-                log('Actual Player Moved !');
+            if (getCurrentTurnObjectOrLastVisibleIfHidden().id === obj.get('id')){
+                logger(LOGLEVEL.INFO, 'handleGraphicMovement::Actual Player Moved !');
                 changeMarker(obj);
                 //changeMarker(obj, markerType.RANGE);
                 changeMarker(obj, markerType.MAIN);
             } else if (nextTurnObject && nextTurnObject.id === obj.get('id')) {
-                log('Next Player Moved !');
+                logger(LOGLEVEL.INFO, 'handleGraphicMovement::Next Player Moved !');
                 changeMarker(obj, markerType.NEXT);
                 toFront(getOrCreateMarker(markerType.MAIN));
             }
@@ -3502,32 +3144,30 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     //     return partyList;
     // },
 
-    testAndSetDefault = (propertyName, state, defaults) => {
-        if (debug) log ('testAndSetDefault');
+    testAndSetDefault = (propertyKey, propertyName, state, defaults) => {
+        logger(`testAndSetDefault::testAndSetDefault propertyName=${propertyName}`);
 
 
-        if(!state[combatState].config.hasOwnProperty(propertyName)){
-            state[combatState].config[propertyName] = defaults.config[propertyName];
+        if (!state[combatState].config[propertyKey].hasOwnProperty(propertyName)){
+            state[combatState].config[propertyKey][propertyName] = defaults.config[propertyKey][propertyName];
         }
     },
 
-    testAndSetDefaults = (propertyList, state, defaults) => {
-        if(!Array.isArray(propertyList)) {
-            log('testAndSetDefaults propertyList IS NOT AN ARRAY ! propertyList=' + JSON.stringify(propertyList));
+    testAndSetDefaults = (propertyKey, propertyList, state, defaults) => {
+        if (!Array.isArray(propertyList)) {
+            logger(LOGLEVEL.CRITICAL, 'testAndSetDefaults::propertyList IS NOT AN ARRAY ! propertyList=' + JSON.stringify(propertyList));
             return;
         }
 
-        if (debug) log ('testAndSetDefaults list=' + JSON.stringify(propertyList));
+        logger('testAndSetDefaults::testAndSetDefaults list=' + JSON.stringify(propertyList));
 
-
-        propertyList.forEach(prop => testAndSetDefault(prop, state, defaults));
+        propertyList.forEach(prop => testAndSetDefault(propertyKey, prop, state, defaults));
     },
 
     setDefaults = function (reset) {
         let key, condition;
 
-        if (debug) log ('Set Defaults');
-
+        logger('setDefaults::setDefaults');
 
         const combatDefaults = {
             conditions: [],
@@ -3583,7 +3223,9 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     useRangeMarker: 'External URL',
                     rangeExternalMarkerURL: 'https://s3.amazonaws.com/files.d20.io/images/255451119/sO9vPVGw6S_B-lq-PIgGTA/max.png?1636832705',
                     rangeMarkerWidth: 6000,
-                    rangeMarkerHeight: 6000
+                    rangeMarkerHeight: 6000,
+
+                    addMotesEachTurnToNonMortal: true
                 },
                 timer: {
                     useTimer: false,
@@ -3601,6 +3243,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     announceRound: true,
                     handleLongName: true,
 					showNPCTurns: true,
+                    announceMoteRegen: false
                 },
                 macro: {
                     substitutions: [],
@@ -4031,389 +3674,169 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         };
 
 
-        if(!state[combatState].config || typeof state[combatState].config == 'undefined' || reset) {
-            state[combatState].config = combatDefaults.config;
-        } else {
+        if (!state[combatState].config || typeof state[combatState].config == 'undefined' || reset) state[combatState].config = combatDefaults.config;
+        else {
+            if (!state[combatState].config.hasOwnProperty('command'))        state[combatState].config.command = combatDefaults.config.command;
+			if (!state[combatState].config.hasOwnProperty('favorite'))       state[combatState].config.favorite = combatDefaults.config.favorite;
+			if (!state[combatState].config.hasOwnProperty('previousPage'))   state[combatState].config.previousPage = combatDefaults.config.previousPage;
 
-            if(!state[combatState].config.hasOwnProperty('command')){
-                state[combatState].config.command = combatDefaults.config.command;
-            }
-			if(!state[combatState].config.hasOwnProperty('favorite')){
-				state[combatState].config.favorite = combatDefaults.config.favorite;
-			}
-			if(!state[combatState].config.hasOwnProperty('previousPage')){
-				state[combatState].config.previousPage = combatDefaults.config.previousPage;
-			}
-            if(!state[combatState].config.hasOwnProperty('hold')){
-                state[combatState].config.hold = combatDefaults.config.hold;
-            } else {
-                if(!state[combatState].config.hold.hasOwnProperty('held')){
-                    state[combatState].config.hold.held = combatDefaults.config.hold.held;
-                }
-                if(!state[combatState].config.hold.hasOwnProperty('turnorder')){
-                    state[combatState].config.hold.turnorder = combatDefaults.config.hold.turnorder;
-                }
-                if(!state[combatState].config.hold.hasOwnProperty('conditions')){
-                    state[combatState].config.hold.conditions = combatDefaults.config.hold.conditions;
-                }
-                if(!state[combatState].config.hold.hasOwnProperty('round')){
-                    state[combatState].config.hold.round = combatDefaults.config.hold.round;
-                }
-            }
-            if(!state[combatState].config.hasOwnProperty('initiative')){
-                state[combatState].config.initiative = combatDefaults.config.initiative;
-            } else {
-				if(!state[combatState].config.initiative.hasOwnProperty('initiativeAttributes')){
-					state[combatState].config.initiative.initiativeAttributes = combatDefaults.config.initiative.initiativeAttributes;
-				}
-                if(!state[combatState].config.initiative.hasOwnProperty('rollInitiative')){
-                    state[combatState].config.initiative.rollInitiative = combatDefaults.config.initiative.rollInitiative;
-                }
-                if(!state[combatState].config.initiative.hasOwnProperty('initiativeDie')){
-                    state[combatState].config.initiative.initiativeDie = combatDefaults.config.initiative.initiativeDie;
-                }
+            if (!state[combatState].config.hasOwnProperty('hold'))           state[combatState].config.hold = combatDefaults.config.hold;
+            else
+                testAndSetDefaults('hold', [
+                    'held',
+                    'turnorder',
+                    'conditions',
+                    'round'
+                ], state, combatDefaults);
 
-                if(!state[combatState].config.initiative.hasOwnProperty('rollEachRound')){
-                    state[combatState].config.initiative.rollEachRound = combatDefaults.config.initiative.rollEachRound;
-                }
-                if(!state[combatState].config.initiative.hasOwnProperty('apiTargetTokens')){
-                    state[combatState].config.initiative.apiTargetTokens = combatDefaults.config.initiative.apiTargetTokens;
-                }
-			}
+            if (!state[combatState].config.hasOwnProperty('initiative')) state[combatState].config.initiative = combatDefaults.config.initiative;
+            else
+                testAndSetDefaults('initiative', [
+                    'initiativeAttributes',
+                    'rollInitiative',
+                    'initiativeDie',
+                    'rollEachRound',
+                    'apiTargetTokens'
+                ], state, combatDefaults);
 
-            if(!state[combatState].config.hasOwnProperty('turnorder')){
-                state[combatState].config.turnorder = combatDefaults.config.turnorder;
-            } else {
-				if(!state[combatState].config.turnorder.hasOwnProperty('useMarker')){
-					state[combatState].config.turnorder.useMarker = combatDefaults.config.turnorder.useMarker;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('markerType')){
-					state[combatState].config.turnorder.markerType = combatDefaults.config.turnorder.markerType;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('externalMarkerURL')){
-					state[combatState].config.turnorder.externalMarkerURL = combatDefaults.config.turnorder.externalMarkerURL;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('nextMarkerType')){
-					state[combatState].config.turnorder.nextMarkerType = combatDefaults.config.turnorder.nextMarkerType;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('nextExternalMarkerURL')){
-					state[combatState].config.turnorder.nextExternalMarkerURL = combatDefaults.config.turnorder.nextExternalMarkerURL;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('tokenMarkerName')){
-					state[combatState].config.turnorder.tokenMarkerName = combatDefaults.config.turnorder.tokenMarkerName;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('tokenMarkerURL')){
-					state[combatState].config.turnorder.tokenMarkerURL = combatDefaults.config.turnorder.tokenMarkerURL;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('nextTokenMarkerName')){
-					state[combatState].config.turnorder.nextTokenMarkerName = combatDefaults.config.turnorder.nextTokenMarkerName;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('nextTokenMarkerURL')){
-					state[combatState].config.turnorder.nextTokenMarkerURL = combatDefaults.config.turnorder.nextTokenMarkerURL;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('markerSize')){
-					state[combatState].config.turnorder.markerSize = combatDefaults.config.turnorder.markerSize;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('animateMarker')){
-					state[combatState].config.turnorder.animateMarker = combatDefaults.config.turnorder.animateMarker;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('animateMarkerDegree')){
-					state[combatState].config.turnorder.animateMarkerDegree = combatDefaults.config.turnorder.animateMarkerDegree;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('animateMarkerWait')){
-					state[combatState].config.turnorder.animateMarkerWait = combatDefaults.config.turnorder.animateMarkerWait;
-				}
-				if(!state[combatState].config.turnorder.hasOwnProperty('centerToken')){
-					state[combatState].config.turnorder.centerToken = combatDefaults.config.turnorder.centerToken;
-				}
-                if(!state[combatState].config.turnorder.hasOwnProperty('sortTurnOrder')){
-                    state[combatState].config.turnorder.sortTurnOrder = combatDefaults.config.turnorder.sortTurnOrder;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('turnAPI')){
-                    state[combatState].config.turnorder.turnAPI = combatDefaults.config.turnorder.turnAPI;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('turnRoll20AM')){
-                    state[combatState].config.turnorder.turnRoll20AM = combatDefaults.config.turnorder.turnRoll20AM;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('turnFX')){
-                    state[combatState].config.turnorder.turnFX = combatDefaults.config.turnorder.turnFX;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('turnMacro')){
-                    state[combatState].config.turnorder.turnMacro = combatDefaults.config.turnorder.turnMacro;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('roundAPI')){
-                    state[combatState].config.turnorder.roundAPI = combatDefaults.config.turnorder.roundAPI;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('roundRoll20AM')){
-                    state[combatState].config.turnorder.roundRoll20AM = combatDefaults.config.turnorder.roundRoll20AM;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('roundFX')){
-                    state[combatState].config.turnorder.roundFX = combatDefaults.config.turnorder.roundFX;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('characterRoundMacro')){
-                    state[combatState].config.turnorder.characterRoundMacro = combatDefaults.config.turnorder.characterRoundMacro;
-                }
-                if(!state[combatState].config.turnorder.hasOwnProperty('allRoundMacrFhando')){
-                    state[combatState].config.turnorder.allRoundMacro = combatDefaults.config.turnorder.allRoundMacro;
-                }
-
-                // if(!state[combatState].config.turnorder.hasOwnProperty('useRangeMarker')){
-                //     state[combatState].config.turnorder.useRangeMarker = combatDefaults.config.turnorder.useRangeMarker;
-                // }
-                // if(!state[combatState].config.turnorder.hasOwnProperty('rangeExternalMarkerURL')){
-                //     state[combatState].config.turnorder.rangeExternalMarkerURL = combatDefaults.config.turnorder.rangeExternalMarkerURL;
-                // }
-                // if(!state[combatState].config.turnorder.hasOwnProperty('rangeMarkerWidth')){
-                //     state[combatState].config.turnorder.rangeMarkerWidth = combatDefaults.config.turnorder.rangeMarkerWidth;
-                // }
-                // if(!state[combatState].config.turnorder.hasOwnProperty('rangeMarkerHeight')){
-                //     state[combatState].config.turnorder.rangeMarkerHeight = combatDefaults.config.turnorder.rangeMarkerHeight;
-                // }
-
-                testAndSetDefaults([
+            if (!state[combatState].config.hasOwnProperty('turnorder')) state[combatState].config.turnorder = combatDefaults.config.turnorder;
+            else
+                testAndSetDefaults('turnorder', [
+                    'useMarker',
+                    'markerType',               'externalMarkerURL',
+                    'nextMarkerType',           'nextExternalMarkerURL',
+                    'tokenMarkerName',          'tokenMarkerURL',
+                    'nextTokenMarkerName',      'nextTokenMarkerURL',
+                    'markerSize',
+                    'animateMarker',            'animateMarkerDegree',      'animateMarkerWait',
+                    'centerToken',
+                    'sortTurnOrder',
+                    'turnAPI',
+                    'turnRoll20AM',
+                    'turnFX',
+                    'turnMacro',
+                    'roundAPI',
+                    'roundFX',
+                    'characterRoundMacro',
+                    'allRoundMacrFhando',
                     'useRangeMarker',
                     'rangeExternalMarkerURL',
                     'rangeMarkerWidth',
-                    'rangeMarkerHeight'
+                    'rangeMarkerHeight',
+                    'addMotesEachTurnToNonMortal'
                 ], state, combatDefaults);
-            }
 
-            if(!state[combatState].config.hasOwnProperty('timer')){
-                state[combatState].config.timer = combatDefaults.config.timer;
-            } else {
-                if(!state[combatState].config.timer.hasOwnProperty('useTimer')){
-                    state[combatState].config.timer.useTimer = combatDefaults.config.timer.useTimer;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('time')){
-                    state[combatState].config.timer.time = combatDefaults.config.timer.time;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('skipTurn')){
-                    state[combatState].config.timer.skipTurn = combatDefaults.config.timer.skipTurn;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('sendTimerToChat')){
-                    state[combatState].config.timer.sendTimerToChat = combatDefaults.config.timer.sendTimerToChat;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('showTokenTimer')){
-                    state[combatState].config.timer.showTokenTimer = combatDefaults.config.timer.showTokenTimer;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('timerFont')){
-                    state[combatState].config.timer.timerFont = combatDefaults.config.timer.timerFont;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('timerFontSize')){
-                    state[combatState].config.timer.timerFontSize = combatDefaults.config.timer.timerFontSize;
-                }
-                if(!state[combatState].config.timer.hasOwnProperty('timerFontColor')){
-                    state[combatState].config.timer.timerFontColor = combatDefaults.config.timer.timerFontColor;
-                }
-            }
+            if (!state[combatState].config.hasOwnProperty('timer')) state[combatState].config.timer = combatDefaults.config.timer;
+            else
+                testAndSetDefaults('timer', [
+                    'useTimer',
+                    'time',
+                    'skipTurn',
+                    'sendTimerToChat',
+                    'showTokenTimer',
+                    'timerFont',
+                    'timerFontSize',
+                    'timerFontColor'
+                ], state, combatDefaults);
 
-            if(!state[combatState].config.hasOwnProperty('announcements')){
-                state[combatState].config.announcements = combatDefaults.config.announcements;
-            } else {
-                if(!state[combatState].config.announcements.hasOwnProperty('announceTurn')){
-                    state[combatState].config.announcements.announceTurn = combatDefaults.config.announcements.announceTurn;
-                }
-                if(!state[combatState].config.announcements.hasOwnProperty('whisperToGM')){
-                    state[combatState].config.announcements.whisperToGM = combatDefaults.config.announcements.whisperToGM;
-                }
-                if(!state[combatState].config.announcements.hasOwnProperty('announceRound')){
-                    state[combatState].config.announcements.announceRound = combatDefaults.config.announcements.announceRound;
-                }
-                if(!state[combatState].config.announcements.hasOwnProperty('handleLongName')){
-                    state[combatState].config.announcements.handleLongName = combatDefaults.config.announcements.handleLongName;
-                }
-				if(!state[combatState].config.announcements.hasOwnProperty('showNPCTurns')){
-					state[combatState].config.announcements.showNPCTurns = combatDefaults.config.announcements.showNPCTurns;
-				}
-			}
+            if (!state[combatState].config.hasOwnProperty('announcements')) state[combatState].config.announcements = combatDefaults.config.announcements;
+            else
+                testAndSetDefaults('announcements', [
+                    'announceTurn',
+                    'whisperToGM',
+                    'announceRound',
+                    'handleLongName',
+                    'showNPCTurns',
+                    'announceMoteRegen'
+                ], state, combatDefaults);
 
-            if(!state[combatState].config.hasOwnProperty('macro')){
-                state[combatState].config.macro = combatDefaults.config.macro;
-            }
+            if (!state[combatState].config.hasOwnProperty('macro'))  state[combatState].config.macro = combatDefaults.config.macro;
+			if (!state[combatState].config.hasOwnProperty('status')) state[combatState].config.status = combatDefaults.config.status;
+            else
+                testAndSetDefaults('status', [
+                    'userChanges',
+                    'sendOnlyToGM',
+                    'sendConditions',
+                    'clearConditions',
+                    'useMessage',
+                    'showConditions',
+                    'access',
+                    'autoAddSpells',
+                    'sheet'
+                ], state, combatDefaults);
 
-			if(!state[combatState].config.hasOwnProperty('status')) {
-				state[combatState].config.status = combatDefaults.config.status;
-			} else {
-				if(!state[combatState].config.status.hasOwnProperty('userChanges')){
-					state[combatState].config.status.userChanges = combatDefaults.config.status.userChanges;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('sendOnlyToGM')){
-					state[combatState].config.status.sendOnlyToGM = combatDefaults.config.status.sendOnlyToGM;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('sendConditions')){
-					state[combatState].config.status.sendConditions = combatDefaults.config.status.sendConditions;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('clearConditions')){
-					state[combatState].config.status.clearConditions = combatDefaults.config.status.clearConditions;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('useMessage')){
-					state[combatState].config.status.useMessage = combatDefaults.config.status.useMessage;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('showConditions')){
-					state[combatState].config.status.showConditions = combatDefaults.config.status.showConditions;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('access')){
-					state[combatState].config.status.access = combatDefaults.config.status.access;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('autoAddSpells')){
-					state[combatState].config.status.autoAddSpells = combatDefaults.config.status.autoAddSpells;
-				}
-				if(!state[combatState].config.status.hasOwnProperty('sheet')){
-					state[combatState].config.status.sheet = combatDefaults.config.status.sheet;
-				}
-            }
-
-			if(!state[combatState].config.hasOwnProperty('concentration')) {
-				state[combatState].config.concentration = combatDefaults.config.concentration;
-			} else {
-				if(!state[combatState].config.concentration.hasOwnProperty('useConcentration')){
-					state[combatState].config.concentration.useConcentration = combatDefaults.config.concentration.useConcentration;
-				}
-				if(!state[combatState].config.concentration.hasOwnProperty('notify')){
-					state[combatState].config.concentration.notify = combatDefaults.config.concentration.notify;
-				}
-				if(!state[combatState].config.concentration.hasOwnProperty('autoAdd')){
-					state[combatState].config.concentration.autoAdd = combatDefaults.config.concentration.autoAdd;
-				}
-				if(!state[combatState].config.concentration.hasOwnProperty('autoRoll')){
-					state[combatState].config.concentration.autoRoll = combatDefaults.config.concentration.autoRoll;
-				}
-				if(!state[combatState].config.concentration.hasOwnProperty('woundBar')){
-					state[combatState].config.concentration.woundBar = combatDefaults.config.concentration.woundBar;
-				}
-				if(!state[combatState].config.concentration.hasOwnProperty('attribute')){
-					state[combatState].config.concentration.attribute = combatDefaults.config.concentration.attribute;
-				}
-            }
+			if (!state[combatState].config.hasOwnProperty('concentration')) state[combatState].config.concentration = combatDefaults.config.concentration;
+            else
+                testAndSetDefaults('concentration', [
+                    'useConcentration',
+                    'notify',
+                    'autoAdd',
+                    'autoRoll',
+                    'woundBar',
+                    'attribute'
+                ], state, combatDefaults);
         }
 
-        if(!state[combatState].hasOwnProperty('conditions')){
-            state[combatState].conditions = [];
-        }
+        if (!state[combatState].hasOwnProperty('conditions'))    state[combatState].conditions = [];
+        if (!state[combatState].hasOwnProperty('ignores'))       state[combatState].ignores = [];
+        if (!state[combatState].hasOwnProperty('spells'))        state[combatState].spells = [];
 
-        if(!state[combatState].hasOwnProperty('ignores')){
-            state[combatState].ignores = [];
-        }
-
-        if(!state[combatState].hasOwnProperty('spells')){
-            state[combatState].spells = [];
-        }
-
-        if(state[combatState].config.hasOwnProperty('conditions') && !reset){
+        if (state[combatState].config.hasOwnProperty('conditions') && !reset){
             for (key in state[combatState].config.conditions) {
                 condition = getConditionByKey(key);
-                if (!condition.hasOwnProperty('key')) {
-                    condition.key = key;
-                }
-                if (!condition.hasOwnProperty('type')) {
-                    condition.type = 'Condition';
-                }
-                if (!condition.hasOwnProperty('duration')) {
-                    condition.duration = 1;
-                }
-                if (!condition.hasOwnProperty('direction')) {
-                    condition.direction = 0;
-                }
-                if (!condition.hasOwnProperty('override')) {
-                    condition.override = true;
-                }
-                if (!condition.hasOwnProperty('favorite')) {
-                    condition.favorite = false;
-                }
-                if (!condition.hasOwnProperty('message')) {
-                    condition.message = 'None';
-                }
-                if (!condition.hasOwnProperty('targeted')) {
-                    condition.targeted = false;
-                }
-                if (!condition.hasOwnProperty('targetedAPI')) {
-                    condition.targetedAPI = 'casterTargets';
-                }
-                if (!condition.hasOwnProperty('concentration')) {
-                    condition.concentration = false;
-                }
-                if (!condition.hasOwnProperty('iconType')) {
-                    condition.iconType = 'Combat Master';
-                }
-                if (!condition.hasOwnProperty('addAPI')) {
-                    condition.addAPI = 'None';
-                }
-                if (!condition.hasOwnProperty('addRoll20AM')) {
-                    condition.addRoll20AM = 'None';
-                }
-                if (!condition.hasOwnProperty('addFX')) {
-                    condition.addFX = 'None';
-                }
-                if (!condition.hasOwnProperty('addMacro')) {
-                    condition.addMacro = 'None';
-                }
-                if (!condition.hasOwnProperty('addPersistentMacro')) {
-                    condition.addPersistentMacro = false;
-                }
-                if (!condition.hasOwnProperty('remAPI')) {
-                    condition.remAPI = 'None';
-                }
-                if (!condition.hasOwnProperty('remRoll20AM')) {
-                    condition.remRoll20AM = 'None';
-                }
-                if (!condition.hasOwnProperty('remFX')) {
-                    condition.remFX = 'None';
-                }
-                if (!condition.hasOwnProperty('remMacro')) {
-                    condition.remMacro = 'None';
-                }
+                if (!condition.hasOwnProperty('key'))                   condition.key                   = key;
+                if (!condition.hasOwnProperty('type'))                  condition.type                  = 'Condition';
+                if (!condition.hasOwnProperty('duration'))              condition.duration              = 1;
+                if (!condition.hasOwnProperty('direction'))             condition.direction             = 0;
+                if (!condition.hasOwnProperty('override'))              condition.override              = true;
+                if (!condition.hasOwnProperty('favorite'))              condition.favorite              = false;
+                if (!condition.hasOwnProperty('message'))               condition.message               = 'None';
+                if (!condition.hasOwnProperty('targeted'))              condition.targeted              = false;
+                if (!condition.hasOwnProperty('targetedAPI'))           condition.targetedAPI           = 'casterTargets';
+                if (!condition.hasOwnProperty('concentration'))         condition.concentration         = false;
+                if (!condition.hasOwnProperty('iconType'))              condition.iconType              = 'Combat Master'
+                if (!condition.hasOwnProperty('addAPI'))                condition.addAPI                = 'None';
+                if (!condition.hasOwnProperty('addRoll20AM'))           condition.addRoll20AM           = 'None';
+                if (!condition.hasOwnProperty('addFX'))                 condition.addFX                 = 'None';
+                if (!condition.hasOwnProperty('addMacro'))              condition.addMacro              = 'None';
+                if (!condition.hasOwnProperty('addPersistentMacro'))    condition.addPersistentMacro    = false;
+                if (!condition.hasOwnProperty('remAPI'))                condition.remAPI                = 'None';
+                if (!condition.hasOwnProperty('remRoll20AM'))           condition.remRoll20AM           = 'None';
+                if (!condition.hasOwnProperty('remFX'))                 condition.remFX                 = 'None';
+                if (!condition.hasOwnProperty('remMacro'))              condition.remMacro              = 'None';
             }
-        } else if (!state[combatState].config.hasOwnProperty('conditions') || reset) {
+        } else if (reset || !state[combatState].config.hasOwnProperty('conditions'))
             state[combatState].config.conditions = combatDefaults.config.conditions;
-        }
 
-        if (!state[combatState].config.conditions.hasOwnProperty('concentration') && state[combatState].config.concentration.useConcentration) {
+        if (!state[combatState].config.conditions.hasOwnProperty('concentration') && state[combatState].config.concentration.useConcentration)
             state[combatState].config.conditions.concentration = combatDefaults.config.conditions.concentration;
-        }
     },
 
     showHelp = function(cmdDetails) {
         let handout;
         let title;
-        if (cmdDetails.details.held) {
-            title = 'Main Menu Held';
-        } else if (cmdDetails.details.started) {
-            title = 'Main Menu Started';
-        } else if (cmdDetails.details.stopped) {
-            title = 'Main Menu Stopped';
-        } else if (cmdDetails.details.setup) {
-            title = 'Setup Menu';
-        } else if (cmdDetails.details.initiative) {
-            title = 'Initiative Menu';
-        } else if (cmdDetails.details.turnorder) {
-            title = 'Turnorder Menu';
-        } else if (cmdDetails.details.timer) {
-            title = 'Timer Menu';
-        } else if (cmdDetails.details.announcements) {
-            title = 'Announcements Menu';
-        } else if (cmdDetails.details.macro) {
-            title = 'Macro & API Menu';
-        } else if (cmdDetails.details.status) {
-            title = 'Status Menu';
-        } else if (cmdDetails.details.concentration) {
-            title = 'Concentration Menu';
-        } else if (cmdDetails.details.conditions) {
-            title = 'Conditions Menu';
-        } else if (cmdDetails.details.condition) {
-            title = 'Condition Menu';
-        } else if (cmdDetails.details.addAPI) {
-            title = 'Add API Menu';
-        } else if (cmdDetails.details.remAPI) {
-            title = 'Remove API Menu';
-        } else if (cmdDetails.details.export) {
-            title = 'Export Menu';
-        }
+        if (cmdDetails.details.held)                title = 'Main Menu Held';
+        else if (cmdDetails.details.started)        title = 'Main Menu Started';
+        else if (cmdDetails.details.stopped)        title = 'Main Menu Stopped';
+        else if (cmdDetails.details.setup)          title = 'Setup Menu';
+        else if (cmdDetails.details.initiative)     title = 'Initiative Menu';
+        else if (cmdDetails.details.turnorder)      title = 'Turnorder Menu';
+        else if (cmdDetails.details.timer)          title = 'Timer Menu';
+        else if (cmdDetails.details.announcements)  title = 'Announcements Menu';
+        else if (cmdDetails.details.macro)          title = 'Macro & API Menu';
+        else if (cmdDetails.details.status)         title = 'Status Menu';
+        else if (cmdDetails.details.concentration)  title = 'Concentration Menu';
+        else if (cmdDetails.details.conditions)     title = 'Conditions Menu';
+        else if (cmdDetails.details.condition)      title = 'Condition Menu';
+        else if (cmdDetails.details.addAPI)         title = 'Add API Menu';
+        else if (cmdDetails.details.remAPI)         title = 'Remove API Menu';
+        else if (cmdDetails.details.export)         title = 'Export Menu';
         handout = findHandout(title);
         makeAndSendMenu(`<a href="http://journal.roll20.net/handout/${handout[0].id}">View Help</a>`,title,'gm');
     },
 
     buildHelp = function() {
-        log('Building Help');
+        logger('Building Help');
 
         let mainStarted         = createHandout('Main Menu Started');
         let mainStopped         = createHandout('Main Menu Stopped');
@@ -4461,16 +3884,11 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
     createHandout = function (title) {
         let handout = findHandout(title);
-
-        if (handout[0]) {
-            handout[0].remove();
-        }
-
-        handout   = createObj('handout', {
-                        name:title,
-                        archived:true
-                    });
-
+        if (handout[0]) handout[0].remove();
+        handout = createObj('handout', {
+            name:title,
+            archived:true
+        });
         return handout;
     },
 
@@ -4626,6 +4044,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <ul>
                                 <li><b>Sort Turnorder </b>— Sorts the turnorder in descending sequence (only) once created.<br></li>
                                 <li><b>Center Map on Token </b>— Will center the map for all players on the token currently active in the turnorder using the Ping function. This will not center the map if the token is on the GM Layer.<br></li>
+                                <li><b>Add Motes to Exalteds </b>— Will try to add 5 motes to each combat member if "Caste" is other than "Mortal".<br></li>
                                 <li><b>Use Marker </b>— Determines if the marker is visible to players or always stays on the GM Layer. If visible, the marker will only move to the GM Layer if a token in the turnorder is on the GM Layer. It will do switch layers before moving to that token, and after moving to the next token, so as not to give away the position of any tokens hidden from players.<br></li><li><b>Marker Type </b>— Set to External URL (default) or can be set to Token Marker.  If Token Marker is selected a suitable token must be uploaded to your game.</li><li><b>Marker </b>— A thumbnail of what will be used to highlight the current active character.</li><li><b>Use Next Marker </b>— If set to true will display another marker around the player that is next in the turnorder.  If set to false, then the next player up is not highlighted.</li>
                                 <li><b>Use Next Marker </b>— A thumbnail of what will be used to highlight the next active character. Set to None if you don't need it</li>
                                 <li><b>Use Range Marker </b>— A thumbnail of what will be used to highlight the range under the active character. Set to None if you don't need it</li>
@@ -4641,7 +4060,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     buildExternalCallMenu = function(title,round,condition) {
         let notes = `<h4><i>${title}</i></h4>
                      <h5><i> Set various external calls which will be invoked</i></h5>
-                    <ul>
+                     <ul>
                         <li><b>API </b>— Must be a full API command. You must use brackets {{ and }} around the command and around each parameter when entering the command. Any inline rolls must be written like [#[1d6]#] instead of [[1d6]].</li>
                         <li><b>Roll20AM </b>— Must be a full Roll20AM command. You must use brackets {{ and }} around the command and around each parameter when entering the command.</li>
                         <li><b>FX </b>— Must be a valid FX command.</li>`;
@@ -4651,9 +4070,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         } else {
             notes +=    `<li><b>Macro </b>— Must be the full macro name (without the #). Any inline rolls within the macro must be written like [#[1d6]#] instead of [[1d6]].</li>`;
         }
-        if (condition) {
-            notes +=    `<li><b>Persistent Macro</b> — Determines if the assigned macro is repeated at the start of an affected token's turn.`;
-        }
+        if (condition) notes +=    `<li><b>Persistent Macro</b> — Determines if the assigned macro is repeated at the start of an affected token's turn.`;
         notes +=    `</ul>`;
 
         return notes;
@@ -4698,6 +4115,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                             <li><b>Whisper GM Only </b>— Choose whether all announcements are only sent to the GM.<br></li>
                             <li><b>Shorten Long Names </b>— Shortens the token name as displayed in the turn announcement.<br></li>
                             <li><b>Show NPC Conditions </b>— Choose whether NPC turn announcements are only sent to the GM.<br></li>
+                            <li><b>Announce Mote Regen </b>— Choose whether all player see mote regen of each essence wielder.
                         </ul>
                     </div>`;
         handout.set({notes:notes});
@@ -4840,17 +4258,15 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     },
 
     checkInstall = function () {
-        if(!_.has(state, combatState)){
-            state[combatState] = state[combatState] || {};
-        }
+        state[combatState] || (state[combatState] = {});
         setDefaults();
         buildHelp();
-        log(script_name + ' Ready! Command: !cmaster --main');
+        logger(script_name + ' Ready! Command: !cmaster --main');
     },
 
     registerEventHandlers = function() {
-        //log('registerEventHandlers !!!');
-        //log('registerEventHandlers turnorder=' + JSON.stringify(Campaign().get('turnorder')));
+        //logger('registerEventHandlers !!!');
+        //logger('registerEventHandlers turnorder=' + JSON.stringify(Campaign().get('turnorder')));
         on('chat:message', inputHandler);
         on('close:campaign:turnorder', handleTurnorderChange);
         on('change:campaign:turnorder', handleTurnorderChange);
@@ -4862,19 +4278,19 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         on('destroy:graphic', handleGraphicDelete);
         on('change:graphic:'+state[combatState].config.concentration.woundBar+'_value', handleConstitutionSave);
 
-        if('undefined' !== typeof DeathTracker && DeathTracker.ObserveTokenChange){
+        if ('undefined' !== typeof DeathTracker && DeathTracker.ObserveTokenChange){
             DeathTracker.ObserveTokenChange(function(obj,prev) {
                 handleStatusMarkerChange(obj,prev);
             });
         }
 
-        if('undefined' !== typeof InspirationTracker && InspirationTracker.ObserveTokenChange){
+        if ('undefined' !== typeof InspirationTracker && InspirationTracker.ObserveTokenChange){
             InspirationTracker.ObserveTokenChange(function(obj,prev)  {
                 handleStatusMarkerChange(obj,prev);
             });
         }
 
-        if('undefined' !== typeof TokenMod && TokenMod.ObserveTokenChange) {
+        if ('undefined' !== typeof TokenMod && TokenMod.ObserveTokenChange) {
             TokenMod.ObserveTokenChange(function(obj,prev) {
                 handleStatusMarkerChange(obj,prev);
             });
