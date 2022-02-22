@@ -44,10 +44,10 @@
                     TAS.debug('DO IT !! Updating Parry value !! e=' + JSON.stringify(e));
                     TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
                         'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMaAndApply(rows, attrs) {
-                        const ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
+                        var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
                                              attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
-                                             attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']),
-                            onslaught = (parseInt(values['apply-onslaught'])) ? parseInt(values['onslaught']) : 0,
+                                             attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']);
+                        const onslaught = (parseInt(values['apply-onslaught'])) ? parseInt(values['onslaught']) : 0,
                             dex = parseInt(values['dexterity']),
                             brawl = parseInt(values['brawl']),
                             melee = parseInt(values['melee']),
@@ -277,6 +277,16 @@
     on('change:qc-resolve change:qc-join-battle', TAS._fn(function quickResolveChange(e) {
         changeJoinResolve();
     }));
+
+    // on('change:qc-parry', TAS._fn(function quickParryChange(e) {
+    //     getAttrs(['qc-parry'], values => {
+    //         let val = parseInt(values['qc-parry']);
+    //         setAttrs({
+    //             'parry': val,
+    //             'parry-specialty': val + 1
+    //         });
+    //     });
+    // }));
 
     on('change:qc-evasion', TAS._fn(function quickEvasionChange(e) {
         getAttrs(['qc-evasion'], values => {
