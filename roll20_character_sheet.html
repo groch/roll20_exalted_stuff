@@ -16,51 +16,54 @@
     TAS.debugMode();
     on('sheet:opened change:dexterity change:brawl change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane '
         + 'change:ma-nightingale change:ma-devil change:ma-claw change:ma-pearl change:ma-steel change:repeating_martialarts remove:repeating_martialarts '
-        + ' change:melee change:repeating_weapon:repweapondef remove:repeating_weapon change:onslaught change:apply-onslaught change:onslaught-applied ' + damageWatch, TAS._fn(function updateWoundThenParry(e) {
+        + 'change:melee change:repeating_weapon:repweapondef remove:repeating_weapon change:onslaught change:apply-onslaught change:onslaught-applied '
+        + 'change:qc-parry ' + damageWatch, TAS._fn(function updateWoundThenParry(e) {
         TAS.debug('Updating wound penalty', JSON.stringify(e));
         getAttrs(damageAttrs, TAS._fn(function calcWoundPenalty(values) {
-            var pen, finalAttr = {};
+            var pen, finalAttr = {}, i;
 
             for (i = 32; i >= 1; i--) {
                 if (values['hl' + i + '-damage'] && (!values['hl' + i + '-damage'] || values['hl' + i + '-damage'] !== 'healthy')) break;
             }
-            TAS.debug('Wound penalty at index ' + i, values['hl' + i + '-penalty']);
+            TAS.debug('Wound penalty at index ' + i + ', ' + JSON.stringify(values['hl' + i + '-penalty']));
             if (values['hl' + i + '-penalty']) pen = values['hl' + i + '-penalty'];
             else pen = 0;
 
             if (pen === 'I') pen = -4;
             if (pen === '') pen = 0;
             pen = parseInt(pen);
-            TAS.debug('Calculated penalty', pen);
+            TAS.debug('Calculated penalty=' + pen);
             finalAttr = { 'wound-penalty': pen };
 
-            TAS.debug('Updating Parry value', JSON.stringify(e));
-            getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'onslaught', 'apply-onslaught'], TAS._fn(function determineIfQC(values){
+            TAS.debug('Calling determineIfQC to Update Parry, e=' + JSON.stringify(e));
+            getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'onslaught', 'apply-onslaught', 'qc-parry'], TAS._fn(function determineIfQC(values){
                 TAS.debug('Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
                 if (values['qc'] == 0 ||
                     (e.sourceType == 'player' &&
-                        ['sheet:opened', 'apply-onslaught', 'onslaught', ...damageAttrs].includes(e.triggerName))) {
-                    TAS.debug('DO IT !! Updating Parry value !!', e);
+                        ['sheet:opened', 'apply-onslaught', 'onslaught', 'qc-parry', ...damageAttrs].includes(e.triggerName))) {
+                    TAS.debug('DO IT !! Updating Parry value !! e=' + JSON.stringify(e));
                     TAS.repeating('martialarts').fields('repma').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
-                        'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMa(rows, attrs) {
-                        var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
+                        'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(TAS._fn(function getMaxMaAndApply(rows, attrs) {
+                        const ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
                                              attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
                                              attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']),
                             onslaught = (parseInt(values['apply-onslaught'])) ? parseInt(values['onslaught']) : 0,
                             dex = parseInt(values['dexterity']),
                             brawl = parseInt(values['brawl']),
-                            melee = parseInt(values['melee']);
+                            melee = parseInt(values['melee']),
+                            qcParry = parseInt(values['qc-parry']),
+                            isQc = values['qc'];
         
-                        TAS.debug('values=' + JSON.stringify(values) + ', attrs', JSON.stringify(attrs), 'rows', JSON.stringify(rows));
+                        TAS.debug('values=' + JSON.stringify(values) + ', attrs' + JSON.stringify(attrs) + 'rows', JSON.stringify(rows));
                         _.each(rows, function(v, k) {
                             ma = Math.max(ma, v.I.repmartialarts);
                         });
         
                         TAS.debug('Max MA', ma);
-                        TAS.debug('Parry calc:', 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2) - ' + pen + ' - ' + onslaught);
-                        var newParry = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + pen - onslaught);
-                        TAS.debug('Parry w/specialty calc:', 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2) + ' + ' - ' + pen + ' - ' + onslaught);
-                        var newParrySpe = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + pen - onslaught);
+                        TAS.debug('Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen + ' - ' + onslaught);
+                        var newParry = Math.max(0, (isQc ? qcParry : Math.ceil((dex + Math.max(brawl, ma, melee)) / 2)) + pen - onslaught);
+                        TAS.debug('Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen + ' - ' + onslaught);
+                        var newParrySpe = Math.max(0, (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen - onslaught);
                         TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
                         finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe};
         
@@ -80,7 +83,7 @@
                                         finalAttr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen - onslaught);
                                         finalAttr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen - onslaught);
                                 });
-                                console.log('UPDATE WEAPONS PARRY', newParry, newParrySpe, valuesSections, attr);
+                                TAS.debug('UPDATE WEAPONS PARRY', newParry, newParrySpe, valuesSections, attr);
                                 setAttrs(finalAttr);
                             });
                         });
@@ -140,7 +143,7 @@
     }));
 
     on('sheet:opened ' + damageWatch, TAS._fn(function updateWoundPenalty(e) {
-        TAS.debug('Updating wound penalty', e);
+        TAS.debug('Updating wound penalty2', e);
         getAttrs(damageAttrs, TAS._fn(function calcPenalty(values) {
             var pen;
 
@@ -273,16 +276,6 @@
 
     on('change:qc-resolve change:qc-join-battle', TAS._fn(function quickResolveChange(e) {
         changeJoinResolve();
-    }));
-
-    on('change:qc-parry', TAS._fn(function quickParryChange(e) {
-        getAttrs(['qc-parry'], values => {
-            let val = parseInt(values['qc-parry']);
-            setAttrs({
-                'parry': val,
-                'parry-specialty': val + 1
-            });
-        });
     }));
 
     on('change:qc-evasion', TAS._fn(function quickEvasionChange(e) {
