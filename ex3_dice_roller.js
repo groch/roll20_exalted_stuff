@@ -305,7 +305,7 @@ function performRoll(msg, cmd) {
             finalizeRoll(result);
 
             const player = getObj("player", msg.playerid);
-            var outHTML = buildHTML(result, ops[0].origRoll, player.get('color'));
+            var outHTML = buildHTML(result, ops[0].origRoll, player);
             if (!outHTML) {
                 logger(LOGLEVEL.EMERGENCY, 'performRoll:: !!!!!!!!! outHTML IS NULL OR EMPTY !!!!!!!!!!');
                 return;
@@ -1012,11 +1012,11 @@ function recalculateSuccesses(result) {
  * @param JavaScript Object reference	result		The content of the rollresult message, as above; now in its final version, with all rolls and successes
  *														accurately calculated.
  * @param string						origRoll	The original roll executed by Roll20, for display in the result.
- * @param string						color		The hexadecimal value of the player's selected color.
+ * @param object roll20 player			player		The roll20 object containing everything possibly needed.
  *
  * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
  */
-function buildHTML(result, origRoll, color) {
+function buildHTML(result, origRoll, player) {
     if (!result.rolls[0].results) {
         logger(LOGLEVEL.EMERGENCY, 'buildHTML:: !!!!!! result.rolls[0].results IS EMPTY !?!?!?!??!?!?! !!!!!!!!!');
         return;
@@ -1031,7 +1031,7 @@ function buildHTML(result, origRoll, color) {
 
     var html = "";
     html += "<div style=\"" + outerStyle + "\"><div style=\"" + innerStyle + "\">";
-    html +=   "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\"> rolling " + origRoll + " </div>";
+    html +=   "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\">"+player.get('displayname')+" roll " + origRoll + " </div>";
     html +=     "<div style=\"clear: both;\"></div>";
     if (!result.rollSetup.onlyResult) {
         html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
