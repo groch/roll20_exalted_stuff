@@ -227,13 +227,13 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -418,6 +418,15 @@ var CombatMaster = CombatMaster || (function() {
             logger('commandHandler::before createDecisiveAbilities');
             createDecisiveAbilities(cmdDetails, msg.selected);
         }
+
+        if (cmdDetails.action == 'moteAdd') {
+            if (!playerIsGM(playerID)) {
+                logger(LOGLEVEL.NOTICE, 'commandHandler::createDecisiveAbilities received but user is not GM');
+                return;
+            }
+            logger('commandHandler::before createDecisiveAbilities');
+            addMotesCommand(cmdDetails, msg.selected);
+        }
 	},
 
     clearTokenStatuses = function(selectedTokens) {
@@ -434,6 +443,27 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************
 //NEW ACTIONS
 //*************************************************************************************************************
+    addMotesCommand = function (cmdDetails, selected) {
+        logger(`addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+
+        let qty = cmdDetails.details['qty'] ? parseInt(cmdDetails.details['qty']) : state[combatState].config.turnorder.moteQtyToAdd;
+
+        if (!selected) {
+            let charList = findObjs({_type: 'character'}).filter(i => getAttrByName(i.get('id'), 'caste') !== 'Mortal');
+            logger(`addMotesCommand::NO SELECTED, ADDING TO ALL CHAR: ${charList.map(i => i.get('name'))}`);
+            for (const obj of charList)
+                addMotesToNonMortalCharacter(obj, qty);
+        } else {
+            _.chain(selected).map(function(o){
+                return getObj('graphic',o._id);
+            }).compact()
+            .each(function(t){
+                var finalcharacterObj = getObj('character',t.get('represents'));
+                addMotesToNonMortalCharacter(finalcharacterObj, qty);
+            });
+        }
+    },
+
     addMotesToNonMortalCharacters = function (turnorder) {
         var charAddedList = [];
         for (const turn of turnorder) {
@@ -441,7 +471,7 @@ var CombatMaster = CombatMaster || (function() {
             let tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
                 characterId = tokenObj.get('represents'),
                 characterObj = getObj('character', characterId),
-                characterCaste = findObjs({_characterid:characterId, _type: 'attribute', name: 'caste'})[0];
+                characterCaste = getAttrByName(characterId, 'caste');
             logger(`addMotesToNonMortalCharacters::characterId=${characterId}, characterObj=${JSON.stringify(characterObj)}, caste=${characterCaste}`);
             if (tokenObj && characterObj && characterCaste.get('current') !== 'Mortal')
                 var added = addMotesToNonMortalCharacter(characterObj);

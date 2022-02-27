@@ -130,12 +130,17 @@
                 committed = parseInt(values['committedesstotal']),
                 pattern = /[^0-9\(\)\+\-\*\/\.]/g;
 
+            if (isNaN(committed)) {
+                committed = 0;
+                setAttrs({'committedesstotal':0});
+            }
+
             periEquationStr = periEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
-            periEquationStr = periEquationStr.replace('@{committedesstotal}', isNaN(committed) ? 0 : committed);
+            periEquationStr = periEquationStr.replace('@{committedesstotal}', committed);
             periEquationStr = periEquationStr.replace(pattern, '');
 
             persoEquationStr = persoEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
-            persoEquationStr = persoEquationStr.replace('@{committedesstotal}', isNaN(committed) ? 0 : committed);
+            persoEquationStr = persoEquationStr.replace('@{committedesstotal}', committed);
             persoEquationStr = persoEquationStr.replace(pattern, '');
             TAS.debug(`SETTING personal-essence_max=${eval(persoEquationStr)} peripheral-essence_max=${eval(periEquationStr)}`);
             setAttrs({'personal-essence_max': eval(persoEquationStr), 'peripheral-essence_max': eval(periEquationStr)});
