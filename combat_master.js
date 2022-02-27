@@ -434,7 +434,83 @@ var CombatMaster = CombatMaster || (function() {
 //*************************************************************************************************************
 //NEW ACTIONS
 //*************************************************************************************************************
-createDecisiveAbilities = function(cmdDetails, selected) {
+    addMotesToNonMortalCharacters = function (turnorder) {
+        var charAddedList = [];
+        for (const turn of turnorder) {
+            if (turn.id === "-1") continue;
+            let tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
+                characterId = tokenObj.get('represents'),
+                characterObj = getObj('character', characterId),
+                characterCaste = findObjs({_characterid:characterId, _type: 'attribute', name: 'caste'})[0];
+            logger(`addMotesToNonMortalCharacters::characterId=${characterId}, characterObj=${JSON.stringify(characterObj)}, caste=${characterCaste}`);
+            if (tokenObj && characterObj && characterCaste.get('current') !== 'Mortal')
+                var added = addMotesToNonMortalCharacter(characterObj);
+            if (added)
+                charAddedList.push(tokenObj.get('name'));
+        }
+        if (charAddedList.length && state[combatState].config.announcements.announceMoteRegen)
+            sendStandardScriptMessage(`Adding ${state[combatState].config.turnorder.moteQtyToAdd} motes to these Tokens : ${charAddedList.join(', ')}`);
+    },
+
+    addMotesToNonMortalCharacter = function (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd) {
+        logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON MORTAL FOUND:${characterObj.get('name')}`);
+        let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
+        logger(`addMotesToNonMortalCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
+        attrList = attrList
+            .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
+            .sort((a, b) => {
+                if (a.get('name') === 'personal-essence' && b.get('name') !== 'personal-essence') return 1;
+                if (a.get('name') !== 'personal-essence' && b.get('name') === 'personal-essence') return -1;
+                return a.get('name').localeCompare(b.get('name'));
+            });
+
+        logger(`addMotesToNonMortalCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
+
+        var added = 0;
+        for (const attr of attrList) {
+            if (!attr) continue;
+            let current = parseInt(attr.get('current')), max = parseInt(attr.get('max'));
+            if (isNaN(max))
+                max = updateMaxAttr(characterId, attr);
+            if (current === max) continue;
+            logger(`addMotesToNonMortalCharacter::qty=${qty}, added=${added}, current=${current}, max=${max}`);
+            let toAdd = qty - added < max - current ? qty - added : max - current;
+            logger(`addMotesToNonMortalCharacter::adding ${toAdd} to ${characterObj.get('name')}`);
+            added += toAdd;
+            logger(`addMotesToNonMortalCharacter::current=${JSON.stringify(current)}, max=${JSON.stringify(max)}`);
+            let total = (current + toAdd);
+            if (!isNaN(total)) {
+                attr.set('current', current + toAdd);
+                if (!state[combatState].config.announcements.announceMoteRegen) {
+                    const controlledBy = characterObj.get('controlledBy');
+                    if (controlledBy)
+                        for (const idPlayer of controlledBy) sendStandardScriptMessage(`/w ${getObj('displayname', idPlayer)} Adding ${toAdd} motes to ${attr.get('name')}`);
+                    else
+                        sendStandardGMScriptMessage(`${characterObj.get('name')}:> Adding ${toAdd} motes to ${attr.get('name')}`);
+                }
+            }
+            if (added >= qty) break;
+        }
+        if (added) return true;
+    },
+
+    updateMaxAttr = function(characterId, attr) {
+        let test = (attr.get('name') === 'personal-essence' ? 'personal-equation' : 'peripheral-equation'),
+            equationStr = getAttrByName(characterId, test),
+            committedesstotal = parseInt(getAttrByName(characterId, 'committedesstotal')),
+            essence = parseInt(getAttrByName(characterId, 'essence'));
+        logger(`updateMaxAttr::updateMaxAttr essence=${essence}`);
+        equationStr = equationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
+        equationStr = equationStr.replace('@{committedesstotal}', isNaN(committedesstotal) ? 0 : committedesstotal);
+        let pattern = /[^0-9\(\)\+\-\*\/\.]/g;
+        equationStr = equationStr.replace(pattern, '');
+        let calculatedMax = eval(equationStr);
+        logger(`updateMaxAttr::equationStr=${equationStr}, essence=${essence}, calculatedMax=${calculatedMax}`);
+        attr.set('max', calculatedMax);
+        return calculatedMax;
+    },
+
+    createDecisiveAbilities = function(cmdDetails, selected) {
         logger('createDecisiveAbilities::createDecisiveAbilities cmdDetails=' + JSON.stringify(cmdDetails));
 
         _.chain(selected).map(function(o){
@@ -735,6 +811,7 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 		listItems.push(makeTextButton('Sort Turnorder',turnorder.sortTurnOrder, '!cmaster --config,turnorder,key=sortTurnOrder,value='+!turnorder.sortTurnOrder + ' --show,turnorder'));
         listItems.push(makeTextButton('Center Map on Token', turnorder.centerToken, '!cmaster --config,turnorder,key=centerToken,value='+!turnorder.centerToken + ' --show,turnorder'));
         listItems.push(makeTextButton('Add Motes to Exalteds', turnorder.addMotesEachTurnToNonMortal, '!cmaster --config,turnorder,key=addMotesEachTurnToNonMortal,value='+!turnorder.addMotesEachTurnToNonMortal + ' --show,turnorder'));
+        listItems.push(makeTextButton('Mote qty to add to Exalteds', turnorder.moteQtyToAdd, '!cmaster --config,turnorder,key=moteQtyToAdd,value=?{Quantity ?|5} --show,turnorder'));
 
         listItems.push(makeTextButton('Use Marker',turnorder.useMarker, '!cmaster --config,turnorder,key=useMarker,value='+!turnorder.useMarker + ' --show,turnorder'));
         listItems.push(makeTextButton('Marker Type',turnorder.markerType, '!cmaster --config,turnorder,key=markerType,value=?{Marker Type|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
@@ -2201,6 +2278,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
 
             if (state[combatState].config.turnorder.sortTurnOrder)
                 sortTurnorder();
+            if (state[combatState].config.turnorder.addMotesEachTurnToNonMortal)
+                addMotesToNonMortalCharacters(turnorder);
             changeToNextTurn();
         }
     },
@@ -2955,6 +3034,10 @@ createDecisiveAbilities = function(cmdDetails, selected) {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
+    sendStandardGMScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
+        sendChat(script_name, '/w gm <div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+    },
+
     inFight = function () {
         return (Campaign().get('initiativepage') !== false);
     },
@@ -3145,10 +3228,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
     // },
 
     testAndSetDefault = (propertyKey, propertyName, state, defaults) => {
-        logger(`testAndSetDefault::testAndSetDefault propertyName=${propertyName}`);
-
-
         if (!state[combatState].config[propertyKey].hasOwnProperty(propertyName)){
+            logger(`testAndSetDefault::SETTING DEFAULT TO propertyName=${propertyName} = ${defaults.config[propertyKey][propertyName]}`);
             state[combatState].config[propertyKey][propertyName] = defaults.config[propertyKey][propertyName];
         }
     },
@@ -3225,7 +3306,8 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     rangeMarkerWidth: 6000,
                     rangeMarkerHeight: 6000,
 
-                    addMotesEachTurnToNonMortal: true
+                    addMotesEachTurnToNonMortal: true,
+                    moteQtyToAdd: 5
                 },
                 timer: {
                     useTimer: false,
@@ -3718,12 +3800,13 @@ createDecisiveAbilities = function(cmdDetails, selected) {
                     'roundAPI',
                     'roundFX',
                     'characterRoundMacro',
-                    'allRoundMacrFhando',
+                    'allRoundMacro',
                     'useRangeMarker',
                     'rangeExternalMarkerURL',
                     'rangeMarkerWidth',
                     'rangeMarkerHeight',
-                    'addMotesEachTurnToNonMortal'
+                    'addMotesEachTurnToNonMortal',
+                    'moteQtyToAdd'
                 ], state, combatDefaults);
 
             if (!state[combatState].config.hasOwnProperty('timer')) state[combatState].config.timer = combatDefaults.config.timer;
