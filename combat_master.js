@@ -454,7 +454,7 @@ var CombatMaster = CombatMaster || (function() {
             logger(`addMotesCommand::NO SELECTED, ADDING TO ALL CHAR: ${charList.map(i => i.get('name'))}`);
             for (const obj of charList) {
                 if (addMotesToNonMortalCharacter(obj, qty))
-                    charAddedList.push(`<b><a href="http://journal.roll20.net/character/${obj.get('id')}">${obj.get('name')}</a></b>`);
+                    charAddedList.push(makeCharacterLink(obj));
             }
         } else {
             _.chain(selected).map(function(o){
@@ -463,7 +463,7 @@ var CombatMaster = CombatMaster || (function() {
             .each(function(t){
                 var characterId = t.get('represents'), finalcharacterObj = getObj('character',characterId);
                 if (addMotesToNonMortalCharacter(finalcharacterObj, qty))
-                    charAddedList.push(`<b><a href="http://journal.roll20.net/character/${characterId}">${finalcharacterObj.get('name')}</a></b>`);
+                    charAddedList.push(makeCharacterLink(finalcharacterObj, characterId));
             });
         }
         logger(`addMotesCommand::charAddedList.length=${charAddedList.length}, announceMoteRegen=${state[combatState].config.announcements.announceMoteRegen}`);
@@ -484,7 +484,7 @@ var CombatMaster = CombatMaster || (function() {
             if (tokenObj && characterObj && characterCaste.get('current') !== 'Mortal')
                 var added = addMotesToNonMortalCharacter(characterObj);
             if (added)
-                charAddedList.push(`<b><a href="http://journal.roll20.net/character/${characterId}">${tokenObj.get('name')}</a></b>`);
+                charAddedList.push(makeCharacterLink(tokenObj, characterId));
         }
         logger(`addMotesToNonMortalCharacters::charAddedList.length=${charAddedList.length}, announceMoteRegen=${state[combatState].config.announcements.announceMoteRegen}`);
         if (charAddedList.length && state[combatState].config.announcements.announceMoteRegen)
@@ -521,7 +521,7 @@ var CombatMaster = CombatMaster || (function() {
             logger(`addMotesToNonMortalCharacter::current=${JSON.stringify(current)}, max=${JSON.stringify(max)}`);
             let total = (current + toAdd);
             if (!isNaN(total)) {
-                const outString = `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>:> Adding ${toAdd} motes to ${attr.get('name')}`;
+                const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding ${toAdd} motes to ${attr.get('name')}`;
                 attr.set('current', current + toAdd);
                 if (!state[combatState].config.announcements.announceMoteRegen) {
                     logger(`addMotesToNonMortalCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
@@ -2604,6 +2604,8 @@ var CombatMaster = CombatMaster || (function() {
 		if (backButton) list += '<hr>'+backButton;
         return list;
     },
+
+    makeCharacterLink = (characterObj, characterId = characterObj.get('id')) => `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>`,
 
 //*************************************************************************************************************
 //ICONS
