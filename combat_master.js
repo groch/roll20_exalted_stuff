@@ -481,7 +481,7 @@ var CombatMaster = CombatMaster || (function() {
                 characterObj = getObj('character', characterId),
                 characterCaste = getAttrByName(characterId, 'caste');
             logger(`addMotesToNonMortalCharacters::characterId=${characterId}, characterObj=${JSON.stringify(characterObj)}, caste=${characterCaste}`);
-            if (tokenObj && characterObj && characterCaste.get('current') !== 'Mortal')
+            if (tokenObj && characterObj && characterCaste !== 'Mortal')
                 var added = addMotesToNonMortalCharacter(characterObj);
             if (added)
                 charAddedList.push(makeCharacterLink(tokenObj, characterId));
