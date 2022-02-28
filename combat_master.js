@@ -446,25 +446,33 @@ var CombatMaster = CombatMaster || (function() {
     addMotesCommand = function (cmdDetails, selected) {
         logger(`addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
-        let qty = cmdDetails.details['qty'] ? parseInt(cmdDetails.details['qty']) : state[combatState].config.turnorder.moteQtyToAdd;
+        let qty = cmdDetails.details['qty'] ? parseInt(cmdDetails.details['qty']) : state[combatState].config.turnorder.moteQtyToAdd,
+            charAddedList = [];
 
         if (!selected) {
             let charList = findObjs({_type: 'character'}).filter(i => getAttrByName(i.get('id'), 'caste') !== 'Mortal');
             logger(`addMotesCommand::NO SELECTED, ADDING TO ALL CHAR: ${charList.map(i => i.get('name'))}`);
-            for (const obj of charList)
-                addMotesToNonMortalCharacter(obj, qty);
+            for (const obj of charList) {
+                if (addMotesToNonMortalCharacter(obj, qty))
+                    charAddedList.push(`<b><a href="http://journal.roll20.net/character/${obj.get('id')}">${obj.get('name')}</a></b>`);
+            }
         } else {
             _.chain(selected).map(function(o){
                 return getObj('graphic',o._id);
             }).compact()
             .each(function(t){
-                var finalcharacterObj = getObj('character',t.get('represents'));
-                addMotesToNonMortalCharacter(finalcharacterObj, qty);
+                var characterId = t.get('represents'), finalcharacterObj = getObj('character',characterId);
+                if (addMotesToNonMortalCharacter(finalcharacterObj, qty))
+                    charAddedList.push(`<b><a href="http://journal.roll20.net/character/${characterId}">${finalcharacterObj.get('name')}</a></b>`);
             });
         }
+        logger(`addMotesCommand::charAddedList.length=${charAddedList.length}, announceMoteRegen=${state[combatState].config.announcements.announceMoteRegen}`);
+        if (charAddedList.length && state[combatState].config.announcements.announceMoteRegen)
+            sendStandardScriptMessage(`Adding up to ${qty} motes to these Tokens : ${charAddedList.join(', ')}`);
     },
 
     addMotesToNonMortalCharacters = function (turnorder) {
+        logger(`addMotesToNonMortalCharacters::addMotesToNonMortalCharacters`);
         var charAddedList = [];
         for (const turn of turnorder) {
             if (turn.id === "-1") continue;
@@ -476,15 +484,17 @@ var CombatMaster = CombatMaster || (function() {
             if (tokenObj && characterObj && characterCaste.get('current') !== 'Mortal')
                 var added = addMotesToNonMortalCharacter(characterObj);
             if (added)
-                charAddedList.push(tokenObj.get('name'));
+                charAddedList.push(`<b><a href="http://journal.roll20.net/character/${characterId}">${tokenObj.get('name')}</a></b>`);
         }
+        logger(`addMotesToNonMortalCharacters::charAddedList.length=${charAddedList.length}, announceMoteRegen=${state[combatState].config.announcements.announceMoteRegen}`);
         if (charAddedList.length && state[combatState].config.announcements.announceMoteRegen)
-            sendStandardScriptMessage(`Adding ${state[combatState].config.turnorder.moteQtyToAdd} motes to these Tokens : ${charAddedList.join(', ')}`);
+            sendStandardScriptMessage(`Adding up to ${state[combatState].config.turnorder.moteQtyToAdd} motes to these Tokens : ${charAddedList.join(', ')}`);
     },
 
     addMotesToNonMortalCharacter = function (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd) {
         logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON MORTAL FOUND:${characterObj.get('name')}`);
-        let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
+        let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'}), controlledBy = characterObj.get('controlledby');
+        controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
         logger(`addMotesToNonMortalCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
         attrList = attrList
             .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
@@ -511,20 +521,17 @@ var CombatMaster = CombatMaster || (function() {
             logger(`addMotesToNonMortalCharacter::current=${JSON.stringify(current)}, max=${JSON.stringify(max)}`);
             let total = (current + toAdd);
             if (!isNaN(total)) {
+                const outString = `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>:> Adding ${toAdd} motes to ${attr.get('name')}`;
                 attr.set('current', current + toAdd);
                 if (!state[combatState].config.announcements.announceMoteRegen) {
-                    let controlledBy = characterObj.get('controlledby');
-                    controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
                     logger(`addMotesToNonMortalCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
-                    let outString = `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>:> Adding ${toAdd} motes to ${attr.get('name')}`;
-                    if (controlledBy)
-                        for (const idPlayer of controlledBy) sendWhisperStandardScriptMessage(getObj('player', idPlayer).get('_displayname'), outString);
-                    sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (added to: [${controlledBy.map(i => getObj('player', i).get('_displayname')).join(', ')}])`:''}`);
+                    for (const idPlayer of controlledBy) sendWhisperStandardScriptMessage(getObj('player', idPlayer).get('_displayname'), outString);
                 }
+                if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0) sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (added to: [${controlledBy.map(i => getObj('player', i).get('_displayname')).join(', ')}])`:''}`);
             }
             if (added >= qty) break;
         }
-        if (added) return true;
+        return added && controlledBy.length ? true : false;
     },
 
     updateMaxAttr = function(characterId, attr) {
