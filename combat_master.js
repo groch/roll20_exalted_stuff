@@ -500,6 +500,7 @@ var CombatMaster = CombatMaster || (function() {
         for (const attr of attrList) {
             if (!attr) continue;
             let current = parseInt(attr.get('current')), max = parseInt(attr.get('max'));
+            if (isNaN(current)) current = 0;
             if (isNaN(max))
                 max = updateMaxAttr(characterId, attr);
             if (current === max) continue;
@@ -512,11 +513,13 @@ var CombatMaster = CombatMaster || (function() {
             if (!isNaN(total)) {
                 attr.set('current', current + toAdd);
                 if (!state[combatState].config.announcements.announceMoteRegen) {
-                    const controlledBy = characterObj.get('controlledBy');
+                    let controlledBy = characterObj.get('controlledby');
+                    controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+                    logger(`addMotesToNonMortalCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
+                    let outString = `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>:> Adding ${toAdd} motes to ${attr.get('name')}`;
                     if (controlledBy)
-                        for (const idPlayer of controlledBy) sendStandardScriptMessage(`/w ${getObj('displayname', idPlayer)} Adding ${toAdd} motes to ${attr.get('name')}`);
-                    else
-                        sendStandardGMScriptMessage(`${characterObj.get('name')}:> Adding ${toAdd} motes to ${attr.get('name')}`);
+                        for (const idPlayer of controlledBy) sendWhisperStandardScriptMessage(getObj('player', idPlayer).get('_displayname'), outString);
+                    sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (added to: [${controlledBy.map(i => getObj('player', i).get('_displayname')).join(', ')}])`:''}`);
                 }
             }
             if (added >= qty) break;
@@ -3064,8 +3067,12 @@ var CombatMaster = CombatMaster || (function() {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
-    sendStandardGMScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
-        sendChat(script_name, '/w gm <div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
+        sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+    },
+
+    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
+        sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive);
     },
 
     inFight = function () {
