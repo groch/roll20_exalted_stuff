@@ -475,18 +475,20 @@ var CombatMaster = CombatMaster || (function() {
         logger(`addMotesToNonMortalCharacters::addMotesToNonMortalCharacters`);
         var charAddedList = [];
         for (const turn of turnorder) {
-            if (turn.id === "-1") continue;
+            logger(`addMotesToNonMortalCharacters::turn=${JSON.stringify(turn)}`);
+            if (turn.pr === -420) continue;
             let tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
                 characterId = tokenObj.get('represents'),
                 characterObj = getObj('character', characterId),
-                characterCaste = getAttrByName(characterId, 'caste');
+                characterCaste = getAttrByName(characterId, 'caste'),
+                added = false;
             logger(`addMotesToNonMortalCharacters::characterId=${characterId}, characterObj=${JSON.stringify(characterObj)}, caste=${characterCaste}`);
             if (tokenObj && characterObj && characterCaste !== 'Mortal')
-                var added = addMotesToNonMortalCharacter(characterObj);
+                added = addMotesToNonMortalCharacter(characterObj);
             if (added)
                 charAddedList.push(makeCharacterLink(tokenObj, characterId));
         }
-        logger(`addMotesToNonMortalCharacters::charAddedList.length=${charAddedList.length}, announceMoteRegen=${state[combatState].config.announcements.announceMoteRegen}`);
+        logger(`addMotesToNonMortalCharacters::END charAddedList.length=${charAddedList.length}, announceMoteRegen=${state[combatState].config.announcements.announceMoteRegen}`);
         if (charAddedList.length && state[combatState].config.announcements.announceMoteRegen)
             sendStandardScriptMessage(`Adding up to ${state[combatState].config.turnorder.moteQtyToAdd} motes to these Tokens : ${charAddedList.join(', ')}`);
     },
@@ -510,9 +512,8 @@ var CombatMaster = CombatMaster || (function() {
         for (const attr of attrList) {
             if (!attr) continue;
             let current = parseInt(attr.get('current')), max = parseInt(attr.get('max'));
-            if (isNaN(current)) current = 0;
-            if (isNaN(max))
-                max = updateMaxAttr(characterId, attr);
+            if (isNaN(current))  current = 0;
+            if (isNaN(max))      max = updateMaxAttr(characterId, attr);
             if (current === max) continue;
             logger(`addMotesToNonMortalCharacter::qty=${qty}, added=${added}, current=${current}, max=${max}`);
             let toAdd = qty - added < max - current ? qty - added : max - current;
