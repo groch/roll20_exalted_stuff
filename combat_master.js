@@ -4286,12 +4286,9 @@ var CombatMaster = CombatMaster || (function() {
         on('destroy:graphic', handleGraphicDelete);
         on('change:graphic:'+state[combatState].config.concentration.woundBar+'_value', handleConstitutionSave);
 
-        if ('undefined' !== typeof DeathTracker         && DeathTracker.ObserveTokenChange)
-            DeathTracker.ObserveTokenChange(handleStatusMarkerChange);
-        if ('undefined' !== typeof InspirationTracker   && InspirationTracker.ObserveTokenChange)
-            InspirationTracker.ObserveTokenChange(handleStatusMarkerChange);
-        if ('undefined' !== typeof TokenMod             && TokenMod.ObserveTokenChange)
-            TokenMod.ObserveTokenChange(handleStatusMarkerChange);
+        for (const item of [DeathTracker, InspirationTracker, TokenMod])
+            if ('undefined' !== typeof item && item.ObserveTokenChange)
+                item.ObserveTokenChange(handleStatusMarkerChange);
     };
 
     return {
