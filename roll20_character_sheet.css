@@ -800,6 +800,7 @@ tier 2: couleurs
 
 .charsheet div.sheet-dots-full,
 .charsheet div.sheet-damage-box {
+    margin: auto;
     position: relative;
 }
 
@@ -970,16 +971,14 @@ and (min-resolution:.001dpcm) {
 
 .charsheet input.show-anima[value="1"] ~ div.anima-box,
 .charsheet input.show-sup[value="1"] ~ div.supernal-box,
-.charsheet input.show-limit[value="1"] ~ div.limit-box {
-	/* background: red */
+.charsheet input.show-limit[value="1"] ~ div.sheet-col div.limit-box {
 	visibility: visible;
 }
 
 .charsheet input.show-anima[value="0"] ~ div.anima-box,
 .charsheet input.show-sup[value="0"] ~ div.supernal-box,
-.charsheet input.show-limit[value="0"] ~ div.limit-box {
-	/* background: red */
-	visibility: hidden;
+.charsheet input.show-limit[value="0"] ~ div.sheet-col div.limit-box {
+    display: none;
 }
 
 
@@ -1185,6 +1184,14 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-character-sheet > .sheet-health-header,
 .charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-character-sheet h1.sheet-qc-health {
     display: none;
+}
+
+.charsheet .sheet-player-caste[value="Mortal"] ~ div.sheet-hide-to-mortal {
+    display: none;
+}
+
+.charsheet .show-limit[value="0"] ~ div.sheet-col.sheet-resize-to-mortal {
+    width: 100%;
 }
 
 .charsheet .charm-tab-list {
@@ -1550,4 +1557,46 @@ body.sheet-darkmode {
 
 .sheet-darkmode .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: darkred;
+}
+
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    background-color: #d5d500;
+    color: var(--dark-surface1);
+}
+
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    background-color: #ab6f00;
+    font-weight: bold;
+}
+
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    background-color: #9f2c01;
+    font-weight: bold;
+}
+
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    background-color: darkred;
+    font-weight: bold;
+}
+
+.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
+    background-color: darkred;
+}
+
+.sheet-darkmode .btn, .sheet-darkmode .btn.btn-default {
+    background-image: -webkit-linear-gradient(top, #3e3a3a, #d6d6d6);
+    color: #e6e6e6;
+    border: 2px solid #f8da33;
 }

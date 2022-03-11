@@ -167,6 +167,7 @@
             } else if (["Journeys", "Serenity", "Battles", "Secrets", "Endings"].includes(values.caste)){
                 persEquation = "@{essence} * 2 + 9";
                 periEquation = "@{essence} * 6 + 25 - @{committedesstotal}";
+                showLimit = 1;
             } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(values.caste)){
                 persEquation = "@{essence} * 3 + 10";
                 periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
@@ -1806,7 +1807,8 @@
                     </fieldset>
 					<!-- 1.3.3.3 WILLPOWER & LIMIT AREA; OR QC RIGHT COLUMN -->
                     <div class="sheet-2colrow">
-                        <div class="sheet-col"><!-- 1.3.3.3.1 WILLPOWER & ESSENCE -->
+                        <input type="hidden" name="attr_showlimit" class="show-limit" value="0">
+                        <div class="sheet-col sheet-resize-to-mortal"><!-- 1.3.3.3.1 WILLPOWER & ESSENCE -->
                             <h1><span>Willpower</span></h1>
                             <div style="padding: 0 6px 6px 6px;">
                                 <input type="number" name="attr_willpower" value="5" min="0" max="15" style="width: 100%;">
@@ -1842,29 +1844,30 @@
                                     <input type="radio" class="sheet-dots10" name="attr_essence" value="10"><span></span>
                                 </div>
                             </div>
-                            <div class="sheet-motes">
-                                <span>Personal</span>
-                                <span>
-                                    <input type="number" name="attr_personal-essence"> |
-                                    <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
-                                </span>
-                            </div>
-                            <div class="sheet-motes">
-                                <span>Peripheral</span>
-                                <span>
-                                    <input type="number" name="attr_peripheral-essence"> |
-                                    <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
-                                </span>
-                            </div>
-                            <div class="sheet-motes">
-                                <span>Committed</span>
-                                <span><input type="number" name="attr_committedesstotal"></span>
+                            <input type="hidden" name="attr_caste" class="sheet-player-caste" value="">
+                            <div class="sheet-hide-to-mortal"><div class="sheet-motes">
+                                    <span>Personal</span>
+                                    <span>
+                                        <input type="number" name="attr_personal-essence"> |
+                                        <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
+                                    </span>
+                                </div>
+                                <div class="sheet-motes">
+                                    <span>Peripheral</span>
+                                    <span>
+                                        <input type="number" name="attr_peripheral-essence"> |
+                                        <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
+                                    </span>
+                                </div>
+                                <div class="sheet-motes">
+                                    <span>Committed</span>
+                                    <span><input type="number" name="attr_committedesstotal"></span>
+                                </div>
                             </div>
                         </div>
 						
                         <div class="sheet-col"><!-- 1.3.3.3.2 LIMIT BREAK & TRIGGER; OR QC RIGHT COLUMN -->
 							<!-- 1.3.3.3.2.1 LIMIT BREAK & TRIGGER -->
-                            <input type="hidden" name="attr_showlimit" class="show-limit" value="0">
 							<div class="limit-box">
 								<h1 class="sheet-limit"><span>Limit Break</span></h1>
 								<div class="sheet-limit" style="padding-left: 6px ; margin: 9px 0 9px 0">
