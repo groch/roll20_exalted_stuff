@@ -964,7 +964,6 @@ and (min-resolution:.001dpcm) {
 
 .charsheet div.sheet-tab-content { 
    display: none; 
-   border-top:1px solid #ffffff;
    margin-top:2px;
    width: 100%;
 }
@@ -1305,6 +1304,12 @@ and (min-resolution:.001dpcm) {
     width: calc(67% - 109px - 5em - 128px - 35px);
 }
 
+@-moz-document url-prefix() {
+    .charsheet input.sheet-charms-spells-trait-short-desc {
+        width: calc(67% - 109px - 5em - 128px - 51px);
+    }
+}
+
 .charsheet button.sheet-roll{
     height:30px;
     width:50px;
@@ -1501,4 +1506,48 @@ and (min-resolution:.001dpcm) {
 
 .sheet-rolltemplate-exalted3e_turn .test-content span {
     background-color: brown;
+}
+
+
+
+/* --- NIGHT MODE --- */
+
+body.sheet-darkmode {
+    color: var(--dark-secondarytext);
+}
+
+.sheet-darkmode input, .sheet-darkmode textarea, .sheet-darkmode select, .sheet-darkmode .uneditable-input {
+    color: var(--dark-primarytext);
+}
+
+.sheet-darkmode .charsheet input[type=text], .sheet-darkmode .charsheet input[type=number], .sheet-darkmode .charsheet select {
+    border-bottom: 1px solid var(--dark-primarytext);
+}
+
+.sheet-darkmode .charsheet select:focus, .sheet-darkmode .charsheet h1 span {
+    background: var(--dark-surface1);
+	color: var(--dark-primarytext);
+}
+
+.sheet-darkmode h1, .sheet-darkmode h2, .sheet-darkmode h3, .sheet-darkmode h4, .sheet-darkmode h5, .sheet-darkmode h6 {
+    color: var(--dark-primarytext);
+}
+
+.sheet-darkmode .charsheet input.sheet-tab::before {
+    color: var(--dark-primarytext);
+    background: gray;
+}
+
+.sheet-darkmode .charsheet input.sheet-tab:checked::before, .sheet-darkmode .charsheet input.sheet-tab:checked:hover::before {
+	color: #FFDF00;
+	background: #840000;
+}
+
+.sheet-darkmode .charsheet div.sheet-dots-full, .sheet-darkmode .charsheet div.sheet-damage-box, .sheet-darkmode .charsheet div.sheet-dots {
+    background-color: dimgray;
+    border-radius: 10px;
+}
+
+.sheet-darkmode .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+    background-color: darkred;
 }
