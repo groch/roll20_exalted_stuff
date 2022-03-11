@@ -66,7 +66,7 @@
                         TAS.debug('Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen + ' - ' + onslaught);
                         var newParrySpe = Math.max(0, (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen - onslaught);
                         TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-                        finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe};
+                        finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
         
                         TAS.debug('Updating Weapon Parry value');
                         getSectionIDs('weapon', TAS._fn(function ForgeWeaponList(idarray) {
@@ -91,6 +91,27 @@
                 }
             }));
         }));
+    }));
+
+    on('sheet:opened change:craft-armoring change:craft-artifact change:craft-cooking change:craft-artifice change:craft-gemcutting '
+        + 'change:craft-geomancy change:craft-jewelry change:craft-tailoring change:craft-forging change:repeating_crafts '
+        + 'remove:repeating_crafts ', TAS._fn(function onCraftChange(e) {
+        TAS.debug('craft changed', JSON.stringify(e));
+        TAS.repeating('crafts').fields('repcrafts').attrs('craft-armoring', 'craft-artifact', 'craft-cooking', 'craft-artifice', 'craft-gemcutting', 'craft-geomancy',
+            'craft-jewelry', 'craft-tailoring', 'craft-forging').tap(TAS._fn(function getMaxCraftAndSet(rows, attrs) {
+            var craft = Math.max(0, attrs.I['craft-armoring'], attrs.I['craft-artifact'], attrs.I['craft-cooking'], attrs.I['craft-artifice'],
+                                    attrs.I['craft-gemcutting'], attrs.I['craft-geomancy'], attrs.I['craft-jewelry'], attrs.I['craft-tailoring'],
+                                    attrs.I['craft-forging']);
+
+            TAS.debug('attrs' + JSON.stringify(attrs) + 'rows', JSON.stringify(rows));
+            _.each(rows, function(v, k) {
+                TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
+                craft = Math.max(craft, parseInt(v.repcrafts));
+            });
+
+            TAS.debug(`set Max Craft=${craft}`);
+            setAttrs({'max-craft': craft});
+        })).execute();
     }));
 
     on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', TAS._fn(function updateBattleGroupMagnitude(e) {
@@ -855,6 +876,7 @@
                             <span>Craft</span>
                         </label>
                         <div class="sheet-dots">
+                            <input class="sheet-max-craft-val" name="attr_max-craft" type="hidden" value="0">
                             <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show crafts" class="sheet-layer7"></span>
                             <div class="sheet-layer6">
                                 <div class="sheet-trait">
@@ -1142,6 +1164,7 @@
                             <span>Martial Arts</span>
                         </label>
                         <div class="sheet-dots">
+                            <input class="sheet-max-ma-val" name="attr_max-ma" type="hidden" value="0">
                             <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show styles" class="sheet-layer5"></span>
                             <div class="sheet-layer4">
                                 <div class="sheet-trait">

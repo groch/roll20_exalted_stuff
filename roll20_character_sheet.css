@@ -573,13 +573,26 @@ tier 2: couleurs
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
     width: 100%;
-    height: calc(100% - 3px);
+    height: calc(100% - 1px);
+    padding-top: 1px;
     content: attr(title);
     text-align: center;
     line-height: 100%;
     font-size: 18px;
     overflow: hidden;
     z-index: 4;
+    border-radius: 4px;
+}
+
+.btn, .btn.btn-default, .btn:hover {
+	background: linear-gradient(#ffffff, #e6e6e6) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+	border: 2px solid transparent;
+    padding: 2px 10px;
+    transition: color .2s;
+}
+
+.btn:hover {
+    color: darkred;
 }
 
 .charsheet .sheet-layer7,.charsheet .sheet-layer7::before { z-index: 7; }
@@ -600,8 +613,19 @@ tier 2: couleurs
     left: -142px;
     border: 1px solid black;
     padding: 5px;
-    background-color: #f6f6f6;
+    background: linear-gradient(#f6f6f6, #f6f6f6) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+	border: 3px solid transparent;
+    border-radius: 13px;
     width: 250px;
+}
+
+.charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
+    background: #fff8aa;
+}
+
+.charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
+.charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
+    background: radial-gradient(#f6f6f6, #dfdfdf);
 }
 
 .charsheet .sheet-unnamed-toggle + span + div > .sheet-trait > label,
@@ -1596,7 +1620,33 @@ body.sheet-darkmode {
 }
 
 .sheet-darkmode .btn, .sheet-darkmode .btn.btn-default {
-    background-image: -webkit-linear-gradient(top, #3e3a3a, #d6d6d6);
+	background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+	border: 2px solid transparent;
+	padding: 2px 10px;
+	transition: color .2s;
+}
+
+.sheet-darkmode .btn:hover {
+    color: white;
+}
+
+/* .sheet-darkmode input[type=checkbox].sheet-unnamed-toggle + span::before, */
+.sheet-darkmode .merits-div-checkbox input + strong:before{
+    background: dimgray;
     color: #e6e6e6;
-    border: 2px solid #f8da33;
+}
+
+.sheet-darkmode input[type=checkbox].sheet-unnamed-toggle:checked + span + div {
+    background: linear-gradient(#1F1F1F, #1F1F1F) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+	border: 3px solid transparent;
+    border-radius: 13px;
+}
+
+.sheet-darkmode .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
+    background: #420000;
+}
+
+.sheet-darkmode .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
+.sheet-darkmode .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
+    background: dimgray;
 }
