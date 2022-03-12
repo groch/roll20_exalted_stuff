@@ -563,14 +563,14 @@ var CombatMaster = CombatMaster || (function() {
                         name:          'HLP-Decisive-Damage',
                         description:   'Exalted HLP Decisive Ability:dd',
                         characterid:   finalcharacterId,
-                        action:        '/em confirme son attaque Decisive et inflige :\n!exr @{tracker|'+finalcharacterObj.get('name')+'}# -D\n/r 3[RESETING INIT] &{tracker}',
+                        action:        '/em confirme son attaque Decisive et inflige :\n!exr @{tracker|'+t.get('name')+'}# ?{Type de Jet|Jet Standard,-D|Custom Roll,?{Commande a Ajouter :&#125;}\n/r 3[RESETING INIT] &{tracker}',
                         istokenaction: true
                     },
                     ddGm:{
                         name:          'HLP-Decisive-Damage-ToGM',
                         description:   'Exalted HLP Decisive Ability:ddGm',
                         characterid:   finalcharacterId,
-                        action:        '/w gm @{character_name} confirme son attaque Decisive et inflige :\n!exr @{tracker|'+finalcharacterObj.get('name')+'}# -D -gm\n/gr 3[RESETING INIT] &{tracker}',
+                        action:        '/w gm @{character_name} confirme son attaque Decisive et inflige :\n!exr @{tracker|'+t.get('name')+'}# ?{Type de Jet|Jet Standard,-D|Custom Roll,?{Commande a Ajouter :&#125;} -gm\n/gr 3[RESETING INIT] &{tracker}',
                         istokenaction: true
                     }
                 };
@@ -583,6 +583,10 @@ var CombatMaster = CombatMaster || (function() {
                 if (!expectedAbilities[key]){
                     logger(LOGLEVEL.INFO, 'createDecisiveAbilities::Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
                     createObj('ability',abilityTemplates[key]);
+                } else {
+                    let finalAbi = findObjs({type:'ability',characterid:finalcharacterId, description:`Exalted HLP Decisive Ability:${key}`})[0];
+                    if (!finalAbi) logger(LOGLEVEL.ALERT, 'ABILITY PRESENT BUT NOT FOUND !?!?');
+                    finalAbi.set(abilityTemplates[key]);
                 }
             });
         });
