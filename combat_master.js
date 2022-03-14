@@ -463,12 +463,17 @@ var CombatMaster = CombatMaster || (function() {
 
     addMotesToNonMortalCharacters = (turnorder) => {
         logger(`addMotesToNonMortalCharacters::addMotesToNonMortalCharacters`);
+        const playerPageId = Campaign().get("playerpageid");
         var charAddedList = [];
         for (const turn of turnorder) {
             logger(`addMotesToNonMortalCharacters::turn=${JSON.stringify(turn)}`);
             if (turn.pr === -420) continue;
-            let tokenObj = findObjs({_id:turn.id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
-                characterId = tokenObj.get('represents'),
+            let tokenObj = findObjs({_id:turn.id, _pageid:playerPageId, _type: 'graphic'})[0];
+            if (!tokenObj) {
+                logger(LOGLEVEL.NOTICE, 'PLAYER TOKEN POSSIBLY NOT ON COMBAT PAGE !!!');
+                continue;
+            }
+            let characterId = tokenObj.get('represents'),
                 characterObj = getObj('character', characterId),
                 characterCaste = getAttrByName(characterId, 'caste'),
                 added = false;
