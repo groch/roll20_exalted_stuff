@@ -192,6 +192,10 @@
             } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(values.caste)){
                 persEquation = "@{essence} * 3 + 10";
                 periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
+            } else if (["God", "Elemental"].includes(values.caste)){
+                persEquation = "0";
+                periEquation = "@{essence} * 10 + 50 - @{committedesstotal}";
+                showAnima = 0;
             } else if (values.caste == "Mortal"){
                 persEquation = "0";
                 periEquation = "0";
@@ -539,6 +543,8 @@
 							<option value="other" disabled>--- OTHER ---</option>
 							<option value="Exigent">Exigent</option>
 							<option value="Getimian">Getimian</option>
+                            <option value="God">God</option>
+                            <option value="Elemental">Elemental</option>
 							<option value="Mortal">Mortal</option>
 							<option value="Custom">Custom</option>
 						</select></label>
