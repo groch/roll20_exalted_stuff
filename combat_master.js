@@ -520,9 +520,22 @@ var CombatMaster = CombatMaster || (function() {
                 attr.set('current', current + toAdd);
                 if (!state[combatState].config.announcements.announceMoteRegen) {
                     logger(`addMotesToNonMortalCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
-                    for (const idPlayer of controlledBy) sendWhisperStandardScriptMessage(getObj('player', idPlayer).get('_displayname'), outString);
+                    for (const idPlayer of controlledBy) {
+                        const playerObj = getObj('player', idPlayer);
+                        if (!playerObj) {
+                            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${idPlayer}`);
+                            continue;
+                        }
+                        sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString);
+                    }
                 }
-                if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0) sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (added to: [${controlledBy.map(i => getObj('player', i).get('_displayname')).join(', ')}])`:''}`);
+                if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0)
+                    sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
+                        const playerObj = getObj('player', i);
+                        if (playerObj) return playerObj.get('_displayname');
+                        logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
+                        return false;
+                    }).filter(i => i).join(', ')}])`:''}`);
             }
             if (added >= qty) break;
         }
