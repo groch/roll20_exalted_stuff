@@ -142,7 +142,104 @@ const LogLvl = LOGLEVEL.DEBUG,
         pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/,
         getCmdObj: (matchReturn) => ({
             cmd:    matchReturn[1]})
-    }];
+    }],
+  tableStyle = 'border-collapse: collapse; width: 100%; color: black;',
+  thStyle = 'text-align: center;',
+  tdStyle = 'padding: 5px; border: 1px solid rgb(200,200,200);',
+  divStyle = 'border: 1px solid rgb(200,200,200); border-radius: 3px; background-color: white; padding: 5px; margin: 10px 0px; color: black;',
+  pStyle = 'margin: 5px 0px; line-height: 1.5;',
+  helpData = [
+      {
+          arrayfirstCol:['-d NB,...','-d[lNB]','-D'],
+          arraySecondCol:[
+"These commands cover doubling of all successful corresponding face(s).\
+ <code>-d</code>, followed by a comma-delimited list of values to double, automatically doubles 10s.\
+ <code>-D</code> prevent this (mostly useful for damage rolls).\
+ <code>-d</code> without arguments is unnecessary, as the script will double 10s by default.\
+ You <em>may</em> pass <code>-D</code> by itself, to double nothing.",
+'The optional <code>l</code> signals the script to limit the number of doubles. Example :<code>-dl1 8,9</code>.',
+"The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results.\
+ Just add <code>l</code> and the maximum number of doubles after the command, <em>e.g.,</em> <code>-dl5 8</code>.\
+ These command can be stacked, consuming smallest limit first and trying to do all the limit,\
+ <em>e.g.,</em> <code>-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
+ This is the case for each command using the <code>l</code> optional code"
+          ],
+      },
+      {
+        arrayfirstCol:['-s NB,...','-s[lNB]'],
+        arraySecondCol:[
+"These commands cover adding faces as success.\
+<code>-s</code>, followed by a comma-delimited list of values to add as success, useless without arguments.",
+'The optional <code>l</code> signals the script to limit the number of this/these faces counting as success. Example :<code>-sl3 2,5,6</code>.',
+"The optional <code>l</code> modifier covers really rare cases where a charm or effect enable other sides as succes (sidereals for example).\
+ Follow rules described in first command"
+        ],
+      },
+      {
+        arrayfirstCol:['-r NB,...','-r[lNB] NB','-r[k|K] NB','-r NB TAGS=LABEL,...','-R NB,...','-R[lNB] NB','-R[k|K] NB','-R NB TAGS=LABEL,...'],
+        arraySecondCol:[
+'These commands cover rerolls, followed by a comma-delimited list of values to reroll\
+ <code>-r</code> provides single rerolls—once the values have been rerolled once.\
+ <code>-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s fail to appear."\
+ It will keep rerolling the results in the comma-delimited list of arguments until those values are no longer in the pool, for better or for worse.\
+ By default, rerolled dice are hidden, see <code>-v|V</code> below.',
+'The optional <code>l</code> signals the script to limit the number of rerolls. Example :<code>-rl 6,4</code>.',
+'The optional <code>k|K</code> signals the script that you want to keep the highest rerolled value. Example :<code>-rk 1</code>.',
+'The optional <code>TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>-r 1,2 TAGS=charm1</code>.',
+'Everything above can be combined. Example :<code>-Rl3K 1,2,3 TAGS=charm42OP</code>.'
+        ],
+      },
+      {
+        arrayfirstCol:['-e NB,...','-e[lNB]','-E NB,...','-E[lNB]'],
+        arraySecondCol:[
+"These commands cover exploding of faces, creating new dice when happening.\
+ <code>-e</code>, followed by a comma-delimited list of values to explode, not exploding on rerolled dices.\
+ <code>-E</code> works the same as above but ignore if dice is rerolled, exploding each time the face is encountered.\
+ <code>-e/E</code> without arguments is useless.",
+'The optional <code>l</code> signals the script to limit the number of explodes. Example :<code>-el1 8,9</code>.',
+"The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results. Follow rules described in first command"
+        ],
+      },
+      {
+        arrayfirstCol:['-g', '-gm'],
+        arraySecondCol:["This commands is used to hide roll to other players. Example :<code>!exr 42#+2 -el1 8,9 -gm</code>."],
+      },
+      {
+        arrayfirstCol:['-target', '-turn'],
+        arraySecondCol:[
+"This command is used to set result as turn tracker value for selected token.\
+ do nothing more than a roll if no token is selected"
+        ],
+      },
+      {
+        arrayfirstCol:['-v', '-V', '-c'],
+        arraySecondCol:[
+"These commands are used to increase visual information included in the roll.",
+"<code>-v</code> is 1st level of verbosity, including 'roll turns' markers to track limits and rerolls.\
+ <code>-c</code> is color shadows, used to track visually which dice is rerolled, which come from a reroll, same for exploding & conditionals.\
+ <code>-V</code> is a short hand for -v -c",
+"Example :<code>!exr 42#+2 -v -c -gm</code>."
+        ],
+      },
+      {
+        arrayfirstCol:['-rev', '-reverseTitle'],
+        arraySecondCol:["This command is used to reverse order of title (hover text on each dice) informations."],
+      },
+      {
+        arrayfirstCol:['-o', '-onlyResult'],
+        arraySecondCol:["This command is used to hide dices and only show result."],
+      },
+      {
+        arrayfirstCol:[...Object.keys(ConditionalList).map(i => `-${i}`)],
+        arraySecondCol:[
+"These commands are conditionals triggers, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
+"Actually there is :",
+'- 1MotD: CRAFT=> First Movement of the Demiurge, Exalte Core, p298',
+'- DIT: CRAFT=> Divine Inspiration Technique, Exalte Core, p298',
+'- HMU: CRAFT=> Holistic Miracle Understanding (version ameliorée de DIT), Exalte Core, p299'
+        ],
+      }
+  ];
 
 function setupRollStructure(result) {
     result.rollSetup = JSON.parse(JSON.stringify(DefaultRollSetup));
@@ -1093,6 +1190,22 @@ function displayRolls(vals, result, html) {
     return html + ')';
 }
 
+function buildTableRow(arrayfirstCol, arraySecondCol) {
+    var outhtml =  '<tr>';
+        outhtml +=     `<td style="${tdStyle}">`;
+        outhtml +=         `<p style="${pStyle}">`
+    for (const [i,code] of arrayfirstCol.entries())
+        outhtml +=             `<code>${code}</code>${i < arrayfirstCol.length-1 ? '<br>' :''}`;
+        outhtml +=         `</p>`;
+        outhtml +=     '</td>';
+        outhtml +=     `<td style="${tdStyle}">`;
+    for (const paragraph of arraySecondCol)
+        outhtml +=         `<p style="${pStyle}">${paragraph}</p>`;
+        outhtml +=     '</td>';
+        outhtml += '</tr>';
+    return outhtml;
+}
+
 /**
  * This builds the HTML for the message that is sent when the user passes the -help command. It's all pretty standard; if you know HTML already, it should
  * be fairly self-explanatory.
@@ -1102,73 +1215,33 @@ function displayRolls(vals, result, html) {
  *															I stopped touching it.
  */
 function buildHelp() {
-
-    var tableStyle = 'border-collapse: collapse;';
-    var thStyle = 'text-align: center; width: 100px;';
-    var tdStyle = 'padding: 5px; border: 1px solid rgb(200,200,200);';
-
-    var divStyle = 'border: 1px solid rgb(200,200,200); border-radius: 3px; background-color: white; padding: 5px; margin: 10px 0px;';
-    var pStyle = 'margin: 5px 0px; line-height: 1.5;';
-
     var outhtml = '';
+    outhtml +=  `<div style="${divStyle}">`;
+    outhtml +=      `<p style="${pStyle}"><strong>Exalted 3rd Edition Dice Roller Help</strong></p>`;
+    outhtml +=      `<p style="${pStyle}">The basic syntax of most rolls you will make is:</p>`;
+    outhtml +=      `<p style="${pStyle}"><code>!exr [no. of dice]#</code></p>`;
+    outhtml +=      `<p style="${pStyle}">The <code>#</code> marks the end of the dice statement, and this syntax provides the most common type of roll in `;
+    outhtml +=          'Exalted: that many dice, with a target number of 7+, and 10s count double. In the majority of cases, this is all you need.</p>';
+    outhtml +=      `<p style="${pStyle}">Charms, however, can throw a wrench in this, so I designed the script to be able to compensate. With the additional `;
+    outhtml +=          'commands and arguments, you can customize the way the roller treats your results and counts your successes, in order to match that behavior.</p>';
+    outhtml +=      `<p style="${pStyle}">The full syntax of rolls is as follows:</p>`;
+    outhtml +=      `<p style="${pStyle}"><code>!exr [no. of dice]# -[cmd1] [arg1],[arg2]... -[cmd2] [arg3],[arg4]...</code></p>`;
+    outhtml +=      `<p style="${pStyle}"><em>You can also type <code>!exr -help</code> to pull up this menu again, if necessary.</em></p>`;
+    outhtml +=      '<br />';
+    outhtml +=      `<p style="${pStyle}">The following table explains the various commands.</p>`;
+    outhtml +=      `<table style="${tableStyle}">`;
+    outhtml +=         `<tr><th style="${tdStyle} ${thStyle}">Command</th><th style="${tdStyle} ${thStyle}">Explanation</th></tr>`;
+    outhtml +=         '<tbody>';
 
-    outhtml += '<div style="' + divStyle + '">';
+    for (const helpSection of helpData)
+        outhtml += buildTableRow(helpSection.arrayfirstCol, helpSection.arraySecondCol);
 
-    outhtml += '<p style="' + pStyle + '"><strong>Exalted 3rd Edition Dice Roller Help</strong></p>';
-    outhtml += '<p style="' + pStyle + '">The basic syntax of most rolls you will make is:</p>';
-    outhtml += '<p style="' + pStyle + '"><code>!exr [no. of dice]#</code></p>';
-    outhtml += '<p style="' + pStyle + '">The <code>#</code> marks the end of the dice statement, and this syntax provides the most common type of roll in ';
-    outhtml += 'Exalted: that many dice, with a target number of 7+, and 10s count double. In the majority of cases, this is all you need.</p>';
-    outhtml += '<p style="' + pStyle + '">Charms, however, can throw a wrench in this, so I designed the script to be able to compensate. With the additional ';
-    outhtml += 'commands and arguments, you can customize the way the roller treats your results and counts your successes, in order to match that behavior.</p>';
-    outhtml += '<p style="' + pStyle + '">The full syntax of rolls is as follows:</p>';
-    outhtml += '<p style="' + pStyle + '"><code>!exr [no. of dice]# -[cmd1] [arg1],[arg2]... -[cmd2] [arg3],[arg4]...</code></p>';
-    outhtml += '<p style="' + pStyle + '"><em>You can also type <code>!exr -help</code> to pull up this menu again, if necessary.</em></p>';
-    outhtml += '<br />';
-
-    outhtml += '<p style="' + pStyle + '">The following table explains the various commands.</p>';
-
-    var outhtml2 = '<table style="' + tableStyle + '">';
-    outhtml2 += '<tr><th style="' + tdStyle + ' ' + thStyle + '">Command</th><th style="' + tdStyle + ' ' + thStyle + '">Explanation</th></tr>';
-
-    outhtml2 += '<tbody>';
-    outhtml2 += '<tr>';
-    outhtml2 += '<td style="' + tdStyle + '">';
-    outhtml2 += '<p style="' + pStyle + ' ' + thStyle + '"><code>-d / -D [l]</code></p>';
-    outhtml2 += '</td>';
-    outhtml2 += '<td style="' + tdStyle + '">';
-    outhtml2 += '<p style="' + pStyle + '">These commands cover doubling of successful results. <code>-d</code>, followed by a comma-delimited list of values ';
-    outhtml2 += 'to double, automatically doubles 10s. <code>-D</code> does not (mostly useful for damage rolls). <code>-d</code> without arguments is ';
-    outhtml2 += 'unnecessary, as the script will double 10s by default. You <em>may</em> pass <code>-D</code> by itself, to double nothing.</p>';
-    outhtml2 += '<p style="' + pStyle + '">The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results. '
-    outhtml2 += 'Just add <code>l</code> and the maximum number of doubles after the command, <em>e.g.,</em> <code>-dl5</code>.</p>';
-    outhtml2 += '</td>';
-    outhtml2 += '</tr>';
-
-    var outhtml3 = '<tr>';
-    outhtml3 += '<td style="' + tdStyle + ' ' + thStyle + '">';
-    outhtml3 += '<p style="' + pStyle + ' ' + thStyle + '"><code>-r / -R [l]</code></p>';
-    outhtml3 += '</td>';
-    outhtml3 += '<td style="' + tdStyle + '">';
-    outhtml3 += '<p style="' + pStyle + '">These cover rerolls. <code>-r</code> provides single rerolls—once the values have been rerolled once, that\'s it. ';
-    outhtml3 += 'It also defaults to keeping the higher of the two results (if you need to keep the second roll regardless, pass the <code>l</code> modifier, ';
-    outhtml3 += 'below). <code>-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s ';
-    outhtml3 += 'fail to appear." It will keep rerolling the results in the comma-delimited list of arguments until those values are no longer in the pool, for ';
-    outhtml3 += 'better or for worse.</p>';
-    outhtml3 += '<p style="' + pStyle + '">The optional <code>l</code> modifier behaves differently than above here. As mentioned briefly before, this modifier ';
-    outhtml3 += 'signals the script that you want to keep the rerolled value, regardless of which is higher. The syntax for such a command would look like ';
-    outhtml3 += '<code>-rl 6,4</code>, for example. As -R is going to keep rolling until identical ';
-    outhtml3 += 'results fail to appear, this modifier has no effect on those rolls</p>';
-    outhtml3 += '</td>';
-    outhtml3 += '</tr>';
-    outhtml3 += '</tbody>';
-
-    outhtml3 += '</table>';
-    outhtml3 += '</div>';
-
-    return outhtml + outhtml2 + outhtml3;
+    outhtml +=     '</tbody>';
+    outhtml +=     '</table>';
+    outhtml += '</div>';
+    logger(`buildHelp::buildHelp outhtml=${outhtml}`);
+    return outhtml;
 }
-
 
 /**
  * This PMs an error message to the user in the event that it doesn't understand something.
