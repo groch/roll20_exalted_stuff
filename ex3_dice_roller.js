@@ -1038,7 +1038,7 @@ function makeSectionDoneObj(typeTxt, color, detailsTxt = '') {
 }
 
 /* Build HTML */
-const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px",
+const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px; color: black",
         innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
         baseColor = 'black',
         successColor = '#23b04f',
