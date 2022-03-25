@@ -82,13 +82,6 @@ if (testQty <= 84) console.log(`successArray=[${resultObj.resultArray}]`);
 console.log(`successTotal=${resultObj.resultTotal}`);
 console.log(`successAvg=${averageThatShit(resultObj.resultTotal/testQty)}`);
 console.log(`successAvg=${averageThatShit((resultObj.resultTotal/testQty)/resultObj.diceNb)} per die`);
-// Object.keys(resultObj.resultCounted).map((key, ) => resultObj.resultCounted[key] = String(resultObj.resultCounted[key]).padStart(5) + ' ');
-// console.log(`successCounted=${JSON.stringify(resultObj.resultCounted).replaceAll('"','').replace('{','').replace('}','').replaceAll(',',', ')}`);
-
-// for (const [key, value] of Object.entries(resultObj.resultCounted))
-    // resultObj.resultCountedAvg[key] = String(averageThatShitLess(100*(Number(value) / testQty))).padStart(5) + '%';
-
-// console.log(`successCounted=${JSON.stringify(resultObj.resultCountedAvg).replaceAll('"','').replace('{','').replace('}','').replaceAll(',',', ')}`);
 console.log('successCounted=');
 for (const [key, value] of Object.entries(resultObj.resultCounted))
     console.log(`${String(key).padEnd(4)}:${String(resultObj.resultCounted[key]).padStart(5)}, ${String(averageThatShitLess(100*(Number(value) / testQty))).padStart(5)}%`);
