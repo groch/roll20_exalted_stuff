@@ -153,15 +153,15 @@ const LogLvl = LOGLEVEL.DEBUG,
           arrayfirstCol:['-d NB,...','-d[lNB]','-D'],
           arraySecondCol:[
 "These commands cover doubling of all successful corresponding face(s).\
- <code>-d</code>, followed by a comma-delimited list of values to double, automatically doubles 10s.\
- <code>-D</code> prevent this (mostly useful for damage rolls).\
- <code>-d</code> without arguments is unnecessary, as the script will double 10s by default.\
- You <em>may</em> pass <code>-D</code> by itself, to double nothing.",
-'The optional <code>l</code> signals the script to limit the number of doubles. Example :<code>-dl1 8,9</code>.',
+ <code style=\"white-space: nowrap\">-d</code>, followed by a comma-delimited list of values to double, automatically doubles 10s.\
+ <code style=\"white-space: nowrap\">-D</code> prevent this (mostly useful for damage rolls).\
+ <code style=\"white-space: nowrap\">-d</code> without arguments is unnecessary, as the script will double 10s by default.\
+ You <em>may</em> pass <code style=\"white-space: nowrap\">-D</code> by itself, to double nothing.",
+'The optional <code>l</code> signals the script to limit the number of doubles. Example :<code style=\"white-space: nowrap\">-dl1 8,9</code>.',
 "The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results.\
- Just add <code>l</code> and the maximum number of doubles after the command, <em>e.g.,</em> <code>-dl5 8</code>.\
+ Just add <code>l</code> and the maximum number of doubles after the command, <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl5 8</code>.\
  These command can be stacked, consuming smallest limit first and trying to do all the limit,\
- <em>e.g.,</em> <code>-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
+ <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
  This is the case for each command using the <code>l</code> optional code"
           ],
       },
@@ -169,8 +169,8 @@ const LogLvl = LOGLEVEL.DEBUG,
         arrayfirstCol:['-s NB,...','-s[lNB]'],
         arraySecondCol:[
 "These commands cover adding faces as success.\
-<code>-s</code>, followed by a comma-delimited list of values to add as success, useless without arguments.",
-'The optional <code>l</code> signals the script to limit the number of this/these faces counting as success. Example :<code>-sl3 2,5,6</code>.',
+<code style=\"white-space: nowrap\">-s</code>, followed by a comma-delimited list of values to add as success, useless without arguments.",
+'The optional <code>l</code> signals the script to limit the number of this/these faces counting as success. Example :<code style="white-space: nowrap">-sl3 2,5,6</code>.',
 "The optional <code>l</code> modifier covers really rare cases where a charm or effect enable other sides as succes (sidereals for example).\
  Follow rules described in first command"
         ],
@@ -179,30 +179,30 @@ const LogLvl = LOGLEVEL.DEBUG,
         arrayfirstCol:['-r NB,...','-r[lNB] NB','-r[k|K] NB','-r NB TAGS=LABEL,...','-R NB,...','-R[lNB] NB','-R[k|K] NB','-R NB TAGS=LABEL,...'],
         arraySecondCol:[
 'These commands cover rerolls, followed by a comma-delimited list of values to reroll\
- <code>-r</code> provides single rerolls—once the values have been rerolled once.\
- <code>-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s fail to appear."\
+ <code style="white-space: nowrap">-r</code> provides single rerolls—once the values have been rerolled once.\
+ <code style="white-space: nowrap">-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s fail to appear."\
  It will keep rerolling the results in the comma-delimited list of arguments until those values are no longer in the pool, for better or for worse.\
- By default, rerolled dice are hidden, see <code>-v|V</code> below.',
-'The optional <code>l</code> signals the script to limit the number of rerolls. Example :<code>-rl 6,4</code>.',
-'The optional <code>k|K</code> signals the script that you want to keep the highest rerolled value. Example :<code>-rk 1</code>.',
-'The optional <code>TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>-r 1,2 TAGS=charm1</code>.',
-'Everything above can be combined. Example :<code>-Rl3K 1,2,3 TAGS=charm42OP</code>.'
+ By default, rerolled dice are hidden, see <code style="white-space: nowrap">-v|V</code> below.',
+'The optional <code>l</code> signals the script to limit the number of rerolls. Example :<code style="white-space: nowrap">-rl 6,4</code>.',
+'The optional <code style="white-space: nowrap">k|K</code> signals the script that you want to keep the highest rerolled value. Example :<code style="white-space: nowrap">-rk 1</code>.',
+'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>-r 1,2 TAGS=charm1</code>.',
+'Everything above can be combined. Example :<code style="white-space: nowrap">-Rl3K 1,2,3 TAGS=charm42OP</code>.'
         ],
       },
       {
         arrayfirstCol:['-e NB,...','-e[lNB]','-E NB,...','-E[lNB]'],
         arraySecondCol:[
 "These commands cover exploding of faces, creating new dice when happening.\
- <code>-e</code>, followed by a comma-delimited list of values to explode, not exploding on rerolled dices.\
- <code>-E</code> works the same as above but ignore if dice is rerolled, exploding each time the face is encountered.\
- <code>-e/E</code> without arguments is useless.",
-'The optional <code>l</code> signals the script to limit the number of explodes. Example :<code>-el1 8,9</code>.',
+ <code style=\"white-space: nowrap\">-e</code>, followed by a comma-delimited list of values to explode, not exploding on rerolled dices.\
+ <code style=\"white-space: nowrap\">-E</code> works the same as above but ignore if dice is rerolled, exploding each time the face is encountered.\
+ <code style=\"white-space: nowrap\">-e/E</code> without arguments is useless.",
+'The optional <code>l</code> signals the script to limit the number of explodes. Example :<code style="white-space: nowrap">-el1 8,9</code>.',
 "The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results. Follow rules described in first command"
         ],
       },
       {
         arrayfirstCol:['-g', '-gm'],
-        arraySecondCol:["This commands is used to hide roll to other players. Example :<code>!exr 42#+2 -el1 8,9 -gm</code>."],
+        arraySecondCol:["This commands is used to hide roll to other players. Example :<code style=\"white-space: nowrap\">!exr 42#+2 -el1 8,9 -gm</code>."],
       },
       {
         arrayfirstCol:['-target', '-turn'],
@@ -215,10 +215,10 @@ const LogLvl = LOGLEVEL.DEBUG,
         arrayfirstCol:['-v', '-V', '-c'],
         arraySecondCol:[
 "These commands are used to increase visual information included in the roll.",
-"<code>-v</code> is 1st level of verbosity, including 'roll turns' markers to track limits and rerolls.\
- <code>-c</code> is color shadows, used to track visually which dice is rerolled, which come from a reroll, same for exploding & conditionals.\
- <code>-V</code> is a short hand for -v -c",
-"Example :<code>!exr 42#+2 -v -c -gm</code>."
+"<code style=\"white-space: nowrap\">-v</code> is 1st level of verbosity, including 'roll turns' markers to track limits and rerolls.\
+ <code style=\"white-space: nowrap\">-c</code> is color shadows, used to track visually which dice is rerolled, which come from a reroll, same for exploding & conditionals.\
+ <code style=\"white-space: nowrap\">-V</code> is a short hand for -v -c",
+"Example :<code style=\"white-space: nowrap\">!exr 42#+2 -v -c -gm</code>."
         ],
       },
       {
@@ -1197,7 +1197,7 @@ function buildTableRow(arrayfirstCol, arraySecondCol) {
         outhtml +=     `<td style="${tdStyle}">`;
         outhtml +=         `<p style="${pStyle}">`
     for (const [i,code] of arrayfirstCol.entries())
-        outhtml +=             `<code>${code}</code>${i < arrayfirstCol.length-1 ? '<br>' :''}`;
+        outhtml +=             `<code style="white-space: nowrap">${code}</code>${i < arrayfirstCol.length-1 ? '<br>' :''}`;
         outhtml +=         `</p>`;
         outhtml +=     '</td>';
         outhtml +=     `<td style="${tdStyle}">`;
