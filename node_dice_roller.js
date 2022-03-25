@@ -52,6 +52,10 @@ function randomInteger(int) {
     return getRandomInt(int);
 }
 
+function playerIsGM() {
+    return true;
+}
+
 // file is included here:
 eval(fs.readFileSync('ex3_dice_roller.js')+'');
 
