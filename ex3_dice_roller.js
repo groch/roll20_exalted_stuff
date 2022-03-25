@@ -300,7 +300,8 @@ sendChat('EX3Dice API', 'Thanks for using EX3Dice (Groch Version)! For instructi
  * The core functionality of the script. Intercepts API messages meant for it, extracts the core of the command, and passes it to
  * the appropriate function for handling.
  */
-on('chat:message', function(msg) {
+on('chat:message', onChatMessage);
+function onChatMessage(msg) {
 	var apiWake = '!exr ';
 
 	if (msg.type == 'api' && msg.content.indexOf(apiWake) != -1) {
@@ -319,7 +320,7 @@ on('chat:message', function(msg) {
             printError(msg, msg.who);
 		}
 	}
-});
+}
 
 function setSelectedTurnOrder(selected, successes) {
     logger(LOGLEVEL.INFO, 'setTurnOrder::INSIDE !!!');
@@ -389,7 +390,8 @@ function performRoll(msg, cmd) {
 
             var strSplit = ops[0].origRoll.split('-');
             var cmds = [];
-            _.each(strSplit, parseCmds, cmds);
+            for (const i of strSplit) parseCmds(i, cmds);
+
             logger(LOGLEVEL.NOTICE, 'performRoll::parseCmds DONE !');
             logger('performRoll::ops='+JSON.stringify(ops));
             logger('performRoll::result='+ops[0].content);
@@ -397,7 +399,7 @@ function performRoll(msg, cmd) {
 
             parseAddedSuccesses(result, msg.content);
 
-            if (!_.isEmpty(cmds)) processCmds(cmds, result);
+            if (cmds && cmds.length) processCmds(cmds, result);
             if (result.rollSetup.has10doubled) result.rollSetup.face[10].doubles.push({limit: 0, done: 0});
             finalizeRoll(result);
 
@@ -432,10 +434,10 @@ function performRoll(msg, cmd) {
  *
  * @return void.
  */
-function parseCmds(item) {
+function parseCmds(item, list) {
     var trim = item.trim();
     if (!item) return;
-    logger(LOGLEVEL.INFO, 'parseCmds::item="' + trim + '"');
+    logger(LOGLEVEL.INFO, `parseCmds::item="${trim}", list=${JSON.stringify(list)}`);
 
     var objRet, match = false, ret, patt;
     for (var i = 0; i < ParserConfig.length; i++) {
@@ -461,7 +463,7 @@ function parseCmds(item) {
     }
 
     logger(LOGLEVEL.INFO, `parseCmds::FINAL match=${match} objRet=${JSON.stringify(objRet)}`);
-    if (match) this.push(objRet);
+    if (match) list.push(objRet);
 }
 
 
@@ -1152,7 +1154,7 @@ function buildHTML(result, origRoll, player) {
 function displayRolls(vals, result, html) {
     var diceNumber = 1;
     html += '(';
-    _.each(vals, function (item, idx) {
+    vals.forEach(function (item, idx) {
         logger(`displayRolls::item=${JSON.stringify(item)}`);
         if (item.v === 'SECTIONDONE') {
             logger(LOGLEVEL.INFO, `displayRolls::item(${strFill(diceNumber++)})=SECTION ${item.sectionType}, verbosity=${result.rollSetup.verbosity}`);
