@@ -18,5 +18,8 @@
   "homepage": "https://github.com/groch/roll20_exalted_stuff#readme",
   "devDependencies": {
     "eslint": "^8.8.0"
+  },
+  "dependencies": {
+    "cli-progress": "^3.10.0"
   }
 }

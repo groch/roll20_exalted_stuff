@@ -36,6 +36,7 @@ function sendChat(sender, message, callback) {
         resultObj.resultArray.push(successTotal);
         resultObj.resultTotal += successTotal;
         resultObj.resultCounted[successTotal] = resultObj.resultCounted[successTotal] ? resultObj.resultCounted[successTotal] + 1 : 1;
+        bar1.update(i+1);
     }
 }
 
@@ -74,14 +75,25 @@ const myArgs = process.argv.slice(2);
 const testQty = myArgs[1] ? Number(myArgs[1]) : 42,
       testedRoll = myArgs[0] || '!exr 42#';
 
-for (let i = 0; i < testQty; i++)
+
+const cliProgress = require('cli-progress');
+const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.legacy);
+
+bar1.start(testQty, 0);
+
+for (var i = 0; i < testQty; i++)
     callChatMessage(testedRoll);
+
+bar1.stop();
 
 console.log(`Rolling ${testQty} times this roll : "${testedRoll}"`);
 if (testQty <= 84) console.log(`successArray=[${resultObj.resultArray}]`);
 console.log(`successTotal=${resultObj.resultTotal}`);
 console.log(`successAvg=${averageThatShit(resultObj.resultTotal/testQty)}`);
 console.log(`successAvg=${averageThatShit((resultObj.resultTotal/testQty)/resultObj.diceNb)} per die`);
+resultObj.resultArray.sort((a,b) => a-b);
+let half = Math.floor(resultObj.resultArray.length / 2);
+console.log(`successMedian=${resultObj.resultArray.length % 2 ? resultObj.resultArray[half] : averageThatShitLess((resultObj.resultArray[half - 1] + resultObj.resultArray[half]) / 2.0)}`);
 console.log('successCounted=');
 for (const [key, value] of Object.entries(resultObj.resultCounted))
     console.log(`${String(key).padEnd(4)}:${String(resultObj.resultCounted[key]).padStart(5)}, ${String(averageThatShitLess(100*(Number(value) / testQty))).padStart(5)}%`);
