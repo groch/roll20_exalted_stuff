@@ -28,7 +28,7 @@ function sendChat(sender, message, callback) {
             callback([{type: 'rollresult', content: content, origRoll: `!exr ${rollTxt}`}]);
         }
     }
-    if ((ret2 = message.match(/(\d+)(\+\d+)?=(\d+) Successes/)) || (ret2 = message.match(/(\d+) Successes/))) {
+    if ((ret2 = message.match(/(\d+)(\+\d+)?=(\d+) Successes/)) || (ret2 = message.match(/(\d+) Successes/)) || (ret2 = message.match(/(\d+) Success/))) {
         let successBase = Number(ret2[1]),
             successAdded = ret2[2] ? Number(ret2[2]) : 0,
             successTotal = ret2[3] ? Number(ret2[3]) : Number(ret2[1]);
