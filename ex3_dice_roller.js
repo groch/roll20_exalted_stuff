@@ -89,7 +89,8 @@ const LogLvl = LOGLEVEL.DEBUG,
     conditionalActivated: [],
     rollToProcess: [],
     finalResults: [],
-    maxRecursiveAchieved: false
+    maxRecursiveAchieved: false,
+    hasAtLeastOneFaceOne: false
   },
   DefaultRollHandlingSetup = {
     face: null,
@@ -1146,7 +1147,9 @@ function buildHTML(result, origRoll, player) {
         html += "<div style=\"clear: both;\"></div>";
     }
     html +=     "<strong> = </strong>";
-    html +=   "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
+    html +=     "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
+    if (!succ && result.rollSetup.hasAtLeastOneFaceOne)
+        html += "<p style='"+maxRecursionStyle+"'>YOU'VE BEEN BOTCHED</p>";
     html += "</div></div>";
     return html;
 }
@@ -1188,6 +1191,7 @@ function displayRolls(vals, result, html) {
         html += "</div>";
         html += (idx + 1 != vals.length) ? "+" : "";
         html += "</div>";
+        if (!item.rerolled && !result.rollSetup.hasAtLeastOneFaceOne && item.v === 1) result.rollSetup.hasAtLeastOneFaceOne = true;
     });
     return html + ')';
 }
