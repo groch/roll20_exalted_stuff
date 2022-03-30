@@ -28,7 +28,11 @@ function sendChat(sender, message, callback) {
             callback([{type: 'rollresult', content: content, origRoll: `!exr ${rollTxt}`}]);
         }
     }
-    if ((ret2 = message.match(/(\d+)(\+\d+)?=(\d+) Successes/)) || (ret2 = message.match(/(\d+) Successes/)) || (ret2 = message.match(/(\d+) Success/))) {
+    if ((ret2 = message.match(/BOTCH/))) {
+        resultObj.resultArray.push(0);
+        resultObj.resultCounted['BOTCH'] = resultObj.resultCounted['BOTCH'] ? resultObj.resultCounted['BOTCH'] + 1 : 1;
+        bar1.update(i+1);
+    } else if ((ret2 = message.match(/(\d+)(\+\d+)?=(\d+) Successes/)) || (ret2 = message.match(/(\d+) Successes/)) || (ret2 = message.match(/(\d+) Success/))) {
         let successBase = Number(ret2[1]),
             successAdded = ret2[2] ? Number(ret2[2]) : 0,
             successTotal = ret2[3] ? Number(ret2[3]) : Number(ret2[1]);
@@ -99,5 +103,14 @@ resultObj.resultArray.sort((a,b) => a-b);
 let half = Math.floor(resultObj.resultArray.length / 2);
 console.log(`successMedian=${resultObj.resultArray.length % 2 ? resultObj.resultArray[half] : averageThatShitLess((resultObj.resultArray[half - 1] + resultObj.resultArray[half]) / 2.0)}`);
 console.log('successCounted=');
-for (const [key, value] of Object.entries(resultObj.resultCounted))
-    console.log(`${String(key).padEnd(4)}:${String(resultObj.resultCounted[key]).padStart(5)}, ${String(averageThatShitLess(100*(Number(value) / testQty))).padStart(5)}%`);
+let addedVal = 0;
+if (resultObj.resultCounted['BOTCH']) {
+    let botchPercent = resultObj.resultCounted[0] ? averageThatShitLess(100*(Number(resultObj.resultCounted['BOTCH']) / (Number(resultObj.resultCounted[0])+Number(resultObj.resultCounted['BOTCH'])))) : 100;
+    console.log(`BOTCH :${String(resultObj.resultCounted['BOTCH']).padStart(6)}, ${String(averageThatShitLess(100*(Number(resultObj.resultCounted['BOTCH']) / testQty))).padStart(5)}%, ${String(botchPercent).padStart(5)}% of 0 successes`);
+    addedVal += Number(resultObj.resultCounted['BOTCH']);
+    delete resultObj.resultCounted['BOTCH'];
+}
+for (const [key, value] of Object.entries(resultObj.resultCounted)) {
+    console.log(`${String(key).padEnd(6)}:${String(resultObj.resultCounted[key]).padStart(6)}, ${String(averageThatShitLess(100*(Number(value) / testQty))).padStart(5)}%, ${String(averageThatShitLess(100*(Number(addedVal) / testQty))).padStart(5)}% to have done ${key == 0 ? 'worst' : 'less successes'}`);
+    addedVal += Number(value);
+}
