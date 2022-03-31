@@ -2,12 +2,13 @@
 /* eslint-disable no-undef */
 
 /*
- * Version 2.46
+ * Version 3.0E
  * Original By Robin Kuiper
  * Changes in Version 0.3.0 and before by Victor B
- * Changes in Version X.X.X to 2.44 by The Aaron
+ * Changes in forked and prior versions by The Aaron
  * fork from 2.44 to adapt to Exalted 3 by Groch
- * Changes in Version 2.45 until current version by Groch
+ * Change version number to 3.0E for clarity
+ * Changes in Version 3.0E until current version by Groch
  * Discord: Vic#5196H
  * Discord: Groch#0102
  * Roll20: https://app.roll20.net/users/3135709/victor-b
@@ -36,7 +37,7 @@ var CombatMaster = CombatMaster || (function() {
     }
 
     let round = 1,
-        version = '2.46',
+        version = '3.0E',
         timerObj,
         intervalHandle,
         animationHandle,
@@ -432,9 +433,10 @@ var CombatMaster = CombatMaster || (function() {
         });
     },
 
-//*************************************************************************************************************
-//NEW ACTIONS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //NEW ACTIONS
+    //*************************************************************************************************************
+
     addMotesCommand = (cmdDetails, selected) => {
         logger(`addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
@@ -671,9 +673,10 @@ var CombatMaster = CombatMaster || (function() {
         if (characterObj) setAttrs(characterObj.get('id'), {'onslaught':0});
     },
 
-//*************************************************************************************************************
-//MENUS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //MENUS
+    //*************************************************************************************************************
+
     sendMainMenu = (who) => {
         logger('Send Main Menu');
 
@@ -1209,9 +1212,10 @@ var CombatMaster = CombatMaster || (function() {
         makeAndSendMenu(contents,title,'gm');
     },
 
-//*************************************************************************************************************
-//SESSION STATE MAINTENANCE
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //SESSION STATE MAINTENANCE
+    //*************************************************************************************************************
+
 	editCombatState = (cmdDetails) => {
 		if        (cmdDetails.details.initiative)
 			state[combatState].config.initiative[cmdDetails.details.key]    = cmdDetails.details.value;
@@ -1246,9 +1250,10 @@ var CombatMaster = CombatMaster || (function() {
 		state[combatState].config.status.showConditions = value;
 	},
 
-//*************************************************************************************************************
-//CONDITIONS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //CONDITIONS
+    //*************************************************************************************************************
+
 	newCondition = (name, type='Condition', concentration=false, description='None') => {
         logger('Create Condition');
 
@@ -1547,9 +1552,10 @@ var CombatMaster = CombatMaster || (function() {
         makeAndSendMenu('Selected Tokens Added',"Selected Tokens",'gm');
     },
 
-//*************************************************************************************************************
-//START/STOP COMBAT
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //START/STOP COMBAT
+    //*************************************************************************************************************
+
     verifyCombatSetup = (selectedTokens, initiative) => {
         logger('verifyCombatSetup::verifyCombatSetup');
         let turnorder, whisper, characterObj, verified=true, tokenObj;
@@ -1647,6 +1653,7 @@ var CombatMaster = CombatMaster || (function() {
 
         removeMarkers();
         stopTimer();
+        stopMarkerAnimation();
         Campaign().set({turnorder:''});
         round = 1;
 
@@ -1775,9 +1782,10 @@ var CombatMaster = CombatMaster || (function() {
         makeAndSendMenu(contents, name + ' Initiative', whisper);
     },
 
-//*************************************************************************************************************
-//MARKERS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //MARKERS
+    //*************************************************************************************************************
+
     addMarker = (tokenObj, markerType, marker, duration, direction, key) => {
         logger('addMarker::addMarker');
         logger(marker);
@@ -1911,7 +1919,7 @@ var CombatMaster = CombatMaster || (function() {
         }
 
         if (type === markerType.ROUND)   insertMarkerTurnIfNotInTurnOrder(marker);
-        if (type === markerType.MAIN)    startMarkerAnimation(marker);
+        if (type === markerType.MAIN)    handleMarkerAnimation(marker);
 
         if (type === markerType.ROUND)  toBack(marker);
         else                            toFront(marker);
@@ -2046,15 +2054,27 @@ var CombatMaster = CombatMaster || (function() {
         }
     },
 
+    handleMarkerAnimation = (marker) => {
+        if (state[combatState].config.turnorder.animateMarker) {
+            startMarkerAnimation(marker);
+        } else {
+            stopMarkerAnimation(marker);
+        } 
+    },
+
     startMarkerAnimation = (marker) => {
-        if ( !animationHandle && state[combatState].config.turnorder.animateMarker) {
-            animationHandle = rotateMarkerCallback;
-            setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
-        }
+        clearInterval(animationHandle);
+        animateMarker(marker);
     },
 
     stopMarkerAnimation = () => {
-        animationHandle = null;
+        clearInterval(animationHandle);
+    },
+
+    animateMarker = (marker) => {
+		animationHandle = setInterval(() => {
+		   	marker.set('rotation',parseInt(marker.get('rotation'))+state[combatState].config.turnorder.animateMarkerDegree);
+		}, state[combatState].config.turnorder.animateMarkerWait);
     },
 
     rotateMarkerCallback = (marker) => {
@@ -2069,9 +2089,10 @@ var CombatMaster = CombatMaster || (function() {
         setTimeout(function() {rotateMarkerCallback(marker);}, state[combatState].config.turnorder.animateMarkerWait);
     },
 
-//*************************************************************************************************************
-//TURNORDER
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //TURNORDER
+    //*************************************************************************************************************
+
     clearTurnorder = () => {
         Campaign().set({ turnorder: '' });
         state[combatState].turnorder = {};
@@ -2209,9 +2230,10 @@ var CombatMaster = CombatMaster || (function() {
 
     setTurnorder = (turnorder) => Campaign().set('turnorder', JSON.stringify(turnorder)),
 
-//*************************************************************************************************************
-//TURNS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //TURNS
+    //*************************************************************************************************************
+
     changeTurnOrderToNext = () => {
         logger('changeTurnOrderToNext::changeTurnOrderToNext');
 
@@ -2328,9 +2350,11 @@ var CombatMaster = CombatMaster || (function() {
 
         changeTurnOrderToPrevious();
     },
-//*************************************************************************************************************
-//TIMER
-//*************************************************************************************************************
+
+    //*************************************************************************************************************
+    //TIMER
+    //*************************************************************************************************************
+
     startTimer = (token) => {
         let timer       = state[combatState].config.timer,
             config_time = parseInt(timer.time),
@@ -2381,9 +2405,11 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     pauseTimer = () => paused = !paused,
-//*************************************************************************************************************
-//ANNOUNCE
-//*************************************************************************************************************
+
+    //*************************************************************************************************************
+    //ANNOUNCE
+    //*************************************************************************************************************
+
     announcePlayer = (tokenObj, prev, delay=false, show=false) => {
         logger('announcePlayer::announcePlayer');
 
@@ -2504,9 +2530,11 @@ var CombatMaster = CombatMaster || (function() {
 
         return output;
     },
-//*************************************************************************************************************
-//MAKES
-//*************************************************************************************************************
+
+    //*************************************************************************************************************
+    //MAKES
+    //*************************************************************************************************************
+
     makeAndSendMenu = (contents, title = undefined, whisper = undefined, noarchive = true) => {
         whisper = (whisper && whisper !== '') ? '/w ' + whisper + ' ' : '';
 		title = makeTitle(title);
@@ -2550,9 +2578,10 @@ var CombatMaster = CombatMaster || (function() {
     makeCharacterLink   = (characterObj, characterId = characterObj.get('id')) => `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>`,
     makeImageButtonHtml = txt                                                  => `<img src="${txt}" width="20px" height="20px" />`,
 
-//*************************************************************************************************************
-//ICONS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //ICONS
+    //*************************************************************************************************************
+
     getDefaultIcon = (iconType, icon, style='', height, width) => {
         if (iconType == 'None') return 'None';
         let installed = verifyInstalls(iconType);
@@ -2620,9 +2649,10 @@ var CombatMaster = CombatMaster || (function() {
         return true;
     },
 
-//*************************************************************************************************************
-//EXTERNAL CALLS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //EXTERNAL CALLS
+    //*************************************************************************************************************
+
     doRoundCalls = () => {
         logger("doRoundCalls::doRoundCalls");
 
@@ -2771,9 +2801,10 @@ var CombatMaster = CombatMaster || (function() {
         return macro;
     },
 
-//*************************************************************************************************************
-//SUBSTITUTIONS
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //SUBSTITUTIONS
+    //*************************************************************************************************************
+
     newSubstitution = (cmdDetails) => {
         logger('newSubstitution::newSubstitution');
 
@@ -2794,9 +2825,11 @@ var CombatMaster = CombatMaster || (function() {
         });
 		sendMacroMenu();
     },
-//*************************************************************************************************************
-//SPELLS
-//*************************************************************************************************************
+
+    //*************************************************************************************************************
+    //SPELLS
+    //*************************************************************************************************************
+
     handleSpellCast = (msg) => {
         logger('handleSpellCast::handleSpellCast');
         logger(msg);
@@ -2981,9 +3014,9 @@ var CombatMaster = CombatMaster || (function() {
         }
     },
 
-//*************************************************************************************************************
-//MISC
-//*************************************************************************************************************
+    //*************************************************************************************************************
+    //MISC
+    //*************************************************************************************************************
 
     sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
@@ -3237,7 +3270,7 @@ var CombatMaster = CombatMaster || (function() {
 					nextTokenMarkerName:         'None',
 					nextTokenMarkerURL:          null,
 					markerSize:                  2.1,
-					animateMarker:               true,
+					animateMarker:               false,
 					animateMarkerDegree:         1,
 					animateMarkerWait:           25,
                     sortTurnOrder:               true,
