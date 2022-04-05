@@ -1,0 +1,187 @@
+backup:
+/r ?{Nombre de dés a lancer ?|1}t[?{Table ?|Doubles 10,10s|Doubles 9,9s|Doubles 8,8s|Doubles 7,7s}]+?{Bonus aux succès|0} )
+?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7}
+
+Ratio:
+!token-mod --set scale|?{Ratio|PAGE SCALE,*0.0142857142un|/1.5,/1.5|*1.5,*1.5|/0.75,/0.75|Custom Roll,?{Ratio Custom :&#125;}
+
+Vision+:
+!token-mod --set ?{Vision Setting |
+	Turn ON,bright_vision&#124;1|
+	Turn OFF NV,night_vision&#124;0|
+	Default NV,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0|
+	NV+,night_vision&#124;1 night_vision_distance&#124;6 night_vision_effect&#124;dimming&#124;0|
+	Merit NV,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;nocturnal|
+	Merit NV+,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;nocturnal|
+	SET DEFAULT ON OnTheFly,bright_vision&#124;1 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0|
+	Move To Dynamic-Lighting Layer,layer&#124;walls|
+	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT+Size,width&#124;70 height&#124;70 bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT+Size+Mote,width&#124;70 height&#124;70 bar1_link&#124;peripheral-essence bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff --off playersedit_aura1|
+}
+
+Anima:
+!token-mod --set ?{Change Anima state to |
+	Dim,emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124;0 --off playersedit_aura1|
+	Glow,emits_bright&#124;1 bright_distance&#124;0.3 showplayers_aura1&#124;1 aura1_radius&#124;0.2 --off playersedit_aura1|
+	Burn,emits_bright&#124;1 bright_distance&#124;3 showplayers_aura1&#124;1 aura1_radius&#124;2.8 --off playersedit_aura1|
+	Bonfire,emits_bright&#124;1 bright_distance&#124;10.5 showplayers_aura1&#124;1 aura1_radius&#124;10 --off playersedit_aura1|
+	HIDE_AURA_KEEP_LIGHT,aura1_radius&#124;0.1|
+	Solar,aura1_color&#124;#ff0 --off playersedit_aura1|
+	Lunar,aura1_color&#124;#bbb --off playersedit_aura1|
+	Air,aura1_color&#124;#0ff --off playersedit_aura1|
+	Water,aura1_color&#124;#00f --off playersedit_aura1|
+	Earth,aura1_color&#124;#ffe599 --off playersedit_aura1|
+	Wood,aura1_color&#124;#0f0 --off playersedit_aura1|
+	Fire,aura1_color&#124;#f00 --off playersedit_aura1|
+	Undefined,aura1_color&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124;0 aura1_color&#124;#fff --off playersedit_aura1
+}
+
+Roll:
+!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter :&#125;}
+noDbl
+!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,?{Commande a Ajouter :&#125;}
+
+
+GM-Roll:
+!exr ?{Nombre de dés a lancer ?|1}#+?{Bonus aux succès|0} ?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7} -gm
+
+?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter :&#125;}
+?{Type de Jet|Jet Standard,-D|Custom Roll,?{Commande a Ajouter :&#125;}
+?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,?{Commande a Ajouter :&#125;}
+
+Duplicate Token:
+!DupCharToken ?{Action|
+  Create, ?{Set Starting ?&#124;
+     No&#44; ?{How Many ? &amp;#124;1 &amp;#125; &#124;
+     Yes&#44; ?{How Many ? SET START NUMBER AFTER SPACE &amp;#124;1 1 &amp;#125; &#125; |
+  Clean, clean}
+
+AddMotes:
+!cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;}
+
+ExROLL:
+!exr (?{Attribute|Strenght (@{selected|strength}),@{selected|strength}|Dexterity (@{selected|dexterity}),@{selected|dexterity}|Stamina (@{selected|stamina}), @{selected|stamina}|Charisma (@{selected|charisma}), @{selected|charisma}|Manipulation (@{selected|manipulation}), @{selected|manipulation}|Appearance (@{selected|appearance}), @{selected|appearance}|Perception (@{selected|perception}), @{selected|perception}|Intelligence (@{selected|intelligence}), @{selected|intelligence}|Wits (@{selected|wits}), @{selected|wits}}+?{Ability|
+	Archery (@{selected|archery}),@{selected|archery}|
+	Athletics (@{selected|athletics}),@{selected|athletics}|
+	Awareness (@{selected|awareness}),@{selected|awareness}|
+	Brawl (@{selected|brawl}),@{selected|brawl}|
+	Bureaucracy (@{selected|bureaucracy}),@{selected|bureaucracy}|
+	Craft (...),?{Craft&#124;
+		Armoring (@{selected|craft-armoring})&#44;@{selected|craft-armoring}&#124;
+		Artifact (@{selected|craft-artifact})&#44;@{selected|craft-artifact}&#124;
+		Cooking (@{selected|craft-cooking})&#44;@{selected|craft-cooking}&#124;
+		First Age Artifice (@{selected|craft-artifice})&#44;@{selected|craft-artifice}&#124;
+		Gemcutting (@{selected|craft-gemcutting})&#44;@{selected|craft-gemcutting}&#124;
+		Geomancy (@{selected|craft-geomancy})&#44;@{selected|craft-geomancy}&#124;
+		Jewelry (@{selected|craft-jewelry})&#44;@{selected|craft-jewelry}&#124;
+		Tailoring (@{selected|craft-tailoring})&#44;@{selected|craft-tailoring}&#124;
+		Weapon Forging (@{selected|craft-forging})&#44;@{selected|craft-forging}&#124;
+		Other&#44;?{Enter the number of Craft dots&amp;#124;0&amp;#125;&#125;|
+	Dodge (@{selected|dodge}),@{selected|dodge}|
+	Integrity (@{selected|integrity}),@{selected|integrity}|
+	Investigation (@{selected|investigation}),@{selected|investigation}|
+	Larceny (@{selected|larceny}),@{selected|larceny}|
+	Linguistics (@{selected|linguistics}),@{selected|linguistics}|
+	Lore (@{selected|lore}),@{selected|lore}|
+	Martial Arts (...),?{Martial Arts&#124;
+		Snake Style (@{selected|ma-snake})&#44;@{selected|ma-snake}&#124;
+		Tiger Style (@{selected|ma-tiger})&#44;@{selected|ma-tiger}&#124;
+		Single Point Shining Into The Void Style (@{selected|ma-void})&#44;@{selected|ma-void}&#124;
+		White Reaper Style (@{selected|ma-reaper})&#44;@{selected|ma-reaper}&#124;
+		Ebon Shadow Style (@{selected|ma-ebon})&#44;@{selected|ma-ebon}&#124;
+		Crane Style (@{selected|ma-crane})&#44;@{selected|ma-crane}&#124;
+		Silver-voiced Nightingale Style (@{selected|ma-nightingale})&#44;@{selected|ma-nightingale}&#124;
+		Righteous Devil Style (@{selected|ma-devil})&#44;@{selected|ma-devil}&#124;
+		Black Claw Style (@{selected|ma-claw})&#44;@{selected|ma-claw}&#124;
+		Dreaming Pearl Courtesan Style (@{selected|ma-pearl})&#44;@{selected|ma-pearl}&#124;
+		Steel Devil Style (@{selected|ma-steel})&#44;@{selected|ma-steel}&#124;
+		Other&#44;?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;&#125;|
+	Medicine (@{selected|medicine}),@{selected|medicine}|
+	Melee (@{selected|melee}),@{selected|melee}|
+	Occult (@{selected|occult}),@{selected|occult}|
+	Performance (@{selected|performance}),@{selected|performance}|
+	Presence (@{selected|presence}),@{selected|presence}|
+	Resistance (@{selected|resistance}),@{selected|resistance}|
+	Ride (@{selected|ride}),@{selected|ride}|
+	Sail (@{selected|sail}),@{selected|sail}|
+	Socialize (@{selected|socialize}),@{selected|socialize}|
+	Stealth (@{selected|stealth}),@{selected|stealth}|
+	Survival (@{selected|survival}),@{selected|survival}|
+	Thrown (@{selected|thrown}),@{selected|thrown}|
+	War (@{selected|war}),@{selected|war}|
+	Thrown (@{selected|thrown}),@{selected|thrown}|
+	Other,?{Enter the number of dots of this attribute&#124;0&#125;
+}+?{Nombre de dés supplémentaires (Stunt/Circonstances/...) ?|0}+@{selected|wound-penalty})#[Roll: (Attribute + Ability + Other - WoundPenalty)]+?{Additional Successes|0}[Auto Successes] ?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter :&#125;}
+
+?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7}
+
+INIT:
+&{template:exalted3e_init} {{init-character-name=@{selected|character_name}}} {{init-message= rentre en combat et lance son initiative :}}
+!exr (?{Wits+Awareness-Wound (Ajoutez a la fin les dés en bonus/malus)|@{selected|wits}+@{selected|awareness}+@{selected|wound-penalty}})#[Wits + Awareness - Wounds (+Other)]+?{Bonus aux succès|0}[Automatic Successes]+3[Base Init] ?{Type de Jet|Jet Standard,|Custom Roll,?{Commande a Ajouter :&#125;} -target
+
+/w gm &{template:exalted3e_init} {{init-character-name=@{selected|character_name}}} {{init-message= rentre en combat et lance son initiative :}}
+!exr (?{Wits+Awareness-Wound (Ajoutez a la fin les dés en bonus/malus)|@{selected|wits}+@{selected|awareness}+@{selected|wound-penalty}})#[Wits + Awareness - Wounds (+Other)]+?{Bonus aux succès|0}[Automatic Successes]+3[Base Init] ?{Type de Jet|Jet Standard,|Custom Roll,?{Commande a Ajouter :&#125;} -target -gm
+
+Withering Atk:
+/w gm @{selected|token_name} tente une attaque Affaiblissante/Génante
+!exr (@{selected|dexterity}+?{Relevant Combat Ability|
+	Archery (@{selected|archery}),@{selected|archery}|
+	Brawl (@{selected|brawl}),@{selected|brawl}|
+	Martial Arts (...),?{Martial Arts&#124;
+		Snake Style (@{selected|ma-snake})&#44;@{selected|ma-snake}&#124;
+		Tiger Style (@{selected|ma-tiger})&#44;@{selected|ma-tiger}&#124;
+		Single Point Shining Into The Void Style (@{selected|ma-void})&#44;@{selected|ma-void}&#124;
+		White Reaper Style (@{selected|ma-reaper})&#44;@{selected|ma-reaper}&#124;
+		Ebon Shadow Style (@{selected|ma-ebon})&#44;@{selected|ma-ebon}&#124;
+		Crane Style (@{selected|ma-crane})&#44;@{selected|ma-crane}&#124;
+		Silver-voiced Nightingale Style (@{selected|ma-nightingale})&#44;@{selected|ma-nightingale}&#124;
+		Righteous Devil Style (@{selected|ma-devil})&#44;@{selected|ma-devil}&#124;
+		Black Claw Style (@{selected|ma-claw})&#44;@{selected|ma-claw}&#124;
+		Dreaming Pearl Courtesan Style (@{selected|ma-pearl})&#44;@{selected|ma-pearl}&#124;
+		Steel Devil Style (@{selected|ma-steel})&#44;@{selected|ma-steel}&#124;
+		Other&#44;?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;&#125;|
+	Melee (@{selected|melee}),@{selected|melee}|
+	Thrown (@{selected|thrown}),@{selected|thrown}
+}+?{Accuracy|0}+?{Nombre de dés supplémentaires (Stunt/Circonstances/...) ?|0}+@{selected|wound-penalty})#[Roll: (Dex + CombatAbility + Accu + Other - WoundPenalty)]+?{Additional Successes|0}[Auto Successes] -gm ?{Type de Jet|Jet Standard,|Custom Roll,?{Commande a Ajouter :&#125;}
+
+?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7} -gm
+
+Withering Damage:
+/w gm @{selected|token_name} confirme son attaque Affaiblissante/Génante et inflige des degats a l'Initiative
+!exr (@{selected|strength}+?{Weapon Damage|7}+?{Attack Threshold successes|0}-?{Soak (positive number)|0})#[Roll: (Str + WeaponDamage + AtkThreshold - Soak)]+?{Additional Successes|0}[Auto Successes] -gm ?{Type de Jet|Jet Standard,|Custom Roll,?{Commande a Ajouter :&#125;}
+
+OLD
+?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7} -gm
+/r ([[{@{selected|strength}+?{Weapon Damage|7}+?{Attack Threshold successes|0}-?{Soak (positive number)|0},?{Overwhelming|1}}kh1]])t[?{Table ?|Doubles 10,10s|Doubles 9,9s|Doubles 8,8s|Doubles 7,7s}][Roll: MAX between (Str + WeaponDamage + AtkThreshold - Soak) and (Overwhelming)]+?{Additional Successes|0}[Auto Successes]
+
+Decisive Atk:
+/w gm @{selected|token_name} tente une attaque Decisive
+!exr (@{selected|dexterity}+?{Relevant Combat Ability|
+	Archery (@{selected|archery}),@{selected|archery}|
+	Brawl (@{selected|brawl}),@{selected|brawl}|
+	Martial Arts (...),?{Martial Arts&#124;
+		Snake Style (@{selected|ma-snake})&#44;@{selected|ma-snake}&#124;
+		Tiger Style (@{selected|ma-tiger})&#44;@{selected|ma-tiger}&#124;
+		Single Point Shining Into The Void Style (@{selected|ma-void})&#44;@{selected|ma-void}&#124;
+		White Reaper Style (@{selected|ma-reaper})&#44;@{selected|ma-reaper}&#124;
+		Ebon Shadow Style (@{selected|ma-ebon})&#44;@{selected|ma-ebon}&#124;
+		Crane Style (@{selected|ma-crane})&#44;@{selected|ma-crane}&#124;
+		Silver-voiced Nightingale Style (@{selected|ma-nightingale})&#44;@{selected|ma-nightingale}&#124;
+		Righteous Devil Style (@{selected|ma-devil})&#44;@{selected|ma-devil}&#124;
+		Black Claw Style (@{selected|ma-claw})&#44;@{selected|ma-claw}&#124;
+		Dreaming Pearl Courtesan Style (@{selected|ma-pearl})&#44;@{selected|ma-pearl}&#124;
+		Steel Devil Style (@{selected|ma-steel})&#44;@{selected|ma-steel}&#124;
+		Other&#44;?{Enter the number of M.A. dots of this style &amp;#124;0&amp;#125;&#125;|
+	Melee (@{selected|melee}),@{selected|melee}|
+	Thrown (@{selected|thrown}),@{selected|thrown}
+}+?{Nombre de dés supplémentaires (Stunt/Circonstances/...) ?|0}+@{selected|wound-penalty})#[Roll: (Dex + CombatAbility + Other - WoundPenalty)]+?{Additional Successes|0}[Auto Successes] -gm ?{Type de Jet|Jet Standard,|Custom Roll,?{Commande a Ajouter :&#125;}
+
+?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7} -gm
+
+Decisive Damage:
+HLP-Decisive-Damage
+/w gm @{character_name} confirme son attaque Decisive et inflige :
+!exr @{tracker|Selenok Lokarth}# -D -gm
+/gr 3[RESETING INIT] &{tracker}
