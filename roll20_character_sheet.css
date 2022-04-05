@@ -1332,20 +1332,23 @@ and (min-resolution:.001dpcm) {
 }
 
 .charsheet input.sheet-charms-spells-trait-short-desc {
-    width: calc(67% - 109px - 5em - 128px - 35px);
+    width: calc(67% - 109px - 5em - 128px - 39px);
 }
 
 @-moz-document url-prefix() {
     .charsheet input.sheet-charms-spells-trait-short-desc {
-        width: calc(67% - 109px - 5em - 128px - 51px);
+        width: calc(67% - 109px - 5em - 128px - 55px);
     }
 }
 
 .charsheet button.sheet-roll{
     height:30px;
     width:50px;
+    font-family: Cimiez, Arial, sans-serif;
     font-size:18px !important;
     font-weight:bold;
+    padding: 2px 3px;
+    margin: 0 3px 0 3px;
 }
 
 .charsheet .sheet-tab-intimacies-sheet textarea {
@@ -1649,4 +1652,31 @@ body.sheet-darkmode {
 .sheet-darkmode .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
 .sheet-darkmode .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
     background: dimgray;
+}
+
+.charm-tab-list textarea {
+    margin-bottom: 0;
+}
+
+.charsheet input,
+.charsheet select,
+.charsheet option,
+.charsheet optgroup,
+.charsheet textarea,
+.charsheet .btn:not([type=roll]) {
+    font-family: Cimiez, Arial, sans-serif;
+}
+
+.charsheet .sheet-tab-charm-sheet .charm-buttons {
+    display: contents;
+}
+
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .charm-buttons-include-check[value="0"] ~ div.charm-buttons-show-extended {
+    display: none;
+}
+
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect .charm-buttons-include-check[value="1"] ~ input[type="text"] {
+    border: 1px solid darkgreen;
+    border-radius: 5px 5px;
 }
