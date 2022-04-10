@@ -37,7 +37,7 @@ var CombatMaster = CombatMaster || (function() {
     }
 
     let round = 1,
-        version = '3.0E',
+        version = '3.01E',
         timerObj,
         intervalHandle,
         animationHandle,
@@ -220,13 +220,13 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -420,6 +420,15 @@ var CombatMaster = CombatMaster || (function() {
             logger('commandHandler::before createDecisiveAbilities');
             addMotesCommand(cmdDetails, msg.selected);
         }
+
+        if (cmdDetails.action == 'togglePageSize') {
+            if (!playerIsGM(playerID)) {
+                logger(LOGLEVEL.NOTICE, 'commandHandler::togglePageSize received but user is not GM');
+                return;
+            }
+            logger('commandHandler::before togglePageSize');
+            togglePageSize(cmdDetails, msg.selected);
+        }
 	},
 
     clearTokenStatuses = (selectedTokens) => {
@@ -436,6 +445,29 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
     //NEW ACTIONS
     //*************************************************************************************************************
+
+    togglePageSize = (cmdDetails, selected) => {
+        logger(`togglePageSize::togglePageSize cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+
+        const revert = cmdDetails.details['revert'] ? true : false;
+        logger(`togglePageSize::togglePageSize revert=${revert}`);
+
+        if (!selected) {
+            logger(`addMotesCommand::NO SELECTED, RETURN`);
+            sendGMStandardScriptMessage('Please select a token on the page for the script to work !');
+            return;
+        }
+        const tokenObj = getObj('graphic', selected[0]['_id']);
+        const pageObj = getObj('page', tokenObj.get('_pageid'));
+        let scale_number = Number(pageObj.get('scale_number')), // grid cell distance
+            snapping_increment = Number(pageObj.get('snapping_increment')); // cell width
+        logger(`togglePageSize::togglePageSize scale_number=${scale_number}, snapping_increment=${snapping_increment}`);
+
+        scale_number =       revert ? scale_number * 70             : scale_number / 70;
+        snapping_increment = revert ? snapping_increment * 70       : snapping_increment / 70;
+        pageObj.set({scale_number: scale_number, snapping_increment: snapping_increment});
+        sendGMStandardScriptMessage(`Script DONE ! ${revert ? 'REVERT =>' : ' =>'}<br/> scale_number=${scale_number},<br/> snapping_increment=${snapping_increment}`);
+    },
 
     addMotesCommand = (cmdDetails, selected) => {
         logger(`addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
