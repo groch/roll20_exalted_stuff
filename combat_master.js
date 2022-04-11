@@ -464,8 +464,8 @@ var CombatMaster = CombatMaster || (function() {
         logger(`togglePageSize::togglePageSize scale_number=${scale_number}, snapping_increment=${snapping_increment}`);
 
         scale_number =       revert ? scale_number * 70             : scale_number / 70;
-        snapping_increment = revert ? snapping_increment * 70       : snapping_increment / 70;
-        pageObj.set({scale_number: scale_number, snapping_increment: snapping_increment});
+        snapping_increment = revert ? 1                             : 1 / 70;
+        pageObj.set({showgrid: true, grid_opacity: 0, scale_number: scale_number, snapping_increment: snapping_increment});
         sendGMStandardScriptMessage(`Script DONE ! ${revert ? 'REVERT =>' : ' =>'}<br/> scale_number=${scale_number},<br/> snapping_increment=${snapping_increment}`);
     },
 
