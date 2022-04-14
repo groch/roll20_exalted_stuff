@@ -86,6 +86,7 @@ const LogLvl = LOGLEVEL.DEBUG,
     onlyResult: false,
     revertTitleOrder: false,
     face: [null],
+    rerollPool: [],
     conditionalActivated: [],
     rollToProcess: [],
     finalResults: [],
@@ -124,6 +125,13 @@ const LogLvl = LOGLEVEL.DEBUG,
           keepBest: matchReturn[3] ? true : false,
           faces:    [...matchReturn[4].split(',').filter(i => i).map(i => Number(i))],
           tagList:  matchReturn[5] ? [...matchReturn[5].split(',').filter(i => i)] : []})
+    },{
+        categoryName: 'Reroll Pools',
+        pattern: /^(rP)(?:\s([\d,]+))(?:\sTAGS=([(?:\w)+,]+))?$/,
+        getCmdObj: (matchReturn) => ({
+          cmd:      matchReturn[1],
+          limit:    Number(matchReturn[2]),
+          tagList:  matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i)] : []})
     },{
         categoryName: 'Doubles & Explodes',
         pattern: /^(d|e|E)(l\d*)?(?:\s([\d,]+))?$/,
@@ -179,7 +187,7 @@ const LogLvl = LOGLEVEL.DEBUG,
       {
         arrayfirstCol:['-r NB,...','-r[lNB] NB','-r[k|K] NB','-r NB TAGS=LABEL,...','-R NB,...','-R[lNB] NB','-R[k|K] NB','-R NB TAGS=LABEL,...'],
         arraySecondCol:[
-'These commands cover rerolls, followed by a comma-delimited list of values to reroll\
+'These commands cover rerolls, followed by a comma-delimited list of values to reroll.\
  <code style="white-space: nowrap">-r</code> provides single rerolls—once the values have been rerolled once.\
  <code style="white-space: nowrap">-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s fail to appear."\
  It will keep rerolling the results in the comma-delimited list of arguments until those values are no longer in the pool, for better or for worse.\
@@ -188,6 +196,15 @@ const LogLvl = LOGLEVEL.DEBUG,
 'The optional <code style="white-space: nowrap">k|K</code> signals the script that you want to keep the highest rerolled value. Example :<code style="white-space: nowrap">-rk 1</code>.',
 'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>-r 1,2 TAGS=charm1</code>.',
 'Everything above can be combined. Example :<code style="white-space: nowrap">-Rl3K 1,2,3 TAGS=charm42OP</code>.'
+        ],
+      },
+      {
+        arrayfirstCol:['-rP NB','-rP NB TAGS=LABEL,...'],
+        arraySecondCol:[
+'This command cover reroll pools, or reroll of fails not specific to one face, followed by the limit/number of faces to reroll.\
+ This command follows the rules of recursive reroll (see previous section) as you would reroll fails until limit has been reached or all has become successes.\
+ By default, rerolled dice are hidden, see <code style="white-space: nowrap">-v|V</code> below.',
+'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>-r 1,2 TAGS=charm1</code>.'
         ],
       },
       {
@@ -467,6 +484,17 @@ function parseCmds(item, list) {
     if (match) list.push(objRet);
 }
 
+function randomUUID() {
+    let dt = new Date().getTime();
+    
+    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = (dt + Math.random()*16)%16 | 0
+        dt = Math.floor(dt/16)
+        return (c=='x' ? r :(r&0x3|0x8)).toString(16)
+    });
+    
+    return uuid;
+}
 
 /**
  * This takes the parsed cmds array and actually interprets those commands and passes them to the appropriate functions. This is sort of the heart
@@ -483,7 +511,8 @@ function processCmds(cmds, result) {
     for (const item of cmds) {
         var recReroll = false,
             exploIgnore = true,
-            verbosityToSet = 1;
+            verbosityToSet = 1,
+            uuid = randomUUID();
         // else default Parsing
         switch (String(item.cmd)) {
             case 'R':
@@ -499,6 +528,10 @@ function processCmds(cmds, result) {
                         tagList: item.tagList
                     });
                 }
+                break;
+            case 'rP':
+                while (result.rollSetup.rerollPool.some(i => i.uuid === uuid)) uuid = randomUUID();
+                result.rollSetup.rerollPool.push({uuid: uuid, limit: item.limit, tagList: item.tagList});
                 break;
             case 'E':
                 exploIgnore = false; // break omitted because same treatment
@@ -593,7 +626,7 @@ function finalizeRoll(result) {
         return;
     }
 
-    sortRerollsAndExplosives(result);
+    addRerollPoolsAndFinalSort(result);
 
     logger(`finalizeRoll::FINAL rollSetup=${JSON.stringify(result.rollSetup)}`)
     var turn = 1;
@@ -611,12 +644,30 @@ function finalizeRoll(result) {
     result.rolls[0].results = result.rollSetup.finalResults;
 }
 
+function addRerollPoolsAndFinalSort(result) {
+    for (const rp of result.rollSetup.rerollPool) {
+        for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+            if (!result.rollSetup.face[i].successes.length) {
+                result.rollSetup.face[i].rerolls.push({
+                    uuid: rp.uuid,
+                    limit: rp.limit,
+                    done: 0,
+                    keepBest: false,
+                    recursive: true,
+                    tagList: rp.tagList,
+                });
+            }
+        }
+    }
+    sortRerollsAndExplosives(result);
+}
+
 function sortRerollsAndExplosives(result) {
     for (var i = 1; i <= 10; i++) {
         var face = result.rollSetup.face[i];
         face.rerolls.sort((a, b) => {
-            if ((a.recursive && !b.recursive) || (!a.limit && b.limit)) return 1;
-            if ((!a.recursive && b.recursive) || (a.limit && !b.limit)) return -1;
+            if ((!a.uuid && b.uuid) || (a.recursive && !b.recursive) || (!a.limit && b.limit)) return 1;
+            if ((a.uuid && !b.uuid) || (!a.recursive && b.recursive) || (a.limit && !b.limit)) return -1;
             return a.limit - b.limit;
         });
         face.explosives.sort((a, b) => {
@@ -764,7 +815,7 @@ function handleTurnConditionalHookHMU(result, turn, nextRollsToProcess, condIter
 function handleRoll(result, setup, item, turn) {
     logger(`handleRollTurn::face(${setup.face}) rerolls.length=${setup.faceObj.rerolls.length}, explosives.length=${setup.faceObj.explosives.length}, doubles.length=${setup.faceObj.doubles.length}, conditionalActivated.length=${result.rollSetup.conditionalActivated.length}`);
     if (setup.faceObj.rerolls.length)
-        handleFaceReroll(setup, item, turn, result.rollSetup.conditionalActivated.length);
+        handleFaceReroll(setup, item, turn, result);
     if (!setup.rerolled && setup.faceObj.successes.length)
         handleFaceSuccess(setup);
     if (setup.faceObj.doubles.length && !setup.rerolled)
@@ -775,7 +826,7 @@ function handleRoll(result, setup, item, turn) {
         handleFaceConditionals(result, setup, item, turn);
 }
 
-function handleFaceReroll(setup, item, turn, condiLength) {
+function handleFaceReroll(setup, item, turn, result) {
     setup.rerollSnapshot = setup.faceObj.rerolls[0];
     var reroll = randomInteger(10);
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) REROLL TO DO ! section=${JSON.stringify(setup.faceObj.rerolls[0])}`);
@@ -785,16 +836,30 @@ function handleFaceReroll(setup, item, turn, condiLength) {
         setup.toNextRollRerolled = {
             v: rerolledVal, wasEverRerolled: true,
             wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
-            title: [`RollTurn (${strFill(turn + 1)}). R${condiLength ? condiPadder : ''} ->Face=${strFill(rerolledVal)}.`]
+            title: [`RollTurn (${strFill(turn + 1)}). R${result.rollSetup.conditionalActivated.length ? condiPadder : ''} ->Face=${strFill(rerolledVal)}.`]
         };
     }
-    setup.faceObj.rerolls[0].done++;
+    increaseDoneOnRerolls(setup, result);
     setup.titleText += ` ${setup.rerolled ? 'Rerolled to a' : 'Not Reroll to'} ${strFill(reroll)}`
         + (setup.faceObj.rerolls[0].limit != 0
             ? ` (Done${setup.faceObj.rerolls[0].done}/${setup.faceObj.rerolls[0].limit} ).`
             : ` ( Done${strFill(setup.faceObj.rerolls[0].done)} ).`);
     if (setup.faceObj.rerolls[0].limit != 0 && setup.faceObj.rerolls[0].limit == setup.faceObj.rerolls[0].done) {
-        setup.rerollSectionDone = removeFirstRerollSection(setup.faceObj);
+        setup.rerollSectionDone = removeFirstRerollSection(result, setup.faceObj);
+    }
+}
+
+function increaseDoneOnRerolls(setup, result) {
+    setup.faceObj.rerolls[0].done++;
+    if (setup.faceObj.rerolls[0].uuid) {
+        for (const faceTested of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+            if (faceTested === setup.faceObj.face) continue;
+            if (result.rollSetup.face[faceTested].rerolls.some(i => (i.uuid === setup.faceObj.rerolls[0].uuid))) {
+                const index = result.rollSetup.face[faceTested].rerolls.findIndex(r => r.uuid === setup.faceObj.rerolls[0].uuid);
+                logger(`removeRerollPoolSections::REROLLPOOL increasing i=${index}`);
+                result.rollSetup.face[faceTested].rerolls[index].done++;
+            }
+        }
     }
 }
 
@@ -935,7 +1000,7 @@ function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
 }
 
 /**
- * SECTION CLEANING
+ * SECTION CLEANING AFTER 1ST ROLL TURN, OR AT THE COMPLETE END OF THE ROLL
  */
 function handleSectionCleaning(result, lastTurnClean = false) {
     logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING !');
@@ -943,7 +1008,7 @@ function handleSectionCleaning(result, lastTurnClean = false) {
         var faceObj = result.rollSetup.face[faceClearing];
         // remove non recursive reroll && push section accordingly
         while (faceObj.rerolls.length && (!faceObj.rerolls[0].recursive || lastTurnClean))
-            result.rollSetup.finalResults.push(removeFirstRerollSection(faceObj, true));
+            result.rollSetup.finalResults.push(removeFirstRerollSection(result, faceObj, true));
         // remove doubles && push section accordingly
         while (lastTurnClean && faceObj.doubles.length)
             result.rollSetup.finalResults.push(removeFirstDoubleSection(faceObj, true));
@@ -988,16 +1053,28 @@ function removeFirstDoubleSection(faceObj, showDone = false) {
     return removedDoubleSection;
 }
 
-function removeFirstRerollSection(faceObj, showDone = false) {
+function removeFirstRerollSection(result, faceObj, showDone = false) {
     logger(LOGLEVEL.NOTICE, `removeFirstRerollSection::REROLL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
     var rerollSectionDone = {
         v: 'SECTIONDONE',
-        sectionType: 'Reroll',
+        sectionType: faceObj.rerolls[0].uuid ? 'RerollPool' : 'Reroll',
         color: rerolledColor,
-        details: `&#013;&#010; face: ${faceObj.face}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'`
+        details: `${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; face: ${faceObj.face}`}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`}&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'`
     };
+    if (faceObj.rerolls[0].uuid) removeRerollPoolSections(result, faceObj)
     faceObj.rerolls.shift();
     return rerollSectionDone;
+}
+
+function removeRerollPoolSections(result, faceObj) {
+    logger(LOGLEVEL.NOTICE, `removeRerollPoolSections::REROLLPOOL SECTION DONE=${JSON.stringify(faceObj.rerolls[0])}`);
+    for (const faceTested of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+        if (faceTested === faceObj.face) continue;
+        if (result.rollSetup.face[faceTested].rerolls.some(i => (i.uuid === faceObj.rerolls[0].uuid))) {
+            logger(`removeRerollPoolSections::REROLLPOOL splicing i=${result.rollSetup.face[faceTested].rerolls.findIndex(r => r.uuid === faceObj.rerolls[0].uuid)}`);
+            result.rollSetup.face[faceTested].rerolls.splice(result.rollSetup.face[faceTested].rerolls.findIndex(r => r.uuid === faceObj.rerolls[0].uuid), 1);
+        }
+    }
 }
 
 function removeIteratorExplodeSection(faceObj, iterator, showDone = false) {
