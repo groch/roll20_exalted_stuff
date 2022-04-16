@@ -465,7 +465,7 @@ var CombatMaster = CombatMaster || (function() {
 
         scale_number =       revert ? scale_number * 70             : scale_number / 70;
         snapping_increment = revert ? 1                             : 1 / 70;
-        pageObj.set({showgrid: true, grid_opacity: 0, scale_number: scale_number, snapping_increment: snapping_increment});
+        pageObj.set({diagonaltype: "pythagorean", showgrid: true, grid_opacity: 0, scale_number: scale_number, snapping_increment: snapping_increment});
         sendGMStandardScriptMessage(`Script DONE ! ${revert ? 'REVERT =>' : ' =>'}<br/> scale_number=${scale_number},<br/> snapping_increment=${snapping_increment}`);
     },
 
@@ -1995,7 +1995,10 @@ var CombatMaster = CombatMaster || (function() {
             resetMarker(type);
             return;
         }
-        let markerWidth, markerHeight, scale_number = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0].get('scale_number');
+        let markerWidth, markerHeight,
+            pageObj = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0],
+            scale_number = Number(pageObj.get('scale_number')) * (Number(pageObj.get('snapping_increment')) === 1 ? 1 : 70);
+            logger(`changeMarker:: !! scale_number=${scale_number}`);
         switch (type) {
             case markerType.ROUND:
                 markerWidth  = 2;
