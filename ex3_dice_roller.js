@@ -118,7 +118,7 @@ const LogLvl = LOGLEVEL.DEBUG,
   },
   ParserConfig = [{
         categoryName: 'Rerolls',
-        pattern: /^(r|R)(l\d*)?(k|K)?(?:\s([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
+        pattern: /^(r|R)(l\d*)?(k|K)?\s([\d,]+)(?:\sTAGS=([(?:\w)+,]+))?$/,
         getCmdObj: (matchReturn) => ({
           cmd:      matchReturn[1],
           limit:    matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
@@ -127,21 +127,21 @@ const LogLvl = LOGLEVEL.DEBUG,
           tagList:  matchReturn[5] ? [...matchReturn[5].split(',').filter(i => i)] : []})
     },{
         categoryName: 'Reroll Pools',
-        pattern: /^(rP)(?:\s([\d,]+))(?:\sTAGS=([(?:\w)+,]+))?$/,
+        pattern: /^(rP)\s([\d,]+)(?:\sTAGS=([(?:\w)+,]+))?$/,
         getCmdObj: (matchReturn) => ({
           cmd:      matchReturn[1],
           limit:    Number(matchReturn[2]),
           tagList:  matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i)] : []})
     },{
         categoryName: 'Doubles & Explodes',
-        pattern: /^(d|e|E)(l\d*)?(?:\s([\d,]+))?$/,
+        pattern: /^(d|e|E)(l\d*)?\s([\d,]+)$/,
         getCmdObj: (matchReturn) => ({
             cmd:    matchReturn[1],
             limit:  matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
             faces:  [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
     },{
         categoryName: 'Successes',
-        pattern: /^(s)(l\d*)?(?:\s([\d,]+))?$/,
+        pattern: /^(s)(l\d*)?\s([\d,]+)$/,
         getCmdObj: (matchReturn) => ({
             cmd:    matchReturn[1],
             limit:  matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
@@ -159,7 +159,7 @@ const LogLvl = LOGLEVEL.DEBUG,
   pStyle = 'margin: 5px 0px; line-height: 1.5;',
   helpData = [
       {
-          arrayfirstCol:['-d NB,...','-d[lNB]','-D'],
+          arrayfirstCol:['-d NB,...','-d[lNB] NB,...','-D'],
           arraySecondCol:[
 "These commands cover doubling of all successful corresponding face(s).\
  <code style=\"white-space: nowrap\">-d</code>, followed by a comma-delimited list of values to double, automatically doubles 10s.\
@@ -175,7 +175,7 @@ const LogLvl = LOGLEVEL.DEBUG,
           ],
       },
       {
-        arrayfirstCol:['-s NB,...','-s[lNB]'],
+        arrayfirstCol:['-s NB,...','-s[lNB] NB,...'],
         arraySecondCol:[
 "These commands cover adding faces as success.\
 <code style=\"white-space: nowrap\">-s</code>, followed by a comma-delimited list of values to add as success, useless without arguments.",
@@ -185,7 +185,7 @@ const LogLvl = LOGLEVEL.DEBUG,
         ],
       },
       {
-        arrayfirstCol:['-r NB,...','-r[lNB] NB','-r[k|K] NB','-r NB TAGS=LABEL,...','-R NB,...','-R[lNB] NB','-R[k|K] NB','-R NB TAGS=LABEL,...'],
+        arrayfirstCol:['-r NB,...','-r[lNB] NB,...','-r[k|K] NB,...','-r NB TAGS=LABEL,...','-R NB,...','-R[lNB] NB,...','-R[k|K] NB,...','-R NB TAGS=LABEL,...'],
         arraySecondCol:[
 'These commands cover rerolls, followed by a comma-delimited list of values to reroll.\
  <code style="white-space: nowrap">-r</code> provides single rerolls—once the values have been rerolled once.\
@@ -257,7 +257,30 @@ const LogLvl = LOGLEVEL.DEBUG,
 '- HMU: CRAFT=> Holistic Miracle Understanding (version ameliorée de DIT), Exalte Core, p299'
         ],
       }
-  ];
+  ],
+  helpVersion = 1.0,
+  styles = {
+    menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
+    buttonStyle:     'display: inline-block; '
+                    +'border: 2px solid gold; '
+                    +'border-radius: 4px; '
+                    +'background: gray; '
+                    +'color: goldenrod; '
+                    +'font-weight: bold; '
+                    +'line-height: 19px; '
+                    +'text-align: center;',
+
+    menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
+    title:           'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+    titleText:       'color:white',
+    overflow:        'overflow: hidden;',
+    buttonRight:     'display:inline-block;float:right;vertical-aligh:middle',
+    buttonRight:     'display:inline-block;float:right;vertical-aligh:middle'
+  },
+  script_name = 'EX3Dice',
+  script_version = 1.0,
+  lastUpdate = 1651959915,
+  defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284095099/qWdQsEhfPVp5EAtpyB7lyg/max.png?1651956254';
 
 function setupRollStructure(result) {
     result.rollSetup = JSON.parse(JSON.stringify(DefaultRollSetup));
@@ -312,7 +335,7 @@ function logger(level, ...logged) {
 }
 
 logger('-- Loaded EX3Dice! --');
-sendChat('EX3Dice API', 'Thanks for using EX3Dice (Groch Version)! For instructions, type <code>!exr -help</code>');
+sendChat(script_name, 'Thanks for using EX3Dice (Groch Version)! For instructions, type <code>!exr -help</code>');
 
 /**
  * The core functionality of the script. Intercepts API messages meant for it, extracts the core of the command, and passes it to
@@ -320,73 +343,257 @@ sendChat('EX3Dice API', 'Thanks for using EX3Dice (Groch Version)! For instructi
  */
 on('chat:message', onChatMessage);
 function onChatMessage(msg) {
-	var apiWake = '!exr ';
+    logger(`onChatMessage::onChatMessage msg=${JSON.stringify(msg)}`);
+    replaceInlineRolls();
 
+	var apiWake = '!exr ';
 	if (msg.type == 'api' && msg.content.indexOf(apiWake) != -1) {
 		var slc = msg.content.slice(msg.content.indexOf(apiWake) + apiWake.length);
 		var rawCmd = slc.trim();
-		var patt = /^.*#/;
+        rawCmd = sliceSpecials(rawCmd);
 
+		var patt = /^.*#/;
 		if (patt.test(rawCmd)) {
 			var parseCmd = rawCmd.replace('#', 'd10>7');
 			var rollStr = '/roll ' + parseCmd;
 			performRoll(msg, rollStr);
 		} else if (rawCmd.indexOf('-help') != -1) {
             var outHTML = buildHelp();
-            sendChat('EX3Dice API', '/w ' + msg.who + ' ' + outHTML);
+            sendChat(script_name, '/w ' + msg.who + ' ' + outHTML);
 		} else {
             printError(msg, msg.who);
 		}
 	}
 }
 
-function setSelectedTurnOrder(selected, successes) {
-    logger(LOGLEVEL.INFO, 'setTurnOrder::INSIDE !!!');
-    if (!selected || !selected.length) {
-        logger(LOGLEVEL.WARNING, 'setTurnOrder::NO SELECTEDS ! RETURN');
-        return;
-    }
-    var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
-    logger('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
-
-    logger(LOGLEVEL.INFO, 'setTurnOrder::selected='+JSON.stringify(selected));
-    var selectedTokenId = selected.map(o => getObj('graphic',o._id)).filter(n => n).map(o => o.get('id'));
-    if (!Array.isArray(selectedTokenId)) selectedTokenId = [selectedTokenId];
-    if (selectedTokenId.length && Array.isArray(selectedTokenId[0])) selectedTokenId.map(o => o[0]);
-    logger('setTurnOrder::selectedTokenId='+JSON.stringify(selectedTokenId));
-
-    const idTurnOrder = turnOrder.map(o => o.id);
-    logger('setTurnOrder::idTurnOrder=' + JSON.stringify(idTurnOrder));
-    var idTurnToCreate = [];
-
-    for (const id of selectedTokenId) {
-        if (!idTurnOrder.includes(id)) {
-            logger('setTurnOrder::adding to include into turnorder id=' + id);
-            idTurnToCreate.push(id);
+function replaceInlineRolls() {
+    if (msg.inlinerolls && msg.inlinerolls.length !== 0) {
+        for (let i = 0; i < msg.inlinerolls.length; i++) {
+            logger(`onChatMessage::onChatMessage REPLACING $[[${i}]] by ${msg.inlinerolls[i].results.total}`);
+            msg.content = msg.content.replace(`$[[${i}]]`, msg.inlinerolls[i].results.total);
         }
+        logger(`onChatMessage::onChatMessage msg.content=${JSON.stringify(msg)}`);
     }
-
-    if (idTurnToCreate.length < idTurnOrder.length) {
-        for (var i = 0; i < turnOrder.length; i++) {
-            if (selectedTokenId.includes(turnOrder[i].id)) {
-                logger(`setTurnOrder::setting id=${turnOrder[i].id} to pr=${successes}`);
-                turnOrder[i].pr = successes;
-            }
-        }
-    }
-
-    var pageId = getObj('graphic', selectedTokenId[0]).get('pageid');
-    if (idTurnToCreate.length > 0) {
-        for (const id of idTurnToCreate) {
-            logger(LOGLEVEL.INFO, `setTurnOrder::pushing to turnorder id=${id} pr=${successes}`);
-            turnOrder.push({id:id,pr:successes,custom:'',_pageid:pageId});
-        }
-    }
-
-    logger(LOGLEVEL.INFO, `setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
-    Campaign().set('turnorder', JSON.stringify(turnOrder));
 }
 
+function sliceSpecials(rawCmd) {
+    rawCmd = checkAndSliceAndDoAtk(rawCmd, '==atk==', () => {
+        sendChat(script_name, `/w gm <a style="${styles.buttonStyle}" href="!cmaster --onslaught"> &gt; Set Onslaught to Selected &lt; </a>`);
+    });
+    rawCmd = checkAndSliceAndDoCost(rawCmd, '=COST:', (rawCmd, costSlice) => {
+        logger(`onChatMessage:: costSlice=${costSlice} rawCmd='${rawCmd}'`);
+        setCosts(costSlice);
+    });
+    return rawCmd;
+}
+
+function checkAndSlice(rawCmd, sliceString, callback) {
+    var index = rawCmd.indexOf(sliceString);
+    if (index !== -1) {
+        let slice = rawCmd.slice(costIndex + sliceString.length);
+        rawCmd = rawCmd.slice(0, index - 1);
+        callback(rawCmd, slice);
+    }
+    return rawCmd;
+}
+
+/**
+ * COST SECTION
+ */
+
+function setCosts(costStr) {
+    const parsedCost = costStr.split(':'), playerId = parsedCost[0], characterObj = getObj('character', playerId),
+        willObj = findObjs({_characterid:playerId, _type: 'attribute', name: 'willpower'})[0];
+    for (let i = 1; i < parsedCost.length; i++) {
+        const data = parsedCost[i].split(';'), val = Number(data[1]);
+        if (!val) {
+            logger(`setCosts:: val is empty or =0 => skip`);
+            continue;
+        }
+        if (data[0] === 'will') {
+            let actualVal = Number(willObj.get('current'));
+            if (actualVal - val < 0)
+                sendChat(script_name, `/w gm WILLPOWER ERROR WHEN ${characterObj.get('name')} CASTED: ACTUAL=${actualVal} COST=${val} !!!`);
+            willObj.set('current', actualVal - val);
+        } else if (data[0].indexOf('peri') !== -1) {
+            logger(`setCosts:: calling removeMotesToCharacter, data[0][5]='${data[0][5]}'`);
+            removeMotesToCharacter(characterObj, val, data[0][5] === '1');
+        } else if (data[0] === 'init') {
+            reduceInitForId(playerId, val);
+        }
+    }
+}
+
+function reduceInitForId(tokenId, toRemove) {
+    logger(LOGLEVEL.INFO, `reduceInitForId::INSIDE !!! tokenId=${tokenId}, toRemove=${toRemove}`);
+
+    var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
+    logger('reduceInitForId::turnOrder='+JSON.stringify(turnOrder));
+
+    const idTurnOrder = turnOrder.map(o => o.id);
+    logger('reduceInitForId::idTurnOrder=' + JSON.stringify(idTurnOrder));
+
+    for (var i = 0; i < turnOrder.length; i++) {
+        const tokenObj = getObj('graphic', turnOrder[i].id);
+        if (tokenObj.get('represents') === tokenId) {
+            logger(`reduceInitForId::setting id=${turnOrder[i].id} to pr=${Number(turnOrder[i].pr) - toRemove}`);
+            turnOrder[i].pr = Number(turnOrder[i].pr) - toRemove;
+            sendStandardScriptMessage(`Removing ${toRemove} Initiative to ${tokenObj.get('name')}`);
+
+            logger(LOGLEVEL.INFO, `reduceInitForId::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
+            Campaign().set('turnorder', JSON.stringify(turnOrder));
+            return;
+        }
+    }
+
+    const charObj = getObj('character', tokenId);
+    sendGMStandardScriptMessage(`NO INIT FOR CHAR=${charObj.get('name')}, CREATE TURN WITH INIT=-${toRemove}`);
+    sendChat(script_name, `<a style="${styles.buttonStyle}" href="\`/gr -${toRemove} &amp;{tracker}"> &gt; Set Selected to -${toRemove} Init &lt; </a>`);
+
+    /* TEST IN PROGRESS => SEND THE LINK TO GM ONLY
+    let title         = ' &gt; Set Init to Selected Token &lt; ';
+    const testCommand = `\`\`/gr -${toRemove} &amp;{tracker}`;
+    let doneButton    = makeImageButton(testCommand,'S','SET INIT','transparent',18,'white');
+    // let delayButton   = makeImageButton('!cmaster --turn,delay',delayImage,'Delay your Turn','transparent',18, 'white');
+
+    title   += '<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
+    // title   += '<div style="'+styles.buttonRight+'">'+delayButton+'</div>';
+    makeAndSendMenu('',title, 'gm', false);*/
+}
+
+function removeMotesToCharacter(characterObj, qty, periFirst = true) {
+    logger(LOGLEVEL.INFO, `removeMotesToCharacter::removeMotesToCharacter qty=${qty}, periFirst=${periFirst}`);
+    let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'}), controlledBy = characterObj.get('controlledby');
+    controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+
+    logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
+    attrList = sortMoteAttr(attrList);
+
+    logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
+    var removed = 0;
+    for (const attr of attrList) {
+        if (!attr) continue;
+        let current = Number(attr.get('current')), max = Number(attr.get('max'));
+        if (isNaN(current))  current = 0;
+        if (isNaN(max))      max = updateMaxAttr(characterId, attr);
+        if (current === 0) continue;
+        logger(`removeMotesToCharacter::qty=${qty}, added=${removed}, current=${current}, max=${max}`);
+        let toRemove = qty - removed < current ? qty - removed : current;
+        removed += toRemove;
+        logger(`removeMotesToCharacter::removing ${toRemove} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
+        let total = (current - toRemove);
+        if (!isNaN(total))
+            sendMoteWhispers(characterObj, characterId, attr, current, toRemove);
+        if (removed >= qty) break;
+    }
+    if (removed < qty)
+        sendGMStandardScriptMessage(`MOTE ERROR WHEN ${characterObj.get('name')} CASTED: qty=${qty} removed=${removed} !!! NO MORE MOTE TO SPEND`);
+}
+
+function sortMoteAttr(attrList) {
+    return attrList
+    .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
+    .sort((a, b) => {
+        if (a.get('name') === 'personal-essence' && b.get('name') !== 'personal-essence') return periFirst ? 1 : -1;
+        if (a.get('name') !== 'personal-essence' && b.get('name') === 'personal-essence') return periFirst ? -1 : 1;
+        return a.get('name').localeCompare(b.get('name'));
+    });
+}
+
+function updateMaxAttr(characterId, attr) {
+    let test = (attr.get('name') === 'personal-essence' ? 'personal-equation' : 'peripheral-equation'),
+        equationStr         = getAttrByName(characterId, test),
+        committedesstotal   = Number(getAttrByName(characterId, 'committedesstotal')),
+        essence             = Number(getAttrByName(characterId, 'essence'));
+    logger(`updateMaxAttr::updateMaxAttr essence=${essence}`);
+    equationStr = equationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
+    equationStr = equationStr.replace('@{committedesstotal}', isNaN(committedesstotal) ? 0 : committedesstotal);
+    let pattern = /[^0-9\(\)\+\-\*\/\.]/g;
+    equationStr = equationStr.replace(pattern, '');
+    let calculatedMax = eval(equationStr);
+    logger(`updateMaxAttr::equationStr=${equationStr}, essence=${essence}, calculatedMax=${calculatedMax}`);
+    if (isNaN(calculatedMax)) {
+        logger('updateMaxAttr::ERROR IN FORMULA => setting to 0');
+        calculatedMax = 0;
+    }
+    attr.set('max', calculatedMax);
+    return calculatedMax;
+}
+
+function sendMoteWhispers(characterObj, characterId, attr, current, toRemove) {
+    const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing ${toRemove} motes to ${attr.get('name')}`;
+    attr.set('current', current - toRemove);
+    
+    logger(`removeMotesToCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
+    for (const playerId of controlledBy) {
+        const playerObj = getObj('player', playerId);
+        if (!playerObj) {
+            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${playerId}`);
+            continue;
+        }
+        sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString);
+    }
+    
+    sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
+        const playerObj = getObj('player', i);
+        if (playerObj) return playerObj.get('_displayname');
+        logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
+        return false;
+    }).filter(i => i).join(', ')}])`:''}`);
+}
+
+/**
+ * GENERIC MAKE FUNCTION
+ */
+
+function makeAndSendMenu(contents, title = undefined, whisper = undefined, noarchive = true) {
+    whisper = (whisper && whisper !== '') ? '/w ' + whisper + ' ' : '';
+    title = makeTitle(title);
+    sendChat(script_name, whisper + '<div style="'+styles.menu+styles.overflow+'">'+title+contents+'</div>', null, {noarchive:noarchive});
+}
+
+function makeTitle(title) {
+    return `<div style="${styles.title}"><span style=${styles.titleText}>${title}</span></div>`;
+}
+
+function makeImageButton(command, image, toolTip, backgroundColor,size,color) {
+    if (!color) color = 'black';
+    return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>';
+}
+
+function makejournalLink(journalType, id, outerText) {
+    return `<b><a href="http://journal.roll20.net/${journalType}/${id}">${outerText}</a></b>`;
+}
+
+function makeCharacterLink(characterObj, characterId = characterObj.get('id')) {
+    return makejournalLink('character', characterId, characterObj.get('name'));
+}
+
+function makeHandoutLink(handoutId, handoutLinkText) {
+    return makejournalLink('handout', handoutId, handoutLinkText);
+}
+
+function cleanImgSrc(imgsrc) {
+    let parts = imgsrc.match(/(.*\/images\/.*)(thumb|med|original|max)([^?]*)(\?[^?]+)?$/);
+    if (parts) return parts[1]+'thumb'+parts[3]+(parts[4]?parts[4]:`?${Math.round(Math.random()*9999999)}`);
+    return;
+}
+
+/**
+ * GENERIC SEND WHISPER FUNCTIONS
+ */
+
+function sendStandardScriptMessage(innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) {
+    sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+}
+
+function sendWhisperStandardScriptMessage(whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) {
+    sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+}
+
+function sendGMStandardScriptMessage(innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) {
+    sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive);
+}
 
 /**
  * The rolling function. Handles making the roll and passing the results to the anonymous callback function. Extracts the commands from
@@ -441,6 +648,59 @@ function performRoll(msg, cmd) {
             printError(ops[0], msg.who);
         }
 	});
+}
+
+/**
+ * Set Initiative value of selected tokens to result of roll
+ * 
+ * @param Array     selected    Array of the seleted tokens
+ * @param integer   successes   Value to set
+ */
+function setSelectedTurnOrder(selected, successes) {
+    logger(LOGLEVEL.INFO, 'setTurnOrder::INSIDE !!!');
+    if (!selected || !selected.length) {
+        logger(LOGLEVEL.WARNING, 'setTurnOrder::NO SELECTEDS ! RETURN');
+        return;
+    }
+    var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
+    logger('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
+
+    logger(LOGLEVEL.INFO, 'setTurnOrder::selected='+JSON.stringify(selected));
+    var selectedTokenId = selected.map(o => getObj('graphic',o._id)).filter(n => n).map(o => o.get('id'));
+    if (!Array.isArray(selectedTokenId)) selectedTokenId = [selectedTokenId];
+    if (selectedTokenId.length && Array.isArray(selectedTokenId[0])) selectedTokenId.map(o => o[0]);
+    logger('setTurnOrder::selectedTokenId='+JSON.stringify(selectedTokenId));
+
+    const idTurnOrder = turnOrder.map(o => o.id);
+    logger('setTurnOrder::idTurnOrder=' + JSON.stringify(idTurnOrder));
+    var idTurnToCreate = [];
+
+    for (const id of selectedTokenId) {
+        if (!idTurnOrder.includes(id)) {
+            logger('setTurnOrder::adding to include into turnorder id=' + id);
+            idTurnToCreate.push(id);
+        }
+    }
+
+    if (idTurnToCreate.length < idTurnOrder.length) {
+        for (var i = 0; i < turnOrder.length; i++) {
+            if (selectedTokenId.includes(turnOrder[i].id)) {
+                logger(`setTurnOrder::setting id=${turnOrder[i].id} to pr=${successes}`);
+                turnOrder[i].pr = successes;
+            }
+        }
+    }
+
+    var pageId = getObj('graphic', selectedTokenId[0]).get('pageid');
+    if (idTurnToCreate.length > 0) {
+        for (const id of idTurnToCreate) {
+            logger(LOGLEVEL.INFO, `setTurnOrder::pushing to turnorder id=${id} pr=${successes}`);
+            turnOrder.push({id:id,pr:successes,custom:'',_pageid:pageId});
+        }
+    }
+
+    logger(LOGLEVEL.INFO, `setTurnOrder::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
+    Campaign().set('turnorder', JSON.stringify(turnOrder));
 }
 
 /**
@@ -1298,33 +1558,75 @@ function buildTableRow(arrayfirstCol, arraySecondCol) {
  *															I stopped touching it.
  */
 function buildHelp() {
-    var outhtml = '';
-    outhtml +=  `<div style="${divStyle}">`;
-    outhtml +=      `<p style="${pStyle}"><strong>Exalted 3rd Edition Dice Roller Help</strong></p>`;
-    outhtml +=      `<p style="${pStyle}">The basic syntax of most rolls you will make is:</p>`;
-    outhtml +=      `<p style="${pStyle}"><code>!exr [no. of dice]#</code></p>`;
-    outhtml +=      `<p style="${pStyle}">The <code>#</code> marks the end of the dice statement, and this syntax provides the most common type of roll in `;
-    outhtml +=          'Exalted: that many dice, with a target number of 7+, and 10s count double. In the majority of cases, this is all you need.</p>';
-    outhtml +=      `<p style="${pStyle}">Charms, however, can throw a wrench in this, so I designed the script to be able to compensate. With the additional `;
-    outhtml +=          'commands and arguments, you can customize the way the roller treats your results and counts your successes, in order to match that behavior.</p>';
-    outhtml +=      `<p style="${pStyle}">The full syntax of rolls is as follows:</p>`;
-    outhtml +=      `<p style="${pStyle}"><code>!exr [no. of dice]# -[cmd1] [arg1],[arg2]... -[cmd2] [arg3],[arg4]...</code></p>`;
-    outhtml +=      `<p style="${pStyle}"><em>You can also type <code>!exr -help</code> to pull up this menu again, if necessary.</em></p>`;
-    outhtml +=      '<br />';
-    outhtml +=      `<p style="${pStyle}">The following table explains the various commands.</p>`;
-    outhtml +=      `<table style="${tableStyle}">`;
-    outhtml +=         `<tr><th style="${tdStyle} ${thStyle}">Command</th><th style="${tdStyle} ${thStyle}">Explanation</th></tr>`;
-    outhtml +=         '<tbody>';
-
-    for (const helpSection of helpData)
-        outhtml += buildTableRow(helpSection.arrayfirstCol, helpSection.arraySecondCol);
-
-    outhtml +=     '</tbody>';
-    outhtml +=     '</table>';
-    outhtml += '</div>';
-    logger(`buildHelp::buildHelp outhtml=${outhtml}`);
-    return outhtml;
+    checkInstall();
+    return makeHandoutLink(state[script_name].handout_id, `${script_name} Help Handout`);
 }
+
+function assureHelpHandout(create = false) {
+    // find handout
+    let props = {type:'handout', name:`Help: ${script_name}`, inplayerjournals: 'all'};
+    let hh = findObjs(props)[0];
+    if (!hh) {
+        hh = createObj('handout',Object.assign(props, {avatar: defaultTokenImage}));
+        create = true;
+    }
+    if (create || helpVersion !== state[script_name].lastHelpVersion){
+        var outhtml = '';
+        outhtml +=  `<div style="${divStyle}">`;
+        outhtml +=      `<p style="${pStyle}"><strong>Exalted 3rd Edition Dice Roller Help</strong></p>`;
+        outhtml +=      `<p style="${pStyle}">The basic syntax of most rolls you will make is:</p>`;
+        outhtml +=      `<p style="${pStyle}"><code>!exr [no. of dice]#</code></p>`;
+        outhtml +=      `<p style="${pStyle}">The <code>#</code> marks the end of the dice statement, and this syntax provides the most common type of roll in `;
+        outhtml +=          'Exalted: that many dice, with a target number of 7+, and 10s count double. In the majority of cases, this is all you need.</p>';
+        outhtml +=      `<p style="${pStyle}">Charms, however, can throw a wrench in this, so I designed the script to be able to compensate. With the additional `;
+        outhtml +=          'commands and arguments, you can customize the way the roller treats your results and counts your successes, in order to match that behavior.</p>';
+        outhtml +=      `<p style="${pStyle}">The full syntax of rolls is as follows:</p>`;
+        outhtml +=      `<p style="${pStyle}"><code>!exr [no. of dice]# -[cmd1] [arg1],[arg2]... -[cmd2] [arg3],[arg4]...</code></p>`;
+        outhtml +=      `<p style="${pStyle}"><em>You can also type <code>!exr -help</code> to pull up this menu again, if necessary.</em></p>`;
+        outhtml +=      '<br />';
+        outhtml +=      `<p style="${pStyle}">The following table explains the various commands.</p>`;
+        outhtml +=      `<table style="${tableStyle}">`;
+        outhtml +=         `<tr><th style="${tdStyle} ${thStyle}">Command</th><th style="${tdStyle} ${thStyle}">Explanation</th></tr>`;
+        outhtml +=         '<tbody>';
+
+        for (const helpSection of helpData)
+            outhtml += buildTableRow(helpSection.arrayfirstCol, helpSection.arraySecondCol);
+
+        outhtml +=     '</tbody>';
+        outhtml +=     '</table>';
+        outhtml += '</div>';
+        logger(`buildHelp::buildHelp outhtml=${outhtml}`);
+
+        hh.set({notes: outhtml});
+        state[script_name].lastHelpVersion = helpVersion;
+        log('  > Updating Help Handout to v'+script_version+' <');
+    }
+    state[script_name].handout_id = hh.id;
+  };
+
+function checkInstall() {
+    logger(`-=> ${script_name} v${script_version} <=-  [${new Date(lastUpdate*1000)}]`);
+
+    if( ! state.hasOwnProperty(script_name) || state[script_name].version !== script_version) {
+        logger(`  > Updating Schema to v${script_version} <`);
+        switch(state[script_name] && state[script_name].version) {
+
+            case 1.0:
+                /* break; // intentional dropthrough */ /* falls through */
+
+            case 'UpdateSchemaVersion':
+                state[script_name].version = script_version;
+                break;
+
+            default:
+                state[script_name] = {
+                    version: script_version
+                };
+                break;
+      }
+    }
+    assureHelpHandout();
+  };
 
 /**
  * This PMs an error message to the user in the event that it doesn't understand something.
@@ -1338,8 +1640,8 @@ function printError(result, sender) {
     logger(LOGLEVEL.ERROR, 'Error!');
 
     if (result.type == 'error' ) {
-        sendChat('EX3Dice API', '/w ' + sender + ' I tried, but Roll20 had a problem with this. They said: ' + result.content);
+        sendChat(script_name, '/w ' + sender + ' I tried, but Roll20 had a problem with this. They said: ' + result.content);
     } else {
-        sendChat('EX3Dice API', '/w ' + sender + ' Sorry, I didn\'t understand your input. Please try again.');
+        sendChat(script_name, '/w ' + sender + ' Sorry, I didn\'t understand your input. Please try again.');
     }
 }
