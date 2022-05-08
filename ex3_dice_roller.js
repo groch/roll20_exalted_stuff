@@ -84,6 +84,7 @@ const LogLvl = LOGLEVEL.DEBUG,
     verbosity: 0,
     colored: false,
     onlyResult: false,
+    noBotch: false,
     revertTitleOrder: false,
     face: [null],
     rerollPool: [],
@@ -148,7 +149,7 @@ const LogLvl = LOGLEVEL.DEBUG,
             faces:  [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
     },{
         categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle',
-        pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle)$/,
+        pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|NB|NoBotch)$/,
         getCmdObj: (matchReturn) => ({
             cmd:    matchReturn[1]})
     }],
@@ -241,14 +242,6 @@ const LogLvl = LOGLEVEL.DEBUG,
         ],
       },
       {
-        arrayfirstCol:['-g', '-gm'],
-        arraySecondCol:["<b>This commands is used to hide roll to other players.</b>", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -el1 8,9 -gm</code>."],
-      },
-      {
-        arrayfirstCol:['-target', '-turn'],
-        arraySecondCol:["<b>This command is used to set result as turn tracker value for selected token.</b> Do nothing more than a roll if no token is selected"],
-      },
-      {
         arrayfirstCol:['-v', '-V', '-c'],
         arraySecondCol:[
 '<b>These commands are used to increase visual information included in the roll.</b>',
@@ -259,12 +252,24 @@ const LogLvl = LOGLEVEL.DEBUG,
         ],
       },
       {
+        arrayfirstCol:['-g', '-gm'],
+        arraySecondCol:["<b>This commands is used to hide roll to other players.</b>", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -el1 8,9 -gm</code>."],
+      },
+      {
+        arrayfirstCol:['-target', '-turn'],
+        arraySecondCol:["<b>This command is used to set result as turn tracker value for selected token.</b> Do nothing more than a roll if no token is selected"],
+      },
+      {
         arrayfirstCol:['-rev', '-reverseTitle'],
         arraySecondCol:["<b>This command is used to reverse order of title (hover text on each dice) informations.</b>"],
       },
       {
         arrayfirstCol:['-o', '-onlyResult'],
         arraySecondCol:["<b>This command is used to hide dices and only show result.</b>"],
+      },
+      {
+        arrayfirstCol:['-NB', '-NoBotch'],
+        arraySecondCol:["<b>This command is used to hide the botch message.</b>"],
       },
       {
         arrayfirstCol:[...Object.keys(ConditionalList).map(i => `-${i}`)],
@@ -277,7 +282,7 @@ const LogLvl = LOGLEVEL.DEBUG,
         ],
       }
   ],
-  helpVersion = 1.03,
+  helpVersion = 1.04,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
@@ -847,6 +852,10 @@ function processCmds(cmds, result) {
             case 'onlyResult':
                 result.rollSetup.onlyResult = true;
                 break;
+            case 'NB':
+            case 'NoBotch':
+                result.rollSetup.noBotch = true;
+                break;
             case 'rev':
             case 'reverseTitle':
                 result.rollSetup.revertTitleOrder = true;
@@ -1077,7 +1086,7 @@ function handleTurnConditionalHookHMU(result, turn, nextRollsToProcess, condIter
     if (turn !== 2) return;
     var cond = result.rollSetup.conditionalActivated[condIterator];
     if (cond.firstTurnSuccesses >= 3) {
-        result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-HMU', conditionalColor, `&#013;&#010; HMU generated 3 or more success (${cond.firstTurnSuccesses}) => Adding 3 dices`));
+        result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-HMU', conditionalColor, `&#013;&#010; DIT generated 3 or more success (${cond.firstTurnSuccesses}) => Adding 3 dices`));
         for (var i = 0; i < 3; i++) {
             var newDie = randomInteger(10);
             nextRollsToProcess.push({
@@ -1504,7 +1513,7 @@ function buildHTML(result, origRoll, player) {
     }
     html +=     "<strong> = </strong>";
     html +=     "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
-    if (!succ && result.rollSetup.hasAtLeastOneFaceOne)
+    if (!result.rollSetup.noBotch && !succ && result.rollSetup.hasAtLeastOneFaceOne)
         html += "<p style='"+maxRecursionStyle+"'>YOU'VE BEEN BOTCHED</p>";
     html += "</div></div>";
     return html;
