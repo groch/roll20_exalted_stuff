@@ -27,13 +27,14 @@
     display: flex;
     -webkit-flex-direction: row;
     flex-direction: column;
+    padding: 0 10px 0 0 !important;
 }
 
 .charsheet .sheet-body {
     display: block;
     padding: 5px 0 5px 0;
     overflow-x: visible;
-    overflow-y: scroll;
+    overflow-y: visible;
     position: relative;
     flex: 1 1 auto;
 }
@@ -95,70 +96,82 @@ tier 2: couleurs
 
 .charsheet .sheet-defenses input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-defenses input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-gear input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #bc69c4;
     font-weight: bold;
 }
 
 .charsheet .sheet-defenses input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .apply-onslaught-check[value="0"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .apply-onslaught-check[value="0"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .apply-onslaught-check[value="0"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
 }
 
-.charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: yellow;
     font-weight: bold;
 }
 
-.charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: orange;
     font-weight: bold;
 }
 
-.charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: orangered;
     font-weight: bold;
 }
 
-.charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: red;
     font-weight: bold;
 }
 
+.charsheet input[type=number].onslaught-input,
 .charsheet input[type=number][readonly].onslaught-input {
     background-color: #ea00ff;
     font-weight: bold;
 }
 
+.charsheet .apply-onslaught-check[value="0"] ~ input[type=number].onslaught-input,
 .charsheet .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-input {
     background-color: rgba(128, 128, 128, 0.25);
 }
 
+.charsheet .onslaught-check[value="0"] ~ input[type=number].onslaught-input,
 .charsheet .onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
 }
 
+.charsheet input[type=number][disabled].woundpenalty,
 .charsheet input[type=number][disabled].woundpenalty-input {
-    background-color: red;
+    background-color: rgb(255, 128, 128);
     font-weight: bold;
 }
 
+.charsheet .wound-penalty-check[value="0"] ~ .combat-init input[type=number][disabled].woundpenalty,
+.charsheet .wound-penalty-check[value="0"] ~ .combat-attacks input[type=number][disabled].woundpenalty,
 .charsheet .wound-penalty-check[value="0"] ~ input[type=number][disabled].woundpenalty-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
@@ -184,18 +197,28 @@ tier 2: couleurs
     width: 6em;
 }
 
+.charsheet .sheet-qc-defenses > .sheet-trait,
+.charsheet .sheet-qc-pools > .sheet-trait {
+    height: 25px;
+}
+
 .charsheet .sheet-tab-intimacies-sheet .sheet-qc-soc-influence-type-display {
     font-size: small;
     width: 5.5em;
 }
 
 
-
+.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-spell-sheet .gm-whisper,
 .charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,
 .charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-charm-sheet .gm-whisper {
     display: none;
 }
 
+.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-spell-sheet .gm-whisper,
+.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
 .charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-charm-sheet .default-whisper,
 .charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .gm-whisper,
 .charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.default-whisper,
@@ -264,9 +287,23 @@ tier 2: couleurs
 }
 
 .charsheet .sheet-flexbox-inline {
-    display: -webkit-inline-flex;
-    display:         inline-flex;
+    /* display: -webkit-inline-flex; */
+    /* display:         inline-flex; */
+    display: grid;
     width: 100%;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+@media only screen and (max-width: 847px) {
+    .charsheet .sheet-flexbox-inline {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (max-width: 200px) {
+    .charsheet .sheet-flexbox-inline {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
 
 .charsheet .sheet-flexbox-inline > label > span {
@@ -288,10 +325,67 @@ tier 2: couleurs
 }
  
 .charsheet .sheet-3colrow .sheet-2col:last-child { margin-right: 0; }
+
+.charsheet .sheet-3colrow .sheet-2col:last-child,
+.ui-dialog .charsheet .sheet-col {
+    display: grid;
+    align-items: start;
+    grid-template-columns: repeat(1, 1fr );
+}
+
+.ui-dialog .charsheet .sheet-2colrow,
+.ui-dialog .charsheet .sheet-3colrow {
+    display: grid;
+    align-items: start;
+    gap: 0 1em;
+}
+
+.ui-dialog .charsheet .sheet-2colrow {
+    grid-template-columns: repeat(2, 1fr );
+}
+
+.ui-dialog .charsheet .sheet-3colrow {
+    grid-template-columns: repeat(3, 1fr );
+}
+
+.charsheet .sheet-3colrow .sheet-2col:last-child > div,
+.ui-dialog .charsheet .sheet-2colrow > .sheet-col,
+.ui-dialog .charsheet .sheet-3colrow > .sheet-col {
+    display: grid;
+    width: 100%;
+    margin-right: auto;
+}
  
-.charsheet .sheet-3colrow .sheet-2col {
-    width: calc(66% - 5px);
-    margin-right: 30px;
+.ui-dialog .charsheet .sheet-3colrow.sheet-centerblock {
+    grid-template-areas: "a b b";
+}
+
+.ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities {
+    grid-area: a;
+}
+
+.ui-dialog .charsheet .sheet-3colrow .sheet-2col {
+    grid-area: b;
+}
+
+.ui-dialog .charsheet .sheet-tab-intimacies-sheet .sheet-3colrow {
+    grid-template-columns: min-content calc(100% - 1em);
+}
+
+.charsheet .sheet-tab-settings-sheet .sheet-2colrow.sheet-checklist,
+.charsheet .sheet-tab-settings-sheet .sheet-3colrow.sheet-checklist {
+    white-space: nowrap;
+    width: fit-content;
+    margin: auto;
+}
+
+
+.charsheet .sheet-tab-settings-sheet .sheet-2colrow.sheet-checklist {
+    grid-template-columns: min-content min-content;
+}
+
+.charsheet .sheet-tab-settings-sheet .sheet-3colrow.sheet-checklist {
+    grid-template-columns: min-content min-content min-content;
 }
 
 .charsheet .sheet-3colrow .sheet-col.stat-col {
@@ -307,12 +401,6 @@ tier 2: couleurs
 
 .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: #faa4a4;
-}
-
-.charsheet .sheet-2col .sheet-2colrow .sheet-col {
-    width: calc(50% - 11px);
-    margin-right: 18px;
-    position: relative;
 }
 
 .charsheet [title] { cursor: help; }
@@ -408,7 +496,13 @@ tier 2: couleurs
 
 .charsheet .sheet-trait {
     position: relative;
-    margin-bottom: 3px;
+    display: grid;
+    grid-template-columns: auto 5.8em;
+    align-items: start;
+}
+
+.charsheet .sheet-trait > div.sheet-dots {
+    justify-self: end;
 }
 
 .charsheet .sheet-trait > span:last-child,
@@ -416,6 +510,20 @@ tier 2: couleurs
     position: absolute;
     right: 0;
     bottom: 0;
+}
+
+.ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
+    grid-template-rows: repeat(3, 1fr);
+    grid-auto-flow: column;
+}
+
+.characterviewer label {
+    margin-bottom: 5px;
+}
+
+.charsheet .sheet-trait > label {
+    width: fit-content;
+    white-space: nowrap;
 }
 
 .charsheet .sheet-6rows {
@@ -437,7 +545,7 @@ tier 2: couleurs
 }
 
 .charsheet [data-groupname=repeating_qcattacks] .sheet-trait > input[type="text"] {
-    width: calc(100% - 3em - 1.75em);
+    width: 100%;
 }
 
 .charsheet .sheet-trait input[type="number"],
@@ -684,6 +792,8 @@ tier 2: couleurs
 .charsheet [data-groupname=repeating_merits] textarea.merit-textarea {
     width: 97%;
     height: 3em;
+    margin-bottom: -5px;
+    resize: vertical;
 }
 
 .charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-dots {
@@ -739,13 +849,17 @@ tier 2: couleurs
     display: none;
 }
 
-.charsheet [data-groupname=repeating_weapon] input[type=text] { width: 100%; }
-.charsheet [data-groupname=repeating_weapon] input[type=number] { width: 26px; }
+.charsheet .sheet-armor input[type=text],
+.charsheet .sheet-armor input[type=number],
+.charsheet [data-groupname=repeating_weapon] input[type=text],
+.charsheet [data-groupname=repeating_weapon] input[type=number] { width: 100%; }
 
 .charsheet [data-groupname=repeating_intimacies] input[type=text],
 .charsheet [data-groupname=repeating_charms] input,
 .charsheet [data-groupname=repeating_spells] input[type=text],
-.charsheet [data-groupname=repeating_spells] input[type=number] {
+.charsheet [data-groupname=repeating_spells] input[type=number],
+.charsheet .sheet-tab-content div.repcontainer .sheet-table.sheet-body > div:nth-child(2) input[type=text],
+.charsheet .sheet-tab-content div.repcontainer .sheet-table.sheet-body > div:nth-child(2) input[type=number] {
     width: 80px;
     margin-top: 3px;
 }
@@ -817,9 +931,8 @@ tier 2: couleurs
 
 .charsheet div.sheet-dots {
     display: inline-block;
-    position: absolute;
+    position: relative;
     padding: 0;
-    right: 15px;
 }
 
 .charsheet div.sheet-dots-full,
@@ -943,11 +1056,50 @@ Shinier Gold
     margin: 0;
 }
 
-.charsheet .sheet-health-track { text-align: center; }
+.charsheet .sheet-health-track {
+    text-align: center;
+    font-size: 0;
+    justify-content: center;
+}
 
-.charsheet .sheet-health-level {
+.charsheet .flex > .sheet-health-track {
+    flex-shrink: 1;
+}
+
+.charsheet .sheet-health-track .sheet-health-level {
     display: inline-block;
     width: 23.6px;
+}
+
+.charsheet [data-groupname=repeating_health] {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+.charsheet [data-groupname=repeating_health] .repitem {
+    display: inline-block;
+    font-size: 13px;
+    padding-right: 0.1em;
+}
+
+.charsheet [data-groupname=repeating_health] .repitem .itemcontrol .repcontrol_move {
+    display: none;
+}
+
+.charsheet [data-groupname=repeating_health].repcontrol {
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+.charsheet .repitem .itemcontrol,
+.charsheet .repitem .itemcontrol .pictos {
+    font-family: Pictos;
+}
+
+.charsheet [data-groupname=repeating_health] .repitem .itemcontrol button {
+    padding: 0 0;
+    width: calc(100% - 4px);
+    margin-top: calc(50% - 2.5em);
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0)
@@ -995,13 +1147,13 @@ and (min-resolution:.001dpcm) {
 
 .charsheet input.show-anima[value="1"] ~ div.anima-box,
 .charsheet input.show-sup[value="1"] ~ div.supernal-box,
-.charsheet input.show-limit[value="1"] ~ div.sheet-col div.limit-box {
+.charsheet input.show-limit[value="1"] ~ div.sheet-2colrow div.sheet-col div.limit-box {
 	visibility: visible;
 }
 
 .charsheet input.show-anima[value="0"] ~ div.anima-box,
 .charsheet input.show-sup[value="0"] ~ div.supernal-box,
-.charsheet input.show-limit[value="0"] ~ div.sheet-col div.limit-box {
+.charsheet input.show-limit[value="0"] ~ div.sheet-2colrow div.sheet-col div.limit-box {
     display: none;
 }
 
@@ -1011,6 +1163,7 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet:checked					        ~ div.sheet-tab-charm-sheet,
 .charsheet input.sheet-tab-settings-sheet:checked				        ~ div.sheet-tab-settings-sheet,
 .charsheet input.sheet-tab-intimacies-sheet:checked				        ~ div.sheet-tab-intimacies-sheet,
+.charsheet input.sheet-tab-combat-sheet:checked				            ~ div.sheet-tab-combat-sheet,
 .charsheet input.sheet-tab-charm-sheet-archery:checked			        ~ div.sheet-tab-charm-sheet-archery,
 .charsheet input.sheet-tab-charm-sheet-athletics:checked		        ~ div.sheet-tab-charm-sheet-athletics,
 .charsheet input.sheet-tab-charm-sheet-awareness:checked		        ~ div.sheet-tab-charm-sheet-awareness,
@@ -1094,7 +1247,8 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet-ma-whiteveil:checked				~ div.sheet-tab-charm-sheet-ma-whiteveil,
 .charsheet input.sheet-tab-charm-sheet-ma-other:checked				    ~ div.sheet-tab-charm-sheet-ma-other,
 .charsheet input.sheet-tab-charm-sheet-evocation:checked		        ~ div.sheet-tab-charm-sheet-evocation,
-.charsheet input.sheet-tab-charm-sheet-old:checked				        ~ div.sheet-tab-charm-sheet-old
+.charsheet input.sheet-tab-charm-sheet-old:checked				        ~ div.sheet-tab-charm-sheet-old,
+.charsheet input.sheet-tab-charm-sheet-universal:checked		        ~ div.sheet-tab-charm-sheet-universal
 {                                 
    display: block;
 }
@@ -1182,7 +1336,8 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-charm-ma-whiteveil[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whiteveil,
 .charsheet .sheet-charm-ma-other[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-other,
 .charsheet .sheet-charm-evocation[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-evocation,
-.charsheet .sheet-charm-old[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-old {
+.charsheet .sheet-charm-old[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-old,
+.charsheet .sheet-charm-universal[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-universal {
 	display: none;
 }
 
@@ -1214,8 +1369,8 @@ and (min-resolution:.001dpcm) {
     display: none;
 }
 
-.charsheet .show-limit[value="0"] ~ div.sheet-col.sheet-resize-to-mortal {
-    width: 100%;
+.charsheet .show-limit[value="0"] ~ div.sheet-2colrow.sheet-resize-to-mortal {
+    grid-template-columns: none;
 }
 
 .charsheet .charm-tab-list {
@@ -1288,7 +1443,7 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-charmeffect:checked ~ div.sheet-charm-effect,
 .charsheet input.sheet-spelleffect:checked ~ div.sheet-spell-effect {
     display: block;
-}  
+}
 
 .charsheet input.sheet-charmeffect,
 .charsheet input.sheet-spelleffect {
@@ -1335,9 +1490,17 @@ and (min-resolution:.001dpcm) {
     width: calc(67% - 109px - 5em - 128px - 39px);
 }
 
+.charsheet .sheet-tab-spell-sheet input.sheet-charms-spells-trait-short-desc {
+    width: calc(68% - 109px - 122px - 14px)
+}
+
 @-moz-document url-prefix() {
     .charsheet input.sheet-charms-spells-trait-short-desc {
         width: calc(67% - 109px - 5em - 128px - 55px);
+    }
+    
+    .charsheet .sheet-tab-spell-sheet input.sheet-charms-spells-trait-short-desc {
+        width: calc(68% - 109px - 122px - 27px)
     }
 }
 
@@ -1358,14 +1521,22 @@ and (min-resolution:.001dpcm) {
 
 /* --- ROLLTEMPLATES --- */
 
+.sheet-rolltemplate-exalted3e_combatcast table,
 .sheet-rolltemplate-exalted3e_cast table{
     text-align:center;
     background-color: #FFFFFF;
     width:100%;
     font-size:12px;
-    border-radius:10px;
     border-collapse:separate;
     border:1px solid black;
+}
+
+.sheet-rolltemplate-exalted3e_combatcast table {
+    border-radius: 10px 10px 0 0;
+}
+
+.sheet-rolltemplate-exalted3e_cast table{
+    border-radius:10px;
 }
 
 .sheet-rolltemplate-exalted3e_cast tr:last-child td{
@@ -1374,21 +1545,26 @@ and (min-resolution:.001dpcm) {
     overflow: hidden;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast td,
 .sheet-rolltemplate-exalted3e_cast td{
     padding-left: 5px;
     padding-right: 5px;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast table tbody tr:first-child,
+.sheet-rolltemplate-exalted3e_combatcast table tbody tr:first-child td,
 .sheet-rolltemplate-exalted3e_cast table tbody tr:first-child,
 .sheet-rolltemplate-exalted3e_cast table tbody tr:first-child td {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast table tbody tr:first-child td,
 .sheet-rolltemplate-exalted3e_cast table tbody tr:first-child td {
     padding-top: 5px;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast .sheet-charm-name,
 .sheet-rolltemplate-exalted3e_cast .sheet-charm-name{
     color:#0095c6;
     font-size:20px;
@@ -1423,30 +1599,58 @@ and (min-resolution:.001dpcm) {
     border-left: solid 1px #D3D3D3;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast td.sheet-desc,
 .sheet-rolltemplate-exalted3e_cast td.sheet-desc,
 .sheet-rolltemplate-exalted3e_cast td.sheet-effect{
     padding: 0px;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast div.sheet-desc,
 .sheet-rolltemplate-exalted3e_cast div.sheet-desc,
 .sheet-rolltemplate-exalted3e_cast div.sheet-effect{
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-left: 5px;
     padding-top: 5px;
     text-align:left;
+    resize: vertical;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast *,
+.sheet-rolltemplate-exalted3e_cast * {
+    scrollbar-width: thin;
+    scrollbar-color: #90A4AE #CFD8DC;
+}
+
+.sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar,
+.sheet-rolltemplate-exalted3e_cast *::-webkit-scrollbar {
+    width: 9px;
+}
+
+.sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar-thumb,
+.sheet-rolltemplate-exalted3e_cast *::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 2px;
+    border: 1px solid #CFD8DC;
+}
+
+.sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar-track,
+.sheet-rolltemplate-exalted3e_cast *::-webkit-scrollbar-track {
+    background: #CFD8DC;
+}
+
+.sheet-rolltemplate-exalted3e_combatcast div.sheet-desc,
 .sheet-rolltemplate-exalted3e_cast div.sheet-desc{
-    max-height: 44px;
+    height: 44px;
     background-color:#F5F5F5;
     font-style: italic;
 }
 
 .sheet-rolltemplate-exalted3e_cast div.sheet-effect{
-    max-height: 67px;
+    height: 67px;
     background-color:#D3D3D3;
 }
 
+.sheet-rolltemplate-exalted3e_combatcast span,
 .sheet-rolltemplate-exalted3e_cast span{
     font-style:normal;
     font-weight:bold;
@@ -1586,38 +1790,119 @@ body.sheet-darkmode {
     background-color: darkred;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear input[type=number][readonly].onslaught-taint.wound-taint {
+    background-color: #bc69c4;
+    font-weight: bold;
+}
+
+.sheet-darkmode .charsheet .sheet-defenses input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .apply-onslaught-check[value="0"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .apply-onslaught-check[value="0"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .apply-onslaught-check[value="0"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    background-color: rgba(128, 128, 128, 0.25);
+    font-weight: normal;
+}
+
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #d5d500;
     color: var(--dark-surface1);
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #ab6f00;
     font-weight: bold;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #9f2c01;
     font-weight: bold;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .sheet-table-body .sheet-table-row .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: darkred;
     font-weight: bold;
 }
 
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-5"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-5"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-5"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-5"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-5"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-6"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-6"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-6"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-6"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-6"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-7"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-7"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-7"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-7"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-7"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-8"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-8"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-8"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-8"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-8"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-9"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-9"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-9"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-9"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-9"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-10"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-10"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-10"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-10"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-10"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-11"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-11"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-11"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-11"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-11"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-12"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-12"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-12"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-12"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-12"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-13"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-13"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-13"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-13"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-13"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-14"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-14"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-14"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-14"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-14"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-15"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-15"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-15"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-15"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-15"] ~ input[type=number][disabled].onslaught-taint.wound-taint {
+    background-color: black;
+    font-weight: bold;
+}
+
+.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
     background-color: darkred;
 }
@@ -1667,16 +1952,844 @@ body.sheet-darkmode {
     font-family: Cimiez, Arial, sans-serif;
 }
 
+.charsheet .sheet-tab-spell-sheet .charm-buttons,
 .charsheet .sheet-tab-charm-sheet .charm-buttons {
     display: contents;
 }
 
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .charm-buttons-include-check[value="0"] ~ div.charm-buttons-show-extended,
 .charsheet .sheet-tab-charm-sheet .sheet-table-row .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
 .charsheet .sheet-tab-charm-sheet .sheet-table-row .charm-buttons-include-check[value="0"] ~ div.charm-buttons-show-extended {
     display: none;
 }
 
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect .charm-buttons-include-check[value="1"] ~ input[type="text"],
 .charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect .charm-buttons-include-check[value="1"] ~ input[type="text"] {
     border: 1px solid darkgreen;
     border-radius: 5px 5px;
+}
+
+/* --- COMBAT TAB --- */
+
+.ui-dialog .charsheet button[type="roll"].stealth-btn {
+    display: inline-block;
+    background: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--dark-secondarytext);
+    line-height: 18px;
+    text-shadow: none;
+    box-shadow: none;
+}
+
+.ui-dialog .charsheet button[type="roll"].stealth-btn:hover {
+    color: gold;
+}
+
+.charsheet .sheet-content .sheet-show-combat-tab[value="0"] ~ .sheet-tab-combat {
+    display: none;
+}
+
+.charsheet .sheet-tab-settings-sheet .hidden-cb {
+    position: absolute;
+    right: 0;
+    bottom: -1.5%;
+    display: inline-block;
+    width: auto;
+}
+
+/* -- HEADER -- */
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div {
+    border: 1px solid #0b0;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-combat-sheet .sheet-bg-show,
+.charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-combat-sheet .sheet-bg-hide {
+    display: none;
+}
+
+.sheet-health-track {
+    flex-shrink: 1;
+    justify-content: center;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .health-block {
+    vertical-align: middle;
+    position: relative;
+    width: calc(100% - 27px - 8em - 6px);
+    display: inline-block;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .health-block .sheet-health-header.sheet-text-center.sheet-txt-lg {
+    display: inline-block;
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .health-block .sheet-health-track {
+    margin-left: 4.5vh;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .crippling-box input.sheet-crippling-pen {
+    width: 7.55em;
+    background-color: #f6f6f6;
+    height: 20px;
+    margin: 0;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .crippling-box input[type="checkbox"].sheet-crippling-pen:checked + span::before {
+	content: attr(title) "ON";
+	color: #a00;
+	font-weight: normal;
+    background: black;
+    border: red 1px solid;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .crippling-box input.sheet-crippling-pen + span::before {
+    width: 99%;
+    color: #0a0;
+    height: calc(100% - 3px);
+    content: attr(title) "NO";
+    text-align: center;
+    line-height: 100%;
+    font-size: 18px;
+    border-radius: 4px;
+}
+
+/* -- DEFENSE -- */
+
+.charsheet .sheet-tab-combat-sheet .combat-header .defense-line .sheet-table {
+    width: 100%;
+}
+
+.charsheet .defense-line .sheet-defenses > .flex-col.grow-normal {
+    max-width: 50%;
+}
+
+.charsheet .defense-line .sheet-defenses > .flex-col.grow-normal:last-child {
+    max-width: unset;
+}
+
+/* -- WEAPON -- */
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line {
+    max-height: 10em;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #90A4AE #CFD8DC;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar {
+    width: 9px;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 2px;
+    border: 1px solid #CFD8DC;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar-track {
+    background: #CFD8DC;
+}
+
+/* -- RESSOURCE LINE -- */
+
+.charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-init .peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-attacks .peripheral-mote-toggle {
+    display: none;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div.ressource-line > p:last-child {
+    flex-grow: 1;
+}
+
+/* -- INIT TOGGLER -- */
+
+.charsheet input.sheet-initeffect + span::before {
+    width: 99%;
+    height: calc(100% - 3px);
+    content: attr(title);
+    text-align: center;
+    line-height: 100%;
+    font-size: 18px;
+}
+
+.charsheet input.sheet-initeffect:checked + span:before {
+    content: attr(title) !important;
+}
+
+.charsheet input.sheet-initeffect {
+    width:99%;
+    background-color: #f6f6f6;
+    height: 20px;
+    margin: 0;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init div.sheet-init-div {
+    display: none;
+    /* padding-top: 5px; */
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init input.sheet-initeffect:checked ~ div.sheet-init-div {
+    display: block;
+}
+
+/* -- INIT -- */
+
+.sheet-combat-init {
+    padding: 0 0.4em;
+}
+
+.sheet-combat-init .first-line {
+    width: 100%;
+}
+
+.sheet-combat-init .first-line .sheet-atk-name {
+    color: gold;
+    font-weight: bold;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init .repitem {
+	border: 1px solid gold;
+    border-radius: 5px;
+    background: linear-gradient(15.5deg ,transparent,rgba(var(--init-color), 0.10),transparent,rgba(var(--init-color), 0.15), transparent, rgba(var(--init-color), 0.20),transparent,rgba(var(--init-color), 0.25),transparent,rgba(var(--init-color), 0.30), rgba(var(--init-color), 0.35), rgba(var(--init-color), 0.45),rgba(var(--init-color), 0.5));
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init select {
+    width: 7.1em;
+    text-align: center;
+    height: 25px;
+    border-radius: 13px;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init .sheet-init-bonus-successes {
+    width: 4em;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init .sheet-init-bonus-dices {
+    width: 6.95em;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init .sheet-init-macro-options {
+    /* width: calc(100% - 13em); */
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init > div:last-child {
+    flex-grow: 42000;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init .sheet-grouped-buttons .btn:hover {
+    color: rgb(var(--init-color));
+}
+
+/* -- ATTACKS -- */
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .first-line .sheet-atk-name {
+    width: calc(100% - 5.78em);
+    color: red;
+    font-weight: bold;
+}
+
+
+.charsheet .sheet-tab-combat-sheet p {
+    margin-bottom: 0;
+}
+
+.charsheet .flex,
+.charsheet .flex-col,
+.charsheet .flex-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.charsheet .flex-col {
+    flex-flow: column;
+}
+
+.charsheet .flex-wrap {
+    flex-wrap: wrap;
+}
+
+.charsheet .flex > * {
+    flex-shrink: 0;
+}
+
+.charsheet .flex .grow-normal,
+.charsheet .flex-wrap .grow-normal {
+    flex-grow: 1;
+}
+
+.charsheet .flex .grow-double,
+.charsheet .flex-wrap .grow-double {
+    flex-grow: 2;
+}
+
+.charsheet .flex .grow-max,
+.charsheet .flex-wrap .grow-max {
+    flex-grow: 42000;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
+	border: 1px solid red;
+    border-radius: 5px;
+}
+
+.charsheet div .sheet-grouped-buttons {
+	display: inline-flex;
+	background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+	border: 2px solid transparent;
+	border-radius: 4px;
+	font-size: 0;
+}
+
+.charsheet .sheet-tab-combat-sheet div .sheet-grouped-buttons {
+    flex-grow: unset;
+    flex-shrink: 0;
+}
+
+.ui-dialog .charsheet div .sheet-grouped-buttons button[type="roll"] {
+	margin: 0;
+	border-radius: 0;
+	border: 0;
+	background: none;
+	padding: 0;
+	height: 1.3em;
+    border-right: 1px solid;
+}
+
+.ui-dialog .charsheet div .sheet-grouped-buttons button[type="roll"]:last-child {
+	padding: 0 7px 0 0;
+    border-right: 0;
+}
+
+:root {
+    --goldish-color: 255, 218, 18;
+    --init-color: 32, 139, 253;
+    --dark-init-color: 31, 85, 142;
+    --accuracy-color: 0, 255, 0;
+    --dark-accuracy-color: 0, 128, 0;
+    --damage-color: 255, 0, 0;
+    --dark-damage-color: 76, 25, 25;
+    --willpower-color: 162, 0, 255;
+    --dark-willpower-color: 97, 24, 142;
+    --mote-color: 255, 145, 0;
+    --dark-mote-color: 144, 88, 29;
+}
+
+.rounded-box {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.init-color {
+    background: rgba(var(--init-color), 0.5);
+}
+
+.dark-init-color {
+    background: rgb(var(--dark-init-color));
+}
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-atk-decisive-init-to-reset-val[value=""] ~ p.dark-init-color {
+    background: transparent;
+}
+
+.init-color-up {
+    background: linear-gradient(rgb(var(--init-color)), transparent);
+}
+
+.init-color-down {
+    background: linear-gradient(transparent, rgba(var(--init-color), 0.5));
+}
+
+.accu-color {
+    background: rgba(var(--accuracy-color), 0.2);
+}
+.charsheet input[type="number"][readonly].accu-color {
+    background-color: rgba(var(--accuracy-color), 0.2);
+}
+
+.dmg-color {
+    background: rgba(var(--damage-color), 0.2);
+}
+.charsheet input[type="number"][readonly].dark-dmg-color {
+    background-color: rgba(var(--damage-color),0.5);
+}
+.sheet-darkmode .charsheet input[type="number"][readonly].dark-dmg-color {
+    background-color: rgb(var(--dark-damage-color));
+}
+
+.will-color {
+    background: rgba(var(--willpower-color), 0.5);
+}
+
+.will-color-down {
+    background: linear-gradient(white, rgba(var(--willpower-color), 0.5));
+}
+
+.sheet-darkmode .will-color-down {
+    background: linear-gradient(var(--dark-surface1), rgb(var(--dark-willpower-color)));
+}
+
+.mote-color {
+    background: rgba(var(--mote-color), 0.5);
+}
+
+.mote-color-down {
+    background: linear-gradient(white, rgba(var(--mote-color), 0.5))
+}
+
+.sheet-darkmode .mote-color-down {
+    background: linear-gradient(var(--dark-surface1), rgb(var(--dark-mote-color)));
+}
+
+/* -- COST -- */
+
+.cost-section input[type="text"] {
+    width: 5em;
+    text-align: center;
+}
+
+.cost-section input[type="text"].sheet-cost-will {
+    width: 2em;
+}
+
+.ui-dialog .charsheet .combat-attacks .sheet-atk-decisive-init-to-reset {
+    width: 3em;
+}
+
+/* -- desc textarea -- */
+
+.charsheet .desc-toggle {
+    display: inline-block;
+}
+
+/* KIRBY */
+
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc {
+    width: 4.3em;
+    background-color: transparent;
+    height: 20px;
+    margin: 0;
+}
+
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:checked + span::before {
+	/* content: "<('o'<)"; */
+	content: attr(title) "('o'" attr(title) ")";
+	color: gold;
+}
+
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc + span::before {
+    height: calc(100% - 3px);
+    width: unset;
+    min-width: 3em;
+    /* content: "<('-'<)"; */
+    content: attr(title) "('-'" attr(title) ")";
+    color: white;
+    background: black;
+    border: white 1px solid;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 100%;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.charsheet .combat-textarea {
+    /* width: auto; */
+    display: none;
+    width: 98.8%;
+    margin-bottom: 0.5em;
+    resize: vertical;
+    height: 3em;
+    overflow: hidden;
+    background: var(--dark-surface1);
+}
+
+.charsheet .sheet-combat-toggle-desc-val[value="1"] ~ .combat-textarea {
+    display: block;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-init .woundpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .woundpenalty {
+    width: 1.3em;
+    border-radius: 0 13px 13px 0;
+    padding: 0;
+}
+
+/* -- with/deci sections -- */
+
+.withering-section {
+    background: linear-gradient(0deg, rgba(var(--init-color), 0.45), rgba(var(--init-color), 0.45), rgba(var(--init-color), 0.45), rgba(var(--accuracy-color), 0.15), rgba(var(--accuracy-color), 0.15));
+    /* background: linear-gradient(-5deg, rgba(var(--init-color), 0.45),rgba(var(--init-color), 0.45), rgba(var(--accuracy-color), 0.15)); */
+}
+
+.decisive-section {
+    background: linear-gradient(-180deg, rgba(255, 0, 0, 0.3),rgba(0, 0, 0, 0.5), rgba(255, 0, 0, 0.3));
+    /* background: linear-gradient(-180deg, rgba(255, 214, 0, 0.15), rgba(255, 0, 0, 0.3),rgb(0, 0, 0)); */
+}
+
+.charsheet div.sheet-tab-combat-sheet p.sheet-bg-show {
+    width: 1.5em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.charsheet div.sheet-tab-combat-sheet .sheet-bg-show > input[type="number"][disabled] {
+    padding: 0;
+    min-width: 0.5em;
+}
+
+/* -- COMBAT 1ST LINE -- */
+
+.ui-dialog .charsheet .combat-attacks .first-line {
+    padding: 0 0.4em;
+}
+
+.ui-dialog .charsheet .combat-attacks .first-line .rounded-box > input {
+    border-radius: 0 0 5px 0;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section {
+    border: 1px solid darkred;
+    border-radius: 8px;
+    display: flex;
+    padding: 0 0.2em;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section > div {
+    display: inline-block;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section .header-section {
+    writing-mode: vertical-lr;
+    transform: rotate(-180deg);
+    text-decoration: underline;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 4.55em;
+    padding: 0.2em 0 0.2em 0.2em;
+    margin: 0 0.2em;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    color: rgb(var(--goldish-color));
+}
+
+.sheet-darkmode .ui-dialog .charsheet .combat-attacks .attack-section .header-section {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section .inner-section {
+    /* height: 100%;
+    vertical-align: top; */
+    width: calc(100% - 2em);
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section select {
+    width: 7.1em;
+    text-align: center;
+    height: 25px;
+    border-radius: 13px;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section input[type="text"] {
+    width: 3em;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section > div > div .head {
+    width: 2.4em;
+    display: inline-block;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-dmg {
+    width: 5.769em;
+    border-radius: 13px;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-atk {
+    width: 1.2em;
+    border-radius: 13px;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section > div > div .sheet-ddmg-bonus-dices {
+    /* width: 16.75em; */
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section > div > div .sheet-init-macro-options {
+    min-width: 4em;
+    /* width: calc(100% - 23.1em); */
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section.withering-section > div > div.atk-section select[name="attr_repcombat-watk-abi"] {
+    width: 5.1em;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section.decisive-section > div > div.dmg-section .sheet-init-macro-options {
+    /* width: calc(100% - 32.8em); */
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-grouped-buttons.reset-init,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-atk-decisive-init-to-reset-val[value=""] ~ .sheet-grouped-buttons.noreset-init {
+    display: inline-flex;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-grouped-buttons.noreset-init,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-atk-decisive-init-to-reset-val[value=""] ~ .sheet-grouped-buttons.reset-init {
+    display: none;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .withering-section .atk-section .sheet-grouped-buttons .btn {
+    text-shadow: 0 1px 1px rgb(var(--dark-accuracy-color));
+}
+.charsheet .sheet-tab-combat-sheet .combat-attacks .withering-section .atk-section .sheet-grouped-buttons {
+    /* background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box; */
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .withering-section .dmg-section .sheet-grouped-buttons {
+    background: linear-gradient(rgb(var(--init-color)), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-grouped-buttons.reset-init {
+    background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-grouped-buttons.noreset-init {
+    /* background: linear-gradient(rgb(128, 128, 128), rgb(0, 128  , 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box */
+}
+
+/* .charsheet .combat-attacks .withering-section .flex-wrap .flex:first-child,
+.charsheet .combat-attacks .decisive-section .atk-section.flex-wrap .flex:first-child, */
+.charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
+.charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
+.charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),
+.charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(3) {
+    flex-basis: 50%;
+}
+
+
+/* --- MOBILE SHEET PORTRAIT --- */
+
+@media only screen and (max-width: 630px) {
+
+    .ui-dialog .charsheet div.sheet-2colrow,
+    .ui-dialog .charsheet div.sheet-3colrow {
+        grid-template-columns: 100%;
+    }
+
+    .ui-dialog .charsheet div.sheet-3colrow.sheet-centerblock {
+        grid-template-areas: none;
+        grid-template-columns: 100%;
+    }
+
+    .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
+    .ui-dialog .charsheet .sheet-3colrow .sheet-2col {
+        grid-area: unset;
+    }
+
+    .charsheet .sheet-3colrow .sheet-2col:last-child > div,
+    .ui-dialog .charsheet .sheet-2colrow > .sheet-col,
+    .ui-dialog .charsheet .sheet-3colrow > .sheet-col {
+        grid-template-columns: 100%;
+    }
+
+    .ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
+        grid-template-columns: repeat(1, 1fr);
+        grid-auto-flow: unset;
+    }
+
+    .charsheet .sheet-table.sheet-defenses.sheet-txt-lg.sheet-center-table.sheet-80pct {
+        display: grid;
+        width: 100%;
+        margin-right: auto;
+        grid-template-columns: 100%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .sheet-content {
+        min-width: 320px;
+    }
+
+/* halo layout */
+
+    .sheet-editPane {
+         width: 80%;
+     }
+    
+    input[name="attr_Portrait"][value="PC0"]  {
+        border: 1px solid #cccc00;
+        text-align: center;
+        background-color: rgba(255, 128, 0, 0.05);
+    }
+
+    h1.sheet-hide {
+        visibility: visible !important;
+        display: block;
+    }
+
+    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-physical {
+        position: static;
+        border: 1px dashed #ffcb2b;
+        border-top: 6px solid #ffcb2b;
+        padding: 5px;
+    }
+
+    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-mental {
+        position: static;
+        border: 1px dashed #ffcb2b;
+        border-top: 6px solid #ffcb2b;
+        padding: 5px;
+    }
+
+    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-social {
+        position: static;
+        border: 1px dashed #ffcb2b;
+        border-top: 6px solid #ffcb2b;
+        padding: 5px;
+    }
+    
+    input[name="attr_Portrait"]:not([value="PC0"]) + .sheet-action {
+        display: block;
+        visibility: visible;
+    }
+    
+    .charsheet button[type="roll"].sheet-blank-roll-button + span {
+        display: none !important;
+        visibility: hidden !important;
+        /* visibility: visible !important; */
+    }
+}
+
+/* --- MOBILE SHEET PAYSAGE --- */
+
+@media only screen and (max-width: 854px) {
+
+
+    /* NIGHT MODE FOR MOBILE */
+
+    body {
+        color: #B3B3B3;
+    }
+    
+    input, textarea, select, .uneditable-input {
+        color: #E6E6E6;
+    }
+    
+    .charsheet input[type=text], .charsheet input[type=number], .charsheet select {
+        border-bottom: 1px solid #E6E6E6;
+    }
+    
+    .charsheet select:focus, .charsheet h1 span {
+        background: #B3B3B3;
+        color: #E6E6E6;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: #E6E6E6;
+    }
+    
+    .charsheet input.sheet-tab::before {
+        color: #E6E6E6;
+        background: gray;
+    }
+    
+    .charsheet input.sheet-tab:checked::before, .charsheet input.sheet-tab:checked:hover::before {
+        color: #FFDF00;
+        background: #840000;
+    }
+    
+    .charsheet div.sheet-dots-full, .charsheet div.sheet-damage-box, .charsheet div.sheet-dots {
+        background-color: dimgray;
+        border-radius: 10px;
+    }
+    
+    .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+        background-color: darkred;
+    }
+    
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+        background-color: #d5d500;
+        color: #B3B3B3;
+    }
+    
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+        background-color: #ab6f00;
+        font-weight: bold;
+    }
+    
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+        background-color: #9f2c01;
+        font-weight: bold;
+    }
+    
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+        background-color: darkred;
+        font-weight: bold;
+    }
+    
+    .charsheet input[type=number][disabled].woundpenalty-input {
+        background-color: darkred;
+    }
+    
+    .btn, .btn.btn-default {
+        background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+        border: 2px solid transparent;
+        padding: 2px 10px;
+        transition: color .2s;
+    }
+    
+    .btn:hover {
+        color: white;
+    }
+    
+    /* input[type=checkbox].sheet-unnamed-toggle + span::before, */
+    .merits-div-checkbox input + strong:before{
+        background: dimgray;
+        color: #e6e6e6;
+    }
+    
+    input[type=checkbox].sheet-unnamed-toggle:checked + span + div {
+        background: linear-gradient(#1F1F1F, #1F1F1F) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+        border: 3px solid transparent;
+        border-radius: 13px;
+    }
+    
+    .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
+        background: #420000;
+    }
+    
+    .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
+    .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
+        background: dimgray;
+    }
 }
