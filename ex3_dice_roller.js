@@ -414,7 +414,7 @@ function sliceSpecials(rawCmd) {
 function checkAndSlice(rawCmd, sliceString, callback) {
     var index = rawCmd.indexOf(sliceString);
     if (index !== -1) {
-        let slice = rawCmd.slice(costIndex + sliceString.length);
+        let slice = rawCmd.slice(index + sliceString.length);
         rawCmd = rawCmd.slice(0, index - 1);
         callback(rawCmd, slice);
     }
@@ -487,11 +487,10 @@ function reduceInitForId(tokenId, toRemove) {
 
 function removeMotesToCharacter(characterObj, qty, periFirst = true) {
     logger(LOGLEVEL.INFO, `removeMotesToCharacter::removeMotesToCharacter qty=${qty}, periFirst=${periFirst}`);
-    let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'}), controlledBy = characterObj.get('controlledby');
-    controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+    let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
 
     logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
-    attrList = sortMoteAttr(attrList);
+    attrList = sortMoteAttr(attrList, periFirst);
 
     logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
     var removed = 0;
@@ -514,7 +513,7 @@ function removeMotesToCharacter(characterObj, qty, periFirst = true) {
         sendGMStandardScriptMessage(`MOTE ERROR WHEN ${characterObj.get('name')} CASTED: qty=${qty} removed=${removed} !!! NO MORE MOTE TO SPEND`);
 }
 
-function sortMoteAttr(attrList) {
+function sortMoteAttr(attrList, periFirst = true) {
     return attrList
     .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
     .sort((a, b) => {
@@ -546,6 +545,8 @@ function updateMaxAttr(characterId, attr) {
 
 function sendMoteWhispers(characterObj, characterId, attr, current, toRemove) {
     const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing ${toRemove} motes to ${attr.get('name')}`;
+    let controlledBy = characterObj.get('controlledby');
+    controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
     attr.set('current', current - toRemove);
     
     logger(`removeMotesToCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
