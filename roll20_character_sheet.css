@@ -2510,8 +2510,18 @@ body.sheet-darkmode {
 	background: linear-gradient(-5deg, rgba(var(--init-color), 0.45), rgba(var(--init-color), 0.45), rgba(var(--accuracy-color), 0.15), rgba(var(--accuracy-color), 0.15));
 }
 
-@media only screen and (max-width: 398px) {
+@media only screen and (max-width: 480px) {
     .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
+        justify-content: center;
+    }
+
+    .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
+        justify-content: space-between;
+    }
+}
+
+@media only screen and (max-width: 398px) {
+    .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
         justify-content: center;
     }
 
@@ -2555,6 +2565,14 @@ body.sheet-darkmode {
 .charsheet div.sheet-tab-combat-sheet .sheet-bg-show > input[type="number"][disabled] {
     padding: 0;
     min-width: 0.5em;
+}
+
+.combat-attacks .attack-section .dmg-section {
+    display: none;
+}
+
+.ui-dialog .combat-attacks .attack-section .dmg-section {
+    display: inline-flex;
 }
 
 /* -- COMBAT 1ST LINE -- */
@@ -2672,108 +2690,6 @@ body.sheet-darkmode {
 
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
 
-/* --- MOBILE SHEET PORTRAIT --- */
-
-@media only screen and (max-width: 630px) {
-
-    .charsheet div.sheet-2colrow,
-    .charsheet div.sheet-3colrow,
-    .ui-dialog .charsheet div.sheet-2colrow,
-    .ui-dialog .charsheet div.sheet-3colrow {
-        grid-template-columns: 100%;
-    }
-
-    .charsheet div.sheet-3colrow.sheet-centerblock,
-    .ui-dialog .charsheet div.sheet-3colrow.sheet-centerblock {
-        grid-template-areas: none;
-        grid-template-columns: 100%;
-    }
-
-    .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
-    .charsheet .sheet-3colrow .sheet-2col,
-    .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
-    .ui-dialog .charsheet .sheet-3colrow .sheet-2col {
-        grid-area: unset;
-        width: 100%;
-    }
-
-    /* .charsheet .sheet-3colrow .sheet-2col:last-child > div,
-    .charsheet .sheet-2colrow > .sheet-col,
-    .charsheet .sheet-3colrow > .sheet-col,
-    .ui-dialog .charsheet .sheet-2colrow > .sheet-col,
-    .ui-dialog .charsheet .sheet-3colrow > .sheet-col {
-        grid-template-columns: 100%;
-    } */
-
-    .charsheet .sheet-attributes.sheet-3colrow,
-    .ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
-        grid-template-columns: repeat(1, 1fr);
-        grid-auto-flow: unset;
-    }
-
-    .charsheet .sheet-table.sheet-defenses.sheet-txt-lg.sheet-center-table.sheet-80pct {
-        display: grid;
-        width: 100%;
-        margin-right: auto;
-        grid-template-columns: 100%;
-    }
-}
-
-@media only screen and (max-width: 480px) {
-    .sheet-content {
-        min-width: 320px;
-    }
-
-/* halo layout */
-
-    .sheet-editPane {
-         width: 80%;
-     }
-    
-    input[name="attr_Portrait"][value="PC0"]  {
-        border: 1px solid #cccc00;
-        text-align: center;
-        background-color: rgba(255, 128, 0, 0.05);
-    }
-
-    h1.sheet-hide {
-        visibility: visible !important;
-        display: block;
-    }
-
-    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-physical {
-        position: static;
-        border: 1px dashed #ffcb2b;
-        border-top: 6px solid #ffcb2b;
-        padding: 5px;
-    }
-
-    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-mental {
-        position: static;
-        border: 1px dashed #ffcb2b;
-        border-top: 6px solid #ffcb2b;
-        padding: 5px;
-    }
-
-    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-social {
-        position: static;
-        border: 1px dashed #ffcb2b;
-        border-top: 6px solid #ffcb2b;
-        padding: 5px;
-    }
-    
-    input[name="attr_Portrait"]:not([value="PC0"]) + .sheet-action {
-        display: block;
-        visibility: visible;
-    }
-    
-    .charsheet button[type="roll"].sheet-blank-roll-button + span {
-        display: none !important;
-        visibility: hidden !important;
-        /* visibility: visible !important; */
-    }
-}
-
 /* --- MOBILE SHEET PAYSAGE --- */
 
 @media only screen and (max-width: 854px) {
@@ -2887,5 +2803,107 @@ body.sheet-darkmode {
     .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
     .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
         background: dimgray;
+    }
+}
+
+/* --- MOBILE SHEET PORTRAIT --- */
+
+@media only screen and (max-width: 630px) {
+
+    .charsheet div.sheet-2colrow,
+    .charsheet div.sheet-3colrow,
+    .ui-dialog .charsheet div.sheet-2colrow,
+    .ui-dialog .charsheet div.sheet-3colrow {
+        grid-template-columns: 100%;
+    }
+
+    .charsheet div.sheet-3colrow.sheet-centerblock,
+    .ui-dialog .charsheet div.sheet-3colrow.sheet-centerblock {
+        grid-template-areas: none;
+        grid-template-columns: 100%;
+    }
+
+    .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
+    .charsheet .sheet-3colrow .sheet-2col,
+    .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
+    .ui-dialog .charsheet .sheet-3colrow .sheet-2col {
+        grid-area: unset;
+        width: 100%;
+    }
+
+    /* .charsheet .sheet-3colrow .sheet-2col:last-child > div,
+    .charsheet .sheet-2colrow > .sheet-col,
+    .charsheet .sheet-3colrow > .sheet-col,
+    .ui-dialog .charsheet .sheet-2colrow > .sheet-col,
+    .ui-dialog .charsheet .sheet-3colrow > .sheet-col {
+        grid-template-columns: 100%;
+    } */
+
+    .charsheet .sheet-attributes.sheet-3colrow,
+    .ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
+        grid-template-columns: repeat(1, 1fr);
+        grid-auto-flow: unset;
+    }
+
+    .charsheet .sheet-table.sheet-defenses.sheet-txt-lg.sheet-center-table.sheet-80pct {
+        display: grid;
+        width: 100%;
+        margin-right: auto;
+        grid-template-columns: 100%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .sheet-content {
+        min-width: 320px;
+    }
+
+/* halo layout */
+
+    .sheet-editPane {
+         width: 80%;
+     }
+    
+    input[name="attr_Portrait"][value="PC0"]  {
+        border: 1px solid #cccc00;
+        text-align: center;
+        background-color: rgba(255, 128, 0, 0.05);
+    }
+
+    h1.sheet-hide {
+        visibility: visible !important;
+        display: block;
+    }
+
+    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-physical {
+        position: static;
+        border: 1px dashed #ffcb2b;
+        border-top: 6px solid #ffcb2b;
+        padding: 5px;
+    }
+
+    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-mental {
+        position: static;
+        border: 1px dashed #ffcb2b;
+        border-top: 6px solid #ffcb2b;
+        padding: 5px;
+    }
+
+    input[name="attr_Portrait"]:not([value="PC0"]) ~ .sheet-social {
+        position: static;
+        border: 1px dashed #ffcb2b;
+        border-top: 6px solid #ffcb2b;
+        padding: 5px;
+    }
+    
+    input[name="attr_Portrait"]:not([value="PC0"]) + .sheet-action {
+        display: block;
+        visibility: visible;
+    }
+    
+    .charsheet button[type="roll"].sheet-blank-roll-button + span {
+        display: none !important;
+        visibility: hidden !important;
+        /* visibility: visible !important; */
     }
 }
