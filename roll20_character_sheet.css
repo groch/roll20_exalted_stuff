@@ -2651,8 +2651,8 @@ body.sheet-darkmode {
     background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
 }
 
-.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
-.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
+.charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
+.charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(3) {
     flex-basis: 50%;
