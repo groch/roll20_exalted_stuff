@@ -793,8 +793,8 @@
                      written_attr = `${attr_name}repcombat-watk-bonus-dices`;
                 getAttrs([tested_attr], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
                     let writtenValue;
-                    if (val[tested_attr] === '@{archery}')     writtenValue = '2?{Range ?|Close,-2|Short,+4|Medium,+2|Long,+0|Extreme,-2}';
-                    else if (val[tested_attr] === '@{thrown}') writtenValue = '2?{Range ?|Close,+4|Short,+3|Medium,+2|Long,-1|Extreme,-2}';
+                    if (val[tested_attr] === '@{archery}')     writtenValue = '?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}+?{Bonus Dices ? (Stunt, Situational, ...)|2}';
+                    else if (val[tested_attr] === '@{thrown}') writtenValue = '?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}+?{Bonus Dices ? (Stunt, Situational, ...)|2}';
                     else                                       writtenValue = '?{Bonus Dices ? (Stunt, Situational, ...)|2}';
                     cb(written_attr, writtenValue);
                 }));
