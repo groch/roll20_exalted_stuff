@@ -151,15 +151,32 @@
         }));
     }));
 
-    on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', TAS._fn(function updateBattleGroupSpecialAttrs(e) {
-        getAttrs(["battlegroup-drill", "battlegroup-might"], TAS._fn(function getBGAttrs(values) {
-            TAS.debug(`updateBattleGroupSpecialAttrs::updateBattleGroupSpecialAttrs battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
+    on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', TAS._fn(function setOrDisableBattleGroupSpecialAttrs(e) {
+        if (e.sourceType !== "player") {
+            TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
+        if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
+            TAS.debug(`setting DEFAULT bg attrs`);
             setAttrs({
-                "battlegroup-def-boost": (values["battlegroup-drill"] === 'Average' ? 1 : values["battlegroup-drill"] === 'Elite' ? 2 : 0) + (['1','2'].includes(values["battlegroup-might"]) ? 1 : values["battlegroup-might"] === '3' ? 2 : 0),
-                "battlegroup-acc-boost": Number(values["battlegroup-might"]),
-                "battlegroup-dmg-boost": Number(values["battlegroup-might"]),
+                "battlegroup-size": 0,
+                "battlegroup-drill": 'Poor',
+                "battlegroup-might": 0,
+                "battlegroup-def-boost": 0,
+                "battlegroup-acc-boost": 0,
+                "battlegroup-dmg-boost": 0
             });
-        }));
+        } else {
+            getAttrs(["battlegroup-drill", "battlegroup-might"], TAS._fn(function getBGAttrs(values) {
+                TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
+                TAS.debug(`updating special bg attrs`);
+                setAttrs({
+                    "battlegroup-def-boost": (values["battlegroup-drill"] === 'Average' ? 1 : values["battlegroup-drill"] === 'Elite' ? 2 : 0) + (['1','2'].includes(values["battlegroup-might"]) ? 1 : values["battlegroup-might"] === '3' ? 2 : 0),
+                    "battlegroup-acc-boost": Number(values["battlegroup-might"]),
+                    "battlegroup-dmg-boost": Number(values["battlegroup-might"])
+                });
+            }));
+        }
     }));
 
     on('sheet:opened', TAS._fn(function testEssenceValue(e) {
