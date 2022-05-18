@@ -371,7 +371,7 @@ function onChatMessage(msg) {
     replaceInlineRolls(msg);
 
 	var apiWake = '!exr ';
-	if (msg.type == 'api' && msg.content.indexOf(apiWake) != -1) {
+	if (['api', 'general'].includes(msg.type) && msg.content.indexOf(apiWake) != -1) {
 		var slc = msg.content.slice(msg.content.indexOf(apiWake) + apiWake.length);
 		var rawCmd = slc.trim();
         rawCmd = sliceSpecials(rawCmd);
