@@ -2397,7 +2397,7 @@ body.sheet-darkmode {
     display: inline-block;
 }
 
-/* KIRBY */
+/* KIRBY & Desc area */
 
 .charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc {
     width: 4.3em;
@@ -2449,6 +2449,78 @@ body.sheet-darkmode {
     padding: 0;
 }
 
+/* EDIT mode */
+
+.charsheet .sheet-tab-combat-sheet .header-section .edit-toggle input.sheet-combat-toggle-edit {
+	width: calc(100%);
+	background-color: transparent;
+	height: calc(100%);
+	margin: 0;
+}
+
+.charsheet .sheet-tab-combat-sheet .show-on-edit .header-section .edit-toggle input.sheet-combat-toggle-edit {
+	top: 0px;
+	right: 0px;
+}
+
+.charsheet .sheet-tab-combat-sheet .hide-on-edit .header-section .edit-toggle input.sheet-combat-toggle-edit {
+	width: 5em;
+	height: 1.6em;
+}
+
+.charsheet .sheet-tab-combat-sheet .header-section .edit-toggle input[type="checkbox"].sheet-combat-toggle-edit:checked + span::before {
+	color: rgb(var(--goldish-color));
+    font-weight: normal;
+}
+
+.charsheet .sheet-tab-combat-sheet .header-section .edit-toggle input.sheet-combat-toggle-edit + span::before {
+    height: calc(100%);
+    width: 1.12em;
+    content: attr(title);
+    background: none;
+    border: none;
+    font-size: 13px;
+    text-decoration: underline;
+}
+
+.charsheet .sheet-tab-combat-sheet .hide-on-edit .header-section .edit-toggle input.sheet-combat-toggle-edit + span::before {
+    width: 5em;
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
+    flex-flow: initial;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.withering-section.hide-on-edit {
+	background: linear-gradient(-5deg, rgba(var(--init-color), 0.45), rgba(var(--init-color), 0.45), rgba(var(--accuracy-color), 0.15), rgba(var(--accuracy-color), 0.15));
+}
+
+@media only screen and (max-width: 398px) {
+    .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
+        justify-content: center;
+    }
+
+    .withering-section.hide-on-edit {
+        background: linear-gradient(0deg, rgba(var(--init-color), 0.45), rgba(var(--init-color), 0.45), rgba(var(--init-color), 0.45), rgba(var(--accuracy-color), 0.15), rgba(var(--accuracy-color), 0.15));
+    }
+}
+
+.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .first-line > .hide-on-edit,
+.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .attack-section.show-on-edit,
+.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="0"] ~ .flex-wrap > .attack-section.hide-on-edit {
+    display: none;
+}
+
+.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .flex-wrap > .attack-section.hide-on-edit {
+    display: flex;
+}
+
+.sheet-darkmode .ui-dialog .charsheet .combat-attacks .attack-section .header-section {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
 /* -- with/deci sections -- */
 
 .withering-section {
@@ -2494,18 +2566,21 @@ body.sheet-darkmode {
 }
 
 .ui-dialog .charsheet .combat-attacks .attack-section .header-section {
-    writing-mode: vertical-lr;
-    transform: rotate(-180deg);
     text-decoration: underline;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    min-height: 4.55em;
     padding: 0.2em 0 0.2em 0.2em;
     margin: 0 0.2em;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 4px;
     color: rgb(var(--goldish-color));
+}
+
+.ui-dialog .charsheet .combat-attacks .attack-section.show-on-edit .header-section {
+    writing-mode: vertical-lr;
+    transform: rotate(-180deg);
+    min-height: 4.55em;
 }
 
 .sheet-darkmode .ui-dialog .charsheet .combat-attacks .attack-section .header-section {
@@ -2575,8 +2650,8 @@ body.sheet-darkmode {
     background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
 }
 
-.charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
-.charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
+.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
+.charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(3) {
     flex-basis: 50%;
