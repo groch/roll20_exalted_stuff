@@ -1,3 +1,45 @@
+* {
+    transition: color 1s, background-color 1s;
+}
+
+.charsheet select {
+    transition: background-color 0s;
+}
+
+*::before {
+    transition: color 1s, background-color 1s;
+}
+
+h1 span,
+.charsheet div.sheet-dots {
+    transition: background-color 0s;
+}
+
+.ui-dialog .charsheet button.stealth-btn {
+    color: #333;
+    display: inline-block;
+    background: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    line-height: 18px;
+    text-shadow: none;
+    box-shadow: none;
+    transition: color 1s, text-shadow 1s;
+}
+
+.sheet-darkmode .ui-dialog .charsheet button.stealth-btn {
+    color: var(--dark-secondarytext);
+}
+
+.ui-dialog .charsheet button.stealth-btn:hover {
+    color: gold;
+    transition: color .1s, text-shadow .1s;
+    text-shadow: 1px 1px 0 red, -1px 1px 0 red, -1px -1px 0 red, 1px -1px 0 red;
+    cursor: pointer;
+}
+
 .charsheet {
     position: absolute;
     left: 0;
@@ -1918,7 +1960,6 @@ body.sheet-darkmode {
     color: white;
 }
 
-/* .sheet-darkmode input[type=checkbox].sheet-unnamed-toggle + span::before, */
 .sheet-darkmode .merits-div-checkbox input + strong:before{
     background: dimgray;
     color: #e6e6e6;
@@ -1971,23 +2012,6 @@ body.sheet-darkmode {
 }
 
 /* --- COMBAT TAB --- */
-
-.ui-dialog .charsheet button[type="roll"].stealth-btn {
-    display: inline-block;
-    background: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    color: var(--dark-secondarytext);
-    line-height: 18px;
-    text-shadow: none;
-    box-shadow: none;
-}
-
-.ui-dialog .charsheet button[type="roll"].stealth-btn:hover {
-    color: gold;
-}
 
 .charsheet .sheet-content .sheet-show-combat-tab[value="0"] ~ .sheet-tab-combat {
     display: none;
@@ -2143,7 +2167,6 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-init div.sheet-init-div {
     display: none;
-    /* padding-top: 5px; */
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-init input.sheet-initeffect:checked ~ div.sheet-init-div {
@@ -2184,10 +2207,6 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-init .sheet-init-bonus-dices {
     width: 6.95em;
-}
-
-.charsheet .sheet-tab-combat-sheet .combat-init .sheet-init-macro-options {
-    /* width: calc(100% - 13em); */
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-init > div:last-child {
@@ -2410,7 +2429,6 @@ body.sheet-darkmode {
 }
 
 .charsheet .combat-textarea {
-    /* width: auto; */
     display: none;
     width: 98.8%;
     margin-bottom: 0.5em;
@@ -2495,8 +2513,6 @@ body.sheet-darkmode {
 }
 
 .ui-dialog .charsheet .combat-attacks .attack-section .inner-section {
-    /* height: 100%;
-    vertical-align: top; */
     width: calc(100% - 2em);
     display: flex;
     flex-flow: column;
@@ -2529,21 +2545,12 @@ body.sheet-darkmode {
     border-radius: 13px;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section > div > div .sheet-ddmg-bonus-dices {
-    /* width: 16.75em; */
-}
-
 .ui-dialog .charsheet .combat-attacks .attack-section > div > div .sheet-init-macro-options {
     min-width: 4em;
-    /* width: calc(100% - 23.1em); */
 }
 
 .ui-dialog .charsheet .combat-attacks .attack-section.withering-section > div > div.atk-section select[name="attr_repcombat-watk-abi"] {
     width: 5.1em;
-}
-
-.ui-dialog .charsheet .combat-attacks .attack-section.decisive-section > div > div.dmg-section .sheet-init-macro-options {
-    /* width: calc(100% - 32.8em); */
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-grouped-buttons.reset-init,
@@ -2559,9 +2566,6 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-combat-sheet .combat-attacks .withering-section .atk-section .sheet-grouped-buttons .btn {
     text-shadow: 0 1px 1px rgb(var(--dark-accuracy-color));
 }
-.charsheet .sheet-tab-combat-sheet .combat-attacks .withering-section .atk-section .sheet-grouped-buttons {
-    /* background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box; */
-}
 
 .charsheet .sheet-tab-combat-sheet .combat-attacks .withering-section .dmg-section .sheet-grouped-buttons {
     background: linear-gradient(rgb(var(--init-color)), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
@@ -2571,12 +2575,6 @@ body.sheet-darkmode {
     background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
 }
 
-.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-grouped-buttons.noreset-init {
-    /* background: linear-gradient(rgb(128, 128, 128), rgb(0, 128  , 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box */
-}
-
-/* .charsheet .combat-attacks .withering-section .flex-wrap .flex:first-child,
-.charsheet .combat-attacks .decisive-section .atk-section.flex-wrap .flex:first-child, */
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),

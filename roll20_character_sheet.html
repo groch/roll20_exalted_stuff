@@ -12,7 +12,6 @@
     on('change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane change:ma-nightingale '
       +'change:ma-devil change:ma-claw change:ma-pearl change:ma-steel', TAS._fn(updateWoundThenParry));
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef remove:repeating_weapon', TAS._fn(updateWoundThenParry));
-    // on('change:onslaught change:apply-onslaught change:onslaught-applied', TAS._fn(updateWoundThenParry));
     on('change:qc-parry', TAS._fn(updateWoundThenParry));
     on('change:repeating_health', TAS._fn(updateWoundThenParry));
     on('change:combat-crippling-pen change:woundpenalty-add', TAS._fn(updateWoundThenParry));
@@ -528,20 +527,20 @@
     costSectionsToBind.forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(updateRollForCost))));
 
     function updateRollForCost(e) {
-        TAS.debug('updateRollForCost::updateRollForCost e=', JSON.stringify(e));
+        if (debug === 2) TAS.debug('updateRollForCost::updateRollForCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
             repSectionName = sourceAttrSplit[1],
             id = sourceAttrSplit[2];
         const attr_name = `repeating_${repSectionName}_${id}_`;
 
-        TAS.debug(`updateRollForCost:: attr_name=${attr_name}`);
+        if (debug === 2) TAS.debug(`updateRollForCost:: attr_name=${attr_name}`);
         if (e.sourceType === "sheetworker") {
             TAS.debug('updateRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
-        TAS.debug('updateRollForCost:: NORMAL TRIGGER COST EDIT');
+        if (debug === 2) TAS.debug('updateRollForCost:: NORMAL TRIGGER COST EDIT');
         getAttrs(costAttrs.map(attr => attr_name + attr), setDebugWrapper(val => {
-            TAS.debug(`updateRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
+            if (debug === 2) TAS.debug(`updateRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
             const mote = val[attr_name + 'rep-cost-mote'],
                 will = val[attr_name + 'rep-cost-will'],
                 init = val[attr_name + 'rep-cost-init'];
@@ -596,18 +595,25 @@
           wDmgAttrsToBind =     ['wdmg-attr',   'weap-dmg', 'wdmg-bonus-dices', 'wdmg-bonus-successes',     'wdmg-final-macro-options', 'weap-ovw'],
           dAtkAttrsToBind =     ['datk-attr',   'datk-abi', 'datk-bonus-dices', 'datk-bonus-successes',     'datk-final-macro-options'],
           dDmgAttrsToBind =     ['ddmg-dices',  'ddmg-bonus-successes',         'ddmg-final-macro-options'],
-          dDmgInitResetAttrsToBind =           ['init-to-set'];
+          dDmgInitResetAttrsToBind =           ['init-to-set'],
+          allCombatBind =  ['repcombat-name',     'combat-toggle-desc'];
 
     on(`change:repeating_combat-init`, setDebugWrapper((e) => updateAttackRollRepeating(e, initSectionsToBind, defaultInitFinalExpr, 'repinit-')));
 
-    on(`change:repeating_combat-attack`, setDebugWrapper((e) => {
+    allCombatBind.forEach(section => on(`change:repeating_combat-attack:${section}`, setDebugWrapper((e) => {
         updateAttackRollRepeating(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-');
         updateAttackRollRepeating(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-');
         updateAttackRollRepeating(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-');
         updateAttackRollRepeating(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-');
 
         updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
-    }));
+    })));
+    
+    wAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-'))));
+    wDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-'))));
+    dAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-'))));
+    dDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-'))));
+    dDmgInitResetAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-ddmg-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-'))));
 
     function updateAttackRollRepeating(e, sectionToBind, finalExprCb, attributePrefix = '', finalAttrNameAttrPrefix = '') {
         const repeatingSectionName = e.sourceAttribute.split('_')[1];
@@ -616,15 +622,15 @@
             if (debug === 2) TAS.debug(`updateAttackRollRepeating:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
             return;
         }
-        TAS.debug(`updateAttackRollRepeating::updateAttackRollRepeating e=${JSON.stringify(e)}`);
+        if (debug === 2) TAS.debug(`updateAttackRollRepeating::updateAttackRollRepeating e=${JSON.stringify(e)}`);
         updateAttackRollRepeatingId(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
     }
 
     function updateAttackRollRepeatingId(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
         const attr_name = `repeating_${repeatingSectionName}_${id}_${attributePrefix}`;
 
-        getAttrs([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)], TAS._fn(function getAllValuesForAttackRoll(val) {
-            TAS.debug(`updateAttackRollRepeating::getAllValuesForAttackRoll val=${JSON.stringify(val)}`);
+        getAttrs([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)], setDebugWrapper(function getAllValuesForAttackRoll(val) {
+            if (debug === 2) TAS.debug(`updateAttackRollRepeating::getAllValuesForAttackRoll val=${JSON.stringify(val)}`);
             let replaced = false;
             for (const section of sectionToBind) {
                 for (const attr_tested of attrNAbi) {
@@ -637,7 +643,7 @@
             }
 
             if (!setIfReplaced || replaced) {
-                TAS.debug(`updateAttackRollRepeating:: OUT val=${JSON.stringify(val)}`);
+                if (debug === 2) TAS.debug(`updateAttackRollRepeating:: OUT val=${JSON.stringify(val)}`);
                 let finalExpr = finalExprCb(val, attr_name);
                 let finalAttrName = attr_name + finalAttrNameAttrPrefix + 'final-macro-replaced';
                 TAS.debug(`updateAttackRollRepeating:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
@@ -651,6 +657,10 @@
     attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(updateAllAttackRolls)));
 
     function updateAllAttackRolls(e) {
+        if (e.sourceType !== "player") {
+            TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
         TAS.debug('updateAllAttackRolls::updateAllAttackRolls e=', JSON.stringify(e));
 
         getSectionIDs('combat-init', setDebugWrapper(function getCombatInitSection(idSections) {
@@ -713,6 +723,7 @@
                     case 2.27:
                         TAS._fn(upgradeto228());
                         // fallthrough
+                    case 2.28:
                     case version:
                         // nothing to do
                         // fallthrough
@@ -756,6 +767,55 @@
             TAS.debug('Saving attributes!', attrs);
             setAttrs(cleanAttrs(attrs));
         }));
+    }
+
+    on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+        if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
+        clickDefaultMacro(e, (cb, attr_name) => {
+                const tested_attr = `${attr_name}repcombat-watk-abi`,
+                     written_attr = `${attr_name}repcombat-watk-bonus-dices`;
+                getAttrs([tested_attr], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
+                    let writtenValue;
+                    if (val[tested_attr] === '@{archery}')     writtenValue = '2?{Range ?|Close,-2|Short,+4|Medium,+2|Long,+0|Extreme,-2}';
+                    else if (val[tested_attr] === '@{thrown}') writtenValue = '2?{Range ?|Close,+4|Short,+3|Medium,+2|Long,-1|Extreme,-2}';
+                    else                                       writtenValue = '?{Bonus Dices ? (Stunt, Situational, ...)|2}';
+                    cb(written_attr, writtenValue);
+                }));
+            },
+            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', true)
+        );
+    }));
+
+    on('clicked:repeating_combat-attack:default-macro-datk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+        if (debug === 2) TAS.debug(`CLICK datk-d !!! e=${JSON.stringify(e)}`);
+        clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}repcombat-datk-bonus-dices`, '?{Bonus Dices ? (Stunt, Situational, ...)|2}'),
+            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', true)
+        );
+    }));
+
+    on('clicked:repeating_combat-attack:default-macro-watk-s clicked:repeating_combat-attack:default-macro-datk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+        if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
+        clickDefaultMacro(e, (cb, attr_name, section) => cb(`${attr_name}repcombat-${section}-bonus-successes`, '?{Bonus Success ? (Stunt, Willpower, ...)|0}'),
+            (id, section) => {        
+                if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', true);
+                else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', true);
+            }
+        );
+    }));
+
+    function clickDefaultMacro(e, cb, finalCb) {
+        if (debug === 2) TAS.debug(`clickDefaultMacro::clickDefaultMacro e=${JSON.stringify(e)}`);
+        const repeatingSectionName = e.sourceAttribute.split('_')[1];
+        const id = e.sourceAttribute.split('_')[2];
+        const section = e.sourceAttribute.split('_')[3].split('-')[2];
+        const attr_name = `repeating_${repeatingSectionName}_${id}_`;
+
+        cb((written_attr, writtenValue) => {
+            TAS.debug(`setting ${written_attr} = ${writtenValue}`);
+            setAttrs({[written_attr]: writtenValue});
+            if (debug === 2) TAS.debug(`updating macro`);
+            finalCb(id, section);
+        }, attr_name, section);
     }
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
@@ -7952,13 +8012,14 @@
                                             <option value="9">9</option>
                                             <option value="10">10</option>
                                         </select>+
-                                        <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">+
+                                        <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
+                                        <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability&#013;&#010;(Special for Archery & Thrown)">+</button>
                                         <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
                                         <p class="sheet-bg-show"><input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}">+</p>
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
                                     <div class="flex grow-normal">
-                                        + 
+                                        <button type="action" name="act_default-macro-watk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                         <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
 
                                         <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
@@ -8092,13 +8153,14 @@
                                             <option value="8">8</option>
                                             <option value="9">9</option>
                                             <option value="10">10</option>
-                                        </select>+
+                                        </select>
+                                        <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                         <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
                                         <p class="sheet-bg-show"><input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}">+</p>
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
                                     <div class="flex grow-normal">
-                                        + 
+                                        <button type="action" name="act_default-macro-datk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                         <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
 
                                         <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
