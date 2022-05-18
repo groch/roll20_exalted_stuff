@@ -7609,59 +7609,41 @@
 		<div class="sheet-body sheet-tab-content sheet-tab-combat-sheet">
             <h1><span>Combat</span></h1>
             <div class="combat-header">
-                <div class="health-line flex sheet-bg-hide"><!-- HEALTH -->
-                    <div class="sheet-health-header sheet-text-center sheet-txt-lg"><strong>HL</strong></div>
-                    <div class="sheet-health-track grow-normal"><!-- Health Levels -->
+                <div class="weapon-line"><!-- WEAPONS -->
+                    <div class="sheet-table sheet-gear">
                         <input type="hidden" name="attr_wound-penalty" value="-4">
-                        <fieldset class="repeating_health">
-                            <div class="sheet-health-level">
-                                <div class="sheet-damage-box">
-                                    <input type="radio" name="attr_hl-damage" value="healthy" class="sheet-dots0" checked="checked"><span>&nbsp;</span>
-                                    <input type="radio" name="attr_hl-damage" value="bashing" class="sheet-dots1"><span>&nbsp;</span>
-                                    <input type="radio" name="attr_hl-damage" value="lethal" class="sheet-dots2"><span>&nbsp;</span>
-                                    <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
-                                </div>
-                                <select class="sheet-wound-penalty" name="attr_hl-penalty">
-                                    <option value="" selected="selected"></option>
-                                    <option value="0">-0</option>
-                                    <option value="-1">-1</option>
-                                    <option value="-2">-2</option>
-                                    <option value="-3">-3</option>
-                                    <option value="-4">-4</option>
-                                    <option value="I">Incapacitated</option>
-                                </select>
+                        <div class="sheet-table-header">
+                            <div class="sheet-table-row">
+                                <div class="sheet-table-cell" style="width: 25%;">Weapon Name</div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Accuracy"><span class="sheet-dotted">Acc</span></div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Damage"><span class="sheet-dotted">Dmg</span></div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Defense"><span class="sheet-dotted">Def</span></div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Parry including Defense"><span class="sheet-dotted">Par</span></div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Parry with specialty including Defense"><span class="sheet-dotted">ParS</span></div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Overwhelming"><span class="sheet-dotted">Over.</span></div>
+                                <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
+                                <div class="sheet-table-cell">Tags</div>
                             </div>
+                        </div>
+                        <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
+                            <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
+                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
+                            <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
+                            <div class="sheet-table-cell"><input type="number" name="attr_repweapondef" value="0"></div>
+                            <div class="sheet-table-cell">
+                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+                                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
+                                <input type="number" value="@{repweaponparry}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryfinal" disabled="disabled" class="wound-taint onslaught-taint">
+                            </div>
+                            <div class="sheet-table-cell">
+                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+                                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
+                                <input type="number" value="@{repweaponparryspe}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryspefinal" disabled="disabled" class="wound-taint onslaught-taint">
+                            </div>
+                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
+                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
+                            <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
                         </fieldset>
-                    </div>
-                    <div class="crippling-box"><!-- CRIPPLING BOX -->
-                        <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
-                        <span class="sheet-spelleffect" title="Crippling:"></span>
-                    </div>
-                    <div class="wound-pen"><!-- WOUND PEN -->
-                        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
-                        <input type="number" value="0" style="width: 27px" title="Wound panalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
-                    </div>
-                </div>
-                <div class="health-line flex sheet-bg-show"><!-- HEALTH BG -->
-                    <div class="sheet-health-track grow-normal">
-                        <p class="flex grow-normal">Magnitude:
-                            <input type="number" name="attr_battlegroup-magnitude" value="8" class="grow-normal">/
-                            <input type="number" name="attr_battlegroup-magnitude_max" readonly="readonly">
-                        </p>
-                        <p class="flex grow-normal">Size:
-                            <input type="number" name="attr_battlegroup-size" value="0" class="grow-normal">/
-                            <input type="number" name="attr_battlegroup-size_max" value="1">
-                        </p>
-                    </div>
-                    <div class="crippling-box"><!-- CRIPPLING BOX -->
-                        <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
-                        <span class="sheet-spelleffect" title="Crippling:"></span>
-                    </div>
-                    <div class="wound-pen"><!-- WOUND PEN -->
-                        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
-                        <input type="number" value="0" style="width: 27px" title="Wound panalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
                     </div>
                 </div>
                 <div class="defense-line"><!-- DEFENSES -->
@@ -7741,41 +7723,59 @@
                         </div>
                     </div>
                 </div>
-                <div class="weapon-line"><!-- WEAPONS -->
-                    <div class="sheet-table sheet-gear">
+                <div class="health-line flex sheet-bg-hide"><!-- HEALTH -->
+                    <div class="sheet-health-header sheet-text-center sheet-txt-lg"><strong>HL</strong></div>
+                    <div class="sheet-health-track grow-normal"><!-- Health Levels -->
                         <input type="hidden" name="attr_wound-penalty" value="-4">
-                        <div class="sheet-table-header">
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell" style="width: 25%;">Weapon Name</div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Accuracy"><span class="sheet-dotted">Acc</span></div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Damage"><span class="sheet-dotted">Dmg</span></div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Defense"><span class="sheet-dotted">Def</span></div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Parry including Defense"><span class="sheet-dotted">Par</span></div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Parry with specialty including Defense"><span class="sheet-dotted">ParS</span></div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Overwhelming"><span class="sheet-dotted">Over.</span></div>
-                                <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
-                                <div class="sheet-table-cell">Tags</div>
+                        <fieldset class="repeating_health">
+                            <div class="sheet-health-level">
+                                <div class="sheet-damage-box">
+                                    <input type="radio" name="attr_hl-damage" value="healthy" class="sheet-dots0" checked="checked"><span>&nbsp;</span>
+                                    <input type="radio" name="attr_hl-damage" value="bashing" class="sheet-dots1"><span>&nbsp;</span>
+                                    <input type="radio" name="attr_hl-damage" value="lethal" class="sheet-dots2"><span>&nbsp;</span>
+                                    <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
+                                </div>
+                                <select class="sheet-wound-penalty" name="attr_hl-penalty">
+                                    <option value="" selected="selected"></option>
+                                    <option value="0">-0</option>
+                                    <option value="-1">-1</option>
+                                    <option value="-2">-2</option>
+                                    <option value="-3">-3</option>
+                                    <option value="-4">-4</option>
+                                    <option value="I">Incapacitated</option>
+                                </select>
                             </div>
-                        </div>
-                        <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
-                            <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
-                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
-                            <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
-                            <div class="sheet-table-cell"><input type="number" name="attr_repweapondef" value="0"></div>
-                            <div class="sheet-table-cell">
-                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                <input type="number" value="@{repweaponparry}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryfinal" disabled="disabled" class="wound-taint onslaught-taint">
-                            </div>
-                            <div class="sheet-table-cell">
-                                <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                <input type="number" value="@{repweaponparryspe}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryspefinal" disabled="disabled" class="wound-taint onslaught-taint">
-                            </div>
-                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
-                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
-                            <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
                         </fieldset>
+                    </div>
+                    <div class="crippling-box"><!-- CRIPPLING BOX -->
+                        <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
+                        <span class="sheet-spelleffect" title="Crippling:"></span>
+                    </div>
+                    <div class="wound-pen"><!-- WOUND PEN -->
+                        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
+						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                        <input type="number" value="0" style="width: 27px" title="Wound panalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
+                    </div>
+                </div>
+                <div class="health-line flex sheet-bg-show"><!-- HEALTH BG -->
+                    <div class="sheet-health-track grow-normal">
+                        <p class="flex grow-normal">Magnitude:
+                            <input type="number" name="attr_battlegroup-magnitude" value="8" class="grow-normal">/
+                            <input type="number" name="attr_battlegroup-magnitude_max" readonly="readonly">
+                        </p>
+                        <p class="flex grow-normal">Size:
+                            <input type="number" name="attr_battlegroup-size" value="0" class="grow-normal">/
+                            <input type="number" name="attr_battlegroup-size_max" value="1">
+                        </p>
+                    </div>
+                    <div class="crippling-box"><!-- CRIPPLING BOX -->
+                        <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
+                        <span class="sheet-spelleffect" title="Crippling:"></span>
+                    </div>
+                    <div class="wound-pen"><!-- WOUND PEN -->
+                        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
+						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                        <input type="number" value="0" style="width: 27px" title="Wound panalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
                     </div>
                 </div>
                 <div class="ressource-line flex-wrap">
