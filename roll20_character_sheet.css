@@ -15,7 +15,7 @@ h1 span,
     transition: background-color 0s;
 }
 
-.ui-dialog .charsheet button.stealth-btn {
+.charsheet button.stealth-btn {
     color: #333;
     display: inline-block;
     background: none;
@@ -29,11 +29,11 @@ h1 span,
     transition: color 1s, text-shadow 1s;
 }
 
-.sheet-darkmode .ui-dialog .charsheet button.stealth-btn {
+.sheet-darkmode .charsheet button.stealth-btn {
     color: var(--dark-secondarytext);
 }
 
-.ui-dialog .charsheet button.stealth-btn:hover {
+.charsheet button.stealth-btn:hover {
     color: gold;
     transition: color .1s, text-shadow .1s;
     text-shadow: 1px 1px 0 red, -1px 1px 0 red, -1px -1px 0 red, 1px -1px 0 red;
@@ -369,12 +369,15 @@ tier 2: couleurs
 .charsheet .sheet-3colrow .sheet-2col:last-child { margin-right: 0; }
 
 .charsheet .sheet-3colrow .sheet-2col:last-child,
+.charsheet .sheet-col,
 .ui-dialog .charsheet .sheet-col {
     display: grid;
     align-items: start;
     grid-template-columns: repeat(1, 1fr );
 }
 
+.charsheet .sheet-2colrow,
+.charsheet .sheet-3colrow,
 .ui-dialog .charsheet .sheet-2colrow,
 .ui-dialog .charsheet .sheet-3colrow {
     display: grid;
@@ -382,15 +385,19 @@ tier 2: couleurs
     gap: 0 1em;
 }
 
+.charsheet .sheet-2colrow,
 .ui-dialog .charsheet .sheet-2colrow {
     grid-template-columns: repeat(2, 1fr );
 }
 
+.charsheet .sheet-3colrow,
 .ui-dialog .charsheet .sheet-3colrow {
     grid-template-columns: repeat(3, 1fr );
 }
 
 .charsheet .sheet-3colrow .sheet-2col:last-child > div,
+.charsheet .sheet-2colrow > .sheet-col,
+.charsheet .sheet-3colrow > .sheet-col,
 .ui-dialog .charsheet .sheet-2colrow > .sheet-col,
 .ui-dialog .charsheet .sheet-3colrow > .sheet-col {
     display: grid;
@@ -398,18 +405,22 @@ tier 2: couleurs
     margin-right: auto;
 }
  
+.charsheet .sheet-3colrow.sheet-centerblock,
 .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock {
     grid-template-areas: "a b b";
 }
 
+.charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
 .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities {
     grid-area: a;
 }
 
+.charsheet .sheet-3colrow .sheet-2col,
 .ui-dialog .charsheet .sheet-3colrow .sheet-2col {
     grid-area: b;
 }
 
+.charsheet .sheet-tab-intimacies-sheet .sheet-3colrow,
 .ui-dialog .charsheet .sheet-tab-intimacies-sheet .sheet-3colrow {
     grid-template-columns: min-content calc(100% - 1em);
 }
@@ -554,6 +565,7 @@ tier 2: couleurs
     bottom: 0;
 }
 
+.charsheet .sheet-attributes.sheet-3colrow,
 .ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
     grid-template-rows: repeat(3, 1fr);
     grid-auto-flow: column;
@@ -2283,7 +2295,7 @@ body.sheet-darkmode {
     flex-shrink: 0;
 }
 
-.ui-dialog .charsheet div .sheet-grouped-buttons button[type="roll"] {
+.charsheet div .sheet-grouped-buttons button[type="roll"] {
 	margin: 0;
 	border-radius: 0;
 	border: 0;
@@ -2293,7 +2305,7 @@ body.sheet-darkmode {
     border-right: 1px solid;
 }
 
-.ui-dialog .charsheet div .sheet-grouped-buttons button[type="roll"]:last-child {
+.charsheet div .sheet-grouped-buttons button[type="roll"]:last-child {
 	padding: 0 7px 0 0;
     border-right: 0;
 }
@@ -2388,7 +2400,7 @@ body.sheet-darkmode {
     width: 2em;
 }
 
-.ui-dialog .charsheet .combat-attacks .sheet-atk-decisive-init-to-reset {
+.charsheet .combat-attacks .sheet-atk-decisive-init-to-reset {
     width: 3em;
 }
 
@@ -2488,7 +2500,7 @@ body.sheet-darkmode {
     width: 5em;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
+.charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
     flex-flow: initial;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -2499,7 +2511,7 @@ body.sheet-darkmode {
 }
 
 @media only screen and (max-width: 398px) {
-    .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
+    .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
         justify-content: center;
     }
 
@@ -2518,7 +2530,7 @@ body.sheet-darkmode {
     display: flex;
 }
 
-.sheet-darkmode .ui-dialog .charsheet .combat-attacks .attack-section .header-section {
+.sheet-darkmode .charsheet .combat-attacks .attack-section .header-section {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -2547,26 +2559,26 @@ body.sheet-darkmode {
 
 /* -- COMBAT 1ST LINE -- */
 
-.ui-dialog .charsheet .combat-attacks .first-line {
+.charsheet .combat-attacks .first-line {
     padding: 0 0.4em;
 }
 
-.ui-dialog .charsheet .combat-attacks .first-line .rounded-box > input {
+.charsheet .combat-attacks .first-line .rounded-box > input {
     border-radius: 0 0 5px 0;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section {
+.charsheet .combat-attacks .attack-section {
     border: 1px solid darkred;
     border-radius: 8px;
     display: flex;
     padding: 0 0.2em;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section > div {
+.charsheet .combat-attacks .attack-section > div {
     display: inline-block;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section .header-section {
+.charsheet .combat-attacks .attack-section .header-section {
     text-decoration: underline;
     display: inline-flex;
     justify-content: center;
@@ -2578,54 +2590,54 @@ body.sheet-darkmode {
     color: rgb(var(--goldish-color));
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section.show-on-edit .header-section {
+.charsheet .combat-attacks .attack-section.show-on-edit .header-section {
     writing-mode: vertical-lr;
     transform: rotate(-180deg);
     min-height: 4.55em;
 }
 
-.sheet-darkmode .ui-dialog .charsheet .combat-attacks .attack-section .header-section {
+.sheet-darkmode .charsheet .combat-attacks .attack-section .header-section {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section .inner-section {
+.charsheet .combat-attacks .attack-section .inner-section {
     width: calc(100% - 2em);
     display: flex;
     flex-flow: column;
     justify-content: center;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section select {
+.charsheet .combat-attacks .attack-section select {
     width: 7.1em;
     text-align: center;
     height: 25px;
     border-radius: 13px;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section input[type="text"] {
+.charsheet .combat-attacks .attack-section input[type="text"] {
     width: 3em;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section > div > div .head {
+.charsheet .combat-attacks .attack-section > div > div .head {
     width: 2.4em;
     display: inline-block;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-dmg {
+.charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-dmg {
     width: 5.769em;
     border-radius: 13px;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-atk {
+.charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-atk {
     width: 1.2em;
     border-radius: 13px;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section > div > div .sheet-init-macro-options {
+.charsheet .combat-attacks .attack-section > div > div .sheet-init-macro-options {
     min-width: 4em;
 }
 
-.ui-dialog .charsheet .combat-attacks .attack-section.withering-section > div > div.atk-section select[name="attr_repcombat-watk-abi"] {
+.charsheet .combat-attacks .attack-section.withering-section > div > div.atk-section select[name="attr_repcombat-watk-abi"] {
     width: 5.1em;
 }
 
@@ -2658,32 +2670,42 @@ body.sheet-darkmode {
     flex-basis: 50%;
 }
 
+/* .ui-dialog .charsheet => NOT ON COMPANION !!! */
 
 /* --- MOBILE SHEET PORTRAIT --- */
 
 @media only screen and (max-width: 630px) {
 
+    .charsheet div.sheet-2colrow,
+    .charsheet div.sheet-3colrow,
     .ui-dialog .charsheet div.sheet-2colrow,
     .ui-dialog .charsheet div.sheet-3colrow {
         grid-template-columns: 100%;
     }
 
+    .charsheet div.sheet-3colrow.sheet-centerblock,
     .ui-dialog .charsheet div.sheet-3colrow.sheet-centerblock {
         grid-template-areas: none;
         grid-template-columns: 100%;
     }
 
+    .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
+    .charsheet .sheet-3colrow .sheet-2col,
     .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
     .ui-dialog .charsheet .sheet-3colrow .sheet-2col {
         grid-area: unset;
+        width: 100%;
     }
 
-    .charsheet .sheet-3colrow .sheet-2col:last-child > div,
+    /* .charsheet .sheet-3colrow .sheet-2col:last-child > div,
+    .charsheet .sheet-2colrow > .sheet-col,
+    .charsheet .sheet-3colrow > .sheet-col,
     .ui-dialog .charsheet .sheet-2colrow > .sheet-col,
     .ui-dialog .charsheet .sheet-3colrow > .sheet-col {
         grid-template-columns: 100%;
-    }
+    } */
 
+    .charsheet .sheet-attributes.sheet-3colrow,
     .ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
         grid-template-columns: repeat(1, 1fr);
         grid-auto-flow: unset;
