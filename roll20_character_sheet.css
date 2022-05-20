@@ -19,19 +19,6 @@ input[type="number"] {
     transition: color 1s, background-color 1s;
 }
 
-/* .charsheet select {
-    transition: background-color 0s;
-} */
-
-/* *::before {
-    transition: color 1s, background-color 1s;
-} */
-
-/* h1 span,
-.charsheet div.sheet-dots {
-    transition: background-color 0s;
-} */
-
 .charsheet button.stealth-btn {
     color: #333;
     display: inline-block;
