@@ -653,7 +653,7 @@ function performRoll(msg, cmd) {
             if (result.rollSetup.has10doubled) result.rollSetup.face[10].doubles.push({limit: 0, done: 0});
             finalizeRoll(result);
 
-            const player = getObj("player", msg.playerid);
+            const player = msg.playerid === 'API' ? {get: () => 'API'} : getObj("player", msg.playerid);
             var outHTML = buildHTML(result, ops[0].origRoll, player);
             if (!outHTML) {
                 logger(LOGLEVEL.EMERGENCY, 'performRoll:: !!!!!!!!! outHTML IS NULL OR EMPTY !!!!!!!!!!');
