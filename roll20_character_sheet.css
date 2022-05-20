@@ -2649,6 +2649,12 @@ body.sheet-darkmode {
     display: inline-block;
 }
 
+.charsheet .edit-toggle:hover,
+.charsheet .attack-section .stealth-btn:hover ~ .sheet-watk-bonus-dices,
+.charsheet .attack-section .stealth-btn:hover ~ .sheet-watk-bonus-successes {
+    box-shadow: 1px 1px 2px gold, -1px 1px 2px gold, 1px -1px 2px gold, -1px -1px 2px gold;
+}
+
 .charsheet .combat-attacks .attack-section > div > div input[type="number"][readonly].sheet-weap-dmg {
     width: 5.769em;
     border-radius: 13px;
