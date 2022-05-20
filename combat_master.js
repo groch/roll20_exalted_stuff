@@ -2039,8 +2039,10 @@ var CombatMaster = CombatMaster || (function() {
         // }
 
         setTimeout(() => {
-            if (state[combatState].config.turnorder.useMarker || markerType.RANGE === type) {
-                let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : 'map' };
+            if (state[combatState].config.turnorder.useMarker || (state[combatState].config.turnorder.useRangeMarker !== 'None' && markerType.RANGE === type)) {
+                let isBattleGroup = token.get('represents') && getAttrByName(token.get('represents'), 'battlegroup', 'current') === '1' ? true : false;
+                logger(`changeMarker:: isBattleGroup=${isBattleGroup}`)
+                let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : isBattleGroup && markerType.RANGE !== type ? 'gmlayer' : 'map' };
                 logger('changeMarker::Moving marker type=' + type + ', pos=' + JSON.stringify(position) + ', setting to=' + JSON.stringify(typeMarkerNewAttributes));
                 typeMarker.set(typeMarkerNewAttributes);
             }
