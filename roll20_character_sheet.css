@@ -210,6 +210,10 @@ tier 2: couleurs
     font-weight: normal;
 }
 
+.charsheet .woundpenalty-add-input[title] {
+    cursor: text;
+}
+
 .charsheet input[type=number][disabled].woundpenalty,
 .charsheet input[type=number][disabled].woundpenalty-input {
     background-color: rgb(255, 128, 128);
