@@ -2069,7 +2069,9 @@ var CombatMaster = CombatMaster || (function() {
 
                 var prevstatusmarkers = prev.statusmarkers.split(",");
                 var newstatusmarkers  = obj.get('statusmarkers').split(",");
-
+                logger(`handleStatusMarkerChange:: prev=${JSON.stringify(prevstatusmarkers)}`);
+                logger(`handleStatusMarkerChange:: new=${JSON.stringify(newstatusmarkers)}`);
+                
                 if (prevstatusmarkers.length > 0) {
                     prevstatusmarkers.forEach((marker) => {
                         let condition = getConditionByMarker(marker);
@@ -2082,9 +2084,10 @@ var CombatMaster = CombatMaster || (function() {
                 if (newstatusmarkers.length > 0 ) {
                     newstatusmarkers.forEach(function(marker){
                         let condition = getConditionByMarker(marker);
+                        const duration = marker.indexOf('@') > 0 ? marker.split('@')[1] : condition.duration;
                         if (!condition) return;
                         if (marker !== "" && !prevstatusmarkers.includes(marker))
-                            addConditionToToken(obj,condition.key,condition.duration,condition.direction,condition.message);
+                            addConditionToToken(obj,condition.key,duration,condition.direction,condition.message);
                     });
                 }
             }
