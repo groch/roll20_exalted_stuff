@@ -86,7 +86,7 @@ var CombatMaster = CombatMaster || (function() {
         // spellsImage = 'C';
 
     //Styling for the chat responses.
-    const LogLvl = LOGLEVEL.DEBUG,
+    const LogLvl = LOGLEVEL.INFO, // EDIT THIS TO CHANGE LOG LEVEL
     logger = (level, ...logged) => {
         if (!(level instanceof LOGLEVEL)) {
             logged.unshift(level);
@@ -447,7 +447,7 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
 
     togglePageSize = (cmdDetails, selected) => {
-        logger(`togglePageSize::togglePageSize cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+        logger(LOGLEVEL.INFO, `togglePageSize::togglePageSize cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
         const revert = cmdDetails.details['revert'] ? true : false;
         logger(`togglePageSize::togglePageSize revert=${revert}`);
@@ -470,7 +470,7 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     addMotesCommand = (cmdDetails, selected) => {
-        logger(`addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+        logger(LOGLEVEL.INFO, `addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
         let qty = cmdDetails.details['qty'] ? parseInt(cmdDetails.details['qty']) : state[combatState].config.turnorder.moteQtyToAdd,
             charAddedList = [];
@@ -547,7 +547,7 @@ var CombatMaster = CombatMaster || (function() {
             logger(`addMotesToNonMortalCharacter::qty=${qty}, added=${added}, current=${current}, max=${max}`);
             let toAdd = qty - added < max - current ? qty - added : max - current;
             added += toAdd;
-            logger(`addMotesToNonMortalCharacter::adding ${toAdd} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
+            logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::adding ${toAdd} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
             let total = (current + toAdd);
             if (!isNaN(total)) {
                 const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding ${toAdd} motes to ${attr.get('name')}`;
@@ -557,19 +557,20 @@ var CombatMaster = CombatMaster || (function() {
                     for (const idPlayer of controlledBy) {
                         const playerObj = getObj('player', idPlayer);
                         if (!playerObj) {
-                            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${idPlayer}`);
+                            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${idPlayer} probably imported character`);
                             continue;
                         }
                         sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString);
                     }
                 }
-                if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0)
+                if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0) {
                     sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
                         const playerObj = getObj('player', i);
                         if (playerObj) return playerObj.get('_displayname');
-                        logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
+                        logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i} probably imported character`);
                         return false;
                     }).filter(i => i).join(', ')}])`:''}`);
+                }
             }
             if (added >= qty) break;
         }
@@ -597,7 +598,7 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     createDecisiveAbilities = (cmdDetails, selected) => {
-        logger('createDecisiveAbilities::createDecisiveAbilities cmdDetails=' + JSON.stringify(cmdDetails));
+        logger(`createDecisiveAbilities::createDecisiveAbilities cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
         _.chain(selected)
         .map(o => getObj('graphic',o._id))
@@ -633,11 +634,12 @@ var CombatMaster = CombatMaster || (function() {
             });
             _.each(_.keys(expectedAbilities),(key)=>{
                 if (!expectedAbilities[key]){
-                    logger(LOGLEVEL.INFO, 'createDecisiveAbilities::Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
+                    logger(LOGLEVEL.INFO, 'createDecisiveAbilities:: Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
                     createObj('ability',abilityTemplates[key]);
                 } else {
                     let finalAbi = findObjs({type:'ability',characterid:finalcharacterId, description:`Exalted HLP Decisive Ability:${key}`})[0];
                     if (!finalAbi) logger(LOGLEVEL.ALERT, 'ABILITY PRESENT BUT NOT FOUND !?!?');
+                    logger(LOGLEVEL.INFO, 'createDecisiveAbilities:: Setting Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
                     finalAbi.set(abilityTemplates[key]);
                 }
             });
@@ -645,7 +647,7 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     toggleTokenVision = (cmdDetails, selected) => {
-        logger('toggleTokenVision::toggleTokenVision cmdDetails=' + JSON.stringify(cmdDetails));
+        logger(LOGLEVEL.INFO, `toggleTokenVision::toggleTokenVision cmdDetails=${JSON.stringify(cmdDetails)} selected=${JSON.stringify(selected)}`);
 
         _.chain(selected)
         .map(o => getObj('graphic',o._id))
@@ -659,8 +661,6 @@ var CombatMaster = CombatMaster || (function() {
 
     addOnslaughtToPlayer = (cmdDetails, selected) => {
         logger('addOnslaughtToPlayer::addOnslaughtToPlayer cmdDetails=' + JSON.stringify(cmdDetails));
-        logger(LOGLEVEL.INFO, 'addOnslaughtToPlayer::Add Onslaught to Player');
-
 
         let turnorder   = getTurnorder();
         if (!turnorder.length) {
@@ -694,6 +694,7 @@ var CombatMaster = CombatMaster || (function() {
         if (tokenNameArray.length) {
             let images = tokenNameArray.map(i => i.image).join(),
                 name_list = tokenNameArray.map(i => '<b>'+i.name+'</b>').join(', ').replace(/, ([^,]*)$/, ' and $1');
+            logger(LOGLEVEL.INFO, `addOnslaughtToPlayer:: Add Onslaught to Player${tokenNameArray.length > 1 ? 's' : ''}:${JSON.stringify(tokenNameArray.map(i => i.name))}`);
             sendStandardScriptMessage(name_list+' ' + ((tokenNameArray.length == 1) ? 'get' : 'got') + ' 1 point of onslaught from the attack', images, false);
         }
     },
@@ -701,7 +702,7 @@ var CombatMaster = CombatMaster || (function() {
     resetOnslaught = (tokenObj) => {
         logger('resetOnslaught::resetOnslaught');
         let characterObj = getObj('character', tokenObj.get('represents'));
-        logger('resetOnslaught::characterObj=' + JSON.stringify(characterObj));
+        logger(LOGLEVEL.INFO, 'resetOnslaught:: characterObj=' + JSON.stringify(characterObj));
         if (characterObj) setAttrs(characterObj.get('id'), {'onslaught':0});
     },
 
@@ -1410,8 +1411,7 @@ var CombatMaster = CombatMaster || (function() {
         let newCondition = {};
 
         if (!tokenObj) return;
-        logger('addConditionToToken::addConditionToToken');
-
+        logger(`addConditionToToken::addConditionToToken defaultCondition=${JSON.stringify(defaultCondition)}`);
 
         if (verifyCondition(tokenObj.get("_id"), key)) {
             let remove = removeConditionFromToken(tokenObj, key, false);
@@ -1505,7 +1505,7 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     removeConditionFromToken = (tokenObj,key,removeAPI) => {
-        logger('removeConditionFromToken::removeConditionFromToken');
+        logger(`removeConditionFromToken::removeConditionFromToken tokenObj=${JSON.stringify(tokenObj)} key=${JSON.stringify(key)} conditions=${JSON.stringify(state[combatState].conditions)}`);
 
         if (!tokenObj) return;
         let removed = false;
@@ -1819,8 +1819,7 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
 
     addMarker = (tokenObj, markerType, marker, duration, direction, key) => {
-        logger('addMarker::addMarker');
-        logger(marker);
+        logger(`addMarker::addMarker marker='${marker}'`);
 
         if (!verifyInstalls(markerType)) {
              makeAndSendMenu('You are missing an API required by an Icon Type you are using.  Install libTokenMarker or TokenConditions.');
@@ -1843,8 +1842,7 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     removeMarker = (tokenObj, markerType, marker) => {
-        logger('removeMarker::removeMarker');
-        logger(marker);
+        logger(`removeMarker::removeMarker marker='${marker}'`);
 
         let installed = verifyInstalls(markerType);
         if (!installed) {
@@ -1856,7 +1854,7 @@ var CombatMaster = CombatMaster || (function() {
         if (!iconTag) return;
         let statusMarkers = returnStatusMarkers(tokenObj);
         statusMarkers.forEach((a, i) => {
-            if (a.indexOf(iconTag) > -420) statusMarkers.splice(i,1);
+            if (a.indexOf(iconTag) > -1) statusMarkers.splice(i,1);
         });
         tokenObj.set('statusmarkers', statusMarkers.join());
     },
@@ -1930,10 +1928,6 @@ var CombatMaster = CombatMaster || (function() {
         logger('getOrCreateMarker::imgsrc=' + imgsrc);
         let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
 
-        // markers.forEach((marker, i) => {
-        //     if (i > 0 && type === markerType.ROUND) marker.remove();
-        // });
-
         let marker = markers.shift();
         if (!marker) {
             const newMarkerAttr = {
@@ -1965,7 +1959,6 @@ var CombatMaster = CombatMaster || (function() {
 
         logger('insertMarkerTurnIfNotInTurnOrder::insertMarkerTurnIfNotInTurnOrder');
 
-
         turnorder.forEach(turn => {
             if (turn.id === marker.get('id')) hasTurn = true;
         });
@@ -1984,21 +1977,20 @@ var CombatMaster = CombatMaster || (function() {
         getOrCreateMarker(markerType.RANGE).remove();
     },
 
-   changeMarker = function (token, type=markerType.ROUND)  {
+   updateMarker = function (token, type=markerType.ROUND)  {
         let typeMarker = getOrCreateMarker(type);
 
-        logger('changeMarker::changeMarker type=' + type);
-
+        logger('updateMarker::updateMarker type=' + type);
 
         if (!token){
-            logger(LOGLEVEL.CRITICAL, 'changeMarker::!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)');
+            logger(LOGLEVEL.CRITICAL, 'updateMarker::!!! NO token ?!?!?!?!?!? GONNA DO resetMarker(type)');
             resetMarker(type);
             return;
         }
         let markerWidth, markerHeight,
             pageObj = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0],
             scale_number = Number(pageObj.get('scale_number')) * (Number(pageObj.get('snapping_increment')) === 1 ? 1 : 70);
-            logger(`changeMarker:: !! scale_number=${scale_number}`);
+            logger(`updateMarker:: !! scale_number=${scale_number}`);
         switch (type) {
             case markerType.ROUND:
                 markerWidth  = 2;
@@ -2018,32 +2010,11 @@ var CombatMaster = CombatMaster || (function() {
             height: markerHeight,
         };
 
-        // DETECT IF TOKEN (should be ROUND type only) IS ON CORRECT LAYER
-        // if (token.get('layer') !== typeMarker.get('layer')) {
-        //     if (typeMarker.get('layer') === 'gmlayer') {
-        //         typeMarker.set(position);
-        //         setTimeout(() => {
-        //             if (state[combatState].config.turnorder.useMarker) {
-        //                 // typeMarker.set({ layer: 'objects' });
-        //                 typeMarker.set({ layer: 'map' });
-        //             }
-        //         }, 500);
-        //     } else {
-        //         typeMarker.set({ layer: 'gmlayer' });
-        //         setTimeout(() => {
-        //             typeMarker.set(position);
-        //         }, 500);
-        //     }
-        // } else {
-        //     typeMarker.set(position);
-        // }
-
         setTimeout(() => {
             if (state[combatState].config.turnorder.useMarker || (state[combatState].config.turnorder.useRangeMarker !== 'None' && markerType.RANGE === type)) {
                 let isBattleGroup = token.get('represents') && getAttrByName(token.get('represents'), 'battlegroup', 'current') === '1' ? true : false;
-                logger(`changeMarker:: isBattleGroup=${isBattleGroup}`)
                 let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : isBattleGroup && markerType.RANGE !== type ? 'gmlayer' : 'map' };
-                logger('changeMarker::Moving marker type=' + type + ', pos=' + JSON.stringify(position) + ', setting to=' + JSON.stringify(typeMarkerNewAttributes));
+                logger(LOGLEVEL.INFO, `updateMarker::Moving marker type=${type}, isBattleGroup=${isBattleGroup}, pos=${JSON.stringify(position)}, setting to=${JSON.stringify(typeMarkerNewAttributes)}`);
                 typeMarker.set(typeMarkerNewAttributes);
             }
         }, 50);
@@ -2053,8 +2024,10 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     sendPingOnToken = (token) => {
-        if (state[combatState].config.turnorder.centerToken && token.get('layer') == 'objects')
+        if (state[combatState].config.turnorder.centerToken && token.get('layer') == 'objects') {
+            logger(LOGLEVEL.INFO, `sendPingOnToken:: centering on token name=${token.get('name')}`);
             sendPing(token.get('left'), token.get('top'), token.get('pageid'), null, true);
+        }
     },
 
     handleStatusMarkerChange = (obj, prev) => {
@@ -2191,9 +2164,9 @@ var CombatMaster = CombatMaster || (function() {
             logger('changeToNextTurn::tmpTurn.pr='+tmpTurn.pr);
 
             if (state[combatState].config.turnorder.useRangeMarker != 'None')
-                changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.RANGE);
-            changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken);
-            changeMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.MAIN);
+                updateMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.RANGE);
+            updateMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken);
+            updateMarker((tokenObj.get('layer') != 'gmlayer') ? tokenObj : lastVisibleToken, markerType.MAIN);
 
             logger('changeToNextTurn::============== sameFirstTurn='+preventAnnounceTurn);
             if (!preventAnnounceTurn)
@@ -2212,7 +2185,7 @@ var CombatMaster = CombatMaster || (function() {
                 if (nextToken && turnOrderUnmodified ||
                     (!turnOrderUnmodified &&   (nextToken.get('top')  != getOrCreateMarker(markerType.NEXT).get('top') ||
                                                 nextToken.get('left') != getOrCreateMarker(markerType.NEXT).get('left')))) {
-                    changeMarker(nextToken || false, markerType.NEXT);
+                    updateMarker(nextToken || false, markerType.NEXT);
                     toFront(getOrCreateMarker(markerType.MAIN));
                 }
             }
@@ -2451,10 +2424,9 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
 
     announcePlayer = (tokenObj, prev, delay=false, show=false) => {
-        logger('announcePlayer::announcePlayer');
-
         if (!tokenObj) return;
         let name        = tokenObj.get('name');
+        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
         let imgurl      = tokenObj.get('imgsrc');
         let conditions  = getAnnounceConditions(tokenObj, prev, delay, show);
         let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
@@ -3123,7 +3095,7 @@ var CombatMaster = CombatMaster || (function() {
         if (!nextTurnObject)
             resetMarker(markerType.NEXT);
         else
-            changeMarker(getObj('graphic', nextTurnObject.id), markerType.NEXT);
+            updateMarker(getObj('graphic', nextTurnObject.id), markerType.NEXT);
     },
 
     handleGraphicDelete = (obj) => {
@@ -3154,9 +3126,9 @@ var CombatMaster = CombatMaster || (function() {
             if (curretMarker.get('top') === obj.get('top') && curretMarker.get('left') === obj.get('left')){
                 logger('handleGraphicDelete::Actual Player Deleted !');
                 let currentFocus = getObj('graphic', getCurrentTurnObjectOrLastVisibleIfHidden(obj.get('id')).id);
-                changeMarker(currentFocus);
-                changeMarker(currentFocus, markerType.RANGE);
-                changeMarker(currentFocus, markerType.MAIN);
+                updateMarker(currentFocus);
+                updateMarker(currentFocus, markerType.RANGE);
+                updateMarker(currentFocus, markerType.MAIN);
                 if (nextMarker.get('top') === currentFocus.get('top') && nextMarker.get('left') === currentFocus.get('left')) {
                     logger('handleGraphicDelete::Main marker will be on NEXT, need to move NEXT !!!');
                     actualizeNextMarker(obj);
@@ -3180,12 +3152,12 @@ var CombatMaster = CombatMaster || (function() {
             const nextTurnObject = getNextTurnObject();
             if (getCurrentTurnObjectOrLastVisibleIfHidden().id === obj.get('id')){
                 logger(LOGLEVEL.INFO, 'handleGraphicMovement::Actual Player Moved !');
-                changeMarker(obj);
-                //changeMarker(obj, markerType.RANGE);
-                changeMarker(obj, markerType.MAIN);
+                updateMarker(obj);
+                //updateMarker(obj, markerType.RANGE);
+                updateMarker(obj, markerType.MAIN);
             } else if (nextTurnObject && nextTurnObject.id === obj.get('id')) {
                 logger(LOGLEVEL.INFO, 'handleGraphicMovement::Next Player Moved !');
-                changeMarker(obj, markerType.NEXT);
+                updateMarker(obj, markerType.NEXT);
                 toFront(getOrCreateMarker(markerType.MAIN));
             }
         }
