@@ -86,7 +86,7 @@ var CombatMaster = CombatMaster || (function() {
         // spellsImage = 'C';
 
     //Styling for the chat responses.
-    const LogLvl = LOGLEVEL.DEBUG, // EDIT THIS TO CHANGE LOG LEVEL
+    const LogLvl = LOGLEVEL.INFO, // EDIT THIS TO CHANGE LOG LEVEL
     logger = (level, ...logged) => {
         if (!(level instanceof LOGLEVEL)) {
             logged.unshift(level);
@@ -3663,7 +3663,7 @@ var CombatMaster = CombatMaster || (function() {
 					allRoundMacro:               'None',
 
                     useRangeMarker:              'External URL',
-                    rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/255451119/sO9vPVGw6S_B-lq-PIgGTA/max.png?1636832705',
+                    rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/286593209/iKIw8-n03SYQmCG93s47Iw/max.png?1653389150',
                     rangeMarkerWidth:            6000,
                     rangeMarkerHeight:           6000,
 
