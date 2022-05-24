@@ -494,7 +494,7 @@ var CombatMaster = CombatMaster || (function() {
 
         let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
         let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `${confObj.name}:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
+        logger(`${confObj.name}:: name=${name}, actual statuses=${tokenObj.get('statusmarkers')}`);
         let imgurl      = tokenObj.get('imgsrc');
         let image       = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px"  />` : '';
         name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;

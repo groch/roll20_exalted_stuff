@@ -28,7 +28,7 @@ class LOGLEVEL {
     }
 }
 // CONSTANTS
-const LogLvl = LOGLEVEL.DEBUG,
+const LogLvl = LOGLEVEL.INFO,
   ConditionalList = {
     '1MotD': {
         faceTrigger: (setup, result, condIterator) => !setup.rerolled && setup.successSnapshot,
