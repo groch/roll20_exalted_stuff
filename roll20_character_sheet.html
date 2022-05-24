@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.29, debug = 1;
+    const version = 2.30, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -337,7 +337,8 @@
                 'committedesstotal': 0,
                 'battlegroup-def-boost': 0,
                 'battlegroup-acc-boost': 0,
-                'battlegroup-dmg-boost': 0
+                'battlegroup-dmg-boost': 0,
+                'grab-def-penalty': 0
             });
 
             let healthAttrs = {}, healthIndexes = _.times(7, generateRowID);
@@ -741,6 +742,9 @@
                         TAS._fn(upgradeto228());
                         // fallthrough
                     case 2.28:
+                    case 2.29:
+                        TAS._fn(upgradeto230());
+
                     case version:
                         // nothing to do
                         // fallthrough
@@ -748,6 +752,15 @@
             }
         }));
     }));
+
+    function upgradeto230() {
+        setAttrs({
+            'grab-def-penalty': 0,
+            'prone-def-penalty': 0,
+            'cover-def-bonus': 0,
+            'version': version
+        });
+    }
 
     function upgradeto228() {
         setAttrs({
@@ -2516,12 +2529,14 @@
                                 <div class="sheet-table-cell">
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                    <input type="number" value="@{repweaponparry}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryfinal" disabled="disabled" class="wound-taint onslaught-taint">
+                                    <input type="hidden" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty})" disabled="disabled" name="attr_repparry-base">
+                                    <input type="number" value="(((@{repparry-base}) + abs(@{repparry-base}))/2)" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint">
                                 </div>
                                 <div class="sheet-table-cell">
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                <input type="number" value="@{repweaponparryspe}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryspefinal" disabled="disabled" class="wound-taint onslaught-taint">
+                                    <input type="hidden" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty})" disabled="disabled" name="attr_repparry-base-s">
+                                    <input type="number" value="(((@{repparry-base-s}) + abs(@{repparry-base-s}))/2)" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
                                 </div>
                                 <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
                                 <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
@@ -2591,7 +2606,9 @@
                         <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                         <input type="hidden" class="onslaught-check" name="attr_onslaught">
                         <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
-                        <input type="number" value="@{parry}+@{battlegroup-def-boost} - (@{onslaught} * @{apply-onslaught})" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-specialty}+@{battlegroup-def-boost} - (@{onslaught} * @{apply-onslaught})" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
+                        <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus})" disabled="disabled" name="attr_parry-base">
+                        <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus})" disabled="disabled" name="attr_parry-base-s">
+                        <input type="number" value="(((@{parry-base}) + abs(@{parry-base}))/2)" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="(((@{parry-base-s}) + abs(@{parry-base-s}))/2)" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                     </div>
                 </div>
                 <div class="flex-col grow-normal">
@@ -2605,11 +2622,11 @@
                         <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                         <input type="hidden" value="(@{dexterity} + @{dodge})" disabled="disabled" name="attr_evasion-root">
                         <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
-                        <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base">
-                        <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base-s">
-                        <input type="hidden" value="(((@{evasion-base} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final">
-                        <input type="hidden" value="(((@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final-s">
-                        <input type="number" value="(@{evasion-final} + abs(@{evasion-final})) / 2 + @{battlegroup-def-boost}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="(@{evasion-final-s} + abs(@{evasion-final-s})) / 2 + @{battlegroup-def-boost}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
+                        <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus})" disabled="disabled" name="attr_evasion-base">
+                        <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus})" disabled="disabled" name="attr_evasion-base-s">
+                        <input type="hidden" value="(((@{evasion-base}) + abs(@{evasion-base}))/2)"  disabled="disabled" name="attr_evasion-final">
+                        <input type="hidden" value="(((@{evasion-base-s}) + abs(@{evasion-base-s}))/2)"  disabled="disabled" name="attr_evasion-final-s">
+                        <input type="number" value="@{evasion-final}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                     </div>
                 </div>
                 <div class="flex-col grow-normal">
@@ -7633,12 +7650,14 @@
                             <div class="sheet-table-cell">
                                 <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                <input type="number" value="@{repweaponparry}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryfinal" disabled="disabled" class="wound-taint onslaught-taint">
+                                <input type="hidden" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus})" disabled="disabled" name="attr_repparry-base">
+                                <input type="number" value="(((@{repparry-base}) + abs(@{repparry-base}))/2)" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint">
                             </div>
                             <div class="sheet-table-cell">
                                 <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                <input type="number" value="@{repweaponparryspe}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" name="attr_repweaponparryspefinal" disabled="disabled" class="wound-taint onslaught-taint">
+                                <input type="hidden" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus})" disabled="disabled" name="attr_repparry-base-s">
+                                <input type="number" value="(((@{repparry-base-s}) + abs(@{repparry-base-s}))/2)" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
                             </div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
@@ -7670,7 +7689,9 @@
                                 <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                 <input type="hidden" class="onslaught-check" name="attr_onslaught">
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
-                                <input type="number" value="@{parry}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-specialty}+@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught})" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
+                                <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus})" disabled="disabled" name="attr_parry-base">
+                                <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus})" disabled="disabled" name="attr_parry-base-s">
+                                <input type="number" value="(((@{parry-base}) + abs(@{parry-base}))/2)" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="(((@{parry-base-s}) + abs(@{parry-base-s}))/2)" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                             </div>
                         </div>
                         <div class="flex-col grow-normal">
@@ -7684,11 +7705,11 @@
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                                 <input type="hidden" value="(@{dexterity} + @{dodge})" disabled="disabled" name="attr_evasion-root">
                                 <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
-                                <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base">
-                                <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}))" disabled="disabled" name="attr_evasion-base-s">
-                                <input type="hidden" value="(((@{evasion-base} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final">
-                                <input type="hidden" value="(((@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})) + abs(@{evasion-base-s} - (@{apply-onslaught} * @{onslaught})))/2)"  disabled="disabled" name="attr_evasion-final-s">
-                                <input type="number" value="(@{evasion-final} + abs(@{evasion-final})) / 2 + @{battlegroup-def-boost}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="(@{evasion-final-s} + abs(@{evasion-final-s})) / 2 + @{battlegroup-def-boost}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
+                                <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus})" disabled="disabled" name="attr_evasion-base">
+                                <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus})" disabled="disabled" name="attr_evasion-base-s">
+                                <input type="hidden" value="(((@{evasion-base}) + abs(@{evasion-base}))/2)"  disabled="disabled" name="attr_evasion-final">
+                                <input type="hidden" value="(((@{evasion-base-s}) + abs(@{evasion-base-s}))/2)"  disabled="disabled" name="attr_evasion-final-s">
+                                <input type="number" value="@{evasion-final}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                             </div>
                         </div>
                         <div class="flex-col grow-normal">
