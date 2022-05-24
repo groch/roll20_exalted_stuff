@@ -100,6 +100,7 @@ var CombatMaster = CombatMaster || (function() {
         reset:           'padding: 0; margin: 0;',
         menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
         title:           'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+        baseTitle:       'font-size:14px;font-weight:bold;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
         titleText:       'color:white',
         titleSpacer:     'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
         version:         'font-size:10px;',
@@ -167,7 +168,9 @@ var CombatMaster = CombatMaster || (function() {
         var msg = _.clone(msg_orig),args,restrict;
 
         playerID = msg.playerid;
-        if (playerIsGM(msg.playerid)) {
+        if (msg.playerid === 'API') {
+            who = 'API';
+        } else if (playerIsGM(msg.playerid)) {
             state[combatState].config.gmPlayerID = msg.playerid;
             who = 'gm';
         } else
@@ -220,13 +223,13 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize|applyCrashDefPenAndSendInitGainButton|applyInitBonusToCrasherSelected|remCrashDefPenAndSendResetInitButton|rstInitToSelected/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -429,6 +432,34 @@ var CombatMaster = CombatMaster || (function() {
             logger('commandHandler::before togglePageSize');
             togglePageSize(cmdDetails, msg.selected);
         }
+
+        if (cmdDetails.action == 'applyCrashDefPenAndSendInitGainButton') {
+            logger('commandHandler::before applyCrashDefPenAndSendCrasButton');
+            applyCrashDefPenAndSendInitGainButton(cmdDetails);
+        }
+
+        if (cmdDetails.action == 'applyInitBonusToCrasherSelected') {
+            if (!playerIsGM(playerID)) {
+                logger(LOGLEVEL.NOTICE, 'commandHandler::togglePageSize received but user is not GM');
+                return;
+            }
+            logger('commandHandler::before applyInitBonusToCrasherSelected');
+            applyInitBonusToCrasherSelected(cmdDetails, msg.selected);
+        }
+
+        if (cmdDetails.action == 'remCrashDefPenAndSendResetInitButton') {
+            logger('commandHandler::before remCrashDefPenAndSendResetInitButton');
+            remCrashDefPenAndSendResetInitButton(cmdDetails);
+        }
+
+        if (cmdDetails.action == 'rstInitToSelected') {
+            if (!playerIsGM(playerID)) {
+                logger(LOGLEVEL.NOTICE, 'commandHandler::togglePageSize received but user is not GM');
+                return;
+            }
+            logger('commandHandler::before rstInitToSelected');
+            rstInitToSelected(cmdDetails, msg.selected);
+        }
 	},
 
     clearTokenStatuses = (selectedTokens) => {
@@ -445,6 +476,142 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
     //NEW ACTIONS
     //*************************************************************************************************************
+
+    rstInitToSelected = (cmdDetails, selected) => {
+        logger(`rstInitToSelected::rstInitToSelected cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+
+        if (!selected) {
+            logger(`rstInitToSelected:: NO SELECTED, RETURN`);
+            sendGMStandardScriptMessage('Please select a token on the page for the script to work !');
+            return;
+        }
+
+        let turnorder = getTurnorder(), appliedCount = 0, appliedName;
+        logger(`rstInitToSelected:: turnorder=${JSON.stringify(turnorder)}`);
+
+        _.chain(selected)
+        .map(o => getObj('graphic',o._id))
+        .compact()
+        .each(function(t){
+            if (appliedCount) return;
+
+            for (var i = 0; i < turnorder.length; i++) {
+                if (turnorder[i].pr === '-420' || turnorder[i].id !== t.get('id')) continue;
+                let tokenObj    = findObjs({_id:turnorder[i].id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
+                turnorder[i].pr = Number(cmdDetails.details['initiative']);
+                let imgurl = tokenObj.get('imgsrc');
+                let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
+                appliedName = tokenObj.get('name');
+                sendStandardScriptMessage(`${appliedName} <b>reset init to ${turnorder[i].pr}</b> for getting out of Crash status`, image, 'display:inline-block;vertical-align:middle;', false);
+                appliedCount++;
+            }
+        });
+        if (appliedCount) {
+            logger(LOGLEVEL.INFO, `rstInitToSelected:: Reseting init to '${appliedName}'`);
+            setTurnorder(turnorder);
+        }
+    },
+
+    remCrashDefPenAndSendResetInitButton = (cmdDetails) => {
+        logger(`remCrashDefPenAndSendResetInitButton::remCrashDefPenAndSendResetInitButton cmdDetails=${JSON.stringify(cmdDetails)}`);
+
+        const charObj = getObj('character', cmdDetails.details['id']);
+        if (!charObj) {
+            logger(LOGLEVEL.ERROR, `remCrashDefPenAndSendResetInitButton:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
+        }
+        logger(LOGLEVEL.INFO, `remCrashDefPenAndSendResetInitButton:: charObj.name=${charObj.get('name')} got removed CRASH def Penalty`);
+        setAttrs(charObj.get('id'), {'crash-def-penalty':0});
+
+        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
+        let name        = tokenObj.get('name');
+        logger(LOGLEVEL.INFO, `remCrashDefPenAndSendResetInitButton:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
+        let imgurl      = tokenObj.get('imgsrc');
+        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
+        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+
+        let doneButton  = makeImageButton('!cmaster --rstInitToSelected,initiative=?{Reset to ?|3}',doneImage,'Reset Init (GM Only)','transparent',18,'white');
+        let title       = 'Out of Crash';
+
+        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
+        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is out of crash status</div>';
+
+        let turnorder = getTurnorder(), isStillCrashed = false;
+        for (var i = 0; i < turnorder.length; i++) {
+            if (turnorder[i].pr === '-420' || turnorder[i].id !== tokenObj.get('id')) continue;
+            if (turnorder[i].pr <= 0) isStillCrashed = true;
+            break;
+        }
+        if (isStillCrashed) title += '<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
+
+        if (tokenObj.get('layer') == 'gmlayer')
+            makeAndSendMenu(contents,title,'gm', false, `background-color:darkgreen;${styles.specialTitle}`);
+        else
+            makeAndSendMenu(contents,title,'', false, `background-color:darkgreen;${styles.specialTitle}`);
+    },
+
+    applyInitBonusToCrasherSelected = (cmdDetails, selected) => {
+        logger(`applyInitBonusToCrasher::applyInitBonusToCrasher cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+
+        if (!selected) {
+            logger(`applyInitBonusToCrasherSelected:: NO SELECTED, RETURN`);
+            sendGMStandardScriptMessage('Please select a token on the page for the script to work !');
+            return;
+        }
+
+        let turnorder = getTurnorder(), appliedCount = 0, appliedName;
+        logger(`applyInitBonusToCrasher:: turnorder=${JSON.stringify(turnorder)}`);
+
+        _.chain(selected)
+        .map(o => getObj('graphic',o._id))
+        .compact()
+        .each(function(t){
+            if (appliedCount) return;
+
+            for (var i = 0; i < turnorder.length; i++) {
+                if (turnorder[i].pr === '-420' || turnorder[i].id !== t.get('id')) continue;
+                let tokenObj    = findObjs({_id:turnorder[i].id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
+                turnorder[i].pr += 5;
+                let imgurl = tokenObj.get('imgsrc');
+                let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
+                appliedName = tokenObj.get('name');
+                sendStandardScriptMessage(appliedName+' <b>gain 5 init</b> for having crashed someone', image, 'display:inline-block;vertical-align:middle;', false);
+                appliedCount++;
+            }
+        });
+        if (appliedCount) {
+            logger(LOGLEVEL.INFO, `applyInitBonusToCrasher:: Applying init bonus to '${appliedName}'`);
+            setTurnorder(turnorder);
+        }
+    },
+
+    applyCrashDefPenAndSendInitGainButton = (cmdDetails) => {
+        logger(`applyCrashDefPenAndSendInitGainButton::applyCrashDefPenAndSendInitGainButton cmdDetails=${JSON.stringify(cmdDetails)}`);
+
+        const charObj = getObj('character', cmdDetails.details['id']);
+        if (!charObj) {
+            logger(LOGLEVEL.ERROR, `applyCrashDefPenAndSendInitGainButton:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
+        }
+        logger(LOGLEVEL.INFO, `applyCrashDefPenAndSendInitGainButton:: charObj.name=${charObj.get('name')} got applied CRASH def Penalty`);
+        setAttrs(charObj.get('id'), {'crash-def-penalty':2});
+
+        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
+        let name        = tokenObj.get('name');
+        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
+        let imgurl      = tokenObj.get('imgsrc');
+        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
+        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+
+        let doneButton  = makeImageButton('!cmaster --applyInitBonusToCrasherSelected',doneImage,'Apply Init Bonus (GM Only)','transparent',18,'white');
+        let title       = 'Crashed<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
+
+        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
+        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' has beed crashed</div>';
+
+        if (tokenObj.get('layer') == 'gmlayer')
+            makeAndSendMenu(contents,title,'gm', false, `background-color:darkred;${styles.specialTitle}`);
+        else
+            makeAndSendMenu(contents,title,'', false, `background-color:darkred;${styles.specialTitle}`);
+    },
 
     togglePageSize = (cmdDetails, selected) => {
         logger(LOGLEVEL.INFO, `togglePageSize::togglePageSize cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
@@ -2547,9 +2714,9 @@ var CombatMaster = CombatMaster || (function() {
     //MAKES
     //*************************************************************************************************************
 
-    makeAndSendMenu = (contents, title = undefined, whisper = undefined, noarchive = true) => {
+    makeAndSendMenu = (contents, title = undefined, whisper = undefined, noarchive = true, titleStyle = false) => {
         whisper = (whisper && whisper !== '') ? '/w ' + whisper + ' ' : '';
-		title = makeTitle(title);
+		title = makeTitle(title, titleStyle ? titleStyle : styles.title);
         sendChat(script_name, whisper + '<div style="'+styles.menu+styles.overflow+'">'+title+contents+'</div>', null, {noarchive:noarchive});
     },
 
@@ -2583,7 +2750,7 @@ var CombatMaster = CombatMaster || (function() {
         return list;
     },
 
-    makeTitle           = title                                                => `<div style="${styles.title}"><span style=${styles.titleText}>${title}</span></div>`,
+    makeTitle           = (title, titleStyle)                                  => `<div style="${titleStyle}"><span style=${styles.titleText}>${title}</span></div>`,
     makeBigButton       = (title, href)                                        => `<div style="${styles.bigButton}"><a style="${styles.bigButtonLink}" href="${href}">${title}</a></div>`,
     makeButton          = (title, href)                                        => `<a style="${styles.conditionButton}" href="${href}">${title}</a>`,
     makeTextButton      = (label, value, href)                                 => `<span style="${styles.textLabel}">${label}</span><a style="${styles.textButton}" href="${href}">${value}</a>`,
@@ -3325,7 +3492,12 @@ var CombatMaster = CombatMaster || (function() {
                     announceMoteRegen:  false
                 },
                 macro: {
-                    substitutions: [],
+                    substitutions: [
+                        { type: 'CharID',   action: 'CharID' },
+                        { type: 'CharName', action: 'CharName' },
+                        { type: 'TokenID',  action: 'TokenID' },
+                        { type: 'PlayerID', action: 'PlayerID' }
+                    ],
                 },
 				status: {
 					userAllowed:        false,
@@ -3348,136 +3520,36 @@ var CombatMaster = CombatMaster || (function() {
 					attribute:          'None'
 				},
                 conditions: {
-					blinded: {
-						name:               'Blinded',
-						key:                'blinded',
-						type:               'Condition',
-						description:        '<p>A blinded creature cannot see and automatically fails any ability check that requires sight.</p> <p>Attack rolls against the creature have advantage, and the creature making Attack rolls have disadvantage.</p>',
-						icon:               'bleeding-eye',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					charmed: {
-						name:               'Charmed',
-						key:                'charmed',
-						type:               'Spell',
-						description:        "<p>A charmed creature can't Attack the charmer or target the charmer with harmful Abilities or magical effects.</p> <p>The charmer has advantage on any ability check to interact socially with the creature.</p>",
-						icon:               'broken-heart',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					concentration: {
-						name:               'Concentration',
-						key:                'concentration',
-						type:               'Spell',
-						description:        "<p>In order to keep their magic active. If you lose concentration, such a spell ends. If a spell must be maintained with concentralion, that fact appears in its Duration entry, and the spell specifics how long you can concentrate on it. You can end concentration at any time (no action required)..</p>",
-						icon:               'trophy',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          0,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					deafened: {
-						name:               'Deafened',
-						key:                'deafened',
-						type:               'Condition',
-						description:         "<p>A deafened creature can't hear and automatically fails any ability check that requires hearing.</p>",
-						icon:               'edge-crack',
-						iconType:           'Combat Master',
-						duration:            1,
-						direction:          -1,
-						override:            true,
-						favorite:            false,
-						message:            'None',
-						targeted:            false,
-						targetedAPI:        'casterTargets',
-						concentration:       false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro:  false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					frightened: {
-						name:               'Frightened',
-						key:                'frightened',
-						type:               'Condition',
-						description:        "<p>A frightened creature has disadvantage on Ability Checks and Attack rolls while the source of its fear is within line of sight.</p> <p>The creature can't willingly move closer to the source of its fear.</p>",
-						icon:               'screaming',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
+					// concentration: {
+					// 	name:               'Concentration',
+					// 	key:                'concentration',
+					// 	type:               'Spell',
+					// 	description:        "<p>In order to keep their magic active. If you lose concentration, such a spell ends. If a spell must be maintained with concentralion, that fact appears in its Duration entry, and the spell specifics how long you can concentrate on it. You can end concentration at any time (no action required)..</p>",
+					// 	icon:               'trophy',
+					// 	iconType:           'Combat Master',
+					// 	duration:           1,
+					// 	direction:          0,
+					// 	override:           true,
+					// 	favorite:           false,
+					// 	message:            'None',
+					// 	targeted:           false,
+					// 	targetedAPI:        'casterTargets',
+					// 	concentration:      false,
+					// 	addAPI:             'None',
+					// 	addRoll20AM:        'None',
+					// 	addFX:              'None',
+					// 	addMacro:           'None',
+					// 	addPersistentMacro: false,
+					// 	remAPI:             'None',
+					// 	remRoll20AM:        'None',
+					// 	remFX:              'None',
+					// 	remMacro:           'None',
+					// },
 					grappled: {
 						name:               'Grappled',
 						key:                'grappled',
 						type:               'Condition',
-						description:        "<p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p> <p>The condition ends if the Grappler is <i>incapacitated</i>.</p> <p>The condition also ends if an effect removes the grappled creature from the reach of the Grappler or Grappling effect, such as when a creature is hurled away by the Thunderwave spell.</p>",
+						description:        "<p>A grappled creature have a penalty of 2 to both his defenses.</p>",
 						icon:               'grab',
 						iconType:           'Combat Master',
 						duration:           1,
@@ -3498,14 +3570,14 @@ var CombatMaster = CombatMaster || (function() {
 						remFX:              'None',
 						remMacro:           'None',
 					},
-					incapacitated: {
-						name:               'Incapacitated',
-						key:                'incapacitated',
+					crashed: {
+						name:               'Crashed',
+						key:                'crashed',
 						type:               'Condition',
-						description:        "<p>An incapacitated creature can't take actions or reactions.</p>",
-						icon:               'interdiction',
+						description:        "<p>A Crashed opponent cannot take Decisive Attacks nor make Gambits.</p>",
+						icon:               'broken-shield',
 						iconType:           'Combat Master',
-						duration:           1,
+						duration:           3,
 						direction:          -1,
 						override:           true,
 						favorite:           false,
@@ -3513,137 +3585,12 @@ var CombatMaster = CombatMaster || (function() {
 						targeted:           false,
 						targetedAPI:        'casterTargets',
 						concentration:      false,
-						addAPI:             'None',
+						addAPI:             '!cmaster --applyCrashDefPenAndSendInitGainButton,id=CharID,tok=TokenID',
 						addRoll20AM:        'None',
 						addFX:              'None',
 						addMacro:           'None',
 						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					inspiration: {
-						name:               'Inspiration',
-						key:                'inspiration',
-						type:               'Spell',
-						description:        "<p>If you have inspiration, you can expend it when you make an Attack roll, saving throw, or ability check. Spending your inspiration gives you advantage on that roll.</p> <p>Additionally, if you have inspiration, you can reward another player for good roleplaying, clever thinking, or simply doing something exciting in the game. When another player character does something that really contributes to the story in a fun and interesting way, you can give up your inspiration to give that character inspiration.</p>",
-						icon:               'black-flag',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					invisibility: {
-						name:               'Invisibility',
-						key:                'invisibility',
-						type:               'Spell',
-						description:        "<p>An invisible creature is impossible to see without the aid of magic or a Special sense. For the purpose of Hiding, the creature is heavily obscured. The creature's location can be detected by any noise it makes or any tracks it leaves.</p> <p>Attack rolls against the creature have disadvantage, and the creature's Attack rolls have advantage.</p>",
-						icon:               'ninja-mask',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					paralyzed: {
-						name:               'Paralyzed',
-						key:                'paralyzed',
-						type:               'Condition',
-						description:        "<p>A paralyzed creature is <i>incapacitated</i> and can't move or speak.</p> <p>The creature automatically fails Strength and Dexterity saving throws.</p> <p>Attack rolls against the creature have advantage.</p> <p>Any Attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p>",
-						icon:               'pummeled',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					petrified: {
-						name:               'Petrified',
-						key:                'petrified',
-						type:               'Condition',
-						description:        "<p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p> <p>The creature is <i>incapacitated</i>, can't move or speak, and is unaware of its surroundings.</p> <p>Attack rolls against the creature have advantage.</p> <p>The creature automatically fails Strength and Dexterity saving throws.</p> <p>The creature has Resistance to all damage.</p> <p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized.</p>",
-						icon:               'frozen-orb',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
-					poisoned: {
-						name:               'Poisoned',
-						key:                'poisoned',
-						type:               'Condition',
-						description:        '<p>A poisoned creature has disadvantage on Attack rolls and Ability Checks.</p>',
-						icon:               'chemical-bolt',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
+						remAPI:             '!cmaster --remCrashDefPenAndSendResetInitButton,id=CharID,tok=TokenID',
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
@@ -3652,11 +3599,11 @@ var CombatMaster = CombatMaster || (function() {
 						name:               'Prone',
 						key:                'prone',
 						type:               'Condition',
-						description:        "<p>A prone creature's only Movement option is to crawl, unless it stands up and thereby ends the condition.</p> <p>The creature has disadvantage on Attack rolls.</p> <p>An Attack roll against the creature has advantage if the attacker is within 5 feet of the creature. Otherwise, the Attack roll has disadvantage.</p>",
+						description:        "<p>A prone creature has a penalty of 1 to parry and a penalty of 2 to evasions.</p>",
 						icon:               'back-pain',
 						iconType:           'Combat Master',
 						duration:           1,
-						direction:          -1,
+						direction:          0,
 						override:           true,
 						favorite:           false,
 						message:            'None',
@@ -3673,15 +3620,15 @@ var CombatMaster = CombatMaster || (function() {
 						remFX:              'None',
 						remMacro:           'None',
 					},
-					restrained: {
-						name:               'Restrained',
-						key:                'restrained',
+					coverT1: {
+						name:               'Cover Light',
+						key:                'coverT1',
 						type:               'Condition',
-						description:        "<p>A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p> <p>Attack rolls against the creature have advantage, and the creature's Attack rolls have disadvantage.</p> <p>The creature has disadvantage on Dexterity saving throws.</p>",
-						icon:               'fishing-net',
+						description:        "<p>Light Cover provides 1point bonus to defenses.</p>",
+						icon:               'bolt-shield',
 						iconType:           'Combat Master',
 						duration:           1,
-						direction:          -1,
+						direction:          0,
 						override:           true,
 						favorite:           false,
 						message:            'None',
@@ -3698,15 +3645,15 @@ var CombatMaster = CombatMaster || (function() {
 						remFX:              'None',
 						remMacro:           'None',
 					},
-					stunned: {
-						name:               'Stunned',
-						key:                'stunned',
+                    coverT2: {
+						name:               'Cover Heavy',
+						key:                'coverT2',
 						type:               'Condition',
-						description:        "<p>A stunned creature is <i>incapacitated</i>, can't move, and can speak only falteringly.</p> <p>The creature automatically fails Strength and Dexterity saving throws.</p> <p>Attack rolls against the creature have advantage.</p>",
-						icon:               'fist',
+						description:        "<p>Heavy Cover provides 2points bonus to defenses.</p>",
+						icon:               'white-tower',
 						iconType:           'Combat Master',
 						duration:           1,
-						direction:          -1,
+						direction:          0,
 						override:           true,
 						favorite:           false,
 						message:            'None',
@@ -3722,32 +3669,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
-					},
-					unconscious: {
-						name:               'Unconscious',
-						key:                'unconscious',
-						type:               'Condition',
-						description:        "<p>An unconscious creature is <i>incapacitated</i>, can't move or speak, and is unaware of its surroundings.</p> <p>The creature drops whatever it's holding and falls prone.</p> <p>The creature automatically fails Strength and Dexterity saving throws.</p> <p>Attack rolls against the creature have advantage.</p> <p>Any Attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p>",
-						icon:               'sleepy',
-						iconType:           'Combat Master',
-						duration:           1,
-						direction:          -1,
-						override:           true,
-						favorite:           false,
-						message:            'None',
-						targeted:           false,
-						targetedAPI:        'casterTargets',
-						concentration:      false,
-						addAPI:             'None',
-						addRoll20AM:        'None',
-						addFX:              'None',
-						addMacro:           'None',
-						addPersistentMacro: false,
-						remAPI:             'None',
-						remRoll20AM:        'None',
-						remFX:              'None',
-						remMacro:           'None',
-					},
+					}
 				},
             },
         };
@@ -3830,7 +3752,7 @@ var CombatMaster = CombatMaster || (function() {
                     'announceMoteRegen'
                 ], state, combatDefaults);
 
-            if (!state[combatState].config.hasOwnProperty('macro'))          state[combatState].config.macro = combatDefaults.config.macro;
+            if (!state[combatState].config.hasOwnProperty('macro') || reset) state[combatState].config.macro = combatDefaults.config.macro;
 			if (!state[combatState].config.hasOwnProperty('status'))         state[combatState].config.status = combatDefaults.config.status;
             else
                 testAndSetDefaults('status', [
