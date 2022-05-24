@@ -389,111 +389,44 @@ var CombatMaster = CombatMaster || (function() {
 			sendMainMenu(who);
         }
         if (cmdDetails.action == 'help')        showHelp(cmdDetails);
-        if (cmdDetails.action == 'onslaught') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::onslaught received but user is not GM');
-                return;
-            }
-            addOnslaughtToPlayer(cmdDetails, msg.selected);
+
+        const simpleCastList = [
+                {key:'announceCrashAndSendInitGainButton',  fxName:'announceCrashAndSendInitGainButton',  fx: announceCrashAndSendInitGainButton},
+                {key:'announceCrashOff',                    fxName:'announceCrashOff',                    fx: announceCrashOff},
+                {key:'applyGrabDefPen',                     fxName:'applyGrabDefPen',                     fx: applyGrabDefPen},
+                {key:'remGrabDefPen',                       fxName:'remGrabDefPen',                       fx: remGrabDefPen},
+                {key:'applyProneDefPen',                    fxName:'applyProneDefPen',                    fx: applyProneDefPen},
+                {key:'remProneDefPen',                      fxName:'remProneDefPen',                      fx: remProneDefPen},
+                {key:'applyLightCoverDefBonus',             fxName:'applyLightCoverDefBonus',             fx: applyLightCoverDefBonus},
+                {key:'applyHeavyCoverDefBonus',             fxName:'applyHeavyCoverDefBonus',             fx: applyHeavyCoverDefBonus},
+                {key:'remCoverDefBonus',                    fxName:'remCoverDefBonus',                    fx: remCoverDefBonus},
+            ],
+            checkedCastList = [
+                {key:'onslaught',                           fxName:'addOnslaughtToPlayer',                fx: addOnslaughtToPlayer},
+                {key:'toggleVision',                        fxName:'toggleTokenVision',                   fx: toggleTokenVision},
+                {key:'createDecisiveAbilities',             fxName:'createDecisiveAbilities',             fx: createDecisiveAbilities},
+                {key:'moteAdd',                             fxName:'addMotesCommand',                     fx: addMotesCommand},
+                {key:'togglePageSize',                      fxName:'togglePageSize',                      fx: togglePageSize},
+                {key:'applyInitBonusToCrasherSelected',     fxName:'applyInitBonusToCrasherSelected',     fx: applyInitBonusToCrasherSelected},
+                {key:'rstInitToSelected',                   fxName:'rstInitToSelected',                   fx: rstInitToSelected}
+            ];
+
+        for (const fxObj of checkedCastList) {
+            if (cmdDetails.action == fxObj.key) {
+                if (!playerIsGM(playerID)) {
+                    logger(LOGLEVEL.NOTICE, `commandHandler::${fxObj.key} received but user is not GM`);
+                    return;
+                }
+                logger(`commandHandler::before ${fxObj.fxName}`);
+                fxObj.fx(cmdDetails, msg.selected);
+            }    
         }
 
-        if (cmdDetails.action == 'toggleVision') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::toggleVision received but user is not GM');
-                return;
-            }
-            logger('commandHandler::before toggleTokenVision');
-            toggleTokenVision(cmdDetails, msg.selected);
-        }
-
-        if (cmdDetails.action == 'createDecisiveAbilities') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::createDecisiveAbilities received but user is not GM');
-                return;
-            }
-            logger('commandHandler::before createDecisiveAbilities');
-            createDecisiveAbilities(cmdDetails, msg.selected);
-        }
-
-        if (cmdDetails.action == 'moteAdd') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::createDecisiveAbilities received but user is not GM');
-                return;
-            }
-            logger('commandHandler::before createDecisiveAbilities');
-            addMotesCommand(cmdDetails, msg.selected);
-        }
-
-        if (cmdDetails.action == 'togglePageSize') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::togglePageSize received but user is not GM');
-                return;
-            }
-            logger('commandHandler::before togglePageSize');
-            togglePageSize(cmdDetails, msg.selected);
-        }
-
-        if (cmdDetails.action == 'announceCrashAndSendInitGainButton') {
-            logger('commandHandler::before announceCrashAndSendInitGainButton');
-            announceCrashAndSendInitGainButton(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'applyInitBonusToCrasherSelected') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::togglePageSize received but user is not GM');
-                return;
-            }
-            logger('commandHandler::before applyInitBonusToCrasherSelected');
-            applyInitBonusToCrasherSelected(cmdDetails, msg.selected);
-        }
-
-        if (cmdDetails.action == 'announceCrashOff') {
-            logger('commandHandler::before announceCrashOff');
-            announceCrashOff(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'rstInitToSelected') {
-            if (!playerIsGM(playerID)) {
-                logger(LOGLEVEL.NOTICE, 'commandHandler::togglePageSize received but user is not GM');
-                return;
-            }
-            logger('commandHandler::before rstInitToSelected');
-            rstInitToSelected(cmdDetails, msg.selected);
-        }
-
-        if (cmdDetails.action == 'applyGrabDefPen') {
-            logger('commandHandler::before applyGrabDefPen');
-            applyGrabDefPen(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'remGrabDefPen') {
-            logger('commandHandler::before remGrabDefPen');
-            remGrabDefPen(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'applyProneDefPen') {
-            logger('commandHandler::before applyProneDefPen');
-            applyProneDefPen(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'remProneDefPen') {
-            logger('commandHandler::before remProneDefPen');
-            remProneDefPen(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'applyLightCoverDefBonus') {
-            logger('commandHandler::before applyLightCoverDefBonus');
-            applyLightCoverDefBonus(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'applyHeavyCoverDefBonus') {
-            logger('commandHandler::before applyHeavyCoverDefBonus');
-            applyHeavyCoverDefBonus(cmdDetails);
-        }
-
-        if (cmdDetails.action == 'remCoverDefBonus') {
-            logger('commandHandler::before remCoverDefBonus');
-            remCoverDefBonus(cmdDetails);
+        for (const fxObj of simpleCastList) {
+            if (cmdDetails.action == fxObj.key) {
+                logger(`commandHandler::before ${fxObj.fxName}`);
+                fxObj.fx(cmdDetails, msg.selected);
+            }    
         }
 	},
 
