@@ -445,193 +445,17 @@ var CombatMaster = CombatMaster || (function() {
     //NEW ACTIONS
     //*************************************************************************************************************
 
-    remCoverDefBonus = (cmdDetails) => {
-        logger(`remProneDefPen::remProneDefPen cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `remProneDefPen:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `remProneDefPen:: charObj.name=${charObj.get('name')} got removed COVER def Bonus`);
-        setAttrs(charObj.get('id'), {'cover-def-bonus':0});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `remProneDefPen:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is out of Cover</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Out of Cover','gm', false, `background-color:black;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Out of Cover','', false, `background-color:black;${styles.specialTitle}`);
-    },
-
-    applyHeavyCoverDefBonus = (cmdDetails) => {
-        logger(`applyHeavyCoverDefBonus::applyHeavyCoverDefBonus cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `applyHeavyCoverDefBonus:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `applyHeavyCoverDefBonus:: charObj.name=${charObj.get('name')} got applied HEAVY COVER def Bonus`);
-        setAttrs(charObj.get('id'), {'cover-def-bonus':2});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is now behind Heavy Cover</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Heavy Cover','gm', false, `background-color:green;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Heavy Cover','', false, `background-color:green;${styles.specialTitle}`);
-    },
-
-    applyLightCoverDefBonus = (cmdDetails) => {
-        logger(`applyLightCoverDefBonus::applyLightCoverDefBonus cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `applyLightCoverDefBonus:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `applyLightCoverDefBonus:: charObj.name=${charObj.get('name')} got applied LIGHT COVER def Bonus`);
-        setAttrs(charObj.get('id'), {'cover-def-bonus':1});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is now behind Light Cover</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Light Cover','gm', false, `background-color:darkgreen;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Light Cover','', false, `background-color:darkgreen;${styles.specialTitle}`);
-    },
-
-    remProneDefPen = (cmdDetails) => {
-        logger(`remProneDefPen::remProneDefPen cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `remProneDefPen:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `remProneDefPen:: charObj.name=${charObj.get('name')} got removed PRONE def Penalty`);
-        setAttrs(charObj.get('id'), {'prone-def-penalty':0});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `remProneDefPen:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' got on his feet</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Out of Prone','gm', false, `background-color:darkgreen;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Out of Prone','', false, `background-color:darkgreen;${styles.specialTitle}`);
-    },
-
-    applyProneDefPen = (cmdDetails) => {
-        logger(`applyProneDefPen::applyProneDefPen cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `applyProneDefPen:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `applyProneDefPen:: charObj.name=${charObj.get('name')} got applied PRONE def Penalty`);
-        setAttrs(charObj.get('id'), {'prone-def-penalty':1});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is now prone</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Prone','gm', false, `background-color:darkred;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Prone','', false, `background-color:darkred;${styles.specialTitle}`);
-    },
-
-    remGrabDefPen = (cmdDetails) => {
-        logger(`remGrabDefPen::remGrabDefPen cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `remGrabDefPen:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `remGrabDefPen:: charObj.name=${charObj.get('name')} got removed GRAB def Penalty`);
-        setAttrs(charObj.get('id'), {'grab-def-penalty':0});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `remGrabDefPen:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is out of grab</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Out of Grab','gm', false, `background-color:darkgreen;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Out of Grab','', false, `background-color:darkgreen;${styles.specialTitle}`);
-    },
-
-    applyGrabDefPen = (cmdDetails) => {
-        logger(`applyGrabDefPen::applyGrabDefPen cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        const charObj = getObj('character', cmdDetails.details['id']);
-        if (!charObj) {
-            logger(LOGLEVEL.ERROR, `applyGrabDefPen:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
-        }
-        logger(LOGLEVEL.INFO, `applyGrabDefPen:: charObj.name=${charObj.get('name')} got applied GRAB def Penalty`);
-        setAttrs(charObj.get('id'), {'grab-def-penalty':2});
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' has been grabbed</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,'Grab','gm', false, `background-color:darkred;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,'Grab','', false, `background-color:darkred;${styles.specialTitle}`);
-        sendMainMenu('gm');
-    },
-
-    rstInitToSelected = (cmdDetails, selected) => {
-        logger(`rstInitToSelected::rstInitToSelected cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
+    setInitToSelected = (cmdDetails, selected, confObj) => {
+        logger(`${confObj.name}::${confObj.name} cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
         if (!selected) {
-            logger(`rstInitToSelected:: NO SELECTED, RETURN`);
+            logger(`${confObj.name}:: NO SELECTED, RETURN`);
             sendGMStandardScriptMessage('Please select a token on the page for the script to work !');
             return;
         }
 
         let turnorder = getTurnorder(), appliedCount = 0, appliedName;
-        logger(`rstInitToSelected:: turnorder=${JSON.stringify(turnorder)}`);
+        logger(`${confObj.name}:: turnorder=${JSON.stringify(turnorder)}`);
 
         _.chain(selected)
         .map(o => getObj('graphic',o._id))
@@ -642,35 +466,110 @@ var CombatMaster = CombatMaster || (function() {
             for (var i = 0; i < turnorder.length; i++) {
                 if (turnorder[i].pr === '-420' || turnorder[i].id !== t.get('id')) continue;
                 let tokenObj    = findObjs({_id:turnorder[i].id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
-                turnorder[i].pr = Number(cmdDetails.details['initiative']);
+                turnorder[i].pr = confObj.getInitToSetFx(cmdDetails.details['initiative'], turnorder[i].pr);
                 let imgurl = tokenObj.get('imgsrc');
                 let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
                 appliedName = tokenObj.get('name');
-                sendStandardScriptMessage(`${appliedName} <b>reset init to ${turnorder[i].pr}</b> for getting out of Crash status`, image, 'display:inline-block;vertical-align:middle;', false);
+                sendStandardScriptMessage(`${appliedName} ${confObj.getMessageFx(turnorder[i].pr)}`, image, 'display:inline-block;vertical-align:middle;', false);
                 appliedCount++;
             }
         });
         if (appliedCount) {
-            logger(LOGLEVEL.INFO, `rstInitToSelected:: Reseting init to '${appliedName}'`);
+            logger(LOGLEVEL.INFO, `${confObj.name}:: ${confObj.debugMessageOnSet} to '${appliedName}'`);
             setTurnorder(turnorder);
         }
     },
 
-    announceCrashOff = (cmdDetails) => {
-        logger(`announceCrashOff::announceCrashOff cmdDetails=${JSON.stringify(cmdDetails)}`);
+    announceAndExec = (cmdDetails, confObj) => {
+        logger(`${confObj.name}::${confObj.name} cmdDetails=${JSON.stringify(cmdDetails)}`);
+
+        if (confObj.charAttrToSet) {
+            const charObj = getObj('character', cmdDetails.details['id']);
+            if (!charObj) {
+                logger(LOGLEVEL.ERROR, `${confObj.name}:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
+            }
+            if (confObj.debugMessage) logger(LOGLEVEL.INFO, `${confObj.name}:: charObj.name=${charObj.get('name')} got ${confObj.debugMessage}`);
+            setAttrs(charObj.get('id'), confObj.charAttrToSet);
+        }
 
         let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
         let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `announceCrashOff:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
+        logger(LOGLEVEL.INFO, `${confObj.name}:: name=${name} statuses=${tokenObj.get('statusmarkers')}`);
         let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
+        let image       = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px"  />` : '';
         name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+        let contents    = `<div style="${styles.announcePlayer}">${image}</div>`;
+        contents   += `<div style="${styles.announcePlayer}max-width: 67%;">${name} ${confObj.contentString}</div>`;
 
+        if (tokenObj.get('layer') == 'gmlayer')
+            makeAndSendMenu(contents,confObj.title,'gm', false, `background-color:${confObj.bgColor};${styles.specialTitle}`);
+        else
+            makeAndSendMenu(contents,confObj.title,'', false, `background-color:${confObj.bgColor};${styles.specialTitle}`);
+    },
+
+    remCoverDefBonus = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'remCoverDefBonus',                   debugMessage: 'removed COVER def Bonus',        charAttrToSet: {'cover-def-bonus':0},
+            contentString: 'is out of Cover',           title: 'Out of Cover',                          bgColor: 'black'
+        });
+    },
+
+    applyHeavyCoverDefBonus = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'applyHeavyCoverDefBonus',            debugMessage: 'applied HEAVY COVER def Bonus',  charAttrToSet: {'cover-def-bonus':2},
+            contentString: 'is now behind Heavy Cover', title: 'Heavy Cover',                           bgColor: 'green'
+        });
+    },
+
+    applyLightCoverDefBonus = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'applyLightCoverDefBonus',            debugMessage: 'applied LIGHT COVER def Bonus',  charAttrToSet: {'cover-def-bonus':1},
+            contentString: 'is now behind Light Cover', title: 'Light Cover',                           bgColor: 'darkgreen'
+        });
+    },
+
+    remProneDefPen = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'remProneDefPen',                     debugMessage: 'removed PRONE def Penalty',      charAttrToSet: {'prone-def-penalty':0},
+            contentString: 'got on his feet',           title: 'Out of Prone',                          bgColor: 'darkgreen'
+        });
+    },
+
+    applyProneDefPen = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'applyProneDefPen',                   debugMessage: 'applied PRONE def Penalty',      charAttrToSet: {'prone-def-penalty':1},
+            contentString: 'is now prone',              title: 'Prone',                                 bgColor: 'darkred'
+        });
+    },
+
+    remGrabDefPen = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'remGrabDefPen',                      debugMessage: 'removed GRAB def Penalty',       charAttrToSet: {'grab-def-penalty':0},
+            contentString: 'is out of grab',            title: 'Out of Grab',                           bgColor: 'darkgreen'
+        });
+    },
+
+    applyGrabDefPen = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'applyGrabDefPen',                    debugMessage: 'applied GRAB def Penalty',       charAttrToSet: {'grab-def-penalty':2},
+            contentString: 'has been grabbed',          title: 'Grab',                                  bgColor: 'darkred'
+        });
+        sendMainMenu('gm');
+    },
+
+    rstInitToSelected = (cmdDetails, selected) => {
+        setInitToSelected(cmdDetails, selected, {
+            name: 'rstInitToSelected',
+            getInitToSetFx: cmdInit => Number(cmdInit),
+            getMessageFx: (init) => `<b>reset init to ${init}</b> for getting out of Crash status`,
+            debugMessageOnSet: 'Reseting init'
+        });
+    },
+
+    announceCrashOff = (cmdDetails) => {
+        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
         let doneButton  = makeImageButton('!cmaster --rstInitToSelected,initiative=?{Reset to ?|3}',doneImage,'Reset Init (GM Only)','transparent',18,'white');
         let title       = 'Out of Crash';
-
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' is out of crash status</div>';
 
         let turnorder = getTurnorder(), isStillCrashed = false;
         for (var i = 0; i < turnorder.length; i++) {
@@ -680,67 +579,29 @@ var CombatMaster = CombatMaster || (function() {
         }
         if (isStillCrashed) title += '<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
 
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,title,'gm', false, `background-color:darkgreen;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,title,'', false, `background-color:darkgreen;${styles.specialTitle}`);
+        announceAndExec(cmdDetails, {
+            name: 'announceCrashOff',
+            contentString: 'is out of crash status', title: title, bgColor: 'darkgreen'
+        });
     },
 
     applyInitBonusToCrasherSelected = (cmdDetails, selected) => {
-        logger(`applyInitBonusToCrasher::applyInitBonusToCrasher cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
-
-        if (!selected) {
-            logger(`applyInitBonusToCrasherSelected:: NO SELECTED, RETURN`);
-            sendGMStandardScriptMessage('Please select a token on the page for the script to work !');
-            return;
-        }
-
-        let turnorder = getTurnorder(), appliedCount = 0, appliedName;
-        logger(`applyInitBonusToCrasher:: turnorder=${JSON.stringify(turnorder)}`);
-
-        _.chain(selected)
-        .map(o => getObj('graphic',o._id))
-        .compact()
-        .each(function(t){
-            if (appliedCount) return;
-
-            for (var i = 0; i < turnorder.length; i++) {
-                if (turnorder[i].pr === '-420' || turnorder[i].id !== t.get('id')) continue;
-                let tokenObj    = findObjs({_id:turnorder[i].id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0];
-                turnorder[i].pr += 5;
-                let imgurl = tokenObj.get('imgsrc');
-                let image  = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px" />' : '';
-                appliedName = tokenObj.get('name');
-                sendStandardScriptMessage(appliedName+' <b>gain 5 init</b> for having crashed someone', image, 'display:inline-block;vertical-align:middle;', false);
-                appliedCount++;
-            }
+        setInitToSelected(cmdDetails, selected, {
+            name: 'applyInitBonusToCrasher',
+            getInitToSetFx: (cmdInit, init) => Number(init) + 5,
+            getMessageFx: () => '<b>gain 5 init</b> for having crashed someone',
+            debugMessageOnSet: 'Applying init bonus'
         });
-        if (appliedCount) {
-            logger(LOGLEVEL.INFO, `applyInitBonusToCrasher:: Applying init bonus to '${appliedName}'`);
-            setTurnorder(turnorder);
-        }
     },
 
     announceCrashAndSendInitGainButton = (cmdDetails) => {
-        logger(`announceCrashAndSendInitGainButton::announceCrashAndSendInitGainButton cmdDetails=${JSON.stringify(cmdDetails)}`);
-
-        let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
-        let name        = tokenObj.get('name');
-        logger(LOGLEVEL.INFO, `announcePlayer::announcePlayer name=${name} statuses=${tokenObj.get('statusmarkers')}`);
-        let imgurl      = tokenObj.get('imgsrc');
-        let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
-        name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
-
         let doneButton  = makeImageButton('!cmaster --applyInitBonusToCrasherSelected',doneImage,'Apply Init Bonus (GM Only)','transparent',18,'white');
         let title       = 'Crashed<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
 
-        let contents    = '<div style="'+styles.announcePlayer+'">'+image+'</div>';
-        contents   += '<div style="'+styles.announcePlayer+'max-width: 67%;">'+name+' has been crashed</div>';
-
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,title,'gm', false, `background-color:darkred;${styles.specialTitle}`);
-        else
-            makeAndSendMenu(contents,title,'', false, `background-color:darkred;${styles.specialTitle}`);
+        announceAndExec(cmdDetails, {
+            name: 'announceCrashAndSendInitGainButton',
+            contentString: 'has been crashed',          title: title, bgColor: 'darkred'
+        });
     },
 
     togglePageSize = (cmdDetails, selected) => {
