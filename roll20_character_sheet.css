@@ -2240,6 +2240,7 @@ body.sheet-darkmode {
 
 /* -- ATTACKS -- */
 
+.charsheet .sheet-tab-character-sheet .sheet-rolls-div .first-line .sheet-rolls-name,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .first-line .sheet-atk-name {
     width: calc(100% - 5.78em);
     color: red;
@@ -2247,6 +2248,7 @@ body.sheet-darkmode {
 }
 
 
+.charsheet .sheet-tab-character-sheet .sheet-rolls-div p,
 .charsheet .sheet-tab-combat-sheet p {
     margin-bottom: 0;
 }
@@ -2420,6 +2422,7 @@ body.sheet-darkmode {
 
 /* KIRBY & Desc area */
 
+.charsheet .sheet-tab-character-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc,
 .charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc {
     width: 4.3em;
     background-color: transparent;
@@ -2427,12 +2430,14 @@ body.sheet-darkmode {
     margin: 0;
 }
 
+.charsheet .sheet-tab-character-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:checked + span::before,
 .charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:checked + span::before {
 	/* content: "<('o'<)"; */
 	content: attr(title) "('o'" attr(title) ")";
 	color: gold;
 }
 
+.charsheet .sheet-tab-character-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc + span::before,
 .charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc + span::before {
     height: calc(100% - 3px);
     width: unset;
@@ -2449,6 +2454,7 @@ body.sheet-darkmode {
     font-weight: normal;
 }
 
+.charsheet .rolls-textarea,
 .charsheet .combat-textarea {
     display: none;
     width: 98.8%;
@@ -2459,10 +2465,12 @@ body.sheet-darkmode {
     background: var(--dark-surface1);
 }
 
+.charsheet .sheet-rolls-toggle-desc-val[value="1"] ~ .rolls-textarea,
 .charsheet .sheet-combat-toggle-desc-val[value="1"] ~ .combat-textarea {
     display: block;
 }
 
+.charsheet .sheet-tab-character-sheet .sheet-rolls-div .woundpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-init .woundpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .woundpenalty {
     width: 1.3em;
@@ -2472,6 +2480,7 @@ body.sheet-darkmode {
 
 /* EDIT mode */
 
+.charsheet .sheet-tab-character-sheet .header-section .edit-toggle input.sheet-rolls-toggle-edit,
 .charsheet .sheet-tab-combat-sheet .header-section .edit-toggle input.sheet-combat-toggle-edit {
 	width: calc(100%);
 	background-color: transparent;
@@ -2479,21 +2488,25 @@ body.sheet-darkmode {
 	margin: 0;
 }
 
+.charsheet .sheet-tab-character-sheet .show-on-edit .header-section .edit-toggle input.sheet-rolls-toggle-edit,
 .charsheet .sheet-tab-combat-sheet .show-on-edit .header-section .edit-toggle input.sheet-combat-toggle-edit {
 	top: 0px;
 	right: 0px;
 }
 
+.charsheet .sheet-tab-character-sheet .hide-on-edit .header-section .edit-toggle input.sheet-rolls-toggle-edit,
 .charsheet .sheet-tab-combat-sheet .hide-on-edit .header-section .edit-toggle input.sheet-combat-toggle-edit {
 	width: 5em;
 	height: 1.6em;
 }
 
+.charsheet .sheet-tab-character-sheet .header-section .edit-toggle input[type="checkbox"].sheet-rolls-toggle-edit:checked + span::before,
 .charsheet .sheet-tab-combat-sheet .header-section .edit-toggle input[type="checkbox"].sheet-combat-toggle-edit:checked + span::before {
 	color: rgb(var(--goldish-color));
     font-weight: normal;
 }
 
+.charsheet .sheet-tab-character-sheet .header-section .edit-toggle input.sheet-rolls-toggle-edit + span::before,
 .charsheet .sheet-tab-combat-sheet .header-section .edit-toggle input.sheet-combat-toggle-edit + span::before {
     height: calc(100%);
     width: 1.12em;
@@ -2504,10 +2517,12 @@ body.sheet-darkmode {
     text-decoration: underline;
 }
 
+.charsheet .sheet-tab-character-sheet .hide-on-edit .header-section .edit-toggle input.sheet-rolls-toggle-edit + span::before,
 .charsheet .sheet-tab-combat-sheet .hide-on-edit .header-section .edit-toggle input.sheet-combat-toggle-edit + span::before {
     width: 5em;
 }
 
+.charsheet .sheet-rolls-div .hide-on-edit .inner-section,
 .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
     flex-flow: initial;
     justify-content: space-between;
@@ -2538,12 +2553,16 @@ body.sheet-darkmode {
     }
 }
 
+.charsheet .sheet-rolls-div .sheet-rolls-toggle-edit-val[value="1"] ~ .first-line > .hide-on-edit,
+.charsheet .sheet-rolls-div .sheet-rolls-toggle-edit-val[value="1"] ~ .roll-section.show-on-edit,
+.charsheet .sheet-rolls-div .sheet-rolls-toggle-edit-val[value="0"] ~ .roll-section.hide-on-edit,
 .charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .first-line > .hide-on-edit,
 .charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .attack-section.show-on-edit,
 .charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="0"] ~ .flex-wrap > .attack-section.hide-on-edit {
     display: none;
 }
 
+.charsheet .sheet-rolls-div .sheet-rolls-toggle-edit-val[value="1"] ~ .roll-section.hide-on-edit,
 .charsheet .combat-attacks .sheet-combat-toggle-edit-val[value="1"] ~ .flex-wrap > .attack-section.hide-on-edit {
     display: flex;
 }
@@ -2604,6 +2623,7 @@ body.sheet-darkmode {
     display: inline-block;
 }
 
+.charsheet .sheet-tab-character-sheet .sheet-rolls-main .header-section,
 .charsheet .combat-attacks .attack-section .header-section {
     text-decoration: underline;
     display: inline-flex;
@@ -2616,12 +2636,14 @@ body.sheet-darkmode {
     color: rgb(var(--goldish-color));
 }
 
+.charsheet .sheet-tab-character-sheet .sheet-rolls-main .show-on-edit .header-section,
 .charsheet .combat-attacks .attack-section.show-on-edit .header-section {
     writing-mode: vertical-lr;
     transform: rotate(-180deg);
     min-height: 4.55em;
 }
 
+.sheet-darkmode .charsheet .sheet-tab-character-sheet .sheet-rolls-main .header-section,
 .sheet-darkmode .charsheet .combat-attacks .attack-section .header-section {
     background-color: rgba(255, 255, 255, 0.2);
 }
@@ -2633,6 +2655,7 @@ body.sheet-darkmode {
     justify-content: center;
 }
 
+.charsheet .sheet-tab-character-sheet .roll-section select,
 .charsheet .combat-attacks .attack-section select {
     width: 7.1em;
     text-align: center;
@@ -2640,16 +2663,20 @@ body.sheet-darkmode {
     border-radius: 13px;
 }
 
+.charsheet .sheet-tab-character-sheet .roll-section input[type="text"],
 .charsheet .combat-attacks .attack-section input[type="text"] {
     width: 3em;
 }
 
+.charsheet .sheet-tab-character-sheet .roll-section > div > div .head,
 .charsheet .combat-attacks .attack-section > div > div .head {
     width: 2.4em;
     display: inline-block;
 }
 
 .charsheet .edit-toggle:hover,
+.charsheet .roll-section .stealth-btn:hover ~ .sheet-rolls-bonus-dices,
+.charsheet .roll-section .stealth-btn:hover ~ .sheet-rolls-bonus-successes,
 .charsheet .attack-section .stealth-btn:hover ~ .sheet-watk-bonus-dices,
 .charsheet .attack-section .stealth-btn:hover ~ .sheet-watk-bonus-successes {
     box-shadow: 1px 1px 2px gold, -1px 1px 2px gold, 1px -1px 2px gold, -1px -1px 2px gold;
@@ -2665,6 +2692,7 @@ body.sheet-darkmode {
     border-radius: 13px;
 }
 
+.charsheet .sheet-tab-character-sheet .roll-section > div > div .sheet-rolls-macro-options,
 .charsheet .combat-attacks .attack-section > div > div .sheet-init-macro-options {
     min-width: 4em;
 }
@@ -2695,11 +2723,74 @@ body.sheet-darkmode {
     background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
 }
 
+.charsheet .sheet-tab-character-sheet .roll-section .inner-section > .flex-wrap > .flex.grow-normal,
+.charsheet .sheet-tab-character-sheet .roll-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(3) {
     flex-basis: 50%;
+}
+
+/* main sheet Rolls */
+
+.charsheet .sheet-exroll {
+    display: flex;
+    justify-content: center;
+}
+
+/* -- Rolls TOGGLER -- */
+
+.charsheet input.sheet-rollseffect + span::before {
+    width: 99%;
+    height: calc(100% - 3px);
+    content: attr(title);
+    text-align: center;
+    line-height: 100%;
+    font-size: 18px;
+}
+
+.charsheet input.sheet-rollseffect:checked + span:before {
+    content: attr(title) !important;
+}
+
+.charsheet input.sheet-rollseffect {
+    width:99%;
+    background-color: #f6f6f6;
+    height: 20px;
+    margin: 0;
+}
+
+.charsheet .sheet-tab-character-sheet .sheet-rolls-main div.sheet-rolls-div {
+    display: none;
+}
+
+.charsheet .sheet-tab-character-sheet .sheet-rolls-main input.sheet-rollseffect:checked ~ div.sheet-rolls-div {
+    display: block;
+}
+
+.charsheet .sheet-rolls .roll-section.show-on-edit .inner-section.flex-wrap {
+    flex-grow: 1;
+    flex-flow: wrap;
+    max-width: calc(100% - 1.9em);
+    /* max-width: calc(100% - 1.7em); */
+    align-items: stretch;
+}
+
+.charsheet .sheet-tab-character-sheet .roll-section .inner-section {
+    width: auto;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+
+.charsheet .sheet-rolls-main .sheet-rolls .first-line .stealth-btn {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+.charsheet .roll-section.hide-on-edit {
+    justify-content: space-between;
 }
 
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
