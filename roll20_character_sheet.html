@@ -270,12 +270,91 @@
         }));
     }));
 
+    on('sheet:opened', TAS._fn(function upgradeVersion(e) {
+        TAS.debug('Checking version', e);
+        getAttrs(['version'], TAS._fn(function versionCheck(values) {
+            var v = parseFloat(values.version);
+            TAS.debug('v = ', v);
+
+            if (v !== version) {
+                switch (v) {
+                    default:
+                        // upgrade to new version 2.25
+                        initCharacterSheet();
+                        break;
+                    case 1:
+                        TAS._fn(upgradeHealthBars());
+                    case 2.24:
+                        // fallthrough
+                        // nothing to do
+                    case 2.26:
+                    case 2.27:
+                        TAS._fn(upgradeto228());
+                        // fallthrough
+                    case 2.28:
+                    case 2.29:
+                        TAS._fn(upgradeto230());
+
+                    case version:
+                        // nothing to do
+                        // fallthrough
+                }
+            }
+        }));
+    }));
+
+    function upgradeto230() {
+        setAttrs({
+            'grab-def-penalty': 0,
+            'prone-def-penalty': 0,
+            'cover-def-bonus': 0,
+            'version': version
+        });
+    }
+
+    function upgradeto228() {
+        setAttrs({
+            'battlegroup-def-boost': 0,
+            'battlegroup-acc-boost': 0,
+            'battlegroup-dmg-boost': 0,
+            'version': version
+        });
+    }
+
+    function upgradeHealthBars() {
+        TAS.debug('Upgrade Health Bars v1 => 2.25');
+        var healthList = [];
+        for (var i = 1; i <= 32; i++) {
+            healthList.push('hl' + i + '-damage');
+            healthList.push('hl' + i + '-penalty');
+        }
+        getAttrs(healthList, TAS._fn(function getHealth(values) {
+            var attrs = {}, healthValues = [];
+            for (var i = 1; i <= 32; i++) {
+                if (values[`hl${i}-damage`] !== 'healthy' || values[`hl${i}-penalty`])
+                    healthValues.push({damage:values[`hl${i}-damage`],penalty:values[`hl${i}-penalty`]});
+            }
+            
+            var indexesIntimacies = _.times(healthValues.length, generateRowID);
+            TAS.debug('Creating new intimacies', indexesIntimacies);
+            _.each(indexesIntimacies, function(id, k) {
+                attrs['repeating_health_' + id + '_hl-damage'] = healthValues[k].damage;
+                attrs['repeating_health_' + id + '_hl-penalty'] = healthValues[k].penalty;
+            });
+
+            attrs.version = version;
+            attrs = cleanAttrs(attrs);
+            TAS.debug('Saving attributes!', attrs);
+            setAttrs(cleanAttrs(attrs));
+        }));
+    }
+
     on('sheet:opened', TAS._fn(initIntimacies));
 
     function initIntimacies() {
         TAS.debug('Initializing 1st time Intimacies');
         getSectionIDs('intimacies', TAS._fn(function getIntimaciesList(idIntimaciesArray) {
-            getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
+            getAttrs(['init-intimacies', 'version'], TAS._fn(function checkInitialized(values) {
                 if (idIntimaciesArray.length || parseInt(values['init-intimacies']) !== 0) {
                     TAS.debug('ALREADY DONE => CANCEL');
                     return;
@@ -301,7 +380,10 @@
         TAS.debug('Initializing 1st time attributes');
         getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
             if (parseInt(values['init-intimacies']) !== 0) {
-                TAS.debug('ALREADY DONE => CANCEL');
+                TAS.debug('ALREADY DONE => Doing all upgrades and Quitting');
+                TAS._fn(upgradeHealthBars());
+                TAS._fn(upgradeto228());
+                TAS._fn(upgradeto230());
                 return;
             }
             setAttrs({
@@ -338,7 +420,9 @@
                 'battlegroup-def-boost': 0,
                 'battlegroup-acc-boost': 0,
                 'battlegroup-dmg-boost': 0,
-                'grab-def-penalty': 0
+                'grab-def-penalty': 0,
+                'prone-def-penalty': 0,
+                'cover-def-bonus': 0
             });
 
             let healthAttrs = {}, healthIndexes = _.times(7, generateRowID);
@@ -727,85 +811,6 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
-    on('sheet:opened', TAS._fn(function upgradeVersion(e) {
-        TAS.debug('Checking version', e);
-        getAttrs(['version'], TAS._fn(function versionCheck(values) {
-            var v = parseFloat(values.version);
-            TAS.debug('v = ', v);
-
-            if (v !== version) {
-                switch (v) {
-                    default:
-                        // upgrade to new version 2.25
-                        initCharacterSheet();
-                        break;
-                    case 1:
-                        TAS._fn(upgradeHealthBars());
-                    case 2.24:
-                        // fallthrough
-                        // nothing to do
-                    case 2.26:
-                    case 2.27:
-                        TAS._fn(upgradeto228());
-                        // fallthrough
-                    case 2.28:
-                    case 2.29:
-                        TAS._fn(upgradeto230());
-
-                    case version:
-                        // nothing to do
-                        // fallthrough
-                }
-            }
-        }));
-    }));
-
-    function upgradeto230() {
-        setAttrs({
-            'grab-def-penalty': 0,
-            'prone-def-penalty': 0,
-            'cover-def-bonus': 0,
-            'version': version
-        });
-    }
-
-    function upgradeto228() {
-        setAttrs({
-            'battlegroup-def-boost': 0,
-            'battlegroup-acc-boost': 0,
-            'battlegroup-dmg-boost': 0,
-            'version': version
-        });
-    }
-
-    function upgradeHealthBars() {
-        TAS.debug('Upgrade Health Bars v1 => 2.25');
-        var healthList = [];
-        for (var i = 1; i <= 32; i++) {
-            healthList.push('hl' + i + '-damage');
-            healthList.push('hl' + i + '-penalty');
-        }
-        getAttrs(healthList, TAS._fn(function getHealth(values) {
-            var attrs = {}, healthValues = [];
-            for (var i = 1; i <= 32; i++) {
-                if (values[`hl${i}-damage`] !== 'healthy' || values[`hl${i}-penalty`])
-                    healthValues.push({damage:values[`hl${i}-damage`],penalty:values[`hl${i}-penalty`]});
-            }
-            
-            var indexesIntimacies = _.times(healthValues.length, generateRowID);
-            TAS.debug('Creating new intimacies', indexesIntimacies);
-            _.each(indexesIntimacies, function(id, k) {
-                attrs['repeating_health_' + id + '_hl-damage'] = healthValues[k].damage;
-                attrs['repeating_health_' + id + '_hl-penalty'] = healthValues[k].penalty;
-            });
-
-            attrs.version = version;
-            attrs = cleanAttrs(attrs);
-            TAS.debug('Saving attributes!', attrs);
-            setAttrs(cleanAttrs(attrs));
-        }));
-    }
-
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
         clickDefaultMacro(e, (cb, attr_name) => {
@@ -1113,7 +1118,7 @@
 
             <h1 class="sheet-attributes"><span>Attributes</span></h1>
             <div class="sheet-attributes sheet-3colrow"><!-- Attributes -->
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{strength}">
                         <label>
                             <input type="checkbox" name="attr_strengthfav" value="1"><span></span>
                             <span>Strength</span>
@@ -1132,7 +1137,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_strength" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{dexterity}">
                         <label>
                             <input type="checkbox" name="attr_dexterityfav" value="1"><span></span>
                             <span>Dexterity</span>
@@ -1151,7 +1156,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_dexterity" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{stamina}">
                         <label>
                             <input type="checkbox" name="attr_staminafav" value="1"><span></span>
                             <span>Stamina</span>
@@ -1170,7 +1175,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_stamina" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{charisma}">
                         <label>
                             <input type="checkbox" name="attr_charismafav" value="1"><span></span>
                             <span>Charisma</span>
@@ -1189,7 +1194,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_charisma" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{manipulation}">
                         <label>
                             <input type="checkbox" name="attr_manipulationfav" value="1"><span></span>
                             <span>Manipulation</span>
@@ -1208,7 +1213,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_manipulation" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{appearance}">
                         <label>
                             <input type="checkbox" name="attr_apperancefav" value="1"><span></span>
                             <span>Appearance</span>
@@ -1227,7 +1232,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_appearance" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{perception}">
                         <label>
                             <input type="checkbox" name="attr_perceptionfav" value="1"><span></span>
                             <span>Perception</span>
@@ -1246,7 +1251,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_perception" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{intelligence}">
                         <label>
                             <input type="checkbox" name="attr_intelligencefav" value="1"><span></span>
                             <span>Intelligence</span>
@@ -1265,7 +1270,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_intelligence" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{wits}">
                         <label>
                             <input type="checkbox" name="attr_witsfav" value="1"><span></span>
                             <span>Wits</span>
@@ -1291,7 +1296,7 @@
             <div class="sheet-3colrow sheet-centerblock">
                 <div class="sheet-abilities sheet-col"><!-- 1.3.1 LEFT COLUMN -->
                     <h1><span>Abilities</span></h1>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{archery}">
                         <label>
                             <input type="checkbox" name="attr_archeryfav" value="1"><span></span>
                             <span>Archery</span>
@@ -1310,7 +1315,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_archery" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{athletics}">
                         <label>
                             <input type="checkbox" name="attr_athleticsfav" value="1"><span></span>
                             <span>Athletics</span>
@@ -1329,7 +1334,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_athletics" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{awareness}">
                         <label>
                             <input type="checkbox" name="attr_awarenessfav" value="1"><span></span>
                             <span>Awareness</span>
@@ -1348,7 +1353,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_awareness" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{brawl}">
                         <label>
                             <input type="checkbox" name="attr_brawlfav" value="1"><span></span>
                             <span>Brawl</span>
@@ -1367,7 +1372,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_brawl" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{bureaucracy}">
                         <label>
                             <input type="checkbox" name="attr_bureaucracyfav" value="1"><span></span>
                             <span>Bureaucracy</span>
@@ -1395,7 +1400,7 @@
                             <input class="sheet-max-craft-val" name="attr_max-craft" type="hidden" value="0">
                             <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show crafts" class="sheet-layer7"></span>
                             <div class="sheet-layer6">
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-armoring}">
                                     <label>Armoring</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-armoring" value="0" checked="checked"><span></span>
@@ -1411,7 +1416,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-armoring" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-artifact}">
                                     <label>Artifact</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-artifact" value="0" checked="checked"><span></span>
@@ -1427,7 +1432,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-artifact" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-cooking}">
                                     <label>Cooking</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-cooking" value="0" checked="checked"><span></span>
@@ -1443,7 +1448,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-cooking" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-artifice}">
                                     <label>First Age Artifice</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-artifice" value="0" checked="checked"><span></span>
@@ -1459,7 +1464,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-artifice" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-gemcutting}">
                                     <label>Gemcutting</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-gemcutting" value="0" checked="checked"><span></span>
@@ -1475,7 +1480,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-gemcutting" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-geomancy}">
                                     <label>Geomancy</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-geomancy" value="0" checked="checked"><span></span>
@@ -1491,7 +1496,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-geomancy" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-jewelry}">
                                     <label>Jewelry</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-jewelry" value="0" checked="checked"><span></span>
@@ -1507,7 +1512,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-jewelry" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-tailoring}">
                                     <label>Tailoring</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-tailoring" value="0" checked="checked"><span></span>
@@ -1523,7 +1528,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_craft-tailoring" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{craft-forging}">
                                     <label>Weapon Forging</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_craft-forging" value="0" checked="checked"><span></span>
@@ -1560,7 +1565,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{dodge}">
                         <label>
                             <input type="checkbox" name="attr_dodgefav" value="1"><span></span>
                             <span>Dodge</span>
@@ -1579,7 +1584,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_dodge" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{integrity}">
                         <label>
                             <input type="checkbox" name="attr_integrityfav" value="1"><span></span>
                             <span>Integrity</span>
@@ -1598,7 +1603,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_integrity" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{investigation">
                         <label>
                             <input type="checkbox" name="attr_investigationfav" value="1"><span></span>
                             <span>Investigation</span>
@@ -1617,7 +1622,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_investigation" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{larceny">
                         <label>
                             <input type="checkbox" name="attr_larcenyfav" value="1"><span></span>
                             <span>Larceny</span>
@@ -1636,7 +1641,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_larceny" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{linguistics}">
                         <label>
                             <input type="checkbox" name="attr_linguisticsfav" value="1"><span></span>
                             <span>Linguistics</span>
@@ -1655,7 +1660,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_linguistics" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{lore}">
                         <label>
                             <input type="checkbox" name="attr_lorefav" value="1"><span></span>
                             <span>Lore</span>
@@ -1683,7 +1688,7 @@
                             <input class="sheet-max-ma-val" name="attr_max-ma" type="hidden" value="0">
                             <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show styles" class="sheet-layer5"></span>
                             <div class="sheet-layer4">
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-snake}">
                                     <label>Snake Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-snake" value="0" checked="checked"><span></span>
@@ -1699,7 +1704,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-snake" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-tiger}">
                                     <label>Tiger Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-tiger" value="0" checked="checked"><span></span>
@@ -1715,7 +1720,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-tiger" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-void}">
                                     <label>Single Point Shining Into the Void Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-void" value="0" checked="checked"><span></span>
@@ -1731,7 +1736,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-void" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-reaper}">
                                     <label>White Reaper Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-reaper" value="0" checked="checked"><span></span>
@@ -1747,7 +1752,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-reaper" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-ebon}">
                                     <label>Ebon Shadow Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-ebon" value="0" checked="checked"><span></span>
@@ -1763,7 +1768,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-ebon" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-crane}">
                                     <label>Crane Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-crane" value="0" checked="checked"><span></span>
@@ -1779,7 +1784,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-crane" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-nightingale}">
                                     <label>Silver-Voiced Nightingale Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-nightingale" value="0" checked="checked"><span></span>
@@ -1795,7 +1800,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-nightingale" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-devil}">
                                     <label>Righteous Devil Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-devil" value="0" checked="checked"><span></span>
@@ -1811,7 +1816,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-devil" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-claw}">
                                     <label>Black Claw Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-claw" value="0" checked="checked"><span></span>
@@ -1827,7 +1832,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-claw" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-pearl}">
                                     <label>Dreaming Pearl Courtesan Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-pearl" value="0" checked="checked"><span></span>
@@ -1843,7 +1848,7 @@
                                         <input type="radio" class="sheet-dots10" name="attr_ma-pearl" value="10"><span></span>
                                     </div>
                                 </div>
-                                <div class="sheet-trait">
+                                <div class="sheet-trait" title="@{ma-steel}">
                                     <label>Steel Devil Style</label>
                                     <div class="sheet-dots">
                                         <input type="radio" class="sheet-dots0" name="attr_ma-steel" value="0" checked="checked"><span></span>
@@ -1880,7 +1885,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{medicine}">
                         <label>
                             <input type="checkbox" name="attr_medicinefav" value="1"><span></span>
                             <span>Medicine</span>
@@ -1899,7 +1904,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_medicine" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{melee}">
                         <label>
                             <input type="checkbox" name="attr_meleefav" value="1"><span></span>
                             <span>Melee</span>
@@ -1918,7 +1923,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_melee" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{occult}">
                         <label>
                             <input type="checkbox" name="attr_occultfav" value="1"><span></span>
                             <span>Occult</span>
@@ -1937,7 +1942,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_occult" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{performance">
                         <label>
                             <input type="checkbox" name="attr_performancefav" value="1"><span></span>
                             <span>Performance</span>
@@ -1956,7 +1961,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_performance" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{presence}">
                         <label>
                             <input type="checkbox" name="attr_presencefav" value="1"><span></span>
                             <span>Presence</span>
@@ -1975,7 +1980,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_presence" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{resistance}">
                         <label>
                             <input type="checkbox" name="attr_resistancefav" value="1"><span></span>
                             <span>Resistance</span>
@@ -1994,7 +1999,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_resistance" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{ride}">
                         <label>
                             <input type="checkbox" name="attr_ridefav" value="1"><span></span>
                             <span>Ride</span>
@@ -2013,7 +2018,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_ride" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{sail}">
                         <label>
                             <input type="checkbox" name="attr_sailfav" value="1"><span></span>
                             <span>Sail</span>
@@ -2032,7 +2037,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_sail" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{socialize}">
                         <label>
                             <input type="checkbox" name="attr_socializefav" value="1"><span></span>
                             <span>Socialize</span>
@@ -2051,7 +2056,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_socialize" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{stealth}">
                         <label>
                             <input type="checkbox" name="attr_stealthfav" value="1"><span></span>
                             <span>Stealth</span>
@@ -2070,7 +2075,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_stealth" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{survival}">
                         <label>
                             <input type="checkbox" name="attr_survivalfav" value="1"><span></span>
                             <span>Survival</span>
@@ -2089,7 +2094,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_survival" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{thrown}">
                         <label>
                             <input type="checkbox" name="attr_thrownfav" value="1"><span></span>
                             <span>Thrown</span>
@@ -2108,7 +2113,7 @@
                             <input type="radio" class="sheet-dots10" name="attr_thrown" value="10"><span></span>
                         </div>
                     </div>
-                    <div class="sheet-trait">
+                    <div class="sheet-trait" title="@{war}">
                         <label>
                             <input type="checkbox" name="attr_warfav" value="1"><span></span>
                             <span>War</span>
@@ -2200,7 +2205,7 @@
                     <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
                         <h1><span>Rolls</span></h1>
                         <div class="sheet-exroll">
-                            <div class="header-section" title="Generic Roll with prompts for Attribute+Accuracu+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
+                            <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
                                 <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}+?{Ability|
                                     Archery (@{archery}),@{archery}|
