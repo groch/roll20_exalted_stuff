@@ -929,7 +929,7 @@
         <input class="sheet-charm-dex-defense" name="attr_charm-dex-defense" type="hidden" value="0">
         <input class="sheet-charm-dex-subterfuge" name="attr_charm-dex-subterfuge" type="hidden" value="0">
         <input class="sheet-charm-dex-mobility" name="attr_charm-dex-mobility" type="hidden" value="0">
-        <input class="sheet-charm-dex-Swam" name="attr_charm-dex-Swam" type="hidden" value="0">
+        <input class="sheet-charm-dex-swarm" name="attr_charm-dex-swarm" type="hidden" value="0">
         <input class="sheet-charm-sta-defense" name="attr_charm-sta-defense" type="hidden" value="0">
         <input class="sheet-charm-sta-endurance" name="attr_charm-sta-endurance" type="hidden" value="0">
         <input class="sheet-charm-sta-berserker" name="attr_charm-sta-berserker" type="hidden" value="0">
@@ -3021,7 +3021,7 @@
 				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-defense sheet-tab-charm-dex-defense" name="attr__charm_sheet" title="DEX - Defense" type="radio" value="33">
 				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-subterfuge sheet-tab-charm-dex-subterfuge" name="attr__charm_sheet" title="DEX - Subterfuge" type="radio" value="34">
 				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-mobility sheet-tab-charm-dex-mobility" name="attr__charm_sheet" title="DEX - Mobility" type="radio" value="35">
-				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-Swam sheet-tab-charm-dex-Swam" name="attr__charm_sheet" title="DEX - Swam" type="radio" value="36">
+				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-swarm sheet-tab-charm-dex-swarm" name="attr__charm_sheet" title="DEX - Swarm" type="radio" value="36">
 				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sta-defense sheet-tab-charm-sta-defense" name="attr__charm_sheet" title="STA - Defense" type="radio" value="37">
 				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sta-endurance sheet-tab-charm-sta-endurance" name="attr__charm_sheet" title="STA - Endurance" type="radio" value="38">
 				<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sta-berserker sheet-tab-charm-sta-berserker" name="attr__charm_sheet" title="STA - Berserker" type="radio" value="39">
@@ -4404,7 +4404,7 @@
 
                 <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-universal">
                     <h1><span>Universal</span></h1>
-                    <fieldset class="repeating_charms-str-offense" style="display: none;">
+                    <fieldset class="repeating_charms-universal" style="display: none;">
                         <div class="sheet-table sheet-body">
                             <div class="sheet-table-row" style="width: 100%">
                                 <input type="text" name="attr_charm-name" class="sheet-charms-spells-trait-name" placeholder="Excellent Solar Larceny"><span> </span>
@@ -4722,7 +4722,7 @@
                 </div>
                 <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-subterfuge">
                     <h1><span>Dexterity - Subterfuge</span></h1>
-                    <fieldset class="repeating_charms-dex-offensive" style="display: none;">
+                    <fieldset class="repeating_charms-dex-subterfuge" style="display: none;">
                         <div class="sheet-table sheet-body">
                             <div class="sheet-table-row" style="width: 100%">
                                 <input type="text" name="attr_charm-name" class="sheet-charms-spells-trait-name" placeholder="Excellent Solar Larceny"><span> </span>
@@ -4775,7 +4775,7 @@
                 </div>
                 <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-mobility">
                     <h1><span>Dexterity - Mobility</span></h1>
-                    <fieldset class="repeating_charms-dex-offensive" style="display: none;">
+                    <fieldset class="repeating_charms-dex-mobility" style="display: none;">
                         <div class="sheet-table sheet-body">
                             <div class="sheet-table-row" style="width: 100%">
                                 <input type="text" name="attr_charm-name" class="sheet-charms-spells-trait-name" placeholder="Excellent Solar Larceny"><span> </span>
@@ -4826,9 +4826,9 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-swam">
-                    <h1><span>Dexterity - Swam</span></h1>
-                    <fieldset class="repeating_charms-dex-offensive" style="display: none;">
+                <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-swarm">
+                    <h1><span>Dexterity - Swarm</span></h1>
+                    <fieldset class="repeating_charms-dex-swarm" style="display: none;">
                         <div class="sheet-table sheet-body">
                             <div class="sheet-table-row" style="width: 100%">
                                 <input type="text" name="attr_charm-name" class="sheet-charms-spells-trait-name" placeholder="Excellent Solar Larceny"><span> </span>
@@ -4861,7 +4861,7 @@
                                     <input type="number" name="attr_charm-page" class="sheet-charms-spells-trait" placeholder="255"><span> </span>
                                     <span>Duration</span><span>: </span>
                                     <input type="text" name="attr_charm-duration" class="sheet-charms-spells-trait" placeholder="Instant"><span> </span>
-                                    <input type="hidden" name="attr_charm-skill" class="sheet-charms-spells-trait" value="Dexterity - Swam"><span> </span>
+                                    <input type="hidden" name="attr_charm-skill" class="sheet-charms-spells-trait" value="Dexterity - Swarm"><span> </span>
                                     <span>Keywords</span><span>: </span>
                                     <input type="text" name="attr_charm-keywords" class="sheet-charms-spells-trait" placeholder="Uniform, Psyche">
                                 </div>
@@ -7722,7 +7722,7 @@
 					<label><input type="checkbox" name="attr_charm-dex-defense" value="1"><span> Dexterity - Defense</span></label>
 					<label><input type="checkbox" name="attr_charm-dex-subterfuge" value="1"><span> Dexterity - Subterfuge</span></label>
 					<label><input type="checkbox" name="attr_charm-dex-mobility" value="1"><span> Dexterity - Mobility</span></label>
-					<label><input type="checkbox" name="attr_charm-dex-Swam" value="1"><span> Dexterity - Swam</span></label>
+					<label><input type="checkbox" name="attr_charm-dex-swarm" value="1"><span> Dexterity - Swarm</span></label>
 					<label><input type="checkbox" name="attr_charm-sta-defense" value="1"><span> Stamina - Defense</span></label>
 					<label><input type="checkbox" name="attr_charm-sta-endurance" value="1"><span> Stamina - Endurance</span></label>
 					<label><input type="checkbox" name="attr_charm-sta-berserker" value="1"><span> Stamina - Berserker</span></label>
