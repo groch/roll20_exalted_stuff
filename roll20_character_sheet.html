@@ -876,11 +876,13 @@
 <div class="sheet-content">
     <div>
         
-        <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="0"><span></span>
+        <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="1"><span></span>
+        <input class="sheet-show-antisocial-tab" type="hidden" name="attr_antisocialtab" value="0"><span></span>
 		<input checked="checked" class="sheet-tab sheet-tab-character-sheet" name="attr_sheet" title="Character Sheet" type="radio" value="1">
 		<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet" name="attr_sheet" title="Charms" type="radio" value="2">
 		<input class="sheet-tab sheet-tab-spells sheet-tab-spell-sheet" name="attr_sheet" title="Sorceries" type="radio" value="3">
 		<input class="sheet-tab sheet-tab-intimacies sheet-tab-intimacies-sheet" name="attr_sheet" title="Social" type="radio" value="5">
+		<input class="sheet-tab sheet-tab-antisocial sheet-tab-antisocial-sheet" name="attr_sheet" title="Tu perds ton Sang froid !" type="radio" value="7">
 		<input class="sheet-tab sheet-tab-combat sheet-tab-combat-sheet" name="attr_sheet" title="Combat" type="radio" value="6">
 		<input class="sheet-tab sheet-tab-settings sheet-tab-settings-sheet" name="attr_sheet" title="y" type="radio" value="4">
         
@@ -7661,6 +7663,10 @@
                     <span>Show both buttons in Charm Tab</span>
                 </label>
                 <label>
+                    <input type="checkbox" name="attr_antisocialtab" value="1"><span></span>
+                    <span>Show 2nd Social Tab</span>
+                </label>
+                <label>
                     <input type="checkbox" name="attr_combattab" value="1"><span></span>
                     <span>Show Combat Tab</span>
                 </label>
@@ -7880,6 +7886,119 @@
 							</div>
 						</div>
 						<fieldset class="repeating_intimacies sheet-table-body" style="display: none;">
+                            <input type="hidden" name="attr_intimacyrepeatingtaint" class="intimacy-taint-check" value="0">
+                            <input type="hidden" name="attr_intimacyrepeatingxpspent" class="intimacy-xp-check" value="0">
+                            <div class="sheet-table-cell">
+                                <label><input type="checkbox" name="attr_intimacyrepeatingxpspent" value="1"><span></span></label>
+                            </div>
+                            <div class="sheet-table-cell">
+                                <label style="margin-left: 0.9em;"><input type="checkbox" name="attr_intimacyrepeatingtaint" value="1"><span></span></label>
+                            </div>
+							<div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
+							<div class="sheet-table-cell intimacy-taint">
+								<select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
+									<option value="">None</option>
+									<option value="Minor" selected="selected">Minor</option>
+									<option value="Major">Major</option>
+									<option value="Defining">Defining</option>
+								</select>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+            <h1><span>Notepad</span></h1>
+            <textarea name="attr_social-notepad"></textarea>
+        </div>
+		
+		<!-- 5.1 ANTI SOCIAL PAGE -->
+		
+		<div class="sheet-body sheet-tab-content sheet-tab-antisocial-sheet">
+            <h1><span>Social attributes and abilities</span></h1>
+			<div class="sheet-table-body">
+				<div class="sheet-table-row">
+					<div class="sheet-table-cell sheet-text-right"><span>Resolve (wits + integrity)</span>:</div>
+					<div class="sheet-table-cell">
+						<input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
+						<input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
+						<input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
+						<input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
+						<input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Resolve without specialty" name="attr_resolve" data-formula="(@{resolve-base} + abs(@{resolve-base})) / 2"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width: 27px" title="Resolve with specialty" name="attr_resolve-specialty" data-formula="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2">
+					</div>
+					<div class="sheet-table-cell sheet-text-right"><span>Guile (manipulation + socialize)</span>:</div>
+					<div class="sheet-table-cell">
+						<input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
+						<input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
+						<input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
+						<input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
+						<input type="number" value="(@{guile-base} + abs(@{guile-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile"><input type="number" value="(@{guile-base-s} + abs(@{guile-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty">
+					</div>
+					<div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
+					<div class="sheet-table-cell">
+                        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
+						<input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+					</div>
+				</div>
+			</div>
+			<div class="sheet-3colrow">
+				<div class="sheet-col stat-col">
+                    <input type="hidden" class="qc-panel-check" name="attr_qc">
+                    <h1><span>Attributes</span></h1>
+					<div class="sheet-table">
+                        <input type="hidden" class="qc-panel-check" name="attr_qc">
+						<div class="sheet-table-row qc-toggle-display">
+						    <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" value="(@{perception})" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Perception" name="attr_perception2" data-formula="(@{perception})"></div>
+						</div>
+						<div class="sheet-table-row qc-toggle-display">
+						    <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" value="@{charisma}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Charisma" name="attr_charisma2" data-formula="@{charisma}"></div>
+						</div>
+						<div class="sheet-table-row qc-toggle-display">
+						    <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" value="@{manipulation}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Manipulation" name="attr_manipulation2" data-formula="@{manipulation}"></div>
+						</div>
+                        <div class="sheet-table-row qc-toggle-display-inv">
+                            <div class="sheet-table-cell">
+                                <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-soc-influence-type-display" readonly="readonly">
+                            </div>
+                            <div class="sheet-table-cell">
+                                <input type="number" value="@{qc-social-influence}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="QC Social Influence" name="attr_qc-social-influence2" data-formula="@{qc-social-influence}">
+                            </div>
+                        </div>
+						<div class="sheet-table-row">
+						    <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{appearance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Appearance" name="attr_appearance2" data-formula="@{appearance}"></div>
+						</div>
+					</div>
+					<h1 class="qc-toggle-display"><span>Abilities</span></h1>
+					<div class="sheet-table qc-toggle-display">
+						<div class="sheet-table-row">
+						    <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" value="@{socialize}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Socialize" name="attr_socialize2" data-formula="@{socialize}"></div>
+						</div>
+						<div class="sheet-table-row">
+						    <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" value="@{survival}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Survival" name="attr_survival2" data-formula="@{survival}"></div>
+						</div>
+						<div class="sheet-table-row">
+						    <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" value="@{presence}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Presence" name="attr_presence2" data-formula="@{presence}"></div>
+						</div>
+						<div class="sheet-table-row">
+						    <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" value="@{performance}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Performance" name="attr_performance2" data-formula="@{performance}"></div>
+						</div>
+						<div class="sheet-table-row">
+						    <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" value="@{integrity}" disabled="disabled" style="width: 27px ; margin-right: 3px" title="Integrity" name="attr_integrity2" data-formula="@{integrity}"></div>
+						</div>
+					</div>
+				</div>
+				<div class="sheet-3col inti-col">
+					<h1><span>Intimacies Read</span></h1>
+					<input type="hidden" value="0" name="attr_init-intimacies">
+					<div class="sheet-table" style="table-layout: fixed;">
+						<div class="sheet-table-header">
+							<div class="sheet-table-row">
+                                <div class="sheet-table-cell" style="width: 1.0em;">XP</div>
+                                <div class="sheet-table-cell" style="width: 2.8em;">Tainted</div>
+								<div class="sheet-table-cell">Intimacy</div>
+								<div class="sheet-table-cell" style="width: 6em;">Intensity</div>
+							</div>
+						</div>
+						<fieldset class="repeating_intimacies_read sheet-table-body" style="display: none;">
                             <input type="hidden" name="attr_intimacyrepeatingtaint" class="intimacy-taint-check" value="0">
                             <input type="hidden" name="attr_intimacyrepeatingxpspent" class="intimacy-xp-check" value="0">
                             <div class="sheet-table-cell">

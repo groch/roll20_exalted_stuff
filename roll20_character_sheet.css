@@ -304,12 +304,14 @@ tier 2: couleurs
     right: 41px;
     left: initial;
 }
+.charsheet .sheet-table [data-groupname=repeating_intimacies_read].editmode + .repcontrol .repcontrol_edit,
 .charsheet .sheet-table [data-groupname=repeating_intimacies].editmode + .repcontrol .repcontrol_edit,
 .charsheet .sheet-table [data-groupname=repeating_charms].editmode + .repcontrol .repcontrol_edit,
 .charsheet .sheet-table [data-groupname=repeating_spells].editmode + .repcontrol .repcontrol_edit { right: 0; }
 
 .charsheet [data-groupname=repeating_weapon].editmode .repitem .itemcontrol,
 .charsheet [data-groupname=repeating_armor].editmode .repitem .itemcontrol,
+.charsheet [data-groupname=repeating_intimacies_read].editmode .repitem .itemcontrol,
 .charsheet [data-groupname=repeating_intimacies].editmode .repitem .itemcontrol,
 .charsheet [data-groupname=repeating_spells].editmode .repitem .itemcontrol { height: 28px; }
 .charsheet [data-groupname=repeating_weapon].editmode .repitem .itemcontrol { width: calc(100% - 41px); }
@@ -428,6 +430,8 @@ tier 2: couleurs
     grid-area: b;
 }
 
+.charsheet .sheet-tab-antisocial-sheet .sheet-3colrow,
+.ui-dialog .charsheet .sheet-tab-antisocial-sheet .sheet-3colrow,
 .charsheet .sheet-tab-intimacies-sheet .sheet-3colrow,
 .ui-dialog .charsheet .sheet-tab-intimacies-sheet .sheet-3colrow {
     grid-template-columns: min-content calc(100% - 1em);
@@ -916,6 +920,7 @@ tier 2: couleurs
 .charsheet [data-groupname=repeating_weapon] input[type=text],
 .charsheet [data-groupname=repeating_weapon] input[type=number] { width: 100%; }
 
+.charsheet [data-groupname=repeating_intimacies_read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] input[type=text],
 .charsheet [data-groupname=repeating_charms] input,
 .charsheet [data-groupname=repeating_spells] input[type=text],
@@ -926,11 +931,15 @@ tier 2: couleurs
     margin-top: 3px;
 }
 
+.charsheet [data-groupname=repeating_intimacies_read] select,
+.charsheet [data-groupname=repeating_intimacies_read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] select,
 .charsheet [data-groupname=repeating_intimacies] input[type=text] { width: 100%; }
 
 .charsheet [data-groupname=repeating_weapon] input,
 .charsheet [data-groupname=repeating_armor] input,
+.charsheet [data-groupname=repeating_intimacies_read] select,
+.charsheet [data-groupname=repeating_intimacies_read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] select,
 .charsheet [data-groupname=repeating_intimacies] input[type=text],
 .charsheet [data-groupname=repeating_charms] select,
@@ -1226,6 +1235,7 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-settings-sheet:checked				        ~ div.sheet-tab-settings-sheet,
 .charsheet input.sheet-tab-intimacies-sheet:checked				        ~ div.sheet-tab-intimacies-sheet,
 .charsheet input.sheet-tab-combat-sheet:checked				            ~ div.sheet-tab-combat-sheet,
+.charsheet input.sheet-tab-antisocial-sheet:checked			            ~ div.sheet-tab-antisocial-sheet,
 .charsheet input.sheet-tab-charm-sheet-archery:checked			        ~ div.sheet-tab-charm-sheet-archery,
 .charsheet input.sheet-tab-charm-sheet-athletics:checked		        ~ div.sheet-tab-charm-sheet-athletics,
 .charsheet input.sheet-tab-charm-sheet-awareness:checked		        ~ div.sheet-tab-charm-sheet-awareness,
@@ -1576,6 +1586,7 @@ and (min-resolution:.001dpcm) {
     margin: 0 3px 0 3px;
 }
 
+.charsheet .sheet-tab-antisocial-sheet textarea,
 .charsheet .sheet-tab-intimacies-sheet textarea {
     width: 98.8%;
     resize: vertical;
@@ -2029,6 +2040,16 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect .charm-buttons-include-check[value="1"] ~ input[type="text"] {
     border: 1px solid darkgreen;
     border-radius: 5px 5px;
+}
+
+/* --- ANTI SOCIAL TAB --- */
+
+.charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .sheet-tab-antisocial {
+    display: none;
+}
+
+.charsheet input.sheet-tab-antisocial::before {
+    content: 'AntiSocial';
 }
 
 /* --- COMBAT TAB --- */
