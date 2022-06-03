@@ -38,7 +38,7 @@
             return;
         }
         TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
-        getSectionIDs('health', TAS._fn(function getHealthList(idHealthArray) {
+        getSectionIDs('health', function getHealthList(idHealthArray) {
             sortHealth(idHealthArray);
             var finalAttr = {};
             const healthFieldNames = [];
@@ -83,9 +83,9 @@
                                 qcParry = parseInt(values['qc-parry']),
                                 isQc = parseInt(values['qc']);
 
-                            TAS.debug('values=' + JSON.stringify(values) + ', attrs' + JSON.stringify(attrs) + 'rows', JSON.stringify(rows));
+                            if (debug === 2) TAS.debug(`values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
                             _.each(rows, function(v, k) {
-                                TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
+                                if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
                                 ma = Math.max(ma, parseInt(v.repmartialarts));
                             });
                     
@@ -97,22 +97,23 @@
                             TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
                             finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
             
-                            TAS.debug('Updating Weapon Parry value');
-                            getSectionIDs('weapon', TAS._fn(function ForgeWeaponList(idarray) {
+                            if (debug === 2) TAS.debug('Updating Weapon Parry value');
+                            getSectionIDs('weapon', function ForgeWeaponList(idarray) {
                                 const weaponFieldNames = [];
                                 idarray.forEach(id => weaponFieldNames.push(`repeating_weapon_${id}_repweapondef`));
                             
                                 getAttrs(weaponFieldNames, TAS._fn(function GetWeapondFieldsAndUpdateWeaponParrys(valuesSections) {
+                                    if (debug === 2) TAS.debug(`valuesSections=${JSON.stringify(valuesSections)}`);
                                     idarray.forEach(id => {
                                         let row = 'repeating_weapon_' + id,
                                             def = valuesSections[`${row}_repweapondef`] || 0;
                                         finalAttr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen);
                                         finalAttr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen);
                                     });
-                                    TAS.debug('UPDATE WEAPONS PARRY', newParry, newParrySpe, valuesSections);
+                                    TAS.debug('UPDATE WEAPONS PARRY', finalAttr);
                                     setAttrs(finalAttr);
                                 }));
-                            }));
+                            });
                         })).execute();
                     } else {
                         TAS.debug('QC modif ! Set Wound-Pen only');
@@ -120,44 +121,47 @@
                     }
                 }));
             }));
-        }));
+        });
     }
 
-    on('sheet:opened change:craft-armoring change:craft-artifact change:craft-cooking change:craft-artifice change:craft-gemcutting '
+    on('sheet:opened', onCraftChange);
+    on('change:craft-armoring change:craft-artifact change:craft-cooking change:craft-artifice change:craft-gemcutting '
         + 'change:craft-geomancy change:craft-jewelry change:craft-tailoring change:craft-forging change:repeating_crafts '
-        + 'remove:repeating_crafts ', TAS._fn(function onCraftChange(e) {
-        TAS.debug('craft changed', JSON.stringify(e));
+        + 'remove:repeating_crafts', TAS._fn(onCraftChange));
+
+    function onCraftChange(e) {
+        if (debug === 2) TAS.debug(`craft changed, e=${JSON.stringify(e)}`);
         TAS.repeating('crafts').fields('repcrafts').attrs('craft-armoring', 'craft-artifact', 'craft-cooking', 'craft-artifice', 'craft-gemcutting', 'craft-geomancy',
             'craft-jewelry', 'craft-tailoring', 'craft-forging').tap(TAS._fn(function getMaxCraftAndSet(rows, attrs) {
             var craft = Math.max(0, attrs.I['craft-armoring'], attrs.I['craft-artifact'], attrs.I['craft-cooking'], attrs.I['craft-artifice'],
                                     attrs.I['craft-gemcutting'], attrs.I['craft-geomancy'], attrs.I['craft-jewelry'], attrs.I['craft-tailoring'],
                                     attrs.I['craft-forging']);
 
-            TAS.debug('attrs' + JSON.stringify(attrs) + 'rows', JSON.stringify(rows));
+            if (debug === 2) TAS.debug(`attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
             _.each(rows, function(v, k) {
-                TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
+                if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
                 craft = Math.max(craft, parseInt(v.repcrafts));
             });
 
             TAS.debug(`set Max Craft=${craft}`);
             setAttrs({'max-craft': craft});
         })).execute();
-    }));
+    }
 
-    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', TAS._fn(function updateBattleGroupMagnitude(e) {
+    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', function updateBattleGroupMagnitude(e) {
         getAttrs(["battlegroup-size", "battlegroup-health-levels", "battlegroup-perfect-morale"], TAS._fn(function determineBattleGroupMagnitude(values) {
             TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
             setAttrs({"battlegroup-magnitude_max": parseInt(values["battlegroup-size"]) + parseInt(values["battlegroup-health-levels"]) + (parseInt(values["battlegroup-perfect-morale"]) == 1 ? 3 : 0)});
         }));
-    }));
+    });
 
-    on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', TAS._fn(function setOrDisableBattleGroupSpecialAttrs(e) {
+    on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', function setOrDisableBattleGroupSpecialAttrs(e) {
         if (e.sourceType !== "player") {
             TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
-            TAS.debug(`setting DEFAULT bg attrs`);
+            TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: setting DEFAULT bg attrs`);
             setAttrs({
                 "battlegroup-size": 0,
                 "battlegroup-drill": 'Poor',
@@ -177,9 +181,9 @@
                 });
             }));
         }
-    }));
+    });
 
-    on('sheet:opened', TAS._fn(function testEssenceValue(e) {
+    on('sheet:opened', function testEssenceValue(e) {
         getAttrs(['essence', 'caste'], TAS._fn(function getEssence(values) {
             TAS.debug(`essence=${JSON.stringify(values['essence'])}`);
             if (!values['essence']) {
@@ -199,7 +203,7 @@
                 });
             }
         }));
-    }));
+    });
 
     on('change:essence change:peripheral-equation change:committedesstotal', TAS._fn(function updateMaxPeripheral(e) {
         getAttrs(['essence', 'personal-equation', 'peripheral-equation', 'committedesstotal'], TAS._fn(function getAttrToUpdate(values){
@@ -270,38 +274,33 @@
         }));
     }));
 
-    on('sheet:opened', TAS._fn(function upgradeVersion(e) {
-        TAS.debug('Checking version', e);
-        getAttrs(['version'], TAS._fn(function versionCheck(values) {
-            var v = parseFloat(values.version);
-            TAS.debug('v = ', v);
+    const updateList = [
+        {version: 1, fn: upgradeHealthBars},
+        {version: 2.27, fn: upgradeto228},
+        {version: 2.29, fn: upgradeto230},
+    ];
 
-            if (v !== version) {
-                switch (v) {
-                    default:
-                        // upgrade to new version 2.25
-                        initCharacterSheet();
-                        break;
-                    case 1:
-                        TAS._fn(upgradeHealthBars());
-                    case 2.24:
-                        // fallthrough
-                        // nothing to do
-                    case 2.26:
-                    case 2.27:
-                        TAS._fn(upgradeto228());
-                        // fallthrough
-                    case 2.28:
-                    case 2.29:
-                        TAS._fn(upgradeto230());
+    on('sheet:opened', function versionCheck(e) {
+        getAttrs(['version', 'init-intimacies'], TAS._fn(function checkIfSheetUpgradeIsNeeded(values) {
+            TAS.debug(`values=${JSON.stringify(values)}`);
+            if (!values.version) {
+                TAS.debug('NO VERSION FOUND => INITIALIZING A NEW SHEET');
+                initCharacterSheet();
+            } else {
+                const v = parseFloat(values.version);
+                TAS.debug(`v = ${v}`);
 
-                    case version:
-                        // nothing to do
-                        // fallthrough
+                if (!values['init-intimacies'] || !parseInt(values['init-intimacies']))
+                    initIntimacies()
+
+                const upgradeRemaining = updateList.filter(i => i.version >= v).sort((a,b) => a.version - b.version);
+                for (const u of upgradeRemaining) {
+                    TAS.debug(`Upgrade to do = v=${u.version}`);
+                    TAS._fn(u.fn());
                 }
             }
         }));
-    }));
+    });
 
     function upgradeto230() {
         setAttrs({
@@ -349,14 +348,12 @@
         }));
     }
 
-    on('sheet:opened', TAS._fn(initIntimacies));
-
     function initIntimacies() {
-        TAS.debug('Initializing 1st time Intimacies');
+        TAS.debug(`initIntimacies::initIntimacies Initializing 1st time Intimacies`);
         getSectionIDs('intimacies', TAS._fn(function getIntimaciesList(idIntimaciesArray) {
-            getAttrs(['init-intimacies', 'version'], TAS._fn(function checkInitialized(values) {
+            getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
                 if (idIntimaciesArray.length || parseInt(values['init-intimacies']) !== 0) {
-                    TAS.debug('ALREADY DONE => CANCEL');
+                    TAS.debug(`ALREADY DONE => CANCEL init-intimacies=${parseInt(values['init-intimacies'])} len=${idIntimaciesArray.length}`);
                     return;
                 }
     
@@ -371,87 +368,78 @@
                 });
                 attrs['init-intimacies'] = 1;
                 setAttrs(attrs);
-                setAttrs({'version': version});
             }));
         }));
     }
 
     function initCharacterSheet() {
         TAS.debug('Initializing 1st time attributes');
-        getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
-            if (parseInt(values['init-intimacies']) !== 0) {
-                TAS.debug('ALREADY DONE => Doing all upgrades and Quitting');
-                TAS._fn(upgradeHealthBars());
-                TAS._fn(upgradeto228());
-                TAS._fn(upgradeto230());
-                return;
-            }
-            setAttrs({
-                'essence': '1',
-                'apply-onslaught': 1,
-                'onslaught': 0,
-                'willpower': 5,
-                'willpower_max': 5,
-                'strength': 1,
-                'dexterity': 1,
-                'stamina': 1,
-                'charisma': 1,
-                'manipulation': 1,
-                'appearance': 1,
-                'perception': 1,
-                'intelligence': 1,
-                'wits': 1,
-                'awareness': 0,
-                'dodge': 0,
-                'integrity': 0,
-                'socialize': 0,
-                'parry': 0,
-                'naturalsoak': 0,
-                'armorsoak': 0,
-                'charmwhispergm': 0,
-                'charmwhisperboth': 0,
-                'caste': 'Mortal',
-                'personal-equation': '0',
-                'peripheral-equation': '0',
-                'showanimadiv': 0,
-                'showsupdiv': 0,
-                'showlimit': 0,
-                'committedesstotal': 0,
-                'battlegroup-def-boost': 0,
-                'battlegroup-acc-boost': 0,
-                'battlegroup-dmg-boost': 0,
-                'grab-def-penalty': 0,
-                'prone-def-penalty': 0,
-                'cover-def-bonus': 0
-            });
+        setAttrs({
+            'version': version,
+            'essence': '1',
+            'apply-onslaught': 1,
+            'onslaught': 0,
+            'willpower': 5,
+            'willpower_max': 5,
+            'strength': 1,
+            'dexterity': 1,
+            'stamina': 1,
+            'charisma': 1,
+            'manipulation': 1,
+            'appearance': 1,
+            'perception': 1,
+            'intelligence': 1,
+            'wits': 1,
+            'awareness': 0,
+            'dodge': 0,
+            'integrity': 0,
+            'socialize': 0,
+            'parry': 0,
+            'naturalsoak': 0,
+            'armorsoak': 0,
+            'charmwhispergm': 0,
+            'charmwhisperboth': 0,
+            'caste': 'Mortal',
+            'personal-equation': '0',
+            'peripheral-equation': '0',
+            'showanimadiv': 0,
+            'showsupdiv': 0,
+            'showlimit': 0,
+            'committedesstotal': 0,
+            'battlegroup-def-boost': 0,
+            'battlegroup-acc-boost': 0,
+            'battlegroup-dmg-boost': 0,
+            'grab-def-penalty': 0,
+            'prone-def-penalty': 0,
+            'cover-def-bonus': 0
+        });
 
-            let healthAttrs = {}, healthIndexes = _.times(7, generateRowID);
-            _.each(healthIndexes, function(id, k) {
-                var pen;
-                if (k === 0) pen = '0';
-                else if ([1,2].includes(k)) pen = '-1';
-                else if ([3,4].includes(k)) pen = '-2';
-                else if (k === 5) pen = '-4';
-                else pen = 'I';
-                healthAttrs['repeating_health_' + id + '_hl-damage'] = 'healthy';
-                healthAttrs['repeating_health_' + id + '_hl-penalty'] = pen;
-            });
-            setAttrs(healthAttrs);
+        let healthAttrs = {}, healthIndexes = _.times(7, generateRowID);
+        _.each(healthIndexes, function(id, k) {
+            var pen;
+            if (k === 0) pen = '0';
+            else if ([1,2].includes(k)) pen = '-1';
+            else if ([3,4].includes(k)) pen = '-2';
+            else if (k === 5) pen = '-4';
+            else pen = 'I';
+            healthAttrs['repeating_health_' + id + '_hl-damage'] = 'healthy';
+            healthAttrs['repeating_health_' + id + '_hl-penalty'] = pen;
+        });
+        setAttrs(healthAttrs);
 
-            let defaultWeapon = {}, indexeWeapon = generateRowID();
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponname'] = 'Unarmed';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponacc'] = '4';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondam'] = '7';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondef'] = '0';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparry'] = '0';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparryspe'] = '0';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponov'] = '1';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponatt'] = '0';
-            defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapontags'] = 'Bashing, Brawl, Grappling, Natural';
-            setAttrs(defaultWeapon);
+        let defaultWeapon = {}, indexeWeapon = generateRowID();
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponname'] = 'Unarmed';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponacc'] = '4';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondam'] = '7';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondef'] = '0';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparry'] = '0';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparryspe'] = '0';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponov'] = '1';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponatt'] = '0';
+        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapontags'] = 'Bashing, Brawl, Grappling, Natural';
+        setAttrs(defaultWeapon);
 
-            initIntimacies();
-        }));
+        initIntimacies();
     }
 
     function changeJoinResolve() {
@@ -539,14 +527,15 @@
         'charms-survival',
         'charms-thrown',
         'charms-war',
+        'charms-universal',
         'charms-str-offense',
         'charms-str-mobility',
         'charms-str-fos',
         'charms-dex-offensive',
         'charms-dex-defense',
-        'charms-dex-offensive',
-        'charms-dex-offensive',
-        'charms-dex-offensive',
+        'charms-dex-subterfuge',
+        'charms-dex-mobility',
+        'charms-dex-swarm',
         'charms-sta-defense',
         'charms-sta-endurance',
         'charms-sta-berserker',
