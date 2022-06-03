@@ -2145,10 +2145,11 @@ var CombatMaster = CombatMaster || (function() {
             resetMarker(type);
             return;
         }
-        let markerWidth, markerHeight,
-            pageObj = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0],
-            scale_number = Number(pageObj.get('scale_number')) * (Number(pageObj.get('snapping_increment')) === 1 ? 1 : 70);
-            logger(`updateMarker:: !! scale_number=${scale_number}`);
+        let markerWidth, markerHeight;
+        const pageObj = findObjs({_id: Campaign().get('playerpageid'), type: 'page'})[0];
+        logger(`updateMarker:: pageObj.snapping_increment=${Number(pageObj.get('snapping_increment'))}, pageObj.showgrid=${pageObj.get('showgrid')}`);
+        const scale_number = Number(pageObj.get('scale_number')) * (!pageObj.get('showgrid') || Number(pageObj.get('snapping_increment')) === 1 ? 1 : 70);
+        logger(`updateMarker:: !! scale_number=${scale_number}`);
         switch (type) {
             case markerType.ROUND:
                 markerWidth  = 2;
@@ -2631,9 +2632,10 @@ var CombatMaster = CombatMaster || (function() {
 
             if (state[combatState].config.announcements.announceTurn) {
                 let target;
-                if (tokenObj.get('layer') == 'gmlayer')
+                if (tokenObj.get('layer') == 'gmlayer') {
                     makeAndSendMenu(contents,title,'gm', false);
-                else {
+                    makeAndSendMenu('It\'s not your turn yet, sorry','Something is coming','', false);
+                } else {
                     if (players[0] != "")
                         target = (state[combatState].config.announcements.whisperToGM) ? 'gm' : '';
                     else
