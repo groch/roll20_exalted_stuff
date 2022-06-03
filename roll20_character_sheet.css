@@ -2776,10 +2776,16 @@ body.sheet-darkmode {
 }
 
 .charsheet input.sheet-rollseffect {
-    width:99%;
+    width: 32%;
     background-color: #f6f6f6;
     height: 20px;
     margin: 0;
+}
+
+@media only screen and (max-width: 630px) {
+    .charsheet input.sheet-rollseffect {
+        width: 99%;
+    }
 }
 
 .charsheet .sheet-tab-character-sheet .sheet-rolls-main div.sheet-rolls-div {
