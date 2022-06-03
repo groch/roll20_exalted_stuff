@@ -15,9 +15,9 @@ Vision+:
 	Merit NV+,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;nocturnal|
 	SET DEFAULT ON OnTheFly,bright_vision&#124;1 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0|
 	Move To Dynamic-Lighting Layer,layer&#124;walls|
-	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff --off playersedit_aura1|
-	TOKEN CREATION DEFAULT+Size,width&#124;70 height&#124;70 bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff --off playersedit_aura1|
-	TOKEN CREATION DEFAULT+Size+Mote,width&#124;70 height&#124;70 bar1_link&#124;peripheral-essence bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT+Size,width&#124;70 height&#124;70 bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT+Size+Mote,width&#124;70 height&#124;70 bar1_link&#124;peripheral-essence bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
 }
 
 Anima:
@@ -26,16 +26,15 @@ Anima:
 	Glow,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;0.8 bright_distance&#124;0.3 showplayers_aura1&#124;1 aura1_radius&#124;0.2 --off playersedit_aura1|
 	Burn,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;8 bright_distance&#124;3 showplayers_aura1&#124;1 aura1_radius&#124;2.8 --off playersedit_aura1|
 	Bonfire,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;35 bright_distance&#124;10.5 showplayers_aura1&#124;1 aura1_radius&#124;10 --off playersedit_aura1|
-	HIDE_AURA_KEEP_LIGHT,aura1_radius&#124;0.1|
-	Solar,aura1_color&#124;#ff0 --off playersedit_aura1|
-	Lunar,aura1_color&#124;#bbb --off playersedit_aura1|
-	Air,aura1_color&#124;#0ff --off playersedit_aura1|
-	Water,aura1_color&#124;#00f --off playersedit_aura1|
-	Earth,aura1_color&#124;#ffe599 --off playersedit_aura1|
-	Wood,aura1_color&#124;#0f0 --off playersedit_aura1|
-	Fire,aura1_color&#124;#f00 --off playersedit_aura1|
-	Undefined,aura1_color&#124;#fff --off playersedit_aura1|
-	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124;0 aura1_color&#124;#fff --off playersedit_aura1
+	HIDE_AURA_KEEP_LIGHT,aura1_radius&#124;|
+	Solar,aura1_color&#124;#ff0 lightColor&#124;#ff0 --off playersedit_aura1|
+	Lunar,aura1_color&#124;#bbb lightColor&#124;#bbb --off playersedit_aura1|
+	Air,aura1_color&#124;#0ff lightColor&#124;#0ff --off playersedit_aura1|
+	Water,aura1_color&#124;#00f lightColor&#124;#00f --off playersedit_aura1|
+	Earth,aura1_color&#124;#ffe599 lightColor&#124;#ffe599 --off playersedit_aura1|
+	Wood,aura1_color&#124;#0f0 lightColor&#124;#0f0 --off playersedit_aura1|
+	Fire,aura1_color&#124;#f00 lightColor&#124;#f00 --off playersedit_aura1|
+	Undefined,aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1
 }
 
 Roll:
