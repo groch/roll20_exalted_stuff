@@ -501,6 +501,40 @@
         });
     }));
 
+    on('change:repeating_qcattacks', TAS._fn(function qcAttacksChange(e) {
+        getSectionIDs('qcattacks', setDebugWrapper(function getQcAttacksSections(idSections) {
+            getSectionIDs('weapon', setDebugWrapper(function getQcAttacksSections(idWeaponSections) {
+                const qcFieldNames = [];
+                idSections.forEach(id => qcFieldNames.push(`repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdamage`));
+                
+                getAttrs(qcFieldNames, TAS._fn(function GetQCAttacksFieldsAndUpdateWeaponFields(valuesSections) {
+                    // remove weapons
+                    idWeaponSections.forEach(id => removeRepeatingRow(`repeating_weapon_${id}`));
+
+                    const weaponFieldToSet = {};
+                    for (const id of idSections) {
+                        const name_attr = `repeating_qcattacks_${id}_repqcattackname`,
+                        acc_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
+                        dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
+                        newWeapIndex = generateRowID(),
+                        weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
+                        weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
+                        weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
+                        qcAccSplit = valuesSections[acc_attr].split('+');
+                    weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]})`;
+                    weaponFieldToSet[weap_acc_attr] = qcAccSplit[1] ? Number(qcAccSplit[1]) : 0;
+                    weaponFieldToSet[weap_dam_attr] = valuesSections[dam_attr];
+                    }
+
+                    TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(weaponFieldToSet)}`);
+                    setAttrs(weaponFieldToSet);
+
+                    updateWoundThenParry({sourceType: "player", triggerName: "qc-parry"});
+                }));
+            }));
+        }));
+    }));
+
     const sections = [
         'charms-archery',
         'charms-athletics',
