@@ -304,14 +304,14 @@ tier 2: couleurs
     right: 41px;
     left: initial;
 }
-.charsheet .sheet-table [data-groupname=repeating_intimacies_read].editmode + .repcontrol .repcontrol_edit,
+.charsheet .sheet-table [data-groupname=repeating_intimacies-read].editmode + .repcontrol .repcontrol_edit,
 .charsheet .sheet-table [data-groupname=repeating_intimacies].editmode + .repcontrol .repcontrol_edit,
 .charsheet .sheet-table [data-groupname=repeating_charms].editmode + .repcontrol .repcontrol_edit,
 .charsheet .sheet-table [data-groupname=repeating_spells].editmode + .repcontrol .repcontrol_edit { right: 0; }
 
 .charsheet [data-groupname=repeating_weapon].editmode .repitem .itemcontrol,
 .charsheet [data-groupname=repeating_armor].editmode .repitem .itemcontrol,
-.charsheet [data-groupname=repeating_intimacies_read].editmode .repitem .itemcontrol,
+.charsheet [data-groupname=repeating_intimacies-read].editmode .repitem .itemcontrol,
 .charsheet [data-groupname=repeating_intimacies].editmode .repitem .itemcontrol,
 .charsheet [data-groupname=repeating_spells].editmode .repitem .itemcontrol { height: 28px; }
 .charsheet [data-groupname=repeating_weapon].editmode .repitem .itemcontrol { width: calc(100% - 41px); }
@@ -920,7 +920,7 @@ tier 2: couleurs
 .charsheet [data-groupname=repeating_weapon] input[type=text],
 .charsheet [data-groupname=repeating_weapon] input[type=number] { width: 100%; }
 
-.charsheet [data-groupname=repeating_intimacies_read] input[type=text],
+.charsheet [data-groupname=repeating_intimacies-read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] input[type=text],
 .charsheet [data-groupname=repeating_charms] input,
 .charsheet [data-groupname=repeating_spells] input[type=text],
@@ -931,15 +931,15 @@ tier 2: couleurs
     margin-top: 3px;
 }
 
-.charsheet [data-groupname=repeating_intimacies_read] select,
-.charsheet [data-groupname=repeating_intimacies_read] input[type=text],
+.charsheet [data-groupname=repeating_intimacies-read] select,
+.charsheet [data-groupname=repeating_intimacies-read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] select,
 .charsheet [data-groupname=repeating_intimacies] input[type=text] { width: 100%; }
 
 .charsheet [data-groupname=repeating_weapon] input,
 .charsheet [data-groupname=repeating_armor] input,
-.charsheet [data-groupname=repeating_intimacies_read] select,
-.charsheet [data-groupname=repeating_intimacies_read] input[type=text],
+.charsheet [data-groupname=repeating_intimacies-read] select,
+.charsheet [data-groupname=repeating_intimacies-read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] select,
 .charsheet [data-groupname=repeating_intimacies] input[type=text],
 .charsheet [data-groupname=repeating_charms] select,
