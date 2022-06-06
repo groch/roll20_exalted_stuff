@@ -8402,12 +8402,12 @@
                                     <option value="9">9</option>
                                     <option value="10">10</option>
                                 </select>+
-                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="2">+
+                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|2}">+
                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                             </div>
                             <div class="third-line grow-normal flex">
                                  + 
-                                <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3+?{Bonus succès ? (Willpower)|1}" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3+?{Bonus Success ? (Stunt 2, Willpower, ...)|0}" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                             
                                 <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                 <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
