@@ -501,7 +501,7 @@
         });
     }));
 
-    on('change:repeating_qcattacks', TAS._fn(function qcAttacksChange(e) {
+    on('change:repeating_qcattacks', setDebugWrapper(function qcAttacksChange() {
         getSectionIDs('qcattacks', setDebugWrapper(function getQcAttacksSections(idSections) {
             getSectionIDs('weapon', setDebugWrapper(function getQcAttacksSections(idWeaponSections) {
                 const qcFieldNames = [];
@@ -514,16 +514,16 @@
                     const weaponFieldToSet = {};
                     for (const id of idSections) {
                         const name_attr = `repeating_qcattacks_${id}_repqcattackname`,
-                        acc_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
-                        dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
-                        newWeapIndex = generateRowID(),
-                        weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
-                        weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
-                        weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
-                        qcAccSplit = valuesSections[acc_attr].split('+');
-                    weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]})`;
-                    weaponFieldToSet[weap_acc_attr] = qcAccSplit[1] ? Number(qcAccSplit[1]) : 0;
-                    weaponFieldToSet[weap_dam_attr] = valuesSections[dam_attr];
+                            acc_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
+                            dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
+                            newWeapIndex = generateRowID(),
+                            weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
+                            weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
+                            weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
+                            qcAccSplit = valuesSections[acc_attr].split('+');
+                        weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]})`;
+                        weaponFieldToSet[weap_acc_attr] = qcAccSplit[1] ? Number(qcAccSplit[1]) : 0;
+                        weaponFieldToSet[weap_dam_attr] = valuesSections[dam_attr];
                     }
 
                     TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(weaponFieldToSet)}`);
@@ -697,6 +697,7 @@
         }));
     }
 
+    /* Combat Tab Standard Binds */
     const attrNAbi = [
         'essence',
         // attributes
@@ -781,6 +782,7 @@
         }));
     }
 
+    /* Combat Tab ALL Binds */
     attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(updateAllAttackRolls)));
 
     function updateAllAttackRolls(e) {
@@ -834,6 +836,7 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
+    /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
         clickDefaultMacro(e, (cb, attr_name) => {
@@ -847,38 +850,70 @@
                     cb(written_attr, writtenValue);
                 }));
             },
-            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', true)
+            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-')
         );
+        defaultMacroDAtkDice(e);
     }));
 
-    on('clicked:repeating_combat-attack:default-macro-datk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+    on('clicked:repeating_combat-attack:default-macro-datk-d', setDebugWrapper(function clickDefaultMacroDAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK datk-d !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}repcombat-datk-bonus-dices`, '?{Bonus Dices ? (Stunt, Situational, ...)|2}'),
-            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', true)
-        );
+        defaultMacroDAtkDice(e);
     }));
+
+    function defaultMacroDAtkDice(e) {
+        clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}repcombat-datk-bonus-dices`, '?{Bonus Dices ? (Stunt, Situational, ...)|2}'),
+            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
+        );
+    }
 
     on('clicked:repeating_combat-attack:default-macro-watk-s clicked:repeating_combat-attack:default-macro-datk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (cb, attr_name, section) => cb(`${attr_name}repcombat-${section}-bonus-successes`, '?{Bonus Success ? (Stunt, Willpower, ...)|0}'),
+        clickDefaultMacro(e, (cb, attr_name, section) => cb(`${attr_name}repcombat-${section}-bonus-successes`, '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}'),
             (id, section) => {        
-                if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', true);
-                else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', true);
+                if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
             }
         );
+        TAS.debug(`clickDefaultMacroWAtkDice:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
+        if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
+            clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}repcombat-datk-bonus-successes`, '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}'),
+                id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
+            );
+        }
     }));
 
+    /* QC special */
+    on('change:repeating_combat-attack:repcombat-wdmg-attr', setDebugWrapper(function testQCSetup(e) {
+        if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
+        getAttrs(['qc'], TAS._fn(function ifQCSetupAll(values) {
+            TAS.debug(`ifQCSetupAll:: values=${JSON.stringify(values)} values.qc=${values.qc}`);
+            if (values.qc) {
+                const id = e.sourceAttribute.split('_')[2];
+                const attr_name = `repeating_combat-attack_${id}_`;
+                setAttrs({
+                    [`${attr_name}repcombat-watk-bonus-dices`]: '?{Bonus Dices ? (Stunt, Situational, ...)|2}',
+                    [`${attr_name}repcombat-datk-bonus-dices`]: '?{Bonus Dices ? (Stunt, Situational, ...)|2}',
+                    [`${attr_name}repcombat-watk-bonus-successes`]: '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}',
+                    [`${attr_name}repcombat-datk-bonus-successes`]: '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}',
+                });
+                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+            }
+        }));
+    }));
+
+    /* Character Tab Roll Section '+' Triggers */
     on('clicked:repeating_rolls:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
         clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}reprolls-bonus-dices`, '?{Bonus Dices ? (Stunt, Situational, ...)|2}'),
-            id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', true)
+            id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
         );
     }));
 
     on('clicked:repeating_rolls:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
         clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}reprolls-bonus-successes`, '?{Bonus Success ? (Stunt, Willpower, ...)|0}'),
-            id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', true)
+            id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
         );
     }));
 
@@ -896,6 +931,19 @@
             finalCb(id, section);
         }, attr_name, section);
     }
+    
+    /* replicate withering to decisive */
+    on('change:repeating_combat-attack:repcombat-watk-attr change:repeating_combat-attack:repcombat-watk-abi', setDebugWrapper(function qcDamageAttacksChange(e) {
+        const id = e.sourceAttribute.split('_')[2];
+        const repAttr = e.sourceAttribute.split('_')[3].split('-')[2];
+
+        getAttrs([`repeating_combat-attack_${id}_repcombat-watk-${repAttr}`], TAS._fn(function get(values) {
+            const finalObj = {
+                [`repeating_combat-attack_${id}_repcombat-datk-${repAttr}`]: values[`repeating_combat-attack_${id}_repcombat-watk-${repAttr}`],
+            };
+            setAttrs(finalObj);
+        }));
+    }));
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
     // Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
