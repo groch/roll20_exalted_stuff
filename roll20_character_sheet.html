@@ -895,9 +895,11 @@
                     [`${attr_name}repcombat-datk-bonus-dices`]: '?{Bonus Dices ? (Stunt, Situational, ...)|2}',
                     [`${attr_name}repcombat-watk-bonus-successes`]: '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}',
                     [`${attr_name}repcombat-datk-bonus-successes`]: '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}',
+                    [`${attr_name}repcombat-ddmg-init-to-set`]: '3'
                 });
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+                updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
             }
         }));
     }));
