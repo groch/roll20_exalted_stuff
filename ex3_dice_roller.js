@@ -285,7 +285,7 @@ const LogLvl = LOGLEVEL.INFO,
         ],
       }
   ],
-  helpVersion = 1.04,
+  helpVersion = 1.05,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
