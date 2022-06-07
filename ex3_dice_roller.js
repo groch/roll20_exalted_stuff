@@ -128,11 +128,12 @@ const LogLvl = LOGLEVEL.INFO,
           tagList:  matchReturn[5] ? [...matchReturn[5].split(',').filter(i => i)] : []})
     },{
         categoryName: 'Reroll Pools',
-        pattern: /^(rP)\s([\d,]+)(?:\sTAGS=([(?:\w)+,]+))?$/,
+        pattern: /^(rP)\s([\d,]+)(?:\sIGNORE=([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
         getCmdObj: (matchReturn) => ({
           cmd:      matchReturn[1],
           limit:    Number(matchReturn[2]),
-          tagList:  matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i)] : []})
+          ignoreList:  matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))] : [],
+          tagList:  matchReturn[4] ? [...matchReturn[4].split(',').filter(i => i)] : []}),
     },{
         categoryName: 'Doubles & Explodes',
         pattern: /^(d|e|E)(l\d*)?\s([\d,]+)$/,
@@ -212,13 +213,15 @@ const LogLvl = LOGLEVEL.INFO,
         ],
       },
       {
-        arrayfirstCol:['-rP NB','-rP NB TAGS=LABEL,...'],
+        arrayfirstCol:['-rP NB','-rP NB IGNORE=NB,...','-rP NB TAGS=LABEL,...','-rP NB IGNORE=NB,... TAGS=LABEL,...'],
         arraySecondCol:[
 '<b>This command cover reroll pools, or reroll of fails not specific to one face, followed by the limit/number of faces to reroll.</b>',
 'This command follows the rules of recursive reroll (see previous section) as you would reroll fails until limit has been reached or all has become successes.\
  By default, rerolled dice are hidden, see <code style="white-space: nowrap">-v|V</code> below.',
+'The optional <code style="white-space: nowrap">IGNORE=NB,NB,...</code> signals the script that you don\'t want the reroll pool to affect these numbers.',
+'Example :<code>!exr 10# -rP 4 IGNORE=1</code>.',
 'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms).',
-'Example :<code>!exr 10# -r 1,2 TAGS=charm1</code>.',
+'Example :<code>!exr 10# -rP 4 TAGS=charm1</code>.',
 '---------',
 "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
  <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
@@ -816,7 +819,7 @@ function processCmds(cmds, result) {
                 break;
             case 'rP':
                 while (result.rollSetup.rerollPool.some(i => i.uuid === uuid)) uuid = randomUUID();
-                result.rollSetup.rerollPool.push({uuid: uuid, limit: item.limit, tagList: item.tagList});
+                result.rollSetup.rerollPool.push({uuid: uuid, limit: item.limit, ignoreList: item.ignoreList, tagList: item.tagList});
                 break;
             case 'E':
                 exploIgnore = false; // break omitted because same treatment
@@ -936,13 +939,14 @@ function finalizeRoll(result) {
 function addRerollPoolsAndFinalSort(result) {
     for (const rp of result.rollSetup.rerollPool) {
         for (const i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
-            if (!result.rollSetup.face[i].successes.length) {
+            if (!rp.ignoreList.includes(i) && !result.rollSetup.face[i].successes.length) {
                 result.rollSetup.face[i].rerolls.push({
                     uuid: rp.uuid,
                     limit: rp.limit,
                     done: 0,
                     keepBest: false,
                     recursive: true,
+                    ignoreList: rp.ignoreList,
                     tagList: rp.tagList,
                 });
             }
@@ -1348,7 +1352,7 @@ function removeFirstRerollSection(result, faceObj, showDone = false) {
         v: 'SECTIONDONE',
         sectionType: faceObj.rerolls[0].uuid ? 'RerollPool' : 'Reroll',
         color: rerolledColor,
-        details: `${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; face: ${faceObj.face}`}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`}&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'`
+        details: `${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; face: ${faceObj.face}`}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`}${faceObj.rerolls[0].ignoreList.length ? `&#013;&#010; ignoreList: ${faceObj.rerolls[0].ignoreList.join(', ')}` : ''}${faceObj.rerolls[0].tagList.length ? `&#013;&#010; tagList: '${faceObj.rerolls[0].ignoreList.join('\', \'')}'` : ''}`
     };
     if (faceObj.rerolls[0].uuid) removeRerollPoolSections(result, faceObj)
     faceObj.rerolls.shift();
