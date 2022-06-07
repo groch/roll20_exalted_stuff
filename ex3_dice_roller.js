@@ -295,11 +295,11 @@ const LogLvl = LOGLEVEL.INFO,
 '- 1MotD: CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
 '- DIT: CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
 '- HMU: CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
-'- Rn1on10: Reroll non 1 on 10; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169'
+'- Rn1on10: on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169'
         ],
       }
   ],
-  helpVersion = 1.06,
+  helpVersion = 1.07,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
