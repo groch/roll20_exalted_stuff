@@ -34,6 +34,11 @@ Anima:
 	Earth,aura1_color&#124;#ffe599 lightColor&#124;#ffe599 --off playersedit_aura1|
 	Wood,aura1_color&#124;#0f0 lightColor&#124;#0f0 --off playersedit_aura1|
 	Fire,aura1_color&#124;#f00 lightColor&#124;#f00 --off playersedit_aura1|
+	Mercury/Journey,aura1_color&#124;#ff8 lightColor&#124;#ff8 --off playersedit_aura1|
+	Venus/Serenity,aura1_color&#124;#08f lightColor&#124;#08f --off playersedit_aura1|
+	Mars/Battles,aura1_color&#124;#b00 lightColor&#124;#b00 --off playersedit_aura1|
+	Jupiter/Secrets,aura1_color&#124;#274e13 lightColor&#124;#274e13 --off playersedit_aura1|
+	Saturn/Endings,aura1_color&#124;#90f lightColor&#124;#90f --off playersedit_aura1|
 	Undefined,aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1
 }
 
@@ -59,6 +64,34 @@ Duplicate Token:
 
 AddMotes:
 !cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;}
+
+
+Replace Simple Img:
+!token-mod --set imgsrc|@{target|token_id} --ids @{selected|token_id}
+
+Replace Multiple Img: 1/3
+!token-mod --set imgsrc|-*
+Replace Multiple Img: 2/3
+!token-mod --set imgsrc|+@{target|token_id}:* --ids @{selected|token_id}
+Replace Multiple Img: 3/3
+!token-mod --set imgsrc|-
+
+Token Ability ChangeSize:
+!token-mod --set scale|?{Size ?|100%,1un|105%,1.05un|95%,0.95un|65%,0.65un}
+with 1px grid rework =>
+!token-mod --set scale|[[?{Size ?|Hiroo-100%,1|Frothi-105%,1.05|Tom-65%,0.65|Garde-95%,0.95}*0.014285714285]]un
+
+PageSizeConvert:
+!cmaster --?{Normal or Reverse ?|Normal,togglePageSize|Reverse,togglePageSize&#44;revert}
+
+
+
+
+
+
+
+
+/* OLD */
 
 ExROLL:
 !exr (?{Attribute|Strenght (@{selected|strength}),@{selected|strength}|Dexterity (@{selected|dexterity}),@{selected|dexterity}|Stamina (@{selected|stamina}), @{selected|stamina}|Charisma (@{selected|charisma}), @{selected|charisma}|Manipulation (@{selected|manipulation}), @{selected|manipulation}|Appearance (@{selected|appearance}), @{selected|appearance}|Perception (@{selected|perception}), @{selected|perception}|Intelligence (@{selected|intelligence}), @{selected|intelligence}|Wits (@{selected|wits}), @{selected|wits}}+?{Ability|
@@ -184,21 +217,3 @@ HLP-Decisive-Damage
 /w gm @{character_name} confirme son attaque Decisive et inflige :
 !exr @{tracker|Selenok Lokarth}# -D -gm
 /gr 3[RESETING INIT] &{tracker}
-
-Replace Simple Img:
-!token-mod --set imgsrc|@{target|token_id} --ids @{selected|token_id}
-
-Replace Multiple Img: 1/3
-!token-mod --set imgsrc|-*
-Replace Multiple Img: 2/3
-!token-mod --set imgsrc|+@{target|token_id}:* --ids @{selected|token_id}
-Replace Multiple Img: 3/3
-!token-mod --set imgsrc|-
-
-Token Ability ChangeSize:
-!token-mod --set scale|?{Size ?|100%,1un|105%,1.05un|95%,0.95un|65%,0.65un}
-with 1px grid rework =>
-!token-mod --set scale|[[?{Size ?|Hiroo-100%,1|Frothi-105%,1.05|Tom-65%,0.65|Garde-95%,0.95}*0.014285714285]]un
-
-PageSizeConvert:
-!cmaster --?{Normal or Reverse ?|Normal,togglePageSize|Reverse,togglePageSize&#44;revert}
