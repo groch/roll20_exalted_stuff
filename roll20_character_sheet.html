@@ -18,10 +18,7 @@
 
     function sortHealth(idHealthArray) {
         var attribs = ["_reporder_repeating_health"];
-        _.each(idHealthArray, function(id) {
-            attribs.push("repeating_health_" + id + "_hl-damage");
-            attribs.push("repeating_health_" + id + "_hl-penalty");
-        });
+        idHealthArray.forEach(id => attribs.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         getAttrs(attribs, function(v) {
             var final_array = _(idHealthArray).chain().sortBy(function(id) {
                 return v["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(v["repeating_health_" + id + "_hl-penalty"]);
@@ -45,9 +42,12 @@
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         
             getAttrs([...healthFieldNames, 'combat-crippling-pen', 'woundpenalty-add'], TAS._fn(function getHealthFields(valuesSections) {
+                var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
+                    return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+                }).value();
                 
                 var pen = 0;
-                for (const id of idHealthArray.reverse()) {
+                for (const id of sortedIdHealthArray.reverse()) {
                     let dmg =       valuesSections[`repeating_health_${id}_hl-damage`],
                         localPen =  valuesSections[`repeating_health_${id}_hl-penalty`];
                     if (dmg && (!dmg || dmg !== 'healthy')) {
