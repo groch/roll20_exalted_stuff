@@ -1754,10 +1754,12 @@ and (min-resolution:.001dpcm) {
 
 .sheet-rolltemplate-exalted3e_cast span > img{
     width: 3em;
+    height: 3em;
 }
 
-.sheet-rolltemplate-exalted3e_cast span.aspect > img{
+.sheet-rolltemplate-exalted3e_cast span.sheet-aspect > img{
     width: 4em;
+    height: 4em;
 }
 
 .sheet-rolltemplate-exalted3e_cast img[title="zenith"]          { content: url('https://s3.amazonaws.com/files.d20.io/images/287863297/KJXoJYat_oCa2WPUJTJx7Q/max.png?1654114629'); }

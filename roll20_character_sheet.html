@@ -650,7 +650,7 @@
                 let objSet = {};
                 if (!val[`repeating_${section}_${id}_charm-aspect`] ||
                     !['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && val['caste'].toLowerCase() !== val[`repeating_${section}_${id}_charm-aspect`] ||
-                     ['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && !['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val[`repeating_${section}_${id}_charm-aspect`])) {
+                     ['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && !['air', 'earth', 'fire', 'water', 'wood'].includes(val[`repeating_${section}_${id}_charm-aspect`])) {
                     objSet[`repeating_${section}_${id}_charm-aspect`] = val['caste'].toLowerCase();
                     objSet[`repeating_${section}_${id}_charm-balanced`] = 0;
                     setAttrs(objSet);
@@ -9230,7 +9230,7 @@
         <tr>
             <td class="subheader" colspan="3";>
                 {{character-name}}
-                <span title="aspect"><img title={{aspect}} /></span>
+                <span class="aspect"><img title={{aspect}} /></span>
                 <span title={{balanced}}><img src="https://s3.amazonaws.com/files.d20.io/images/290329500/ecMmiM8rUcJ-ziYHX9d18w/max.png?1655517656" /></span>
                 {{skill}}
         </tr>
