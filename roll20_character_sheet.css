@@ -258,26 +258,44 @@ tier 2: couleurs
 }
 
 
-.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-spell-sheet .gm-whisper,
-.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-charm-sheet .gm-whisper {
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-spell-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only
+{
     display: none;
 }
 
-.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-spell-sheet .gm-whisper,
-.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whismer-gm-check[value="0"] ~ .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whismer-gm-check[value="1"] ~ .sheet-tab-charm-sheet .gm-whisper,
-.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
+.charsheet .charm-caste-check[value="Air"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .charm-caste-check[value="Earth"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .charm-caste-check[value="Fire"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .charm-caste-check[value="Water"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .charm-caste-check[value="Wood"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
+    display: inline;
+}
+
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
     display: inline-block;
 }
 
-.charsheet .charm-whismer-both-check[value="1"] ~ .sheet-tab-settings-sheet .sheet-cast-to-gm {
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-settings-sheet .sheet-cast-to-gm {
     text-decoration: line-through;
+}
+
+.charsheet .sheet-tab-charm-sheet .sheet-charm-effect select[name="attr_charm-aspect"] {
+    width: 5em;
+}
+
+.charsheet .sheet-tab-charm-sheet .sheet-charm-effect input[type="checkbox"] {
+    opacity: 1;
 }
 
 
@@ -1729,6 +1747,66 @@ and (min-resolution:.001dpcm) {
     font-weight:bold;
     font-size:15px;
 }
+
+.sheet-rolltemplate-exalted3e_cast span[title="0"]{
+    display: none;
+}
+
+.sheet-rolltemplate-exalted3e_cast span > img{
+    width: 3em;
+}
+
+.sheet-rolltemplate-exalted3e_cast span.aspect > img{
+    width: 4em;
+}
+
+.sheet-rolltemplate-exalted3e_cast img[title="zenith"]          { content: url('https://s3.amazonaws.com/files.d20.io/images/287863297/KJXoJYat_oCa2WPUJTJx7Q/max.png?1654114629'); }
+.sheet-rolltemplate-exalted3e_cast img[title="dawn"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/289224722/2PTxxCqN9PnIFP-08ji-HA/max.png?1654898555'); }
+.sheet-rolltemplate-exalted3e_cast img[title="twilight"]        { content: url('https://s3.amazonaws.com/files.d20.io/images/289224750/VSxk0-pVumQRb6qKoF326g/max.png?1654898564'); }
+.sheet-rolltemplate-exalted3e_cast img[title="night"]           { content: url('https://s3.amazonaws.com/files.d20.io/images/287863296/-NW0u39GAfwM8nKKKWXXmA/max.png?1654114629'); }
+.sheet-rolltemplate-exalted3e_cast img[title="eclipse"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/289224731/niPD_rJh1vhKZqa92svF3A/max.png?1654898557'); }
+.sheet-rolltemplate-exalted3e_cast img[title="casteless"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/286517312/wloZbCUcbMz64zExGUq96w/max.png?1653337673'); }
+.sheet-rolltemplate-exalted3e_cast img[title="changing moon"]   { content: url('https://s3.amazonaws.com/files.d20.io/images/289224815/tI6Q_xSvE9VLnjB0PI30Fg/max.png?1654898590'); }
+.sheet-rolltemplate-exalted3e_cast img[title="full moon"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/289224824/ZDe2d2ovY7UeicCk6tEOvQ/max.png?1654898594'); }
+.sheet-rolltemplate-exalted3e_cast img[title="no moon"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/289025253/nUEsxTKOrZBu8AxUXw8f9Q/max.png?1654783243'); }
+.sheet-rolltemplate-exalted3e_cast img[title="endings"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/289225001/vaVVCG8w9R0c3WAzDo8QyQ/max.png?1654898655'); }
+.sheet-rolltemplate-exalted3e_cast img[title="battles"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/289225004/IWCshhIEjS2keLHmwhrjeg/max.png?1654898655'); }
+.sheet-rolltemplate-exalted3e_cast img[title="secrets"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/289225002/BASUdWHsWEeBg4rjBNApSQ/max.png?1654898655'); }
+.sheet-rolltemplate-exalted3e_cast img[title="serenity"]        { content: url('https://s3.amazonaws.com/files.d20.io/images/289225003/a-c4GCO_7UCU-fS6Xz3joQ/max.png?1654898655'); }
+.sheet-rolltemplate-exalted3e_cast img[title="journeys"]        { content: url('https://s3.amazonaws.com/files.d20.io/images/289225000/_9RrEvZpO9Gcdzt8DiAUHw/max.png?1654898655'); }
+.sheet-rolltemplate-exalted3e_cast img[title="water"]           { content: url('https://s3.amazonaws.com/files.d20.io/images/290329797/Xy9MXwjo9o9brGuChOFbpQ/max.png?1655517794'); }
+.sheet-rolltemplate-exalted3e_cast img[title="earth"]           { content: url('https://s3.amazonaws.com/files.d20.io/images/290329796/D3dl9vUlnpW6-62YBxOlYA/max.png?1655517794'); }
+.sheet-rolltemplate-exalted3e_cast img[title="air"]             { content: url('https://s3.amazonaws.com/files.d20.io/images/290329795/wYZAcE0p3HGpld-My69TLw/max.png?1655517794'); }
+.sheet-rolltemplate-exalted3e_cast img[title="wood"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/290329794/2UyfCRr3dIkh5kZNObDbqw/max.png?1655517794'); }
+.sheet-rolltemplate-exalted3e_cast img[title="fire"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/290329793/hlr3nMlOBHTIb-v2-2kjtQ/max.png?1655517794'); }
+
+.sheet-rolltemplate-exalted3e_cast img[title="adamant"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355484/ECiPyO0Uh9HBNru94e2jJQ/max.png?1655534509'); }
+.sheet-rolltemplate-exalted3e_cast img[title="jade"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/290355486/76VFhvLhjVCZSQ-KLlsXkw/max.png?1655534509'); }
+.sheet-rolltemplate-exalted3e_cast img[title="moonsilver"]      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355483/tXC0-EryOTOCP0GplhICCw/max.png?1655534509'); }
+.sheet-rolltemplate-exalted3e_cast img[title="orichalcum"]      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355485/RTnMnr-wT7MCgK9y09A7QQ/max.png?1655534509'); }
+.sheet-rolltemplate-exalted3e_cast img[title="soulsteel"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/290355487/hG7WKJbWMjZtXnuQdgs0RA/max.png?1655534509'); }
+.sheet-rolltemplate-exalted3e_cast img[title="starmetal"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/290355488/nMrXIRQfzoxosVhL7-vqmw/max.png?1655534509'); }
+.sheet-rolltemplate-exalted3e_cast img[title="daybreak"]        { content: url('https://s3.amazonaws.com/files.d20.io/images/290355493/N4amjrZkvnjLmU99IjHQ5w/max.png?1655534516'); }
+.sheet-rolltemplate-exalted3e_cast img[title="day"]             { content: url('https://s3.amazonaws.com/files.d20.io/images/290355492/AJtOq2-jkbSP4LGG1kEKyA/max.png?1655534516'); }
+.sheet-rolltemplate-exalted3e_cast img[title="dusk"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/290355496/fpMl8yYhjVmWtWNa7ra3pw/max.png?1655534516'); }
+.sheet-rolltemplate-exalted3e_cast img[title="midnight"]        { content: url('https://s3.amazonaws.com/files.d20.io/images/290355495/Y0LKm5XpoyjGVb9BwZRZ1A/max.png?1655534516'); }
+.sheet-rolltemplate-exalted3e_cast img[title="moonshadow"]      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355494/ByEJc864bB1dQkcC5cDFRw/max.png?1655534516'); }
+.sheet-rolltemplate-exalted3e_cast img[title="defiler"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355470/xbldGX1-5af-6wrCklSZtg/max.png?1655534499'); }
+.sheet-rolltemplate-exalted3e_cast img[title="fiend"]           { content: url('https://s3.amazonaws.com/files.d20.io/images/290355471/O2fhv2kqA7EgLD4MyW717g/max.png?1655534499'); }
+.sheet-rolltemplate-exalted3e_cast img[title="malefactor"]      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355469/Qzg9YYfn5ie3z3bqhVjuTQ/max.png?1655534499'); }
+.sheet-rolltemplate-exalted3e_cast img[title="scourge"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355467/Te60NdSOWjf2DE9l6Y3jgg/max.png?1655534499'); }
+.sheet-rolltemplate-exalted3e_cast img[title="slayer"]          { content: url('https://s3.amazonaws.com/files.d20.io/images/290355468/Yc98p0D9aXwi8trR_3MQbA/max.png?1655534499'); }
+
+.sheet-rolltemplate-exalted3e_cast img[title="blood"]           { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.sheet-rolltemplate-exalted3e_cast img[title="breath"]          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.sheet-rolltemplate-exalted3e_cast img[title="flesh"]           { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.sheet-rolltemplate-exalted3e_cast img[title="marrow"]          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.sheet-rolltemplate-exalted3e_cast img[title="soil"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+
+.sheet-rolltemplate-exalted3e_cast img[title="unknown"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+
+.sheet-rolltemplate-exalted3e_cast img[title="sorceries"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/290361561/SB_IxeE7B6beH6LTt6R6fQ/max.png?1655540239'); }
+
 
 /* --- Turns --- NOT USED */
 
