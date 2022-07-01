@@ -482,10 +482,6 @@ tier 2: couleurs
     display: inline-block;
 }
 
-.charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
-    background-color: #faa4a4;
-}
-
 .charsheet [title] { cursor: help; }
 .charsheet .sheet-dotted { border-bottom: 1px dotted black; }
 
@@ -1939,10 +1935,6 @@ body.sheet-darkmode {
     border-radius: 10px;
 }
 
-.sheet-darkmode .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
-    background-color: darkred;
-}
-
 .sheet-darkmode .charsheet .sheet-defenses input[type=number][disabled].onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .sheet-defenses input[type=number][readonly].onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .sheet-gear input[type=number][disabled].onslaught-taint.wound-taint,
@@ -2130,6 +2122,30 @@ body.sheet-darkmode {
 
 .charsheet input.sheet-tab-antisocial::before {
     content: 'AntiSocial';
+}
+
+/* --- COLOR INTIMACIES -- */
+
+.charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+    /* background-color: #faa4a4; */
+    border: 3px solid red;
+    border-radius: 5px;
+}
+
+.sheet-darkmode .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+    /* background-color: darkred; */
+    border: 3px solid red;
+    border-radius: 5px;
+}
+
+.inti-col .intimacy-val-check[value="Major"] ~ div.sheet-table-cell {
+    background: linear-gradient(180deg, transparent, rgba(0, 243, 255, 0.34), transparent)
+    /* background-color: #ffcc00; */
+}
+
+.inti-col .intimacy-val-check[value="Defining"] ~ div.sheet-table-cell {
+    background: linear-gradient(180deg, transparent, rgba(0, 88, 255, 0.5), transparent);
+    /* background-color: #ff9100; */
 }
 
 /* --- COMBAT TAB --- */

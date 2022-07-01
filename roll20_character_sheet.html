@@ -8349,6 +8349,7 @@
                         <fieldset class="repeating_intimacies sheet-table-body" style="display: none;">
                             <input type="hidden" name="attr_intimacyrepeatingtaint" class="intimacy-taint-check" value="0">
                             <input type="hidden" name="attr_intimacyrepeatingxpspent" class="intimacy-xp-check" value="0">
+                            <input type="hidden" name="attr_intimacyrepeatingtype" class="intimacy-val-check" value="none">
                             <div class="sheet-table-cell">
                                 <label><input type="checkbox" name="attr_intimacyrepeatingxpspent" value="1"><span></span></label>
                             </div>
@@ -8358,7 +8359,7 @@
                             <div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
                             <div class="sheet-table-cell intimacy-taint">
                                 <select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
-                                    <option value="">None</option>
+                                    <option value="none">None</option>
                                     <option value="Minor" selected="selected">Minor</option>
                                     <option value="Major">Major</option>
                                     <option value="Defining">Defining</option>
@@ -8460,14 +8461,15 @@
                         </div>
                         <fieldset class="repeating_intimacies-read sheet-table-body" style="display: none;">
                             <input type="hidden" name="attr_intimacyrepeatingtaint" class="intimacy-taint-check" value="0">
+                            <input type="hidden" name="attr_intimacyrepeatingtype" class="intimacy-val-check" value="none">
                             <div class="sheet-table-cell">
                                 <label style="margin-left: 0.9em;"><input type="checkbox" name="attr_intimacyrepeatingtaint" value="1"><span></span></label>
                             </div>
                             <div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
                             <div class="sheet-table-cell intimacy-taint">
                                 <select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
-                                    <option value="">None</option>
-                                    <option value="Minor" selected="selected">Minor</option>
+                                    <option value="none" selected="selected">None</option>
+                                    <option value="Minor">Minor</option>
                                     <option value="Major">Major</option>
                                     <option value="Defining">Defining</option>
                                 </select>
