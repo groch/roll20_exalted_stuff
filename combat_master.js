@@ -139,6 +139,7 @@ var CombatMaster = CombatMaster || (function() {
     markerType = {ROUND:'round', MAIN: 'main', NEXT: 'next', RANGE: 'range'},
     invisibleImage = 'https://s3.amazonaws.com/files.d20.io/images/255367527/BLuBSgz14Tx_IGSPAPM6vw/max.png?1636797848',
     icon_image_positions = {red:"#C91010",blue:"#1076C9",green:"#2FC910",brown:"#C97310",purple:"#9510C9",pink:"#EB75E1",yellow:"#E5EB75",dead:"X",skull:0,sleepy:34,"half-heart":68,"half-haze":102,interdiction:136,snail:170,"lightning-helix":204,spanner:238,"chained-heart":272,"chemical-bolt":306,"death-zone":340,"drink-me":374,"edge-crack":408,"ninja-mask":442,stopwatch:476,"fishing-net":510,overdrive:544,strong:578,fist:612,padlock:646,"three-leaves":680,"fluffy-wing":714,pummeled:748,tread:782,arrowed:816,aura:850,"back-pain":884,"black-flag":918,"bleeding-eye":952,"bolt-shield":986,"broken-heart":1020,cobweb:1054,"broken-shield":1088,"flying-flag":1122,radioactive:1156,trophy:1190,"broken-skull":1224,"frozen-orb":1258,"rolling-bomb":1292,"white-tower":1326,grab:1360,screaming:1394,grenade:1428,"sentry-gun":1462,"all-for-one":1496,"angel-outfit":1530,"archery-target":1564},
+    icon_custom_token = {"clashlost::5271616": 'https://s3.amazonaws.com/files.d20.io/images/5271616/Kl55cKKOq-v4AoBUsAynrQ/max.png?1656706679'},
     ctMarkers = ['blue', 'brown', 'green', 'pink', 'purple', 'red', 'yellow', '-', 'all-for-one', 'angel-outfit', 'archery-target', 'arrowed', 'aura', 'back-pain', 'black-flag', 'bleeding-eye', 'bolt-shield', 'broken-heart', 'broken-shield', 'broken-skull', 'chained-heart', 'chemical-bolt', 'cobweb', 'dead', 'death-zone', 'drink-me', 'edge-crack', 'fishing-net', 'fist', 'fluffy-wing', 'flying-flag', 'frozen-orb', 'grab', 'grenade', 'half-haze', 'half-heart', 'interdiction', 'lightning-helix', 'ninja-mask', 'overdrive', 'padlock', 'pummeled', 'radioactive', 'rolling-bomb', 'screaming', 'sentry-gun', 'skull', 'sleepy', 'snail', 'spanner',   'stopwatch','strong', 'three-leaves', 'tread', 'trophy', 'white-tower'],
     // shaped_conditions = ['blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'],
     script_name = 'CombatMaster',
@@ -223,7 +224,7 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -400,6 +401,8 @@ var CombatMaster = CombatMaster || (function() {
                 {key:'applyLightCoverDefBonus',             fxName:'applyLightCoverDefBonus',             fx: applyLightCoverDefBonus},
                 {key:'applyHeavyCoverDefBonus',             fxName:'applyHeavyCoverDefBonus',             fx: applyHeavyCoverDefBonus},
                 {key:'remCoverDefBonus',                    fxName:'remCoverDefBonus',                    fx: remCoverDefBonus},
+                {key:'applyClashDefPen',                    fxName:'applyClashDefPen',                    fx: applyClashDefPen},
+                {key:'remClashDefPen',                      fxName:'remClashDefPen',                      fx: remClashDefPen},
             ],
             checkedCastList = [
                 {key:'onslaught',                           fxName:'addOnslaughtToPlayer',                fx: addOnslaughtToPlayer},
@@ -505,6 +508,20 @@ var CombatMaster = CombatMaster || (function() {
             makeAndSendMenu(contents,confObj.title,'gm', false, `background-color:${confObj.bgColor};${styles.specialTitle}`);
         else
             makeAndSendMenu(contents,confObj.title,'', false, `background-color:${confObj.bgColor};${styles.specialTitle}`);
+    },
+
+    remClashDefPen = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'remCoverDefBonus',                   debugMessage: 'removed CLASH def Penalty',        charAttrToSet: {'clash-def-penalty':0},
+            contentString: 'recovered from Clash Lost', title: 'Out of Clash Lost Penalty',               bgColor: 'darkgreen'
+        });
+    },
+
+    applyClashDefPen = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'applyClashDefPen',                   debugMessage: 'applied CLASH def Penalty',      charAttrToSet: {'clash-def-penalty':2},
+            contentString: 'has failed the Clash',      title: 'Clash Lost Defense Penalty',            bgColor: 'darkred'
+        });
     },
 
     remCoverDefBonus = (cmdDetails) => {
@@ -2765,9 +2782,14 @@ var CombatMaster = CombatMaster || (function() {
             let iconStyle = '';
             // let iconSize = '';
 
+            iconStyle += (width) ? 'width: '+width+'px;height: '+height+'px;' : 'width: 24px; height: 24px;';
+            if (typeof icon_custom_token[icon] !== 'undefined') {
+                iconStyle += `background-image: url(${icon_custom_token[icon]}); background-size: 24px;`;
+                iconStyle += style;
+                return '<div style="vertical-align:middle;'+iconStyle+'">'+X+'</div>';
+            }
             if (typeof icon_image_positions[icon] === 'undefined') return false;
 
-            iconStyle += (width) ? 'width: '+width+'px;height: '+height+'px;' : 'width: 24px; height: 24px;';
             if (Number.isInteger(icon_image_positions[icon])){
                 iconStyle += 'background-image: url(https://roll20.net/images/statussheet.png);';
                 iconStyle += 'background-repeat: no-repeat;';
@@ -3684,6 +3706,31 @@ var CombatMaster = CombatMaster || (function() {
 						addMacro:           'None',
 						addPersistentMacro: false,
 						remAPI:             'None',
+						remRoll20AM:        'None',
+						remFX:              'None',
+						remMacro:           'None',
+					},
+                    clashlost: {
+						name:               'Clash Lost',
+						key:                'clashlost',
+						type:               'Condition',
+						description:        '',
+						icon:               'clashlost::5271616',
+						iconType:           'Combat Master',
+						duration:           1,
+						direction:          -1,
+						override:           true,
+						favorite:           false,
+						message:            'None',
+						targeted:           false,
+						targetedAPI:        'casterTargets',
+						concentration:      false,
+						addAPI:             '!cmaster --applyClashDefPen,id=CharID,tok=TokenID',
+						addRoll20AM:        'None',
+						addFX:              'None',
+						addMacro:           'None',
+						addPersistentMacro: false,
+						remAPI:             '!cmaster --remClashDefPen,id=CharID,tok=TokenID',
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
