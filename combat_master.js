@@ -3714,7 +3714,7 @@ var CombatMaster = CombatMaster || (function() {
 						name:               'Clash Lost',
 						key:                'clashlost',
 						type:               'Condition',
-						description:        '',
+						description:        '<p>Losing a Clash inflict 2points penalty to defenses until next turn.</p>',
 						icon:               'clashlost::5271616',
 						iconType:           'Combat Master',
 						duration:           1,
