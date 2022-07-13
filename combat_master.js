@@ -699,7 +699,7 @@ var CombatMaster = CombatMaster || (function() {
 
     addMotesToNonMortalCharacter = (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd) => {
         if (!characterObj) {
-            logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON CONTROLLED TOKEN: QUIT`);
+            logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON CONTROLLED TOKEN: QUIT${characterObj}`);
             return false;    
         }
         logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON MORTAL FOUND:${characterObj.get('name')}`);
@@ -3485,9 +3485,12 @@ var CombatMaster = CombatMaster || (function() {
 					allRoundMacro:               'None',
 
                     useRangeMarker:              'External URL',
-                    rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/286593209/iKIw8-n03SYQmCG93s47Iw/max.png?1653389150',
-                    rangeMarkerWidth:            6000,
-                    rangeMarkerHeight:           6000,
+                    // rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/286593209/iKIw8-n03SYQmCG93s47Iw/max.png?1653389150',
+                    // rangeMarkerWidth:            6000,
+                    // rangeMarkerHeight:           6000,
+                    rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/293975183/Ha4Eyb2nQqXpRpyZnLc0kA/max.png?1657514551',
+                    rangeMarkerWidth:            6412,
+                    rangeMarkerHeight:           6412,
 
                     addMotesEachTurnToNonMortal: true,
                     moteQtyToAdd:                5
