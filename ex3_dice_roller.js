@@ -28,6 +28,34 @@ class LOGLEVEL {
     }
 }
 // CONSTANTS
+const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px; color: black",
+        innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
+        baseColor = 'black',
+        successColor = '#23b04f',
+        doubleColor = '#950015',
+        rerolledColor = 'rgba(0, 100, 255, 1)',
+        explodedColor = 'rgba(255, 235, 0, 1)',
+        conditionalColor = 'cyan',
+        initialRollColor = '#f06292',
+        formulaStyleBase = "font-size:inherit;background:white;border-radius:3px;",
+        totalStyle = formulaStyleBase + 'padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;',
+        formulaStyle = formulaStyleBase + 'padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;',
+        formattedFormulaStyle = "display:block;float:left;",
+        uidraggableStyle = "cursor:move",
+        diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
+        planeWalkerFont = "font-family: 'Planewalker';", // use font from character sheet css
+        diceRollStyle = planeWalkerFont + " letter-spacing: -1px; top: 4px;",
+        successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
+        doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
+        rerolledStyle = 'opacity: 0.4;',
+        wasAffectedTextShadow = ', -3px 0 0.03em ',
+        rerolledTextShadow = `, 5px -5px 3px `,
+        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
+        condTriggeredTextShadowBase = ', 0.15em 0em 2px ',
+        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;',
+        sectionDoneStyle = 'position:relative;padding: 3px 0;width: 3px;height:1em;top:0.33em;border-radius:1em;border: 1px solid black;',
+        condiPadder = '              ';
+
 const LogLvl = LOGLEVEL.INFO,
   ConditionalList = {
     '1MotD': {
@@ -89,6 +117,18 @@ const LogLvl = LOGLEVEL.INFO,
             done: 0
         },
         finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
+    },
+    'ES': {
+        faceTrigger: (setup, result, cond) => setup.success,
+        diceCheckMethod: handleFaceConditionExplodeSuccesses, //(result, setup, item, turn, condIterator)
+        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
+        getDetailMethod: detailsCondESSectionDone, //f(condObj, showDone = false)
+        defaultConditionObj: {
+            name: 'ES',
+            done: 0,
+            conditionalColor: explodedColor
+        },
+        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
     }
   },
   DefaultRollSetup = {
@@ -115,6 +155,7 @@ const LogLvl = LOGLEVEL.INFO,
     rerolled: false,
     condTriggered: false,
     condRerolled: false,
+    conditionalColor: undefined,
     exploded: false,
     success: false,
     doubled: false,
@@ -300,11 +341,12 @@ const LogLvl = LOGLEVEL.INFO,
 '- 1MotD: CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
 '- DIT: CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
 '- HMU: CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
-'- Rn1on10: on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169'
+'- Rn1on10: on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
+'- ES: Explode on success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)'
         ],
       }
   ],
-  helpVersion = 1.09,
+  helpVersion = 1.10,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
@@ -1061,7 +1103,8 @@ function handleRollTurn(result, turn) {
 
     for (const item of result.rollSetup.rollToProcess) {
         var setup = JSON.parse(JSON.stringify(DefaultRollHandlingSetup));
-        setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face], setup.wasConditionallyAffected = item.wasConditionallyAffected;
+        setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face], setup.wasConditionallyAffected = item.wasConditionallyAffected,
+        setup.conditionalColor = item.conditionalColor || undefined;
         if (item.tagList && item.tagList.length) for (const tag of item.tagList) setup.tagList.push(tag);
         handleRoll(result, setup, item, turn);
         var finalObj = {
@@ -1071,6 +1114,7 @@ function handleRollTurn(result, turn) {
             wasExploded:        item.wasExploded || false,     wasConditionallyAffected: item.wasConditionallyAffected || false,
             rerolled:           setup.rerolled,                exploded:                 setup.exploded,
             condTriggered:      setup.condTriggered,           condRerolled:             setup.condRerolled,
+            conditionalColor:   setup.conditionalColor,
             title: item.title ? makeNewTitleFromOld(result, item.title, setup.titleText) : [`Roll Initial.${result.rollSetup.conditionalActivated.length ? condiPadder : ''}            Face=${strFill(setup.face)}.${setup.titleText}`]
         };
         logger(LOGLEVEL.NOTICE, `handleRollTurn::face(${setup.face}) =>finalObj=${finalObj.v} rerolled=${setup.rerolled} exploded=${setup.exploded} FULL=${JSON.stringify(finalObj)}`);
@@ -1394,6 +1438,27 @@ function handleFaceConditionRerollNon1On10(result, setup, item, turn, condIterat
     return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
 }
 
+function handleFaceConditionExplodeSuccesses(result, setup, item, turn, condIterator) {
+    var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
+    logger(LOGLEVEL.INFO, `handleFaceConditionExplodeSuccesses::face(${setup.face}) CONDITIONAL-EXPLODE SUCCESSES TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
+
+    var newDie = randomInteger(10);
+    logger(LOGLEVEL.INFO, `handleFaceConditionExplodeSuccesses::producing a die`);
+    setup.producedADie = true;
+    toNextRollCondi = {
+        v: newDie, wasEverRerolled: false,
+        wasRerolled: false, wasExploded: true, wasConditionallyAffected: true, conditionalColor: cond.conditionalColor,
+        title: [`RollTurn (${strFill(turn + 1)}). C(ES) ->Face=${newDie}.`]
+    };
+    setup.condTriggered = true;
+    setup.conditionalColor = cond.conditionalColor;
+    cond.done++;
+    setup.titleText += ` ES produced a ${newDie} (Done=${cond.done}).`;
+
+    logger(`handleFaceConditionExplodeSuccesses::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+    return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
+}
+
 /**
  * SECTION CLEANING AFTER 1ST ROLL TURN, OR AT THE COMPLETE END OF THE ROLL
  */
@@ -1514,38 +1579,17 @@ function detailsCondRn1on10SectionDone(condObj, showDone = false) {
     return detail;
 }
 
+function detailsCondESSectionDone(condObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-ES Detail SECTION DONE=${JSON.stringify(condObj)}`);
+    var detail = `&#013;&#010; Total produced =${condObj.done}`;
+    return detail;
+}
+
 function makeSectionDoneObj(typeTxt, color, detailsTxt = '') {
     return {v: 'SECTIONDONE', sectionType: typeTxt, color: color, details: detailsTxt};
 }
 
 /* Build HTML */
-const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px; color: black",
-        innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
-        baseColor = 'black',
-        successColor = '#23b04f',
-        doubleColor = '#950015',
-        rerolledColor = 'rgba(0, 100, 255, 1)',
-        explodedColor = 'rgba(255, 235, 0, 1)',
-        conditionalColor = 'cyan',
-        initialRollColor = '#f06292',
-        formulaStyleBase = "font-size:inherit;background:white;border-radius:3px;",
-        totalStyle = formulaStyleBase + 'padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;',
-        formulaStyle = formulaStyleBase + 'padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;',
-        formattedFormulaStyle = "display:block;float:left;",
-        uidraggableStyle = "cursor:move",
-        diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
-        planeWalkerFont = "font-family: 'Planewalker';", // use font from character sheet css
-        diceRollStyle = planeWalkerFont + " letter-spacing: -1px; top: 4px;",
-        successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
-        doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
-        rerolledStyle = 'opacity: 0.4;',
-        wasAffectedTextShadow = ', -3px 0 0.03em ',
-        rerolledTextShadow = `, 5px -5px 3px `,
-        explodedTextShadow = `, 0.08em 0.05em 0px ${explodedColor}`,
-        condTriggeredTextShadow = `, 0.15em 0em 2px ${conditionalColor}`,
-        maxRecursionStyle = 'color: red; font-size: larger; font-weight: bold; padding-top: 10px;',
-        sectionDoneStyle = 'position:relative;padding: 3px 0;width: 3px;height:1em;top:0.33em;border-radius:1em;border: 1px solid black;',
-        condiPadder = '              ';
 
 function parseAddedSuccesses(result, origCmd) {
     logger(`parseAddedSuccesses::parseAddedSuccesses origCmd=${origCmd}, result=${JSON.stringify(result)}`);
@@ -1649,12 +1693,12 @@ function displayRolls(vals, result, html) {
         var affectedTextShadow = '';
         if (item.wasRerolled || item.wasExploded) {
             affectedTextShadow = wasAffectedTextShadow;
-            if (item.wasRerolled)       affectedTextShadow += item.wasConditionallyAffected ? conditionalColor : rerolledColor;
-            else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? conditionalColor : explodedColor;
+            if (item.wasRerolled)       affectedTextShadow += item.wasConditionallyAffected ? (item.conditionalColor ? item.conditionalColor : conditionalColor) : rerolledColor;
+            else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? (item.conditionalColor ? item.conditionalColor : conditionalColor) : explodedColor;
         }
         if (item.exploded)      affectedTextShadow += explodedTextShadow;
-        if (item.rerolled)      affectedTextShadow += rerolledTextShadow + (item.condRerolled ? conditionalColor : rerolledColor);
-        if (item.condTriggered) affectedTextShadow += condTriggeredTextShadow;
+        if (item.rerolled)      affectedTextShadow += rerolledTextShadow + (item.condRerolled ? (item.conditionalColor ? item.conditionalColor : conditionalColor) : rerolledColor);
+        if (item.condTriggered) affectedTextShadow += `${condTriggeredTextShadowBase}${(item.conditionalColor ? item.conditionalColor : conditionalColor)}`;
         if (item.exploded || item.rerolled || item.condTriggered)
             affectedTextShadow += ';';
         html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
