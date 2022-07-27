@@ -129,6 +129,18 @@ const LogLvl = LOGLEVEL.INFO,
             conditionalColor: explodedColor
         },
         finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
+    },
+    'CR': {
+        faceTrigger: (setup, result, cond) => setup.success || cond.remainingToDo,
+        diceCheckMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
+        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
+        getDetailMethod: detailsCondCRSectionDone, //f(condObj, showDone = false)
+        defaultConditionObj: {
+            name: 'CR',
+            remainingToDo: 0,
+            done: 0
+        },
+        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
     }
   },
   DefaultRollSetup = {
@@ -342,11 +354,12 @@ const LogLvl = LOGLEVEL.INFO,
 '- DIT: CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
 '- HMU: CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
 '- Rn1on10: on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
-'- ES: Explode on success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)'
+'- ES: Explode on success. NOT USED IN CHARMS',
+'- CR: Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)'
         ],
       }
   ],
-  helpVersion = 1.10,
+  helpVersion = 1.11,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
@@ -1459,6 +1472,57 @@ function handleFaceConditionExplodeSuccesses(result, setup, item, turn, condIter
     return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
 }
 
+function handleFaceConditionCR(result, setup, item, turn, condIterator) {
+    var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
+    logger(LOGLEVEL.INFO, `handleFaceConditionCR::face(${setup.face}) CONDITIONAL-REROLL POOL ON 10 TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
+
+    if (setup.success) {
+        cond.remainingToDo++;
+        setup.condTriggered = true;
+    }
+
+    if (cond.remainingToDo && setup.success) {
+        logger(LOGLEVEL.INFO, `handleFaceConditionCR::remainingToDo=${cond.remainingToDo} result.rollSetup.finalResults.length=${result.rollSetup.finalResults.length}`);
+        var diceNb = 1;
+        for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+            const dieTesting = result.rollSetup.finalResults[i];
+            if (dieTesting.v === 'SECTIONDONE') continue;
+            if (!dieTesting.success && !dieTesting.rerolled) {
+                var newDie = randomInteger(10);
+                logger(LOGLEVEL.INFO, `handleFaceConditionCR::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
+                setup.producedADie = true;
+                toNextRollCondi = {
+                    v: newDie, wasEverRerolled: true,
+                    wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
+                    title: [`RollTurn (${strFill(turn + 1)}). C(CR) ->Face=${newDie}.`],
+                    alternatePrevObjForTitle: dieTesting
+                };
+                dieTesting.condTriggered = false;
+                dieTesting.rerolled = true, dieTesting.condRerolled = false, dieTesting.wasEverRerolled = true;
+                logger(`handleFaceConditionCR::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
+                cond.remainingToDo--, cond.done++;
+                dieTesting.title = makeNewTitleFromOld(result, dieTesting.title, ` CR rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`);
+                setup.titleText += ` CR rerolled a ${dieTesting.v} to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
+            }
+        }
+    } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
+        var newDie = randomInteger(10);
+        logger(LOGLEVEL.INFO, `handleFaceConditionCR:: Rerolling THIS dice ! turning into a ${newDie} die no=${diceNb++}`);
+        setup.producedADie = true;
+        toNextRollCondi = {
+            v: newDie, wasEverRerolled: true,
+            wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
+            title: [`RollTurn (${strFill(turn + 1)}). C(CR) ->Face=${newDie}.`]
+        };
+        setup.rerolled = true;
+        logger(`handleFaceConditionCR::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
+        cond.remainingToDo--, cond.done++;
+        setup.titleText += ` CR rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
+    }
+    logger(`handleFaceConditionCR::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+    return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
+}
+
 /**
  * SECTION CLEANING AFTER 1ST ROLL TURN, OR AT THE COMPLETE END OF THE ROLL
  */
@@ -1568,20 +1632,26 @@ function detailsCond1MotDSectionDone(condObj, showDone = false) {
 }
 
 function detailsCondDITSectionDone(condObj, showDone = false) {
-    logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-DIT Detail SECTION DONE=${JSON.stringify(condObj)}`);
+    logger(LOGLEVEL.NOTICE, `detailsCondDITSectionDone::COND-DIT Detail SECTION DONE=${JSON.stringify(condObj)}`);
     var detail = `&#013;&#010; Success stocked=${condObj.status}/3&#013;&#010; Total generated =${condObj.done}`;
     return detail;
 }
 
 function detailsCondRn1on10SectionDone(condObj, showDone = false) {
-    logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-Rn1on10 Detail SECTION DONE=${JSON.stringify(condObj)}`);
+    logger(LOGLEVEL.NOTICE, `detailsCondRn1on10SectionDone::COND-Rn1on10 Detail SECTION DONE=${JSON.stringify(condObj)}`);
     var detail = `&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
     return detail;
 }
 
 function detailsCondESSectionDone(condObj, showDone = false) {
-    logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-ES Detail SECTION DONE=${JSON.stringify(condObj)}`);
+    logger(LOGLEVEL.NOTICE, `detailsCondESSectionDone::COND-ES Detail SECTION DONE=${JSON.stringify(condObj)}`);
     var detail = `&#013;&#010; Total produced =${condObj.done}`;
+    return detail;
+}
+
+function detailsCondCRSectionDone(condObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `detailsCondCRSectionDone::COND-CR Detail SECTION DONE=${JSON.stringify(condObj)}`);
+    var detail = `&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
     return detail;
 }
 
