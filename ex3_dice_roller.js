@@ -84,14 +84,14 @@ const LogLvl = LOGLEVEL.INFO,
     'DIT': {
         faceTrigger: (setup, result, cond) => setup.success,
         diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
-        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
         getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
             name: 'DIT',
             status: 0,
             done: 0
         },
-        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
+        finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
+        tagAssociated: 'DIT'
     },
     'HMU': {
         faceTrigger: (setup, result, cond) => setup.success,
@@ -104,7 +104,8 @@ const LogLvl = LOGLEVEL.INFO,
             done: 0,
             firstTurnSuccesses: 0
         },
-        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
+        finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
+        tagAssociated: 'DIT'
     },
     'Rn1on10': {
         faceTrigger: (setup, result, cond) => setup.face === 10 || (cond.remainingToDo && setup.face !== 1 && !setup.success),
@@ -121,7 +122,6 @@ const LogLvl = LOGLEVEL.INFO,
     'ES': {
         faceTrigger: (setup, result, cond) => setup.success,
         diceCheckMethod: handleFaceConditionExplodeSuccesses, //(result, setup, item, turn, condIterator)
-        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
         getDetailMethod: detailsCondESSectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
             name: 'ES',
@@ -133,7 +133,6 @@ const LogLvl = LOGLEVEL.INFO,
     'CR': {
         faceTrigger: (setup, result, cond) => setup.success || cond.remainingToDo,
         diceCheckMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
-        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
         getDetailMethod: detailsCondCRSectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
             name: 'CR',
@@ -141,6 +140,22 @@ const LogLvl = LOGLEVEL.INFO,
             done: 0
         },
         finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
+    },
+    'CRStarter': {
+        regPattern: /CRStarter\s(\d+)/,
+        parseCommand: parseCondCRStarter, //f(defaultConditionObj, parsedReturn)
+        faceTrigger: (setup, result, cond) => setup.success && setup.tagList.includes('CRStarter') || !setup.success && cond.remainingToDo,
+        diceCheckMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
+        turnHook: handleTurnConditionalHookCRStarter, //f(result, turn, nextRollsToProcess, condIterator)
+        getDetailMethod: detailsCondCRSectionDone, //f(condObj, showDone = false)
+        defaultConditionObj: {
+            name: 'CRStarter',
+            starterCount: 0,
+            remainingToDo: 0,
+            done: 0
+        },
+        finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
+        tagAssociated: 'CRStarter'
     }
   },
   DefaultRollSetup = {
@@ -350,16 +365,17 @@ const LogLvl = LOGLEVEL.INFO,
         arraySecondCol:[
 "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
 "Actually there is :",
-'- 1MotD: CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
-'- DIT: CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
-'- HMU: CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
-'- Rn1on10: on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
-'- ES: Explode on success. NOT USED IN CHARMS',
-'- CR: Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)'
+'-1MotD : CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
+'-DIT : CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
+'-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
+'-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
+'-ES : Explode on success. NOT USED IN CHARMS',
+'-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
+'-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
         ],
       }
   ],
-  helpVersion = 1.11,
+  helpVersion = 1.12,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
@@ -832,12 +848,12 @@ function parseCmds(item, list) {
 
     if (!match) {
         for (const condItem of Object.keys(ConditionalList)) {
-            patt = new RegExp(`^(${condItem})$`);
+            patt = ConditionalList[condItem].regPattern || new RegExp(`^(${condItem})$`);
             if ((ret = trim.match(patt))) {
                 match = true;
                 logger(LOGLEVEL.NOTICE, `parseCmds::MATCH - Conditional Item = ${condItem}`);
                 logger('parseCmds::ret='+JSON.stringify(ret));
-                objRet = {cmd: ret[1]};
+                objRet = {cmd: condItem, condiFullParsed: ret};
             }
         }
     }
@@ -957,8 +973,10 @@ function processCmds(cmds, result) {
 
     for (const item of cmds) {
         // create Conditional Default Item + Init
-        if (Object.keys(ConditionalList).includes(item.cmd)) {
+        if (item.condiFullParsed) {
             var dupedDefaultConditionObj = JSON.parse(JSON.stringify(ConditionalList[item.cmd].defaultConditionObj));
+            if (ConditionalList[item.cmd].parseCommand)
+                dupedDefaultConditionObj = ConditionalList[item.cmd].parseCommand(dupedDefaultConditionObj, item.condiFullParsed);
             logger(LOGLEVEL.NOTICE, `processCmds::COND ENABLING obj=${JSON.stringify(dupedDefaultConditionObj)}`);
             result.rollSetup.conditionalActivated.push(dupedDefaultConditionObj);
             continue;
@@ -966,6 +984,13 @@ function processCmds(cmds, result) {
     }
 
     logger(`processCmds::processCmds END`);
+}
+
+function parseCondCRStarter(defaultConditionObj, parsedReturn) {
+    logger(`parseCRStarter::parseCRStarter parsedReturn=${JSON.stringify(parsedReturn)}`);
+    defaultConditionObj.starterCount = Number(parsedReturn[1]);
+    logger(LOGLEVEL.NOTICE, `parseCRStarter:: Setting CRStarter dice count to ${defaultConditionObj.starterCount}`);
+    return defaultConditionObj;
 }
 
 function recountSuccesses(result) {
@@ -1191,6 +1216,23 @@ function handleTurnConditionalHookHMU(result, turn, nextRollsToProcess, condIter
     }
 }
 
+function handleTurnConditionalHookCRStarter(result, turn, nextRollsToProcess, condIterator) {
+    if (turn !== 1) return;
+    var cond = result.rollSetup.conditionalActivated[condIterator];
+    if (cond.starterCount > 0) {
+        result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-CRStarter', conditionalColor, `&#013;&#010; CRStarter generate ${cond.starterCount} dices that could start a Cascading Reroll`));
+    }
+    for (var i = 0; i < cond.starterCount; i++) {
+        var newDie = randomInteger(10);
+        nextRollsToProcess.push({
+            v: newDie, wasEverRerolled: false,
+            wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
+            title: [`RollTurn (${strFill(turn + 1)}). C(CRStarter)    ->Face=${strFill(newDie)}.`],
+            tagList: ['CRStarter']
+        });
+    }
+}
+
 function handleRoll(result, setup, item, turn) {
     logger(`handleRollTurn::face(${setup.face}) rerolls.length=${setup.faceObj.rerolls.length}, explosives.length=${setup.faceObj.explosives.length}, doubles.length=${setup.faceObj.doubles.length}, conditionalActivated.length=${result.rollSetup.conditionalActivated.length}`);
     if (setup.faceObj.rerolls.length)
@@ -1300,8 +1342,10 @@ function handleFaceConditionals(result, setup, item, turn) {
             if (condConfig && condConfig.faceTrigger(setup, result, result.rollSetup.conditionalActivated[condIterator])) {
                 ({ localToNextRollCondi, localCondiSectionDone } = condConfig.diceCheckMethod(result, setup, item, turn, condIterator));
                 logger(`handleRollTurn::after diceCheckMethod, localToNextRollCondi=${JSON.stringify(localToNextRollCondi)}`);
-                if (setup.producedADie && localToNextRollCondi)
+                if (setup.producedADie && localToNextRollCondi) {
+                    if (condConfig.tagAssociated) localToNextRollCondi.tagList = [condConfig.tagAssociated];
                     setup.toNextRollCondi.push(localToNextRollCondi);
+                }
                 if (localCondiSectionDone) {
                     setup.condiSectionDone.push(localCondiSectionDone);
                     break;
@@ -1389,8 +1433,7 @@ function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
         toNextRollCondi = {
             v: newDie, wasEverRerolled: false,
             wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
-            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`],
-            tagList: ['DIT']
+            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`]
         };
         cond.done++;
         setup.titleText += ` DIT created a ${strFill(newDie)} ( Done${strFill(cond.done)}).`;
