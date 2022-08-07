@@ -88,7 +88,8 @@ const LogLvl = LOGLEVEL.INFO,
         defaultConditionObj: {
             name: 'DIT',
             status: 0,
-            done: 0
+            done: 0,
+            conditionalColor: '#00ff70'
         },
         finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
         tagAssociated: 'DIT'
@@ -102,7 +103,8 @@ const LogLvl = LOGLEVEL.INFO,
             name: 'HMU',
             status: 0,
             done: 0,
-            firstTurnSuccesses: 0
+            firstTurnSuccesses: 0,
+            conditionalColor: '#00ff70'
         },
         finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
         tagAssociated: 'DIT'
@@ -1155,7 +1157,7 @@ function handleRollTurn(result, turn) {
     for (const item of result.rollSetup.rollToProcess) {
         var setup = JSON.parse(JSON.stringify(DefaultRollHandlingSetup));
         setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face], setup.wasConditionallyAffected = item.wasConditionallyAffected,
-        setup.conditionalColor = item.conditionalColor || undefined;
+        setup.conditionalColorIN = item.conditionalColor || undefined;
         if (item.tagList && item.tagList.length) for (const tag of item.tagList) setup.tagList.push(tag);
         handleRoll(result, setup, item, turn);
         var finalObj = {
@@ -1165,7 +1167,7 @@ function handleRollTurn(result, turn) {
             wasExploded:        item.wasExploded || false,     wasConditionallyAffected: item.wasConditionallyAffected || false,
             rerolled:           setup.rerolled,                exploded:                 setup.exploded,
             condTriggered:      setup.condTriggered,           condRerolled:             setup.condRerolled,
-            conditionalColor:   setup.conditionalColor,
+            conditionalColor:   setup.conditionalColor,        conditionalColorIN:       setup.conditionalColorIN,
             title: item.title ? makeNewTitleFromOld(result, item.title, setup.titleText) : [`Roll Initial.${result.rollSetup.conditionalActivated.length ? condiPadder : ''}            Face=${strFill(setup.face)}.${setup.titleText}`]
         };
         logger(LOGLEVEL.NOTICE, `handleRollTurn::face(${setup.face}) =>finalObj=${finalObj.v} rerolled=${setup.rerolled} exploded=${setup.exploded} FULL=${JSON.stringify(finalObj)}`);
@@ -1220,7 +1222,7 @@ function handleTurnConditionalHookHMU(result, turn, nextRollsToProcess, condIter
             var newDie = randomInteger(10);
             nextRollsToProcess.push({
                 v: newDie, wasEverRerolled: false,
-                wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+                wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
                 title: [`RollTurn (${strFill(turn + 1)}). C(HMU)    ->Face=${strFill(newDie)}.`],
                 tagList: ['HMU']
             });
@@ -1446,8 +1448,11 @@ function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
         toNextRollCondi = {
             v: newDie, wasEverRerolled: false,
             wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
-            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`]
+            title: [`RollTurn (${strFill(turn + 1)}). C(DIT)       ->Face=${strFill(newDie)}.`],
+            conditionalColor: cond.conditionalColor
         };
+        setup.condTriggered = true;
+        setup.conditionalColor = cond.conditionalColor;
         cond.done++;
         setup.titleText += ` DIT created a ${strFill(newDie)} ( Done${strFill(cond.done)}).`;
     }
@@ -1870,8 +1875,8 @@ function displayRolls(vals, result, html) {
         var affectedTextShadow = '';
         if (item.wasRerolled || item.wasExploded) {
             affectedTextShadow = wasAffectedTextShadow;
-            if (item.wasRerolled)       affectedTextShadow += item.wasConditionallyAffected ? (item.conditionalColor ? item.conditionalColor : conditionalColor) : rerolledColor;
-            else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? (item.conditionalColor ? item.conditionalColor : conditionalColor) : explodedColor;
+            if (item.wasRerolled)       affectedTextShadow += item.wasConditionallyAffected ? (item.conditionalColorIN ? item.conditionalColorIN : conditionalColor) : rerolledColor;
+            else if (item.wasExploded)  affectedTextShadow += item.wasConditionallyAffected ? (item.conditionalColorIN ? item.conditionalColorIN : conditionalColor) : explodedColor;
         }
         if (item.exploded)      affectedTextShadow += explodedTextShadow;
         if (item.rerolled)      affectedTextShadow += rerolledTextShadow + (item.condRerolled ? (item.conditionalColor ? item.conditionalColor : conditionalColor) : rerolledColor);
