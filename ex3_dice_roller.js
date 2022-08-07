@@ -1440,7 +1440,6 @@ function handleFaceCondition1MotD(result, setup, item, turn, condIterator) {
             setup.rerolled = true;
             setup.wasEverRerolled = true;
             setup.condRerolled = true;
-            logger(`handleFaceCondition1MotD::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
             const firstRemaining = cond.remainingFaceStored.shift();
             cond.remainingToDo--, cond.statusTotal[firstRemaining]++, cond.totalRerolled++;
             setup.titleText += ` 1MotD rerolled to a 10F (` + (cond.remainingToDo != 0 ? `Remaining:${cond.remainingToDo}, ` : '') + `Total=${cond.statusTotal[firstRemaining]}(${firstRemaining})/${cond.totalRerolled}).`;
@@ -1517,7 +1516,7 @@ function handleFaceConditionRerollOn10(result, setup, item, turn, condIterator) 
         }
     } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
         var newDie = randomInteger(10);
-        logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10:: Rerolling THIS dice ! turning into a ${newDie} die no=${diceNb++}`);
+        logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10:: Rerolling THIS dice ! turning into a ${newDie}`);
         setup.producedADie = true;
         toNextRollCondi = {
             v: newDie, wasEverRerolled: true,
@@ -1525,7 +1524,6 @@ function handleFaceConditionRerollOn10(result, setup, item, turn, condIterator) 
             title: [`RollTurn (${strFill(turn + 1)}). C(Rn1on10) ->Face=${newDie}.`]
         };
         setup.rerolled = true;
-        logger(`handleFaceConditionRerollOn10::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
         cond.remainingToDo--, cond.done++;
         setup.titleText += ` Rn1on10 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
     }
@@ -1568,7 +1566,7 @@ function handleFaceConditionRerollNon1On10(result, setup, item, turn, condIterat
         }
     } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled) && setup.face !== 1) {
         var newDie = randomInteger(10);
-        logger(LOGLEVEL.INFO, `handleFaceConditionRerollPoolNon1On10:: Rerolling THIS dice ! turning into a ${newDie} die no=${diceNb++}`);
+        logger(LOGLEVEL.INFO, `handleFaceConditionRerollPoolNon1On10:: Rerolling THIS dice ! turning into a ${newDie}`);
         setup.producedADie = true;
         toNextRollCondi = {
             v: newDie, wasEverRerolled: true,
@@ -1576,7 +1574,6 @@ function handleFaceConditionRerollNon1On10(result, setup, item, turn, condIterat
             title: [`RollTurn (${strFill(turn + 1)}). C(Rn1on10) ->Face=${newDie}.`]
         };
         setup.rerolled = true;
-        logger(`handleFaceConditionRerollPoolNon1On10::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
         cond.remainingToDo--, cond.done++;
         setup.titleText += ` Rn1on10 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
     }
@@ -1640,7 +1637,7 @@ function handleFaceConditionCR(result, setup, item, turn, condIterator) {
         }
     } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
         var newDie = randomInteger(10);
-        logger(LOGLEVEL.INFO, `handleFaceConditionCR:: Rerolling THIS dice ! turning into a ${newDie} die no=${diceNb++}`);
+        logger(LOGLEVEL.INFO, `handleFaceConditionCR:: Rerolling THIS dice ! turning into a ${newDie}`);
         setup.producedADie = true;
         toNextRollCondi = {
             v: newDie, wasEverRerolled: true,
@@ -1648,7 +1645,6 @@ function handleFaceConditionCR(result, setup, item, turn, condIterator) {
             title: [`RollTurn (${strFill(turn + 1)}). C(CR) ->Face=${newDie}.`]
         };
         setup.rerolled = true;
-        logger(`handleFaceConditionCR::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
         cond.remainingToDo--, cond.done++;
         setup.titleText += ` CR rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
     }
