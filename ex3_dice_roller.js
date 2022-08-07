@@ -1140,7 +1140,7 @@ function makeNewTitleFromOld(result, prevTitleArray, actionsOfThisRoll) {
 }
 
 /**
- * Perform the roll with settings created during previous steps.
+ * Process the rolls with settings created during previous steps, trigger sections that could effect the dice and/or produce one.
  *
  * @param JavaScript Object reference	result		The content of the rollresult message, as above; now in its final version, with all rolls and successes
  *														accurately calculated.
@@ -1195,6 +1195,9 @@ function handleRollTurn(result, turn) {
         handleSectionCleaning(result);
 }
 
+/**
+ * Turn Hook for Conditionals
+ */
 function handleTurnConditionalHook(result, turn, nextRollsToProcess) {
     logger(LOGLEVEL.INFO, `handleTurnConditionalHook::TURN CONDITIONAL-ALL-TESTS !`);
 
@@ -1248,6 +1251,9 @@ function handleTurnConditionalHookCRStarter(result, turn, nextRollsToProcess, co
     }
 }
 
+/**
+ * Process one dice rolled
+ */
 function handleRoll(result, setup, item, turn) {
     logger(`handleRollTurn::face(${setup.face}) rerolls.length=${setup.faceObj.rerolls.length}, explosives.length=${setup.faceObj.explosives.length}, doubles.length=${setup.faceObj.doubles.length}, conditionalActivated.length=${result.rollSetup.conditionalActivated.length}`);
     if (setup.faceObj.rerolls.length)
@@ -1262,6 +1268,9 @@ function handleRoll(result, setup, item, turn) {
         handleFaceConditionals(result, setup, item, turn);
 }
 
+/**
+ * Standard Reroll Section
+ */
 function handleFaceReroll(setup, item, turn, result) {
     setup.rerollSnapshot = setup.faceObj.rerolls[0];
     var reroll = randomInteger(10);
@@ -1299,6 +1308,9 @@ function increaseDoneToAllNeededRerollSections(setup, result) {
     }
 }
 
+/**
+ * Standard Success Section
+ */
 function handleFaceSuccess(setup) {
     setup.successSnapshot = setup.faceObj.successes[0];
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) SUCCESS ! section=${JSON.stringify(setup.faceObj.successes[0])}`);
@@ -1308,6 +1320,9 @@ function handleFaceSuccess(setup) {
         setup.successSectionDone = removeFirstSuccessSection(setup.faceObj);
 }
 
+/**
+ * Standard Double Section
+ */
 function handleFaceDouble(setup) {
     setup.doubleSnapshot = setup.faceObj.doubles[0];
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) DOUBLE  ! section=${JSON.stringify(setup.faceObj.doubles[0])}`);
@@ -1317,6 +1332,9 @@ function handleFaceDouble(setup) {
         setup.doubleSectionDone = removeFirstDoubleSection(setup.faceObj);
 }
 
+/**
+ * Standard Explode Section
+ */
 function handleFaceExplode(setup, item, turn, condiLength) {
     var newDie = randomInteger(10);
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) EXPLOSIVE TO DO ! section=${JSON.stringify(setup.faceObj.explosives[0])} rerolled=${setup.rerolled}`);
@@ -1345,6 +1363,9 @@ function handleFaceExplode(setup, item, turn, condiLength) {
     }
 }
 
+/**
+ * CONDITIONALS
+ */
 function handleFaceConditionals(result, setup, item, turn) {
     logger(LOGLEVEL.INFO, `handleRollTurn::face(${setup.face}) CONDITIONAL-ALL-TESTS ! rerolled=${setup.rerolled} exploded=${setup.exploded}`);
 
@@ -1732,6 +1753,10 @@ function removeIteratorCondSectionMethod(result, iterator, showDone = false) {
     result.rollSetup.conditionalActivated.splice(iterator, 1);
     return condSectionDone;
 }
+
+/**
+ * Detail title per conditions
+ */
 
 function detailsCond1MotDSectionDone(condObj, showDone = false) {
     logger(LOGLEVEL.NOTICE, `detailsCond1MotDSectionDone::COND-1MotD Detail SECTION DONE=${JSON.stringify(condObj)}`);
