@@ -107,11 +107,23 @@ const LogLvl = LOGLEVEL.INFO,
         finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
         tagAssociated: 'DIT'
     },
+    'Ron10': {
+        faceTrigger: (setup, result, cond) => setup.face === 10 || (cond.remainingToDo && !setup.success),
+        diceCheckMethod: handleFaceConditionRerollOn10, //(result, setup, item, turn, condIterator)
+        turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
+        getDetailMethod: detailsCondRerollsOn10SectionDone, //f(condObj, showDone = false)
+        defaultConditionObj: {
+            name: 'Ron10',
+            remainingToDo: 0,
+            done: 0
+        },
+        finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
+    },
     'Rn1on10': {
         faceTrigger: (setup, result, cond) => setup.face === 10 || (cond.remainingToDo && setup.face !== 1 && !setup.success),
         diceCheckMethod: handleFaceConditionRerollNon1On10, //(result, setup, item, turn, condIterator)
         turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
-        getDetailMethod: detailsCondRn1on10SectionDone, //f(condObj, showDone = false)
+        getDetailMethod: detailsCondRerollsOn10SectionDone, //f(condObj, showDone = false)
         defaultConditionObj: {
             name: 'Rn1on10',
             remainingToDo: 0,
@@ -368,6 +380,7 @@ const LogLvl = LOGLEVEL.INFO,
 '-1MotD : CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
 '-DIT : CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
 '-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
+'-Ron10 : on 10 Reroll 1 non success',
 '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
 '-ES : Explode on success. NOT USED IN CHARMS',
 '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
@@ -375,7 +388,7 @@ const LogLvl = LOGLEVEL.INFO,
         ],
       }
   ],
-  helpVersion = 1.12,
+  helpVersion = 1.13,
   styles = {
     menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
     buttonStyle:     'display: inline-block; '
@@ -1443,6 +1456,57 @@ function handleFaceConditionDIT(result, setup, item, turn, condIterator) {
     return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
 }
 
+function handleFaceConditionRerollOn10(result, setup, item, turn, condIterator) {
+    var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
+    logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10::face(${setup.face}) CONDITIONAL-REROLL POOL ON 10 TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
+
+    if (setup.face === 10) {
+        cond.remainingToDo++;
+        setup.condTriggered = true;
+    }
+
+    if (cond.remainingToDo && setup.face === 10) {
+        logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10::remainingToDo=${cond.remainingToDo} result.rollSetup.finalResults.length=${result.rollSetup.finalResults.length}`);
+        var diceNb = 1;
+        for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+            const dieTesting = result.rollSetup.finalResults[i];
+            if (dieTesting.v === 'SECTIONDONE') continue;
+            if (!dieTesting.success && !dieTesting.rerolled) {
+                var newDie = randomInteger(10);
+                logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
+                setup.producedADie = true;
+                toNextRollCondi = {
+                    v: newDie, wasEverRerolled: true,
+                    wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
+                    title: [`RollTurn (${strFill(turn + 1)}). C(Ron10) ->Face=${newDie}.`],
+                    alternatePrevObjForTitle: dieTesting
+                };
+                dieTesting.condTriggered = false;
+                dieTesting.rerolled = true, dieTesting.condRerolled = false, dieTesting.wasEverRerolled = true;
+                logger(`handleFaceConditionRerollOn10::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
+                cond.remainingToDo--, cond.done++;
+                dieTesting.title = makeNewTitleFromOld(result, dieTesting.title, ` Ron10 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`);
+                setup.titleText += ` Ron10 rerolled a ${dieTesting.v} to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
+            }
+        }
+    } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
+        var newDie = randomInteger(10);
+        logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10:: Rerolling THIS dice ! turning into a ${newDie} die no=${diceNb++}`);
+        setup.producedADie = true;
+        toNextRollCondi = {
+            v: newDie, wasEverRerolled: true,
+            wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
+            title: [`RollTurn (${strFill(turn + 1)}). C(Rn1on10) ->Face=${newDie}.`]
+        };
+        setup.rerolled = true;
+        logger(`handleFaceConditionRerollOn10::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
+        cond.remainingToDo--, cond.done++;
+        setup.titleText += ` Rn1on10 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
+    }
+    logger(`handleFaceConditionRerollOn10::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+    return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
+}
+
 function handleFaceConditionRerollNon1On10(result, setup, item, turn, condIterator) {
     var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
     logger(LOGLEVEL.INFO, `handleFaceConditionRerollPoolNon1On10::face(${setup.face}) CONDITIONAL-REROLL POOL ON 10 TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
@@ -1680,8 +1744,8 @@ function detailsCondDITSectionDone(condObj, showDone = false) {
     return detail;
 }
 
-function detailsCondRn1on10SectionDone(condObj, showDone = false) {
-    logger(LOGLEVEL.NOTICE, `detailsCondRn1on10SectionDone::COND-Rn1on10 Detail SECTION DONE=${JSON.stringify(condObj)}`);
+function detailsCondRerollsOn10SectionDone(condObj, showDone = false) {
+    logger(LOGLEVEL.NOTICE, `detailsCondRn1on10SectionDone::COND-R(n1)on10 Detail SECTION DONE=${JSON.stringify(condObj)}`);
     var detail = `&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
     return detail;
 }
