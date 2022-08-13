@@ -1010,6 +1010,7 @@
         <input checked="checked" class="sheet-tab sheet-tab-character-sheet" name="attr_sheet" title="Character Sheet" type="radio" value="1">
         <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet" name="attr_sheet" title="Charms" type="radio" value="2">
         <input class="sheet-tab sheet-tab-spells sheet-tab-spell-sheet" name="attr_sheet" title="Sorceries" type="radio" value="3">
+        <input class="sheet-tab sheet-tab-rolls sheet-tab-rolls-sheet" name="attr_sheet" title="Rolls" type="radio" value="8">
         <input class="sheet-tab sheet-tab-intimacies sheet-tab-intimacies-sheet" name="attr_sheet" title="Social" type="radio" value="5">
         <input class="sheet-tab sheet-tab-antisocial sheet-tab-antisocial-sheet" name="attr_sheet" title="Tu perds ton Sang froid !" type="radio" value="7">
         <input class="sheet-tab sheet-tab-combat sheet-tab-combat-sheet" name="attr_sheet" title="Combat" type="radio" value="6">
@@ -2327,7 +2328,7 @@
                     </fieldset>
 
                     <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
-                        <h1><span>Rolls</span></h1>
+                        <h1><span>Quick Roll</span></h1>
                         <div class="sheet-exroll">
                             <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
@@ -2436,214 +2437,6 @@
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
                                 }+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty})#[Roll: (Attribute + Ability + Other - WoundPenalty)]+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
                             </div>
-                        </div>
-                        <input type="checkbox" name="attr_rolls-display" class="sheet-rollseffect" value="1"><span class="sheet-spelleffect" title="Show Rolls"></span>
-                        <div class="sheet-rolls-div">
-                            <fieldset class="repeating_rolls">
-                                <div class="sheet-rolls">
-                                    <input type="hidden" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit-val" value="0">
-                                    <div class="first-line flex-wrap">
-                                        <div class="grow-max" style="display: flex; align-items: center;">
-                                            <p style="flex-shrink: 0">
-                                                <button type="roll" name="roll_rolls-cast-fluff" value="&amp;{template:exalted3e_combatcast} {{name=@{reprolls-name}}} {{description=@{reprolls-desc}}}" class="stealth-btn" title="Cast Name+Desc for Fluff on click">ROLL NAME : </button>
-                                            </p>
-                                            <input type="text" name="attr_reprolls-name" class="sheet-rolls-name" title="Name of Roll">
-                                            <div class="desc-toggle" title="Toggle Description">
-                                                <input type="checkbox" name="attr_reprolls-toggle-desc" class="sheet-rolls-toggle-desc" value="1">
-                                                <span title="&lt;"></span>
-                                            </div>
-                                        </div>
-                                        <div class="grow-normal flex-wrap hide-on-edit">
-                                            <div class="cost-section grow-normal flex">
-                                                <p class="mote-color-down rounded-box grow-double flex peripheral-mote-toggle">
-                                                    Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
-                                                </p>
-                                                <p class="will-color-down rounded-box grow-normal flex">
-                                                    Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
-                                                </p>
-                                                <p class="init-color-down rounded-box grow-double flex">
-                                                    Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="attr_reprolls-toggle-desc" class="sheet-rolls-toggle-desc-val" value="0">
-                                    <textarea name="attr_reprolls-desc" class="rolls-textarea"></textarea>
-                                    <div class="flex roll-section show-on-edit">
-                                        <div class="header-section" title="Configurable Roll&#013;&#010;TOGGLE EDIT MODE ON CLICK">
-                                            <div class="edit-toggle">
-                                                <input type="checkbox" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit" value="1">
-                                                <span title="Roll:"></span>
-                                            </div>
-                                        </div>
-                                        <div class="inner-section flex-wrap">
-                                            <div class="flex grow-normal">
-                                                (<select name="attr_reprolls-attr" title="Attribute for the Roll">
-                                                    <option value="@{strength}">Strength</option>
-                                                    <option value="@{dexterity}">Dexterity</option>
-                                                    <option value="@{stamina}">Stamina</option>
-                                                    <option value="@{charisma}">Charisma</option>
-                                                    <option value="@{manipulation}">Manipulation</option>
-                                                    <option value="@{appearance}">Appearance</option>
-                                                    <option value="@{perception}">Perception</option>
-                                                    <option value="@{intelligence}">Intelligence</option>
-                                                    <option value="@{wits}">Wits</option>
-                                                    <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                                    <option value="?{Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                                    <option value="?{Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                                    <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
-                                                    <option value="?{Custom Attribute}">Simple Prompt</option>
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                    <option value="6">6</option>
-                                                    <option value="7">7</option>
-                                                    <option value="8">8</option>
-                                                    <option value="9">9</option>
-                                                    <option value="10">10</option>
-                                                </select>+
-                                                <select name="attr_reprolls-abi" title="Ability for the Roll">
-                                                    <option value="@{archery}">Archery</option>
-                                                    <option value="@{athletics}">Athletics</option>
-                                                    <option value="@{awareness}">Awareness</option>
-                                                    <option value="@{brawl}">Brawl</option>
-                                                    <option value="@{bureaucracy}">Bureaucracy</option>
-                                                    <option value="@{dodge}">Dodge</option>
-                                                    <option value="@{integrity}">Integrity</option>
-                                                    <option value="@{investigation}">Investigation</option>
-                                                    <option value="@{larceny}">Larceny</option>
-                                                    <option value="@{linguistics}">Linguistics</option>
-                                                    <option value="@{lore}">Lore</option>
-                                                    <option value="@{medicine}">Medicine</option>
-                                                    <option value="@{melee}">Melee</option>
-                                                    <option value="@{occult}">Occult</option>
-                                                    <option value="@{performance}">Performance</option>
-                                                    <option value="@{presence}">Presence</option>
-                                                    <option value="@{resistance}">Resistance</option>
-                                                    <option value="@{ride}">Ride</option>
-                                                    <option value="@{sail}">Sail</option>
-                                                    <option value="@{socialize}">Socialize</option>
-                                                    <option value="@{stealth}">Stealth</option>
-                                                    <option value="@{survival}">Survival</option>
-                                                    <option value="@{thrown}">Thrown</option>
-                                                    <option value="@{war}">War</option>
-                                                    <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                                    <option value="?{Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                                    <option value="?{Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                                    <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
-                                                    <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
-                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
-                                                    <option value="?{Ability|
-                                                        Archery (@{archery}),@{archery}|
-                                                        Athletics (@{athletics}),@{athletics}|
-                                                        Awareness (@{awareness}),@{awareness}|
-                                                        Brawl (@{brawl}),@{brawl}|
-                                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                                        Craft (...),?{Craft&amp;#124;
-                                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                        Dodge (@{dodge}),@{dodge}|
-                                                        Integrity (@{integrity}),@{integrity}|
-                                                        Investigation (@{investigation}),@{investigation}|
-                                                        Larceny (@{larceny}),@{larceny}|
-                                                        Linguistics (@{linguistics}),@{linguistics}|
-                                                        Lore (@{lore}),@{lore}|
-                                                        Martial Arts (...),?{Martial Arts&amp;#124;
-                                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                        Medicine (@{medicine}),@{medicine}|
-                                                        Melee (@{melee}),@{melee}|
-                                                        Occult (@{occult}),@{occult}|
-                                                        Performance (@{performance}),@{performance}|
-                                                        Presence (@{presence}),@{presence}|
-                                                        Resistance (@{resistance}),@{resistance}|
-                                                        Ride (@{ride}),@{ride}|
-                                                        Sail (@{sail}),@{sail}|
-                                                        Socialize (@{socialize}),@{socialize}|
-                                                        Stealth (@{stealth}),@{stealth}|
-                                                        Survival (@{survival}),@{survival}|
-                                                        Thrown (@{thrown}),@{thrown}|
-                                                        War (@{war}),@{war}|
-                                                        Thrown (@{thrown}),@{thrown}|
-                                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                                    }">Full Ability Prompt</option>
-                                                    <option value="?{Custom Ability}">Simple Prompt</option>
-                                                    <option value="@{strength}">Strength</option>
-                                                    <option value="@{dexterity}">Dexterity</option>
-                                                    <option value="@{stamina}">Stamina</option>
-                                                    <option value="@{charisma}">Charisma</option>
-                                                    <option value="@{manipulation}">Manipulation</option>
-                                                    <option value="@{appearance}">Appearance</option>
-                                                    <option value="@{perception}">Perception</option>
-                                                    <option value="@{intelligence}">Intelligence</option>
-                                                    <option value="@{wits}">Wits</option>
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                    <option value="6">6</option>
-                                                    <option value="7">7</option>
-                                                    <option value="8">8</option>
-                                                    <option value="9">9</option>
-                                                    <option value="10">10</option>
-                                                </select>
-                                                <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                                <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
-                                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
-                                            </div>
-                                            <div class="flex grow-normal">
-                                                <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                                <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
-                                                <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
-                                                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
-                                                <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
-                                                <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex roll-section hide-on-edit">
-                                        <div class="header-section" title="Configurable Roll&#013;&#010;TOGGLE EDIT MODE ON CLICK">
-                                            <div class="edit-toggle">
-                                                <input type="checkbox" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit" value="1">
-                                                <span title="Roll:"></span>
-                                            </div>
-                                        </div>
-                                        <div class="inner-section flex">
-                                            <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                            <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
-                                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -8314,8 +8107,346 @@
             <label>Max Peripheral Motes</label>
             <input type="text" name="attr_peripheral-equation" value="@{essence} * 7 + 26 - @{committedesstotal}"><span></span>
         </div>
+
+        <!-- 5 ROLLS PAGE -->
+
+        <div class="sheet-body sheet-tab-content sheet-tab-rolls-sheet">
+            <h1><span>Rolls</span></h1>
+            <div class="rolls-area">
+                <div class="left-column-rolls">
+                    <div class="sheet-exroll">
+                        <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
+                        <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
+                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}+?{Ability|
+                                Archery (@{archery}),@{archery}|
+                                Athletics (@{athletics}),@{athletics}|
+                                Awareness (@{awareness}),@{awareness}|
+                                Brawl (@{brawl}),@{brawl}|
+                                Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                Craft (...),?{Craft&amp;#124;
+                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                Dodge (@{dodge}),@{dodge}|
+                                Integrity (@{integrity}),@{integrity}|
+                                Investigation (@{investigation}),@{investigation}|
+                                Larceny (@{larceny}),@{larceny}|
+                                Linguistics (@{linguistics}),@{linguistics}|
+                                Lore (@{lore}),@{lore}|
+                                Martial Arts (...),?{Martial Arts&amp;#124;
+                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                Medicine (@{medicine}),@{medicine}|
+                                Melee (@{melee}),@{melee}|
+                                Occult (@{occult}),@{occult}|
+                                Performance (@{performance}),@{performance}|
+                                Presence (@{presence}),@{presence}|
+                                Resistance (@{resistance}),@{resistance}|
+                                Ride (@{ride}),@{ride}|
+                                Sail (@{sail}),@{sail}|
+                                Socialize (@{socialize}),@{socialize}|
+                                Stealth (@{stealth}),@{stealth}|
+                                Survival (@{survival}),@{survival}|
+                                Thrown (@{thrown}),@{thrown}|
+                                War (@{war}),@{war}|
+                                Thrown (@{thrown}),@{thrown}|
+                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                            }+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty})#[Roll: (Attribute + Ability + Other - WoundPenalty)]+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}+?{Ability|
+                                Archery (@{archery}),@{archery}|
+                                Athletics (@{athletics}),@{athletics}|
+                                Awareness (@{awareness}),@{awareness}|
+                                Brawl (@{brawl}),@{brawl}|
+                                Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                Craft (...),?{Craft&amp;#124;
+                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                Dodge (@{dodge}),@{dodge}|
+                                Integrity (@{integrity}),@{integrity}|
+                                Investigation (@{investigation}),@{investigation}|
+                                Larceny (@{larceny}),@{larceny}|
+                                Linguistics (@{linguistics}),@{linguistics}|
+                                Lore (@{lore}),@{lore}|
+                                Martial Arts (...),?{Martial Arts&amp;#124;
+                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                Medicine (@{medicine}),@{medicine}|
+                                Melee (@{melee}),@{melee}|
+                                Occult (@{occult}),@{occult}|
+                                Performance (@{performance}),@{performance}|
+                                Presence (@{presence}),@{presence}|
+                                Resistance (@{resistance}),@{resistance}|
+                                Ride (@{ride}),@{ride}|
+                                Sail (@{sail}),@{sail}|
+                                Socialize (@{socialize}),@{socialize}|
+                                Stealth (@{stealth}),@{stealth}|
+                                Survival (@{survival}),@{survival}|
+                                Thrown (@{thrown}),@{thrown}|
+                                War (@{war}),@{war}|
+                                Thrown (@{thrown}),@{thrown}|
+                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                            }+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty})#[Roll: (Attribute + Ability + Other - WoundPenalty)]+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
+                        </div>
+                    </div>
+                    <div class="sheet-rolls-div">
+                        <fieldset class="repeating_rolls">
+                            <div class="sheet-rolls">
+                                <input type="hidden" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit-val" value="0">
+                                <div class="first-line flex-wrap">
+                                    <div class="grow-normal" style="display: flex; align-items: center;">
+                                        <p style="flex-shrink: 0">
+                                            <button type="roll" name="roll_rolls-cast-fluff" value="&amp;{template:exalted3e_combatcast} {{name=@{reprolls-name}}} {{description=@{reprolls-desc}}}" class="stealth-btn" title="Cast Name+Desc for Fluff on click">ROLL NAME : </button>
+                                        </p>
+                                        <input type="text" name="attr_reprolls-name" class="sheet-rolls-name" title="Name of Roll">
+                                        <div class="desc-toggle" title="Toggle Description">
+                                            <input type="checkbox" name="attr_reprolls-toggle-desc" class="sheet-rolls-toggle-desc" value="1">
+                                            <span title="&lt;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="grow-normal flex-wrap hide-on-edit">
+                                        <div class="cost-section grow-normal flex">
+                                            <p class="mote-color-down rounded-box grow-double flex peripheral-mote-toggle">
+                                                Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                            </p>
+                                            <p class="will-color-down rounded-box grow-normal flex">
+                                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                            </p>
+                                            <p class="init-color-down rounded-box grow-double flex">
+                                                Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="attr_reprolls-toggle-desc" class="sheet-rolls-toggle-desc-val" value="0">
+                                <textarea name="attr_reprolls-desc" class="rolls-textarea"></textarea>
+                                <div class="flex roll-section show-on-edit">
+                                    <div class="header-section" title="Configurable Roll&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                        <div class="edit-toggle">
+                                            <input type="checkbox" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit" value="1">
+                                            <span title="Roll:"></span>
+                                        </div>
+                                    </div>
+                                    <div class="inner-section">
+                                        <div class="flex grow-normal">
+                                            (<select name="attr_reprolls-attr" title="Attribute for the Roll">
+                                                <option value="@{strength}">Strength</option>
+                                                <option value="@{dexterity}">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
+                                                <option value="?{Custom Attribute}">Simple Prompt</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>+
+                                            <select name="attr_reprolls-abi" title="Ability for the Roll">
+                                                <option value="@{archery}">Archery</option>
+                                                <option value="@{athletics}">Athletics</option>
+                                                <option value="@{awareness}">Awareness</option>
+                                                <option value="@{brawl}">Brawl</option>
+                                                <option value="@{bureaucracy}">Bureaucracy</option>
+                                                <option value="@{dodge}">Dodge</option>
+                                                <option value="@{integrity}">Integrity</option>
+                                                <option value="@{investigation}">Investigation</option>
+                                                <option value="@{larceny}">Larceny</option>
+                                                <option value="@{linguistics}">Linguistics</option>
+                                                <option value="@{lore}">Lore</option>
+                                                <option value="@{medicine}">Medicine</option>
+                                                <option value="@{melee}">Melee</option>
+                                                <option value="@{occult}">Occult</option>
+                                                <option value="@{performance}">Performance</option>
+                                                <option value="@{presence}">Presence</option>
+                                                <option value="@{resistance}">Resistance</option>
+                                                <option value="@{ride}">Ride</option>
+                                                <option value="@{sail}">Sail</option>
+                                                <option value="@{socialize}">Socialize</option>
+                                                <option value="@{stealth}">Stealth</option>
+                                                <option value="@{survival}">Survival</option>
+                                                <option value="@{thrown}">Thrown</option>
+                                                <option value="@{war}">War</option>
+                                                <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
+                                                <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
+                                                <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
+                                                <option value="?{Ability|
+                                                    Archery (@{archery}),@{archery}|
+                                                    Athletics (@{athletics}),@{athletics}|
+                                                    Awareness (@{awareness}),@{awareness}|
+                                                    Brawl (@{brawl}),@{brawl}|
+                                                    Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                                    Craft (...),?{Craft&amp;#124;
+                                                        Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                                        Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                                        Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                                        First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                                        Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                                        Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                                        Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                                        Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                                        Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                                        Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                    Dodge (@{dodge}),@{dodge}|
+                                                    Integrity (@{integrity}),@{integrity}|
+                                                    Investigation (@{investigation}),@{investigation}|
+                                                    Larceny (@{larceny}),@{larceny}|
+                                                    Linguistics (@{linguistics}),@{linguistics}|
+                                                    Lore (@{lore}),@{lore}|
+                                                    Martial Arts (...),?{Martial Arts&amp;#124;
+                                                        Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                                        Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                                        Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                                        White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                                        Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                                        Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                                        Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                                        Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                                        Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                                        Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                                        Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                                        Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                    Medicine (@{medicine}),@{medicine}|
+                                                    Melee (@{melee}),@{melee}|
+                                                    Occult (@{occult}),@{occult}|
+                                                    Performance (@{performance}),@{performance}|
+                                                    Presence (@{presence}),@{presence}|
+                                                    Resistance (@{resistance}),@{resistance}|
+                                                    Ride (@{ride}),@{ride}|
+                                                    Sail (@{sail}),@{sail}|
+                                                    Socialize (@{socialize}),@{socialize}|
+                                                    Stealth (@{stealth}),@{stealth}|
+                                                    Survival (@{survival}),@{survival}|
+                                                    Thrown (@{thrown}),@{thrown}|
+                                                    War (@{war}),@{war}|
+                                                    Thrown (@{thrown}),@{thrown}|
+                                                    Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                                }">Full Ability Prompt</option>
+                                                <option value="?{Custom Ability}">Simple Prompt</option>
+                                                <option value="@{strength}">Strength</option>
+                                                <option value="@{dexterity}">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                            <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
+                                            <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
+                                            <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                        </div>
+                                        <div class="flex grow-normal">
+                                            <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
+                                            <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                            <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
+                                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                            <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
+                                            <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
+                                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
+                                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex roll-section hide-on-edit">
+                                    <div class="header-section" title="Configurable Roll&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                        <div class="edit-toggle">
+                                            <input type="checkbox" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit" value="1">
+                                            <span title="Roll:"></span>
+                                        </div>
+                                    </div>
+                                    <div class="inner-section flex">
+                                        <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                        <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
+                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
+                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="right-column-notepads">
+                    <div class="rollpad">
+                        <textarea name="attr_rollpad" class="rollpad-textarea" placeholder="Infos & Details about charm combos."></textarea>
+                    </div>
+                    <div class="commandlist">
+                        <fieldset class="repeating_roll-commands">
+                            <div>
+                                <input class="command-mem" type="text" name="attr_reprolls-cmdname" placeholder="-d 9">
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-        <!-- 5 SOCIAL PAGE -->
+        <!-- 6 SOCIAL PAGE -->
         
         <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">
             <h1><span>Social attributes and abilities</span></h1>
@@ -8434,7 +8565,7 @@
             <textarea name="attr_social-notepad"></textarea>
         </div>
         
-        <!-- 5.1 ANTI SOCIAL PAGE -->
+        <!-- 6.1 ANTI SOCIAL PAGE -->
         
         <div class="sheet-body sheet-tab-content sheet-tab-antisocial-sheet">
             <h1><span>Social attributes and abilities</span></h1>
@@ -8543,7 +8674,7 @@
             <textarea name="attr_social-notepad"></textarea>
         </div>
         
-        <!-- 5 COMBAT PAGE -->
+        <!-- 7 COMBAT PAGE -->
         
         <div class="sheet-body sheet-tab-content sheet-tab-combat-sheet">
             <h1><span>Combat</span></h1>
