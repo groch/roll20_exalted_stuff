@@ -500,7 +500,7 @@ function onChatMessage(msg) {
 }
 
 function sliceComments(str) {
-    while (str.match(/\[[\w|\s]+\]/)) str = str.replace(/\[[\w|\s]+\]/g, '');
+    while (str.match(/\[[^\]]+\]/)) str = str.replace(/\[[^\]]+\]/g, '');
     return str;
 }
 
