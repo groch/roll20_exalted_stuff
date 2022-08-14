@@ -2398,7 +2398,10 @@ var CombatMaster = CombatMaster || (function() {
         logger(`handleTurnorderChange::prevTurnorder.length=${prevTurnorder.length}, turnorder.length=${turnorder.length}`);
         logger(`handleTurnorderChange::callFirstTurn=${callFirstTurn}`);
 
-        if (callFirstTurn) makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
+        if (callFirstTurn) {
+            trySendHelpfullHandoutsOnCombatStart();
+            makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
+        }
         if (turnorder.length && prevTurnorder.length)//  && turnorder[0].id !== prevTurnorder[0].id
             changeToNextTurn(false, false, test, callFirstTurn ? false : turnorder[0].id === prevTurnorder[0].id);
     },
@@ -3216,6 +3219,12 @@ var CombatMaster = CombatMaster || (function() {
     //MISC
     //*************************************************************************************************************
 
+    trySendHelpfullHandoutsOnCombatStart = () => {
+        logger(`handleTurnorderChange:: START COMBAT DETECTED !`)
+        let helpHandout = findObjs({type:'handout', name:`Combat CheatSheet2`, inplayerjournals: 'all'})[0];
+        if (helpHandout) makeAndSendMenu(`<b><a href="http://journal.roll20.net/handout/${helpHandout.id}">Combat CheatSheet2</a></b>`,'Usefull Link');
+    }
+    
     sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
