@@ -486,9 +486,10 @@ function onChatMessage(msg) {
 
 		var patt = /^.*#/;
 		if (patt.test(rawCmd)) {
-			var parseCmd = rawCmd.replace('#', 'd10>7');
-			var rollStr = '/roll ' + parseCmd;
-			performRoll(msg, rollStr);
+            var parseCmd = rawCmd.replace('#', 'd10>7');
+            var finalParseCmd = sliceComments(parseCmd);
+			var rollStr = '/roll ' + finalParseCmd;
+			performRoll(msg, rollStr, parseCmd);
 		} else if (rawCmd.indexOf('-help') != -1) {
             var outHTML = buildHelp();
             sendChat(script_name, '/w ' + msg.who + ' ' + outHTML);
@@ -496,6 +497,11 @@ function onChatMessage(msg) {
             printError(msg, msg.who);
 		}
 	}
+}
+
+function sliceComments(str) {
+    while (str.match(/\[[\w|\s]+\]/)) str = str.replace(/\[[\w|\s]+\]/g, '');
+    return str;
 }
 
 function replaceInlineRolls(msg) {
@@ -737,8 +743,10 @@ function sendGMStandardScriptMessage(innerHtml, image = '', divStyle = 'display:
  *
  * @return void
  */
-function performRoll(msg, cmd) {
+function performRoll(msg, cmd, realOrigRoll) {
+    logger(`performRoll:: CALLING ROLL20 'sendChat' with cmd=${cmd}`);
     sendChat(msg.who, cmd, function(ops) {
+        logger(`performRoll:: RETURN FROM ROLL20 ops=${JSON.stringify(ops)}`);
         if (ops[0].type == 'rollresult') {
             var result = JSON.parse(ops[0].content);
             result.toGm = false;
@@ -746,6 +754,9 @@ function performRoll(msg, cmd) {
             
             setupRollStructure(result);
 
+            logger(`performRoll:: origRoll=${JSON.stringify(ops[0].origRoll)}`);
+            logger(`performRoll:: RealRoll=${JSON.stringify(realOrigRoll)}`);
+            ops[0].origRoll = realOrigRoll;
             var strSplit = ops[0].origRoll.split('-');
             var cmds = [];
             for (const i of strSplit) parseCmds(i, cmds);
