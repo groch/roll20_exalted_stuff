@@ -3497,7 +3497,8 @@ var CombatMaster = CombatMaster || (function() {
                     // rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/286593209/iKIw8-n03SYQmCG93s47Iw/max.png?1653389150',
                     // rangeMarkerWidth:            6000,
                     // rangeMarkerHeight:           6000,
-                    rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/293975183/Ha4Eyb2nQqXpRpyZnLc0kA/max.png?1657514551',
+                    // rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/293975183/Ha4Eyb2nQqXpRpyZnLc0kA/max.png?1657514551',
+                    rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/299537929/ZPT1fJb7MuPwcWNrHr0wbQ/max.png?1660462839',
                     rangeMarkerWidth:            6412,
                     rangeMarkerHeight:           6412,
 
