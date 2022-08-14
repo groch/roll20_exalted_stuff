@@ -3223,7 +3223,7 @@ var CombatMaster = CombatMaster || (function() {
         logger(`handleTurnorderChange:: START COMBAT DETECTED !`)
         let helpHandout = findObjs({type:'handout', name:`Combat CheatSheet2`, inplayerjournals: 'all'})[0];
         if (helpHandout) makeAndSendMenu(`<b><a href="http://journal.roll20.net/handout/${helpHandout.id}">Combat CheatSheet2</a></b>`,'Usefull Link');
-    }
+    },
     
     sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
