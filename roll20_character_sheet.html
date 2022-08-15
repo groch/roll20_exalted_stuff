@@ -881,18 +881,21 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
+    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|2}[Stunt,Spe,...]';
+    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}[Stunt/WP/...]';
+
     /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (cb, attr_name) => {
+        clickDefaultMacro(e, (setParameterCallback, attr_name) => {
                 const tested_attr = `${attr_name}repcombat-watk-abi`,
                      written_attr = `${attr_name}repcombat-watk-bonus-dices`;
                 getAttrs([tested_attr], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
                     let writtenValue;
-                    if (val[tested_attr] === '@{archery}')     writtenValue = '?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}+?{Bonus Dices ? (Stunt, Situational, ...)|2}';
-                    else if (val[tested_attr] === '@{thrown}') writtenValue = '?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}+?{Bonus Dices ? (Stunt, Situational, ...)|2}';
-                    else                                       writtenValue = '?{Bonus Dices ? (Stunt, Situational, ...)|2}';
-                    cb(written_attr, writtenValue);
+                    if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt}`;
+                    else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt}`;
+                    else                                       writtenValue = defaultRoll20AddedDicePrompt;
+                    setParameterCallback(written_attr, writtenValue);
                 }));
             },
             id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-')
@@ -906,14 +909,14 @@
     }));
 
     function defaultMacroDAtkDice(e) {
-        clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}repcombat-datk-bonus-dices`, '?{Bonus Dices ? (Stunt, Situational, ...)|2}'),
+        clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt),
             id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
         );
     }
 
     on('clicked:repeating_combat-attack:default-macro-watk-s clicked:repeating_combat-attack:default-macro-datk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (cb, attr_name, section) => cb(`${attr_name}repcombat-${section}-bonus-successes`, '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}'),
+        clickDefaultMacro(e, (setParameterCallback, attr_name, section) => setParameterCallback(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt),
             (id, section) => {        
                 if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
                 else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
@@ -921,7 +924,7 @@
         );
         TAS.debug(`clickDefaultMacroWAtkDice:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
         if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
-            clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}repcombat-datk-bonus-successes`, '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}'),
+            clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt),
                 id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
             );
         }
@@ -936,10 +939,10 @@
                 const id = e.sourceAttribute.split('_')[2];
                 const attr_name = `repeating_combat-attack_${id}_`;
                 setAttrs({
-                    [`${attr_name}repcombat-watk-bonus-dices`]: '?{Bonus Dices ? (Stunt, Situational, ...)|2}',
-                    [`${attr_name}repcombat-datk-bonus-dices`]: '?{Bonus Dices ? (Stunt, Situational, ...)|2}',
-                    [`${attr_name}repcombat-watk-bonus-successes`]: '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}',
-                    [`${attr_name}repcombat-datk-bonus-successes`]: '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}',
+                    [`${attr_name}repcombat-watk-bonus-dices`]: defaultRoll20AddedDicePrompt,
+                    [`${attr_name}repcombat-datk-bonus-dices`]: defaultRoll20AddedDicePrompt,
+                    [`${attr_name}repcombat-watk-bonus-successes`]: defaultRoll20AddedSuccPrompt,
+                    [`${attr_name}repcombat-datk-bonus-successes`]: defaultRoll20AddedSuccPrompt,
                     [`${attr_name}repcombat-ddmg-init-to-set`]: '3'
                 });
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
@@ -952,30 +955,30 @@
     /* Character Tab Roll Section '+' Triggers */
     on('clicked:repeating_rolls:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}reprolls-bonus-dices`, '?{Bonus Dices ? (Stunt, Situational, ...)|2}'),
+        clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}reprolls-bonus-dices`, defaultRoll20AddedDicePrompt),
             id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
         );
     }));
 
     on('clicked:repeating_rolls:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (cb, attr_name) => cb(`${attr_name}reprolls-bonus-successes`, '?{Bonus Success ? (Stunt, Willpower, ...)|0}'),
+        clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}reprolls-bonus-successes`, defaultRoll20AddedSuccPrompt),
             id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
         );
     }));
 
-    function clickDefaultMacro(e, cb, finalCb) {
+    function clickDefaultMacro(e, afterSetupCallback, finalCallback) {
         if (debug === 2) TAS.debug(`clickDefaultMacro::clickDefaultMacro e=${JSON.stringify(e)}`);
         const repeatingSectionName = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         const section = e.sourceAttribute.split('_')[3].split('-')[2];
         const attr_name = `repeating_${repeatingSectionName}_${id}_`;
 
-        cb((written_attr, writtenValue) => {
+        afterSetupCallback((written_attr, writtenValue) => {
             TAS.debug(`clickDefaultMacro:: setting ${written_attr} = ${writtenValue}`);
             setAttrs({[written_attr]: writtenValue});
             if (debug === 2) TAS.debug(`updating macro`);
-            finalCb(id, section);
+            finalCallback(id, section);
         }, attr_name, section);
     }
     
