@@ -224,13 +224,13 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -403,6 +403,7 @@ var CombatMaster = CombatMaster || (function() {
                 {key:'remCoverDefBonus',                    fxName:'remCoverDefBonus',                    fx: remCoverDefBonus},
                 {key:'applyClashDefPen',                    fxName:'applyClashDefPen',                    fx: applyClashDefPen},
                 {key:'remClashDefPen',                      fxName:'remClashDefPen',                      fx: remClashDefPen},
+                {key:'getHandoutMenu',                      fxName:'getHandoutMenu',                      fx: getHandoutMenu},
             ],
             checkedCastList = [
                 {key:'onslaught',                           fxName:'addOnslaughtToPlayer',                fx: addOnslaughtToPlayer},
@@ -447,6 +448,41 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
     //NEW ACTIONS
     //*************************************************************************************************************
+
+    getHandoutMenu = (cmdDetails) => {
+        let handoutList = findObjs({_type: 'handout'}); // inplayerjournals: 'all'
+        logger(LOGLEVEL.EMERGENCY, `getHandoutMenu::getHandoutMenu cmdDetails=${JSON.stringify(cmdDetails)}, handoutList.length=${handoutList.length}`);
+        // logger(LOGLEVEL.EMERGENCY, `getHandoutMenu:: handoutList=${JSON.stringify(handoutList)}`);
+        let prefixToRemove = '', title = 'Requested Link(s) - ', toGmOnly = false;
+        switch (String(cmdDetails.details.handoutType)) {
+            case 'anima':
+                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Anima:/));
+                prefixToRemove = /^HLP-Anima:\s?/;
+                title += 'Anima';
+                break;
+            case 'combat':
+                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Combat:/));
+                prefixToRemove = /^HLP-Combat:\s?/;
+                title += 'Combat';
+                break;
+            case 'craft':
+                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Craft:/));
+                prefixToRemove = /^HLP-Craft:\s?/;
+                title += 'Craft';
+                break;
+            case 'xp':
+                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-XP:/));
+                prefixToRemove = /^HLP-XP:\s?/;
+                title += 'XP';
+                break;
+            default:
+                handoutList = handoutList.filter(i => i.get('name').match(/^HLP:/));
+                prefixToRemove = /^HLP:\s?/
+                title += 'Default';
+        }
+        let outString = handoutList.sort((a, b) => a.get('name').localeCompare(b.get('name'))).map(i => `<b><a href="http://journal.roll20.net/handout/${i.id}" title="If Link doesn't open, it means GM doesnt gave you the rights. Ask him if it's normal">${i.get('name').replace(prefixToRemove, '')}</a></b>`).join('<br/>');
+        makeAndSendMenu(outString,title,toGmOnly ? 'gm' : undefined);
+    },
 
     setInitToSelected = (cmdDetails, selected, confObj) => {
         logger(`${confObj.name}::${confObj.name} cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
