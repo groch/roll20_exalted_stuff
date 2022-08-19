@@ -76,6 +76,14 @@ Light:
 	Custom,emits_bright&#124;1 emits_low&#124;1 bright_distance&#124;?{Bright Dist&#124;1&#125; low_distance&#124;?{Low Dist&#124;4&#125; statusmarkers&#124;-dead
 }
 
+HandoutMenu:
+!cmaster --getHandoutMenu?{Which Menu ?|
+	Default,|
+	Anima,&#44;handoutType=anima|
+	Craft,&#44;handoutType=craft|
+	Combat,&#44;handoutType=combat|
+	XP,&#44;handoutType=xp}
+
 Fire Token+Light Scale:
 !token-mod --set scale|[[?{Size ?(1 = 100%)|1}*0.014285714285]]un low_distance|[[?{Size ?(1 = 100%)|1}*3]] bright_distance|[[?{Size ?(1 = 100%)|1}]]
 
