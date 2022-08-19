@@ -3257,7 +3257,7 @@ var CombatMaster = CombatMaster || (function() {
 
     trySendHelpfullHandoutsOnCombatStart = () => {
         logger(`handleTurnorderChange:: START COMBAT DETECTED !`)
-        let helpHandout = findObjs({type:'handout', name:`Combat CheatSheet2`, inplayerjournals: 'all'})[0];
+        let helpHandout = findObjs({type:'handout', name:`HLP: Combat CheatSheet2`, inplayerjournals: 'all'})[0];
         if (helpHandout) makeAndSendMenu(`<b><a href="http://journal.roll20.net/handout/${helpHandout.id}">Combat CheatSheet2</a></b>`,'Usefull Link');
     },
     
