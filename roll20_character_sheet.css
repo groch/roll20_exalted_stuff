@@ -2965,6 +2965,10 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     width: calc(5.95rem - 24px);
 }
 
+.sheet-rolltemplate-exalted3e_cast.sheet-rolltemplate-darkmode {
+    color: black;
+}
+
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
 
 /* --- MOBILE SHEET PAYSAGE --- */
