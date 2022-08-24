@@ -311,6 +311,10 @@ tier 2: couleurs
 .charsheet .sheet-table .repcontrol,
 .charsheet .sheet-table-body + .repcontainer .repitem { display: table-row; }
 .charsheet .sheet-table-cell { display: table-cell; }
+.charsheet [data-groupname=repeating_weapon] .sheet-table-cell select.select-abi {
+    height: 24px;
+    width: 100%;
+}
 .charsheet .sheet-table-header .sheet-table-cell { font-weight: bold; }
 .charsheet .sheet-table-cell:not(:last-child) { padding-right: 3px; }
 .charsheet .sheet-table .repcontrol { width: 100%; }
