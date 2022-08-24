@@ -2881,7 +2881,8 @@
                         <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                         <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                         <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
-                        <input type="number" value="(((@{parry-base}) + abs(@{parry-base}))/2)" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="(((@{parry-base-s}) + abs(@{parry-base-s}))/2)" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
+                        <!-- <input type="number" value="(((@{parry-base}) + abs(@{parry-base}))/2)" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="(((@{parry-base-s}) + abs(@{parry-base-s}))/2)" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint"> -->
+                        <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                     </div>
                 </div>
                 <div class="flex-col grow-normal">
@@ -2897,8 +2898,10 @@
                         <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
                         <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_evasion-base">
                         <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_evasion-base-s">
-                        <input type="hidden" value="(((@{evasion-base}) + abs(@{evasion-base}))/2)"  disabled="disabled" name="attr_evasion-final">
-                        <input type="hidden" value="(((@{evasion-base-s}) + abs(@{evasion-base-s}))/2)"  disabled="disabled" name="attr_evasion-final-s">
+                        <!-- <input type="hidden" value="(((@{evasion-base}) + abs(@{evasion-base}))/2)"  disabled="disabled" name="attr_evasion-final">
+                        <input type="hidden" value="(((@{evasion-base-s}) + abs(@{evasion-base-s}))/2)"  disabled="disabled" name="attr_evasion-final-s"> -->
+                        <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
+                        <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                         <input type="number" value="@{evasion-final}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                     </div>
                 </div>
@@ -2914,7 +2917,8 @@
                         <input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
                         <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                         <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
-                        <input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint">
+                        <!-- <input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint"> -->
+                        <input type="number" value="@{resolve-base}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint">
                     </div>
                 </div>
                 <div class="flex-col grow-normal">
@@ -2929,7 +2933,8 @@
                         <input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
                         <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                         <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
-                        <input type="number" value="(@{guile-base} + abs(@{guile-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(@{guile-base-s} + abs(@{guile-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint">
+                        <!-- <input type="number" value="(@{guile-base} + abs(@{guile-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(@{guile-base-s} + abs(@{guile-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint"> -->
+                        <input type="number" value="@{guile-base}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint">
                     </div>
                 </div>
             </div>
@@ -8756,7 +8761,8 @@
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                                 <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                                 <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
-                                <input type="number" value="(((@{parry-base}) + abs(@{parry-base}))/2)" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="(((@{parry-base-s}) + abs(@{parry-base-s}))/2)" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
+                                <!-- <input type="number" value="(((@{parry-base}) + abs(@{parry-base}))/2)" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="(((@{parry-base-s}) + abs(@{parry-base-s}))/2)" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint"> -->
+                                <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                             </div>
                         </div>
                         <div class="flex-col grow-normal">
@@ -8772,8 +8778,10 @@
                                 <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
                                 <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_evasion-base">
                                 <input type="hidden" value="(ceil(@{evasion-root-s} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_evasion-base-s">
-                                <input type="hidden" value="(((@{evasion-base}) + abs(@{evasion-base}))/2)"  disabled="disabled" name="attr_evasion-final">
-                                <input type="hidden" value="(((@{evasion-base-s}) + abs(@{evasion-base-s}))/2)"  disabled="disabled" name="attr_evasion-final-s">
+                                <!-- <input type="hidden" value="(((@{evasion-base}) + abs(@{evasion-base}))/2)"  disabled="disabled" name="attr_evasion-final">
+                                <input type="hidden" value="(((@{evasion-base-s}) + abs(@{evasion-base-s}))/2)"  disabled="disabled" name="attr_evasion-final-s"> -->
+                                <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
+                                <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                                 <input type="number" value="@{evasion-final}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                             </div>
                         </div>
@@ -8789,7 +8797,8 @@
                                 <input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
                                 <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                                 <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
-                                <input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint">
+                                <!-- <input type="number" value="(@{resolve-base} + abs(@{resolve-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(@{resolve-base-s} + abs(@{resolve-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint"> -->
+                                <input type="number" value="@{resolve-base}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint">
                             </div>
                         </div>
                         <div class="flex-col grow-normal">
@@ -8804,7 +8813,8 @@
                                 <input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
                                 <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                                 <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
-                                <input type="number" value="(@{guile-base} + abs(@{guile-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(@{guile-base-s} + abs(@{guile-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint">
+                                <!-- <input type="number" value="(@{guile-base} + abs(@{guile-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(@{guile-base-s} + abs(@{guile-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint"> -->
+                                <input type="number" value="@{guile-base}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint">
                             </div>
                         </div>
                     </div>
@@ -9065,7 +9075,7 @@
                     <div class="sheet-combat-attack">
                         <input type="hidden" name="attr_combat-toggle-edit" class="sheet-combat-toggle-edit-val" value="0">
                         <div class="first-line flex-wrap">
-                            <div class="grow-max" style="display: flex; align-items: center;">
+                            <div class="grow-normal" style="display: flex; align-items: center;">
                                 <p style="flex-shrink: 0">
                                     <button type="roll" name="roll_attack-cast-fluff" value="&amp;{template:exalted3e_combatcast} {{name=@{repcombat-name}}} {{description=@{repcombat-desc}}}" class="stealth-btn" title="Cast Name+Desc for Fluff on click">ATTACK NAME : </button>
                                 </p>
@@ -9075,15 +9085,15 @@
                                     <span title="&lt;"></span>
                                 </div>
                             </div>
-                            <div class="grow-normal flex-wrap hide-on-edit">
-                                <div class="cost-section grow-normal flex">
+                            <div class="grow-double flex-wrap hide-on-edit">
+                                <div class="cost-section grow-max flex">
                                     <p class="mote-color-down rounded-box grow-double flex peripheral-mote-toggle">
                                         Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                     </p>
                                     <p class="will-color-down rounded-box grow-normal flex">
                                         Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                     </p>
-                                    <p class="init-color-down rounded-box grow-double flex">
+                                    <p class="init-color-down rounded-box grow-normal flex">
                                         Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                     </p>
                                 </div>
