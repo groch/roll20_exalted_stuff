@@ -286,8 +286,9 @@
         getAttrs(['version', 'init-intimacies'], TAS._fn(function checkIfSheetUpgradeIsNeeded(values) {
             TAS.debug(`values=${JSON.stringify(values)}`);
             if (!values.version) {
-                TAS.debug('NO VERSION FOUND => INITIALIZING A NEW SHEET');
-                initCharacterSheet();
+                TAS.debug('NO VERSION FOUND !!!!!!');
+                // TAS.debug('NO VERSION FOUND => INITIALIZING A NEW SHEET');
+                // initCharacterSheet();
             } else {
                 const v = parseFloat(values.version);
                 TAS.debug(`v = ${v}`);
@@ -993,6 +994,11 @@
             };
             setAttrs(finalObj);
         }));
+    }));
+    
+    /* trigger sheet initialize manually */
+    on('clicked:init-sheet-btn', setDebugWrapper(function qcDamageAttacksChange(e) {
+        initCharacterSheet();
     }));
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
@@ -7983,6 +7989,9 @@
                     <input type="checkbox" name="attr_combattab" value="1"><span></span>
                     <span>Show Combat Tab</span>
                 </label>
+                <label style="display: none;">
+                    <button type="action" name="act_init-sheet-btn" title="Initializing a new Sheet">Initializing a new Sheet</button>
+                </label>
             </div>
             <h1><span>Charms list configuration</span></h1>
             <h2 style="text-align: center;"><span class="solar-style">Solar</span> & <span class="db-style">DB</span></h2>
@@ -9230,7 +9239,7 @@
                                             <option value="5">5</option>
                                             <option value="6">6</option>
                                             <option value="7">7</option>
-                                            <option value="8">8</option>
+                                            <option value="8">8</option>``
                                             <option value="9">9</option>
                                             <option value="10">10</option>
                                         </select>+
