@@ -61,7 +61,7 @@
                 }
                 
                 TAS.debug(`getHealthFields:: combat-crippling-pen=${valuesSections['combat-crippling-pen']}`);
-                pen = parseInt(pen);
+                pen = Number(pen);
                 pen = Number(valuesSections['combat-crippling-pen'])
                     ? -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
                     : -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
@@ -77,23 +77,25 @@
                             var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
                                                 attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
                                                 attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']);
-                            const dex = parseInt(values['dexterity']),
-                                brawl = parseInt(values['brawl']),
-                                melee = parseInt(values['melee']),
-                                qcParry = parseInt(values['qc-parry']),
-                                isQc = parseInt(values['qc']);
+                            const dex = Number(values['dexterity']),
+                                brawl = Number(values['brawl']),
+                                melee = Number(values['melee']),
+                                qcParry = Number(values['qc-parry']),
+                                isQc = Number(values['qc']);
 
                             if (debug === 2) TAS.debug(`values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
                             _.each(rows, function(v, k) {
                                 if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
-                                ma = Math.max(ma, parseInt(v.repmartialarts));
+                                ma = Math.max(ma, Number(v.repmartialarts));
                             });
                     
                             TAS.debug(`Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
                             TAS.debug('Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen);
-                            var newParry = Math.max(0, (isQc ? qcParry : Math.ceil((dex + Math.max(brawl, ma, melee)) / 2)) + pen);
+                            // var newParry = Math.max(0, (isQc ? qcParry : Math.ceil((dex + Math.max(brawl, ma, melee)) / 2)) + pen);
+                            var newParry = (isQc ? qcParry : Math.ceil((dex + Math.max(brawl, ma, melee)) / 2)) + pen;
                             TAS.debug('Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen);
-                            var newParrySpe = Math.max(0, (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen);
+                            // var newParrySpe = Math.max(0, (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen);
+                            var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen;
                             TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
                             finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
             
@@ -107,8 +109,10 @@
                                     idarray.forEach(id => {
                                         let row = 'repeating_weapon_' + id,
                                             def = valuesSections[`${row}_repweapondef`] || 0;
-                                        finalAttr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen);
-                                        finalAttr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen);
+                                        // finalAttr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen);
+                                        // finalAttr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen);
+                                        finalAttr[`${row}_repweaponparry`] = Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + Number(def) + pen;
+                                        finalAttr[`${row}_repweaponparryspe`] = Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + Number(def) + pen;
                                     });
                                     TAS.debug('UPDATE WEAPONS PARRY', finalAttr);
                                     setAttrs(finalAttr);
@@ -140,7 +144,7 @@
             if (debug === 2) TAS.debug(`attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
             _.each(rows, function(v, k) {
                 if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
-                craft = Math.max(craft, parseInt(v.repcrafts));
+                craft = Math.max(craft, Number(v.repcrafts));
             });
 
             TAS.debug(`set Max Craft=${craft}`);
@@ -151,7 +155,7 @@
     on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', function updateBattleGroupMagnitude(e) {
         getAttrs(["battlegroup-size", "battlegroup-health-levels", "battlegroup-perfect-morale"], TAS._fn(function determineBattleGroupMagnitude(values) {
             TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
-            setAttrs({"battlegroup-magnitude_max": parseInt(values["battlegroup-size"]) + parseInt(values["battlegroup-health-levels"]) + (parseInt(values["battlegroup-perfect-morale"]) == 1 ? 3 : 0)});
+            setAttrs({"battlegroup-magnitude_max": Number(values["battlegroup-size"]) + Number(values["battlegroup-health-levels"]) + (Number(values["battlegroup-perfect-morale"]) == 1 ? 3 : 0)});
         }));
     });
 
@@ -209,8 +213,8 @@
         getAttrs(['essence', 'personal-equation', 'peripheral-equation', 'committedesstotal'], TAS._fn(function getAttrToUpdate(values){
             let periEquationStr = values['peripheral-equation'],
                 persoEquationStr = values['personal-equation'],
-                essence = parseInt(values['essence']),
-                committed = parseInt(values['committedesstotal']),
+                essence = Number(values['essence']),
+                committed = Number(values['committedesstotal']),
                 pattern = /[^0-9\(\)\+\-\*\/\.]/g;
 
             if (isNaN(committed)) {
@@ -293,7 +297,7 @@
                 const v = parseFloat(values.version);
                 TAS.debug(`v = ${v}`);
 
-                if (!values['init-intimacies'] || !parseInt(values['init-intimacies']))
+                if (!values['init-intimacies'] || !Number(values['init-intimacies']))
                     initIntimacies()
 
                 const upgradeRemaining = updateList.filter(i => i.version >= v).sort((a,b) => a.version - b.version);
@@ -362,8 +366,8 @@
         TAS.debug(`initIntimacies::initIntimacies Initializing 1st time Intimacies`);
         getSectionIDs('intimacies', TAS._fn(function getIntimaciesList(idIntimaciesArray) {
             getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
-                if (idIntimaciesArray.length || parseInt(values['init-intimacies']) !== 0) {
-                    TAS.debug(`ALREADY DONE => CANCEL init-intimacies=${parseInt(values['init-intimacies'])} len=${idIntimaciesArray.length}`);
+                if (idIntimaciesArray.length || Number(values['init-intimacies']) !== 0) {
+                    TAS.debug(`ALREADY DONE => CANCEL init-intimacies=${Number(values['init-intimacies'])} len=${idIntimaciesArray.length}`);
                     return;
                 }
     
@@ -455,8 +459,8 @@
 
     function changeJoinResolve() {
         getAttrs(['qc-join-battle', 'qc-resolve'], values => {
-            let valJb = parseInt(values['qc-join-battle']),
-                valRes = parseInt(values['qc-resolve']),
+            let valJb = Number(values['qc-join-battle']),
+                valRes = Number(values['qc-resolve']),
                 valWits = 0,
                 valIntegrity = 0,
                 valAwareness = 0;
@@ -480,7 +484,7 @@
 
     on('change:qc-guile', TAS._fn(function quickGuileChange(e) {
         getAttrs(['qc-guile'], values => {
-            let val = parseInt(values['qc-guile']);
+            let val = Number(values['qc-guile']);
             setAttrs({
                 'manipulation': val,
                 'socialize': val
@@ -494,7 +498,7 @@
 
     on('change:qc-evasion', TAS._fn(function quickEvasionChange(e) {
         getAttrs(['qc-evasion'], values => {
-            let val = parseInt(values['qc-evasion']);
+            let val = Number(values['qc-evasion']);
             setAttrs({
                 'dexterity': val,
                 'dodge': val
@@ -504,7 +508,7 @@
 
     on('change:qc-soak', TAS._fn(function quickSoakChange(e) {
         getAttrs(['qc-soak'], values => {
-            let val = parseInt(values['qc-soak']);
+            let val = Number(values['qc-soak']);
             let setVal = (val > 1 ? val : 1);
             setAttrs({
                 'naturalsoak': setVal-1
@@ -2803,13 +2807,15 @@
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
                                     <input type="hidden" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_repparry-base">
-                                    <input type="number" value="(((@{repparry-base}) + abs(@{repparry-base}))/2)" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint">
+                                    <!-- <input type="number" value="(((@{repparry-base}) + abs(@{repparry-base}))/2)" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint"> -->
+                                    <input type="number" value="@{repparry-base}" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint">
                                 </div>
                                 <div class="sheet-table-cell">
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
                                     <input type="hidden" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_repparry-base-s">
-                                    <input type="number" value="(((@{repparry-base-s}) + abs(@{repparry-base-s}))/2)" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
+                                    <!-- <input type="number" value="(((@{repparry-base-s}) + abs(@{repparry-base-s}))/2)" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint"> -->
+                                    <input type="number" value="@{repparry-base-s}" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
                                 </div>
                                 <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
                                 <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
@@ -8721,13 +8727,15 @@
                                 <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
                                 <input type="hidden" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_repparry-base">
-                                <input type="number" value="(((@{repparry-base}) + abs(@{repparry-base}))/2)" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint">
+                                <!-- <input type="number" value="(((@{repparry-base}) + abs(@{repparry-base}))/2)" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint"> -->
+                                <input type="number" value="@{repparry-base}" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint">
                             </div>
                             <div class="sheet-table-cell">
                                 <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                 <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
                                 <input type="hidden" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_repparry-base-s">
-                                <input type="number" value="(((@{repparry-base-s}) + abs(@{repparry-base-s}))/2)" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
+                                <!-- <input type="number" value="(((@{repparry-base-s}) + abs(@{repparry-base-s}))/2)" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint"> -->
+                                <input type="number" value="@{repparry-base-s}" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
                             </div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
