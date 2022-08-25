@@ -230,7 +230,7 @@ var CombatMaster = CombatMaster || (function() {
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|clearOnStop|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -1318,9 +1318,9 @@ var CombatMaster = CombatMaster || (function() {
 		let descriptionButton   = makeBigButton('Edit Description', '!cmaster --config,condition='+key+',key=description,value={{?{Description|'+condition.description+'}}} --show,condition='+key);
 		let backButton          = makeBigButton('Back',             '!cmaster --back');
 
-		listItems.push(makeTextButton('Name',             condition.name,                            '!cmaster --config,condition='+key+',key=name,value=?{Name}'));
-		listItems.push(makeTextButton('Type',             condition.type,                            '!cmaster --config,condition='+key+',key=type,value=?{Type|Condition,Condition|Spell,Spell} --show,condition='+key));
-		listItems.push(makeTextButton('Icon Type',        condition.iconType,                        '!cmaster --config,condition='+key+',key=iconType,value=?{Icon Type|Combat Master,Combat Master|Token Marker,Token Marker|Token Condition,Token Condition} --show,condition='+key));
+		listItems.push(makeTextButton('Name',                   condition.name,                            '!cmaster --config,condition='+key+',key=name,value=?{Name}'));
+		listItems.push(makeTextButton('Type',                   condition.type,                            '!cmaster --config,condition='+key+',key=type,value=?{Type|Condition,Condition|Spell,Spell} --show,condition='+key));
+		listItems.push(makeTextButton('Icon Type',              condition.iconType,                        '!cmaster --config,condition='+key+',key=iconType,value=?{Icon Type|Combat Master,Combat Master|Token Marker,Token Marker|Token Condition,Token Condition} --show,condition='+key));
 
         if (!verifyInstalls(condition.iconType)) return;
 
@@ -1329,16 +1329,17 @@ var CombatMaster = CombatMaster || (function() {
         else
             listItems.push(makeTextButton('Icon', getDefaultIcon(condition.iconType,condition.icon), '!cmaster --config,condition='+key+',key=icon,value='+buildMarkerDropdown(condition.iconType)+' --show,condition='+key));
 
-		listItems.push(makeTextButton('Duration',         condition.duration,                        '!cmaster --config,condition='+key+',key=duration,value=?{Duration|1} --show,condition='+key));
-		listItems.push(makeTextButton('Direction',        condition.direction,                       '!cmaster --config,condition='+key+',key=direction,value=?{Direction|0} --show,condition='+key));
-		listItems.push(makeTextButton('Override',         condition.override,                        '!cmaster --config,condition='+key+',key=override,value='+!condition.override+' --show,condition='+key));
-		listItems.push(makeTextButton('Favorites',        condition.favorite,                        '!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --show,condition='+key));
-		listItems.push(makeTextButton('Message',          condition.message,                         '!cmaster --config,condition='+key+',key=message,value={{?{Message}}} --show,condition='+key));
-        listItems.push(makeTextButton('Targeted',         condition.targeted,                        '!cmaster --config,condition='+key+',key=targeted,value='+!condition.targeted+' --show,condition='+key));
+		listItems.push(makeTextButton('Duration',               condition.duration,                        '!cmaster --config,condition='+key+',key=duration,value=?{Duration|1} --show,condition='+key));
+		listItems.push(makeTextButton('Direction',              condition.direction,                       '!cmaster --config,condition='+key+',key=direction,value=?{Direction|0} --show,condition='+key));
+		listItems.push(makeTextButton('Override',               condition.override,                        '!cmaster --config,condition='+key+',key=override,value='+!condition.override+' --show,condition='+key));
+		listItems.push(makeTextButton('Favorites',              condition.favorite,                        '!cmaster --config,condition='+key+',key=favorite,value='+!condition.favorite+' --show,condition='+key));
+		listItems.push(makeTextButton('Message',                condition.message,                         '!cmaster --config,condition='+key+',key=message,value={{?{Message}}} --show,condition='+key));
+        listItems.push(makeTextButton('Targeted',               condition.targeted,                        '!cmaster --config,condition='+key+',key=targeted,value='+!condition.targeted+' --show,condition='+key));
         if (condition.targeted)
-            listItems.push(makeTextButton('Targeted API', condition.targetedAPI,                     '!cmaster --config,condition='+key+',key=targetedAPI,value=?{Targeted API|Caster&Targets,casterTargets|Targets(Only),targets} --show,condition='+key));
+            listItems.push(makeTextButton('Targeted API',       condition.targetedAPI,                     '!cmaster --config,condition='+key+',key=targetedAPI,value=?{Targeted API|Caster&Targets,casterTargets|Targets(Only),targets} --show,condition='+key));
 
-        listItems.push(makeTextButton('Concentration',    condition.concentration,                   '!cmaster --config,condition='+key+',key=concentration,value='+!condition.concentration+' --show,condition='+key));
+        listItems.push(makeTextButton('Concentration',          condition.concentration,                   '!cmaster --config,condition='+key+',key=concentration,value='+!condition.concentration+' --show,condition='+key));
+        listItems.push(makeTextButton('Clear on Combat Stop',   condition.clearOnStop,                     '!cmaster --config,condition='+key+',key=clearOnStop,value='+!condition.clearOnStop+' --show,condition='+key));
         listItems.push('<div style="margin-top:3px"><i><b>Adding Condition</b></i></div>' );
 		listItems.push(makeBigButton('Add APIs',    '!cmaster --show,condition='+key+',addAPI'));
         listItems.push('<div style="margin-top:3px"><i><b>Removing Condition</b></i></div>' );
@@ -1648,6 +1649,7 @@ var CombatMaster = CombatMaster || (function() {
                 newCondition.type               = defaultCondition.type;
                 newCondition.targeted           = defaultCondition.targeted;
                 newCondition.targetedAPI        = defaultCondition.targetedAPI;
+                newCondition.clearOnStop        = defaultCondition.clearOnStop;
             } else {
                 newCondition.name               = key;
                 newCondition.icon               = null;
@@ -1660,6 +1662,7 @@ var CombatMaster = CombatMaster || (function() {
                 newCondition.type               = 'Condition';
                 newCondition.targeted           = false;
                 newCondition.targetedAPI        = null;
+                newCondition.clearOnStop        = true;
             }
 
             if (newCondition.iconType == 'Token Condition') {
@@ -1728,7 +1731,7 @@ var CombatMaster = CombatMaster || (function() {
         // let target;
 
         [...state[combatState].conditions].forEach((condition, i) => {
-            if (condition.id == tokenObj.get('_id') && condition.key == key) {
+            if (condition.clearOnStop && condition.id == tokenObj.get('_id') && condition.key == key) {
                 if (condition.hasOwnProperty('target') && condition.target.length > 0) {
                     targets = condition.target;
                     targets.forEach((target, j) => {
@@ -3572,7 +3575,7 @@ var CombatMaster = CombatMaster || (function() {
 					userChanges:        false,
 					sendOnlyToGM:       false,
 					sendConditions:     true,
-					clearConditions:    false,
+					clearConditions:    true,
 					showConditions:     'all',
 					useMessage:         false,
 					access:             'None',
@@ -3637,6 +3640,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        true
 					},
 					crashed: {
 						name:               'Crashed',
@@ -3662,6 +3666,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        true
 					},
 					prone: {
 						name:               'Prone',
@@ -3687,6 +3692,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        true
 					},
 					coverT1: {
 						name:               'Cover Light',
@@ -3712,6 +3718,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        true
 					},
                     coverT2: {
 						name:               'Cover Heavy',
@@ -3737,6 +3744,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        true
 					},
                     poison: {
 						name:               'Poison',
@@ -3762,6 +3770,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        false
 					},
                     clashlost: {
 						name:               'Clash Lost',
@@ -3787,6 +3796,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
+                        clearOnStop:        true
 					}
 				}
             },
