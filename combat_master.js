@@ -1113,53 +1113,55 @@ var CombatMaster = CombatMaster || (function() {
         if (!installed) return;
         installed = verifyInstalls(turnorder.markerType);
         if (!installed) return;
-		listItems.push(makeTextButton('Sort Turnorder',              turnorder.sortTurnOrder,                               '!cmaster --config,turnorder,key=sortTurnOrder,value='+!turnorder.sortTurnOrder + ' --show,turnorder'));
-        listItems.push(makeTextButton('Center Map on Token',         turnorder.centerToken,                                 '!cmaster --config,turnorder,key=centerToken,value='+!turnorder.centerToken + ' --show,turnorder'));
-        listItems.push(makeTextButton('Add Motes to Exalteds',       turnorder.addMotesEachTurnToNonMortal,                 '!cmaster --config,turnorder,key=addMotesEachTurnToNonMortal,value='+!turnorder.addMotesEachTurnToNonMortal + ' --show,turnorder'));
-        listItems.push(makeTextButton('Mote qty to add to Exalteds', turnorder.moteQtyToAdd,                                '!cmaster --config,turnorder,key=moteQtyToAdd,value=?{Quantity ?|5} --show,turnorder'));
+		listItems.push(makeTextButton('Sort Turnorder',                 turnorder.sortTurnOrder,                               '!cmaster --config,turnorder,key=sortTurnOrder,value='+!turnorder.sortTurnOrder + ' --show,turnorder'));
+        listItems.push(makeTextButton('Center Map on Token',            turnorder.centerToken,                                 '!cmaster --config,turnorder,key=centerToken,value='+!turnorder.centerToken + ' --show,turnorder'));
+        listItems.push(makeTextButton('Add Motes to Exalteds',          turnorder.addMotesEachTurnToNonMortal,                 '!cmaster --config,turnorder,key=addMotesEachTurnToNonMortal,value='+!turnorder.addMotesEachTurnToNonMortal + ' --show,turnorder'));
+        listItems.push(makeTextButton('Mote qty to add to Exalteds',    turnorder.moteQtyToAdd,                                '!cmaster --config,turnorder,key=moteQtyToAdd,value=?{Quantity ?|5} --show,turnorder'));
 
-        listItems.push(makeTextButton('Use Marker',                  turnorder.useMarker,                                   '!cmaster --config,turnorder,key=useMarker,value='+!turnorder.useMarker + ' --show,turnorder'));
-        listItems.push(makeTextButton('Marker Type',                 turnorder.markerType,                                  '!cmaster --config,turnorder,key=markerType,value=?{Marker Type|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
+        listItems.push(makeTextButton('Use Marker',                     turnorder.useMarker,                                   '!cmaster --config,turnorder,key=useMarker,value='+!turnorder.useMarker + ' --show,turnorder'));
+        listItems.push(makeTextButton('Marker Type',                    turnorder.markerType,                                  '!cmaster --config,turnorder,key=markerType,value=?{Marker Type|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
         if      (turnorder.markerType == 'External URL')
-            listItems.push(makeTextButton('Marker',                 makeImageButtonHtml(turnorder.externalMarkerURL),       '!cmaster --config,turnorder,key=externalMarkerURL,value=?{Image Url} --show,turnorder'));
+            listItems.push(makeTextButton('Marker',                     makeImageButtonHtml(turnorder.externalMarkerURL),       '!cmaster --config,turnorder,key=externalMarkerURL,value=?{Image Url} --show,turnorder'));
         else if (turnorder.markerType == 'Token Marker')	{
-            listItems.push(makeTextButton('Marker Name',            turnorder.tokenMarkerName,                              '!cmaster --config,turnorder,key=tokenMarkerName,value=?{Marker Name|} --show,turnorder'));
+            listItems.push(makeTextButton('Marker Name',                turnorder.tokenMarkerName,                              '!cmaster --config,turnorder,key=tokenMarkerName,value=?{Marker Name|} --show,turnorder'));
             listItems.push(getDefaultIcon('Token Marker',turnorder.tokenMarkerName));
 		}
 
-		listItems.push(makeTextButton('Use Next Marker',            turnorder.nextMarkerType,                               '!cmaster --config,turnorder,key=nextMarkerType,value=?{Next Marker Type|None,None|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
+		listItems.push(makeTextButton('Use Next Marker',                turnorder.nextMarkerType,                               '!cmaster --config,turnorder,key=nextMarkerType,value=?{Next Marker Type|None,None|External URL,External URL|Token Marker,Token Marker|Token Condition,Token Condition} --show,turnorder'));
 		if      (turnorder.nextMarkerType == 'External URL')
-            listItems.push(makeTextButton('Next Marker',            makeImageButtonHtml(turnorder.nextExternalMarkerURL),   '!cmaster --config,turnorder,key=nextExternalMarkerURL,value=?{Image Url} --show,turnorder'));
+            listItems.push(makeTextButton('Next Marker',                makeImageButtonHtml(turnorder.nextExternalMarkerURL),   '!cmaster --config,turnorder,key=nextExternalMarkerURL,value=?{Image Url} --show,turnorder'));
 		else if (turnorder.nextMarkerType == 'Token Marker')	{
-            listItems.push(makeTextButton('Next Marker Name',       turnorder.nextTokenMarkerName,                          '!cmaster --config,turnorder,key=nextTokenMarkerName,value=?{Next Marker Name|} --show,turnorder'));
+            listItems.push(makeTextButton('Next Marker Name',           turnorder.nextTokenMarkerName,                          '!cmaster --config,turnorder,key=nextTokenMarkerName,value=?{Next Marker Name|} --show,turnorder'));
             listItems.push(getDefaultIcon('Token Marker', turnorder.nextTokenMarkerName));
 		}
-        listItems.push(makeTextButton('Marker Size',                turnorder.markerSize,                                   '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (2.1 default)} --show,turnorder'));
+        listItems.push(makeTextButton('Marker Size',                    turnorder.markerSize,                                   '!cmaster --config,turnorder,key=markerSize,value=?{Marker Size (2.1 default)} --show,turnorder'));
 
-        listItems.push(makeTextButton('Use Range Marker',           turnorder.useRangeMarker,                               '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL} --show,turnorder')); // |Token Marker,Token Marker|Token Condition,Token Condition
+        listItems.push(makeTextButton('Use Range Marker',               turnorder.useRangeMarker,                               '!cmaster --config,turnorder,key=useRangeMarker,value=?{Next Marker Type|None,None|External URL,External URL} --show,turnorder')); // |Token Marker,Token Marker|Token Condition,Token Condition
 		if      (turnorder.useRangeMarker == 'External URL')
-            listItems.push(makeTextButton('Range Marker',           makeImageButtonHtml(turnorder.rangeExternalMarkerURL),  '!cmaster --config,turnorder,key=rangeExternalMarkerURL,value=?{Image Url} --show,turnorder'));
+            listItems.push(makeTextButton('Range Marker',               makeImageButtonHtml(turnorder.rangeExternalMarkerURL),  '!cmaster --config,turnorder,key=rangeExternalMarkerURL,value=?{Image Url} --show,turnorder'));
 		else if (turnorder.useRangeMarker == 'Token Marker')
             logger('balec'); //LEGACYTODO: a voir plus tard > ????
-        listItems.push(makeTextButton('Range Marker Width',         turnorder.rangeMarkerWidth,                             '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (6000 default (px))} --show,turnorder'));
-        listItems.push(makeTextButton('Range Marker Size',          turnorder.rangeMarkerHeight,                            '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'));
+        listItems.push(makeTextButton('Range Marker Additional Faces',  turnorder.rangeSidesURL,                                '!cmaster --config,turnorder,key=rangeSidesURL,value=?{Additional Urls separated by a PIPE character (the vertical bar)} --show,turnorder', true));
+        listItems.push(makeTextButton('Range Marker Starting Face',     turnorder.rangeSidesStart,                              '!cmaster --config,turnorder,key=rangeSidesStart,value=?{Starting Face ?|0} --show,turnorder'));
+        listItems.push(makeTextButton('Range Marker Width',             turnorder.rangeMarkerWidth,                             '!cmaster --config,turnorder,key=rangeMarkerWidth,value=?{Marker Size (6000 default (px))} --show,turnorder'));
+        listItems.push(makeTextButton('Range Marker Size',              turnorder.rangeMarkerHeight,                            '!cmaster --config,turnorder,key=rangeMarkerHeight,value=?{Marker Size (6000 default (px))} --show,turnorder'));
 
-        listItems.push(makeTextButton('Animate Marker',             turnorder.animateMarker,                                '!cmaster --config,turnorder,key=animateMarker,value='+!turnorder.animateMarker + ' --show,turnorder'));
-        listItems.push(makeTextButton('Animation Angle Step',       turnorder.animateMarkerDegree,                          '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (1 default)} --show,turnorder'));
-        listItems.push(makeTextButton('Animation Angle Wait',       turnorder.animateMarkerWait,                            '!cmaster --config,turnorder,key=animateMarkerWait,value=?{milliseconds per tick (25 default)} --show,turnorder'));
+        listItems.push(makeTextButton('Animate Marker',                 turnorder.animateMarker,                                '!cmaster --config,turnorder,key=animateMarker,value='+!turnorder.animateMarker + ' --show,turnorder'));
+        listItems.push(makeTextButton('Animation Angle Step',           turnorder.animateMarkerDegree,                          '!cmaster --config,turnorder,key=animateMarkerDegree,value=?{Degrees to rotate every tick (1 default)} --show,turnorder'));
+        listItems.push(makeTextButton('Animation Angle Wait',           turnorder.animateMarkerWait,                            '!cmaster --config,turnorder,key=animateMarkerWait,value=?{milliseconds per tick (25 default)} --show,turnorder'));
 
 		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Round</b></i></div>' );
-        listItems.push(makeTextButton('API',                        turnorder.roundAPI,                                     '!cmaster --config,turnorder,key=roundAPI,value={{?{API Command|}}} --show,turnorder'));
-        listItems.push(makeTextButton('Roll20AM',                   turnorder.roundRoll20AM,                                '!cmaster --config,turnorder,key=roundRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'));
-        listItems.push(makeTextButton('FX',                         turnorder.roundFX,                                      '!cmaster --config,turnorder,key=roundFX,value=?{FX Command|} --show,turnorder'));
-        listItems.push(makeTextButton('Characters Macro',           turnorder.characterRoundMacro,                          '!cmaster --config,turnorder,key=characterRoundMacro,value=?{Macro Name|} --show,turnorder'));
-        listItems.push(makeTextButton('All Tokens Macro',           turnorder.allRoundMacro,                                '!cmaster --config,turnorder,key=allRoundMacro,value=?{Macro Name|} --show,turnorder'));
+        listItems.push(makeTextButton('API',                            turnorder.roundAPI,                                     '!cmaster --config,turnorder,key=roundAPI,value={{?{API Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('Roll20AM',                       turnorder.roundRoll20AM,                                '!cmaster --config,turnorder,key=roundRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('FX',                             turnorder.roundFX,                                      '!cmaster --config,turnorder,key=roundFX,value=?{FX Command|} --show,turnorder'));
+        listItems.push(makeTextButton('Characters Macro',               turnorder.characterRoundMacro,                          '!cmaster --config,turnorder,key=characterRoundMacro,value=?{Macro Name|} --show,turnorder'));
+        listItems.push(makeTextButton('All Tokens Macro',               turnorder.allRoundMacro,                                '!cmaster --config,turnorder,key=allRoundMacro,value=?{Macro Name|} --show,turnorder'));
 
 		listItems.push('<div style="margin-top:3px"><i><b>Beginning of Each Turn</b></i></div>' );
-        listItems.push(makeTextButton('API',                        turnorder.turnAPI,                                      '!cmaster --config,turnorder,key=turnAPI,value={{?{API Command|}}} --show,turnorder'));
-        listItems.push(makeTextButton('Roll20AM',                   turnorder.turnRoll20AM,                                 '!cmaster --config,turnorder,key=turnRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'));
-        listItems.push(makeTextButton('FX',                         turnorder.turnFX,                                       '!cmaster --config,turnorder,key=turnFX,value=?{FX Command|} --show,turnorder'));
-        listItems.push(makeTextButton('Macro',                      turnorder.turnMacro,                                    '!cmaster --config,turnorder,key=turnMacro,value=?{Macro Name|} --show,turnorder'));
+        listItems.push(makeTextButton('API',                            turnorder.turnAPI,                                      '!cmaster --config,turnorder,key=turnAPI,value={{?{API Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('Roll20AM',                       turnorder.turnRoll20AM,                                 '!cmaster --config,turnorder,key=turnRoll20AM,value={{?{Roll20AM Command|}}} --show,turnorder'));
+        listItems.push(makeTextButton('FX',                             turnorder.turnFX,                                       '!cmaster --config,turnorder,key=turnFX,value=?{FX Command|} --show,turnorder'));
+        listItems.push(makeTextButton('Macro',                          turnorder.turnMacro,                                    '!cmaster --config,turnorder,key=turnMacro,value=?{Macro Name|} --show,turnorder'));
 
         makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
@@ -2144,7 +2146,10 @@ var CombatMaster = CombatMaster || (function() {
         }
 
         logger('getOrCreateMarker::imgsrc=' + imgsrc);
-        let markers = (markerType.ROUND === type) ? findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)}) : findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
+        let markers;
+        if      (markerType.ROUND === type) markers = findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc)});
+        else if (markerType.RANGE === type) markers = findObjs({pageid,name: markerName});
+        else                                markers = findObjs({pageid,imgsrc:getCleanImgsrc(imgsrc),name: markerName});
 
         let marker = markers.shift();
         if (!marker) {
@@ -2158,6 +2163,14 @@ var CombatMaster = CombatMaster || (function() {
                 width:            markerWidth,
                 height:           markerHeight
             };
+            if (type === markerType.RANGE) {
+                newMarkerAttr.sides = turnorder.rangeSidesURL || '';
+                newMarkerAttr.sides = newMarkerAttr.sides.split('|');
+                newMarkerAttr.sides.unshift(turnorder.rangeExternalMarkerURL);
+                newMarkerAttr.sides = newMarkerAttr.sides.map(i => getCleanImgsrc(i)).join('|');
+                newMarkerAttr.currentSide = turnorder.rangeSidesStart || 0;
+            } else
+                newMarkerAttr.imgsrc = getCleanImgsrc(imgsrc);
             logger(LOGLEVEL.INFO, 'getOrCreateMarker::CREATING NEW MARKER !!! newMarkerAttr=' + JSON.stringify(newMarkerAttr));
             marker = createObj('graphic', newMarkerAttr);
         }
@@ -2809,7 +2822,7 @@ var CombatMaster = CombatMaster || (function() {
     makeTitle           = (title, titleStyle)                                  => `<div style="${titleStyle}"><span style=${styles.titleText}>${title}</span></div>`,
     makeBigButton       = (title, href)                                        => `<div style="${styles.bigButton}"><a style="${styles.bigButtonLink}" href="${href}">${title}</a></div>`,
     makeButton          = (title, href)                                        => `<a style="${styles.conditionButton}" href="${href}">${title}</a>`,
-    makeTextButton      = (label, value, href)                                 => `<span style="${styles.textLabel}">${label}</span><a style="${styles.textButton}" href="${href}">${value}</a>`,
+    makeTextButton      = (label, value, href, fixed = false)                  => `<span style="${styles.textLabel}">${label}</span><a style="${styles.textButton}${fixed ? 'width: 2em; height: 1.25em;' : ''}" href="${href}">${value}</a>`,
     makeCharacterLink   = (characterObj, characterId = characterObj.get('id')) => `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>`,
     makeImageButtonHtml = txt                                                  => `<img src="${txt}" width="20px" height="20px" />`,
 
@@ -3538,6 +3551,8 @@ var CombatMaster = CombatMaster || (function() {
                     // rangeMarkerHeight:           6000,
                     // rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/293975183/Ha4Eyb2nQqXpRpyZnLc0kA/max.png?1657514551',
                     rangeExternalMarkerURL:      'https://s3.amazonaws.com/files.d20.io/images/299537929/ZPT1fJb7MuPwcWNrHr0wbQ/max.png?1660462839',
+                    rangeSidesURL:               'https://s3.amazonaws.com/files.d20.io/images/301337852/GnHNjEhapLerEb1skzaazw/max.png?1661393437|https://s3.amazonaws.com/files.d20.io/images/301337851/5USSujLlvKMyI_D-X1TBFg/max.png?1661393437|https://s3.amazonaws.com/files.d20.io/images/301337850/6ycrXBxhL9iYTKn4cxBoKQ/max.png?1661393437|https://s3.amazonaws.com/files.d20.io/images/301337849/lAHoivZuGJ-nz0LWFSA6gA/max.png?1661393437',
+                    rangeSidesStart:             0,
                     rangeMarkerWidth:            6412,
                     rangeMarkerHeight:           6412,
 
