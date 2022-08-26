@@ -475,6 +475,19 @@ tier 2: couleurs
     grid-template-columns: min-content min-content min-content;
 }
 
+.charsheet .sheet-2colrow.sheet-checklist.sheet-main-config {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.charsheet .sheet-2colrow.sheet-checklist .sheet-checklist.sheet-special > label {
+    text-align: end;
+}
+
+.charsheet .sheet-2colrow.sheet-checklist .sheet-checklist.sheet-special > label > select {
+    width: 6em;
+}
+
 .charsheet .sheet-3colrow .sheet-col.stat-col {
 	width: 135px;
     margin-right: 10px;

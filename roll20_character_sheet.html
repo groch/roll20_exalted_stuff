@@ -8024,34 +8024,67 @@
 
         <div class="sheet-body sheet-tab-content sheet-tab-settings-sheet">
             <h1><span>Character Type</span></h1>
-            <div class="sheet-checklist">
-                <label>
-                    <input type="checkbox" name="attr_qc" value="1"><span></span>
-                    <span>Quick Character</span>
-                </label>
-                <label>
-                    <input type="checkbox" name="attr_battlegroup" value="1"><span></span>
-                    <span>Battle Group</span>
-                </label>
-                <label class="sheet-cast-to-gm">
-                    <input type="checkbox" name="attr_charmwhispergm" value="1"><span></span>
-                    <span>Whisper to GM instead of CAST in charm tab</span>
-                </label>
-                <label>
-                    <input type="checkbox" name="attr_charmwhisperboth" value="1"><span></span>
-                    <span>Show both buttons in Charm Tab</span>
-                </label>
-                <label>
-                    <input type="checkbox" name="attr_antisocialtab" value="1"><span></span>
-                    <span>Show 2nd Social Tab</span>
-                </label>
-                <label>
-                    <input type="checkbox" name="attr_combattab" value="1"><span></span>
-                    <span>Show Combat Tab</span>
-                </label>
-                <label style="display: none;">
-                    <button type="action" name="act_init-sheet-btn" title="Initializing a new Sheet">Initializing a new Sheet</button>
-                </label>
+            <div class="sheet-checklist sheet-2colrow sheet-main-config">
+                <div class="sheet-checklist sheet-col">
+                    <label>
+                        <input type="checkbox" name="attr_qc" value="1"><span></span>
+                        <span>Quick Character</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="attr_battlegroup" value="1"><span></span>
+                        <span>Battle Group</span>
+                    </label>
+                    <label class="sheet-cast-to-gm">
+                        <input type="checkbox" name="attr_charmwhispergm" value="1"><span></span>
+                        <span>Whisper to GM instead of CAST in charm tab</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="attr_charmwhisperboth" value="1"><span></span>
+                        <span>Show both buttons in Charm Tab</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="attr_antisocialtab" value="1"><span></span>
+                        <span>Show 2nd Social Tab</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="attr_combattab" value="1"><span></span>
+                        <span>Show Combat Tab</span>
+                    </label>
+                    <label style="display: none;">
+                        <button type="action" name="act_init-sheet-btn" title="Initializing a new Sheet">Initializing a new Sheet</button>
+                    </label>
+                </div>
+                <div class="sheet-checklist sheet-col sheet-special">
+                    <label>
+                        <span>Cover Def Bonus</span>
+                        <select name="attr_cover-def-bonus">
+                            <option value="0" selected>None</option>
+                            <option value="1">Light</option>
+                            <option value="2">Heavy</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Grab Def Penalty</span>
+                        <select name="attr_grab-def-penalty">
+                            <option value="0" selected>None</option>
+                            <option value="2">Grabbed</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Prone Def Penalty</span>
+                        <select name="attr_prone-def-penalty">
+                            <option value="0" selected>None</option>
+                            <option value="1">Proned</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Clash Def Penalty</span>
+                        <select name="attr_clash-def-penalty">
+                            <option value="0" selected>None</option>
+                            <option value="2">Clash Lost</option>
+                        </select>
+                    </label>
+                </div>
             </div>
             <h1><span>Charms list configuration</span></h1>
             <h2 style="text-align: center;"><span class="solar-style">Solar</span> & <span class="db-style">DB</span></h2>
@@ -8089,7 +8122,7 @@
                 </div>
             </div>
             <h2 style="text-align: center;"><span class="lunar-style">Lunar</span></h2>
-            <div class="sheet-checklist" style="margin:auto; width: 80px;"><label><input type="checkbox" name="attr_charm-universal" value="1"><span> Universal</span></label></div>
+            <div class="sheet-checklist" style="margin:auto; width: 90px;"><label><input type="checkbox" name="attr_charm-universal" value="1"><span> Universal</span></label></div>
             <div class="sheet-checklist sheet-3colrow">
                 <div class="sheet-checklist sheet-col">
                     <label><input type="checkbox" name="attr_charm-str-offense" value="1"><span> Strength - Offense</span></label>
