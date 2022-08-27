@@ -457,9 +457,11 @@
             else if ([3,4].includes(k)) pen = '-2';
             else if (k === 5) pen = '-4';
             else pen = 'I';
+            TAS.debug(`id=${id}, k=${k}, pen=${pen}`);
             healthAttrs['repeating_health_' + id + '_hl-damage'] = 'healthy';
             healthAttrs['repeating_health_' + id + '_hl-penalty'] = pen;
         });
+        TAS.debug(`Setting Health levels :`, healthAttrs);
         setAttrs(healthAttrs);
 
         let defaultWeapon = {}, indexeWeapon = generateRowID();
