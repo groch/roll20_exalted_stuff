@@ -2666,6 +2666,7 @@ var CombatMaster = CombatMaster || (function() {
         let conditions  = getAnnounceConditions(tokenObj, prev, delay, show);
         let image       = (imgurl) ? '<img src="'+imgurl+'" width="50px" height="50px"  />' : '';
         name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+        if (!tokenObj.get('showplayers_name')) name = 'Someone';
 
         let title         = 'Conditions';
         let doneButton    = makeImageButton('!cmaster --turn,next',doneImage,'Done with Round','transparent',18,'white');
