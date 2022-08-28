@@ -479,10 +479,12 @@ function onChatMessage(msg) {
     replaceInlineRolls(msg);
 
 	var apiWake = '!exr ';
-	if (['api', 'general'].includes(msg.type) && msg.content.indexOf(apiWake) != -1) {
+	if (['api', 'general'].includes(msg.type) && msg.content.indexOf(apiWake) === 0) {
 		var slc = msg.content.slice(msg.content.indexOf(apiWake) + apiWake.length);
 		var rawCmd = slc.trim();
         rawCmd = sliceSpecials(rawCmd);
+
+        logger(`onChatMessage:: after sliceSpecials rawCmd='${rawCmd}'`);
 
 		var patt = /^.*#/;
 		if (patt.test(rawCmd)) {
@@ -493,6 +495,8 @@ function onChatMessage(msg) {
 		} else if (rawCmd.indexOf('-help') != -1) {
             var outHTML = buildHelp();
             sendChat(script_name, '/w ' + msg.who + ' ' + outHTML);
+		} else if (rawCmd === '') {
+            logger(LOGLEVEL.INFO, `onChatMessage:: NO COMMAND REMAINING => assume its a cost only for charms`);
 		} else {
             printError(msg, msg.who);
 		}
@@ -529,7 +533,7 @@ function checkAndSlice(rawCmd, sliceString, callback) {
     var index = rawCmd.indexOf(sliceString);
     if (index !== -1) {
         let slice = rawCmd.slice(index + sliceString.length);
-        rawCmd = rawCmd.slice(0, index - 1);
+        rawCmd = index - 1 < 0 ? '' : rawCmd.slice(0, index - 1);
         callback(rawCmd, slice);
     }
     return rawCmd;
