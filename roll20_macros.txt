@@ -82,7 +82,8 @@ HandoutMenu:
 	Anima,&#44;handoutType=anima|
 	Craft,&#44;handoutType=craft|
 	Combat,&#44;handoutType=combat|
-	XP,&#44;handoutType=xp}
+	XP,&#44;handoutType=xp|
+	Misc,&#44;handoutType=misc}
 
 Fire Token+Light Scale:
 !token-mod --set scale|[[?{Size ?(1 = 100%)|1}*0.014285714285]]un low_distance|[[?{Size ?(1 = 100%)|1}*3]] bright_distance|[[?{Size ?(1 = 100%)|1}]]

@@ -475,6 +475,11 @@ var CombatMaster = CombatMaster || (function() {
                 prefixToRemove = /^HLP-XP:\s?/;
                 title += 'XP';
                 break;
+            case 'misc':
+                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Misc:/));
+                prefixToRemove = /^HLP-Misc:\s?/;
+                title += 'Misc';
+                break;
             default:
                 handoutList = handoutList.filter(i => i.get('name').match(/^HLP:/));
                 prefixToRemove = /^HLP:\s?/
