@@ -1823,6 +1823,9 @@ and (min-resolution:.001dpcm) {
 
 .sheet-rolltemplate-exalted3e_cast img[title="sorceries"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/290361561/SB_IxeE7B6beH6LTt6R6fQ/max.png?1655540239'); }
 
+.sheet-rolltemplate-exalted3e_cast .sheet-effect .inlinerollresult {
+    background-color: #d09ee9;
+}
 
 /* --- Turns --- NOT USED */
 
