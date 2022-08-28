@@ -13,6 +13,7 @@
       +'change:ma-devil change:ma-claw change:ma-pearl change:ma-steel', TAS._fn(updateWoundThenParry));
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef change:repeating_weapon:repweaponabi remove:repeating_weapon', TAS._fn(updateWoundThenParry));
     on('change:qc-parry', TAS._fn(updateWoundThenParry));
+    on('change:pain-tolerance', TAS._fn(updateWoundThenParry));
     on('change:repeating_health', TAS._fn(updateWoundThenParry));
     on('change:combat-crippling-pen change:woundpenalty-add', TAS._fn(updateWoundThenParry));
 
@@ -41,7 +42,7 @@
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         
-            getAttrs([...healthFieldNames, 'combat-crippling-pen', 'woundpenalty-add'], TAS._fn(function getHealthFields(valuesSections) {
+            getAttrs([...healthFieldNames, 'combat-crippling-pen', 'woundpenalty-add', 'pain-tolerance'], TAS._fn(function getHealthFields(valuesSections) {
                 var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
                     return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
                 }).value();
@@ -62,10 +63,13 @@
                 
                 TAS.debug(`getHealthFields:: combat-crippling-pen=${valuesSections['combat-crippling-pen']}`);
                 pen = Number(pen);
+                TAS.debug('1st Calculated penalty=' + pen);
+                if (pen < -1 && Number(valuesSections['pain-tolerance'])) pen++;
+                TAS.debug('Pain-Tolerance Calculated penalty=' + pen);
                 pen = Number(valuesSections['combat-crippling-pen'])
                     ? -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
                     : -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
-                TAS.debug('Calculated penalty=' + pen);
+                TAS.debug('Final Calculated penalty w/ Crippling=' + pen);
                 finalAttr = { 'wound-penalty': pen };
 
                 getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'qc-parry'], TAS._fn(function determineIfQC(values){
@@ -1040,6 +1044,8 @@
 <div class="sheet-content">
     <div>
         
+        <input type="hidden" name="attr_pain-tolerance" value="0"><span></span>
+
         <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="1"><span></span>
         <input class="sheet-show-antisocial-tab" type="hidden" name="attr_antisocialtab" value="0"><span></span>
         <input checked="checked" class="sheet-tab sheet-tab-character-sheet" name="attr_sheet" title="Character Sheet" type="radio" value="1">
@@ -8051,6 +8057,10 @@
                     <label>
                         <input type="checkbox" name="attr_combattab" value="1"><span></span>
                         <span>Show Combat Tab</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="attr_pain-tolerance" value="1"><span></span>
+                        <span>MERIT: Pain Tolerance</span>
                     </label>
                     <label style="display: none;">
                         <button type="action" name="act_init-sheet-btn" title="Initializing a new Sheet">Initializing a new Sheet</button>
