@@ -9037,6 +9037,8 @@
                                     </p>
                                 </div>
                             </div>
+                            <input type="hidden" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc-val" value="0">
+                            <textarea name="attr_repcombat-desc" class="combat-textarea"></textarea>
                             <div class="second-line grow-normal flex">
                                 (<select name="attr_repinit-attr" title="Attribute for the Roll">
                                     <option value="@{strength}">Strength</option>
@@ -9185,8 +9187,6 @@
                                     <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_init-gmcast" value="!exr @{repinit-final-macro-replaced} -turn -gm @{rep-cost-macro}">to GM</button>
                                 </div>
                             </div>
-                            <input type="hidden" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc-val" value="0">
-                            <textarea name="attr_repcombat-desc" class="combat-textarea"></textarea>
                         </div>
                     </fieldset>
                 </div>
