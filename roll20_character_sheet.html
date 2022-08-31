@@ -260,7 +260,6 @@
 
     on('change:caste', TAS._fn(function updateMotePool(eventInfo){
         getAttrs(["caste"], TAS._fn(function determineMotePool(values){
-            setCasteToAllCharms(values.caste);
             var periEquation = "0", persEquation = "0", showAnima = 1,
                 showSupernal = 0,   showLimit = 0;
             if (["Dawn", "Zenith",   "Twilight", "Night", "Eclipse",
@@ -1029,6 +1028,12 @@
     /* trigger sheet initialize manually */
     on('clicked:init-sheet-btn', setDebugWrapper(function qcDamageAttacksChange(e) {
         initCharacterSheet();
+    }));
+
+    on('clicked:init-charm-img', TAS._fn(function updateMotePool(eventInfo){
+        getAttrs(["caste"], TAS._fn(function determineMotePool(values){
+            setCasteToAllCharms(values.caste);
+        }));
     }));
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
@@ -9080,6 +9085,9 @@
                     <label>
                         <input type="checkbox" name="attr_pain-tolerance" value="1"><span></span>
                         <span>MERIT: Pain Tolerance</span>
+                    </label>
+                    <label style="display: none;">
+                        <button type="action" name="act_init-charm-img" title="Set Caste Image to Charms">Set Caste Image to Charms</button>
                     </label>
                     <label style="display: none;">
                         <button type="action" name="act_init-sheet-btn" title="Initializing a new Sheet">Initializing a new Sheet</button>
