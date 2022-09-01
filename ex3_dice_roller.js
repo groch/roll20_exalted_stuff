@@ -1977,7 +1977,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
     *															I stopped touching it.
     */
     buildHelp = () => {
-        checkInstall();
+        assureHelpHandout();
         return makeHandoutLink(state[script_name].handout_id, `${script_name} Help Handout`);
     },
 
