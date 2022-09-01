@@ -4407,26 +4407,44 @@ var CombatMaster = CombatMaster || (function() {
         state[combatState] || (state[combatState] = {});
         setDefaults();
         buildHelp();
-        logger(script_name + ' Ready! Command: !cmaster --main');
+        logger(LOGLEVEL.INFO, script_name + ' Ready! Command: !cmaster --main');
     },
 
     registerEventHandlers = () => {
         //logger('registerEventHandlers !!!');
         //logger('registerEventHandlers turnorder=' + JSON.stringify(Campaign().get('turnorder')));
         on('chat:message', inputHandler);
-        on('close:campaign:turnorder', handleTurnorderChange);
-        on('change:campaign:turnorder', handleTurnorderChange);
+        for (const handler of ['close:campaign:turnorder','change:campaign:turnorder'])
+            on(handler, handleTurnorderChange);
         on('change:graphic:statusmarkers', handleStatusMarkerChange);
         on('change:campaign:initiativepage', handleInitiativePageChange);
-        on('change:graphic:top', handleGraphicMovement);
-        on('change:graphic:left', handleGraphicMovement);
-        on('change:graphic:layer', handleGraphicMovement);
+        for (const handler of ['change:graphic:top','change:graphic:left','change:graphic:layer'])
+            on(handler, handleGraphicMovement);
         on('destroy:graphic', handleGraphicDelete);
         on('change:graphic:'+state[combatState].config.concentration.woundBar+'_value', handleConstitutionSave);
 
-        for (const item of [DeathTracker, InspirationTracker, TokenMod])
-            if ('undefined' !== typeof item && item.ObserveTokenChange)
-                item.ObserveTokenChange(handleStatusMarkerChange);
+        // WTF can't factorize more this shit ???
+        if('undefined' !== typeof DeathTracker && DeathTracker.ObserveTokenChange)
+            DeathTracker.ObserveTokenChange(handleStatusMarkerChange);
+
+        if('undefined' !== typeof InspirationTracker && InspirationTracker.ObserveTokenChange)
+            InspirationTracker.ObserveTokenChange(handleStatusMarkerChange);
+
+        if('undefined' !== typeof TokenMod && TokenMod.ObserveTokenChange)
+            TokenMod.ObserveTokenChange(handleStatusMarkerChange);
+
+        // FUCK THIS SHIT
+        // for (const item of [DeathTracker, InspirationTracker, TokenMod])
+        //     if ('undefined' !== typeof item && item.ObserveTokenChange)
+        //         item.ObserveTokenChange(handleStatusMarkerChange);
+        // [DeathTracker, InspirationTracker, TokenMod].forEach(item => {
+        //     if ('undefined' !== typeof item && item.ObserveTokenChange)
+        //         item.ObserveTokenChange(handleStatusMarkerChange);
+        // });
+        // const modForwardMarkerChangeList = [DeathTracker, InspirationTracker, TokenMod];
+        // for (let i = 0; i < modForwardMarkerChangeList.length; i++)
+        //     if ('undefined' !== typeof modForwardMarkerChangeList[i] && modForwardMarkerChangeList[i].ObserveTokenChange)
+        //         modForwardMarkerChangeList[i].ObserveTokenChange(handleStatusMarkerChange);
     };
 
     return {
