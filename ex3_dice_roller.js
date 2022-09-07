@@ -646,28 +646,36 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             categoryName: 'Reroll Pools',
             pattern: /^(rP)\s([\d,]+)(?:\sIGNORE=([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
             getCmdObj: (matchReturn) => ({
-            cmd:      matchReturn[1],
-            limit:    Number(matchReturn[2]),
-            ignoreList:  matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))] : [],
-            tagList:  matchReturn[4] ? [...matchReturn[4].split(',').filter(i => i)] : []}),
+            cmd:            matchReturn[1],
+            limit:          Number(matchReturn[2]),
+            ignoreList:     matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))] : [],
+            tagList:        matchReturn[4] ? [...matchReturn[4].split(',').filter(i => i)] : []}),
         },{
             categoryName: 'Successes, Doubles & Explodes',
             pattern: /^(d|e|E|s)(l\d*)?\s([\d,]+)$/,
             getCmdObj: (matchReturn) => ({
-                cmd:    matchReturn[1],
-                limit:  matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
-                faces:  [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
+                cmd:        matchReturn[1],
+                limit:      matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
+                faces:      [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
         },{
             categoryName: 'Fails',
             pattern: /^(f|F)\s([\d,]+)$/,
             getCmdObj: (matchReturn) => ({
-                cmd:    matchReturn[1],
-                faces:  [...matchReturn[2].split(',').filter(i => i).map(i => Number(i))]})
+                cmd:        matchReturn[1],
+                faces:      [...matchReturn[2].split(',').filter(i => i).map(i => Number(i))]})
+        },{
+            categoryName: 'Arcane Fate',
+            pattern: /^([^:]+):(AF)(\d):peri=(\d)$/,
+            getCmdObj: (matchReturn) => ({
+                cmd:        matchReturn[2],
+                option:     Number(matchReturn[3]),
+                periFirst:  matchReturn[4] === '1',
+                charId:     '-' + matchReturn[1]})
         },{
             categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle',
             pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|NB|NoBotch)$/,
             getCmdObj: (matchReturn) => ({
-                cmd:    matchReturn[1]})
+                cmd:        matchReturn[1]})
         }];
 
     // HELP Handout
@@ -766,6 +774,10 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                     arraySecondCol:["<b>This commands cover failing of faces, removing success normally awarded on this face.</b>", "Used almost only by sidereals.", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -f 8,9</code>."],
                 },
                 {
+                    arrayfirstCol:['@{character_id}:AF1:peri=1', '@{character_id}:AF2:peri=0', '@{character_id}:AF3:peri=0'],
+                    arraySecondCol:["<b>This commands cover Arcane Fate for Sidereals.</b>", "- AF1: Same usage than <code style=\"white-space: nowrap\">-s 6</code> plus deduct 1 mote automatically.", "- AF2: Same usage than <code style=\"white-space: nowrap\">-s 6,5</code> plus deduct 2 mote automatically.", "- AF3: Same usage than <code style=\"white-space: nowrap\">-s 6,5,4</code> plus deduct 3 mote automatically.", "The <code style=\"white-space: nowrap\">peri=</code> is there to specify if it's from peripheral first, all value different than '1' will be interpreted as Personal Essence first"],
+                },
+                {
                     arrayfirstCol:['-v', '-V', '-c'],
                     arraySecondCol:[
         '<b>These commands are used to increase visual information included in the roll.</b>',
@@ -812,7 +824,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 }
             ],
             defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-            helpVersion = 1.13;
+            helpVersion = 1.15;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -933,7 +945,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             sendChat(script_name, `/w gm <a style="${styles.buttonStyle}" href="!cmaster --onslaught"> &gt; Set Onslaught to Selected &lt; </a>`);
         });
         rawCmd = checkAndSlice(rawCmd, '=COST:', (rawCmd, costSlice) => {
-            logger(`onChatMessage:: costSlice=${costSlice} rawCmd='${rawCmd}'`);
+            logger(LOGLEVEL.INFO, `onChatMessage:: costSlice=${costSlice} rawCmd='${rawCmd}'`);
             setCosts(costSlice);
         });
         return rawCmd;
@@ -1379,6 +1391,14 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                     logger(LOGLEVEL.INFO, `processCmds::removing success on faces=${item.faces}`);
                     for (const face of item.faces) result.rollSetup.face[face].successes = [];
                     break;
+                case 'AF':
+                    logger(LOGLEVEL.INFO, `processCmds::Arcane Fate=${item.option}, PeriFirst=${item.periFirst}`);
+                    if ([1,2,3].includes(item.option)) {
+                        if (item.option === 1)                              result.rollSetup.face[6].successes.push({limit: item.limit, done: 0});
+                        if (item.option === 2) for (const face of [6,5])    result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
+                        if (item.option === 3) for (const face of [6,5,4])  result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
+                        removeMotesToCharacter(getObj('character', item.charId), item.option, item.periFirst);
+                    }
                 case 'turn':
                 case 'target':
                     result.setTurn = true;
