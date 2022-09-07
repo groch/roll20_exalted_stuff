@@ -911,6 +911,27 @@ tier 2: couleurs
     justify-content: flex-end;
 }
 
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-div-cast label {
+    margin: 0;
+    height: fit-content;
+    width: fit-content;
+}
+
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-div-cast label,
+.charsheet .repcontainer[data-groupname="repeating_merits"] .repitem .merits-div-cast label button {
+    height: 18px;
+    width: fit-content;
+}
+
+.charsheet .merits-toggle-desc[value="on"] ~ .merit-dot-toggle-wrapper > .merits-div-cast {
+    display: block;
+    width: 44px;
+}
+
+.charsheet .merits-toggle-desc[value="0"] ~ .merit-dot-toggle-wrapper > .merits-div-cast {
+    display: none;
+}
+
 .charsheet .merits-div-checkbox {
     margin-left: 4px;
     background-color:#EFEFEF;
