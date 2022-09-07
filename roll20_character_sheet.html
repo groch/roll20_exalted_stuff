@@ -48,6 +48,7 @@
                 }).value();
                 
                 var pen = 0;
+                let actualHealth = 0;
                 for (const id of sortedIdHealthArray.reverse()) {
                     let dmg =       valuesSections[`repeating_health_${id}_hl-damage`],
                         localPen =  valuesSections[`repeating_health_${id}_hl-penalty`];
@@ -58,8 +59,12 @@
                         if (pen === '')  pen = 0;
                         found = true;
                         break;
-                    }
+                    } else
+                        actualHealth++;
                 }
+
+                let maxHealth = sortedIdHealthArray.length;
+                TAS.debug(`getHealthFields:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
                 
                 TAS.debug(`getHealthFields:: combat-crippling-pen=${valuesSections['combat-crippling-pen']}`);
                 pen = Number(pen);
@@ -70,7 +75,7 @@
                     ? -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
                     : -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
                 TAS.debug('Final Calculated penalty w/ Crippling=' + pen);
-                finalAttr = { 'wound-penalty': pen };
+                finalAttr = { 'wound-penalty': pen, 'health-displayed': actualHealth, 'health-displayed_max': maxHealth };
 
                 getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'qc-parry'], TAS._fn(function determineIfQC(values){
                     TAS.debug('Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
