@@ -3006,7 +3006,8 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     width: calc(5.95rem - 24px);
 }
 
-.sheet-rolltemplate-exalted3e_cast.sheet-rolltemplate-darkmode {
+.sheet-rolltemplate-exalted3e_cast.sheet-rolltemplate-darkmode,
+.sheet-rolltemplate-exalted3e_combatcast.sheet-rolltemplate-darkmode {
     color: black;
 }
 
