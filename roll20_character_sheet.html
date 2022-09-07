@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.31, debug = 1;
+    const version = 2.32, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -258,8 +258,32 @@
             persoEquationStr = persoEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
             persoEquationStr = persoEquationStr.replace('@{committedesstotal}', committed);
             persoEquationStr = persoEquationStr.replace(pattern, '');
-            TAS.debug(`SETTING personal-essence_max=${eval(persoEquationStr)} peripheral-essence_max=${eval(periEquationStr)}`);
-            setAttrs({'personal-essence_max': eval(persoEquationStr), 'peripheral-essence_max': eval(periEquationStr)});
+            let finalPerso = eval(persoEquationStr), finalPeri = eval(periEquationStr), maxDisplayed = Number(finalPerso) + Number(finalPeri);
+            TAS.debug(`SETTING personal-essence_max=${finalPerso} peripheral-essence_max=${finalPeri}`);
+            TAS.debug(`SETTING displayed-essence_max=${maxDisplayed}`);
+            setAttrs({'personal-essence_max': finalPerso, 'peripheral-essence_max': finalPeri, 'displayed-essence_max': maxDisplayed});
+        }));
+    }));
+
+    on('change:personal-essence change:peripheral-essence', TAS._fn(function updateDisplayedMotes(e) {
+        getAttrs(['personal-essence', 'peripheral-essence'], TAS._fn(function getMoteAttrs(values){
+            let perso = Number(values['personal-essence']),
+                peri = Number(values['peripheral-essence']);
+
+            if (isNaN(perso)) {
+                perso = 0;
+                TAS.error(`NaN Value ! SETTING personal-essence=0`);
+                setAttrs({'personal-essence':0});
+            }
+            if (isNaN(peri)) {
+                peri = 0;
+                TAS.error(`NaN Value ! SETTING peripheral-essence=0`);
+                setAttrs({'peripheral-essence':0});
+            }
+
+            let displayedMotes = perso + peri;
+            TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
+            setAttrs({'displayed-essence': displayedMotes});
         }));
     }));
 
@@ -312,6 +336,7 @@
         {version: 2.27, fn: upgradeto228},
         {version: 2.29, fn: upgradeto230},
         {version: 2.30, fn: upgradeto231},
+        {version: 2.31, fn: upgradeto232},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -336,6 +361,51 @@
             }
         }));
     });
+
+    function upgradeto232() {
+        getSectionIDs('health', function getHealthList(idHealthArray) {
+            const healthFieldNames = [];
+            idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
+        
+            getAttrs([...healthFieldNames, 'personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], TAS._fn(function getHealthFields(valuesSections) {
+                var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
+                    return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+                }).value();
+                
+                let actualHealth = 0;
+                for (const id of sortedIdHealthArray.reverse()) {
+                    let dmg = valuesSections[`repeating_health_${id}_hl-damage`];
+                    if (dmg && (!dmg || dmg !== 'healthy')) break;
+                    else                                    actualHealth++;
+                }
+                let maxHealth = sortedIdHealthArray.length;
+                TAS.debug(`getHealthFields:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+                
+                let perso =     Number(valuesSections['personal-essence']),
+                    persoMax =  Number(valuesSections['personal-essence_max']),
+                    peri =      Number(valuesSections['peripheral-essence']);
+                    periMax =   Number(valuesSections['peripheral-essence_max']);
+                for (const [variable, attrToSet] of [[perso, 'personal-essence'], [peri, 'peripheral-essence'], [persoMax, 'peripheral-essence_max'], [periMax, 'peripheral-essence_max']]) {
+                    if (isNaN(variable)) {
+                        perso = 0;
+                        TAS.error(`NaN Value ! SETTING ${attrToSet}=0`);
+                        setAttrs({[attrToSet]:0});
+                    }
+                }
+                let displayedMotes = perso + peri, maxDisplayed = persoMax + periMax;
+                TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
+
+                const finalAttr = {
+                    'health-displayed': actualHealth,
+                    'health-displayed_max': maxHealth,
+                    'displayed-essence': displayedMotes,
+                    'displayed-essence_max': maxDisplayed,
+                    'version': version
+                };
+                setAttrs(finalAttr);
+            }));
+        });
+    }
 
     function upgradeto231() {
         setAttrs({

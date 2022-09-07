@@ -16,8 +16,10 @@ Vision+:
 	SET DEFAULT ON OnTheFly,bright_vision&#124;1 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0|
 	Move To Dynamic-Lighting Layer,layer&#124;walls|
 	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
-	TOKEN CREATION DEFAULT+Size,width&#124;70 height&#124;70 bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
-	TOKEN CREATION DEFAULT+Size+Mote,width&#124;70 height&#124;70 bar1_link&#124;peripheral-essence bar2_link&#124;willpower bar3_link&#124;onslaught bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT+Size,width&#124;70 height&#124;70 bar1_link&#124;health-displayed bar2_link&#124;displayed-essence bar3_link&#124;willpower showplayers_bar1&#124;1 playersedit_bar1&#124;0 showplayers_bar2&#124;1 playersedit_bar2&#124;0 bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
+	TOKEN CREATION DEFAULT+Size+Mote,width&#124;70 height&#124;70 bar1_link&#124;health-displayed bar2_link&#124;displayed-essence bar3_link&#124;willpower showplayers_bar1&#124;1 playersedit_bar1&#124;0 showplayers_bar2&#124;1 playersedit_bar2&#124;0 bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
+	RE-SET NEW BARS,bar1_link&#124;health-displayed bar2_link&#124;displayed-essence bar3_link&#124;willpower showplayers_bar1&#124;1 playersedit_bar1&#124;0 showplayers_bar2&#124;1 playersedit_bar2&#124;0 bar1_reset&#124; bar2_reset&#124; bar3_reset&#124;|
+	CLEAR BARS,bar1_link&#124; bar2_link&#124; bar3_link&#124; bar1_reset&#124; bar2_reset&#124; bar3_reset&#124;|
 }
 
 Anima:
