@@ -12,7 +12,7 @@ Vision+:
 	Default NV,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0|
 	NV+,night_vision&#124;1 night_vision_distance&#124;6 night_vision_effect&#124;dimming&#124;0|
 	Merit NV,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;nocturnal|
-	Merit NV+,night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;nocturnal|
+	Merit NV+,night_vision&#124;1 night_vision_distance&#124;6 night_vision_effect&#124;nocturnal|
 	SET DEFAULT ON OnTheFly,bright_vision&#124;1 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0|
 	Move To Dynamic-Lighting Layer,layer&#124;walls|
 	TOKEN CREATION DEFAULT,bright_vision&#124;0 night_vision&#124;1 night_vision_distance&#124;3 night_vision_effect&#124;dimming&#124;0 emits_bright&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1|
