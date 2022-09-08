@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.32, debug = 1;
+    const version = 2.33, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -337,6 +337,7 @@
         {version: 2.29, fn: upgradeto230},
         {version: 2.30, fn: upgradeto231},
         {version: 2.31, fn: upgradeto232},
+        {version: 2.32, fn: upgradeto233},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -361,6 +362,47 @@
             }
         }));
     });
+
+    function addGenericCharmsToObj(caste, charmObj) {
+        let idCharm1 = generateRowID(), idCharm2 = generateRowID();
+        charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Generic Excellency';
+        charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Supplemental';
+        charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '[[?{Dice Added ?|1}]]';
+        charmObj[`repeating_charms_${idCharm1}_rep-cost-mote`] = '?{Dice Added ?|1}';
+        charmObj[`repeating_charms_${idCharm1}_rep-cost-macro`] = '=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dice Added ?|1}';
+        charmObj[`repeating_charms_${idCharm1}_charm-short-desc`] = 'add Dices';
+        charmObj[`repeating_charms_${idCharm1}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms_${idCharm1}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms_${idCharm1}_charm-description`] = 'The Exalt infuse her essence inside the action to magnify it.';
+        charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The Exalt add [[?{Dice Added ?|1}]] dices to the action.';
+        
+        charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Generic Defense Excellency';
+        charmObj[`repeating_charms_${idCharm2}_charm-type`] = 'Supplemental';
+        charmObj[`repeating_charms_${idCharm2}_charm-cost`] = '[[?{Defense Added ?|1} * 2]]';
+        charmObj[`repeating_charms_${idCharm2}_rep-cost-mote`] = '[[?{Defense Added ?|1} * 2]]';
+        charmObj[`repeating_charms_${idCharm2}_rep-cost-macro`] = '=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]';
+        charmObj[`repeating_charms_${idCharm2}_charm-short-desc`] = 'bonus to defensive static values';
+        charmObj[`repeating_charms_${idCharm2}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms_${idCharm2}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms_${idCharm2}_charm-description`] = 'The Exalt infuse her essence inside her defenses to appear impenetrable.';
+        charmObj[`repeating_charms_${idCharm2}_charm-effect`] = 'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.';
+    }
+
+    function upgradeto233() {
+        getAttrs(["caste"], TAS._fn(function determineMotePool(values){
+            const caste = values['caste'] || 'Unknown',
+                  charmObj = {};
+
+            addGenericCharmsToObj(caste, charmObj);
+            if (values['caste'] !== 'Mortal') {
+                charmObj['charm-old'] = 1;
+                charmObj['_charm_sheet'] = 28;
+            }
+            charmObj['version'] = version;
+
+            setAttrs(charmObj);
+        }));
+    }
 
     function upgradeto232() {
         getSectionIDs('health', function getHealthList(idHealthArray) {
@@ -553,6 +595,10 @@
         defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponatt'] = '0';
         defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapontags'] = 'Bashing, Brawl, Grappling, Natural';
         setAttrs(defaultWeapon);
+
+        const charmObj = {};
+        addGenericCharmsToObj('Mortal', charmObj);
+        setAttrs(charmObj);
 
         initIntimacies();
     }
