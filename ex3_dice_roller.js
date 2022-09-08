@@ -379,7 +379,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
     /**
      * Turn Hook for Conditionals
      */
-     handleTurnConditionalHook = (result, turn, nextRollsToProcess) => {
+    handleTurnConditionalHook = (result, turn, nextRollsToProcess) => {
         logger(LOGLEVEL.INFO, `handleTurnConditionalHook::TURN CONDITIONAL-ALL-TESTS !`);
 
         var condIterator = 0;
