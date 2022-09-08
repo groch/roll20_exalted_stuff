@@ -747,6 +747,9 @@ var CombatMaster = CombatMaster || (function() {
         let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'}), controlledBy = characterObj.get('controlledby');
         controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
 
+        const displayedEssenceObj = attrList.filter(i => 'displayed-essence' === i.get('name'))[0];
+        logger(`removeMotesToCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
+
         logger(`addMotesToNonMortalCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
         attrList = attrList
             .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
@@ -794,6 +797,9 @@ var CombatMaster = CombatMaster || (function() {
             }
             if (added >= qty) break;
         }
+
+        const displayedEssenceTest = displayedEssenceObj.get('current') + added;
+        displayedEssenceObj.set('current', displayedEssenceTest > displayedEssenceObj.get('max') ? displayedEssenceObj.get('max') : displayedEssenceTest);
         return added && controlledBy.length ? true : false;
     },
 

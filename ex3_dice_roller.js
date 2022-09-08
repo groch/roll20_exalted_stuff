@@ -1029,6 +1029,9 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         logger(LOGLEVEL.INFO, `removeMotesToCharacter::removeMotesToCharacter qty=${qty}, periFirst=${periFirst}`);
         let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
 
+        const displayedEssenceObj = attrList.filter(i => 'displayed-essence' === i.get('name'))[0];
+        logger(`removeMotesToCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
+
         logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
         attrList = sortMoteAttr(attrList, periFirst);
 
@@ -1051,6 +1054,8 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         }
         if (removed < qty)
             sendGMStandardScriptMessage(`MOTE ERROR WHEN ${characterObj.get('name')} CASTED: qty=${qty} removed=${removed} !!! NO MORE MOTE TO SPEND`);
+        const displayedEssenceTest = displayedEssenceObj.get('current') - removed;
+        displayedEssenceObj.set('current', displayedEssenceTest < 0 ? 0 : displayedEssenceTest);
     },
 
     sortMoteAttr = (attrList, periFirst = true) => {
