@@ -1105,6 +1105,8 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
             return false;
         }).filter(i => i).join(', ')}])`:''}`);
+        if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
+        sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');
     },
 
     /**
@@ -1152,12 +1154,12 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
-    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
-        sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
+        sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+rootDivStyle+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
-    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
-        sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive);
+    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
+        sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive, rootDivStyle);
     },
 
     /**

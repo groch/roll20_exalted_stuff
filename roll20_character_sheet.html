@@ -2758,14 +2758,14 @@
                                 <div class="sheet-hide-to-mortal"><div class="sheet-motes">
                                         <span>Personal</span>
                                         <span>
-                                            <input type="number" name="attr_personal-essence"> |
+                                            <input type="number" name="attr_personal-essence" readonly> |
                                             <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
                                         </span>
                                     </div>
                                     <div class="sheet-motes">
                                         <span>Peripheral</span>
                                         <span>
-                                            <input type="number" name="attr_peripheral-essence"> |
+                                            <input type="number" name="attr_peripheral-essence" readonly> |
                                             <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
                                         </span>
                                     </div>
@@ -10121,11 +10121,11 @@
                     <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
                     <p class="mote-color rounded-box grow-normal flex personal-mote-toggle">
                         Personal:
-                        <input type="number" name="attr_personal-essence" class="grow-normal">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
+                        <input type="number" name="attr_personal-essence" class="grow-normal" readonly>/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
                     </p>
                     <p class="mote-color rounded-box grow-normal flex peripheral-mote-toggle">
                         Peripheral:
-                        <input type="number" name="attr_peripheral-essence" class="grow-normal">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
+                        <input type="number" name="attr_peripheral-essence" class="grow-normal" readonly>/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
                     </p>
                 </div>
             </div>
