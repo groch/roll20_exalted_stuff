@@ -969,7 +969,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         const parsedCost = costStr.split(':'), playerId = parsedCost[0], characterObj = getObj('character', playerId),
             willObj = findObjs({_characterid:playerId, _type: 'attribute', name: 'willpower'})[0];
         for (let i = 1; i < parsedCost.length; i++) {
-            const data = parsedCost[i].split(';'), val = Number(data[1]);
+            const data = parsedCost[i].split(';'), val = Math.abs(Number(data[1]));
             if (!val) {
                 logger(`setCosts:: val is empty or =0 => skip`);
                 continue;
