@@ -14,7 +14,7 @@
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef change:repeating_weapon:repweaponabi remove:repeating_weapon', TAS._fn(updateWoundThenParry));
     on('change:qc-parry', TAS._fn(updateWoundThenParry));
     on('change:pain-tolerance', TAS._fn(updateWoundThenParry));
-    on('change:repeating_health', TAS._fn(updateWoundThenParry));
+    on('change:repeating_health remove:repeating_health', TAS._fn(updateWoundThenParry));
     on('change:combat-crippling-pen change:woundpenalty-add', TAS._fn(updateWoundThenParry));
 
     function sortHealth(idHealthArray) {
@@ -364,7 +364,7 @@
     });
 
     function addGenericCharmsToObj(caste, charmObj) {
-        let idCharm1 = generateRowID(), idCharm2 = generateRowID();
+        let idCharm1 = generateRowID();
         charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Generic Excellency';
         charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Supplemental';
         charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '[[?{Dice Added ?|1}]]';
@@ -376,6 +376,8 @@
         charmObj[`repeating_charms_${idCharm1}_charm-description`] = 'The Exalt infuse her essence inside the action to magnify it.';
         charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The Exalt add [[?{Dice Added ?|1}]] dices to the action.';
         
+        let idCharm2 = generateRowID();
+        while (idCharm1 === idCharm2) idCharm2 = generateRowID();
         charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Generic Defense Excellency';
         charmObj[`repeating_charms_${idCharm2}_charm-type`] = 'Supplemental';
         charmObj[`repeating_charms_${idCharm2}_charm-cost`] = '[[?{Defense Added ?|1} * 2]]';
@@ -400,6 +402,7 @@
             }
             charmObj['version'] = version;
 
+            TAS.debug(`upgradeto233:: Setting=`, charmObj);
             setAttrs(charmObj);
         }));
     }
@@ -598,6 +601,7 @@
 
         const charmObj = {};
         addGenericCharmsToObj('Mortal', charmObj);
+        TAS.debug(`initCharacterSheet:: Setting Default Charms=`, charmObj);
         setAttrs(charmObj);
 
         initIntimacies();
