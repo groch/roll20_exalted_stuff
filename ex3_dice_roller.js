@@ -1110,8 +1110,9 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
             return false;
         }).filter(i => i).join(', ')}])`:''}`);
+
         if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
-        sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');
+            sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');
     },
 
     /**
