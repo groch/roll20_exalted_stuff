@@ -5,6 +5,35 @@ backup:
 Ratio:
 !token-mod --set scale|?{Ratio|PAGE SCALE,*0.0142857142un|/1.5,/1.5|*1.5,*1.5|/0.75,/0.75|Custom Roll,?{Ratio Custom :&#125;}
 
+setTokens:
+
+!token-mod {{
+	--set
+	  represents|?{Type ?|
+		Human-like,?{Character Linked ?&#124;
+			Battle Ready Troops&#44;@{Battle Ready Troops|character_id}&#124;
+			Medium Cavalry Archer&#44;@{Medium Cavalry Archer|character_id}&#124;
+			Elite Troops&#44;@{Elite Troops|character_id}&#124;
+			Lambda&#44;@{Lambda|character_id}&#124;
+			Lambda PM&#44;@{Lambda PM|character_id}&#125;|
+		Animal-like,?{Character Linked ?&#124;
+			Petaure&#44;@{Petaure|character_id}&#124;
+			Ours&#44;@{Ours|character_id}&#124;
+			Panthere&#44;@{Panthere|character_id}&#124;
+			Daim&#44;@{Daim|character_id}&#124;
+			Biche&#44;@{Biche|character_id}&#124;
+			Badger&#44;@{Badger|character_id}&#124;
+			Aigle&#44;@{Aigle|character_id}&#124;
+			Sanglier&#44;@{Sanglier|character_id}&#124;
+			JetPoKa&#44;@{JetPoKa - Nenuphar Bateau|character_id}&#124;
+			Giant Constrictor&#44;@{Giant Constrictor|character_id}&#124;
+			Civretch&#44;@{Civretch|character_id}&#124;
+			Chien/Loup&#44;@{Chien/Loup|character_id}&#124;
+			Chauve Souris&#44;@{Chauve Souris|character_id}&#124;
+			Swan Snake&#44;@{Swan Snake|character_id}&#125;}
+	  name|'?{Name ?}'
+}}
+
 Vision+:
 !token-mod --set ?{Vision Setting |
 	Turn ON,bright_vision&#124;1|
@@ -21,6 +50,30 @@ Vision+:
 	RE-SET NEW BARS,bar1_link&#124;health-displayed bar2_link&#124;displayed-essence bar3_link&#124;willpower showplayers_bar1&#124;1 playersedit_bar1&#124;0 showplayers_bar2&#124;0 playersedit_bar2&#124;1|
 	CLEAR BARS,bar1_link&#124; bar2_link&#124; bar3_link&#124;|
 }
+
+RESET-BAR:
+!token-mod {{
+  --set 
+    bar1_link|
+    bar2_link|
+    bar3_link|
+}}
+!token-mod {{
+  --set 
+    bar1_reset|
+    bar2_reset|
+    bar3_reset|
+}}
+!token-mod {{
+  --set
+    bar1_link|health-displayed
+    bar2_link|displayed-essence
+    bar3_link|willpower
+    showplayers_bar1|1
+    playersedit_bar1|0
+    showplayers_bar2|0
+    playersedit_bar2|1
+}}
 
 Anima:
 !token-mod --set ?{Change Anima state to |
@@ -103,11 +156,9 @@ GM-Roll:
 ?{Type de Jet|Jet Standard,-D|Custom Roll,?{Commande a Ajouter :&#125;}
 ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,?{Commande a Ajouter :&#125;}
 
-Duplicate Token:
+Duplicate Token: 
 !DupCharToken ?{Action|
-  Create, ?{Set Starting ?&#124;
-     No&#44; ?{How Many ? &amp;#124;1 &amp;#125; &#124;
-     Yes&#44; ?{How Many ? SET START NUMBER AFTER SPACE &amp;#124;1 1 &amp;#125; &#125; |
+  Create, ?{How Many ?&#124;1&#125; ?{Starting ?&#125; |
   Clean, clean}
 
 AddMotes:
