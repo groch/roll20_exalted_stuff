@@ -42,7 +42,7 @@
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         
-            getAttrs([...healthFieldNames, 'combat-crippling-pen', 'woundpenalty-add', 'pain-tolerance'], TAS._fn(function getHealthFields(valuesSections) {
+            getAttrs([...healthFieldNames, 'combat-crippling-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'], TAS._fn(function getHealthFields(valuesSections) {
                 var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
                     return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
                 }).value();
@@ -75,7 +75,11 @@
                     ? -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
                     : -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
                 TAS.debug('Final Calculated penalty w/ Crippling=' + pen);
-                finalAttr = { 'wound-penalty': pen, 'health-displayed': actualHealth, 'health-displayed_max': maxHealth };
+                finalAttr = { 'wound-penalty': pen };
+                if (!Number(valuesSections['battlegroup'])) {
+                    TAS.debug(`updateWoundThenParry:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+                    finalAttr = { ...finalAttr, 'health-displayed': actualHealth, 'health-displayed_max': maxHealth };
+                }
 
                 getAttrs(['qc', 'brawl', 'melee', 'dexterity', 'qc-parry'], TAS._fn(function determineIfQC(values){
                     TAS.debug('Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
@@ -186,6 +190,45 @@
             TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
             setAttrs({"battlegroup-magnitude_max": Number(values["battlegroup-size"]) + Number(values["battlegroup-health-levels"]) + (Number(values["battlegroup-perfect-morale"]) == 1 ? 3 : 0)});
         }));
+    });
+
+    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale change:battlegroup-magnitude', function updateBattleGroupHealthDisplayed(e) {
+        getSectionIDs('health', function getHealthList(idHealthArray) {
+            const healthFieldNames = [];
+            idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
+        
+            getAttrs([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"], TAS._fn(function getHealthFields(valuesSections) {
+                if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
+                    TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
+                    var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
+                        return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+                    }).value();
+                    
+                    let actualHealth = 0;
+                    for (const id of sortedIdHealthArray.reverse()) {
+                        let dmg =       valuesSections[`repeating_health_${id}_hl-damage`];
+                        if (dmg && (!dmg || dmg !== 'healthy')) break;
+                        else                                    actualHealth++;
+                    }
+    
+                    let maxHealth = sortedIdHealthArray.length;
+                    TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+                    setAttrs({'health-displayed': actualHealth, 'health-displayed_max': maxHealth});
+                } else if (Number(valuesSections['battlegroup'])) {
+                    let bgSize =    Number(valuesSections["battlegroup-size"]),
+                        bgHL =      Number(valuesSections["battlegroup-health-levels"]),
+                        bgPM =      Number(valuesSections["battlegroup-perfect-morale"]),
+                        bgMag =     Number(valuesSections["battlegroup-magnitude"]);
+                    let displayedHealth = 0;
+                    for (let sizeIter = 1; sizeIter < bgSize; sizeIter++)
+                        displayedHealth += bgHL + sizeIter;
+                    const displayedHealthMax = displayedHealth + bgHL + bgSize + (bgPM ? 3 : 0);
+                    displayedHealth = displayedHealth + bgMag;
+                    TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${displayedHealthMax} actualHealth=${displayedHealth}`);
+                    setAttrs({"health-displayed": displayedHealth, "health-displayed_max": displayedHealthMax});
+                }
+            }));
+        });
     });
 
     on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', function setOrDisableBattleGroupSpecialAttrs(e) {
@@ -364,7 +407,7 @@
     });
 
     function addGenericCharmsToObj(caste, charmObj) {
-        let idCharm1 = generateRowID();
+        const idCharm1 = generateRowID();
         charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Generic Excellency';
         charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Supplemental';
         charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '[[?{Dice Added ?|1}]]';
