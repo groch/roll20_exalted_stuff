@@ -3372,16 +3372,17 @@ var CombatMaster = CombatMaster || (function() {
 
         if (!inFight()) return;
 
-        let turnorder =  getTurnorder();
+        let turnorder =  getTurnorder(), changeTurnDetected = false;
         const newTurnorder = turnorder.filter(turn => turn.id !== obj.get('_id'));
         if (JSON.stringify(newTurnorder) != JSON.stringify(turnorder)) { // delete an item which is in the roll20 combat/turnorder
             logger('handleGraphicDelete::Setting newTurnorder !!! (token deleted was part of turn order) turnorder='+JSON.stringify(newTurnorder.map(turn => turn.pr).filter(turn => turn != -420)));
             setTurnorder(newTurnorder);
+            changeTurnDetected = true
         }
         const filteredTurnorder = turnorder.map(turn => turn.pr).filter(turn => turn != -420);
         logger('handleGraphicDelete::without turns turnorder='+JSON.stringify(filteredTurnorder));
 
-        if (filteredTurnorder.length - 1 <= 1) {
+        if (changeTurnDetected && filteredTurnorder.length - 1 <= 1) {
             logger('handleGraphicDelete::No More Token to Fight with, closing combat !! /!\\');
             stopCombat();
             logger('handleGraphicDelete::-----END-----');
