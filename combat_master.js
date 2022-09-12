@@ -224,7 +224,7 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|toggleVision|createDecisiveAbilities|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -407,8 +407,6 @@ var CombatMaster = CombatMaster || (function() {
             ],
             checkedCastList = [
                 {key:'onslaught',                           fxName:'addOnslaughtToPlayer',                fx: addOnslaughtToPlayer},
-                {key:'toggleVision',                        fxName:'toggleTokenVision',                   fx: toggleTokenVision},
-                {key:'createDecisiveAbilities',             fxName:'createDecisiveAbilities',             fx: createDecisiveAbilities},
                 {key:'moteAdd',                             fxName:'addMotesCommand',                     fx: addMotesCommand},
                 {key:'togglePageSize',                      fxName:'togglePageSize',                      fx: togglePageSize},
                 {key:'applyInitBonusToCrasherSelected',     fxName:'applyInitBonusToCrasherSelected',     fx: applyInitBonusToCrasherSelected},
@@ -453,32 +451,21 @@ var CombatMaster = CombatMaster || (function() {
         let handoutList = findObjs({_type: 'handout'}); // inplayerjournals: 'all'
         logger(LOGLEVEL.EMERGENCY, `getHandoutMenu::getHandoutMenu cmdDetails=${JSON.stringify(cmdDetails)}, handoutList.length=${handoutList.length}`);
         // logger(LOGLEVEL.EMERGENCY, `getHandoutMenu:: handoutList=${JSON.stringify(handoutList)}`);
-        let prefixToRemove = '', title = 'Requested Link(s) - ', toGmOnly = false;
-        switch (String(cmdDetails.details.handoutType)) {
+        let prefixToRemove = '', title = 'Requested Link(s) - ', toGmOnly = false, handType = String(cmdDetails.details.handoutType);
+        switch (handType) {
             case 'anima':
-                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Anima:/));
-                prefixToRemove = /^HLP-Anima:\s?/;
-                title += 'Anima';
-                break;
             case 'combat':
-                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Combat:/));
-                prefixToRemove = /^HLP-Combat:\s?/;
-                title += 'Combat';
-                break;
             case 'craft':
-                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Craft:/));
-                prefixToRemove = /^HLP-Craft:\s?/;
-                title += 'Craft';
+            case 'misc':
+                const capitalizedHandType = handType.charAt(0).toUpperCase() + handType.slice(1);
+                handoutList = handoutList.filter(i => i.get('name').match(RegExp(`^HLP-${capitalizedHandType}:`)));
+                prefixToRemove = RegExp(`^HLP-${capitalizedHandType}:\s?`);
+                title += capitalizedHandType;
                 break;
             case 'xp':
                 handoutList = handoutList.filter(i => i.get('name').match(/^HLP-XP:/));
                 prefixToRemove = /^HLP-XP:\s?/;
                 title += 'XP';
-                break;
-            case 'misc':
-                handoutList = handoutList.filter(i => i.get('name').match(/^HLP-Misc:/));
-                prefixToRemove = /^HLP-Misc:\s?/;
-                title += 'Misc';
                 break;
             default:
                 handoutList = handoutList.filter(i => i.get('name').match(/^HLP:/));
@@ -829,68 +816,6 @@ var CombatMaster = CombatMaster || (function() {
         }
         attr.set('max', calculatedMax);
         return calculatedMax;
-    },
-
-    createDecisiveAbilities = (cmdDetails, selected) => {
-        logger(`createDecisiveAbilities::createDecisiveAbilities cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
-
-        _.chain(selected)
-        .map(o => getObj('graphic',o._id))
-        .compact()
-        .each(function(t){
-            let finalcharacterObj = getObj('character',t.get('represents')),
-                finalcharacterId  = finalcharacterObj.get('id'),
-                abilities         = findObjs({type:'ability',characterid:finalcharacterId}),
-                expectedAbilities = {
-                    dd:false,
-                    ddGm:false
-                },
-                abilityTemplates  = {
-                    dd:{
-                        name:          'HLP-Decisive-Damage',
-                        description:   'Exalted HLP Decisive Ability:dd',
-                        characterid:   finalcharacterId,
-                        action:        '/em confirme son attaque Decisive et inflige :\n!exr @{tracker|'+t.get('name')+'}# ?{Type de Jet|Jet Standard,-D|Custom Roll,?{Commande a Ajouter :&#125;}\n/r 3[RESETING INIT] &{tracker}',
-                        istokenaction: true
-                    },
-                    ddGm:{
-                        name:          'HLP-Decisive-Damage-ToGM',
-                        description:   'Exalted HLP Decisive Ability:ddGm',
-                        characterid:   finalcharacterId,
-                        action:        '/w gm @{character_name} confirme son attaque Decisive et inflige :\n!exr @{tracker|'+t.get('name')+'}# ?{Type de Jet|Jet Standard,-D|Custom Roll,?{Commande a Ajouter :&#125;} -gm\n/gr 3[RESETING INIT] &{tracker}',
-                        istokenaction: true
-                    }
-                };
-            _.each(abilities,(abi)=>{
-                abi.get('description').replace(/^Exalted HLP Decisive Ability:(.+)/,(match,keyword)=>{
-                    expectedAbilities[keyword]=true;
-                });
-            });
-            _.each(_.keys(expectedAbilities),(key)=>{
-                if (!expectedAbilities[key]){
-                    logger(LOGLEVEL.INFO, 'createDecisiveAbilities:: Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
-                    createObj('ability',abilityTemplates[key]);
-                } else {
-                    let finalAbi = findObjs({type:'ability',characterid:finalcharacterId, description:`Exalted HLP Decisive Ability:${key}`})[0];
-                    if (!finalAbi) logger(LOGLEVEL.ALERT, 'ABILITY PRESENT BUT NOT FOUND !?!?');
-                    logger(LOGLEVEL.INFO, 'createDecisiveAbilities:: Setting Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
-                    finalAbi.set(abilityTemplates[key]);
-                }
-            });
-        });
-    },
-
-    toggleTokenVision = (cmdDetails, selected) => {
-        logger(LOGLEVEL.INFO, `toggleTokenVision::toggleTokenVision cmdDetails=${JSON.stringify(cmdDetails)} selected=${JSON.stringify(selected)}`);
-
-        _.chain(selected)
-        .map(o => getObj('graphic',o._id))
-        .compact()
-        .each(function(t){
-            var valLight = t.get('has_bright_light_vision');
-            logger('toggleTokenVision::FOREACH SELECTED t.get(\'has_bright_light_vision\')=' + JSON.stringify(valLight));
-            t.set({'has_bright_light_vision': !valLight, 'has_night_vision': !valLight});
-        });
     },
 
     addOnslaughtToPlayer = (cmdDetails, selected) => {
