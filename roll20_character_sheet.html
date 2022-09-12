@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.34, debug = 1;
+    const version = 2.35, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -333,9 +333,12 @@
     on('change:caste', TAS._fn(function updateMotePool(eventInfo){
         getAttrs(["caste"], TAS._fn(function determineMotePool(values){
             var periEquation = "0", persEquation = "0", showAnima = 1,
-                showSupernal = 0,   showLimit = 0;
-            if (["Dawn", "Zenith",   "Twilight", "Night", "Eclipse",
-                 "Dusk", "Midnight", "Daybreak", "Day",   "Moonshadow"].includes(values.caste)) {
+                showSupernal = 0,   showLimit = 0,
+                casteLow = 'unknown';
+            if (["Dawn",    "Zenith",   "Twilight",   "Night",      "Eclipse",
+                 "Dusk",    "Midnight", "Daybreak",   "Day",        "Moonshadow",
+                 "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer",
+                 "Adamant", "Jade",     "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal"].includes(values.caste)) {
                 persEquation = "@{essence} * 3 + 10";
                 periEquation = "@{essence} * 7 + 26 - @{committedesstotal}";
                 showSupernal = 1;
@@ -358,20 +361,29 @@
                 persEquation = "0";
                 periEquation = "@{essence} * 10 + 50 - @{committedesstotal}";
                 showAnima = 0;
-            } else if (values.caste == "Mortal"){
+            } else if (values.caste === "God-Blooded"){
+                persEquation = "0";
+                periEquation = "@{essence} * 10 - @{committedesstotal}";
+                showAnima = 0;
+            } else if (values.caste === "Mortal"){
                 persEquation = "0";
                 periEquation = "0";
                 showAnima = 0;
             } else return;
 
-            setAttrs({
+            if (hasCasteImg(values.caste))
+                 casteLow = values.caste.toLowerCase();
+
+            const finalObj = {
                 "personal-equation": persEquation,
                 "peripheral-equation": periEquation,
                 "showanimadiv": showAnima,
                 "showsupdiv": showSupernal,
                 "showlimit": showLimit,
-                "caste-low": values.caste ? values.caste.toLowerCase() : 'unknown'
-            });
+                "caste-low": casteLow
+            };
+            TAS.debug(`updateMotePool:: Setting=`, finalObj);
+            setAttrs(finalObj);
         }));
     }));
 
@@ -382,7 +394,7 @@
         {version: 2.30, fn: upgradeto231},
         {version: 2.31, fn: upgradeto232},
         {version: 2.32, fn: upgradeto233},
-        {version: 2.33, fn: upgradeto234},
+        {version: 2.34, fn: upgradeto235},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -435,15 +447,31 @@
         charmObj[`repeating_charms_${idCharm2}_charm-effect`] = 'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.';
     }
 
-    function upgradeto234() {
+    function hasCasteImg(caste) {
+        if (["Dawn",      "Zenith",        "Twilight",   "Night",      "Eclipse",
+             "Dusk",      "Midnight",      "Daybreak",   "Day",        "Moonshadow",
+             "Defiler",   "Fiend",         "Malefactor", "Scourge",    "Slayer",
+             "Adamant",   "Jade",          "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal",
+             "Full Moon", "Changing Moon", "No Moon",    "Casteless",
+             "Air",       "Earth",         "Fire",       "Water",      "Wood",
+             "Journeys",  "Serenity",      "Battles",    "Secrets",    "Endings",
+             "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
+            return true;
+        return false;
+    }
+
+    function upgradeto235() {
         getAttrs(["caste"], TAS._fn(function determineCaste(values){
             const caste = values['caste'] || 'Unknown',
                   charmObj = {}
 
-            charmObj['caste-low'] = caste.toLowerCase();
+            if (hasCasteImg(caste))
+                charmObj['caste-low'] = caste.toLower();
+            else
+                charmObj['caste-low'] = 'unknown';
             charmObj['version'] = version;
 
-            TAS.debug(`upgradeto234:: Setting=`, charmObj);
+            TAS.debug(`upgradeto235:: Setting=`, charmObj);
             setAttrs(charmObj);
         }));
     }
@@ -1417,6 +1445,7 @@
                             <option value="Exigent">Exigent</option>
                             <option value="Getimian">Getimian</option>
                             <option value="God">God</option>
+                            <option value="God-Blooded">God-Blooded</option>
                             <option value="Elemental">Elemental</option>
                             <option value="Demon">Demon</option>
                             <option value="Undead">Undead</option>
