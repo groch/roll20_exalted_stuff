@@ -661,6 +661,11 @@ var CombatMaster = CombatMaster || (function() {
             return;
         }
         const tokenObj = getObj('graphic', selected[0]['_id']);
+        if (!tokenObj) {
+            logger(`addMotesCommand::TOKEN IS NOT GRAPHIC (Image), RETURN`);
+            sendGMStandardScriptMessage('Please select an image on the page for the script to work !');
+            return;
+        }
         const pageObj = getObj('page', tokenObj.get('_pageid'));
         let scale_number = Number(pageObj.get('scale_number')), // grid cell distance
             snapping_increment = Number(pageObj.get('snapping_increment')); // cell width
