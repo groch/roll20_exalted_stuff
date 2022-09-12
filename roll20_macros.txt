@@ -183,8 +183,23 @@ with 1px grid rework =>
 PageSizeConvert:
 !cmaster --?{Normal or Reverse ?|Normal,togglePageSize|Reverse,togglePageSize&#44;revert}
 
+DayNight:
+!token-mod --set currentside|?{Mode ? (face of token, usually 1 for day 2 for night)|1}
 
+Selenok:
+!token-mod --set ?{Form ?|
+	Selenok-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;1|
+	Civretch-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;3|
+	Bat-.2%,scale&#124;[[0.014285714285&#42;0.35]]un currentside&#124;5|
+	Cerf-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;7}
 
+Hakim:
+!token-mod --set ?{Form ?|
+	Hakim-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;1|
+	JetPoKa-250%,scale&#124;[[0.014285714285&#42;2.5]]un currentside&#124;6|
+	Aigle-66%,scale&#124;[[0.014285714285&#42;0.666]]un currentside&#124;10|
+	Sanglier-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;8|
+	Giant Constrictor-500%,scale&#124;[[0.014285714285&#42;5]]un currentside&#124;12}
 
 
 
