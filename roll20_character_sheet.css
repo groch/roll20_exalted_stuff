@@ -2291,12 +2291,8 @@ body.sheet-darkmode {
     width: 100%;
 }
 
-.charsheet .defense-line .sheet-defenses > .flex-col.grow-normal {
-    max-width: 50%;
-}
-
-.charsheet .defense-line .sheet-defenses > .flex-col.grow-normal:last-child {
-    max-width: unset;
+.charsheet .sheet-defenses.flex-wrap {
+    justify-content: space-between;
 }
 
 /* -- WEAPON -- */

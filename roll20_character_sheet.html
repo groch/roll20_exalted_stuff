@@ -3143,7 +3143,7 @@
             <h1 class="sheet-health-defenses"><span>Health &amp; Defense</span></h1><!-- Healt & Defense -->
             <div class="sheet-defenses flex-wrap">
                 <input type="hidden" name="attr_wound-penalty" value="-4">
-                <div class="flex-col grow-normal">
+                <div class="flex-col">
                     <div class="flex grow-normal" style="margin-left: 1em;">
                         <span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:
                     </div>
@@ -3154,7 +3154,7 @@
                         <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
                     </div>
                 </div>
-                <div class="flex-col grow-normal">
+                <div class="flex-col">
                     <div class="flex grow-normal">
                         <span>Natural Soak</span>:
                         <span name="attr_stamina" style="margin-left: 7px; margin-right: 3px; width: 1.55em; text-align: center;" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px">
@@ -3170,7 +3170,7 @@
                         <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                     </div>
                 </div>
-                <div class="flex-col grow-normal">
+                <div class="flex-col">
                     <div class="flex grow-normal">
                         <span>Armored Soak</span>:
                         <input type="number" readonly="readonly" name="attr_armorsoak" title="Come from your armor">
@@ -3191,10 +3191,10 @@
                     </div>
                 </div>
                 <input type="hidden" name="attr_peripheral-essence_max" class="def-exc-test">
-                <div class="flex-col grow-normal def-exc">
+                <div class="flex-col def-exc">
                     <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                 </div>
-                <div class="flex-col grow-normal">
+                <div class="flex-col">
                     <div class="flex grow-normal">
                         <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
                         <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}">
@@ -3210,7 +3210,7 @@
                         <input type="number" value="@{resolve-base}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint">
                     </div>
                 </div>
-                <div class="flex-col grow-normal">
+                <div class="flex-col">
                     <div class="flex grow-normal">
                         <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
                         <input type="number" readonly="readonly" name="attr_hardness" title="Come from your armor">
@@ -10121,7 +10121,7 @@
                 <div class="defense-line"><!-- DEFENSES -->
                     <div class="sheet-defenses flex-wrap">
                         <input type="hidden" name="attr_wound-penalty" value="-4">
-                        <div class="flex-col grow-normal">
+                        <div class="flex-col">
                             <div class="flex grow-normal" style="margin-left: 1em;">
                                 <span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:
                             </div>
@@ -10132,7 +10132,7 @@
                                 <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
                             </div>
                         </div>
-                        <div class="flex-col grow-normal">
+                        <div class="flex-col">
                             <div class="flex grow-normal">
                                 <span>Natural Soak</span>:
                                 <span name="attr_stamina" style="margin-left: 7px; margin-right: 3px; width: 1.55em; text-align: center;" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px">
@@ -10148,7 +10148,7 @@
                                 <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" style="width:27px;margin-right:2px" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" style="width:27px" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint">
                             </div>
                         </div>
-                        <div class="flex-col grow-normal">
+                        <div class="flex-col">
                             <div class="flex grow-normal">
                                 <span>Armored Soak</span>:
                                 <input type="number" readonly="readonly" name="attr_armorsoak" title="Come from your armor">
@@ -10169,10 +10169,10 @@
                             </div>
                         </div>
                         <input type="hidden" name="attr_peripheral-essence_max" class="def-exc-test">
-                        <div class="flex-col grow-normal def-exc">
+                        <div class="flex-col def-exc">
                             <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                         </div>
-                        <div class="flex-col grow-normal">
+                        <div class="flex-col">
                             <div class="flex grow-normal">
                                 <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
                                 <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}">
@@ -10188,7 +10188,7 @@
                                 <input type="number" value="@{resolve-base}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" style="width:27px" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint">
                             </div>
                         </div>
-                        <div class="flex-col grow-normal">
+                        <div class="flex-col">
                             <div class="flex grow-normal">
                                 <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
                                 <input type="number" readonly="readonly" name="attr_hardness" title="Come from your armor">
