@@ -87,6 +87,13 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         return defaultConditionObj;
     },
 
+    parseCondRSuccLTHon1 = (defaultConditionObj, parsedReturn) => {
+        logger(`parseRSuccLTHon1::parseRSuccLTHon1 parsedReturn=${JSON.stringify(parsedReturn)}`);
+        defaultConditionObj.limit = Number(parsedReturn[1]);
+        logger(LOGLEVEL.NOTICE, `parseRSuccLTHon1:: Setting RSuccLTHon1 limit to ${defaultConditionObj.limit}`);
+        return defaultConditionObj;
+    },
+
     /**
      * CONDITIONALS face Handling
      */
@@ -100,9 +107,9 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 logger(`handleRollTurn::face(${setup.face}) section=${JSON.stringify(condConfig)}`);
                 var localToNextRollCondi = null, localCondiSectionDone;
                 if (condConfig && condConfig.faceTrigger(setup, result, result.rollSetup.conditionalActivated[condIterator])) {
-                    ({ localToNextRollCondi, localCondiSectionDone } = condConfig.diceCheckMethod(result, setup, item, turn, condIterator));
-                    logger(`handleRollTurn::after diceCheckMethod, localToNextRollCondi=${JSON.stringify(localToNextRollCondi)}`);
-                    if (setup.producedADie && localToNextRollCondi) {
+                    ({ localToNextRollCondi, localCondiSectionDone } = condConfig.handleFaceMethod(result, setup, item, turn, condIterator));
+                    logger(`handleRollTurn::after handleFaceMethod, localToNextRollCondi=${JSON.stringify(localToNextRollCondi)}`);
+                    if (localToNextRollCondi) {
                         if (condConfig.tagAssociated) localToNextRollCondi.tagList = [condConfig.tagAssociated];
                         setup.toNextRollCondi.push(localToNextRollCondi);
                     }
@@ -137,7 +144,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                     if (dieTesting.v === 'SECTIONDONE') continue;
                     if (!dieTesting.success && !dieTesting.rerolled) {
                         logger(LOGLEVEL.INFO, `handleFaceCondition1MotD::found a die to reroll ! turning into a 10 die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
-                        setup.producedADie = true;
                         toNextRollCondi = {
                             v: 10, wasEverRerolled: true,
                             wasRerolled: true, wasExploded: false, wasConditionallyAffected: true,
@@ -155,7 +161,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 if (cond.remainingToDo) cond.remainingFaceStored.push(setup.face);
             } else {
                 logger(LOGLEVEL.INFO, `handleFaceCondition1MotD:: Rerolling THIS dice ! turning into a 10F`);
-                setup.producedADie = true;
                 toNextRollCondi = {
                     v: 10, wasEverRerolled: true,
                     wasRerolled: true, wasExploded: false, wasConditionallyAffected: true,
@@ -170,7 +175,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             }
         }
         // if (condition of removing section) condiSectionDone = removeIteratorCondSectionMethod(result, condIterator, true);
-        logger(`handleFaceCondition1MotD::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
+        logger(`handleFaceCondition1MotD::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
         return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
     },
 
@@ -188,7 +193,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         if (createDie) {
             var newDie = randomInteger(10);
             logger(`handleFaceConditionDIT::newDie=${newDie}`);
-            setup.producedADie = true;
             toNextRollCondi = {
                 v: newDie, wasEverRerolled: false,
                 wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
@@ -201,7 +205,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             setup.titleText += ` DIT created a ${strFill(newDie)} ( Done${strFill(cond.done)}).`;
         }
         // if (condition of removing section) condiSectionDone = removeIteratorCondSectionMethod(result, condIterator, true);
-        logger(LOGLEVEL.INFO, `handleFaceConditionDIT::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
+        logger(LOGLEVEL.INFO, `handleFaceConditionDIT::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
         return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
     },
 
@@ -223,7 +227,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 if (!dieTesting.success && !dieTesting.rerolled) {
                     var newDie = randomInteger(10);
                     logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
-                    setup.producedADie = true;
                     toNextRollCondi = {
                         v: newDie, wasEverRerolled: true,
                         wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -241,7 +244,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
             var newDie = randomInteger(10);
             logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10:: Rerolling THIS dice ! turning into a ${newDie}`);
-            setup.producedADie = true;
             toNextRollCondi = {
                 v: newDie, wasEverRerolled: true,
                 wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -251,7 +253,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             cond.remainingToDo--, cond.done++;
             setup.titleText += ` Rn1on10 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
         }
-        logger(`handleFaceConditionRerollOn10::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+        logger(`handleFaceConditionRerollOn10::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
         return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
     },
 
@@ -273,7 +275,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 if (!dieTesting.success && !dieTesting.rerolled && dieTesting.v !== 1) {
                     var newDie = randomInteger(10);
                     logger(LOGLEVEL.INFO, `handleFaceConditionRerollPoolNon1On10::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
-                    setup.producedADie = true;
                     toNextRollCondi = {
                         v: newDie, wasEverRerolled: true,
                         wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -291,7 +292,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled) && setup.face !== 1) {
             var newDie = randomInteger(10);
             logger(LOGLEVEL.INFO, `handleFaceConditionRerollPoolNon1On10:: Rerolling THIS dice ! turning into a ${newDie}`);
-            setup.producedADie = true;
             toNextRollCondi = {
                 v: newDie, wasEverRerolled: true,
                 wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -301,7 +301,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             cond.remainingToDo--, cond.done++;
             setup.titleText += ` Rn1on10 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
         }
-        logger(`handleFaceConditionRerollPoolNon1On10::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+        logger(`handleFaceConditionRerollPoolNon1On10::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
         return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
     },
 
@@ -311,7 +311,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
 
         var newDie = randomInteger(10);
         logger(LOGLEVEL.INFO, `handleFaceConditionExplodeSuccesses::producing a die`);
-        setup.producedADie = true;
         toNextRollCondi = {
             v: newDie, wasEverRerolled: false,
             wasRerolled: false, wasExploded: true, wasConditionallyAffected: true, conditionalColor: cond.conditionalColor,
@@ -322,7 +321,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         cond.done++;
         setup.titleText += ` ES produced a ${newDie} (Done=${cond.done}).`;
 
-        logger(`handleFaceConditionExplodeSuccesses::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+        logger(`handleFaceConditionExplodeSuccesses::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
         return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
     },
 
@@ -344,7 +343,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 if (!dieTesting.success && !dieTesting.rerolled) {
                     var newDie = randomInteger(10);
                     logger(LOGLEVEL.INFO, `handleFaceConditionCR::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
-                    setup.producedADie = true;
                     toNextRollCondi = {
                         v: newDie, wasEverRerolled: true,
                         wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -362,7 +360,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
             var newDie = randomInteger(10);
             logger(LOGLEVEL.INFO, `handleFaceConditionCR:: Rerolling THIS dice ! turning into a ${newDie}`);
-            setup.producedADie = true;
             toNextRollCondi = {
                 v: newDie, wasEverRerolled: true,
                 wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -372,8 +369,24 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             cond.remainingToDo--, cond.done++;
             setup.titleText += ` CR rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
         }
-        logger(`handleFaceConditionCR::QUITTING ! producedADie=${setup.producedADie}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+        logger(`handleFaceConditionCR::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
         return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
+    },
+
+    handleFaceConditionRSuccLTHon1 = (result, setup, item, turn, condIterator) => {
+        var cond = result.rollSetup.conditionalActivated[condIterator];
+        if (cond.triggerDisplayed < cond.limit) {
+            logger(LOGLEVEL.INFO, `handleFaceConditionRSuccLTHon1::face(${setup.face}) CONDITIONAL-REROLL SUCCESS ON 1 TO DO ! section=${JSON.stringify(cond)}`);
+
+            setup.condTriggered = true;
+            setup.conditionalColor = cond.conditionalColor;
+            cond.remainingToDo++;
+            cond.triggerDisplayed++;
+            setup.titleText += ` RSuccLTHon1 triggered.`;
+
+            logger(`handleFaceConditionRSuccLTHon1::QUITTING ! cond.remainingToDo=${cond.remainingToDo} toNextRollCondi=null, condiSectionDone=null`);
+        }
+        return { localToNextRollCondi: null, localCondiSectionDone: null };
     },
 
     /**
@@ -433,6 +446,71 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
     },
 
     /**
+     * Final Hook for Conditionals, after all rolls have been done, but can start another dice roll
+     */
+     handleFinalConditionalHook = (result, turn, nextRollsToProcess) => {
+        logger(LOGLEVEL.INFO, `handleFinalConditionalHook::FINAL CONDITIONAL-ALL-TESTS !`);
+
+        var condIterator = 0, nextRollsToProcess = [];
+        do {
+            for (; condIterator < result.rollSetup.conditionalActivated.length; condIterator++) {
+                var condConfig = ConditionalList[result.rollSetup.conditionalActivated[condIterator].name];
+                logger(`handleRollTurn::testing section=${JSON.stringify(condConfig)}`);
+                if (condConfig.finalHook) {
+                    logger(LOGLEVEL.INFO ,`handleRollTurn::HANDLING FINAL ON Section=${JSON.stringify(condConfig)}`);
+                    condConfig.finalHook(result, turn, nextRollsToProcess, condIterator);
+                }
+            }
+        } while (condIterator != result.rollSetup.conditionalActivated.length);
+
+        logger(LOGLEVEL.INFO, `handleFinalConditionalHook::END nextRollsToProcess=${nextRollsToProcess.map(i => i.v)} FULL=${JSON.stringify(nextRollsToProcess)}`);
+        result.rollSetup.rollToProcess = nextRollsToProcess;
+
+        logger(LOGLEVEL.INFO, `handleTurnConditionalHook::END TURN CONDITIONAL-ALL-TESTS`);
+    },
+
+    handleTurnConditionalHookRSuccLTHon1 = (result, turn, nextRollsToProcess, condIterator) => {
+        var cond = result.rollSetup.conditionalActivated[condIterator];
+        if (cond.remainingToDo > 0) {
+            result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-RSuccLTHon1', conditionalColor, `&#013;&#010; RSuccLTHon1 need to reroll ${cond.limit} dices that shows as Success.`));
+        }
+        // find succes
+        let succTable = [null];
+        for (const face of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+            succTable.push((result.rollSetup.face[face] && result.rollSetup.face[face].successes.length) ? {face: face, found: []} : null);
+        for (var i=0; i < result.rollSetup.finalResults.length; i++) {
+            const dieTesting = result.rollSetup.finalResults[i];
+            if (dieTesting.v === 'SECTIONDONE') continue;
+            if (dieTesting.success && !dieTesting.rerolled) {
+                succTable[dieTesting.v].found.push(i);
+            }
+        }
+        succTable = succTable.filter(a => a && a.found.length).sort((a, b) => a.face - b.face);
+        logger(LOGLEVEL.INFO, `handleTurnConditionalHookRSuccLTHon1:: sorted succTable=${JSON.stringify(succTable)}`);
+        // reroll
+        while (cond.done < cond.limit && cond.remainingToDo && succTable.length) {
+            const rerolledId = succTable[0].found.shift();
+            if (!succTable[0].found.length) succTable.shift();
+            const dieTesting = result.rollSetup.finalResults[rerolledId];
+            var newDie = randomInteger(10);
+            logger(LOGLEVEL.INFO, `handleTurnConditionalHookRSuccLTHon1::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} dieTesting=${JSON.stringify(dieTesting)}`);
+            toNextRollCondi = {
+                v: newDie, wasEverRerolled: true,
+                wasRerolled: true, wasExploded: false, wasConditionallyAffected: true, conditionalColor: cond.conditionalColor,
+                title: [`RollTurn (${strFill(turn + 1)}). C(RSuccLTHon1) ->Face=${newDie}.`],
+                alternatePrevObjForTitle: dieTesting
+            };
+            dieTesting.condTriggered = false;
+            dieTesting.conditionalColor = cond.conditionalColor;
+            dieTesting.rerolled = true, dieTesting.condRerolled = true, dieTesting.wasEverRerolled = true;
+            logger(`handleTurnConditionalHookRSuccLTHon1::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
+            cond.remainingToDo--, cond.done++;
+            dieTesting.title = makeNewTitleFromOld(result, dieTesting.title, ` RSuccLTHon1 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`);
+            nextRollsToProcess.push(toNextRollCondi);
+        }  
+    },
+
+    /**
      * Detail title per conditions
      */
     detailsCond1MotDSectionDone = (condObj, showDone = false) => {
@@ -469,6 +547,12 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         return detail;
     },
 
+    detailsCondRSuccLTHon1SectionDone = (condObj, showDone = false) => {
+        logger(LOGLEVEL.NOTICE, `detailsCondRSuccLTHon1SectionDone::COND-REROLL SUCCESS Detail SECTION DONE=${JSON.stringify(condObj)}`);
+        var detail = `&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
+        return detail;
+    },
+
     makeSectionDoneObj = (typeTxt, color, detailsTxt = '') => {
         return {v: 'SECTIONDONE', sectionType: typeTxt, color: color, details: detailsTxt};
     };
@@ -477,7 +561,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
     const ConditionalList = {
         '1MotD': {
             faceTrigger: (setup, result, cond) => !setup.rerolled && (setup.success || cond.remainingToDo),
-            diceCheckMethod: handleFaceCondition1MotD, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceCondition1MotD, //(result, setup, item, turn, condIterator)
             getDetailMethod: detailsCond1MotDSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
                 name: '1MotD',
@@ -500,7 +584,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         },
         'DIT': {
             faceTrigger: (setup, result, cond) => setup.success,
-            diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
             getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
                 name: 'DIT',
@@ -513,7 +597,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         },
         'HMU': {
             faceTrigger: (setup, result, cond) => setup.success,
-            diceCheckMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionDIT, //(result, setup, item, turn, condIterator)
             turnHook: handleTurnConditionalHookHMU, //f(result, turn, nextRollsToProcess, condIterator)
             getDetailMethod: detailsCondDITSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
@@ -528,7 +612,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         },
         'Ron10': {
             faceTrigger: (setup, result, cond) => setup.face === 10 || (cond.remainingToDo && !setup.success),
-            diceCheckMethod: handleFaceConditionRerollOn10, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionRerollOn10, //(result, setup, item, turn, condIterator)
             turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
             getDetailMethod: detailsCondRerollsOn10SectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
@@ -540,7 +624,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         },
         'Rn1on10': {
             faceTrigger: (setup, result, cond) => setup.face === 10 || (cond.remainingToDo && setup.face !== 1 && !setup.success),
-            diceCheckMethod: handleFaceConditionRerollNon1On10, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionRerollNon1On10, //(result, setup, item, turn, condIterator)
             turnHook: null, //f(result, turn, nextRollsToProcess, condIterator)
             getDetailMethod: detailsCondRerollsOn10SectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
@@ -552,7 +636,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         },
         'ES': {
             faceTrigger: (setup, result, cond) => setup.success,
-            diceCheckMethod: handleFaceConditionExplodeSuccesses, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionExplodeSuccesses, //(result, setup, item, turn, condIterator)
             getDetailMethod: detailsCondESSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
                 name: 'ES',
@@ -563,7 +647,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         },
         'CR': {
             faceTrigger: (setup, result, cond) => setup.success || cond.remainingToDo,
-            diceCheckMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
             getDetailMethod: detailsCondCRSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
                 name: 'CR',
@@ -576,7 +660,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
             regPattern: /CRStarter\s(\d+)/,
             parseCommand: parseCondCRStarter, //f(defaultConditionObj, parsedReturn)
             faceTrigger: (setup, result, cond) => setup.success && setup.tagList.includes('CRStarter') || !setup.success && cond.remainingToDo,
-            diceCheckMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
+            handleFaceMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
             turnHook: handleTurnConditionalHookCRStarter, //f(result, turn, nextRollsToProcess, condIterator)
             getDetailMethod: detailsCondCRSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
@@ -584,6 +668,24 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 starterCount: 0,
                 remainingToDo: 0,
                 done: 0
+            },
+            finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
+            tagAssociated: 'CRStarter'
+        },
+        'RSuccLTHon1': {
+            regPattern: /RSuccLTHon1\s(\d+)/,
+            parseCommand: parseCondRSuccLTHon1, //f(defaultConditionObj, parsedReturn)
+            faceTrigger: (setup, result, cond) => setup.face === 1,
+            handleFaceMethod: handleFaceConditionRSuccLTHon1, //(result, setup, item, turn, condIterator)
+            finalHook: handleTurnConditionalHookRSuccLTHon1, //f(result, turn, nextRollsToProcess, condIterator)
+            getDetailMethod: detailsCondRSuccLTHon1SectionDone, //f(condObj, showDone = false)
+            defaultConditionObj: {
+                name: 'RSuccLTHon1',
+                limit: 1,
+                triggerDisplayed: 0,
+                remainingToDo: 0,
+                done: 0,
+                conditionalColor: '#FF0000'
             },
             finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
             tagAssociated: 'CRStarter'
@@ -618,7 +720,6 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         exploded: false,
         success: false,
         doubled: false,
-        producedADie: false,
         toNextRollRerolled: null,
         toNextRollExploded: null,
         toNextRollCondi: [],
@@ -817,6 +918,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         '-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
         '-Ron10 : on 10 Reroll 1 non success',
         '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
+        '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB ATHLETICS=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
         '-ES : Explode on success. NOT USED IN CHARMS',
         '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
         '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
@@ -824,7 +926,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 }
             ],
             defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-            helpVersion = 1.15;
+            helpVersion = 1.16;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -1489,7 +1591,11 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         var turn = 1;
         do {
             logger(LOGLEVEL.NOTICE, `MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
-            handleRollTurn(result, turn++);
+            do {
+                handleRollTurn(result, turn);
+                if (turn > 420) break;
+            } while (result.rollSetup.rollToProcess.length > 0)
+            handleFinalConditionalHook(result, turn++);
             if (turn > 420) break;
         } while (result.rollSetup.rollToProcess.length > 0)
         if (turn >= 420) result.rollSetup.maxRecursiveAchieved = true;
@@ -1626,7 +1732,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 result.rollSetup.finalResults.push(setup.doubleSectionDone);
             if (setup.exploded)
                 updateTitleAndPushToNextRolls(result, setup.toNextRollExploded, finalObj, nextRollsToProcess, setup.explodeSectionDone);
-            if (setup.producedADie && setup.toNextRollCondi)
+            if (setup.toNextRollCondi && setup.toNextRollCondi.length)
                 updateTitleAndPushToNextRolls(result, setup.toNextRollCondi,    finalObj, nextRollsToProcess, setup.condiSectionDone);
         }
 
