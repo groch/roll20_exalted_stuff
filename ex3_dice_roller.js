@@ -918,7 +918,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
         '-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
         '-Ron10 : on 10 Reroll 1 non success',
         '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
-        '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB ATHLETICS=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
+        '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB SOCIALIZE=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
         '-ES : Explode on success. NOT USED IN CHARMS',
         '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
         '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
@@ -926,7 +926,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
                 }
             ],
             defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-            helpVersion = 1.16;
+            helpVersion = 1.17;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
