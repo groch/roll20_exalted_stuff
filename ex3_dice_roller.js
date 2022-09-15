@@ -549,7 +549,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
 
     detailsCondRSuccLTHon1SectionDone = (condObj, showDone = false) => {
         logger(LOGLEVEL.NOTICE, `detailsCondRSuccLTHon1SectionDone::COND-REROLL SUCCESS Detail SECTION DONE=${JSON.stringify(condObj)}`);
-        var detail = `&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
+        var detail = `&#013;&#010; Limit =${condObj.limit}&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
         return detail;
     },
 
