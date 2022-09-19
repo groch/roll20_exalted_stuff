@@ -653,8 +653,6 @@ tier 2: couleurs
     font-size: 14px;
 }
 
-.charsheet .sheet-motes:last-child input[type=number],
-.charsheet .sheet-motes:last-child input[type=text],
 .charsheet .sheet-battle-group-row:last-child input[type=number],
 .charsheet .sheet-battle-group-row select {
     width: 71px;
