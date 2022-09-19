@@ -798,7 +798,7 @@ var CombatMaster = CombatMaster || (function() {
             if (added >= qty) break;
         }
 
-        const displayedEssenceTest = displayedEssenceObj.get('current') + added;
+        const displayedEssenceTest = Number(displayedEssenceObj.get('current')) + added;
         displayedEssenceObj.set('current', displayedEssenceTest > displayedEssenceObj.get('max') ? displayedEssenceObj.get('max') : displayedEssenceTest);
         return added && controlledBy.length ? true : false;
     },
