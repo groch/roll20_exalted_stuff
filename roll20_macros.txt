@@ -124,11 +124,22 @@ EXALTED ANIMA
 Light:
 !token-mod --set ?{Change Light state to |
 	No Lights+Dead,emits_bright&#124;0 emits_low&#124;0 statusmarkers&#124;=dead|
+	Custom,emits_bright&#124;1 emits_low&#124;1 bright_distance&#124;?{Bright Dist&#124;1&#125; low_distance&#124;?{Low Dist&#124;4&#125; statusmarkers&#124;-dead|
 	Glow Tier,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;0.8 bright_distance&#124;0.3 statusmarkers&#124;-dead|
 	Burn Tier,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;8 bright_distance&#124;3 statusmarkers&#124;-dead|
 	Bonfire Tier,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;35 bright_distance&#124;10.5 statusmarkers&#124;-dead|
-	No Lights,emits_bright&#124;0 emits_low&#124;0|
-	Custom,emits_bright&#124;1 emits_low&#124;1 bright_distance&#124;?{Bright Dist&#124;1&#125; low_distance&#124;?{Low Dist&#124;4&#125; statusmarkers&#124;-dead
+	Bob,emits_low&#124;1 low_distance&#124;?{Low Dist&#124;4&#125; bright_distance&#124;0 dim_light_opacity&#124;0.3  lightColor&#124;#ff9900 statusmarkers&#124;-dead|
+	No Lights,emits_bright&#124;0 emits_low&#124;0
+}
+!token-mod --set dim_light_opacity|0.3
+
+TokenStatus:
+!token-mod --set ?{Change Light state to |
+	+Sleepy,statusmarkers&#124;sleepy|
+	+Dead,statusmarkers&#124;dead|
+	=Dead,statusmarkers&#124;=dead|
+	+Custom,statusmarkers&#124;?{Status Marker to Add ?&#124;Skull&#44;skull&#124;Slow&#44;snail&#124;Stealth&#44;ninja-mask&#124;Aim&#44;archery-target&#124;Input&#44;?{Type&amp;#125; &#125;|
+	Clean,statusmarkers&#124;=dead&#124;-dead
 }
 
 HandoutMenu:
