@@ -9,9 +9,9 @@
  * Github: https://github.com/groch/roll20_exalted_stuff
  * @version 1.2
  */
-var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an error to localize the start of the script
+var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates an error to localize the start of the script
  //converts the line number in the error to be line 1
-     scriptStart = scriptStart.stack.match(/apiscript\.js:(\d+)/)[1]*1;
+    //  scriptStart = scriptStart.stack.match(/apiscript\.js:(\d+)/)[1]*1;
      'use strict';
 
      /**
@@ -2211,6 +2211,7 @@ var EX3Dice = EX3Dice || (function() {let scriptStart = new Error;//Generates an
     return {
         CheckInstall: checkInstall,
         RegisterEventHandlers: registerEventHandlers,
+        onChatMessage: onChatMessage,
         Startup: startup
     };
 }());
