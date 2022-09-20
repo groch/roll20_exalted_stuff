@@ -26,6 +26,9 @@ function sendChat(sender, message, callback) {
             // console.log(`content=${arrayRandomizedNumber.join(', ')}`);
             // console.log(`callback([{type: 'rollresult', content: content, origRoll: ${`!exr ${rollTxt}`}}]);`);
             callback([{type: 'rollresult', content: content, origRoll: `!exr ${rollTxt}`}]);
+        } else if (message.match(/\/roll .+d10>7/)) {
+            console.log('\nPlease enter simple roll like "!exr 42#+5", this script doesn\'t parse before the "#".');
+            process.exit(1);
         }
     }
     if ((ret2 = message.match(/BOTCH/))) {
@@ -68,7 +71,7 @@ function getRandomInt(max) {
 }
 
 function callChatMessage(txt) {
-    onChatMessage({type: 'api', content: txt});
+    EX3Dice.onChatMessage({type: 'api', content: txt});
 }
 
 function averageThatShit(nb) {
