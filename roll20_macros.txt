@@ -144,7 +144,7 @@ TokenStatus:
 
 HandoutMenu:
 !cmaster --getHandoutMenu?{Which Menu ?|
-	Default,|
+	Default, |
 	Anima,&#44;handoutType=anima|
 	Craft,&#44;handoutType=craft|
 	Combat,&#44;handoutType=combat|
@@ -201,7 +201,8 @@ Selenok:
 !token-mod --set ?{Form ?|
 	Selenok-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;1|
 	Civretch-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;3|
-	Bat-.2%,scale&#124;[[0.014285714285&#42;0.35]]un currentside&#124;5|
+	Bat-20%,scale&#124;[[0.014285714285&#42;0.2]]un currentside&#124;5|
+	Cock-30%,scale&#124;[[0.014285714285&#42;0.3]]un currentside&#124;9|
 	Cerf-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;7}
 
 Hakim:
