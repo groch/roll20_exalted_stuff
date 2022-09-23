@@ -186,10 +186,26 @@
     }
 
     on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', function updateBattleGroupMagnitude(e) {
-        getAttrs(["battlegroup-size", "battlegroup-health-levels", "battlegroup-perfect-morale"], TAS._fn(function determineBattleGroupMagnitude(values) {
-            TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
-            setAttrs({"battlegroup-magnitude_max": Number(values["battlegroup-size"]) + Number(values["battlegroup-health-levels"]) + (Number(values["battlegroup-perfect-morale"]) == 1 ? 3 : 0)});
-        }));
+        getSectionIDs('health', function getHealthList(idHealthArray) {
+            getAttrs(["battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale"], TAS._fn(function determineBattleGroupMagnitude(values) {
+                let bgSize =    Number(values["battlegroup-size"]),
+                    bgSizeMax = Number(values["battlegroup-size_max"]),
+                    bgHL =      Number(values["battlegroup-health-levels"]),
+                    bgPM =      Number(values["battlegroup-perfect-morale"]);
+                const objSet = {};
+                if (e.sourceAttribute === 'battlegroup' && e.newValue === '1') {
+                    bgHL = idHealthArray.length;
+                    objSet['battlegroup-health-levels'] = bgHL;
+                    bgSize = bgSizeMax;
+                    objSet['battlegroup-size'] = bgSizeMax;
+                }
+                objSet["battlegroup-magnitude_max"] = bgSize + bgHL + (bgPM == 1 ? 3 : 0);
+                if (e.sourceAttribute === 'battlegroup' && e.newValue === '1')
+                    objSet['battlegroup-magnitude'] = objSet["battlegroup-magnitude_max"];
+                TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
+                setAttrs(objSet);
+            }));
+        });
     });
 
     function triangularNumberSum(nb) { return (nb * (nb+1) / 2);}
@@ -223,8 +239,8 @@
                         bgHL =      Number(valuesSections["battlegroup-health-levels"]),
                         bgPM =      Number(valuesSections["battlegroup-perfect-morale"]),
                         bgMag =     Number(valuesSections["battlegroup-magnitude"]);
-                    const displayedHealth = (bgSize - 1) * bgHL + triangularNumberSum(bgSize - 1) + (bgPM ? (bgSize - 1) * 3 : 0) + bgMag;
-                    const displayedHealthMax = bgSizeMax * bgHL + triangularNumberSum(bgSizeMax)  + (bgPM ? bgSizeMax    * 3 : 0);
+                    const displayedHealth = bgSize === 0 ? 0 : (bgSize - 1) * bgHL + triangularNumberSum(bgSize - 1) + (bgPM ? (bgSize - 1) * 3 : 0) + bgMag;
+                    const displayedHealthMax =                    bgSizeMax * bgHL + triangularNumberSum(bgSizeMax)  + (bgPM ? bgSizeMax    * 3 : 0);
                     TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${displayedHealthMax} actualHealth=${displayedHealth}`);
                     setAttrs({"health-displayed": displayedHealth, "health-displayed_max": displayedHealthMax});
                 }
