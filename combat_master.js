@@ -773,7 +773,7 @@ var CombatMaster = CombatMaster || (function() {
             logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::adding ${toAdd} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
             let total = (current + toAdd);
             if (!isNaN(total)) {
-                const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding ${toAdd} motes to ${attr.get('name')}`;
+                const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding <b>${toAdd}</b> motes to <b>${attr.get('name')}</b>`;
                 attr.set('current', current + toAdd);
                 if (!state[combatState].config.announcements.announceMoteRegen) {
                     logger(`addMotesToNonMortalCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
@@ -783,7 +783,7 @@ var CombatMaster = CombatMaster || (function() {
                             logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${idPlayer} probably imported character`);
                             continue;
                         }
-                        sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString);
+                        sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString, undefined, undefined, undefined, 'background-color: #b4ffb4;');
                     }
                 }
                 if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0) {
@@ -792,7 +792,7 @@ var CombatMaster = CombatMaster || (function() {
                         if (playerObj) return playerObj.get('_displayname');
                         logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i} probably imported character`);
                         return false;
-                    }).filter(i => i).join(', ')}])`:''}`);
+                    }).filter(i => i).join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
                 }
             }
             if (added >= qty) break;
@@ -3231,12 +3231,12 @@ var CombatMaster = CombatMaster || (function() {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
-    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
-        sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
+        sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+rootDivStyle+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },
 
-    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
-        sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive);
+    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
+        sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive, rootDivStyle);
     },
 
     inFight = () => (Campaign().get('initiativepage') !== false),

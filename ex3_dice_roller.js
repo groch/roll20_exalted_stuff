@@ -1079,7 +1079,9 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             if (data[0] === 'will') {
                 let actualVal = Number(willObj.get('current'));
                 if (actualVal - val < 0)
-                    sendChat(script_name, `/w gm WILLPOWER ERROR WHEN ${characterObj.get('name')} CASTED: ACTUAL=${actualVal} COST=${val} !!!`);
+                    sendGMStandardScriptMessage(`WILLPOWER ERROR WHEN ${makeCharacterLink(characterObj, playerId)} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
+                else
+                    sendGMStandardScriptMessage(`${makeCharacterLink(characterObj, playerId)}:> Removing ${val} <b>WP</b>`);
                 willObj.set('current', actualVal - val);
             } else if (data[0].indexOf('peri') !== -1) {
                 logger(`setCosts:: calling removeMotesToCharacter, data[0][5]='${data[0][5]}'`);
@@ -1104,7 +1106,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             if (tokenObj.get('represents') === tokenId) {
                 logger(`reduceInitForId::setting id=${turnOrder[i].id} to pr=${Number(turnOrder[i].pr) - toRemove}`);
                 turnOrder[i].pr = Number(turnOrder[i].pr) - toRemove;
-                sendStandardScriptMessage(`Removing ${toRemove} Initiative to ${tokenObj.get('name')}`);
+                sendStandardScriptMessage(`Removing <b>${toRemove}</b> Initiative to <b>${tokenObj.get('name')}</b>`);
 
                 logger(LOGLEVEL.INFO, `reduceInitForId::FINAL setting turnOrder=${JSON.stringify(turnOrder)}`);
                 Campaign().set('turnorder', JSON.stringify(turnOrder));
@@ -1155,7 +1157,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             if (removed >= qty) break;
         }
         if (removed < qty)
-            sendGMStandardScriptMessage(`MOTE ERROR WHEN ${characterObj.get('name')} CASTED: qty=${qty} removed=${removed} !!! NO MORE MOTE TO SPEND`);
+            sendGMStandardScriptMessage(`MOTE ERROR WHEN ${makeCharacterLink(characterObj, characterId)} CASTED<br /><b>ASKED=</b>${qty} <b>REMOVED=</b>${removed} !!! NO MORE MOTE TO SPEND`, undefined, undefined, undefined, 'background-color: red;');
         const displayedEssenceTest = displayedEssenceObj.get('current') - removed;
         displayedEssenceObj.set('current', displayedEssenceTest < 0 ? 0 : displayedEssenceTest);
     },
@@ -1191,7 +1193,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     },
 
     sendMoteWhispers = (characterObj, characterId, attr, current, toRemove) => {
-        const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing ${toRemove} motes to ${attr.get('name')}`;
+        const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attr.get('name')}</b>`;
         let controlledBy = characterObj.get('controlledby');
         controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
         attr.set('current', current - toRemove);
