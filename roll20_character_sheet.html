@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.36, debug = 1;
+    const version = 2.37, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -192,12 +192,14 @@
         }));
     });
 
+    function triangularNumberSum(nb) { return (nb * (nb+1) / 2);}
+
     on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale change:battlegroup-magnitude', function updateBattleGroupHealthDisplayed(e) {
         getSectionIDs('health', function getHealthList(idHealthArray) {
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         
-            getAttrs([...healthFieldNames, "battlegroup-size", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"], TAS._fn(function getHealthFields(valuesSections) {
+            getAttrs([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"], TAS._fn(function getHealthFields(valuesSections) {
                 if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
                     TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
                     var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
@@ -215,15 +217,14 @@
                     TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
                     setAttrs({'health-displayed': actualHealth, 'health-displayed_max': maxHealth});
                 } else if (Number(valuesSections['battlegroup'])) {
+                    TAS.debug(`updateBattleGroupHealthDisplayed:: normal trigger`);
                     let bgSize =    Number(valuesSections["battlegroup-size"]),
+                        bgSizeMax = Number(valuesSections["battlegroup-size_max"]),
                         bgHL =      Number(valuesSections["battlegroup-health-levels"]),
                         bgPM =      Number(valuesSections["battlegroup-perfect-morale"]),
                         bgMag =     Number(valuesSections["battlegroup-magnitude"]);
-                    let displayedHealth = 0;
-                    for (let sizeIter = 1; sizeIter < bgSize; sizeIter++)
-                        displayedHealth += bgHL + sizeIter;
-                    const displayedHealthMax = displayedHealth + bgHL + bgSize + (bgPM ? 3 : 0);
-                    displayedHealth = displayedHealth + bgMag;
+                    const displayedHealth = (bgSize - 1) * bgHL + triangularNumberSum(bgSize - 1) + (bgPM ? (bgSize - 1) * 3 : 0) + bgMag;
+                    const displayedHealthMax = bgSizeMax * bgHL + triangularNumberSum(bgSizeMax)  + (bgPM ? bgSizeMax    * 3 : 0);
                     TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${displayedHealthMax} actualHealth=${displayedHealth}`);
                     setAttrs({"health-displayed": displayedHealth, "health-displayed_max": displayedHealthMax});
                 }
@@ -314,15 +315,18 @@
     }));
 
     on('change:personal-essence change:peripheral-essence', TAS._fn(function updateDisplayedMotes(e) {
-        getAttrs(['personal-essence', 'peripheral-essence'], setDebugWrapper(function getMoteAttrs(values){
+        getAttrs(['personal-essence', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
             let perso = Number(values['personal-essence']),
                 peri = Number(values['peripheral-essence']);
+                periMax = Number(values['peripheral-essence_max']);
 
             if (isNaN(perso)) {
                 perso = 0;
                 TAS.error(`NaN Value ! SETTING personal-essence=0`);
                 setAttrs({'personal-essence':0});
             }
+            if (isNaN(periMax))
+                periMax = 0;
             if (isNaN(peri)) {
                 peri = 0;
                 TAS.error(`NaN Value ! SETTING peripheral-essence=0`);
@@ -331,7 +335,7 @@
 
             let displayedMotes = perso + peri;
             TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
-            setAttrs({'displayed-essence': displayedMotes});
+            setAttrs({'displayed-essence': (displayedMotes === 0 && periMax === 0) ? '' : displayedMotes});
         }));
     }));
 
@@ -401,6 +405,7 @@
         {version: 2.32, fn: upgradeto233},
         {version: 2.34, fn: upgradeto235},
         {version: 2.35, fn: upgradeto236},
+        {version: 2.36, fn: upgradeto237},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -464,6 +469,33 @@
              "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
             return true;
         return false;
+    }
+
+    function upgradeto237() {
+        getAttrs(['personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], TAS._fn(function geMotesAndSetDisplayedAgain(valuesSections) {
+            let perso =     Number(valuesSections['personal-essence']),
+                persoMax =  Number(valuesSections['personal-essence_max']),
+                peri =      Number(valuesSections['peripheral-essence']);
+                periMax =   Number(valuesSections['peripheral-essence_max']);
+            for (const [variable, attrToSet] of [[perso, 'personal-essence'], [peri, 'peripheral-essence'], [persoMax, 'peripheral-essence_max'], [periMax, 'peripheral-essence_max']]) {
+                if (isNaN(variable)) {
+                    perso = 0;
+                    TAS.error(`NaN Value ! SETTING ${attrToSet}=0`);
+                    setAttrs({[attrToSet]:0});
+                }
+            }
+            let displayedMotes = perso + peri, maxDisplayed = persoMax + periMax;
+            if (maxDisplayed === 0 && displayedMotes === 0)
+                displayedMotes = '';
+            TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
+
+            const finalAttr = {
+                'displayed-essence': displayedMotes,
+                'displayed-essence_max': maxDisplayed,
+                'version': version
+            };
+            setAttrs(finalAttr);
+        }));
     }
 
     function upgradeto236() {
