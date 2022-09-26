@@ -1192,8 +1192,8 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
-    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|2}[Stunt,Spe,...]';
-    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}[Stunt/WP/...]';
+    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
+    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
 
     /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
