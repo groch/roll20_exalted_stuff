@@ -65,16 +65,20 @@ on("ready", function() {
                 }
             });
 
+            let playerName = findObjs({
+                id: msg.playerid
+            })[0].get("_displayname");
             if (myTokens.length > 0) {
                 if (myTokens.length > 1) log(`tokenfound length=${myTokens.length} !!! found=${JSON.stringify(myTokens)}`);
                 let myToken = myTokens[0];
+                if (myToken.get('layer') === 'gmlayer') {
+                    log(`ABORT PING: GMLAYER ! TokenName=${myToken.get('name')}, player=${playerName}`);
+                    sendChat("Ping Buddy", `/w "${playerName}" Character belonging to ${playerName} can be found on GM Layer, ask GM if its normal.`, null, {noarchive: true});
+                    return;
+                }
                 sendPing(myToken.get("left"), myToken.get("top"), myToken.get("pageid"), theGM.id, true, msg.playerid);
                 log(`PINGED player=${msg.playerid}, page=${myToken.get("pageid")}`);
             } else {
-                let playerName = findObjs({
-                    id: msg.playerid
-                })[0].get("_displayname");
-
                 sendChat("Ping Buddy", `/w "${playerName}" No character belonging to ${playerName} can be found on this page.`, null, {noarchive: true});
             }
         }
