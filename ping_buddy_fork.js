@@ -38,7 +38,7 @@ on("ready", function() {
     // !pingplayer - Finds and Ping Pulls player token
     on("chat:message", function(msg) {
         if (msg.type == "api" && msg.content.indexOf("!pingplayer") == 0)
-            pingPlayerToken(getPlayerPageOrDefault(msg.playerid));
+            pingPlayerToken(getPlayerPageOrDefault(msg.playerid), "Party", (theGM.get('_id') === msg.playerid) ? undefined : msg.playerid);
     });
 
 
@@ -108,7 +108,7 @@ on("ready", function() {
     });
 
     //Pulls to token named "Player"
-    function pingPlayerToken(page = Campaign().get("playerpageid"), name = "Party") {
+    function pingPlayerToken(page = Campaign().get("playerpageid"), name = "Party", whisperTo) {
         var tokens = findObjs({
             _name: name,
             _type: "graphic",
@@ -123,6 +123,6 @@ on("ready", function() {
         var playerStartToken = tokens[tokens.length - 1];
         if (playerStartToken === undefined) return;
 
-        sendPing(playerStartToken.get("left"), playerStartToken.get("top"), playerStartToken.get("pageid"), theGM.id, true);
+        sendPing(playerStartToken.get("left"), playerStartToken.get("top"), playerStartToken.get("pageid"), theGM.id, true, whisperTo);
     }
 });
