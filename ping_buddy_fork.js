@@ -6,7 +6,9 @@ on("ready", function() {
     const theGM = findObjs({
             type: 'player'
         })
-        .find(o => playerIsGM(o.id));
+        .find(o => playerIsGM(o.id)),
+        defaultColor = '#ffcc00';
+    let originalColor, intervalId;
         
     // When page loads, ping pull to "Player" Token
     on("change:campaign:playerpageid", function() {
@@ -83,15 +85,21 @@ on("ready", function() {
     // When "Player" token moves, invisibly ping pull all players to it
     on("change:graphic", function(obj, prev) {
         if (obj.get("name") === "Party") {
-            let originalColor = theGM.get("color");
+            const localGmCol = theGM.get("color");
+            if (!originalColor || localGmCol !== 'transparent')
+                originalColor = localGmCol === 'transparent' ? defaultColor : localGmCol;
             theGM.set("color", "transparent");
 
             pingPlayerToken(obj.get("_pageid"));
-            setTimeout(() => theGM.set("color", originalColor), 1200);
+
+            if (intervalId) clearInterval(intervalId);
+            intervalId = setTimeout(() => {
+                theGM.set("color", originalColor);
+                intervalId = undefined;
+            }, 2000);
         }
 
     });
-
 
     //Pulls to token named "Player"
     function pingPlayerToken(page = Campaign().get("playerpageid")) {
