@@ -30,6 +30,8 @@ on("ready", function() {
 
     function getPlayerPageOrDefault(playerId) {
         const pages = Campaign().get("playerspecificpages");
+        if (playerId === theGM.get('_id'))
+            return theGM.get('_lastpage');
         return (pages && (playerId in pages)) ? pages[playerId] : Campaign().get("playerpageid");
     }
 
