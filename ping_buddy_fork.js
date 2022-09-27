@@ -26,24 +26,24 @@ on("ready", function() {
         }
     });
 
+    function getPlayerPageOrDefault(playerId) {
+        const pages = Campaign().get("playerspecificpages");
+        return (pages && (playerId in pages)) ? pages[playerId] : Campaign().get("playerpageid");
+    }
+
     // !pingplayer - Finds and Ping Pulls player token
     on("chat:message", function(msg) {
-        if (msg.type == "api" && msg.content.indexOf("!pingplayer") == 0) {
-            pingPlayerToken();
-        }
+        if (msg.type == "api" && msg.content.indexOf("!pingplayer") == 0)
+            pingPlayerToken(getPlayerPageOrDefault(msg.playerid));
     });
 
 
     // !pingpme - Finds and Ping Pulls first found token belonging to a player
     on("chat:message", function(msg) {
         if (msg.type === "api" && msg.content.indexOf("!pingme") === 0) {
-
-            let pages = Campaign().get("playerspecificpages");
-            let page = (pages && (msg.playerid in pages)) ? pages[msg.playerid] : Campaign().get("playerpageid");
-            //log(`page=${page}, playerPageId=${Campaign().get("playerpageid")}`);
             let tokens = findObjs({
                 _type: "graphic",
-                _pageid: page
+                _pageid: getPlayerPageOrDefault(msg.playerid)
             });
             if (undefined === tokens) {
                 return;
