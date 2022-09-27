@@ -114,7 +114,10 @@ on("ready", function() {
             _type: "graphic",
             _pageid: page
         });
-        if (tokens.length < 1) return;
+        if (tokens.length < 1) {
+            sendChat("Ping Buddy", `/w gm No Token named '${name}' can be found on this page.`, null, {noarchive: true});
+            return;
+        }
         if (tokens.length > 1)
             log("Ping Buddy> Multiple Party token on this map, pinging Last one created(??, its the last in the findObj array)");
         var playerStartToken = tokens[tokens.length - 1];
