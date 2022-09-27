@@ -67,19 +67,30 @@ on("ready", function() {
                 }
             });
 
-            let playerName = findObjs({
+            const player = findObjs({
                 id: msg.playerid
-            })[0].get("_displayname");
+            })[0],
+                  playerName = player.get("_displayname"),
+                  playerAs = player.get("speakingas");
             if (myTokens.length > 0) {
-                if (myTokens.length > 1) log(`tokenfound length=${myTokens.length} !!! found=${JSON.stringify(myTokens)}`);
                 let myToken = myTokens[0];
+                if (myTokens.length > 1) {
+                    if (playerAs.indexOf('character|') === 0) {
+                        const slice = playerAs.slice(10);
+                        let myToken2 = myTokens.filter(i => i.get('represents') === slice)[0];
+                        log(`slice=${slice}, myToken2=${JSON.stringify(myToken2)}`);
+
+                        if (myToken2) myToken = myToken2
+                        else          sendChat("Ping Buddy", `/w "${playerName}" There is no Token representing "${getObj('character', slice).get('name')}" (the Character selected) belonging to ${playerName} at this moment but another you represent has been found ! Pinging to this one.`, null, {noarchive: true});
+                    }
+                }
                 if (myToken.get('layer') === 'gmlayer') {
                     log(`ABORT PING: GMLAYER ! TokenName=${myToken.get('name')}, player=${playerName}`);
                     sendChat("Ping Buddy", `/w "${playerName}" Character belonging to ${playerName} can be found on GM Layer, ask GM if its normal.`, null, {noarchive: true});
                     return;
                 }
                 sendPing(myToken.get("left"), myToken.get("top"), myToken.get("pageid"), theGM.id, true, msg.playerid);
-                log(`PINGED player=${msg.playerid}, page=${myToken.get("pageid")}`);
+                log(`PINGED player=${msg.playerid}, page=${myToken.get("pageid")}, tokenName=${myToken.get('name')}`);
             } else {
                 sendChat("Ping Buddy", `/w "${playerName}" No character belonging to ${playerName} can be found on this page.`, null, {noarchive: true});
             }
