@@ -88,13 +88,13 @@ on("ready", function() {
 
     // When "Player" token moves, invisibly ping pull all players to it
     on("change:graphic", function(obj, prev) {
-        if (obj.get("name") === "Party") {
+        if (['Party', 'LookHere'].includes(obj.get("name"))) {
             const localGmCol = theGM.get("color");
             if (!originalColor || localGmCol !== 'transparent')
                 originalColor = localGmCol === 'transparent' ? defaultColor : localGmCol;
             theGM.set("color", "transparent");
 
-            pingPlayerToken(obj.get("_pageid"));
+            pingPlayerToken(obj.get("_pageid"), obj.get("name"));
 
             if (intervalId) clearInterval(intervalId);
             intervalId = setTimeout(() => {
@@ -106,13 +106,16 @@ on("ready", function() {
     });
 
     //Pulls to token named "Player"
-    function pingPlayerToken(page = Campaign().get("playerpageid")) {
+    function pingPlayerToken(page = Campaign().get("playerpageid"), name = "Party") {
         var tokens = findObjs({
-            _name: "Party",
+            _name: name,
             _type: "graphic",
             _pageid: page
         });
-        var playerStartToken = tokens[0];
+        if (tokens.length < 1) return;
+        if (tokens.length > 1)
+            log("Ping Buddy> Multiple Party token on this map, pinging Last one created(??, its the last in the findObj array)");
+        var playerStartToken = tokens[tokens.length - 1];
         if (playerStartToken === undefined) return;
 
         sendPing(playerStartToken.get("left"), playerStartToken.get("top"), playerStartToken.get("pageid"), theGM.id, true);
