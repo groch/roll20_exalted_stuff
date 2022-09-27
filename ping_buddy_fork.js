@@ -115,7 +115,7 @@ on("ready", function() {
             _pageid: page
         });
         if (tokens.length < 1) {
-            sendChat("Ping Buddy", `/w gm No Token named '${name}' can be found on this page.`, null, {noarchive: true});
+            sendChat("Ping Buddy", `/w gm No Token named '${name}' can be found on this page (${getObj('page', page).get('name')}).`, null, {noarchive: true});
             return;
         }
         if (tokens.length > 1)
