@@ -1594,10 +1594,10 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         do {
             logger(LOGLEVEL.NOTICE, `MEGATURN(${turn}) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`);
             do {
-                handleRollTurn(result, turn);
+                handleRollTurn(result, turn++);
                 if (turn > 420) break;
             } while (result.rollSetup.rollToProcess.length > 0)
-            handleFinalConditionalHook(result, turn++);
+            handleFinalConditionalHook(result, turn - 1);
             if (turn > 420) break;
         } while (result.rollSetup.rollToProcess.length > 0)
         if (turn >= 420) result.rollSetup.maxRecursiveAchieved = true;
