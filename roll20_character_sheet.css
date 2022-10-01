@@ -2200,6 +2200,11 @@ body.sheet-darkmode {
     background: linear-gradient(180deg, transparent, rgba(0, 88, 255, 0.5), transparent);
     /* background-color: #ff9100; */
 }
+    
+.charsheet .sheet-3col.inti-col input[name="attr_intimacyrepeatingxpspent"] {
+    width: 2em;
+    border-bottom: none;
+}
 
 /* --- COMBAT TAB --- */
 
