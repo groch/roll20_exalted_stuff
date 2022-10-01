@@ -2375,6 +2375,11 @@ body.sheet-darkmode {
     font-weight: bold;
 }
 
+.sheet-combat-init .second-line,
+.sheet-combat-init .third-line {
+    flex-basis: 50%;
+}
+
 .charsheet .sheet-tab-combat-sheet .combat-init .repitem {
 	border: 1px solid gold;
     border-radius: 5px;
@@ -2402,6 +2407,10 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-init .sheet-grouped-buttons .btn:hover {
     color: rgb(var(--init-color));
+}
+
+.charsheet .sheet-combat-init .sheet-init-macro-options {
+    width: 1em;
 }
 
 /* -- ATTACKS -- */
@@ -2860,7 +2869,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-rolls-sheet .roll-section > div > div .sheet-rolls-macro-options,
 .charsheet .combat-attacks .attack-section > div > div .sheet-init-macro-options {
-    min-width: 4em;
+    min-width: 1em;
 }
 
 .charsheet .combat-attacks .attack-section.withering-section > div > div.atk-section select[name="attr_repcombat-watk-abi"] {

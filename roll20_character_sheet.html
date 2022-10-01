@@ -1193,7 +1193,7 @@
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
     const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
-    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, Willpower, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
+    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
 
     /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
@@ -10362,7 +10362,7 @@
                                 <p style="flex-shrink: 0">
                                     <button type="roll" name="roll_init-cast-fluff" value="&amp;{template:exalted3e_combatcast} {{name=@{repinit-name}}} {{description=@{repcombat-desc}}}" class="stealth-btn" title="Cast Name+Desc for Fluff on click">INIT NAME : </button>
                                 </p>
-                                <input type="text" name="attr_repinit-name" class="sheet-atk-name grow-max" title="Name of Initiative roll">
+                                <input type="text" name="attr_repinit-name" class="sheet-atk-name grow-double" title="Name of Initiative roll">
                                 <div class="desc-toggle" title="Toggle Description">
                                     <input type="checkbox" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc" value="1">
                                     <span class="sheet-combatdesc" title="&lt;"></span>
@@ -10511,12 +10511,12 @@
                                     <option value="9">9</option>
                                     <option value="10">10</option>
                                 </select>+
-                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|2}[Stunt,Spe,...]">+
+                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">+
                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                             </div>
                             <div class="third-line grow-normal flex">
                                  + 
-                                <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, Willpower, ...)|0}[Stunt/WP/...]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                             
                                 <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                 <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
@@ -10721,7 +10721,7 @@
                                     </div>
                                     <div class="flex grow-normal">
                                         <button type="action" name="act_default-macro-watk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                        <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                        <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
                                         <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <input type="text" name="attr_repcombat-watk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -10767,7 +10767,7 @@
                                     </div>
                                     <div class="flex grow-normal">
                                         + 
-                                        <input type="text" name="attr_repcombat-wdmg-bonus-successes" class="sheet-wdmg-bonus-successes grow-normal" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                        <input type="text" name="attr_repcombat-wdmg-bonus-successes" class="sheet-wdmg-bonus-successes grow-double" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                                         <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw">
                                         <input type="text" name="attr_repcombat-wdmg-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -10929,7 +10929,7 @@
                                     </div>
                                     <div class="flex grow-normal">
                                         <button type="action" name="act_default-macro-datk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                        <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                        <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
                                         <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <input type="text" name="attr_repcombat-datk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
