@@ -3,7 +3,7 @@ backup:
 ?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7}
 
 Ratio:
-!token-mod --set scale|?{Ratio|PAGE SCALE,*0.0142857142un|/1.5,/1.5|*1.5,*1.5|/0.75,/0.75|Custom Roll,?{Ratio Custom :&#125;}
+!token-mod --set scale|?{Ratio|PAGE SCALE,*0.0142857142un|Custom Roll,?{Ratio Custom :&#125;|/1.5,/1.5|*1.5,*1.5|/0.75,/0.75}
 
 setTokens:
 
@@ -213,6 +213,16 @@ Hakim:
 	Sanglier-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;8|
 	Giant Constrictor-500%,scale&#124;[[0.014285714285&#42;5]]un currentside&#124;12}
 
+Hiroo:
+!token-mod --set ?{Form ?|
+	Hiroo-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;1|
+	Frothi-105%,scale&#124;[[0.014285714285&#42;1.05]]un currentside&#124;3|
+	Faucon-30%,scale&#124;[[0.014285714285&#42;0.3]]un currentside&#124;5|
+	Tom1-65%,scale&#124;[[0.014285714285&#42;0.65]]un currentside&#124;7|
+	Tom2-65%,scale&#124;[[0.014285714285&#42;0.65]]un currentside&#124;8|
+	Garde-95%,scale&#124;[[0.014285714285&#42;0.95]]un currentside&#124;10|
+	Marchand-85%,scale&#124;[[0.014285714285&#42;0.85]]un currentside&#124;12|
+	Jorg-85%,scale&#124;[[0.014285714285&#42;0.85]]un currentside&#124;14}
 
 
 
