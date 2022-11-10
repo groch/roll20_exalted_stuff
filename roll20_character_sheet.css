@@ -252,6 +252,10 @@ tier 2: couleurs
     height: 25px;
 }
 
+.charsheet div.sheet-qc-defenses .hideous-check[value="1"] ~ .sheet-trait.qc-appearance-trait {
+    background: linear-gradient(180deg, transparent, darkred, transparent);
+}
+
 .charsheet .sheet-tab-intimacies-sheet .sheet-qc-soc-influence-type-display {
     font-size: small;
     width: 5.5em;

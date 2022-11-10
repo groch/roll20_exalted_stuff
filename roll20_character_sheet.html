@@ -3016,25 +3016,31 @@
                                 <!-- 1.3.3.3.2.2 QC RIGHT COLUMN -->
                                 <h1 class="sheet-qc-defenses"><span>Defenses</span></h1>
                                 <div class="sheet-qc-defenses">
-                                    <div class="sheet-trait">
+                                    <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
+                                    <div class="sheet-trait qc-appearance-trait">
                                         <span>Appearance</span>
-                                        <input type="number" name="attr_appearance">
-                                    </div>
-                                    <div class="sheet-trait">
-                                        <span>Guile</span>
-                                        <input type="number" name="attr_qc-guile">
+                                        <span>
+                                            <div style="display: inline-block;" title="Hideous Merit">
+                                                <input type="checkbox" value="1" class="onslaught-checkbox" name="attr_qc-hideous"><span></span>
+                                            </div>
+                                            <input type="number" name="attr_appearance">
+                                        </span>
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Resolve</span>
                                         <input type="number" name="attr_qc-resolve">
                                     </div>
                                     <div class="sheet-trait">
-                                        <span>Parry</span>
-                                        <input type="number" name="attr_qc-parry">
+                                        <span>Guile</span>
+                                        <input type="number" name="attr_qc-guile">
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Evasion</span>
                                         <input type="number" name="attr_qc-evasion">
+                                    </div>
+                                    <div class="sheet-trait">
+                                        <span>Parry</span>
+                                        <input type="number" name="attr_qc-parry">
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Soak</span>
