@@ -173,7 +173,7 @@ Duplicate Token:
   Clean, clean}
 
 AddMotes:
-!cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;}
+!cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;|Full, qty:420}
 
 
 Replace Simple Img:
@@ -203,7 +203,8 @@ Selenok:
 	Civretch-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;3|
 	Bat-20%,scale&#124;[[0.014285714285&#42;0.2]]un currentside&#124;5|
 	Cock-30%,scale&#124;[[0.014285714285&#42;0.3]]un currentside&#124;9|
-	Cerf-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;7}
+	Cerf-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;7|
+	Silvor-110%,scale&#124;[[0.014285714285&#42;1.1]]un currentside&#124;11}
 
 Hakim:
 !token-mod --set ?{Form ?|
