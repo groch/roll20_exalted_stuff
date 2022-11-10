@@ -45,6 +45,7 @@ on("ready", function() {
     // !pingpme - Finds and Ping Pulls first found token belonging to a player
     on("chat:message", function(msg) {
         if (msg.type === "api" && msg.content.indexOf("!pingme") === 0) {
+            const rektMode = msg.content.indexOf('REKT') !== -1;
             let tokens = findObjs({
                 _type: "graphic",
                 _pageid: getPlayerPageOrDefault(msg.playerid)
@@ -57,7 +58,7 @@ on("ready", function() {
             let char = [];
             tokens.forEach(t => {
                 //log("player id = " + msg.playerid);
-                if (t.get("represents").length > 0) {
+                if (t && t.get("represents").length > 0) {
                     char = findObjs({
                         type: 'character',
                         id: t.get("represents")
@@ -75,6 +76,15 @@ on("ready", function() {
             if (myTokens.length > 0) {
                 let myToken = myTokens[0];
                 if (myTokens.length > 1) {
+                    log(`Logging all token founds`);
+                    for (const token of myTokens)
+                        log(`token name=${token.get('name')}, layer=${token.get('layer')}, top=${token.get('top')}, left=${token.get('left')}`);
+                    // handle remove for AS too
+                    if (rektMode && myToken.get('layer') === 'gmlayer') {
+                        log(`Deleting Token !`);
+                        myToken.remove();
+                        myToken = myTokens[1];
+                    }
                     if (playerAs.indexOf('character|') === 0) {
                         const slice = playerAs.slice(10);
                         let myToken2 = myTokens.filter(i => i.get('represents') === slice)[0];
