@@ -494,7 +494,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             const dieTesting = result.rollSetup.finalResults[rerolledId];
             var newDie = randomInteger(10);
             logger(LOGLEVEL.INFO, `handleTurnConditionalHookRSuccLTHon1::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} dieTesting=${JSON.stringify(dieTesting)}`);
-            toNextRollCondi = {
+            let toNextRollCondi = {
                 v: newDie, wasEverRerolled: true,
                 wasRerolled: true, wasExploded: false, wasConditionallyAffected: true, conditionalColor: cond.conditionalColor,
                 title: [`RollTurn (${strFill(turn + 1)}). C(RSuccLTHon1) ->Face=${newDie}.`],
