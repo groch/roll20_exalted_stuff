@@ -382,12 +382,16 @@
             } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(values.caste)){
                 persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
                 periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
-            } else if (["God", "Elemental", "Demon", "Undead"].includes(values.caste)){
-                persEquation = "0";
+            } else if (["God", "Elemental", "Undead"].includes(values.caste)){
+                persEquation = "@{essence} * 0 + 0 - @{committedessperso}";
                 periEquation = "@{essence} * 10 + 50 - @{committedesstotal}";
                 showAnima = 0;
+            } else if (values.caste === "Demon"){
+                persEquation = "@{essence} * 10 + 50 - @{committedessperso}";
+                periEquation = "@{essence} * 0 + 0 - @{committedesstotal}";
+                showAnima = 0;
             } else if (values.caste === "God-Blooded"){
-                persEquation = "0";
+                persEquation = "@{essence} * 0 + 0 - @{committedessperso}";
                 periEquation = "@{essence} * 10 - @{committedesstotal}";
                 showAnima = 0;
             } else if (values.caste === "Mortal"){
