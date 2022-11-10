@@ -2511,7 +2511,10 @@ var CombatMaster = CombatMaster || (function() {
         }
     },
 
-    getCurrentTurnObject = () => getTurnorder().shift(),
+    getCurrentTurnObject = () => {
+        let ret = getTurnorder().shift();
+        return typeof ret === "undefined" ? {id:"NO_TOKEN_FOUND_IN_TURNORDER"} : ret;
+    },
 
     getNextTurnObject = (skipId=-1) => {
         logger('getNextTurnObject::getNextTurnObject');
