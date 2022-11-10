@@ -522,7 +522,7 @@
         getAttrs(["personal-equation"], TAS._fn(function determineCaste(values){
             const personalEq = values['personal-equation'] || '0',
                   stringToCheck = ' - @{committedessperso}',
-                  attrObj = {}
+                  attrObj = {};
 
             if (personalEq.slice(personalEq.length - stringToCheck.length) !== stringToCheck && personalEq !== '0' && personalEq !== '')
                 attrObj['personal-equation'] = personalEq + stringToCheck;
