@@ -1637,7 +1637,7 @@ and (min-resolution:.001dpcm) {
     margin: 0 3px 0 3px;
 }
 
-.charsheet .def-exc-test[value="0"] ~ .def-exc {
+.charsheet .def-exc-test[value="Mortal"] ~ .def-exc {
     display: none;
 }
 

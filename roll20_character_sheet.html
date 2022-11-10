@@ -331,8 +331,9 @@
     }));
 
     on('change:personal-essence change:peripheral-essence', TAS._fn(function updateDisplayedMotes(e) {
-        getAttrs(['personal-essence', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
+        getAttrs(['personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
             let perso = Number(values['personal-essence']),
+                persoMax = Number(values['personal-essence']),
                 peri = Number(values['peripheral-essence']);
                 periMax = Number(values['peripheral-essence_max']);
 
@@ -341,8 +342,8 @@
                 TAS.error(`NaN Value ! SETTING personal-essence=0`);
                 setAttrs({'personal-essence':0});
             }
-            if (isNaN(periMax))
-                periMax = 0;
+            if (isNaN(persoMax)) persoMax = 0;
+            if (isNaN(periMax))  periMax = 0;
             if (isNaN(peri)) {
                 peri = 0;
                 TAS.error(`NaN Value ! SETTING peripheral-essence=0`);
@@ -351,7 +352,7 @@
 
             let displayedMotes = perso + peri;
             TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
-            setAttrs({'displayed-essence': (displayedMotes === 0 && periMax === 0) ? '' : displayedMotes});
+            setAttrs({'displayed-essence': (displayedMotes === 0 && persoMax === 0 && periMax === 0) ? '' : displayedMotes});
         }));
     }));
 
@@ -3267,7 +3268,7 @@
                         <input type="number" value="@{evasion-final}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                     </div>
                 </div>
-                <input type="hidden" name="attr_peripheral-essence_max" class="def-exc-test">
+                <input type="hidden" name="attr_caste" class="def-exc-test">
                 <div class="flex-col def-exc">
                     <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                 </div>
@@ -9910,7 +9911,7 @@
                         <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
                         <input type="number" value="(@{guile-base} + abs(@{guile-base})) / 2" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile"><input type="number" value="(@{guile-base-s} + abs(@{guile-base-s})) / 2" disabled="disabled" style="width:27px" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty">
                     </div>
-                    <input type="hidden" name="attr_peripheral-essence_max" class="def-exc-test">
+                    <input type="hidden" name="attr_caste" class="def-exc-test">
                     <div class="sheet-table-cell def-exc">
                         <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                     </div>
@@ -10245,7 +10246,7 @@
                                 <input type="number" value="@{evasion-final}" disabled="disabled" style="width:27px;margin-right:2px" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" style="width:27px" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint">
                             </div>
                         </div>
-                        <input type="hidden" name="attr_peripheral-essence_max" class="def-exc-test">
+                        <input type="hidden" name="attr_caste" class="def-exc-test">
                         <div class="flex-col def-exc">
                             <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                         </div>
