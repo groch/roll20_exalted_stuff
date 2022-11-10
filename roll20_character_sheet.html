@@ -298,7 +298,7 @@
         }));
     });
 
-    on('change:essence change:peripheral-equation change:committedessperso change:committedesstotal', TAS._fn(function updateMaxPeripheral(e) {
+    on('change:essence change:personal-equation change:peripheral-equation change:committedessperso change:committedesstotal', TAS._fn(function updateMaxPeripheral(e) {
         getAttrs(['essence', 'personal-equation', 'peripheral-equation', 'committedessperso', 'committedesstotal'], setDebugWrapper(function getAttrToUpdate(values){
             let periEquationStr = values['peripheral-equation'],
                 persoEquationStr = values['personal-equation'],
@@ -333,7 +333,7 @@
     on('change:personal-essence change:peripheral-essence', TAS._fn(function updateDisplayedMotes(e) {
         getAttrs(['personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
             let perso = Number(values['personal-essence']),
-                persoMax = Number(values['personal-essence']),
+                persoMax = Number(values['personal-essence_max']),
                 peri = Number(values['peripheral-essence']);
                 periMax = Number(values['peripheral-essence_max']);
 
