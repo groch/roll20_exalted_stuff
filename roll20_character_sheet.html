@@ -331,7 +331,7 @@
     }));
 
     on('change:personal-essence change:peripheral-essence', TAS._fn(function updateDisplayedMotes(e) {
-        getAttrs(['personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
+        getAttrs(['personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
             let perso = Number(values['personal-essence']),
                 persoMax = Number(values['personal-essence_max']),
                 peri = Number(values['peripheral-essence']);
