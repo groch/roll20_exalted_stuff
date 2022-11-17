@@ -1033,8 +1033,8 @@
                 return;
             }
             let finalMacro = '=COST:@{character_id}';
-            if (mote) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
-            if (will) finalMacro += `:will;${will}`;
+            if (String(mote).trim()) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
+            if (String(will).trim()) finalMacro += `:will;${will}`;
             if (init) finalMacro += `:init;${init}`;
             TAS.debug(`updateRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
             if (finalMacro.indexOf('@{') !== -1)
@@ -1193,8 +1193,8 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
-    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
-    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
+    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]+?{Dices from Motes (Excellency)|0}[Dices from Motes]';
+    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes]';
 
     /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
@@ -1267,6 +1267,7 @@
     /* Character Tab Roll Section '+' Triggers */
     on('clicked:repeating_rolls:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
+        updateRollForCost(e);
         clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}reprolls-bonus-dices`, defaultRoll20AddedDicePrompt),
             id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
         );
@@ -9686,10 +9687,10 @@
                                     <div class="grow-normal flex-wrap hide-on-edit">
                                         <div class="cost-section grow-normal flex">
                                             <p class="mote-color-down rounded-box grow-double flex peripheral-mote-toggle">
-                                                Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                                Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]">
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
-                                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Willpower ?|No,0|Yes,1}">
                                             </p>
                                             <p class="init-color-down rounded-box grow-double flex">
                                                 Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
