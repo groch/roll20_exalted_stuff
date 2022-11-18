@@ -927,7 +927,7 @@ tier 2: couleurs
 
 .charsheet .merits-toggle-desc[value="on"] ~ .merit-dot-toggle-wrapper > .merits-div-cast {
     display: block;
-    width: 44px;
+    width: 43px;
 }
 
 .charsheet .merits-toggle-desc[value="0"] ~ .merit-dot-toggle-wrapper > .merits-div-cast {
@@ -2918,12 +2918,71 @@ body.sheet-darkmode {
 
 /* main sheet Rolls */
 
+.charsheet .sheet-exroll-container {
+    display: block;
+}
+
 .charsheet .sheet-exroll {
     display: flex;
-    justify-content: center;
+}
+
+.charsheet .sheet-exroll-div {
+    display: flex;
+    justify-content: space-between;
     padding-bottom: 1em;
     border-bottom: gold 3px solid;
     border-radius: 2px;
+    align-items: center;
+}
+
+.charsheet .sheet-box-reminder {
+    width: 7.5em;
+    height: 1.5em;
+}
+
+.charsheet .sheet-box-reminder hr {
+    height: 2px;
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+
+.charsheet .sheet-box-reminder .reminder-cell {
+    display: inline-flex;
+    width: 3.6em;
+    justify-content: space-between; 
+    flex-basis: 33%;
+}
+
+.charsheet .sheet-box-reminder input[type="checkbox"].sheet-unnamed-toggle {
+    width: 7.2em;
+    height: 1.5em;
+}
+
+.charsheet .sheet-box-reminder .reminder-cell > input[type="number"] {
+    width: 1em;
+}
+
+.charsheet .sheet-box-reminder .repcontrol {
+    display: none;
+}
+
+.charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell > input[type="text"][readonly] {
+    width: 6.71em;
+    border-bottom: none;
+}
+
+.charsheet .sheet-box-reminder .repcontainer .repitem {
+    display: inline-flex;
+}
+
+.charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell {
+    width: unset;
+}
+
+.charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    left: 0px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .charsheet .sheet-tab-rolls-sheet .roll-section input[type="text"] {

@@ -9560,113 +9560,357 @@
             <h1><span>Rolls</span></h1>
             <div class="rolls-area">
                 <div class="left-column-rolls">
-                    <div class="sheet-exroll">
-                        <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                        <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
-                                Archery (@{archery}),@{archery}|
-                                Athletics (@{athletics}),@{athletics}|
-                                Awareness (@{awareness}),@{awareness}|
-                                Brawl (@{brawl}),@{brawl}|
-                                Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                Craft (...),?{Craft&amp;#124;
-                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                Dodge (@{dodge}),@{dodge}|
-                                Integrity (@{integrity}),@{integrity}|
-                                Investigation (@{investigation}),@{investigation}|
-                                Larceny (@{larceny}),@{larceny}|
-                                Linguistics (@{linguistics}),@{linguistics}|
-                                Lore (@{lore}),@{lore}|
-                                Martial Arts (...),?{Martial Arts&amp;#124;
-                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                Medicine (@{medicine}),@{medicine}|
-                                Melee (@{melee}),@{melee}|
-                                Occult (@{occult}),@{occult}|
-                                Performance (@{performance}),@{performance}|
-                                Presence (@{presence}),@{presence}|
-                                Resistance (@{resistance}),@{resistance}|
-                                Ride (@{ride}),@{ride}|
-                                Sail (@{sail}),@{sail}|
-                                Socialize (@{socialize}),@{socialize}|
-                                Stealth (@{stealth}),@{stealth}|
-                                Survival (@{survival}),@{survival}|
-                                Thrown (@{thrown}),@{thrown}|
-                                War (@{war}),@{war}|
-                                Thrown (@{thrown}),@{thrown}|
-                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                            }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
-                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
-                                Archery (@{archery}),@{archery}|
-                                Athletics (@{athletics}),@{athletics}|
-                                Awareness (@{awareness}),@{awareness}|
-                                Brawl (@{brawl}),@{brawl}|
-                                Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                Craft (...),?{Craft&amp;#124;
-                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                Dodge (@{dodge}),@{dodge}|
-                                Integrity (@{integrity}),@{integrity}|
-                                Investigation (@{investigation}),@{investigation}|
-                                Larceny (@{larceny}),@{larceny}|
-                                Linguistics (@{linguistics}),@{linguistics}|
-                                Lore (@{lore}),@{lore}|
-                                Martial Arts (...),?{Martial Arts&amp;#124;
-                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                Medicine (@{medicine}),@{medicine}|
-                                Melee (@{melee}),@{melee}|
-                                Occult (@{occult}),@{occult}|
-                                Performance (@{performance}),@{performance}|
-                                Presence (@{presence}),@{presence}|
-                                Resistance (@{resistance}),@{resistance}|
-                                Ride (@{ride}),@{ride}|
-                                Sail (@{sail}),@{sail}|
-                                Socialize (@{socialize}),@{socialize}|
-                                Stealth (@{stealth}),@{stealth}|
-                                Survival (@{survival}),@{survival}|
-                                Thrown (@{thrown}),@{thrown}|
-                                War (@{war}),@{war}|
-                                Thrown (@{thrown}),@{thrown}|
-                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                            }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
+                    <div class="sheet-exroll-div">
+                        <div class="sheet-box-reminder sheet-attr-reminder">
+                            <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Attr" class="sheet-layer5"></span>
+                            <div class="sheet-layer4">
+                                <div class="reminder-cell" title="Strength">
+                                    <span>Str</span>
+                                    <input type="number" class="reminder-val" name="attr_strength" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Charisma">
+                                    <span>Cha</span>
+                                    <input type="number" class="reminder-val" name="attr_charisma" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Perception">
+                                    <span>Per</span>
+                                    <input type="number" class="reminder-val" name="attr_perception" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Dexterity">
+                                    <span>Dex</span>
+                                    <input type="number" class="reminder-val" name="attr_dexterity" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Manipulation">
+                                    <span>Man</span>
+                                    <input type="number" class="reminder-val" name="attr_manipulation" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Intelligence">
+                                    <span>Int</span>
+                                    <input type="number" class="reminder-val" name="attr_intelligence" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Stamina">
+                                    <span>Sta</span>
+                                    <input type="number" class="reminder-val" name="attr_stamina" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Appearance">
+                                    <span>App</span>
+                                    <input type="number" class="reminder-val" name="attr_appearance" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Wits">
+                                    <span>Wit</span>
+                                    <input type="number" class="reminder-val" name="attr_wits" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sheet-exroll-container">
+                            <div class="sheet-exroll">
+                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
+                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
+                                        Archery (@{archery}),@{archery}|
+                                        Athletics (@{athletics}),@{athletics}|
+                                        Awareness (@{awareness}),@{awareness}|
+                                        Brawl (@{brawl}),@{brawl}|
+                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                        Craft (...),?{Craft&amp;#124;
+                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                        Dodge (@{dodge}),@{dodge}|
+                                        Integrity (@{integrity}),@{integrity}|
+                                        Investigation (@{investigation}),@{investigation}|
+                                        Larceny (@{larceny}),@{larceny}|
+                                        Linguistics (@{linguistics}),@{linguistics}|
+                                        Lore (@{lore}),@{lore}|
+                                        Martial Arts (...),?{Martial Arts&amp;#124;
+                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                        Medicine (@{medicine}),@{medicine}|
+                                        Melee (@{melee}),@{melee}|
+                                        Occult (@{occult}),@{occult}|
+                                        Performance (@{performance}),@{performance}|
+                                        Presence (@{presence}),@{presence}|
+                                        Resistance (@{resistance}),@{resistance}|
+                                        Ride (@{ride}),@{ride}|
+                                        Sail (@{sail}),@{sail}|
+                                        Socialize (@{socialize}),@{socialize}|
+                                        Stealth (@{stealth}),@{stealth}|
+                                        Survival (@{survival}),@{survival}|
+                                        Thrown (@{thrown}),@{thrown}|
+                                        War (@{war}),@{war}|
+                                        Thrown (@{thrown}),@{thrown}|
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                    }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
+                                        Archery (@{archery}),@{archery}|
+                                        Athletics (@{athletics}),@{athletics}|
+                                        Awareness (@{awareness}),@{awareness}|
+                                        Brawl (@{brawl}),@{brawl}|
+                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                        Craft (...),?{Craft&amp;#124;
+                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                        Dodge (@{dodge}),@{dodge}|
+                                        Integrity (@{integrity}),@{integrity}|
+                                        Investigation (@{investigation}),@{investigation}|
+                                        Larceny (@{larceny}),@{larceny}|
+                                        Linguistics (@{linguistics}),@{linguistics}|
+                                        Lore (@{lore}),@{lore}|
+                                        Martial Arts (...),?{Martial Arts&amp;#124;
+                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                        Medicine (@{medicine}),@{medicine}|
+                                        Melee (@{melee}),@{melee}|
+                                        Occult (@{occult}),@{occult}|
+                                        Performance (@{performance}),@{performance}|
+                                        Presence (@{presence}),@{presence}|
+                                        Resistance (@{resistance}),@{resistance}|
+                                        Ride (@{ride}),@{ride}|
+                                        Sail (@{sail}),@{sail}|
+                                        Socialize (@{socialize}),@{socialize}|
+                                        Stealth (@{stealth}),@{stealth}|
+                                        Survival (@{survival}),@{survival}|
+                                        Thrown (@{thrown}),@{thrown}|
+                                        War (@{war}),@{war}|
+                                        Thrown (@{thrown}),@{thrown}|
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                    }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sheet-other-reminders">
+                            <div class="sheet-box-reminder sheet-abi-reminder">
+                                <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
+                                <div class="sheet-layer6">
+                                    <div class="reminder-cell" title="Archery">
+                                        <span>Arc</span>
+                                        <input type="number" class="reminder-val" name="attr_archery" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Athletics">
+                                        <span>Ath</span>
+                                        <input type="number" class="reminder-val" name="attr_athletics" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Awareness">
+                                        <span>Awa</span>
+                                        <input type="number" class="reminder-val" name="attr_awareness" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Brawl">
+                                        <span>Bra</span>
+                                        <input type="number" class="reminder-val" name="attr_brawl" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Bureaucracy">
+                                        <span>Bur</span>
+                                        <input type="number" class="reminder-val" name="attr_bureaucracy" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Dodge">
+                                        <span>Dod</span>
+                                        <input type="number" class="reminder-val" name="attr_dodge" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Integrity">
+                                        <span>Int</span>
+                                        <input type="number" class="reminder-val" name="attr_integrity" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Investigation">
+                                        <span>Inv</span>
+                                        <input type="number" class="reminder-val" name="attr_investigation" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Larceny">
+                                        <span>Lar</span>
+                                        <input type="number" class="reminder-val" name="attr_larceny" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Linguistics">
+                                        <span>Lin</span>
+                                        <input type="number" class="reminder-val" name="attr_linguistics" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Medicine">
+                                        <span>Med</span>
+                                        <input type="number" class="reminder-val" name="attr_medicine" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Melee">
+                                        <span>Mel</span>
+                                        <input type="number" class="reminder-val" name="attr_melee" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Occult">
+                                        <span>Occ</span>
+                                        <input type="number" class="reminder-val" name="attr_occult" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Performance">
+                                        <span>Per</span>
+                                        <input type="number" class="reminder-val" name="attr_performance" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Presence">
+                                        <span>Pre</span>
+                                        <input type="number" class="reminder-val" name="attr_presence" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Resistance">
+                                        <span>Res</span>
+                                        <input type="number" class="reminder-val" name="attr_resistance" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Ride">
+                                        <span>Rid</span>
+                                        <input type="number" class="reminder-val" name="attr_ride" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Sail">
+                                        <span>Sai</span>
+                                        <input type="number" class="reminder-val" name="attr_sail" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Stealth">
+                                        <span>Ste</span>
+                                        <input type="number" class="reminder-val" name="attr_socialize" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Survival">
+                                        <span>Sur</span>
+                                        <input type="number" class="reminder-val" name="attr_survival" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Thrown">
+                                        <span>Thr</span>
+                                        <input type="number" class="reminder-val" name="attr_thrown" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="War">
+                                        <span>War</span>
+                                        <input type="number" class="reminder-val" name="attr_war" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sheet-box-reminder sheet-craft-reminder">
+                                <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Craft" class="sheet-layer6"></span>
+                                <div class="sheet-layer5">
+                                    <div class="reminder-cell" title="Armoring">
+                                        <span>Arm</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-armoring" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Artifact">
+                                        <span>Art</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-artifact" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Cooking">
+                                        <span>Coo</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-cooking" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="First Age Artifice">
+                                        <span>FAA</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-artifice" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Gemcutting">
+                                        <span>Gem</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-gemcutting" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Geomancy">
+                                        <span>Geo</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-geomancy" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Jewelry">
+                                        <span>Jew</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-jewelry" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Tailoring">
+                                        <span>Tai</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-tailoring" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Weapon Forging">
+                                        <span>Wea</span>
+                                        <input type="number" class="reminder-val" name="attr_craft-forging" readonly>
+                                    </div>
+                                    <hr />
+                                    <fieldset class="repeating_crafts" style="display: none;">
+                                        <div class="reminder-cell">
+                                            <input type="text" name="attr_repcraftsname" readonly>
+                                            <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="sheet-box-reminder sheet-ma-reminder">
+                                <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show M-A" class="sheet-layer5"></span>
+                                <div class="sheet-layer4">
+                                    <div class="reminder-cell" title="Snake Style">
+                                        <span>Sna</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-snake" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Tiger Style">
+                                        <span>Tig</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-tiger" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Single Point Shining Into the Void Style">
+                                        <span>SPS</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-void" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="White Reaper Style">
+                                        <span>WR</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-reaper" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Ebon Shadow Style">
+                                        <span>ES</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-ebon" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Crane Style">
+                                        <span>Cra</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-crane" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Silver-Voiced Nightingale Style">
+                                        <span>SVN</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Righteous Devil Style">
+                                        <span>RD</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-devil" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Black Claw Style">
+                                        <span>BC</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-claw" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Dreaming Pearl Courtesan Style">
+                                        <span>DPC</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-pearl" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Steel Devil Style">
+                                        <span>SDS</span>
+                                        <input type="number" class="reminder-val" name="attr_ma-steel" readonly>
+                                    </div>
+                                    <hr />
+                                    <fieldset class="repeating_martialarts" style="display: none;">
+                                        <div class="reminder-cell">
+                                            <input type="text" name="attr_repmartialartsname" readonly>
+                                            <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="sheet-rolls-div">
