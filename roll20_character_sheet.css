@@ -262,6 +262,8 @@ tier 2: couleurs
 }
 
 
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-rolls-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-rolls-sheet .gm-whisper,
 .charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .default-whisper,
 .charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-spell-sheet .gm-whisper,
 .charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,
@@ -279,6 +281,10 @@ tier 2: couleurs
     display: inline;
 }
 
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-rolls-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-rolls-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.gm-whisper,
 .charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-spell-sheet .default-whisper,
 .charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .gm-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.default-whisper,
@@ -2158,10 +2164,8 @@ body.sheet-darkmode {
     display: contents;
 }
 
-.charsheet .sheet-tab-spell-sheet .sheet-table-row .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
-.charsheet .sheet-tab-spell-sheet .sheet-table-row .charm-buttons-include-check[value="0"] ~ div.charm-buttons-show-extended,
-.charsheet .sheet-tab-charm-sheet .sheet-table-row .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
-.charsheet .sheet-tab-charm-sheet .sheet-table-row .charm-buttons-include-check[value="0"] ~ div.charm-buttons-show-extended {
+.charsheet .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
+.charsheet .charm-buttons-include-check[value="0"] ~ div.charm-buttons-show-extended {
     display: none;
 }
 
@@ -2328,6 +2332,8 @@ body.sheet-darkmode {
 
 /* -- RESSOURCE LINE -- */
 
+.charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
+.charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ .peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-init .peripheral-mote-toggle,
@@ -2726,9 +2732,9 @@ body.sheet-darkmode {
     }
 }
 
-@media only screen and (max-width: 398px) {
+@media only screen and (max-width: 399px) {
     .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
-        justify-content: center;
+        justify-content: flex-end;
     }
 
     .withering-section.hide-on-edit {
@@ -2935,8 +2941,20 @@ body.sheet-darkmode {
     align-items: center;
 }
 
-.charsheet .sheet-box-reminder {
-    width: 7.5em;
+.charsheet .sheet-reminders {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 8em;
+    flex-grow: 1;
+}
+
+.charsheet .sheet-reminders:last-child {
+    justify-content: flex-end;
+}
+
+.charsheet .sheet-box-reminder,
+.charsheet .sheet-box-reminder input[type="checkbox"].sheet-unnamed-toggle {
+    width: 8em;
     height: 1.5em;
 }
 
@@ -2949,13 +2967,12 @@ body.sheet-darkmode {
 .charsheet .sheet-box-reminder .reminder-cell {
     display: inline-flex;
     width: 3.6em;
-    justify-content: space-between; 
-    flex-basis: 33%;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.charsheet .sheet-box-reminder input[type="checkbox"].sheet-unnamed-toggle {
-    width: 7.2em;
-    height: 1.5em;
+.charsheet .sheet-attr-reminder .reminder-cell {
+    flex-basis: 33%;
 }
 
 .charsheet .sheet-box-reminder .reminder-cell > input[type="number"] {
@@ -2968,21 +2985,269 @@ body.sheet-darkmode {
 
 .charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell > input[type="text"][readonly] {
     width: 6.71em;
+}
+
+.charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell > input[type="text"][readonly],
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem > input[type="text"][readonly] {
     border-bottom: none;
+}
+
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem > .charm-buttons > button.sheet-roll {
+    height: 1em;
 }
 
 .charsheet .sheet-box-reminder .repcontainer .repitem {
     display: inline-flex;
 }
 
+.charsheet .sheet-charm-reminder .reminder-charms-main-div,
+.charsheet .sheet-charm-reminder .repcontainer,
+.charsheet .sheet-charm-reminder .repcontainer .repitem {
+    width: 100%;
+}
+
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-name"][readonly] {
+    width: 8em;
+    color: #0095c6;
+    font-weight: bold;
+    flex-grow: 2;
+}
+
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-cost"][readonly] {
+    width: 3em;
+    flex-grow: 1;
+}
+
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-buttons {
+    flex-shrink: 0;
+}
+
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-short-desc"][readonly] {
+    width: 2em;
+    flex-grow: 10;
+}
+
 .charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell {
     width: unset;
 }
 
-.charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
-    left: 0px;
+.charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
+.charsheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
     display: flex;
     flex-wrap: wrap;
+}
+
+.charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
+.charsheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    left: 0px;
+}
+
+.charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    flex-direction: column;
+    align-content: space-between;
+}
+
+.charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    height: 7em;
+    width: 12em;
+}
+
+.charsheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    width: 500px;
+    resize: horizontal;
+    overflow: hidden;
+    min-width: 29em;
+}
+
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    max-height: 13em;
+}
+
+.charsheet .sheet-charm-reminder select option.reminder-charm {
+    display: none;
+}
+
+.charsheet .sheet-charm-reminder input.check-charm-archery[value="1"] ~ select option.opt-charm-archery,
+.charsheet .sheet-charm-reminder input.check-charm-athletics[value="1"] ~ select option.opt-charm-athletics,
+.charsheet .sheet-charm-reminder input.check-charm-awareness[value="1"] ~ select option.opt-charm-awareness,
+.charsheet .sheet-charm-reminder input.check-charm-brawl[value="1"] ~ select option.opt-charm-brawl,
+.charsheet .sheet-charm-reminder input.check-charm-bureaucracy[value="1"] ~ select option.opt-charm-bureaucracy,
+.charsheet .sheet-charm-reminder input.check-charm-craft[value="1"] ~ select option.opt-charm-craft,
+.charsheet .sheet-charm-reminder input.check-charm-dodge[value="1"] ~ select option.opt-charm-dodge,
+.charsheet .sheet-charm-reminder input.check-charm-integrity[value="1"] ~ select option.opt-charm-integrity,
+.charsheet .sheet-charm-reminder input.check-charm-investigation[value="1"] ~ select option.opt-charm-investigation,
+.charsheet .sheet-charm-reminder input.check-charm-larceny[value="1"] ~ select option.opt-charm-larceny,
+.charsheet .sheet-charm-reminder input.check-charm-linguistics[value="1"] ~ select option.opt-charm-linguistics,
+.charsheet .sheet-charm-reminder input.check-charm-lore[value="1"] ~ select option.opt-charm-lore,
+.charsheet .sheet-charm-reminder input.check-charm-medicine[value="1"] ~ select option.opt-charm-medicine,
+.charsheet .sheet-charm-reminder input.check-charm-melee[value="1"] ~ select option.opt-charm-melee,
+.charsheet .sheet-charm-reminder input.check-charm-occult[value="1"] ~ select option.opt-charm-occult,
+.charsheet .sheet-charm-reminder input.check-charm-performance[value="1"] ~ select option.opt-charm-performance,
+.charsheet .sheet-charm-reminder input.check-charm-presence[value="1"] ~ select option.opt-charm-presence,
+.charsheet .sheet-charm-reminder input.check-charm-resistance[value="1"] ~ select option.opt-charm-resistance,
+.charsheet .sheet-charm-reminder input.check-charm-ride[value="1"] ~ select option.opt-charm-ride,
+.charsheet .sheet-charm-reminder input.check-charm-sail[value="1"] ~ select option.opt-charm-sail,
+.charsheet .sheet-charm-reminder input.check-charm-socialize[value="1"] ~ select option.opt-charm-socialize,
+.charsheet .sheet-charm-reminder input.check-charm-stealth[value="1"] ~ select option.opt-charm-stealth,
+.charsheet .sheet-charm-reminder input.check-charm-survival[value="1"] ~ select option.opt-charm-survival,
+.charsheet .sheet-charm-reminder input.check-charm-thrown[value="1"] ~ select option.opt-charm-thrown,
+.charsheet .sheet-charm-reminder input.check-charm-war[value="1"] ~ select option.opt-charm-war,
+.charsheet .sheet-charm-reminder input.check-charm-universal[value="1"] ~ select option.opt-charm-universal,
+.charsheet .sheet-charm-reminder input.check-charm-str-offense[value="1"] ~ select option.opt-charm-str-offense,
+.charsheet .sheet-charm-reminder input.check-charm-str-mobility[value="1"] ~ select option.opt-charm-str-mobility,
+.charsheet .sheet-charm-reminder input.check-charm-str-fos[value="1"] ~ select option.opt-charm-str-fos,
+.charsheet .sheet-charm-reminder input.check-charm-dex-offensive[value="1"] ~ select option.opt-charm-dex-offensive,
+.charsheet .sheet-charm-reminder input.check-charm-dex-defense[value="1"] ~ select option.opt-charm-dex-defense,
+.charsheet .sheet-charm-reminder input.check-charm-dex-subterfuge[value="1"] ~ select option.opt-charm-dex-subterfuge,
+.charsheet .sheet-charm-reminder input.check-charm-dex-mobility[value="1"] ~ select option.opt-charm-dex-mobility,
+.charsheet .sheet-charm-reminder input.check-charm-dex-swarm[value="1"] ~ select option.opt-charm-dex-swarm,
+.charsheet .sheet-charm-reminder input.check-charm-sta-defense[value="1"] ~ select option.opt-charm-sta-defense,
+.charsheet .sheet-charm-reminder input.check-charm-sta-endurance[value="1"] ~ select option.opt-charm-sta-endurance,
+.charsheet .sheet-charm-reminder input.check-charm-sta-berserker[value="1"] ~ select option.opt-charm-sta-berserker,
+.charsheet .sheet-charm-reminder input.check-charm-cha-influence[value="1"] ~ select option.opt-charm-cha-influence,
+.charsheet .sheet-charm-reminder input.check-charm-cha-territory[value="1"] ~ select option.opt-charm-cha-territory,
+.charsheet .sheet-charm-reminder input.check-charm-cha-warfare[value="1"] ~ select option.opt-charm-cha-warfare,
+.charsheet .sheet-charm-reminder input.check-charm-man-influence[value="1"] ~ select option.opt-charm-man-influence,
+.charsheet .sheet-charm-reminder input.check-charm-man-subterfugr[value="1"] ~ select option.opt-charm-man-subterfugr,
+.charsheet .sheet-charm-reminder input.check-charm-man-guile[value="1"] ~ select option.opt-charm-man-guile,
+.charsheet .sheet-charm-reminder input.check-charm-app-influence[value="1"] ~ select option.opt-charm-app-influence,
+.charsheet .sheet-charm-reminder input.check-charm-app-subterfuge[value="1"] ~ select option.opt-charm-app-subterfuge,
+.charsheet .sheet-charm-reminder input.check-charm-app-warfare[value="1"] ~ select option.opt-charm-app-warfare,
+.charsheet .sheet-charm-reminder input.check-charm-per-senses[value="1"] ~ select option.opt-charm-per-senses,
+.charsheet .sheet-charm-reminder input.check-charm-per-scrutiny[value="1"] ~ select option.opt-charm-per-scrutiny,
+.charsheet .sheet-charm-reminder input.check-charm-per-mysticism[value="1"] ~ select option.opt-charm-per-mysticism,
+.charsheet .sheet-charm-reminder input.check-charm-int-knowledge[value="1"] ~ select option.opt-charm-int-knowledge,
+.charsheet .sheet-charm-reminder input.check-charm-int-mysticism[value="1"] ~ select option.opt-charm-int-mysticism,
+.charsheet .sheet-charm-reminder input.check-charm-int-crafting[value="1"] ~ select option.opt-charm-int-crafting,
+.charsheet .sheet-charm-reminder input.check-charm-int-warfare[value="1"] ~ select option.opt-charm-int-warfare,
+.charsheet .sheet-charm-reminder input.check-charm-int-sorcery[value="1"] ~ select option.opt-charm-int-sorcery,
+.charsheet .sheet-charm-reminder input.check-charm-wit-resolve[value="1"] ~ select option.opt-charm-wit-resolve,
+.charsheet .sheet-charm-reminder input.check-charm-wit-animalken[value="1"] ~ select option.opt-charm-wit-animalken,
+.charsheet .sheet-charm-reminder input.check-charm-wit-navigation[value="1"] ~ select option.opt-charm-wit-navigation,
+.charsheet .sheet-charm-reminder input.check-charm-wit-cache[value="1"] ~ select option.opt-charm-wit-cache,
+.charsheet .sheet-charm-reminder input.check-charm-wit-territory[value="1"] ~ select option.opt-charm-wit-territory,
+.charsheet .sheet-charm-reminder input.check-charm-ma-snake[value="1"] ~ select option.opt-charm-ma-snake,
+.charsheet .sheet-charm-reminder input.check-charm-ma-tiger[value="1"] ~ select option.opt-charm-ma-tiger,
+.charsheet .sheet-charm-reminder input.check-charm-ma-spsitv[value="1"] ~ select option.opt-charm-ma-spsitv,
+.charsheet .sheet-charm-reminder input.check-charm-ma-whitereaper[value="1"] ~ select option.opt-charm-ma-whitereaper,
+.charsheet .sheet-charm-reminder input.check-charm-ma-ebonshadow[value="1"] ~ select option.opt-charm-ma-ebonshadow,
+.charsheet .sheet-charm-reminder input.check-charm-ma-crane[value="1"] ~ select option.opt-charm-ma-crane,
+.charsheet .sheet-charm-reminder input.check-charm-ma-silvervoice[value="1"] ~ select option.opt-charm-ma-silvervoice,
+.charsheet .sheet-charm-reminder input.check-charm-ma-righteousdevil[value="1"] ~ select option.opt-charm-ma-righteousdevil,
+.charsheet .sheet-charm-reminder input.check-charm-ma-blackclaw[value="1"] ~ select option.opt-charm-ma-blackclaw,
+.charsheet .sheet-charm-reminder input.check-charm-ma-dreamingpearl[value="1"] ~ select option.opt-charm-ma-dreamingpearl,
+.charsheet .sheet-charm-reminder input.check-charm-ma-steeldevil[value="1"] ~ select option.opt-charm-ma-steeldevil,
+.charsheet .sheet-charm-reminder input.check-charm-ma-centipede[value="1"] ~ select option.opt-charm-ma-centipede,
+.charsheet .sheet-charm-reminder input.check-charm-ma-falcon[value="1"] ~ select option.opt-charm-ma-falcon,
+.charsheet .sheet-charm-reminder input.check-charm-ma-laughingmonster[value="1"] ~ select option.opt-charm-ma-laughingmonster,
+.charsheet .sheet-charm-reminder input.check-charm-ma-swayinggrass[value="1"] ~ select option.opt-charm-ma-swayinggrass,
+.charsheet .sheet-charm-reminder input.check-charm-ma-airdragon[value="1"] ~ select option.opt-charm-ma-airdragon,
+.charsheet .sheet-charm-reminder input.check-charm-ma-earthdragon[value="1"] ~ select option.opt-charm-ma-earthdragon,
+.charsheet .sheet-charm-reminder input.check-charm-ma-firedragon[value="1"] ~ select option.opt-charm-ma-firedragon,
+.charsheet .sheet-charm-reminder input.check-charm-ma-waterdragon[value="1"] ~ select option.opt-charm-ma-waterdragon,
+.charsheet .sheet-charm-reminder input.check-charm-ma-wooddragon[value="1"] ~ select option.opt-charm-ma-wooddragon,
+.charsheet .sheet-charm-reminder input.check-charm-ma-goldenjanissary[value="1"] ~ select option.opt-charm-ma-goldenjanissary,
+.charsheet .sheet-charm-reminder input.check-charm-ma-mantis[value="1"] ~ select option.opt-charm-ma-mantis,
+.charsheet .sheet-charm-reminder input.check-charm-ma-whiteveil[value="1"] ~ select option.opt-charm-ma-whiteveil,
+.charsheet .sheet-charm-reminder input.check-charm-ma-other[value="1"] ~ select option.opt-charm-ma-other,
+.charsheet .sheet-charm-reminder input.check-charm-evocations[value="1"] ~ select option.opt-charm-evocations,
+.charsheet .sheet-charm-reminder input.check-charm[value="1"] ~ select option.opt-charm {
+    display: revert;
+}
+
+.charsheet .reminder-charm-div {
+    display: none;
+    width: 100%;
+}
+
+.charsheet .reminder-charm-selector-input[value="archery"] ~ .reminder-charm-archery,
+.charsheet .reminder-charm-selector-input[value="athletics"] ~ .reminder-charm-athletics,
+.charsheet .reminder-charm-selector-input[value="awareness"] ~ .reminder-charm-awareness,
+.charsheet .reminder-charm-selector-input[value="brawl"] ~ .reminder-charm-brawl,
+.charsheet .reminder-charm-selector-input[value="bureaucracy"] ~ .reminder-charm-bureaucracy,
+.charsheet .reminder-charm-selector-input[value="craft"] ~ .reminder-charm-craft,
+.charsheet .reminder-charm-selector-input[value="dodge"] ~ .reminder-charm-dodge,
+.charsheet .reminder-charm-selector-input[value="integrity"] ~ .reminder-charm-integrity,
+.charsheet .reminder-charm-selector-input[value="investigation"] ~ .reminder-charm-investigation,
+.charsheet .reminder-charm-selector-input[value="larceny"] ~ .reminder-charm-larceny,
+.charsheet .reminder-charm-selector-input[value="linguistics"] ~ .reminder-charm-linguistics,
+.charsheet .reminder-charm-selector-input[value="lore"] ~ .reminder-charm-lore,
+.charsheet .reminder-charm-selector-input[value="medicine"] ~ .reminder-charm-medicine,
+.charsheet .reminder-charm-selector-input[value="melee"] ~ .reminder-charm-melee,
+.charsheet .reminder-charm-selector-input[value="occult"] ~ .reminder-charm-occult,
+.charsheet .reminder-charm-selector-input[value="performance"] ~ .reminder-charm-performance,
+.charsheet .reminder-charm-selector-input[value="presence"] ~ .reminder-charm-presence,
+.charsheet .reminder-charm-selector-input[value="resistance"] ~ .reminder-charm-resistance,
+.charsheet .reminder-charm-selector-input[value="ride"] ~ .reminder-charm-ride,
+.charsheet .reminder-charm-selector-input[value="sail"] ~ .reminder-charm-sail,
+.charsheet .reminder-charm-selector-input[value="socialize"] ~ .reminder-charm-socialize,
+.charsheet .reminder-charm-selector-input[value="stealth"] ~ .reminder-charm-stealth,
+.charsheet .reminder-charm-selector-input[value="survival"] ~ .reminder-charm-survival,
+.charsheet .reminder-charm-selector-input[value="thrown"] ~ .reminder-charm-thrown,
+.charsheet .reminder-charm-selector-input[value="war"] ~ .reminder-charm-war,
+.charsheet .reminder-charm-selector-input[value="universal"] ~ .reminder-charm-universal,
+.charsheet .reminder-charm-selector-input[value="str-offense"] ~ .reminder-charm-str-offense,
+.charsheet .reminder-charm-selector-input[value="str-mobility"] ~ .reminder-charm-str-mobility,
+.charsheet .reminder-charm-selector-input[value="str-fos"] ~ .reminder-charm-str-fos,
+.charsheet .reminder-charm-selector-input[value="dex-offensive"] ~ .reminder-charm-dex-offensive,
+.charsheet .reminder-charm-selector-input[value="dex-defense"] ~ .reminder-charm-dex-defense,
+.charsheet .reminder-charm-selector-input[value="dex-subterfuge"] ~ .reminder-charm-dex-subterfuge,
+.charsheet .reminder-charm-selector-input[value="dex-mobility"] ~ .reminder-charm-dex-mobility,
+.charsheet .reminder-charm-selector-input[value="dex-swarm"] ~ .reminder-charm-dex-swarm,
+.charsheet .reminder-charm-selector-input[value="sta-defense"] ~ .reminder-charm-sta-defense,
+.charsheet .reminder-charm-selector-input[value="sta-endurance"] ~ .reminder-charm-sta-endurance,
+.charsheet .reminder-charm-selector-input[value="sta-berserker"] ~ .reminder-charm-sta-berserker,
+.charsheet .reminder-charm-selector-input[value="cha-influence"] ~ .reminder-charm-cha-influence,
+.charsheet .reminder-charm-selector-input[value="cha-territory"] ~ .reminder-charm-cha-territory,
+.charsheet .reminder-charm-selector-input[value="cha-warfare"] ~ .reminder-charm-cha-warfare,
+.charsheet .reminder-charm-selector-input[value="man-influence"] ~ .reminder-charm-man-influence,
+.charsheet .reminder-charm-selector-input[value="man-subterfugr"] ~ .reminder-charm-man-subterfugr,
+.charsheet .reminder-charm-selector-input[value="man-guile"] ~ .reminder-charm-man-guile,
+.charsheet .reminder-charm-selector-input[value="app-influence"] ~ .reminder-charm-app-influence,
+.charsheet .reminder-charm-selector-input[value="app-subterfuge"] ~ .reminder-charm-app-subterfuge,
+.charsheet .reminder-charm-selector-input[value="app-warfare"] ~ .reminder-charm-app-warfare,
+.charsheet .reminder-charm-selector-input[value="per-senses"] ~ .reminder-charm-per-senses,
+.charsheet .reminder-charm-selector-input[value="per-scrutiny"] ~ .reminder-charm-per-scrutiny,
+.charsheet .reminder-charm-selector-input[value="per-mysticism"] ~ .reminder-charm-per-mysticism,
+.charsheet .reminder-charm-selector-input[value="int-knowledge"] ~ .reminder-charm-int-knowledge,
+.charsheet .reminder-charm-selector-input[value="int-mysticism"] ~ .reminder-charm-int-mysticism,
+.charsheet .reminder-charm-selector-input[value="int-crafting"] ~ .reminder-charm-int-crafting,
+.charsheet .reminder-charm-selector-input[value="int-warfare"] ~ .reminder-charm-int-warfare,
+.charsheet .reminder-charm-selector-input[value="int-sorcery"] ~ .reminder-charm-int-sorcery,
+.charsheet .reminder-charm-selector-input[value="wit-resolve"] ~ .reminder-charm-wit-resolve,
+.charsheet .reminder-charm-selector-input[value="wit-animalken"] ~ .reminder-charm-wit-animalken,
+.charsheet .reminder-charm-selector-input[value="wit-navigation"] ~ .reminder-charm-wit-navigation,
+.charsheet .reminder-charm-selector-input[value="wit-cache"] ~ .reminder-charm-wit-cache,
+.charsheet .reminder-charm-selector-input[value="wit-territory"] ~ .reminder-charm-wit-territory,
+.charsheet .reminder-charm-selector-input[value="ma-snake"] ~ .reminder-charm-ma-snake,
+.charsheet .reminder-charm-selector-input[value="ma-tiger"] ~ .reminder-charm-ma-tiger,
+.charsheet .reminder-charm-selector-input[value="ma-spsitv"] ~ .reminder-charm-ma-spsitv,
+.charsheet .reminder-charm-selector-input[value="ma-whitereaper"] ~ .reminder-charm-ma-whitereaper,
+.charsheet .reminder-charm-selector-input[value="ma-ebonshadow"] ~ .reminder-charm-ma-ebonshadow,
+.charsheet .reminder-charm-selector-input[value="ma-crane"] ~ .reminder-charm-ma-crane,
+.charsheet .reminder-charm-selector-input[value="ma-silvervoice"] ~ .reminder-charm-ma-silvervoice,
+.charsheet .reminder-charm-selector-input[value="ma-righteousdevil"] ~ .reminder-charm-ma-righteousdevil,
+.charsheet .reminder-charm-selector-input[value="ma-blackclaw"] ~ .reminder-charm-ma-blackclaw,
+.charsheet .reminder-charm-selector-input[value="ma-dreamingpearl"] ~ .reminder-charm-ma-dreamingpearl,
+.charsheet .reminder-charm-selector-input[value="ma-steeldevil"] ~ .reminder-charm-ma-steeldevil,
+.charsheet .reminder-charm-selector-input[value="ma-centipede"] ~ .reminder-charm-ma-centipede,
+.charsheet .reminder-charm-selector-input[value="ma-falcon"] ~ .reminder-charm-ma-falcon,
+.charsheet .reminder-charm-selector-input[value="ma-laughingmonster"] ~ .reminder-charm-ma-laughingmonster,
+.charsheet .reminder-charm-selector-input[value="ma-swayinggrass"] ~ .reminder-charm-ma-swayinggrass,
+.charsheet .reminder-charm-selector-input[value="ma-airdragon"] ~ .reminder-charm-ma-airdragon,
+.charsheet .reminder-charm-selector-input[value="ma-earthdragon"] ~ .reminder-charm-ma-earthdragon,
+.charsheet .reminder-charm-selector-input[value="ma-firedragon"] ~ .reminder-charm-ma-firedragon,
+.charsheet .reminder-charm-selector-input[value="ma-waterdragon"] ~ .reminder-charm-ma-waterdragon,
+.charsheet .reminder-charm-selector-input[value="ma-wooddragon"] ~ .reminder-charm-ma-wooddragon,
+.charsheet .reminder-charm-selector-input[value="ma-goldenjanissary"] ~ .reminder-charm-ma-goldenjanissary,
+.charsheet .reminder-charm-selector-input[value="ma-mantis"] ~ .reminder-charm-ma-mantis,
+.charsheet .reminder-charm-selector-input[value="ma-whiteveil"] ~ .reminder-charm-ma-whiteveil,
+.charsheet .reminder-charm-selector-input[value="ma-other"] ~ .reminder-charm-ma-other,
+.charsheet .reminder-charm-selector-input[value="evocations"] ~ .reminder-charm-evocations,
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .reminder-charms {
+    display: block;
 }
 
 .charsheet .sheet-tab-rolls-sheet .roll-section input[type="text"] {
@@ -3000,11 +3265,14 @@ body.sheet-darkmode {
     align-items: stretch;
 }
 
+.charsheet .sheet-tab-rolls-sheet .roll-section.hide-on-edit .inner-section {
+    width: unset;
+}
+
 .charsheet .sheet-tab-rolls-sheet .roll-section .inner-section {
     width: calc(100% - 2em);
     display: flex;
     flex-flow: column;
-    justify-content: center;
 }
 
 .charsheet .left-column-rolls .sheet-rolls .first-line .stealth-btn {
