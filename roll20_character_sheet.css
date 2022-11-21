@@ -2948,13 +2948,18 @@ body.sheet-darkmode {
     flex-grow: 1;
 }
 
+.charsheet .sheet-reminders {
+    justify-content: space-between;
+    align-items: center;
+}
+
 .charsheet .sheet-reminders:last-child {
     justify-content: flex-end;
 }
 
 .charsheet .sheet-box-reminder,
 .charsheet .sheet-box-reminder input[type="checkbox"].sheet-unnamed-toggle {
-    width: 8em;
+    width: 8.5em;
     height: 1.5em;
 }
 
