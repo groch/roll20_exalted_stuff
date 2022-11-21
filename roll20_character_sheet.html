@@ -9684,7 +9684,8 @@
                 <div class="left-column-rolls">
                     <div class="sheet-exroll-div">
                         <div class="sheet-reminders">
-                            <div class="sheet-box-reminder sheet-attr-reminder">
+                            <input type="hidden" class="qc-panel-check" name="attr_qc">
+                            <div class="sheet-box-reminder sheet-attr-reminder qc-toggle-display">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Attr" class="sheet-layer6"></span>
                                 <div class="sheet-layer5">
                                     <div class="reminder-cell" title="Strength">
@@ -12230,7 +12231,8 @@
                             </div>
                         </div>
                         <div class="sheet-reminders">
-                            <div class="sheet-box-reminder sheet-abi-reminder">
+                            <input type="hidden" class="qc-panel-check" name="attr_qc">
+                            <div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
                                 <div class="sheet-layer6">
                                     <div class="reminder-cell" title="Archery">
@@ -12331,7 +12333,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="sheet-box-reminder sheet-craft-reminder">
+                            <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Craft" class="sheet-layer6"></span>
                                 <div class="sheet-layer5">
                                     <div class="reminder-cell" title="Armoring">
@@ -12379,7 +12381,7 @@
                                     </fieldset>
                                 </div>
                             </div>
-                            <div class="sheet-box-reminder sheet-ma-reminder">
+                            <div class="sheet-box-reminder sheet-ma-reminder qc-toggle-display">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show M-A" class="sheet-layer5"></span>
                                 <div class="sheet-layer4">
                                     <div class="reminder-cell" title="Snake Style">
@@ -12431,6 +12433,60 @@
                                         <div class="reminder-cell">
                                             <input type="text" name="attr_repmartialartsname" readonly>
                                             <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display-inv">
+                                <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
+                                <div class="sheet-layer5">
+                                    <div class="reminder-cell" title="Read Intentions">
+                                        <span>RI</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Social Influence">
+                                        <span>SI</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Stealth/Larceny">
+                                        <span>S/L</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Senses">
+                                        <span>Sen</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Feats of Strength">
+                                        <span>FoS</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
+                                    </div>
+                                    <hr />
+                                    <div class="reminder-cell" title="Join Battle">
+                                        <span>JB</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Combat Movement">
+                                        <span>Mvt</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-move" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Grapple">
+                                        <span>Gra</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
+                                    </div>
+                                    <div class="reminder-cell" title="Grapple Control">
+                                        <span>GrC</span>
+                                        <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
+                                    </div>
+                                    <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
+                                    <div class="reminder-cell" title="Appearance">
+                                        <span>App</span>
+                                        <input type="number" class="reminder-val" name="attr_appearance" readonly>
+                                    </div>
+                                    <hr />
+                                    <fieldset class="repeating_qcactions" style="display: none;">
+                                        <div class="reminder-cell">
+                                            <input type="text" name="attr_repqcactionname" readonly>
+                                            <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
                                         </div>
                                     </fieldset>
                                 </div>
@@ -13114,7 +13170,8 @@
                     </div>
                 </div>
                 <div class="ressource-line flex-wrap sheet-reminders">
-                    <div class="sheet-box-reminder sheet-attr-reminder">
+                    <input type="hidden" class="qc-panel-check" name="attr_qc">
+                    <div class="sheet-box-reminder sheet-attr-reminder qc-toggle-display">
                         <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Attr" class="sheet-layer6"></span>
                         <div class="sheet-layer5">
                             <div class="reminder-cell" title="Strength">
@@ -15547,7 +15604,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sheet-box-reminder sheet-abi-reminder">
+                    <div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
                         <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
                         <div class="sheet-layer6">
                             <div class="reminder-cell" title="Archery">
@@ -15648,7 +15705,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sheet-box-reminder sheet-craft-reminder">
+                    <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display">
                         <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Craft" class="sheet-layer6"></span>
                         <div class="sheet-layer5">
                             <div class="reminder-cell" title="Armoring">
@@ -15696,7 +15753,7 @@
                             </fieldset>
                         </div>
                     </div>
-                    <div class="sheet-box-reminder sheet-ma-reminder">
+                    <div class="sheet-box-reminder sheet-ma-reminder qc-toggle-display">
                         <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show M-A" class="sheet-layer5"></span>
                         <div class="sheet-layer4">
                             <div class="reminder-cell" title="Snake Style">
@@ -15748,6 +15805,60 @@
                                 <div class="reminder-cell">
                                     <input type="text" name="attr_repmartialartsname" readonly>
                                     <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display-inv">
+                        <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
+                        <div class="sheet-layer5">
+                            <div class="reminder-cell" title="Read Intentions">
+                                <span>RI</span>
+                                <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Social Influence">
+                                <span>SI</span>
+                                <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Stealth/Larceny">
+                                <span>S/L</span>
+                                <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Senses">
+                                <span>Sen</span>
+                                <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Feats of Strength">
+                                <span>FoS</span>
+                                <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
+                            </div>
+                            <hr />
+                            <div class="reminder-cell" title="Join Battle">
+                                <span>JB</span>
+                                <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Combat Movement">
+                                <span>Mvt</span>
+                                <input type="number" class="reminder-val" name="attr_qc-move" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Grapple">
+                                <span>Gra</span>
+                                <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
+                            </div>
+                            <div class="reminder-cell" title="Grapple Control">
+                                <span>GrC</span>
+                                <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
+                            </div>
+                            <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
+                            <div class="reminder-cell" title="Appearance">
+                                <span>App</span>
+                                <input type="number" class="reminder-val" name="attr_appearance" readonly>
+                            </div>
+                            <hr />
+                            <fieldset class="repeating_qcactions" style="display: none;">
+                                <div class="reminder-cell">
+                                    <input type="text" name="attr_repqcactionname" readonly>
+                                    <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
                                 </div>
                             </fieldset>
                         </div>
