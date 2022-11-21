@@ -210,18 +210,41 @@ tier 2: couleurs
     font-weight: normal;
 }
 
-.charsheet .woundpenalty-add-input[title] {
+.charsheet .woundpenalty-add-input[title],
+.charsheet .rollpenalty-input[title] {
     cursor: text;
 }
 
+.ui-dialog .charsheet .woundpenalty-add-input[title],
+.ui-dialog .charsheet input[type=number][disabled].woundpenalty-input,
+.ui-dialog .charsheet .rollpenalty-input[title],
+.charsheet .woundpenalty-add-input[title],
+.charsheet input[type=number][disabled].woundpenalty-input,
+.charsheet .rollpenalty-input[title] {
+    width: 27px;
+}
+
+.charsheet .rollpenalty-input[title] {
+    background-color: yellow;
+}
+
+.sheet-darkmode .charsheet .rollpenalty-input[title] {
+    background-color: darkgoldenrod;
+}
+
+.charsheet input[type=number][disabled].rollpenalty,
 .charsheet input[type=number][disabled].woundpenalty,
 .charsheet input[type=number][disabled].woundpenalty-input {
     background-color: rgb(255, 128, 128);
     font-weight: bold;
 }
 
+.charsheet .roll-penalty-check[value="0"] ~ .combat-init input[type=number][disabled].rollpenalty,
+.charsheet .roll-penalty-check[value="0"] ~ .combat-attacks input[type=number][disabled].rollpenalty,
+.charsheet .roll-penalty-check[value="0"] ~ .rolls-area input[type=number][disabled].rollpenalty,
 .charsheet .wound-penalty-check[value="0"] ~ .combat-init input[type=number][disabled].woundpenalty,
 .charsheet .wound-penalty-check[value="0"] ~ .combat-attacks input[type=number][disabled].woundpenalty,
+.charsheet .wound-penalty-check[value="0"] ~ .rolls-area input[type=number][disabled].woundpenalty,
 .charsheet .wound-penalty-check[value="0"] ~ input[type=number][disabled].woundpenalty-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
@@ -2110,6 +2133,7 @@ body.sheet-darkmode {
     font-weight: bold;
 }
 
+.sheet-darkmode .charsheet input[type=number][disabled].rollpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
     background-color: darkred;
@@ -2661,10 +2685,18 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .woundpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-init .woundpenalty,
-.charsheet .sheet-tab-combat-sheet .combat-attacks .woundpenalty {
+.charsheet .sheet-tab-combat-sheet .combat-attacks .woundpenalty,
+.charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .rollpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-init .rollpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .rollpenalty {
     width: 1.3em;
-    border-radius: 0 13px 13px 0;
     padding: 0;
+}
+
+.charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .woundpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-init .woundpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .woundpenalty {
+    border-radius: 0 13px 13px 0;
 }
 
 /* EDIT mode */

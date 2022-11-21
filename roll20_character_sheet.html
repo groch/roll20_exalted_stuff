@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.37, debug = 1;
+    const version = 2.38, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -16,6 +16,15 @@
     on('change:pain-tolerance', TAS._fn(updateWoundThenParry));
     on('change:repeating_health remove:repeating_health', TAS._fn(updateWoundThenParry));
     on('change:combat-crippling-pen change:woundpenalty-add', TAS._fn(updateWoundThenParry));
+    on('change:rollpenalty-input', TAS._fn(updateRollPenalty));
+
+    function updateRollPenalty() {
+        getAttrs(['rollpenalty-input'], TAS._fn(function getEssence(values) {
+            TAS.debug(`updateRollPenalty:: ${JSON.stringify(values)}`);
+            const rollPenInput = Number(values['rollpenalty-input']);
+            setAttrs({'roll-penalty': isNaN(rollPenInput) ? 0 : Math.abs(rollPenInput)});
+        }));
+    }
 
     function sortHealth(idHealthArray) {
         var attribs = ["_reporder_repeating_health"];
@@ -431,6 +440,7 @@
         {version: 2.34, fn: upgradeto235},
         {version: 2.35, fn: upgradeto236},
         {version: 2.36, fn: upgradeto237},
+        {version: 2.37, fn: upgradeto238},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -494,6 +504,15 @@
              "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
             return true;
         return false;
+    }
+
+    function upgradeto238() {
+        setAttrs({
+            'roll-penalty': 0,
+            'rollpenalty-input': 0,
+            'version': version
+        });
+        updateAllAttackRolls({sourceType: 'player'});
     }
 
     function upgradeto237() {
@@ -1191,10 +1210,10 @@
         })
     }
 
-    function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+${val[attr_name+'abi']}[Ability]${checkValReturnValidString(val[attr_name+'bonus-dices'])}+@{wound-penalty}[Wound Penalty])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
-    function defaultWAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'watk-attr']}[Attribute]+${val[attr_name+'watk-abi']}[Ability]${checkValReturnValidString(val[attr_name+'weap-atk'])}[Accuracy]${checkValReturnValidString(val[attr_name+'watk-bonus-dices'])}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size]':''}+@{wound-penalty}[Wound Penalty])#${checkValReturnValidString(val[attr_name+'watk-bonus-successes'])} ${val[attr_name+'watk-final-macro-options']}`; }
-    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']}+${val[attr_name+'weap-dmg']}${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'])}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}':''}+?{Threshold ?|0}-[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']}+${val[attr_name+'weap-dmg']}${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'])}+?{Threshold ?|0}-SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']}`; }
-    function defaultDAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'datk-attr']}[Attribute]+${val[attr_name+'datk-abi']}[Ability]${checkValReturnValidString(val[attr_name+'datk-bonus-dices'])}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size]':''}+@{wound-penalty}[Wound Penalty])#${checkValReturnValidString(val[attr_name+'datk-bonus-successes'])} ${val[attr_name+'datk-final-macro-options']}`; }
+    function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability] ${checkValReturnValidString(val[attr_name+'bonus-dices'], ' ')}-@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
+    function defaultWAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'watk-attr']}[Attribute] +${val[attr_name+'watk-abi']}[Ability]${checkValReturnValidString(val[attr_name+'weap-atk'], '', ' +')}[Accuracy] ${checkValReturnValidString(val[attr_name+'watk-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'watk-bonus-successes'])} ${val[attr_name+'watk-final-macro-options']}`; }
+    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size} ':''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']}`; }
+    function defaultDAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'datk-attr']}[Attribute] +${val[attr_name+'datk-abi']}[Ability] ${checkValReturnValidString(val[attr_name+'datk-bonus-dices'], ' ', '+')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'datk-bonus-successes'])} ${val[attr_name+'datk-final-macro-options']}`; }
     function defaultDDamageFinalExpr(val, attr_name)     { return `(${val[attr_name+'ddmg-dices']})#${checkValReturnValidString(val[attr_name+'ddmg-bonus-successes'])} ${val[attr_name+'ddmg-final-macro-options']}`; }
     function defaultInitToResetFinalExpr(val, attr_name) { return `${checkValReturnValidString(val[attr_name+'init-to-set'], ')', '(')}`; }
 
@@ -9655,6 +9674,8 @@
                     <input type="number" name="attr_peripheral-essence" class="grow-normal" readonly>/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
                 </p>
             </div>
+            <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
+            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
             <div class="rolls-area">
                 <div class="left-column-rolls">
                     <div class="sheet-exroll-div">
@@ -12585,7 +12606,8 @@
                                                 <option value="10">10</option>
                                             </select>
                                             <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                            <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
+                                            <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
+                                            <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
                                             <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                         </div>
                                         <div class="flex grow-normal">
@@ -13060,8 +13082,9 @@
                     </div>
                     <div class="wound-pen"><!-- WOUND PEN -->
                         <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                        <input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
-                        <input type="number" value="0" style="width: 27px" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
+                        <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                        <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
+                        <input type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
                     </div>
                 </div>
                 <div class="health-line flex sheet-bg-show"><!-- HEALTH BG -->
@@ -13081,8 +13104,9 @@
                     </div>
                     <div class="wound-pen"><!-- WOUND PEN -->
                         <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                        <input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
-                        <input type="number" value="0" style="width: 27px" title="Wound panalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
+                        <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                        <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
+                        <input type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
                     </div>
                 </div>
                 <div class="ressource-line flex-wrap sheet-reminders">
@@ -15742,6 +15766,7 @@
                     </p>
                 </div>
             </div>
+            <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
             <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
             <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
             <div class="combat-init">
@@ -15902,7 +15927,8 @@
                                     <option value="9">9</option>
                                     <option value="10">10</option>
                                 </select>+
-                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">+
+                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">-
+                                <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                             </div>
                             <div class="third-line grow-normal flex">
@@ -16106,8 +16132,9 @@
                                         </select>+
                                         <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
                                         <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability&#013;&#010;(Special for Archery & Thrown)">+</button>
-                                        <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
-                                        <p class="sheet-bg-show"><input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}">+</p>
+                                        <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
+                                        <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}"></p>
+                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
                                     <div class="flex grow-normal">
@@ -16314,8 +16341,9 @@
                                             <option value="10">10</option>
                                         </select>
                                         <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                        <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">+
-                                        <p class="sheet-bg-show"><input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}">+</p>
+                                        <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
+                                        <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}"></p>
+                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
                                     <div class="flex grow-normal">
