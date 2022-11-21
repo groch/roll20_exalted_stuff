@@ -2356,6 +2356,12 @@ body.sheet-darkmode {
 
 /* -- RESSOURCE LINE -- */
 
+.charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ .personal-mote-toggle,
+.charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ .personal-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .combat-init .peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .combat-attacks .peripheral-mote-toggle,
 .charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
 .charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ .peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
