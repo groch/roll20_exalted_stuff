@@ -2689,14 +2689,20 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .rollpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-init .rollpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .rollpenalty {
-    width: 1.3em;
     padding: 0;
+}
+
+.charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .rollpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-init .rollpenalty,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .rollpenalty {
+    width: 0.8em;
 }
 
 .charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .woundpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-init .woundpenalty,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .woundpenalty {
     border-radius: 0 13px 13px 0;
+    width: 1.3em;
 }
 
 /* EDIT mode */
