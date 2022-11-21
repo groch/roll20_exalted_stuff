@@ -360,7 +360,8 @@
         getAttrs(["caste"], setDebugWrapper(function determineMotePool(values){
             var periEquation = "0", persEquation = "0", showAnima = 1,
                 showSupernal = 0,   showLimit = 0,
-                casteLow = 'unknown';
+                casteLow = 'unknown',
+                succEx = 0,         diceEx = 1;
             if (["Dawn",    "Zenith",   "Twilight",   "Night",      "Eclipse",
                  "Dusk",    "Midnight", "Daybreak",   "Day",        "Moonshadow",
                  "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer",
@@ -376,6 +377,7 @@
                 persEquation = "@{essence} * 1 + 15 - @{committedessperso}";
                 periEquation = "@{essence} * 4 + 34 - @{committedesstotal}";
                 showLimit = 1;
+                succEx = 1;
             } else if (["Journeys", "Serenity", "Battles", "Secrets", "Endings"].includes(values.caste)){
                 persEquation = "@{essence} * 2 + 9 - @{committedessperso}";
                 periEquation = "@{essence} * 6 + 25 - @{committedesstotal}";
@@ -383,18 +385,22 @@
             } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(values.caste)){
                 persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
                 periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
+                succEx = 1;
             } else if (["God", "Elemental", "Demon", "Undead"].includes(values.caste)){
                 persEquation = "@{essence} * 10 + 50 - @{committedessperso}";
                 periEquation = "@{essence} * 0 - @{committedesstotal}";
                 showAnima = 0;
+                diceEx = 0;
             } else if (values.caste === "God-Blooded"){
                 persEquation = "@{essence} * 0 + 0 - @{committedessperso}";
                 periEquation = "@{essence} * 10 - @{committedesstotal}";
                 showAnima = 0;
+                diceEx = 0;
             } else if (values.caste === "Mortal"){
                 persEquation = "0";
                 periEquation = "0";
                 showAnima = 0;
+                diceEx = 0;
             } else return;
 
             if (hasCasteImg(values.caste))
@@ -406,7 +412,9 @@
                 "showanimadiv": showAnima,
                 "showsupdiv": showSupernal,
                 "showlimit": showLimit,
-                "caste-low": casteLow
+                "caste-low": casteLow,
+                "diceex": diceEx,
+                "succex": succEx
             };
             TAS.debug(`updateMotePool:: Setting=`, finalObj);
             setAttrs(finalObj);
@@ -1033,8 +1041,8 @@
                 return;
             }
             let finalMacro = '=COST:@{character_id}';
-            if (String(mote).trim()) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
-            if (String(will).trim()) finalMacro += `:will;${will}`;
+            if (mote && String(mote).trim()) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
+            if (will && String(will).trim()) finalMacro += `:will;${will}`;
             if (init) finalMacro += `:init;${init}`;
             TAS.debug(`updateRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
             if (finalMacro.indexOf('@{') !== -1)
@@ -1193,26 +1201,48 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
-    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]+?{Dices from Motes (Excellency)|0}[Dices from Motes]';
-    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes]';
+    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
+    const diceExAddedPrompt = '+?{Dices from Motes (Excellency)|0}[Dices from Motes]';
+    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
+    const succExAddedPrompt = '+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes]';
+    const moteCostDiceDefault = '?{Dices from Motes (Excellency)|0}';
+    const moteCostSuccDefault = '?{Success from Motes (Excellency), COST 2 PER POINTS|0}';
+    const moteCostBothDefault = '[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]';
+
+    function getMoteCostToSet(diceExTest, succExTest) {
+        if (diceExTest || succExTest) {
+            if (diceExTest && succExTest) return moteCostBothDefault;
+            else if (diceExTest) return moteCostDiceDefault;
+            else if (succExTest) return moteCostSuccDefault;
+        }
+        return '';
+    }
 
     /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name) => {
-                const tested_attr = `${attr_name}repcombat-watk-abi`,
-                     written_attr = `${attr_name}repcombat-watk-bonus-dices`;
-                getAttrs([tested_attr], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
-                    let writtenValue;
-                    if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt}`;
-                    else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt}`;
-                    else                                       writtenValue = defaultRoll20AddedDicePrompt;
-                    setParameterCallback(written_attr, writtenValue);
-                }));
-            },
-            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-')
-        );
-        defaultMacroDAtkDice(e);
+        getAttrs(['diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
+            clickDefaultMacro(e, (setParameterCallback, attr_name) => {
+                    const tested_attr = `${attr_name}repcombat-watk-abi`,
+                          written_attr = `${attr_name}repcombat-watk-bonus-dices`,
+                          mote_attr = `${attr_name}rep-cost-mote`;
+                    getAttrs([tested_attr, 'diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
+                        const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+                        setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
+                        let writtenValue;
+                        if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+                        else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+                        else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
+                        setParameterCallback(written_attr, writtenValue);
+                    }));
+                },
+                id => {
+                    updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                    updateRollForCost(e);
+                }
+            );
+            defaultMacroDAtkDice(e);
+        }));
     }));
 
     on('clicked:repeating_combat-attack:default-macro-datk-d', setDebugWrapper(function clickDefaultMacroDAtkDice(e) {
@@ -1221,41 +1251,64 @@
     }));
 
     function defaultMacroDAtkDice(e) {
-        clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt),
-            id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
-        );
-    }
-
-    on('clicked:repeating_combat-attack:default-macro-watk-s clicked:repeating_combat-attack:default-macro-datk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
-        if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name, section) => setParameterCallback(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt),
-            (id, section) => {        
-                if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-            }
-        );
-        TAS.debug(`clickDefaultMacroWAtkDice:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
-        if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
-            clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt),
+        getAttrs(['diceex'], setDebugWrapper(function getDiceExVal(val) {
+            const diceExTest = val['diceex'] === '1';
+            clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')),
                 id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
             );
-        }
+        }));
+    }
+
+    on('clicked:repeating_combat-attack:default-macro-watk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+        defaultMacroAtkSucc(e, true);
     }));
+
+    on('clicked:repeating_combat-attack:default-macro-datk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+        defaultMacroAtkSucc(e);
+    }));
+
+    function defaultMacroAtkSucc(e, setWill = false) {
+        if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
+        getAttrs(['succex'], setDebugWrapper(function getDiceExVal(val) {
+            const succExTest = val['succex'] === '1';
+            clickDefaultMacro(e, (setParameterCallback, attr_name, section) => {
+                    if (setWill) setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
+                    setParameterCallback(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
+                },
+                (id, section) => {
+                    if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                    else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+                }
+            );
+            TAS.debug(`clickDefaultMacroWAtkDice:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
+            if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
+                clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : '')),
+                    id => {
+                        updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+                        updateRollForCost(e);
+                    }
+                );
+            }
+        }));
+    }
 
     /* QC special */
     on('change:repeating_combat-attack:repcombat-wdmg-attr', setDebugWrapper(function testQCSetup(e) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
-        getAttrs(['qc'], TAS._fn(function ifQCSetupAll(values) {
+        getAttrs(['qc', 'diceex', 'succex'], TAS._fn(function ifQCSetupAll(values) {
             TAS.debug(`ifQCSetupAll:: values=${JSON.stringify(values)} values.qc=${values.qc}`);
             if (values.qc) {
                 const id = e.sourceAttribute.split('_')[2];
                 const attr_name = `repeating_combat-attack_${id}_`;
+                const diceExTest = values['diceex'] === '1', succExTest = values['succex'] === '1';
                 setAttrs({
-                    [`${attr_name}repcombat-watk-bonus-dices`]: defaultRoll20AddedDicePrompt,
-                    [`${attr_name}repcombat-datk-bonus-dices`]: defaultRoll20AddedDicePrompt,
-                    [`${attr_name}repcombat-watk-bonus-successes`]: defaultRoll20AddedSuccPrompt,
-                    [`${attr_name}repcombat-datk-bonus-successes`]: defaultRoll20AddedSuccPrompt,
-                    [`${attr_name}repcombat-ddmg-init-to-set`]: '3'
+                    [`${attr_name}repcombat-watk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
+                    [`${attr_name}repcombat-datk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
+                    [`${attr_name}repcombat-watk-bonus-successes`]: defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''),
+                    [`${attr_name}repcombat-datk-bonus-successes`]: defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''),
+                    [`${attr_name}repcombat-ddmg-init-to-set`]: '3',
+                    [`${attr_name}rep-cost-mote`]: getMoteCostToSet(diceExTest, succExTest),
+                    [`${attr_name}rep-cost-will`]: '?{Willpower ?|No,0|Yes,1}'
                 });
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
@@ -1267,16 +1320,34 @@
     /* Character Tab Roll Section '+' Triggers */
     on('clicked:repeating_rolls:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
-        updateRollForCost(e);
-        clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}reprolls-bonus-dices`, defaultRoll20AddedDicePrompt),
-            id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
+        clickDefaultMacro(e, (setParameterCallback, attr_name) => {
+                const mote_attr = `${attr_name}rep-cost-mote`;
+                getAttrs(['diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
+                    const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+                    setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
+                    setParameterCallback(`${attr_name}reprolls-bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
+                }));
+            },
+            id => {
+                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '');
+                updateRollForCost(e);
+            }
         );
     }));
 
     on('clicked:repeating_rolls:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}reprolls-bonus-successes`, defaultRoll20AddedSuccPrompt),
-            id => updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '')
+        clickDefaultMacro(e, (setParameterCallback, attr_name) => {
+                getAttrs(['succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
+                    const succExTest = val['succex'] === '1';
+                    setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
+                    setParameterCallback(`${attr_name}reprolls-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
+                }));
+            },
+            id => {
+                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '');
+                updateRollForCost(e);
+            }
         );
     }));
 
@@ -1332,10 +1403,12 @@
 <div class="sheet-content">
     <div>
         
-        <input type="hidden" name="attr_pain-tolerance" value="0"><span></span>
+        <input type="hidden" name="attr_pain-tolerance" value="0">
+        <input name="attr_diceex" type="hidden" value="0">
+        <input name="attr_succeex" type="hidden" value="0">
 
-        <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="1"><span></span>
-        <input class="sheet-show-antisocial-tab" type="hidden" name="attr_antisocialtab" value="0"><span></span>
+        <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="1">
+        <input class="sheet-show-antisocial-tab" type="hidden" name="attr_antisocialtab" value="0">
         <input checked="checked" class="sheet-tab sheet-tab-character-sheet" name="attr_sheet" title="Character Sheet" type="radio" value="1">
         <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet" name="attr_sheet" title="Charms" type="radio" value="2">
         <input class="sheet-tab sheet-tab-spells sheet-tab-spell-sheet" name="attr_sheet" title="Sorceries" type="radio" value="3">
@@ -9385,6 +9458,14 @@
                         <span>Show Combat Tab</span>
                     </label>
                     <label>
+                        <input type="checkbox" name="attr_diceex" value="1"><span></span>
+                        <span>Include Dice Excellency</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="attr_succex" value="1"><span></span>
+                        <span>Include Success Excellency</span>
+                    </label>
+                    <label>
                         <input type="checkbox" name="attr_pain-tolerance" value="1"><span></span>
                         <span>MERIT: Pain Tolerance</span>
                     </label>
@@ -12349,10 +12430,10 @@
                                     <div class="grow-normal flex-wrap hide-on-edit">
                                         <div class="cost-section grow-normal flex">
                                             <p class="mote-color-down rounded-box grow-double flex peripheral-mote-toggle">
-                                                Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]">
+                                                Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
-                                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Willpower ?|No,0|Yes,1}">
+                                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                             </p>
                                             <p class="init-color-down rounded-box grow-double flex">
                                                 Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
@@ -13042,7 +13123,7 @@
                                         Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                     </p>
                                     <p class="will-color-down rounded-box grow-normal flex">
-                                        Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                        Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Willpower ?|No,0|Yes,1}">
                                     </p>
                                 </div>
                             </div>
