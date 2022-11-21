@@ -512,7 +512,7 @@
             'rollpenalty-input': 0,
             'version': version
         });
-        updateAllAttackRolls({sourceType: 'player'});
+        updateAllAttackRolls({sourceType: 'player'}, false);
     }
 
     function upgradeto237() {
@@ -1169,32 +1169,36 @@
     /* Combat Tab ALL Binds */
     attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(updateAllAttackRolls)));
 
-    function updateAllAttackRolls(e) {
+    function updateAllAttackRolls(e, setIfReplaced = true) {
         if (e.sourceType !== "player") {
             TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         TAS.debug('updateAllAttackRolls::updateAllAttackRolls e=', JSON.stringify(e));
-
+        
         getSectionIDs('rolls', setDebugWrapper(function getRollsSection(idSections) {
+            if (debug === 2) TAS.debug('updateAllAttackRolls::getRollsSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
-                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', true);
+                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
         }));
 
         getSectionIDs('combat-init', setDebugWrapper(function getCombatInitSection(idSections) {
+            if (debug === 2) TAS.debug('updateAllAttackRolls::getCombatInitSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
-                updateAttackRollRepeatingId('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', true);
+                updateAttackRollRepeatingId('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
         }));
 
         getSectionIDs('combat-attack', setDebugWrapper(function getCombatAttackSection(idSections) {
+            if (debug === 2) TAS.debug('updateAllAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
             for (const id of idSections) {
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', true);
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', true);
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', true);
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', true);
+                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
+                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
+                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
+                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
             }
         }));
 
+        if (debug === 2) TAS.debug('updateAllAttackRolls:: UPDATING CHARMS');
         sections.forEach(section => {
             getSectionIDs(section, setDebugWrapper(function getCharmOrEquivalentSection(idSections) {
                 for (const id of idSections) {
