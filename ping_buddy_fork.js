@@ -63,8 +63,8 @@ on("ready", function() {
                         type: 'character',
                         id: t.get("represents")
                     })[0];
-                    if (char.get('controlledby').includes(msg.playerid))
-                        myTokens.push(t)
+                    if (char && char.get('controlledby').includes(msg.playerid))
+                        myTokens.push(t);
                 }
             });
 
