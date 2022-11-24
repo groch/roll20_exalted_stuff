@@ -3027,6 +3027,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-box-reminder .reminder-cell > input[type="number"] {
     width: 1em;
+    padding: 0;
 }
 
 .charsheet .sheet-box-reminder .repcontrol {
