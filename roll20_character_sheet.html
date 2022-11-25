@@ -1414,6 +1414,36 @@
         }));
     }));
 
+    /* multiple HL add mechanism */
+    on('clicked:add-multiple-hl', TAS._fn(function updateMotePool(eventInfo){
+        getAttrs(["add-multiple-qty", "add-multiple-penalty"], TAS._fn(function getAddMultipleValues(values){
+            const qty     = values["add-multiple-qty"] || 1,
+                  penalty = values["add-multiple-penalty"] || "0";
+            getSectionIDs('health', function getHealthList(idHealthArray) {
+                const healthIndexes = {};
+                for (let i = 0; i < qty; i++) {
+                    TAS.debug(`before generateNewRowId idHealthArray=${idHealthArray}`);
+                    let newId = generateNewRowId(idHealthArray);
+                    TAS.debug(`id=${newId}, i=${i}, penalty=${penalty}`);
+                    healthIndexes['repeating_health_' + newId + '_hl-damage'] = 'healthy';
+                    healthIndexes['repeating_health_' + newId + '_hl-penalty'] = penalty;
+                }
+                TAS.debug(`Setting Health levels :`, healthIndexes);
+                setAttrs(healthIndexes);
+                updateWoundThenParry({sourceType: "player", triggerName: "other"});
+            });
+        }));
+    }));
+
+    function generateNewRowId(array_existing) {
+        let ret;
+        do {
+            ret = generateRowID();
+        } while (array_existing.includes(ret))
+        array_existing.push(ret);
+        return ret;
+    }
+
     /* ---- BEGIN: TheAaronSheet.js ---- */
     // Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
     // By:       The Aaron, Arcane Scriptomancer
@@ -3426,6 +3456,20 @@
                         </select>
                     </div>
                 </fieldset>
+                <div class="add-multiple-div">
+                    <input type="checkbox" class="sheet-unnamed-toggle add-multiple btn"><span title="Add Multiple" class="sheet-layer6"></span>
+                    <div class="sheet-layer5">
+                        <input type="number" class="add-multiple-qty" name="attr_add-multiple-qty" min="1" value="1">
+                        <select class="sheet-wound-penalty" name="attr_add-multiple-penalty">
+                            <option value="0" selected="selected">-0</option>
+                            <option value="-1">-1</option>
+                            <option value="-2">-2</option>
+                            <option value="-4">-4</option>
+                            <option value="I">Incapacitated</option>
+                        </select>
+                        <button type="action" name="act_add-multiple-hl" class="btn add-multiple">Add</button>
+                    </div>
+                </div>
             </div>
         </div>
         
