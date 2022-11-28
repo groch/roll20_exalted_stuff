@@ -2789,7 +2789,7 @@
                         <div class="sheet-exroll">
                             <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                     Archery (@{archery}),@{archery}|
                                     Athletics (@{athletics}),@{athletics}|
                                     Awareness (@{awareness}),@{awareness}|
@@ -2840,8 +2840,8 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                     Archery (@{archery}),@{archery}|
                                     Athletics (@{athletics}),@{athletics}|
                                     Awareness (@{awareness}),@{awareness}|
@@ -2892,7 +2892,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
                             </div>
                         </div>
                     </div>
@@ -12167,7 +12167,7 @@
                             <div class="sheet-exroll">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                         Archery (@{archery}),@{archery}|
                                         Athletics (@{athletics}),@{athletics}|
                                         Awareness (@{awareness}),@{awareness}|
@@ -12218,8 +12218,8 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute]+?{Ability|
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes] ?{Command to Add :| }">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                         Archery (@{archery}),@{archery}|
                                         Athletics (@{athletics}),@{athletics}|
                                         Awareness (@{awareness}),@{awareness}|
@@ -12270,7 +12270,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability]+?{Added Dices (Stunt/Situation/...) ?|0}+@{wound-penalty}[Wound Penalty])#+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes] ?{Commande to Add :| } -gm">to GM</button>
                                 </div>
                             </div>
                         </div>
