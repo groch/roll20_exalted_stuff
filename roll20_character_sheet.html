@@ -1227,6 +1227,7 @@
 
     const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
     const diceExAddedPrompt = '+?{Dices from Motes (Excellency)|0}[Dices from Motes]';
+    const baseInit = '3[Base Init]+';
     const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
     const succExAddedPrompt = '+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes]';
     const moteCostDiceDefault = '?{Dices from Motes (Excellency)|0}';
@@ -1342,34 +1343,38 @@
     }));
 
     /* Character Tab Roll Section '+' Triggers */
-    on('clicked:repeating_rolls:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
+    on('clicked:repeating_rolls:default-macro-d clicked:repeating_combat-init:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name) => {
+        clickDefaultMacro(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
                 const mote_attr = `${attr_name}rep-cost-mote`;
                 getAttrs(['diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
                     const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
                     setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
-                    setParameterCallback(`${attr_name}reprolls-bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
+                    const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
+                    setParameterCallback(`${attr_name}${prefix}bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
                 }));
             },
-            id => {
-                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '');
+            (id, section, repeatingSectionName) => {
+                const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
+                updateAttackRollRepeatingId(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
                 updateRollForCost(e);
             }
         );
     }));
 
-    on('clicked:repeating_rolls:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
+    on('clicked:repeating_rolls:default-macro-s clicked:repeating_combat-init:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name) => {
+        clickDefaultMacro(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
                 getAttrs(['succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
                     const succExTest = val['succex'] === '1';
                     setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
-                    setParameterCallback(`${attr_name}reprolls-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
+                    const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
+                    setParameterCallback(`${attr_name}${prefix}bonus-successes`, (repeatingSectionName === "combat-init" ? baseInit : '') + defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
                 }));
             },
-            id => {
-                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '');
+            (id, section, repeatingSectionName) => {
+                const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
+                updateAttackRollRepeatingId(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
                 updateRollForCost(e);
             }
         );
@@ -1386,8 +1391,8 @@
             TAS.debug(`clickDefaultMacro:: setting ${written_attr} = ${writtenValue}`);
             setAttrs({[written_attr]: writtenValue});
             if (debug === 2) TAS.debug(`updating macro`);
-            finalCallback(id, section);
-        }, attr_name, section);
+            finalCallback(id, section, repeatingSectionName);
+        }, attr_name, section, repeatingSectionName);
     }
     
     /* replicate withering to decisive */
@@ -16735,7 +16740,7 @@
                             </div>
                             <input type="hidden" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc-val" value="0">
                             <textarea name="attr_repcombat-desc" class="combat-textarea"></textarea>
-                            <div class="second-line grow-normal flex">
+                            <div class="init-section second-line grow-normal flex">
                                 (<select name="attr_repinit-attr" title="Attribute for the Roll">
                                     <option value="@{strength}">Strength</option>
                                     <option value="@{dexterity}">Dexterity</option>
@@ -16867,13 +16872,14 @@
                                     <option value="8">8</option>
                                     <option value="9">9</option>
                                     <option value="10">10</option>
-                                </select>+
+                                </select>
+                                <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                 <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">-
                                 <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                             </div>
-                            <div class="third-line grow-normal flex">
-                                 + 
+                            <div class="init-section third-line grow-normal flex">
+                                <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                 <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                             
                                 <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">

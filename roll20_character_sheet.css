@@ -2980,6 +2980,8 @@ body.sheet-darkmode {
 .charsheet .edit-toggle:hover,
 .charsheet .roll-section .stealth-btn:hover ~ .sheet-rolls-bonus-dices,
 .charsheet .roll-section .stealth-btn:hover ~ .sheet-rolls-bonus-successes,
+.charsheet .init-section .stealth-btn:hover ~ .sheet-init-bonus-dices,
+.charsheet .init-section .stealth-btn:hover ~ .sheet-init-bonus-successes,
 .charsheet .attack-section .stealth-btn:hover ~ .sheet-watk-bonus-dices,
 .charsheet .attack-section .stealth-btn:hover ~ .sheet-watk-bonus-successes {
     box-shadow: 1px 1px 2px gold, -1px 1px 2px gold, 1px -1px 2px gold, -1px -1px 2px gold;
