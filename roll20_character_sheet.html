@@ -1448,7 +1448,17 @@
         TAS.debug(`change:show-charname-in-charms`);
         getAttrs(["show-charname-in-charms"], TAS._fn(function getVarState(values){
             TAS.debug(`values["show-charname-in-charms"]=${values["show-charname-in-charms"]}`);
-            const obj = {'hide_character_name': (values["show-charname-in-charms"] === "1" ? "" : "1")};
+            const obj = {'hide_character_name': (values["show-charname-in-charms"] === "1" ? "1" : "")};
+            TAS.debug(`obj=${JSON.stringify(obj)}`);
+            setAttrs(obj);
+        }));
+    }));
+
+    on('remove:repeating_abilities change:repeating_abilities', TAS._fn(function updateShowCharm(eventInfo){
+        TAS.debug(`change:repeating_abilities`);
+        getSectionIDs("abilities", TAS._fn(function getVarState(values){
+            TAS.debug(`values.length=${values.length}, values=${JSON.stringify(values)}`);
+            const obj = {'reb-abi-enabled': (values.length ? "1" : "0")};
             TAS.debug(`obj=${JSON.stringify(obj)}`);
             setAttrs(obj);
         }));
@@ -2728,8 +2738,10 @@
                     </div>
                     <fieldset class="repeating_abilities" style="display: none;">
                         <div class="sheet-trait">
-                            <input type="checkbox" name="attr_repabilityfav" value="1"><span></span>
-                            <input type="text" name="attr_repabilityname" placeholder="Astrology">
+                            <label>
+                                <input type="checkbox" name="attr_repabilityfav" value="1"><span></span>
+                                <input type="text" name="attr_repabilityname" placeholder="Astrology">
+                            </label>
                             <div class="sheet-dots">
                                 <input type="radio" class="sheet-dots0" name="attr_repability" value="0" checked="checked"><span></span>
                                 <input type="radio" class="sheet-dots1" name="attr_repability" value="1"><span></span>
@@ -13012,102 +13024,121 @@
                             <div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
                                 <div class="sheet-layer6">
-                                    <div class="reminder-cell" title="Archery">
-                                        <span>Arc</span>
-                                        <input type="number" class="reminder-val" name="attr_archery" readonly>
+                                    <div class="main-abi">
+                                        <div class="reminder-cell" title="Archery">
+                                            <span>Arc</span>
+                                            <input type="number" class="reminder-val" name="attr_archery" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Athletics">
+                                            <span>Ath</span>
+                                            <input type="number" class="reminder-val" name="attr_athletics" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Awareness">
+                                            <span>Awa</span>
+                                            <input type="number" class="reminder-val" name="attr_awareness" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Brawl">
+                                            <span>Bra</span>
+                                            <input type="number" class="reminder-val" name="attr_brawl" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Bureaucracy">
+                                            <span>Bur</span>
+                                            <input type="number" class="reminder-val" name="attr_bureaucracy" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Dodge">
+                                            <span>Dod</span>
+                                            <input type="number" class="reminder-val" name="attr_dodge" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Integrity">
+                                            <span>Int</span>
+                                            <input type="number" class="reminder-val" name="attr_integrity" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Investigation">
+                                            <span>Inv</span>
+                                            <input type="number" class="reminder-val" name="attr_investigation" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Larceny">
+                                            <span>Lar</span>
+                                            <input type="number" class="reminder-val" name="attr_larceny" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Linguistics">
+                                            <span>Lin</span>
+                                            <input type="number" class="reminder-val" name="attr_linguistics" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Lore">
+                                            <span>Lor</span>
+                                            <input type="number" class="reminder-val" name="attr_lore" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Medicine">
+                                            <span>Med</span>
+                                            <input type="number" class="reminder-val" name="attr_medicine" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Melee">
+                                            <span>Mel</span>
+                                            <input type="number" class="reminder-val" name="attr_melee" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Occult">
+                                            <span>Occ</span>
+                                            <input type="number" class="reminder-val" name="attr_occult" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Performance">
+                                            <span>Per</span>
+                                            <input type="number" class="reminder-val" name="attr_performance" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Presence">
+                                            <span>Pre</span>
+                                            <input type="number" class="reminder-val" name="attr_presence" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Resistance">
+                                            <span>Res</span>
+                                            <input type="number" class="reminder-val" name="attr_resistance" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Ride">
+                                            <span>Rid</span>
+                                            <input type="number" class="reminder-val" name="attr_ride" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Sail">
+                                            <span>Sai</span>
+                                            <input type="number" class="reminder-val" name="attr_sail" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Socialize">
+                                            <span>Soc</span>
+                                            <input type="number" class="reminder-val" name="attr_socialize" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Stealth">
+                                            <span>Ste</span>
+                                            <input type="number" class="reminder-val" name="attr_stealth" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Survival">
+                                            <span>Sur</span>
+                                            <input type="number" class="reminder-val" name="attr_survival" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="Thrown">
+                                            <span>Thr</span>
+                                            <input type="number" class="reminder-val" name="attr_thrown" readonly>
+                                        </div>
+                                        <div class="reminder-cell" title="War">
+                                            <span>War</span>
+                                            <input type="number" class="reminder-val" name="attr_war" readonly>
+                                        </div>
                                     </div>
-                                    <div class="reminder-cell" title="Athletics">
-                                        <span>Ath</span>
-                                        <input type="number" class="reminder-val" name="attr_athletics" readonly>
+                                    <input type="hidden" class="repability-enabled-check" name="attr_reb-abi-enabled" />
+                                    <div class="repability-toggle">
+                                        <hr />
+                                        <fieldset class="repeating_abilities" style="display: none;">
+                                            <div class="reminder-cell">
+                                                <input type="text" name="attr_repabilityname" readonly>
+                                                <input type="number" class="reminder-val" name="attr_repability" readonly>
+                                            </div>
+                                        </fieldset>
                                     </div>
-                                    <div class="reminder-cell" title="Awareness">
-                                        <span>Awa</span>
-                                        <input type="number" class="reminder-val" name="attr_awareness" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Brawl">
-                                        <span>Bra</span>
-                                        <input type="number" class="reminder-val" name="attr_brawl" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Bureaucracy">
-                                        <span>Bur</span>
-                                        <input type="number" class="reminder-val" name="attr_bureaucracy" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Dodge">
-                                        <span>Dod</span>
-                                        <input type="number" class="reminder-val" name="attr_dodge" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Integrity">
-                                        <span>Int</span>
-                                        <input type="number" class="reminder-val" name="attr_integrity" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Investigation">
-                                        <span>Inv</span>
-                                        <input type="number" class="reminder-val" name="attr_investigation" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Larceny">
-                                        <span>Lar</span>
-                                        <input type="number" class="reminder-val" name="attr_larceny" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Linguistics">
-                                        <span>Lin</span>
-                                        <input type="number" class="reminder-val" name="attr_linguistics" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Lore">
-                                        <span>Lor</span>
-                                        <input type="number" class="reminder-val" name="attr_lore" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Medicine">
-                                        <span>Med</span>
-                                        <input type="number" class="reminder-val" name="attr_medicine" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Melee">
-                                        <span>Mel</span>
-                                        <input type="number" class="reminder-val" name="attr_melee" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Occult">
-                                        <span>Occ</span>
-                                        <input type="number" class="reminder-val" name="attr_occult" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Performance">
-                                        <span>Per</span>
-                                        <input type="number" class="reminder-val" name="attr_performance" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Presence">
-                                        <span>Pre</span>
-                                        <input type="number" class="reminder-val" name="attr_presence" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Resistance">
-                                        <span>Res</span>
-                                        <input type="number" class="reminder-val" name="attr_resistance" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Ride">
-                                        <span>Rid</span>
-                                        <input type="number" class="reminder-val" name="attr_ride" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Sail">
-                                        <span>Sai</span>
-                                        <input type="number" class="reminder-val" name="attr_sail" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Socialize">
-                                        <span>Soc</span>
-                                        <input type="number" class="reminder-val" name="attr_socialize" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Stealth">
-                                        <span>Ste</span>
-                                        <input type="number" class="reminder-val" name="attr_stealth" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Survival">
-                                        <span>Sur</span>
-                                        <input type="number" class="reminder-val" name="attr_survival" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Thrown">
-                                        <span>Thr</span>
-                                        <input type="number" class="reminder-val" name="attr_thrown" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="War">
-                                        <span>War</span>
-                                        <input type="number" class="reminder-val" name="attr_war" readonly>
-                                    </div>
+                                    <hr />
+                                    <fieldset class="repeating_specialty" style="display: none;">
+                                        <div class="reminder-cell">
+                                            <input type="text" name="attr_repspecialty" readonly>
+                                            <input type="text" class="reminder-val" name="attr_repspecialtyability" readonly>
+                                        </div>
+                                    </fieldset>
                                 </div>
                             </div>
                             <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display">
@@ -16383,102 +16414,121 @@
                     <div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
                         <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
                         <div class="sheet-layer6">
-                            <div class="reminder-cell" title="Archery">
-                                <span>Arc</span>
-                                <input type="number" class="reminder-val" name="attr_archery" readonly>
+                            <div class="main-abi">
+                                <div class="reminder-cell" title="Archery">
+                                    <span>Arc</span>
+                                    <input type="number" class="reminder-val" name="attr_archery" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Athletics">
+                                    <span>Ath</span>
+                                    <input type="number" class="reminder-val" name="attr_athletics" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Awareness">
+                                    <span>Awa</span>
+                                    <input type="number" class="reminder-val" name="attr_awareness" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Brawl">
+                                    <span>Bra</span>
+                                    <input type="number" class="reminder-val" name="attr_brawl" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Bureaucracy">
+                                    <span>Bur</span>
+                                    <input type="number" class="reminder-val" name="attr_bureaucracy" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Dodge">
+                                    <span>Dod</span>
+                                    <input type="number" class="reminder-val" name="attr_dodge" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Integrity">
+                                    <span>Int</span>
+                                    <input type="number" class="reminder-val" name="attr_integrity" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Investigation">
+                                    <span>Inv</span>
+                                    <input type="number" class="reminder-val" name="attr_investigation" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Larceny">
+                                    <span>Lar</span>
+                                    <input type="number" class="reminder-val" name="attr_larceny" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Linguistics">
+                                    <span>Lin</span>
+                                    <input type="number" class="reminder-val" name="attr_linguistics" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Lore">
+                                    <span>Lor</span>
+                                    <input type="number" class="reminder-val" name="attr_lore" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Medicine">
+                                    <span>Med</span>
+                                    <input type="number" class="reminder-val" name="attr_medicine" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Melee">
+                                    <span>Mel</span>
+                                    <input type="number" class="reminder-val" name="attr_melee" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Occult">
+                                    <span>Occ</span>
+                                    <input type="number" class="reminder-val" name="attr_occult" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Performance">
+                                    <span>Per</span>
+                                    <input type="number" class="reminder-val" name="attr_performance" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Presence">
+                                    <span>Pre</span>
+                                    <input type="number" class="reminder-val" name="attr_presence" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Resistance">
+                                    <span>Res</span>
+                                    <input type="number" class="reminder-val" name="attr_resistance" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Ride">
+                                    <span>Rid</span>
+                                    <input type="number" class="reminder-val" name="attr_ride" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Sail">
+                                    <span>Sai</span>
+                                    <input type="number" class="reminder-val" name="attr_sail" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Socialize">
+                                    <span>Soc</span>
+                                    <input type="number" class="reminder-val" name="attr_socialize" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Stealth">
+                                    <span>Ste</span>
+                                    <input type="number" class="reminder-val" name="attr_stealth" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Survival">
+                                    <span>Sur</span>
+                                    <input type="number" class="reminder-val" name="attr_survival" readonly>
+                                </div>
+                                <div class="reminder-cell" title="Thrown">
+                                    <span>Thr</span>
+                                    <input type="number" class="reminder-val" name="attr_thrown" readonly>
+                                </div>
+                                <div class="reminder-cell" title="War">
+                                    <span>War</span>
+                                    <input type="number" class="reminder-val" name="attr_war" readonly>
+                                </div>
                             </div>
-                            <div class="reminder-cell" title="Athletics">
-                                <span>Ath</span>
-                                <input type="number" class="reminder-val" name="attr_athletics" readonly>
+                            <input type="hidden" class="repability-enabled-check" name="attr_reb-abi-enabled" />
+                            <div class="repability-toggle">
+                                <hr />
+                                <fieldset class="repeating_abilities" style="display: none;">
+                                    <div class="reminder-cell">
+                                        <input type="text" name="attr_repabilityname" readonly>
+                                        <input type="number" class="reminder-val" name="attr_repability" readonly>
+                                    </div>
+                                </fieldset>
                             </div>
-                            <div class="reminder-cell" title="Awareness">
-                                <span>Awa</span>
-                                <input type="number" class="reminder-val" name="attr_awareness" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Brawl">
-                                <span>Bra</span>
-                                <input type="number" class="reminder-val" name="attr_brawl" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Bureaucracy">
-                                <span>Bur</span>
-                                <input type="number" class="reminder-val" name="attr_bureaucracy" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Dodge">
-                                <span>Dod</span>
-                                <input type="number" class="reminder-val" name="attr_dodge" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Integrity">
-                                <span>Int</span>
-                                <input type="number" class="reminder-val" name="attr_integrity" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Investigation">
-                                <span>Inv</span>
-                                <input type="number" class="reminder-val" name="attr_investigation" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Larceny">
-                                <span>Lar</span>
-                                <input type="number" class="reminder-val" name="attr_larceny" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Linguistics">
-                                <span>Lin</span>
-                                <input type="number" class="reminder-val" name="attr_linguistics" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Lore">
-                                <span>Lor</span>
-                                <input type="number" class="reminder-val" name="attr_lore" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Medicine">
-                                <span>Med</span>
-                                <input type="number" class="reminder-val" name="attr_medicine" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Melee">
-                                <span>Mel</span>
-                                <input type="number" class="reminder-val" name="attr_melee" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Occult">
-                                <span>Occ</span>
-                                <input type="number" class="reminder-val" name="attr_occult" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Performance">
-                                <span>Per</span>
-                                <input type="number" class="reminder-val" name="attr_performance" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Presence">
-                                <span>Pre</span>
-                                <input type="number" class="reminder-val" name="attr_presence" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Resistance">
-                                <span>Res</span>
-                                <input type="number" class="reminder-val" name="attr_resistance" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Ride">
-                                <span>Rid</span>
-                                <input type="number" class="reminder-val" name="attr_ride" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Sail">
-                                <span>Sai</span>
-                                <input type="number" class="reminder-val" name="attr_sail" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Socialize">
-                                <span>Soc</span>
-                                <input type="number" class="reminder-val" name="attr_socialize" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Stealth">
-                                <span>Ste</span>
-                                <input type="number" class="reminder-val" name="attr_stealth" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Survival">
-                                <span>Sur</span>
-                                <input type="number" class="reminder-val" name="attr_survival" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Thrown">
-                                <span>Thr</span>
-                                <input type="number" class="reminder-val" name="attr_thrown" readonly>
-                            </div>
-                            <div class="reminder-cell" title="War">
-                                <span>War</span>
-                                <input type="number" class="reminder-val" name="attr_war" readonly>
-                            </div>
+                            <hr />
+                            <fieldset class="repeating_specialty" style="display: none;">
+                                <div class="reminder-cell">
+                                    <input type="text" name="attr_repspecialty" readonly>
+                                    <input type="text" class="reminder-val" name="attr_repspecialtyability" readonly>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                     <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display">

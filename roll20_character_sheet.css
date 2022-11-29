@@ -258,6 +258,14 @@ tier 2: couleurs
     visibility: hidden;
 }
 
+.charsheet div.repability-toggle {
+    display: none;
+}
+
+.charsheet .repability-enabled-check[value="1"] ~ .repability-toggle {
+    display: block;
+}
+
 .charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display {
     display: none;
 }
@@ -623,6 +631,10 @@ tier 2: couleurs
 
 .charsheet .sheet-trait > * {
     vertical-align: middle;
+}
+
+.charsheet .repcontainer[data-groupname="repeating_abilities"] .repitem {
+    display: block;
 }
 
 .charsheet .sheet-trait {
@@ -3087,6 +3099,7 @@ body.sheet-darkmode {
     width: 3.6em;
     justify-content: space-between;
     align-items: center;
+    flex-grow: 1;
 }
 
 .charsheet .sheet-attr-reminder .reminder-cell {
@@ -3150,9 +3163,22 @@ body.sheet-darkmode {
     width: unset;
 }
 
+.charsheet .sheet-abi-reminder .repcontainer[data-groupname="repeating_specialty"] {
+    display: inline-grid;
+}
+
+.charsheet .sheet-abi-reminder .repcontainer[data-groupname="repeating_specialty"] input[name="attr_repspecialty"] {
+    flex-grow: 1;
+}
+
+.charsheet .sheet-abi-reminder .repcontainer[data-groupname="repeating_specialty"] .repitem .reminder-cell > .reminder-val[readonly] {
+    width: 5.5em;
+}
+
 .charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
 .charsheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
-.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div > div.main-abi {
     display: flex;
     flex-wrap: wrap;
 }
@@ -3163,7 +3189,8 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-attr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
-.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div,
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div > div.main-abi {
     flex-direction: column;
     align-content: space-between;
 }
@@ -3180,7 +3207,7 @@ body.sheet-darkmode {
     min-width: 29em;
 }
 
-.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+.charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div > div.main-abi {
     max-height: 13em;
 }
 
