@@ -2399,6 +2399,21 @@ body.sheet-darkmode {
     justify-content: space-between;
 }
 
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled] {
+    width: 27px;
+    flex-grow: 1;
+    margin-right:2px;
+}
+
+.sheet-defenses .flex-col .flex.grow-normal {
+    width: 100%;
+}
+
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled]:last-child,
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled] {
+    margin-right:0;
+}
+
 /* -- WEAPON -- */
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line {
