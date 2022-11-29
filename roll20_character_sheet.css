@@ -377,11 +377,6 @@ tier 2: couleurs
 .charsheet [data-groupname=repeating_weapon].editmode .sheet-table-cell { left: -41px; }
 .charsheet [data-groupname=repeating_armor].editmode .sheet-table-cell { left: -30px; }
  
- .charsheet .intimacyrepeating option {color: rgb(0,255,255)}
- .charsheet .intimacyrepeating option[value="defining"]{color: rgb(0,204,0)}
- .charsheet .intimacyrepeating option[value="major"]{color: rgb(0,255,0)}
- .charsheet .intimacyrepeating option[value="minor"]{color: rgb(0,204,255)}
- 
 .charsheet .sheet-flexbox-h > label,.charsheet .sheet-flexbox0 {
     width: 100%;
     line-height: 28px;
@@ -2260,26 +2255,33 @@ body.sheet-darkmode {
 
 /* --- COLOR INTIMACIES -- */
 
-.charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+.charsheet .sheet-tab-intimacies-sheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: rgb(255 134 134 / 15%);
     border: 3px solid red;
     border-radius: 5px;
 }
 
-.sheet-darkmode .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
+.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: darkred;
     border: 3px solid red;
     border-radius: 5px;
 }
+ 
+.charsheet .sheet-intimacyrepeating option[value="none"] {color: darkorange}
+.charsheet .sheet-intimacyrepeating option[value="Defining"]{background: rgba(0, 88, 255, 0.5)}
+.charsheet .sheet-intimacyrepeating option[value="Major"]{background: rgba(0, 243, 255, 0.34)}
+
+.sheet-tab-intimacies-sheet .inti-col .intimacy-val-check[value="none"] ~ div.sheet-table-cell,
+.sheet-tab-antisocial-sheet .inti-col .intimacy-taint-check[value="1"] + .intimacy-val-check[value="none"] ~ div.sheet-table-cell {
+    background: linear-gradient(180deg, transparent, rgba(255, 215, 0, 0.9), rgba(255, 215, 0, 0.3), transparent, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.9))
+}
 
 .inti-col .intimacy-val-check[value="Major"] ~ div.sheet-table-cell {
     background: linear-gradient(180deg, transparent, rgba(0, 243, 255, 0.34), transparent)
-    /* background-color: #ffcc00; */
 }
 
 .inti-col .intimacy-val-check[value="Defining"] ~ div.sheet-table-cell {
     background: linear-gradient(180deg, transparent, rgba(0, 88, 255, 0.5), transparent);
-    /* background-color: #ff9100; */
 }
     
 .charsheet .sheet-3col.inti-col input[name="attr_intimacyrepeatingxpspent"] {
