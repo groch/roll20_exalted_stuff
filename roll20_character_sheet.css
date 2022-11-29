@@ -2414,6 +2414,32 @@ body.sheet-darkmode {
     margin-right:0;
 }
 
+.sheet-defenses .flex-col .flex.grow-normal span[title="Dexterity + Dodge"] {
+    margin-left: 2.5em;
+}
+
+.sheet-defenses .flex-col .flex.grow-normal span[title="Wits + Integrity"] {
+    margin-left: 1.35em;
+}
+
+.sheet-defenses .flex-col .flex.grow-normal span[title="Manipulation + Socialize"] {
+    margin-left: 1.40em;
+}
+
+@-moz-document url-prefix() {
+    .sheet-defenses .flex-col .flex.grow-normal span[title="Dexterity + Dodge"] {
+        margin-left: 2.8em;
+    }
+
+    .sheet-defenses .flex-col .flex.grow-normal span[title="Wits + Integrity"] {
+        margin-left: 1.82em;
+    }
+    
+    .sheet-defenses .flex-col .flex.grow-normal span[title="Manipulation + Socialize"] {
+        margin-left: 1.61em;
+    }
+}
+
 /* -- WEAPON -- */
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line {
