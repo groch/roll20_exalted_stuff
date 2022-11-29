@@ -157,38 +157,38 @@ tier 2: couleurs
     font-weight: normal;
 }
 
-.charsheet .sheet-defenses .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.charsheet .sheet-defenses .wound-penalty-check[value="1"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: yellow;
     font-weight: bold;
 }
 
-.charsheet .sheet-defenses .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.charsheet .sheet-defenses .wound-penalty-check[value="2"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: orange;
     font-weight: bold;
 }
 
-.charsheet .sheet-defenses .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.charsheet .sheet-defenses .wound-penalty-check[value="3"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: orangered;
     font-weight: bold;
 }
 
-.charsheet .sheet-defenses .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.charsheet .sheet-defenses .wound-penalty-check[value="4"] ~ input[type=number][disabled].wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-defenses .flex-col .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: red;
     font-weight: bold;
 }
@@ -2100,97 +2100,97 @@ body.sheet-darkmode {
     font-weight: normal;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="1"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #d5d500;
     color: var(--dark-surface1);
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="2"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #ab6f00;
     font-weight: bold;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="3"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: #9f2c01;
     font-weight: bold;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="4"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
     background-color: darkred;
     font-weight: bold;
 }
 
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-5"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-5"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-5"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-5"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-5"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-6"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-6"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-6"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-6"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-6"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-7"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-7"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-7"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-7"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-7"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-8"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-8"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-8"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-8"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-8"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-9"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-9"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-9"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-9"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-9"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-10"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-10"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-10"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-10"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-10"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-11"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-11"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-11"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-11"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-11"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-12"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-12"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-12"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-12"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-12"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-13"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-13"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-13"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-13"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-13"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-14"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-14"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-14"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-14"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-14"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="-15"] ~ input[type=number][disabled].wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-15"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="-15"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-15"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-15"] ~ input[type=number][disabled].onslaught-taint.wound-taint {
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="5"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="5"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="5"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="5"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="5"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="6"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="6"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="6"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="6"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="6"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="7"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="7"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="7"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="7"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="7"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="8"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="8"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="8"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="8"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="8"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="9"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="9"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="9"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="9"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="9"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="10"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="10"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="10"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="10"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="10"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="11"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="11"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="11"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="11"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="11"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="12"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="12"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="12"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="12"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="12"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="13"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="13"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="13"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="13"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="13"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="14"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="14"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="14"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="14"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="14"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .wound-penalty-check[value="15"] ~ input[type=number][disabled].wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="15"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-defenses .flex-col .wound-penalty-check[value="15"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="15"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+.sheet-darkmode .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="15"] ~ input[type=number][disabled].onslaught-taint.wound-taint {
     background-color: black;
     font-weight: bold;
 }
@@ -3560,34 +3560,34 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
         background-color: darkred;
     }
     
-    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-1"] ~ input[type=number][disabled].wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="1"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
         background-color: #d5d500;
         color: #B3B3B3;
     }
     
-    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-2"] ~ input[type=number][disabled].wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="2"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
         background-color: #ab6f00;
         font-weight: bold;
     }
     
-    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-3"] ~ input[type=number][disabled].wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="3"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
         background-color: #9f2c01;
         font-weight: bold;
     }
     
-    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="-4"] ~ input[type=number][disabled].wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
-    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
-    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="-4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
+    .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="4"] ~ input[type=number][disabled].wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
+    .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
+    .charsheet .sheet-gear .repcontainer[data-groupname="repeating_weapon"] .repitem .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint {
         background-color: darkred;
         font-weight: bold;
     }

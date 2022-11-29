@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.38, debug = 1;
+    const version = 2.39, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -76,13 +76,13 @@
                 TAS.debug(`getHealthFields:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
                 
                 TAS.debug(`getHealthFields:: combat-crippling-pen=${valuesSections['combat-crippling-pen']}`);
-                pen = Number(pen);
+                pen = Math.abs(Number(pen));
                 TAS.debug('1st Calculated penalty=' + pen);
-                if (pen < -1 && Number(valuesSections['pain-tolerance'])) pen++;
+                if (pen > 1 && Number(valuesSections['pain-tolerance'])) pen--;
                 TAS.debug('Pain-Tolerance Calculated penalty=' + pen);
                 pen = Number(valuesSections['combat-crippling-pen'])
-                    ? -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
-                    : -Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
+                    ? Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
+                    : Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
                 TAS.debug('Final Calculated penalty w/ Crippling=' + pen);
                 finalAttr = { 'wound-penalty': pen };
                 if (!Number(valuesSections['battlegroup'])) {
@@ -128,13 +128,9 @@
                     
                             TAS.debug(`Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
                             TAS.debug('Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen);
-                            // var newParry = Math.max(0, (isQc ? qcParry : Math.ceil((dex + Math.max(brawl, ma, melee)) / 2)) + pen);
-                            // var newParry = (isQc ? qcParry : Math.ceil((dex + Math.max(brawl, ma, melee)) / 2)) + pen;
-                            var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2)) + pen;
+                            var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2)) - pen;
                             TAS.debug('Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen);
-                            // var newParrySpe = Math.max(0, (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen);
-                            // var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2)) + pen;
-                            var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2)) + pen;
+                            var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2)) - pen;
                             TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
                             finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
             
@@ -149,12 +145,8 @@
                                         let row = 'repeating_weapon_' + id,
                                             def = valuesSections[`${row}_repweapondef`] || 0,
                                             abi = valuesSections[`${row}_repweaponabi`] || 'brawl';
-                                        // finalAttr[`${row}_repweaponparry`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + parseInt(def) + pen);
-                                        // finalAttr[`${row}_repweaponparryspe`] = Math.max(0, Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + parseInt(def) + pen);
-                                        // finalAttr[`${row}_repweaponparry`] = Math.ceil((dex + Math.max(brawl, ma, melee)) / 2) + Number(def) + pen;
-                                        // finalAttr[`${row}_repweaponparryspe`] = Math.ceil((dex + Math.max(brawl, ma, melee) + 1) / 2) + Number(def) + pen;
-                                        finalAttr[`${row}_repweaponparry`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))) / 2) + Number(def) + pen;
-                                        finalAttr[`${row}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) + pen;
+                                        finalAttr[`${row}_repweaponparry`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))) / 2) + Number(def) - pen;
+                                        finalAttr[`${row}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) - pen;
                                     });
                                     TAS.debug('UPDATE WEAPONS PARRY', finalAttr);
                                     setAttrs(finalAttr);
@@ -441,6 +433,7 @@
         {version: 2.35, fn: upgradeto236},
         {version: 2.36, fn: upgradeto237},
         {version: 2.37, fn: upgradeto238},
+        {version: 2.38, fn: upgradeto239},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -504,6 +497,16 @@
              "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
             return true;
         return false;
+    }
+
+    function upgradeto239() {
+        getAttrs(["wound-penalty"], TAS._fn(function determineCaste(values){
+            setAttrs({
+                'wound-penalty': Math.abs(values['wound-penalty']),
+                'version': version
+            });
+            updateAllAttackRolls({sourceType: 'player'}, false);
+        }));
     }
 
     function upgradeto238() {
@@ -2869,7 +2872,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                 <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                     Archery (@{archery}),@{archery}|
                                     Athletics (@{athletics}),@{athletics}|
@@ -2921,7 +2924,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                         <div class="sheet-exroll exroll-diceex">
@@ -2978,7 +2981,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                 <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                     Archery (@{archery}),@{archery}|
                                     Athletics (@{athletics}),@{athletics}|
@@ -3030,7 +3033,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                         <div class="sheet-exroll exroll-succex">
@@ -3087,7 +3090,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                 <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                     Archery (@{archery}),@{archery}|
                                     Athletics (@{athletics}),@{athletics}|
@@ -3139,7 +3142,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                         <div class="sheet-exroll exroll-full">
@@ -3196,7 +3199,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                 <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                     Archery (@{archery}),@{archery}|
                                     Athletics (@{athletics}),@{athletics}|
@@ -3248,7 +3251,7 @@
                                     War (@{war}),@{war}|
                                     Thrown (@{thrown}),@{thrown}|
                                     Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                     </div>
@@ -3318,29 +3321,29 @@
                         <div class="sheet-exroll exroll-vanilla">
                             <div class="header-section" title="Generic Roll with prompts for Pool+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                         <div class="sheet-exroll exroll-diceex">
                             <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                         <div class="sheet-exroll exroll-succex">
                             <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                         <div class="sheet-exroll exroll-full">
                             <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                             <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                             </div>
                         </div>
                     </div>
@@ -12611,7 +12614,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                     <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                         Archery (@{archery}),@{archery}|
                                         Athletics (@{athletics}),@{athletics}|
@@ -12663,7 +12666,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-diceex">
@@ -12720,7 +12723,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                     <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                         Archery (@{archery}),@{archery}|
                                         Athletics (@{athletics}),@{athletics}|
@@ -12772,7 +12775,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-succex">
@@ -12829,7 +12832,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                     <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                         Archery (@{archery}),@{archery}|
                                         Athletics (@{athletics}),@{athletics}|
@@ -12881,7 +12884,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-full">
@@ -12938,7 +12941,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
                                     <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}[Attribute] +?{Ability|
                                         Archery (@{archery}),@{archery}|
                                         Athletics (@{athletics}),@{athletics}|
@@ -12990,7 +12993,7 @@
                                         War (@{war}),@{war}|
                                         Thrown (@{thrown}),@{thrown}|
                                         Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    }[Ability] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                         </div>
@@ -12998,29 +13001,29 @@
                             <div class="sheet-exroll exroll-vanilla">
                                 <div class="header-section" title="Generic Roll with prompts for Pool+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-diceex">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-succex">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-full">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                         </div>
@@ -13480,7 +13483,7 @@
                                             </select>
                                             <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                             <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
-                                            <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
+                                            <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                             <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                         </div>
                                         <div class="flex grow-normal">
@@ -13559,7 +13562,7 @@
                     <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                        <input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                        <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
                     </div>
                     <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
                     <div class="sheet-table-cell">
@@ -13678,7 +13681,7 @@
                     <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                        <input type="number" value="@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                        <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
                     </div>
                 </div>
             </div>
@@ -16875,7 +16878,7 @@
                                 </select>
                                 <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                 <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">-
-                                <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
+                                <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                             </div>
                             <div class="init-section third-line grow-normal flex">
@@ -17081,7 +17084,7 @@
                                         <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability&#013;&#010;(Special for Archery & Thrown)">+</button>
                                         <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
                                         <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}"></p>
-                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
+                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
                                     <div class="flex grow-normal">
@@ -17290,7 +17293,7 @@
                                         <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                         <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
                                         <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}"></p>
-                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">+
+                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
                                     <div class="flex grow-normal">
