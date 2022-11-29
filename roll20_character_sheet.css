@@ -286,6 +286,8 @@ tier 2: couleurs
 }
 
 
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-character-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-character-sheet .gm-whisper,
 .charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-rolls-sheet .default-whisper,
 .charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-rolls-sheet .gm-whisper,
 .charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .default-whisper,
@@ -305,6 +307,10 @@ tier 2: couleurs
     display: inline;
 }
 
+.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-character-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-character-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-character-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-character-sheet .sheet-roll.gm-whisper,
 .charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-rolls-sheet .default-whisper,
 .charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-rolls-sheet .gm-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.default-whisper,
@@ -3024,7 +3030,19 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-exroll {
+    display: none;
+}
+
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="0"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-vanilla,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="0"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-diceex,
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="1"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-succex,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="1"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-full,
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="0"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-vanilla,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="0"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-diceex,
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-succex,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-full {
     display: flex;
+    justify-content: center;
 }
 
 .charsheet .sheet-exroll-div {
