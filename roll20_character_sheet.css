@@ -980,7 +980,7 @@ tier 2: couleurs
 
 .charsheet .repcontainer[data-groupname="repeating_merits"] .merit-dot-toggle-wrapper {
     display: flex;
-    align-content: flex-end;
+    align-content: space-between;
     flex: 1 1 min-content;
     flex-flow: wrap-reverse;
     justify-content: flex-end;
