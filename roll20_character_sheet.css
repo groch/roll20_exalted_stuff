@@ -2400,7 +2400,8 @@ body.sheet-darkmode {
     justify-content: space-between;
 }
 
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled] {
+.sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled],
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].wound-taint {
     width: 27px;
     flex-grow: 1;
     margin-right:2px;
@@ -2410,6 +2411,11 @@ body.sheet-darkmode {
     width: 100%;
 }
 
+.sheet-table-body .sheet-table-row .sheet-table-cell input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled].wound-taint {
+    width: 3.5em;
+}
+
+.sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled].wound-taint:last-child,
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled]:last-child,
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled] {
     margin-right:0;
