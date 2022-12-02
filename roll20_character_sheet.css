@@ -288,7 +288,8 @@ tier 2: couleurs
     background: linear-gradient(180deg, transparent, darkred, transparent);
 }
 
-.charsheet .sheet-tab-intimacies-sheet .sheet-qc-soc-influence-type-display {
+.charsheet .sheet-tab-intimacies-sheet .sheet-qc-soc-influence-type-display,
+.charsheet .sheet-tab-antisocial-sheet .sheet-qc-soc-influence-type-display {
     font-size: small;
     width: 5.5em;
 }
