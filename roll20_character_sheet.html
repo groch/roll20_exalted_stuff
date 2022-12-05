@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.39, debug = 1;
+    const version = 2.46, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -434,6 +434,8 @@
         {version: 2.36, fn: upgradeto237},
         {version: 2.37, fn: upgradeto238},
         {version: 2.38, fn: upgradeto239},
+        {version: 2.39, fn: upgradeto240},
+        {version: 2.45, fn: upgradeto242},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -499,13 +501,27 @@
         return false;
     }
 
+    function upgradeto242() {
+        setAttrs({'version': version});
+        updateAllRolls({sourceType: 'player'}, false);
+    }
+
+    function upgradeto240() {
+        getAttrs(["battlegroup"], TAS._fn(function determineIfBG(values){
+            if (values['battlegroup'] && Number(values['battlegroup'])) {
+                setAttrs({'version': version});
+                updateAllRolls({sourceType: 'player'}, false);
+            }
+        }));
+    }
+
     function upgradeto239() {
         getAttrs(["wound-penalty"], TAS._fn(function determineCaste(values){
             setAttrs({
                 'wound-penalty': Math.abs(values['wound-penalty']),
                 'version': version
             });
-            updateAllAttackRolls({sourceType: 'player'}, false);
+            updateAllRolls({sourceType: 'player'}, false);
         }));
     }
 
@@ -515,7 +531,7 @@
             'rollpenalty-input': 0,
             'version': version
         });
-        updateAllAttackRolls({sourceType: 'player'}, false);
+        updateAllRolls({sourceType: 'player'}, false);
     }
 
     function upgradeto237() {
@@ -1102,7 +1118,9 @@
         'sail',         'socialize',    'stealth',
         'survival',     'thrown',       'war',
         // battlegroup
-        'battlegroup'
+        'battlegroup',
+        'battlegroup-size',
+        'battlegroup-dmg-boost'
     ];
 
     const initSectionsToBind =  ['attr',        'abi',      'bonus-dices',      'bonus-successes',          'final-macro-options'],
@@ -1125,6 +1143,8 @@
         updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
     })));
     
+    on('change:battlegroup-size', setDebugWrapper((e) => updatAttackRolls(false, true)));
+    on('change:battlegroup-dmg-boost', setDebugWrapper((e) => updatAttackRolls(false, true)));
     wAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-'))));
     wDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-'))));
     dAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-'))));
@@ -1171,38 +1191,30 @@
     }
 
     /* Combat Tab ALL Binds */
-    attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(updateAllAttackRolls)));
+    attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(updateAllRolls)));
 
-    function updateAllAttackRolls(e, setIfReplaced = true) {
+    function updateAllRolls(e, setIfReplaced = true) {
         if (e.sourceType !== "player") {
             TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        TAS.debug('updateAllAttackRolls::updateAllAttackRolls e=', JSON.stringify(e));
+        TAS.debug('updateAllRolls::updateAllRolls e=', JSON.stringify(e));
         
         getSectionIDs('rolls', setDebugWrapper(function getRollsSection(idSections) {
-            if (debug === 2) TAS.debug('updateAllAttackRolls::getRollsSection idSections=', JSON.stringify(idSections));
+            if (debug === 2) TAS.debug('updateAllRolls::getRollsSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
                 updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
         }));
 
         getSectionIDs('combat-init', setDebugWrapper(function getCombatInitSection(idSections) {
-            if (debug === 2) TAS.debug('updateAllAttackRolls::getCombatInitSection idSections=', JSON.stringify(idSections));
+            if (debug === 2) TAS.debug('updateAllRolls::getCombatInitSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
                 updateAttackRollRepeatingId('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
         }));
 
-        getSectionIDs('combat-attack', setDebugWrapper(function getCombatAttackSection(idSections) {
-            if (debug === 2) TAS.debug('updateAllAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
-            for (const id of idSections) {
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
-            }
-        }));
+        updatAttackRolls(setIfReplaced);
 
-        if (debug === 2) TAS.debug('updateAllAttackRolls:: UPDATING CHARMS');
+        if (debug === 2) TAS.debug('updateAllRolls:: UPDATING CHARMS');
         sections.forEach(section => {
             getSectionIDs(section, setDebugWrapper(function getCharmOrEquivalentSection(idSections) {
                 for (const id of idSections) {
@@ -1218,10 +1230,22 @@
         })
     }
 
-    function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability] ${checkValReturnValidString(val[attr_name+'bonus-dices'], ' ')}-@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
-    function defaultWAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'watk-attr']}[Attribute] +${val[attr_name+'watk-abi']}[Ability]${checkValReturnValidString(val[attr_name+'weap-atk'], '', ' +')}[Accuracy] ${checkValReturnValidString(val[attr_name+'watk-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'watk-bonus-successes'])} ${val[attr_name+'watk-final-macro-options']}`; }
-    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size} ':''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']}`; }
-    function defaultDAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'datk-attr']}[Attribute] +${val[attr_name+'datk-abi']}[Ability] ${checkValReturnValidString(val[attr_name+'datk-bonus-dices'], ' ', '+')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] +@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'datk-bonus-successes'])} ${val[attr_name+'datk-final-macro-options']}`; }
+    function updatAttackRolls(setIfReplaced = true, onlyWDmg = false) {
+        getSectionIDs('combat-attack', setDebugWrapper(function getCombatAttackSection(idSections) {
+            if (debug === 2) TAS.debug('updateAllAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
+            for (const id of idSections) {
+                if (!onlyWDmg) updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
+                               updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
+                if (!onlyWDmg) updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
+                if (!onlyWDmg) updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
+            }
+        }));
+    }
+
+    function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability] ${checkValReturnValidString(val[attr_name+'bonus-dices'], ' ')}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
+    function defaultWAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'watk-attr']}[Attribute] +${val[attr_name+'watk-abi']}[Ability]${checkValReturnValidString(val[attr_name+'weap-atk'], '', ' +')}[Accuracy] ${checkValReturnValidString(val[attr_name+'watk-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] +@{battlegroup-acc-boost}[BG Acc] ':''}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'watk-bonus-successes'])} ${val[attr_name+'watk-final-macro-options']}`; }
+    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']}`; }
+    function defaultDAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'datk-attr']}[Attribute] +${val[attr_name+'datk-abi']}[Ability] ${checkValReturnValidString(val[attr_name+'datk-bonus-dices'], ' ', '+')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'datk-bonus-successes'])} ${val[attr_name+'datk-final-macro-options']}`; }
     function defaultDDamageFinalExpr(val, attr_name)     { return `(${val[attr_name+'ddmg-dices']})#${checkValReturnValidString(val[attr_name+'ddmg-bonus-successes'])} ${val[attr_name+'ddmg-final-macro-options']}`; }
     function defaultInitToResetFinalExpr(val, attr_name) { return `${checkValReturnValidString(val[attr_name+'init-to-set'], ')', '(')}`; }
 
@@ -1341,6 +1365,7 @@
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
                 updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
                 updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
+                updateRollForCost(e);
             }
         }));
     }));
@@ -13506,6 +13531,7 @@
                                     </div>
                                     <div class="inner-section flex">
                                         <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
                                             <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
                                             <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
@@ -16886,7 +16912,7 @@
                                 <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                             
                                 <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="=COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">
                                 <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                 <div class="sheet-grouped-buttons" title="Cast INIT Rolls (Remember to select you token to set INIT correctly)">
                                     <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_init-cast" value="!exr @{repinit-final-macro-replaced} -turn @{rep-cost-macro}">Cast</button>
@@ -17352,6 +17378,7 @@
                                     <div class="atk-section flex">
                                         <p class="head" title="Trying to Hit an opponent with mostly narrative damage but build momentum (Initiative)">ATK</p>
                                         <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
                                             <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
                                             <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
@@ -17378,6 +17405,7 @@
                                     <div class="atk-section flex">
                                         <p class="head" title="Trying to Hit an opponent with real damage based on built momentum (Initiative)">ATK</p>
                                         <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
                                             <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
                                             <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
