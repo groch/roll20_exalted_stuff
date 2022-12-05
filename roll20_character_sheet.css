@@ -2379,6 +2379,16 @@ body.sheet-darkmode {
     border: red 1px solid;
 }
 
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .crippling-box input[type="checkbox"].sheet-crippling-pen.sheet-disable-pen:checked + span::before {
+    color: #0a0;
+    background: lightgreen;
+    border: #0a0 1px solid;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header .health-line .crippling-box input.sheet-crippling-pen.sheet-disable-pen + span::before {
+    color: black;
+}
+
 .charsheet .sheet-tab-combat-sheet .combat-header .health-line .crippling-box input.sheet-crippling-pen + span::before {
     width: 99%;
     color: #0a0;

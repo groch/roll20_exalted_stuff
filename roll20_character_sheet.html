@@ -10,7 +10,7 @@
     on('sheet:opened', TAS._fn(updateWound));
     on('change:pain-tolerance', TAS._fn(updateWound));
     on('change:repeating_health remove:repeating_health', TAS._fn(updateWound));
-    on('change:combat-crippling-pen change:woundpenalty-add', TAS._fn(updateWound));
+    on('change:combat-crippling-pen change:combat-disable-pen change:woundpenalty-add', TAS._fn(updateWound));
 
     function sortHealth(idHealthArray) {
         var attribs = ["_reporder_repeating_health"];
@@ -37,14 +37,15 @@
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         
-            getAttrs([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'], setDebugWrapper(function getHealthFields(valuesSections) {
+            getAttrs([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'], setDebugWrapper(function getHealthFields(valuesSections) {
                 var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
                     return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
                 }).value();
                 
                 const oldPen = Number(valuesSections['wound-penalty']) || 0,
                       oldActual = Number(valuesSections['health-displayed']) || 0,
-                      oldMax = Number(valuesSections['health-displayed_max']) || 0;
+                      oldMax = Number(valuesSections['health-displayed_max']) || 0,
+                      disablePen = Number(valuesSections['combat-disable-pen']) || 0;
                 var pen = 0;
                 let actualHealth = 0;
                 for (const id of sortedIdHealthArray.reverse()) {
@@ -72,6 +73,7 @@
                 pen = Number(valuesSections['combat-crippling-pen'])
                     ? Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
                     : Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
+                if (disablePen) pen = 0;
                 if (debug === 2) TAS.debug('Final Calculated penalty w/ Crippling=' + pen);
                 if (oldPen !== pen) finalAttr = { 'wound-penalty': pen };
                 if (!Number(valuesSections['battlegroup'])) {
@@ -13995,6 +13997,10 @@
                             </div>
                         </fieldset>
                     </div>
+                    <div class="crippling-box"><!-- DISABLE BOX -->
+                        <input type="checkbox" name="attr_combat-disable-pen" class="sheet-crippling-pen sheet-disable-pen" value="1">
+                        <span class="sheet-spelleffect" title="NoPen:"></span>
+                    </div>
                     <div class="crippling-box"><!-- CRIPPLING BOX -->
                         <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
                         <span class="sheet-spelleffect" title="Crippling:"></span>
@@ -14016,6 +14022,10 @@
                             <input type="number" name="attr_battlegroup-size" value="0" class="grow-normal">/
                             <input type="number" name="attr_battlegroup-size_max" value="1">
                         </p>
+                    </div>
+                    <div class="crippling-box"><!-- DISABLE BOX -->
+                        <input type="checkbox" name="attr_combat-disable-pen" class="sheet-crippling-pen sheet-disable-pen" value="1">
+                        <span class="sheet-spelleffect" title="NoPen:"></span>
                     </div>
                     <div class="crippling-box"><!-- CRIPPLING BOX -->
                         <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
