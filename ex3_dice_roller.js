@@ -63,7 +63,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             uidraggableStyle = "cursor:move",
             diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
             planeWalkerFont = "font-family: 'Planewalker';", // use font from character sheet css
-            diceRollStyle = planeWalkerFont + " letter-spacing: -1px; top: 4px;",
+            diceRollStyle = planeWalkerFont + " letter-spacing: -1px; top: 8px;",
             successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
             doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
             rerolledStyle = 'opacity: 0.4;',
@@ -2073,12 +2073,12 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                 affectedTextShadow += ';';
             html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
             logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
-            html += '<div class="dicon" style="' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
+            html += '<div class="dicon" style="min-width: 36px;' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
             html += '<div class="didroll" style="' + diceRollStyle
                 + ((item.success ? (item.doubled ? doubleColorStyle : successColorStyle) : ` text-shadow: 0 0 0.03em ${baseColor}`)
                     + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
                 + ([1, 10].includes(item.v) ? ' left: 1.5px;' : ' left: 0px;')
-                + ' font-size: ' + (item.v == 10 ? '31' : '40') + 'px;">' + item.v + '</div>';
+                + ' font-size: ' + (item.v == 10 ? '39' : '50') + 'px;">' + item.v + '</div>';
             html += "<div class=\"backing\" style=\"opacity: 1;\"><img src=\"https://s3.amazonaws.com/files.d20.io/images/263689904/B-bmVPv5NQIDKEbHObaOmg/max.png?1641622935\" style=\"" + diceBackgroundStyle + "\"></div>";
             html += "</div>";
             html += (idx + 1 != vals.length) ? "+" : "";
