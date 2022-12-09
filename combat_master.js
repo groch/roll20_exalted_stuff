@@ -1673,7 +1673,7 @@ var CombatMaster = CombatMaster || (function() {
         return;
     },
 
-    removeConditionFromToken = (tokenObj,key,removeAPI) => {
+    removeConditionFromToken = (tokenObj,key,removeAPI,stopFlag = false) => {
         logger(`removeConditionFromToken::removeConditionFromToken tokenObj=${JSON.stringify(tokenObj)} key=${JSON.stringify(key)} conditions=${JSON.stringify(state[combatState].conditions)}`);
 
         if (!tokenObj) return;
@@ -1682,7 +1682,8 @@ var CombatMaster = CombatMaster || (function() {
         // let target;
 
         [...state[combatState].conditions].forEach((condition, i) => {
-            if (condition.clearOnStop && condition.id == tokenObj.get('_id') && condition.key == key) {
+            if (condition.id == tokenObj.get('_id') && condition.key == key) {
+                if (stopFlag && !condition.clearOnStop) return;
                 if (condition.hasOwnProperty('target') && condition.target.length > 0) {
                     targets = condition.target;
                     targets.forEach((target, j) => {
@@ -1848,7 +1849,7 @@ var CombatMaster = CombatMaster || (function() {
         if (state[combatState].config.status.clearConditions) {
             [...state[combatState].conditions].forEach((condition) => {
                 if (condition.id != getOrCreateMarker().get('id'))
-                	removeConditionFromToken(getObj('graphic',condition.id), condition.key, true);
+                	removeConditionFromToken(getObj('graphic',condition.id), condition.key, true, true);
             });
         }
 
