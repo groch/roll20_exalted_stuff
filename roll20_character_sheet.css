@@ -2483,23 +2483,27 @@ body.sheet-darkmode {
 
 /* -- RESSOURCE LINE -- */
 
-.charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ .personal-mote-toggle,
-.charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .peripheral-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ .personal-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .peripheral-mote-toggle,
+.charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ div.personal-mote-toggle,
+.charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ div.peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ div.personal-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ div.peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .combat-init .peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .combat-attacks .peripheral-mote-toggle,
-.charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
-.charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ .peripheral-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ .personal-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .peripheral-mote-toggle,
+.charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="0"] ~ div.personal-mote-toggle,
+.charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ div.personal-mote-toggle,
+.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-init .peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-attacks .peripheral-mote-toggle {
     display: none;
 }
 
-.charsheet .sheet-tab-combat-sheet .combat-header > div.ressource-line > p:last-child {
-    flex-grow: 1;
+.ressource-line p {
+    margin: 0;
+}
+
+.ressource-line {
+    margin: 0 0 9px;
 }
 
 /* -- INIT TOGGLER -- */
@@ -2678,6 +2682,8 @@ body.sheet-darkmode {
     --dark-willpower-color: 97, 24, 142;
     --mote-color: 255, 145, 0;
     --dark-mote-color: 144, 88, 29;
+    --commited-mote-color: 255, 60, 0;
+    --dark-commited-mote-color: 144, 44, 14;
 }
 
 .rounded-box {
@@ -2737,12 +2743,20 @@ body.sheet-darkmode {
     background: rgba(var(--mote-color), 0.5);
 }
 
+.commited-mote-color {
+    background: rgba(var(--commited-mote-color), 0.5);
+}
+
 .mote-color-down {
     background: linear-gradient(white, rgba(var(--mote-color), 0.5))
 }
 
 .sheet-darkmode .mote-color-down {
     background: linear-gradient(var(--dark-surface1), rgb(var(--dark-mote-color)));
+}
+
+.ui-dialog .charsheet .ressource-line input[type="number"] {
+    width: 2em;
 }
 
 /* -- COST -- */
