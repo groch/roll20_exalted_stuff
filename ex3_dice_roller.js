@@ -9,14 +9,14 @@
  * Github: https://github.com/groch/roll20_exalted_stuff
  * @version 1.2
  */
-var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates an error to localize the start of the script
- //converts the line number in the error to be line 1
+var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates an error to localize the start of the script
+    //converts the line number in the error to be line 1
     //  scriptStart = scriptStart.stack.match(/apiscript\.js:(\d+)/)[1]*1;
-     'use strict';
+    'use strict';
 
-     /**
-      * Logger "Enum", followed by Log Threshold levelm and the logger method
-      */
+    /**
+     * Logger "Enum", followed by Log Threshold levelm and the logger method
+     */
     class LOGLEVEL {
         static EMERGENCY    = new LOGLEVEL(1);
         static ALERT        = new LOGLEVEL(2);
@@ -64,8 +64,8 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
             planeWalkerFont = "font-family: 'Planewalker';", // use font from character sheet css
             diceRollStyle = planeWalkerFont + " letter-spacing: -1px; top: 8px;",
-            successColorStyle = " color: "+successColor+"; text-shadow: 0 0 0.03em "+successColor,
-            doubleColorStyle = " color: "+doubleColor+"; text-shadow: 0 0 0.03em "+doubleColor,
+            successColorStyle = " color: " + successColor + "; text-shadow: 0 0 0.03em " + successColor,
+            doubleColorStyle = " color: " + doubleColor + "; text-shadow: 0 0 0.03em " + doubleColor,
             rerolledStyle = 'opacity: 0.4;',
             wasAffectedTextShadow = ', -3px 0 0.03em ',
             rerolledTextShadow = `, 5px -5px 3px `,
@@ -139,7 +139,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             if (setup.success) {
                 logger(LOGLEVEL.INFO, `handleFaceCondition1MotD::remainingToDo=${cond.remainingToDo}`);
                 var diceNb = 1;
-                for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+                for (var i = 0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
                     const dieTesting = result.rollSetup.finalResults[i];
                     if (dieTesting.v === 'SECTIONDONE') continue;
                     if (!dieTesting.success && !dieTesting.rerolled) {
@@ -153,7 +153,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                         dieTesting.condTriggered = false; //1MotD produce normal reroll but tagging for clarity
                         dieTesting.rerolled = true, dieTesting.condRerolled = true, dieTesting.wasEverRerolled = true;
                         logger(`handleFaceCondition1MotD::die rerolled =${JSON.stringify(result.rollSetup.finalResults[i])}`);
-                        cond.remainingToDo--,       cond.statusTotal[setup.face]++, cond.totalRerolled++;
+                        cond.remainingToDo--, cond.statusTotal[setup.face]++, cond.totalRerolled++;
                         dieTesting.title = makeNewTitleFromOld(result, dieTesting.title, ` 1MotD rerolled to a 10F (` + (cond.remainingToDo != 0 ? `Remaining:${cond.remainingToDo}, ` : '') + `Total=${cond.statusTotal[setup.face]}(${setup.face})/${cond.totalRerolled}).`);
                         setup.titleText += ` triggered a 1MotD reroll (` + (cond.remainingToDo != 0 ? `Rem.=${cond.remainingToDo}, ` : '') + `Total=${cond.statusTotal[setup.face]}(${setup.face})/${cond.totalRerolled}).`;
                     }
@@ -221,7 +221,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         if (cond.remainingToDo && setup.face === 10) {
             logger(LOGLEVEL.INFO, `handleFaceConditionRerollOn10::remainingToDo=${cond.remainingToDo} result.rollSetup.finalResults.length=${result.rollSetup.finalResults.length}`);
             var diceNb = 1;
-            for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+            for (var i = 0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
                 const dieTesting = result.rollSetup.finalResults[i];
                 if (dieTesting.v === 'SECTIONDONE') continue;
                 if (!dieTesting.success && !dieTesting.rerolled) {
@@ -269,7 +269,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         if (cond.remainingToDo && setup.face === 10) {
             logger(LOGLEVEL.INFO, `handleFaceConditionRerollPoolNon1On10::remainingToDo=${cond.remainingToDo} result.rollSetup.finalResults.length=${result.rollSetup.finalResults.length}`);
             var diceNb = 1;
-            for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+            for (var i = 0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
                 const dieTesting = result.rollSetup.finalResults[i];
                 if (dieTesting.v === 'SECTIONDONE') continue;
                 if (!dieTesting.success && !dieTesting.rerolled && dieTesting.v !== 1) {
@@ -337,7 +337,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         if (cond.remainingToDo && setup.success) {
             logger(LOGLEVEL.INFO, `handleFaceConditionCR::remainingToDo=${cond.remainingToDo} result.rollSetup.finalResults.length=${result.rollSetup.finalResults.length}`);
             var diceNb = 1;
-            for (var i=0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
+            for (var i = 0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
                 const dieTesting = result.rollSetup.finalResults[i];
                 if (dieTesting.v === 'SECTIONDONE') continue;
                 if (!dieTesting.success && !dieTesting.rerolled) {
@@ -401,7 +401,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                 var condConfig = ConditionalList[result.rollSetup.conditionalActivated[condIterator].name];
                 logger(`handleRollTurn::testing section=${JSON.stringify(condConfig)}`);
                 if (condConfig.turnHook) {
-                    logger(LOGLEVEL.INFO ,`handleRollTurn::HANDLING TURN ON Section=${JSON.stringify(condConfig)}`);
+                    logger(LOGLEVEL.INFO, `handleRollTurn::HANDLING TURN ON Section=${JSON.stringify(condConfig)}`);
                     condConfig.turnHook(result, turn, nextRollsToProcess, condIterator);
                 }
             }
@@ -448,7 +448,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     /**
      * Final Hook for Conditionals, after all rolls have been done, but can start another dice roll
      */
-     handleFinalConditionalHook = (result, turn, nextRollsToProcess) => {
+    handleFinalConditionalHook = (result, turn, nextRollsToProcess) => {
         logger(LOGLEVEL.INFO, `handleFinalConditionalHook::FINAL CONDITIONAL-ALL-TESTS !`);
 
         var condIterator = 0, nextRollsToProcess = [];
@@ -457,7 +457,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                 var condConfig = ConditionalList[result.rollSetup.conditionalActivated[condIterator].name];
                 logger(`handleRollTurn::testing section=${JSON.stringify(condConfig)}`);
                 if (condConfig.finalHook) {
-                    logger(LOGLEVEL.INFO ,`handleRollTurn::HANDLING FINAL ON Section=${JSON.stringify(condConfig)}`);
+                    logger(LOGLEVEL.INFO, `handleRollTurn::HANDLING FINAL ON Section=${JSON.stringify(condConfig)}`);
                     condConfig.finalHook(result, turn, nextRollsToProcess, condIterator);
                 }
             }
@@ -477,8 +477,8 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         // find succes
         let succTable = [null];
         for (const face of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-            succTable.push((result.rollSetup.face[face] && result.rollSetup.face[face].successes.length) ? {face: face, found: []} : null);
-        for (var i=0; i < result.rollSetup.finalResults.length; i++) {
+            succTable.push((result.rollSetup.face[face] && result.rollSetup.face[face].successes.length) ? { face: face, found: [] } : null);
+        for (var i = 0; i < result.rollSetup.finalResults.length; i++) {
             const dieTesting = result.rollSetup.finalResults[i];
             if (dieTesting.v === 'SECTIONDONE') continue;
             if (dieTesting.success && !dieTesting.rerolled) {
@@ -507,7 +507,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             cond.remainingToDo--, cond.done++;
             dieTesting.title = makeNewTitleFromOld(result, dieTesting.title, ` RSuccLTHon1 rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`);
             nextRollsToProcess.push(toNextRollCondi);
-        }  
+        }
     },
 
     /**
@@ -554,7 +554,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     },
 
     makeSectionDoneObj = (typeTxt, color, detailsTxt = '') => {
-        return {v: 'SECTIONDONE', sectionType: typeTxt, color: color, details: detailsTxt};
+        return { v: 'SECTIONDONE', sectionType: typeTxt, color: color, details: detailsTxt };
     };
 
     // CONDITIONAL HANDLING ARRAY
@@ -565,10 +565,10 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             getDetailMethod: detailsCond1MotDSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
                 name: '1MotD',
-                status: [,,,,,,,0,0,0,0],
+                status: [, , , , , , , 0, 0, 0, 0],
                 remainingToDo: 0,
                 remainingFaceStored: [],
-                statusTotal: [,,,,,,,0,0,0,0],
+                statusTotal: [, , , , , , , 0, 0, 0, 0],
                 totalRerolled: 0
             },
             finalizeDefaultConditionObj: (obj, result) => {
@@ -735,198 +735,204 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     };
 
     const ParserConfig = [{
-            categoryName: 'Rerolls',
-            pattern: /^(r|R)(l\d*)?(k|K)?\s([\d,]+)(?:\sTAGS=([(?:\w)+,]+))?$/,
-            getCmdObj: (matchReturn) => ({
-            cmd:      matchReturn[1],
-            limit:    matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
-            keepBest: matchReturn[3] ? true : false,
-            faces:    [...matchReturn[4].split(',').filter(i => i).map(i => Number(i))],
-            tagList:  matchReturn[5] ? [...matchReturn[5].split(',').filter(i => i)] : []})
-        },{
-            categoryName: 'Reroll Pools',
-            pattern: /^(rP)\s([\d,]+)(?:\sIGNORE=([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
-            getCmdObj: (matchReturn) => ({
-            cmd:            matchReturn[1],
-            limit:          Number(matchReturn[2]),
-            ignoreList:     matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))] : [],
-            tagList:        matchReturn[4] ? [...matchReturn[4].split(',').filter(i => i)] : []}),
-        },{
-            categoryName: 'Successes, Doubles & Explodes',
-            pattern: /^(d|e|E|s)(l\d*)?\s([\d,]+)$/,
-            getCmdObj: (matchReturn) => ({
-                cmd:        matchReturn[1],
-                limit:      matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
-                faces:      [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]})
-        },{
-            categoryName: 'Fails',
-            pattern: /^(f|F)\s([\d,]+)$/,
-            getCmdObj: (matchReturn) => ({
-                cmd:        matchReturn[1],
-                faces:      [...matchReturn[2].split(',').filter(i => i).map(i => Number(i))]})
-        },{
-            categoryName: 'Arcane Fate',
-            pattern: /^([^:]+):(AF)(\d):peri=(\d)$/,
-            getCmdObj: (matchReturn) => ({
-                cmd:        matchReturn[2],
-                option:     Number(matchReturn[3]),
-                periFirst:  matchReturn[4] === '1',
-                charId:     '-' + matchReturn[1]})
-        },{
-            categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle',
-            pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|NB|NoBotch)$/,
-            getCmdObj: (matchReturn) => ({
-                cmd:        matchReturn[1]})
-        }];
+        categoryName: 'Rerolls',
+        pattern: /^(r|R)(l\d*)?(k|K)?\s([\d,]+)(?:\sTAGS=([(?:\w)+,]+))?$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:        matchReturn[1],
+            limit:      matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
+            keepBest:   matchReturn[3] ? true : false,
+            faces:      [...matchReturn[4].split(',').filter(i => i).map(i => Number(i))],
+            tagList:    matchReturn[5] ? [...matchReturn[5].split(',').filter(i => i)] : []
+        })
+    }, {
+        categoryName: 'Reroll Pools',
+        pattern: /^(rP)\s([\d,]+)(?:\sIGNORE=([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:        matchReturn[1],
+            limit:      Number(matchReturn[2]),
+            ignoreList: matchReturn[3] ? [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))] : [],
+            tagList:    matchReturn[4] ? [...matchReturn[4].split(',').filter(i => i)] : []
+        }),
+    }, {
+        categoryName: 'Successes, Doubles & Explodes',
+        pattern: /^(d|e|E|s)(l\d*)?\s([\d,]+)$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:        matchReturn[1],
+            limit:      matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
+            faces:      [...matchReturn[3].split(',').filter(i => i).map(i => Number(i))]
+        })
+    }, {
+        categoryName: 'Fails',
+        pattern: /^(f|F)\s([\d,]+)$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:        matchReturn[1],
+            faces:      [...matchReturn[2].split(',').filter(i => i).map(i => Number(i))]
+        })
+    }, {
+        categoryName: 'Arcane Fate',
+        pattern: /^([^:]+):(AF)(\d):peri=(\d)$/,
+        getCmdObj: (matchReturn) => ({
+            cmd:        matchReturn[2],
+            option:     Number(matchReturn[3]),
+            periFirst:  matchReturn[4] === '1',
+            charId:     '-' + matchReturn[1]
+        })
+    }, {
+        categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle',
+        pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|NB|NoBotch)$/,
+        getCmdObj: (matchReturn) => ({
+            cmd: matchReturn[1]
+        })
+    }];
 
     // HELP Handout
-    const   tableStyle = 'border-collapse: collapse; width: 100%; color: black;',
-            thStyle = 'text-align: center;',
-            tdStyle = 'padding: 5px; border: 1px solid rgb(200,200,200);',
-            divStyle = 'border: 1px solid rgb(200,200,200); border-radius: 3px; background-color: white; padding: 5px; margin: 10px 0px; color: black;',
-            pStyle = 'margin: 5px 0px; line-height: 1.5;',
-            helpData = [
-                {
-                    arrayfirstCol:['-d NB,...','-d[lNB] NB,...','-D'],
-                    arraySecondCol:[
-        '<b>These commands cover doubling of all successful corresponding face(s).</b>',
-        '<code style="white-space: nowrap">-d</code>, followed by a comma-delimited list of values to double, automatically doubles 10s.',
-        '<code style="white-space: nowrap">-D</code> prevent this (mostly useful for damage rolls).',
-        '<code style="white-space: nowrap">-d</code> without arguments is unnecessary, as the script will double 10s by default.',
-        'You <em>may</em> pass <code style="white-space: nowrap">-D</code> by itself, to double nothing.',
-        'The optional <code>l</code> signals the script to limit the number of doubles.',
-        'Example :<code style="white-space: nowrap">!exr 10# -dl1 8,9</code>.',
-        'The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results.\
+    const tableStyle = 'border-collapse: collapse; width: 100%; color: black;',
+        thStyle = 'text-align: center;',
+        tdStyle = 'padding: 5px; border: 1px solid rgb(200,200,200);',
+        divStyle = 'border: 1px solid rgb(200,200,200); border-radius: 3px; background-color: white; padding: 5px; margin: 10px 0px; color: black;',
+        pStyle = 'margin: 5px 0px; line-height: 1.5;',
+        helpData = [
+            {
+                arrayfirstCol: ['-d NB,...', '-d[lNB] NB,...', '-D'],
+                arraySecondCol: [
+                    '<b>These commands cover doubling of all successful corresponding face(s).</b>',
+                    '<code style="white-space: nowrap">-d</code>, followed by a comma-delimited list of values to double, automatically doubles 10s.',
+                    '<code style="white-space: nowrap">-D</code> prevent this (mostly useful for damage rolls).',
+                    '<code style="white-space: nowrap">-d</code> without arguments is unnecessary, as the script will double 10s by default.',
+                    'You <em>may</em> pass <code style="white-space: nowrap">-D</code> by itself, to double nothing.',
+                    'The optional <code>l</code> signals the script to limit the number of doubles.',
+                    'Example :<code style="white-space: nowrap">!exr 10# -dl1 8,9</code>.',
+                    'The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results.\
         Just add <code>l</code> and the maximum number of doubles after the command, <em>e.g.,</em> <code style="white-space: nowrap">-dl5 8</code>.',
-        '---------',
-        "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
+                    '---------',
+                    "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
         <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
         This is the case for each command using the <code>l</code> optional code"
-                    ],
-                },
-                {
-                    arrayfirstCol:['-s NB,...','-s[lNB] NB,...'],
-                    arraySecondCol:[
-        '<b>These commands cover adding faces as success.</b>',
-        '<code style="white-space: nowrap">-s</code>, followed by a comma-delimited list of values to add as success, useless without arguments.',
-        'The optional <code>l</code> signals the script to limit the number of this/these faces counting as success.',
-        'Example :<code style="white-space: nowrap">!exr 10# -sl3 2,5,6</code>.',
-        'The optional <code>l</code> modifier covers really rare cases where a charm or effect enable other sides as succes (sidereals for example).\
+                ],
+            },
+            {
+                arrayfirstCol: ['-s NB,...', '-s[lNB] NB,...'],
+                arraySecondCol: [
+                    '<b>These commands cover adding faces as success.</b>',
+                    '<code style="white-space: nowrap">-s</code>, followed by a comma-delimited list of values to add as success, useless without arguments.',
+                    'The optional <code>l</code> signals the script to limit the number of this/these faces counting as success.',
+                    'Example :<code style="white-space: nowrap">!exr 10# -sl3 2,5,6</code>.',
+                    'The optional <code>l</code> modifier covers really rare cases where a charm or effect enable other sides as succes (sidereals for example).\
         Follow rules described in first command',
-        '---------',
-        "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
+                    '---------',
+                    "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
         <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
         This is the case for each command using the <code>l</code> optional code"
-                    ],
-                },
-                {
-                    arrayfirstCol:['-r NB,...','-r[lNB] NB,...','-r[k|K] NB,...','-r NB TAGS=LABEL,...','-R NB,...','-R[lNB] NB,...','-R[k|K] NB,...','-R NB TAGS=LABEL,...'],
-                    arraySecondCol:[
-        '<b>These commands cover rerolls, followed by a comma-delimited list of values to reroll.</b>',
-        '<code style="white-space: nowrap">-r</code> provides single rerolls—once the values have been rerolled once.',
-        '<code style="white-space: nowrap">-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s fail to appear."\
+                ],
+            },
+            {
+                arrayfirstCol: ['-r NB,...', '-r[lNB] NB,...', '-r[k|K] NB,...', '-r NB TAGS=LABEL,...', '-R NB,...', '-R[lNB] NB,...', '-R[k|K] NB,...', '-R NB TAGS=LABEL,...'],
+                arraySecondCol: [
+                    '<b>These commands cover rerolls, followed by a comma-delimited list of values to reroll.</b>',
+                    '<code style="white-space: nowrap">-r</code> provides single rerolls—once the values have been rerolled once.',
+                    '<code style="white-space: nowrap">-R</code> is a <em>recursive</em> reroll, and covers the cases where a charm or effect instructs you to "reroll [x]s until [x]s fail to appear."\
         It will keep rerolling the results in the comma-delimited list of arguments until those values are no longer in the pool, for better or for worse.\
         By default, rerolled dice are hidden, see <code style="white-space: nowrap">-v|V</code> below.',
-        'The optional <code>l</code> signals the script to limit the number of rerolls. Example :<code style="white-space: nowrap">!exr 10# -rl 6,4</code>.',
-        'The optional <code style="white-space: nowrap">k|K</code> signals the script that you want to keep the highest rerolled value. Example :<code style="white-space: nowrap">!exr 10# -rk 1</code>.',
-        'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>!exr 10# -r 1,2 TAGS=charm1</code>.',
-        'Everything above can be combined.',
-        'Example :<code style="white-space: nowrap">!exr 10# -Rl3K 1,2,3 TAGS=charm42OP</code>.',
-        '---------',
-        "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
+                    'The optional <code>l</code> signals the script to limit the number of rerolls. Example :<code style="white-space: nowrap">!exr 10# -rl 6,4</code>.',
+                    'The optional <code style="white-space: nowrap">k|K</code> signals the script that you want to keep the highest rerolled value. Example :<code style="white-space: nowrap">!exr 10# -rk 1</code>.',
+                    'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms). Example :<code>!exr 10# -r 1,2 TAGS=charm1</code>.',
+                    'Everything above can be combined.',
+                    'Example :<code style="white-space: nowrap">!exr 10# -Rl3K 1,2,3 TAGS=charm42OP</code>.',
+                    '---------',
+                    "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
         <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
         This is the case for each command using the <code>l</code> optional code"
-                    ],
-                },
-                {
-                    arrayfirstCol:['-rP NB','-rP NB IGNORE=NB,...','-rP NB TAGS=LABEL,...','-rP NB IGNORE=NB,... TAGS=LABEL,...'],
-                    arraySecondCol:[
-        '<b>This command cover reroll pools, or reroll of fails not specific to one face, followed by the limit/number of faces to reroll.</b>',
-        'This command follows the rules of recursive reroll (see previous section) as you would reroll fails until limit has been reached or all has become successes.\
+                ],
+            },
+            {
+                arrayfirstCol: ['-rP NB', '-rP NB IGNORE=NB,...', '-rP NB TAGS=LABEL,...', '-rP NB IGNORE=NB,... TAGS=LABEL,...'],
+                arraySecondCol: [
+                    '<b>This command cover reroll pools, or reroll of fails not specific to one face, followed by the limit/number of faces to reroll.</b>',
+                    'This command follows the rules of recursive reroll (see previous section) as you would reroll fails until limit has been reached or all has become successes.\
         By default, rerolled dice are hidden, see <code style="white-space: nowrap">-v|V</code> below.',
-        'The optional <code style="white-space: nowrap">IGNORE=NB,NB,...</code> signals the script that you don\'t want the reroll pool to affect these numbers.',
-        'Example :<code>!exr 10# -rP 4 IGNORE=1</code>.',
-        'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms).',
-        'Example :<code>!exr 10# -rP 4 TAGS=charm1</code>.',
-        '---------',
-        "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
+                    'The optional <code style="white-space: nowrap">IGNORE=NB,NB,...</code> signals the script that you don\'t want the reroll pool to affect these numbers.',
+                    'Example :<code>!exr 10# -rP 4 IGNORE=1</code>.',
+                    'The optional <code style="white-space: nowrap">TAGS=LABEL,LABEL,...</code> signals the script that you tag the rerolled dice with some label (usefull for some specific charms).',
+                    'Example :<code>!exr 10# -rP 4 TAGS=charm1</code>.',
+                    '---------',
+                    "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
         <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
         This is the case for each command using the <code>l</code> optional code"
-                    ],
-                },
-                {
-                    arrayfirstCol:['-e NB,...','-e[lNB]','-E NB,...','-E[lNB]'],
-                    arraySecondCol:[
-        '<b>These commands cover exploding of faces, creating new dice when happening.</b>',
-        '<code style=\"white-space: nowrap\">-e</code>, followed by a comma-delimited list of values to explode, not exploding on rerolled dices.',
-        '<code style=\"white-space: nowrap\">-E</code> works the same as above but ignore if dice is rerolled, exploding each time the face is encountered.',
-        '<code style=\"white-space: nowrap\">-e/E</code> without arguments is useless.',
-        'The optional <code>l</code> signals the script to limit the number of explodes.',
-        'Example :<code style="white-space: nowrap">!exr 10# -el1 8,9</code>.',
-        "The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results. Follow rules described in first command",
-        '---------',
-        "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
+                ],
+            },
+            {
+                arrayfirstCol: ['-e NB,...', '-e[lNB]', '-E NB,...', '-E[lNB]'],
+                arraySecondCol: [
+                    '<b>These commands cover exploding of faces, creating new dice when happening.</b>',
+                    '<code style=\"white-space: nowrap\">-e</code>, followed by a comma-delimited list of values to explode, not exploding on rerolled dices.',
+                    '<code style=\"white-space: nowrap\">-E</code> works the same as above but ignore if dice is rerolled, exploding each time the face is encountered.',
+                    '<code style=\"white-space: nowrap\">-e/E</code> without arguments is useless.',
+                    'The optional <code>l</code> signals the script to limit the number of explodes.',
+                    'Example :<code style="white-space: nowrap">!exr 10# -el1 8,9</code>.',
+                    "The optional <code>l</code> modifier covers cases where a charm or effect offers limited doubled results. Follow rules described in first command",
+                    '---------',
+                    "These command can be stacked, consuming smallest limit first and trying to do all the limit,\
         <em>e.g.,</em> <code style=\"white-space: nowrap\">-dl3 8,9 -dl2 9</code> would try to reroll 5 9s, first consuming the limit '2' then '3'\
         This is the case for each command using the <code>l</code> optional code"
-                    ],
-                },
-                {
-                    arrayfirstCol:['-f', '-F'],
-                    arraySecondCol:["<b>This commands cover failing of faces, removing success normally awarded on this face.</b>", "Used almost only by sidereals.", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -f 8,9</code>."],
-                },
-                {
-                    arrayfirstCol:['@{character_id}:AF1:peri=1', '@{character_id}:AF2:peri=0', '@{character_id}:AF3:peri=0'],
-                    arraySecondCol:["<b>This commands cover Arcane Fate for Sidereals.</b>", "- AF1: Same usage than <code style=\"white-space: nowrap\">-s 6</code> plus deduct 1 mote automatically.", "- AF2: Same usage than <code style=\"white-space: nowrap\">-s 6,5</code> plus deduct 2 mote automatically.", "- AF3: Same usage than <code style=\"white-space: nowrap\">-s 6,5,4</code> plus deduct 3 mote automatically.", "The <code style=\"white-space: nowrap\">peri=</code> is there to specify if it's from peripheral first, all value different than '1' will be interpreted as Personal Essence first"],
-                },
-                {
-                    arrayfirstCol:['-v', '-V', '-c'],
-                    arraySecondCol:[
-        '<b>These commands are used to increase visual information included in the roll.</b>',
-        "<code style=\"white-space: nowrap\">-v</code> is 1st level of verbosity, including 'roll turns' markers to track limits and rerolls.",
-        "<code style=\"white-space: nowrap\">-c</code> is color shadows, used to track visually which dice is rerolled, which come from a reroll, same for exploding & conditionals.",
-        "<code style=\"white-space: nowrap\">-V</code> is a short hand for -v -c",
-        "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -v -c -gm</code>."
-                    ],
-                },
-                {
-                    arrayfirstCol:['-g', '-gm'],
-                    arraySecondCol:["<b>This commands is used to hide roll to other players.</b>", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -el1 8,9 -gm</code>."],
-                },
-                {
-                    arrayfirstCol:['-target', '-turn'],
-                    arraySecondCol:["<b>This command is used to set result as turn tracker value for selected token.</b> Do nothing more than a roll if no token is selected"],
-                },
-                {
-                    arrayfirstCol:['-rev', '-reverseTitle'],
-                    arraySecondCol:["<b>This command is used to reverse order of title (hover text on each dice) informations.</b>"],
-                },
-                {
-                    arrayfirstCol:['-o', '-onlyResult'],
-                    arraySecondCol:["<b>This command is used to hide dices and only show result.</b>"],
-                },
-                {
-                    arrayfirstCol:['-NB', '-NoBotch'],
-                    arraySecondCol:["<b>This command is used to hide the botch message.</b>"],
-                },
-                {
-                    arrayfirstCol:[...Object.keys(ConditionalList).map(i => `-${i}`)],
-                    arraySecondCol:[
-        "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
-        "Actually there is :",
-        '-1MotD : CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
-        '-DIT : CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
-        '-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
-        '-Ron10 : on 10 Reroll 1 non success',
-        '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
-        '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB SOCIALIZE=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
-        '-ES : Explode on success. NOT USED IN CHARMS',
-        '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
-        '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
-                    ],
-                }
-            ],
-            defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-            helpVersion = 1.17;
+                ],
+            },
+            {
+                arrayfirstCol: ['-f', '-F'],
+                arraySecondCol: ["<b>This commands cover failing of faces, removing success normally awarded on this face.</b>", "Used almost only by sidereals.", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -f 8,9</code>."],
+            },
+            {
+                arrayfirstCol: ['@{character_id}:AF1:peri=1', '@{character_id}:AF2:peri=0', '@{character_id}:AF3:peri=0'],
+                arraySecondCol: ["<b>This commands cover Arcane Fate for Sidereals.</b>", "- AF1: Same usage than <code style=\"white-space: nowrap\">-s 6</code> plus deduct 1 mote automatically.", "- AF2: Same usage than <code style=\"white-space: nowrap\">-s 6,5</code> plus deduct 2 mote automatically.", "- AF3: Same usage than <code style=\"white-space: nowrap\">-s 6,5,4</code> plus deduct 3 mote automatically.", "The <code style=\"white-space: nowrap\">peri=</code> is there to specify if it's from peripheral first, all value different than '1' will be interpreted as Personal Essence first"],
+            },
+            {
+                arrayfirstCol: ['-v', '-V', '-c'],
+                arraySecondCol: [
+                    '<b>These commands are used to increase visual information included in the roll.</b>',
+                    "<code style=\"white-space: nowrap\">-v</code> is 1st level of verbosity, including 'roll turns' markers to track limits and rerolls.",
+                    "<code style=\"white-space: nowrap\">-c</code> is color shadows, used to track visually which dice is rerolled, which come from a reroll, same for exploding & conditionals.",
+                    "<code style=\"white-space: nowrap\">-V</code> is a short hand for -v -c",
+                    "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -v -c -gm</code>."
+                ],
+            },
+            {
+                arrayfirstCol: ['-g', '-gm'],
+                arraySecondCol: ["<b>This commands is used to hide roll to other players.</b>", "Example :<code style=\"white-space: nowrap\">!exr 42#+2 -el1 8,9 -gm</code>."],
+            },
+            {
+                arrayfirstCol: ['-target', '-turn'],
+                arraySecondCol: ["<b>This command is used to set result as turn tracker value for selected token.</b> Do nothing more than a roll if no token is selected"],
+            },
+            {
+                arrayfirstCol: ['-rev', '-reverseTitle'],
+                arraySecondCol: ["<b>This command is used to reverse order of title (hover text on each dice) informations.</b>"],
+            },
+            {
+                arrayfirstCol: ['-o', '-onlyResult'],
+                arraySecondCol: ["<b>This command is used to hide dices and only show result.</b>"],
+            },
+            {
+                arrayfirstCol: ['-NB', '-NoBotch'],
+                arraySecondCol: ["<b>This command is used to hide the botch message.</b>"],
+            },
+            {
+                arrayfirstCol: [...Object.keys(ConditionalList).map(i => `-${i}`)],
+                arraySecondCol: [
+                    "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
+                    "Actually there is :",
+                    '-1MotD : CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
+                    '-DIT : CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
+                    '-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
+                    '-Ron10 : on 10 Reroll 1 non success',
+                    '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
+                    '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB SOCIALIZE=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
+                    '-ES : Explode on success. NOT USED IN CHARMS',
+                    '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
+                    '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
+                ],
+            }
+        ],
+        defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
+        helpVersion = 1.17;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -966,38 +972,38 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         }
 
         for (const i of [7, 8, 9, 10])
-            result.rollSetup.face[i].successes.push({limit: 0, done: 0});
+            result.rollSetup.face[i].successes.push({ limit: 0, done: 0 });
 
         logger(`setupRollStructure::result.rollSetup=${JSON.stringify(result.rollSetup)}`);
     },
 
-/**
- * FINALIZE DEFAULT CONDITION OBJECTS
- */
-// function finalizeDefaultConditionObjDIT(obj, result, nextRollsToProcess) {
-//     if (result.addedSuccesses) {
-//         obj.status = result.addedSuccesses;
-//         result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
-//         while (obj.status >= 3) {
-//             obj.status -= 3;
-//             // eslint-disable-next-line no-undef
-//             var newDie = randomInteger(10);
-//             logger(`finalizeDefaultConditionObjDIT::newDie=${newDie}`);
-//             nextRollsToProcess.push({
-//                 v: newDie, wasEverRerolled: false,
-//                 wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
-//                 title: [`RollTurn (2  ). DIT            ->Face=${strFill(newDie)}.`],
-//                 tagList: ['DIT']
-//             });
-//             obj.done++;
-//         }
-//     }
-// }
+    /**
+     * FINALIZE DEFAULT CONDITION OBJECTS
+     */
+    // function finalizeDefaultConditionObjDIT(obj, result, nextRollsToProcess) {
+    //     if (result.addedSuccesses) {
+    //         obj.status = result.addedSuccesses;
+    //         result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-DIT', conditionalColor, `&#013;&#010; Success added to roll stored=${result.addedSuccesses}`));
+    //         while (obj.status >= 3) {
+    //             obj.status -= 3;
+    //             // eslint-disable-next-line no-undef
+    //             var newDie = randomInteger(10);
+    //             logger(`finalizeDefaultConditionObjDIT::newDie=${newDie}`);
+    //             nextRollsToProcess.push({
+    //                 v: newDie, wasEverRerolled: false,
+    //                 wasRerolled: false, wasExploded: false, wasConditionallyAffected: true,
+    //                 title: [`RollTurn (2  ). DIT            ->Face=${strFill(newDie)}.`],
+    //                 tagList: ['DIT']
+    //             });
+    //             obj.done++;
+    //         }
+    //     }
+    // }
 
-/**
- * The core functionality of the script. Intercepts API messages meant for it, extracts the core of the command, and passes it to
- * the appropriate function for handling.
- */
+    /**
+     * The core functionality of the script. Intercepts API messages meant for it, extracts the core of the command, and passes it to
+     * the appropriate function for handling.
+     */
     onChatMessage = (msg) => {
         logger(`onChatMessage::onChatMessage msg=${JSON.stringify(msg)}`);
         replaceInlineRolls(msg);
@@ -1069,7 +1075,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
     setCosts = (costStr) => {
         const parsedCost = costStr.split(':'), playerId = parsedCost[0], characterObj = getObj('character', playerId),
-            willObj = findObjs({_characterid:playerId, _type: 'attribute', name: 'willpower'})[0];
+            willObj = findObjs({ _characterid: playerId, _type: 'attribute', name: 'willpower' })[0];
         for (let i = 1; i < parsedCost.length; i++) {
             const data = parsedCost[i].split(';'), val = Math.abs(Number(data[1]));
             if (!val) {
@@ -1096,7 +1102,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         logger(LOGLEVEL.INFO, `reduceInitForId::INSIDE !!! tokenId=${tokenId}, toRemove=${toRemove}`);
 
         var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
-        logger('reduceInitForId::turnOrder='+JSON.stringify(turnOrder));
+        logger('reduceInitForId::turnOrder=' + JSON.stringify(turnOrder));
 
         const idTurnOrder = turnOrder.map(o => o.id);
         logger('reduceInitForId::idTurnOrder=' + JSON.stringify(idTurnOrder));
@@ -1131,7 +1137,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
     removeMotesToCharacter = (characterObj, qty, periFirst = true) => {
         logger(LOGLEVEL.INFO, `removeMotesToCharacter::removeMotesToCharacter qty=${qty}, periFirst=${periFirst}`);
-        let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
+        let characterId = characterObj.get('id'), attrList = findObjs({ _characterid: characterId, _type: 'attribute' });
 
         const displayedEssenceObj = attrList.filter(i => 'displayed-essence' === i.get('name'))[0];
         logger(`removeMotesToCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
@@ -1164,12 +1170,12 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
     sortMoteAttr = (attrList, periFirst = true) => {
         return attrList
-        .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
-        .sort((a, b) => {
-            if (a.get('name') === 'personal-essence' && b.get('name') !== 'personal-essence') return periFirst ? 1 : -1;
-            if (a.get('name') !== 'personal-essence' && b.get('name') === 'personal-essence') return periFirst ? -1 : 1;
-            return a.get('name').localeCompare(b.get('name'));
-        });
+            .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
+            .sort((a, b) => {
+                if (a.get('name') === 'personal-essence' && b.get('name') !== 'personal-essence') return periFirst ? 1 : -1;
+                if (a.get('name') !== 'personal-essence' && b.get('name') === 'personal-essence') return periFirst ? -1 : 1;
+                return a.get('name').localeCompare(b.get('name'));
+            });
     },
 
     updateMaxAttr = (characterId, attr) => {
@@ -1213,7 +1219,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             if (playerObj) return playerObj.get('_displayname');
             logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
             return false;
-        }).filter(i => i).join(', ')}])`:''}`);
+        }).filter(i => i).join(', ')}])` : ''}`);
 
         if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
             sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');
@@ -1226,16 +1232,16 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     makeAndSendMenu = (contents, title = undefined, whisper = undefined, noarchive = true) => {
         whisper = (whisper && whisper !== '') ? '/w ' + whisper + ' ' : '';
         title = makeTitle(title);
-        sendChat(script_name, whisper + '<div style="'+styles.menu+styles.overflow+'">'+title+contents+'</div>', null, {noarchive:noarchive});
+        sendChat(script_name, whisper + '<div style="' + styles.menu + styles.overflow + '">' + title + contents + '</div>', null, { noarchive: noarchive });
     },
 
     makeTitle = (title) => {
         return `<div style="${styles.title}"><span style=${styles.titleText}>${title}</span></div>`;
     },
 
-    makeImageButton = (command, image, toolTip, backgroundColor,size,color) => {
+    makeImageButton = (command, image, toolTip, backgroundColor, size, color) => {
         if (!color) color = 'black';
-        return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>';
+        return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="' + command + '" title= "' + toolTip + '" style="margin:0px;padding:0px;border:0px solid;background-color:' + backgroundColor + '"><span style="color:' + color + ';padding:0px;font-size:' + size + 'px;font-family: \'Pictos\'">' + image + '</span></a></div>';
     },
 
     makejournalLink = (journalType, id, outerText) => {
@@ -1252,7 +1258,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
     cleanImgSrc = (imgsrc) => {
         let parts = imgsrc.match(/(.*\/images\/.*)(thumb|med|original|max)([^?]*)(\?[^?]+)?$/);
-        if (parts) return parts[1]+'thumb'+parts[3]+(parts[4]?parts[4]:`?${Math.round(Math.random()*9999999)}`);
+        if (parts) return parts[1] + 'thumb' + parts[3] + (parts[4] ? parts[4] : `?${Math.round(Math.random() * 9999999)}`);
         return;
     },
 
@@ -1261,11 +1267,11 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
      */
 
     sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
-        sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+        sendChat(script_name, '<div style="' + styles.menu + '"><div style="display:inherit;">' + (image != '' ? '<div style="text-align:center;">' + image + '</div>' : '') + '<div style="' + divStyle + '">' + innerHtml + '</div></div></div>', null, { noarchive: noarchive });
     },
 
     sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
-        sendChat(script_name, '/w '+whisperName+' <div style="'+styles.menu+rootDivStyle+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
+        sendChat(script_name, '/w ' + whisperName + ' <div style="' + styles.menu + rootDivStyle + '"><div style="display:inherit;">' + (image != '' ? '<div style="text-align:center;">' + image + '</div>' : '') + '<div style="' + divStyle + '">' + innerHtml + '</div></div></div>', null, { noarchive: noarchive });
     },
 
     sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
@@ -1283,7 +1289,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
      */
     performRoll = (msg, cmd, realOrigRoll) => {
         logger(`performRoll:: CALLING ROLL20 'sendChat' with cmd=${cmd}`);
-        sendChat(msg.who, cmd, function(ops) {
+        sendChat(msg.who, cmd, function (ops) {
             logger(`performRoll:: RETURN FROM ROLL20 ops=${JSON.stringify(ops)}`);
             if (ops[0].type == 'rollresult') {
                 var result = JSON.parse(ops[0].content);
@@ -1300,17 +1306,17 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                 for (const i of strSplit) parseCmds(i, cmds);
 
                 logger(LOGLEVEL.NOTICE, 'performRoll::parseCmds DONE !');
-                logger('performRoll::ops='+JSON.stringify(ops));
-                logger('performRoll::result='+ops[0].content);
-                logger('performRoll::cmds='+JSON.stringify(cmds));
+                logger('performRoll::ops=' + JSON.stringify(ops));
+                logger('performRoll::result=' + ops[0].content);
+                logger('performRoll::cmds=' + JSON.stringify(cmds));
 
                 parseAddedSuccesses(result, msg.content);
 
                 if (cmds && cmds.length) processCmds(cmds, result);
-                if (result.rollSetup.has10doubled) result.rollSetup.face[10].doubles.push({limit: 0, done: 0});
+                if (result.rollSetup.has10doubled) result.rollSetup.face[10].doubles.push({ limit: 0, done: 0 });
                 finalizeRoll(result);
 
-                const player = msg.playerid === 'API' ? {get: () => 'API'} : getObj("player", msg.playerid);
+                const player = msg.playerid === 'API' ? { get: () => 'API' } : getObj("player", msg.playerid);
                 var outHTML = buildHTML(result, ops[0].origRoll, player);
                 if (!outHTML) {
                     logger(LOGLEVEL.EMERGENCY, 'performRoll:: !!!!!!!!! outHTML IS NULL OR EMPTY !!!!!!!!!!');
@@ -1345,13 +1351,13 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             return;
         }
         var turnOrder = (Campaign().get('turnorder') === '') ? [] : Array.from(JSON.parse(Campaign().get('turnorder')));
-        logger('setTurnOrder::turnOrder='+JSON.stringify(turnOrder));
+        logger('setTurnOrder::turnOrder=' + JSON.stringify(turnOrder));
 
-        logger(LOGLEVEL.INFO, 'setTurnOrder::selected='+JSON.stringify(selected));
-        var selectedTokenId = selected.map(o => getObj('graphic',o._id)).filter(n => n).map(o => o.get('id'));
+        logger(LOGLEVEL.INFO, 'setTurnOrder::selected=' + JSON.stringify(selected));
+        var selectedTokenId = selected.map(o => getObj('graphic', o._id)).filter(n => n).map(o => o.get('id'));
         if (!Array.isArray(selectedTokenId)) selectedTokenId = [selectedTokenId];
         if (selectedTokenId.length && Array.isArray(selectedTokenId[0])) selectedTokenId.map(o => o[0]);
-        logger('setTurnOrder::selectedTokenId='+JSON.stringify(selectedTokenId));
+        logger('setTurnOrder::selectedTokenId=' + JSON.stringify(selectedTokenId));
 
         const idTurnOrder = turnOrder.map(o => o.id);
         logger('setTurnOrder::idTurnOrder=' + JSON.stringify(idTurnOrder));
@@ -1377,7 +1383,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         if (idTurnToCreate.length > 0) {
             for (const id of idTurnToCreate) {
                 logger(LOGLEVEL.INFO, `setTurnOrder::pushing to turnorder id=${id} pr=${successes}`);
-                turnOrder.push({id:id,pr:successes,custom:'',_pageid:pageId});
+                turnOrder.push({ id: id, pr: successes, custom: '', _pageid: pageId });
             }
         }
 
@@ -1391,7 +1397,6 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
      *
      * @param Array element <string>	item	Passed by the Underscore.js _.each() function; is the value of the element that corresponds to the
      *												current pointer in the collection.
-     *
      * @return void.
      */
     parseCmds = (item, list) => {
@@ -1403,8 +1408,8 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         for (var i = 0; i < ParserConfig.length; i++) {
             if ((ret = trim.match(ParserConfig[i].pattern))) {
                 match = true;
-                logger(LOGLEVEL.NOTICE, `parseCmds::MATCH${i+1} = ${ParserConfig[i].categoryName}`);
-                logger('parseCmds::ret='+JSON.stringify(ret));
+                logger(LOGLEVEL.NOTICE, `parseCmds::MATCH${i + 1} = ${ParserConfig[i].categoryName}`);
+                logger('parseCmds::ret=' + JSON.stringify(ret));
                 objRet = ParserConfig[i].getCmdObj(ret);
                 break;
             }
@@ -1416,8 +1421,8 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                 if ((ret = trim.match(patt))) {
                     match = true;
                     logger(LOGLEVEL.NOTICE, `parseCmds::MATCH - Conditional Item = ${condItem}`);
-                    logger('parseCmds::ret='+JSON.stringify(ret));
-                    objRet = {cmd: condItem, condiFullParsed: ret};
+                    logger('parseCmds::ret=' + JSON.stringify(ret));
+                    objRet = { cmd: condItem, condiFullParsed: ret };
                 }
             }
         }
@@ -1429,10 +1434,10 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     randomUUID = () => {
         let dt = new Date().getTime();
 
-        const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = (dt + Math.random()*16)%16 | 0
-            dt = Math.floor(dt/16)
-            return (c=='x' ? r :(r&0x3|0x8)).toString(16)
+        const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = (dt + Math.random() * 16) % 16 | 0
+            dt = Math.floor(dt / 16)
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16)
         });
 
         return uuid;
@@ -1473,7 +1478,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                     break;
                 case 'rP':
                     while (result.rollSetup.rerollPool.some(i => i.uuid === uuid)) uuid = randomUUID();
-                    result.rollSetup.rerollPool.push({uuid: uuid, limit: item.limit, ignoreList: item.ignoreList, tagList: item.tagList});
+                    result.rollSetup.rerollPool.push({ uuid: uuid, limit: item.limit, ignoreList: item.ignoreList, tagList: item.tagList });
                     break;
                 case 'E':
                     exploIgnore = false; // break omitted because same treatment
@@ -1492,11 +1497,11 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                     break;
                 case 'd':
                     logger(LOGLEVEL.INFO, `processCmds::adding doubles on faces=${item.faces}, limit=${item.limit}`);
-                    for (const face of item.faces) result.rollSetup.face[face].doubles.push({limit: item.limit, done: 0});
+                    for (const face of item.faces) result.rollSetup.face[face].doubles.push({ limit: item.limit, done: 0 });
                     break;
                 case 's':
                     logger(LOGLEVEL.INFO, `processCmds::adding success on faces=${item.faces}, limit=${item.limit}`);
-                    for (const face of item.faces) result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
+                    for (const face of item.faces) result.rollSetup.face[face].successes.push({ limit: item.limit, done: 0 });
                     break;
                 case 'f':
                 case 'F':
@@ -1505,10 +1510,10 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                     break;
                 case 'AF':
                     logger(LOGLEVEL.INFO, `processCmds::Arcane Fate=${item.option}, PeriFirst=${item.periFirst}`);
-                    if ([1,2,3].includes(item.option)) {
-                        if (item.option === 1)                              result.rollSetup.face[6].successes.push({limit: item.limit, done: 0});
-                        if (item.option === 2) for (const face of [6,5])    result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
-                        if (item.option === 3) for (const face of [6,5,4])  result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
+                    if ([1, 2, 3].includes(item.option)) {
+                        if (item.option === 1)                               result.rollSetup.face[6].successes.push({limit: item.limit, done: 0});
+                        if (item.option === 2) for (const face of [6, 5])    result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
+                        if (item.option === 3) for (const face of [6, 5, 4]) result.rollSetup.face[face].successes.push({limit: item.limit, done: 0});
                         removeMotesToCharacter(getObj('character', item.charId), item.option, item.periFirst);
                     }
                 case 'turn':
@@ -1689,7 +1694,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     makeNewTitleFromOld = (result, prevTitleArray, actionsOfThisRoll) => {
         var ret = prevTitleArray, lastItem = prevTitleArray.length - 1;
         var titleToChange = result.rollSetup.revertTitleOrder ? lastItem : 0;
-        ret[titleToChange] = ret[titleToChange]+actionsOfThisRoll;
+        ret[titleToChange] = ret[titleToChange] + actionsOfThisRoll;
         return ret;
     },
 
@@ -1710,7 +1715,9 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
         for (const item of result.rollSetup.rollToProcess) {
             var setup = JSON.parse(JSON.stringify(DefaultTurnObj));
-            setup.face = item.v, setup.faceObj = result.rollSetup.face[setup.face], setup.wasConditionallyAffected = item.wasConditionallyAffected,
+            setup.face = item.v;
+            setup.faceObj = result.rollSetup.face[setup.face];
+            setup.wasConditionallyAffected = item.wasConditionallyAffected;
             setup.conditionalColorIN = item.conditionalColor || undefined;
             if (item.tagList && item.tagList.length) for (const tag of item.tagList) setup.tagList.push(tag);
             handleRoll(result, setup, item, turn);
@@ -1739,7 +1746,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         }
 
         if (turn === 1 || result.rollSetup.verbosity >= 1)
-            result.rollSetup.finalResults.push({v: 'SECTIONDONE', sectionType: (turn === 1 ? 'Initial Roll' : `Additional Rolls n${turn-1}`), color: initialRollColor, details: ''});
+            result.rollSetup.finalResults.push({ v: 'SECTIONDONE', sectionType: (turn === 1 ? 'Initial Roll' : `Additional Rolls n${turn - 1}`), color: initialRollColor, details: '' });
 
         handleTurnConditionalHook(result, turn, nextRollsToProcess);
 
@@ -1866,7 +1873,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
      */
     handleSectionCleaning = (result, lastTurnClean = false) => {
         logger(LOGLEVEL.INFO, 'handleSectionCleaning::CLEANING !');
-        for (const faceClearing of [1,2,3,4,5,6,7,8,9,10]) {
+        for (const faceClearing of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
             var faceObj = result.rollSetup.face[faceClearing];
             // remove non recursive reroll && push section accordingly
             while (faceObj.rerolls.length && (!faceObj.rerolls[0].recursive || lastTurnClean))
@@ -1967,14 +1974,14 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
         var innerPatt = /(([+-]\d+)(?:[^\]+-]*\]?))/g;
         var ret, succ = result.total, addedSuccessesLabel = '', addedSuccesses = 0;
         if ((ret = origCmd.match(patt))) {
-            logger('parseAddedSuccesses::ret='+JSON.stringify(ret));
-            logger('parseAddedSuccesses::succ='+succ);
+            logger('parseAddedSuccesses::ret=' + JSON.stringify(ret));
+            logger('parseAddedSuccesses::succ=' + succ);
             if (ret[1]) {
-                logger('parseAddedSuccesses::ret[1]='+ret[1]);
+                logger('parseAddedSuccesses::ret[1]=' + ret[1]);
                 var arrayAddedSuccesses = [...ret[1].matchAll(innerPatt)];
-                logger('parseAddedSuccesses::arrayAddedSuccesses='+JSON.stringify(arrayAddedSuccesses));
+                logger('parseAddedSuccesses::arrayAddedSuccesses=' + JSON.stringify(arrayAddedSuccesses));
                 for (const [, , item] of arrayAddedSuccesses) {
-                    logger('parseAddedSuccesses::item='+item);
+                    logger('parseAddedSuccesses::item=' + item);
                     addedSuccessesLabel += item;
                     addedSuccesses += Number(item);
                 }
@@ -2023,25 +2030,25 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
         var html = "";
         html += "<div style=\"" + outerStyle + "\"><div style=\"" + innerStyle + "\">";
-        html +=   "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\">"+player.get('displayname')+" roll " + origRoll + " </div>";
+        html +=     "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\">" + player.get('displayname') + " roll " + origRoll + " </div>";
         html +=     "<div style=\"clear: both;\"></div>";
         if (!result.rollSetup.onlyResult) {
             html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
-            html +=   "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
+            html +=     "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
             html = displayRolls(vals, result, html);
             if (result.addedSuccessesLabel) html += result.addedSuccessesLabel;
-            html +=   "</div>";
+            html +=     "</div>";
             html += "</div>";
             html += "<div style=\"clear: both;\"></div>";
         }
         if (result.rollSetup.maxRecursiveAchieved) {
-            html += "<p style='"+maxRecursionStyle+"'>MAX RECURSION ACHIEVED</p>";
+            html += "<p style='" + maxRecursionStyle + "'>MAX RECURSION ACHIEVED</p>";
             html += "<div style=\"clear: both;\"></div>";
         }
         html +=     "<strong> = </strong>";
         html +=     "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
         if (!result.rollSetup.noBotch && !succ && result.rollSetup.hasAtLeastOneFaceOne)
-            html += "<p style='"+maxRecursionStyle+"'>YOU'VE BEEN BOTCHED</p>";
+            html += "<p style='" + maxRecursionStyle + "'>YOU'VE BEEN BOTCHED</p>";
         html += "</div></div>";
         return html;
     },
@@ -2056,7 +2063,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                 if (result.rollSetup.verbosity == 0) return;
                 html += `<div data-origindex="${idx}" class="diceroll d10" style="background-color:${item.color};${sectionDoneStyle}" title="Section ${item.sectionType} DONE${item.details}"></div>`;
                 return;
-            } else 
+            } else
                 logger(LOGLEVEL.INFO, `displayRolls::item(${strFill(diceNumber++)})=${item.v}, full=${JSON.stringify(item)}`);
             if (result.rollSetup.verbosity == 0 && item.rerolled)
                 return;
@@ -2090,17 +2097,17 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
     buildTableRow = (arrayfirstCol, arraySecondCol) => {
         var outhtml =  '<tr>';
-            outhtml +=     `<td style="${tdStyle}">`;
-            outhtml +=         `<p style="${pStyle}">`
-        for (const [i,code] of arrayfirstCol.entries())
-            outhtml +=             `<code style="white-space: nowrap">${code}</code>${i < arrayfirstCol.length-1 ? '<br>' :''}`;
-            outhtml +=         `</p>`;
-            outhtml +=     '</td>';
-            outhtml +=     `<td style="${tdStyle}">`;
+            outhtml +=    `<td style="${tdStyle}">`;
+            outhtml +=      `<p style="${pStyle}">`
+        for (const [i, code] of arrayfirstCol.entries())
+            outhtml +=        `<code style="white-space: nowrap">${code}</code>${i < arrayfirstCol.length - 1 ? '<br>' : ''}`;
+            outhtml +=      `</p>`;
+            outhtml +=    '</td>';
+            outhtml +=    `<td style="${tdStyle}">`;
         for (const paragraph of arraySecondCol)
-            outhtml +=         `<p style="${pStyle}">${paragraph}</p>`;
-            outhtml +=     '</td>';
-            outhtml += '</tr>';
+            outhtml +=      `<p style="${pStyle}">${paragraph}</p>`;
+            outhtml +=    '</td>';
+            outhtml +=  '</tr>';
         return outhtml;
     },
 
@@ -2119,13 +2126,13 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
 
     assureHelpHandout = (create = false) => {
         // find handout
-        let props = {type:'handout', name:`Help: ${script_name}`, inplayerjournals: 'all'};
+        let props = { type: 'handout', name: `Help: ${script_name}`, inplayerjournals: 'all' };
         let hh = findObjs(props)[0];
         if (!hh) {
-            hh = createObj('handout',Object.assign(props, {avatar: defaultTokenImage}));
+            hh = createObj('handout', Object.assign(props, { avatar: defaultTokenImage }));
             create = true;
         }
-        if (create || helpVersion !== state[script_name].lastHelpVersion){
+        if (create || helpVersion !== state[script_name].lastHelpVersion) {
             var outhtml = '';
             outhtml +=  `<div style="${divStyle}">`;
             outhtml +=      `<p style="${pStyle}"><strong>Exalted 3rd Edition Dice Roller Help</strong></p>`;
@@ -2147,27 +2154,27 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
             for (const helpSection of helpData)
                 outhtml += buildTableRow(helpSection.arrayfirstCol, helpSection.arraySecondCol);
 
-            outhtml +=     '</tbody>';
-            outhtml +=     '</table>';
-            outhtml += '</div>';
+            outhtml +=         '</tbody>';
+            outhtml +=      '</table>';
+            outhtml +=  '</div>';
             logger(`buildHelp::buildHelp outhtml=${outhtml}`);
 
-            hh.set({notes: outhtml});
+            hh.set({ notes: outhtml });
             state[script_name].lastHelpVersion = helpVersion;
-            log('  > Updating Help Handout to v'+helpVersion+' <');
+            log('  > Updating Help Handout to v' + helpVersion + ' <');
         }
         state[script_name].handout_id = hh.id;
     },
 
     checkInstall = () => {
-        log(`-=> ${script_name} v${script_version} <=-  [${new Date(lastUpdate*1000)}]`);
+        log(`-=> ${script_name} v${script_version} <=-  [${new Date(lastUpdate * 1000)}]`);
 
-        if( ! state.hasOwnProperty(script_name) || state[script_name].version !== script_version) {
+        if (!state.hasOwnProperty(script_name) || state[script_name].version !== script_version) {
             log(`  > Updating Schema to v${script_version} <`);
-            switch(state[script_name] && state[script_name].version) {
+            switch (state[script_name] && state[script_name].version) {
 
                 case 1.0:
-                    /* break; // intentional dropthrough */ /* falls through */
+                /* break; // intentional dropthrough */ /* falls through */
 
                 case 'UpdateSchemaVersion':
                     state[script_name].version = script_version;
@@ -2178,7 +2185,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
                         version: script_version
                     };
                     break;
-        }
+            }
         }
         assureHelpHandout();
     },
@@ -2194,7 +2201,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     printError = (result, sender) => {
         logger(LOGLEVEL.ERROR, 'Error!');
 
-        if (result.type == 'error' ) {
+        if (result.type == 'error') {
             sendChat(script_name, '/w ' + sender + ' I tried, but Roll20 had a problem with this. They said: ' + result.content);
         } else {
             sendChat(script_name, '/w ' + sender + ' Sorry, I didn\'t understand your input. Please try again.');
@@ -2218,7 +2225,7 @@ var EX3Dice = EX3Dice || (function() {//let scriptStart = new Error;//Generates 
     };
 }());
 
-on("ready",function(){
+on("ready", function () {
     'use strict';
 
     EX3Dice.CheckInstall();
