@@ -472,7 +472,7 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
             convertChain(finalList);
         },
 
-        convertAllWindows = function (other) {
+        convertAllWindows = function (playerId, selected, ...other) {
             log(`!! convertAllWindows !! other=${JSON.stringify(other)}`);
             const finalList = getWindowList(other.includes('page') ? getPlayerPage(playerId) : undefined);
             convertChain(finalList, 'window');
