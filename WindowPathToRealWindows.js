@@ -36,7 +36,7 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
     //Script Constants
     const version = 1.0,
         lastUpdate = 1671161263,
-        defaultsPtWoD = {
+        defaults = {
             css: {
                 button: {
                     'border': '0px',
@@ -49,7 +49,7 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                 }
             }
         },
-        templatesPtWoD = {},
+        templates = {},
         debug = 0,
 
         //Functions called from other functions
@@ -120,8 +120,8 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                         state.PathToWindowOrDoor.version = version;
                     }
                 }
-                buildTemplatesPtWoD();
-                updateHelpPtWoD();
+                buildTemplates();
+                updateHelp();
                 helpLink = `https://journal.roll20.net/character/${state.PathToWindowOrDoor.help}`;
             } catch (err) {
                 sendError(err);
@@ -150,17 +150,17 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
         //End Update functions
 
         /*Builds templates for use in all other functions*/
-        buildTemplatesPtWoD = function () {
-            templatesPtWoD.cssProperty = _.template(
+        buildTemplates = function () {
+            templates.cssProperty = _.template(
                 '<%=name %>: <%=value %>;'
             );
 
-            templatesPtWoD.style = _.template(
+            templates.style = _.template(
                 'style="<%=' +
                 '_.map(css,function(v,k) {' +
-                'return templatesPtWoD.cssProperty({' +
-                'defaultsPtWoD: defaultsPtWoD,' +
-                'templatesPtWoD: templatesPtWoD,' +
+                'return templates.cssProperty({' +
+                'defaults: defaults,' +
+                'templates: templates,' +
                 'name:k,' +
                 'value:v' +
                 '});' +
@@ -168,30 +168,30 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                 ' %>"'
             );
 
-            templatesPtWoD.button = _.template(
-                '<a title="<%=title %>"<%= templatesPtWoD.style({' +
-                'defaultsPtWoD: defaultsPtWoD,' +
-                'templatesPtWoD: templatesPtWoD,' +
-                'css: _.defaults(css,defaultsPtWoD.css.button)' +
+            templates.button = _.template(
+                '<a title="<%=title %>"<%= templates.style({' +
+                'defaults: defaults,' +
+                'templates: templates,' +
+                'css: _.defaults(css,defaults.css.button)' +
                 '}) %> href="<%= command %>"><%= label||"Button" %></a>'
             );
         },
 
         /*Makes the API buttons used throughout the script*/
-        makeButtonPtWoD = function (command, label, backgroundColor, color, title, font) {
+        makeButton = function (command, label, backgroundColor, color, title, font) {
             let obj = {
                 title: title,
                 command: command,
                 label: label,
-                templatesPtWoD: templatesPtWoD,
-                defaultsPtWoD: defaultsPtWoD,
+                templates: templates,
+                defaults: defaults,
                 css: {
                     color: color,
                     'background-color': backgroundColor,
                     'font-family': font
                 }
             };
-            return templatesPtWoD.button(obj);
+            return templates.button(obj);
         },
         //convert hex color to rgb for calculations
         hexToRgb = hex => {
@@ -211,18 +211,10 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                 : { r: 1, g: 1, b: 1 }
         },
         hexToRgbString = hex => `rgb(${Object.values(hexToRgb(hex)).join(', ')})`,
-        // convert rgb to hex. From https://stackoverflow.com/a/5624139
-        rgbToHex = rgbString => {
-            const rgbMatch = rgbString.match(/rgb\((\d+), (\d+), (\d+)\)/) || [];
-            const [, r, g, b] = rgbMatch;
-            return r && g && b ?
-                "#" + ((1 << 24) + (+r << 16) + (+g << 8) + (+b)).toString(16).slice(1) :
-                rgbString;
-        },
         // calc to work out if it will match on black or white better
         setContrast = rgb => (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 125 ? 'black' : 'white',
 
-        updateHelpCharacterPropertiesPtWoD = function () {
+        updateHelpCharacterProperties = function () {
             helpCharacter = findObjs({ type: 'character', name: 'PathToWindowOrDoor UI' })[0];
             if (!state.PathToWindowOrDoor.help || !getObj('character', state.PathToWindowOrDoor.help)) {
                 if (helpCharacter) {
@@ -478,12 +470,12 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
             convertChain(finalList, 'window');
         },
 
-        updateHelpPtWoD = function (playerid, selection, cmd) {
-            if (debug) log(`ptwod updateHelpPtWoD 1`);
+        updateHelp = function (playerid, selection, cmd) {
+            if (debug) log(`ptwod updateHelp 1`);
             if (!cmd) {
-                updateHelpCharacterPropertiesPtWoD();
+                updateHelpCharacterProperties();
             }
-            if (debug) log(`ptwod updateHelpPtWoD 2`);
+            if (debug) log(`ptwod updateHelp 2`);
             const cmdSwitch = {},
                 leftColumnCSS = `"display:inline-block;width:45%;padding-right:5px;border-right:1px solid black;"`,
                 rightColumnCSS = `"display:inline-block;width:45%;padding-left:5px;border-left:1px solid black;"`,
@@ -539,29 +531,29 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                     settings: `<div>
               <h3>Script Configurations</h3>
                   <h4><br>Color Relationships:</h4>
-                  <b>Hidden Doors:</b>${makeButtonPtWoD(`!ptwod --preset|hidden|?{What Color are your Walls|${state.PathToWindowOrDoor.hiddenColor || '#000000'}}`, (state.PathToWindowOrDoor.hiddenColor || '#000000'), (state.PathToWindowOrDoor.hiddenColor || '#000000'), setContrast(hexToRgb((state.PathToWindowOrDoor.hiddenColor || '#000000'))), 'Enter the hex color of your hidden doors')}<br>
-                  <b>Locked Doors:</b>${makeButtonPtWoD(`!ptwod --preset|door|?{What Color are your Doors|${state.PathToWindowOrDoor.doorColor}}`, state.PathToWindowOrDoor.doorColor, state.PathToWindowOrDoor.doorColor, setContrast(hexToRgb(state.PathToWindowOrDoor.doorColor)), 'Enter the hex color of your locked doors')}<br>
-                  <b>Unlocked Doors:</b>${makeButtonPtWoD(`!ptwod --preset|unlocked|?{What Color are your unlocked Doors|${state.PathToWindowOrDoor.unlockedColor}}`, state.PathToWindowOrDoor.unlockedColor, state.PathToWindowOrDoor.unlockedColor, setContrast(hexToRgb(state.PathToWindowOrDoor.unlockedColor)), 'Enter the hex color of your unlocked doors')}<br>
-                  <b>Windows:</b>${makeButtonPtWoD(`!ptwod --preset|window|?{What Color are your Windows|${state.PathToWindowOrDoor.windowColor}}`, state.PathToWindowOrDoor.windowColor, state.PathToWindowOrDoor.windowColor, setContrast(hexToRgb(state.PathToWindowOrDoor.windowColor)), 'Enter the hex color of your windows')}
+                  <b>Hidden Doors:</b>${makeButton(`!ptwod --preset|hidden|?{What Color are your Walls|${state.PathToWindowOrDoor.hiddenColor || '#000000'}}`, (state.PathToWindowOrDoor.hiddenColor || '#000000'), (state.PathToWindowOrDoor.hiddenColor || '#000000'), setContrast(hexToRgb((state.PathToWindowOrDoor.hiddenColor || '#000000'))), 'Enter the hex color of your hidden doors')}<br>
+                  <b>Locked Doors:</b>${makeButton(`!ptwod --preset|door|?{What Color are your Doors|${state.PathToWindowOrDoor.doorColor}}`, state.PathToWindowOrDoor.doorColor, state.PathToWindowOrDoor.doorColor, setContrast(hexToRgb(state.PathToWindowOrDoor.doorColor)), 'Enter the hex color of your locked doors')}<br>
+                  <b>Unlocked Doors:</b>${makeButton(`!ptwod --preset|unlocked|?{What Color are your unlocked Doors|${state.PathToWindowOrDoor.unlockedColor}}`, state.PathToWindowOrDoor.unlockedColor, state.PathToWindowOrDoor.unlockedColor, setContrast(hexToRgb(state.PathToWindowOrDoor.unlockedColor)), 'Enter the hex color of your unlocked doors')}<br>
+                  <b>Windows:</b>${makeButton(`!ptwod --preset|window|?{What Color are your Windows|${state.PathToWindowOrDoor.windowColor}}`, state.PathToWindowOrDoor.windowColor, state.PathToWindowOrDoor.windowColor, setContrast(hexToRgb(state.PathToWindowOrDoor.windowColor)), 'Enter the hex color of your windows')}
                   </div>`
                 },
                 coloring = {
                     'false': ['white', 'black'],
                     'true': ['black', 'white']
                 };
-            if (debug) log(`ptwod updateHelpPtWoD 3`);
+            if (debug) log(`ptwod updateHelp 3`);
             if (!cmd) cmd = state.PathToWindowOrDoor.cmd || 'home';
             let navigation =
-                `${makeButtonPtWoD(`!ptwod --menu|home`, 'Instructions', ...coloring[`${/home/i.test(cmd)}`], 'Learn how to use the script')}` +
-                `${makeButtonPtWoD(`!ptwod --menu|settings`, 'Settings', ...coloring[`${!/home/i.test(cmd)}`], 'Configure the script')}`;
+                `${makeButton(`!ptwod --menu|home`, 'Instructions', ...coloring[`${/home/i.test(cmd)}`], 'Learn how to use the script')}` +
+                `${makeButton(`!ptwod --menu|settings`, 'Settings', ...coloring[`${!/home/i.test(cmd)}`], 'Configure the script')}`;
 
-            if (debug) log(`ptwod updateHelpPtWoD 4`);
+            if (debug) log(`ptwod updateHelp 4`);
             //set handout control
             let newBio = `<h1>PathToWindowOrDoor v${version}</h1>${navigation}<hr>${helpText[cmd].replace(/>\n\s+/g, '>')}`;
             state.PathToWindowOrDoor.cmd = cmd;
             helpCharacter.set({ bio: newBio });
             if (markdown) {
-                if (debug) log(`ptwod updateHelpPtWoD 5?`);
+                if (debug) log(`ptwod updateHelp 5?`);
                 let markdownHelp = `<h1>PathToWindowOrDoor v${version}</h1><hr>${helpText.home}`;
                 markdownHelp = markdownHelp.replace(/\n+\s+|\n+\s+/g, '').replace(/<h(\d)>(.+?)<\/h\d>/g, (match, number, header) => {
                     return `${_.reduce(_.range(number * 1), (memo, string) => {
@@ -596,7 +588,7 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                 }
                 state.PathToWindowOrDoor[`${type}Color`] = color;
                 if (state.PathToWindowOrDoor.cmd === 'settings') {
-                    updateHelpPtWoD(playerid, selection, state.PathToWindowOrDoor.cmd);
+                    updateHelp(playerid, selection, state.PathToWindowOrDoor.cmd);
                 }
             }
         },
@@ -613,12 +605,12 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
          * Handles chat input - Needed to rename as it was catching DoorKnocker too ... wtf scope ???
          * Command Syntax: !PathToWindowOrDoor --action,[options]|tracks/lists to affect|tracks/lists to affect|... --action2,[options|tracks/lists to affect|tracks/lists to affect|...
          */
-        HandleInputPtWoD = function (msg_orig) {
+        HandleInput = function (msg_orig) {
             try {
                 var msg = _.clone(msg_orig),
                     cmdDetails, args,
                     actionSwitch = {
-                        menu: updateHelpPtWoD,
+                        menu: updateHelp,
                         convertwindows: convertAllWindows,
                         convertdoors: convertAllDoors,
                         preset: setPresets
@@ -673,7 +665,7 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
         },
 
         RegisterEventHandlers = function () {
-            on('chat:message', HandleInputPtWoD);
+            on('chat:message', HandleInput);
         };
 
     return {
