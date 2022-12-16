@@ -629,9 +629,8 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
                 args = msg.content.split(/\s+--/);//splits the message contents into discrete arguments
                 if (args[1]) {
                     _.each(_.rest(args, 1), (cmd) => {
-                        log(`cmd=${cmd}`);
                         cmdDetails = cmdExtract(cmd);
-                        log(`cmdDetails=${JSON.stringify(cmdDetails)}`);
+                        log(`cmd=${cmd}, cmdDetails=${JSON.stringify(cmdDetails)}`);
                         if (cmdDetails.action && actionSwitch[cmdDetails.action.toLowerCase()]) {
                             actionSwitch[cmdDetails.action.toLowerCase()](msg.playerid, msg.selected, ...cmdDetails.things);
                         } else {
