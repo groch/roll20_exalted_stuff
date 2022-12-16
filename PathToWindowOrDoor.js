@@ -12,7 +12,7 @@ var PathToWindowOrDoor = PathToWindowOrDoor || (function () {
     /*
     PathToWindowOrDoor script:
     Author: Sylvain "Groch" CLIQUOT
-    Contact: https://app.roll20.net/users/
+    Contact: https://app.roll20.net/users/3137159/groch
     Thanks to: Scott C.h which this file is based on his Door Knocker work
     Credits: https://app.roll20.net/users/459831/scott-c
     state.PathToWindowOrDoor format:
