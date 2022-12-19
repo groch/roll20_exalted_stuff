@@ -1899,9 +1899,14 @@ and (min-resolution:.001dpcm) {
     height: 3em;
 }
 
-.sheet-rolltemplate-exalted3e_cast span.sheet-aspect > img{
+.sheet-rolltemplate-exalted3e_cast span.sheet-aspect > img {
     width: 4em;
     height: 4em;
+}
+
+.sheet-rolltemplate-exalted3e_cast span.sheet-aspect > img[title="none"] {
+    width: 0;
+    height: 0;
 }
 
 .sheet-rolltemplate-exalted3e_cast img[title="zenith"]          { content: url('https://s3.amazonaws.com/files.d20.io/images/287863297/KJXoJYat_oCa2WPUJTJx7Q/max.png?1654114629'); }
@@ -1948,6 +1953,7 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast img[title="soil"]            { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
 
 .sheet-rolltemplate-exalted3e_cast img[title="unknown"]         { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.sheet-rolltemplate-exalted3e_cast img[title="none"]            { content: none; }
 
 .sheet-rolltemplate-exalted3e_cast img[title="sorceries"]       { content: url('https://s3.amazonaws.com/files.d20.io/images/290361561/SB_IxeE7B6beH6LTt6R6fQ/max.png?1655540239'); }
 
