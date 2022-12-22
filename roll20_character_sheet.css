@@ -2268,6 +2268,23 @@ body.sheet-darkmode {
     border-radius: 5px 5px;
 }
 
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect textarea,
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect textarea {
+    resize: vertical;
+}
+
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect textarea.desc,
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect textarea.desc {
+    width: 98%;
+    height: 50px;
+}
+
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect textarea.effect,
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect textarea.effect {
+    width: 98%;
+    height: 100px;
+}
+
 /* --- ANTI SOCIAL TAB --- */
 
 .charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .sheet-tab-antisocial {
