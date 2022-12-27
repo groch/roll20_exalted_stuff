@@ -2797,6 +2797,16 @@ body.sheet-darkmode {
     width: 3em;
 }
 
+.charsheet .sheet-tab-spell-sheet .cost-section {
+    display: inline-flex;
+    width: 5em;
+}
+
+.charsheet .sheet-tab-spell-sheet .cost-section p input {
+    flex-shrink: 1;
+    min-width: 1em;
+}
+
 /* -- desc textarea -- */
 
 .charsheet .desc-toggle {

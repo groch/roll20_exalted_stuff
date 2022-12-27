@@ -1067,7 +1067,8 @@
     const costSectionsToBind = [
         'rolls',
         'combat-init',
-        'combat-attack'
+        'combat-attack',
+        'spells'
     ];
     const costAttrs = [
         'rep-cost-mote',
@@ -9883,27 +9884,33 @@
                             <option value="Solar">Solar</option>
                         </select>
                         <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
+                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                         <div class="charm-buttons charm-buttons-show-default">
-                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}">Cast</button>
-                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}">to GM</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n!exr @{rep-cost-macro}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n!exr @{rep-cost-macro}">to GM</button>
                         </div>
                         <div class="charm-buttons charm-buttons-show-extended">
-                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr}">Cast</button>
-                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} -gm">to GM</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} @{rep-cost-macro}">Cast</button>
+                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{charm-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} -gm @{rep-cost-macro}">to GM</button>
                         </div>
                         <input type="text" name="attr_charm-short-desc" class="sheet-charms-spells-trait sheet-charms-spells-trait-short-desc" placeholder="short desc">
                     </div>
                     <div class="sheet-table-row sheet-charms-spells-trait" style="width: 100%"> 
                         <span>Book: </span>
-                        <input type="text" name="attr_spell-book" style="width: 41%" class="sheet-charms-spells-trait" placeholder="Core"><span> </span> 
+                        <input type="text" name="attr_spell-book" style="width: calc(100% - 43em)" class="sheet-charms-spells-trait" placeholder="Core"><span> </span> 
                         <span>Page #: </span> 
-                        <input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471"><span> </span> 
+                        <input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471" style="width: 5em;"><span> </span> 
                         <span>Duration: </span> 
                         <input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span> 
                         <span>Cost: </span> 
                         <input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp">
                         <span>Control: </span>
                         <input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span>
+                        <div class="cost-section">
+                            <p class="will-color-down rounded-box grow-normal flex">
+                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                            </p>
+                        </div>
                         <input type="hidden" name="attr_charm-aspect" value="sorceries">
                         <input type="hidden" name="attr_charm-balanced" value="0">
                     </div>
