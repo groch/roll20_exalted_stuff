@@ -36,12 +36,12 @@
             var finalAttr = {};
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
-        
+
             getAttrs([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'], setDebugWrapper(function getHealthFields(valuesSections) {
                 var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
                     return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
                 }).value();
-                
+
                 const oldPen = Number(valuesSections['wound-penalty']) || 0,
                       oldActual = Number(valuesSections['health-displayed']) || 0,
                       oldMax = Number(valuesSections['health-displayed_max']) || 0,
@@ -64,7 +64,7 @@
 
                 let maxHealth = sortedIdHealthArray.length;
                 if (debug === 2) TAS.debug(`updateWound:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
-                
+
                 if (debug === 2) TAS.debug(`updateWound:: combat-crippling-pen=${valuesSections['combat-crippling-pen']}`);
                 pen = Math.abs(Number(pen));
                 if (debug === 2) TAS.debug('1st Calculated penalty=' + pen);
@@ -93,7 +93,7 @@
             }));
         });
     }
-    
+
     on('sheet:opened', TAS._fn(updateParry));
     on('change:dexterity change:brawl change:melee', TAS._fn(updateParry));
     on('change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane change:ma-nightingale '
@@ -141,7 +141,7 @@
                     if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
                     ma = Math.max(ma, Number(v.repmartialarts));
                 });
-        
+
                 if (debug === 2) TAS.debug(`Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
                 if (debug === 2) TAS.debug('Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen);
                 var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2)) - pen;
@@ -154,7 +154,7 @@
                 getSectionIDs('weapon', function ForgeWeaponList(idarray) {
                     const weaponFieldNames = [];
                     idarray.forEach(id => weaponFieldNames.push(`repeating_weapon_${id}_repweapondef`, `repeating_weapon_${id}_repweaponabi`));
-                
+
                     getAttrs(weaponFieldNames, setDebugWrapper(function GetWeapondFieldsAndUpdateWeaponParrys(valuesSections) {
                         if (debug === 2) TAS.debug(`valuesSections=${JSON.stringify(valuesSections)}`);
                         idarray.forEach(id => {
@@ -235,21 +235,21 @@
         getSectionIDs('health', function getHealthList(idHealthArray) {
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
-        
+
             getAttrs([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"], TAS._fn(function getHealthFields(valuesSections) {
                 if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
                     TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
                     var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
                         return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
                     }).value();
-                    
+
                     let actualHealth = 0;
                     for (const id of sortedIdHealthArray.reverse()) {
                         let dmg =       valuesSections[`repeating_health_${id}_hl-damage`];
                         if (dmg && (!dmg || dmg !== 'healthy')) break;
                         else                                    actualHealth++;
                     }
-    
+
                     let maxHealth = sortedIdHealthArray.length;
                     TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
                     setAttrs({'health-displayed': actualHealth, 'health-displayed_max': maxHealth});
@@ -493,7 +493,7 @@
         charmObj[`repeating_charms_${idCharm1}_charm-aspect`] = caste.toLowerCase();
         charmObj[`repeating_charms_${idCharm1}_charm-description`] = 'The Exalt infuse her essence inside the action to magnify it.';
         charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The Exalt add [[?{Dice Added ?|1}]] dices to the action.';
-        
+
         let idCharm2 = generateRowID();
         while (idCharm1 === idCharm2) idCharm2 = generateRowID();
         charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Generic Defense Excellency';
@@ -634,12 +634,12 @@
         getSectionIDs('health', function getHealthList(idHealthArray) {
             const healthFieldNames = [];
             idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
-        
+
             getAttrs([...healthFieldNames, 'personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], TAS._fn(function getHealthFields(valuesSections) {
                 var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
                     return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
                 }).value();
-                
+
                 let actualHealth = 0;
                 for (const id of sortedIdHealthArray.reverse()) {
                     let dmg = valuesSections[`repeating_health_${id}_hl-damage`];
@@ -648,7 +648,7 @@
                 }
                 let maxHealth = sortedIdHealthArray.length;
                 TAS.debug(`getHealthFields:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
-                
+
                 let perso =     Number(valuesSections['personal-essence']),
                     persoMax =  Number(valuesSections['personal-essence_max']),
                     peri =      Number(valuesSections['peripheral-essence']);
@@ -713,7 +713,7 @@
                 if (values[`hl${i}-damage`] !== 'healthy' || values[`hl${i}-penalty`])
                     healthValues.push({damage:values[`hl${i}-damage`],penalty:values[`hl${i}-penalty`]});
             }
-            
+
             var indexesIntimacies = _.times(healthValues.length, generateRowID);
             TAS.debug('Creating new intimacies', indexesIntimacies);
             _.each(indexesIntimacies, function(id, k) {
@@ -736,7 +736,7 @@
                     TAS.debug(`ALREADY DONE => CANCEL init-intimacies=${Number(values['init-intimacies'])} len=${idIntimaciesArray.length}`);
                     return;
                 }
-    
+
                 var attrs = {}, indexesIntimacies = _.times(4, generateRowID);
                 TAS.debug('Creating new intimacies', indexesIntimacies);
                 _.each(indexesIntimacies, function(id, k) {
@@ -895,7 +895,7 @@
             getSectionIDs('weapon', setDebugWrapper(function getQcAttacksSections(idWeaponSections) {
                 const qcFieldNames = [];
                 idSections.forEach(id => qcFieldNames.push(`repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdamage`));
-                
+
                 getAttrs(qcFieldNames, TAS._fn(function GetQCAttacksFieldsAndUpdateWeaponFields(valuesSections) {
                     // remove weapons
                     idWeaponSections.forEach(id => removeRepeatingRow(`repeating_weapon_${id}`));
@@ -1163,7 +1163,7 @@
 
         updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
     })));
-    
+
     on('change:battlegroup-size', setDebugWrapper((e) => updatAttackRolls(false, true)));
     on('change:battlegroup-dmg-boost', setDebugWrapper((e) => updatAttackRolls(false, true)));
     wAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-'))));
@@ -1220,7 +1220,7 @@
             return;
         }
         TAS.debug('updateAllRolls::updateAllRolls e=', JSON.stringify(e));
-        
+
         getSectionIDs('rolls', setDebugWrapper(function getRollsSection(idSections) {
             if (debug === 2) TAS.debug('updateAllRolls::getRollsSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
@@ -1443,7 +1443,7 @@
             finalCallback(id, section, repeatingSectionName);
         }, attr_name, section, repeatingSectionName);
     }
-    
+
     /* replicate withering to decisive */
     on('change:repeating_combat-attack:repcombat-watk-attr change:repeating_combat-attack:repcombat-watk-abi', setDebugWrapper(function qcDamageAttacksChange(e) {
         const id = e.sourceAttribute.split('_')[2];
@@ -1456,7 +1456,7 @@
             setAttrs(finalObj);
         }));
     }));
-    
+
     /* trigger sheet initialize manually */
     on('clicked:init-sheet-btn', setDebugWrapper(function qcDamageAttacksChange(e) {
         initCharacterSheet();
@@ -1530,7 +1530,7 @@
 
 <div class="sheet-content">
     <div>
-        
+
         <input type="hidden" name="attr_pain-tolerance" value="0">
         <input class="roll-diceex-check" name="attr_diceex" type="hidden" value="0">
         <input class="roll-succex-check" name="attr_succex" type="hidden" value="0">
@@ -1547,7 +1547,7 @@
         <input class="sheet-tab sheet-tab-antisocial sheet-tab-antisocial-sheet" name="attr_sheet" title="Tu perds ton Sang froid !" type="radio" value="7">
         <input class="sheet-tab sheet-tab-combat sheet-tab-combat-sheet" name="attr_sheet" title="Combat" type="radio" value="6">
         <input class="sheet-tab sheet-tab-settings sheet-tab-settings-sheet" name="attr_sheet" title="y" type="radio" value="4">
-        
+
         <input class="sheet-charm-archery" name="attr_charm-archery" type="hidden" value="0">
         <input class="sheet-charm-athletics" name="attr_charm-athletics" type="hidden" value="0">
         <input class="sheet-charm-awareness" name="attr_charm-awareness" type="hidden" value="0">
@@ -1636,7 +1636,7 @@
 
         <input class="sheet-charm-evocation" name="attr_charm-evocation" type="hidden" value="0">
         <input class="sheet-charm-old" name="attr_charm-old" type="hidden" value="0">
-        
+
         <input class="sheet-quick-character" name="attr_qc" type="hidden" value="0">
         <input class="sheet-battle-group" name="attr_battlegroup" type="hidden" value="0">
         <input class="sheet-long-merit" name="attr_longmerit" type="hidden" value="1">
@@ -1649,9 +1649,9 @@
         <div class="sheet-body sheet-tab-content sheet-tab-character-sheet">
             <div class="sheet-3colrow">
                 <div class="sheet-col"><img src="https://imgsrv.roll20.net?src=http%3A//i.imgur.com/JqdPTxp.png"></div>
-                
+
                 <!-- 1.1 Header -->
-                
+
                 <div class="sheet-col"><!-- 1.1.1 1st column (Name, Player, SELECT Caste) -->
                     <div class="sheet-flexbox-h"><label>Name: <input type="text" name="attr_character_name" placeholder="Karal Fire Orchid"></label></div>
                     <div class="sheet-flexbox-h"><label>Player: <input type="text" name="attr_player-name" placeholder="John Smith"></label></div>
@@ -1659,41 +1659,41 @@
                         <label>Caste/Aspect:
                         <select class="player-caste" name="attr_caste">
                             <option value=""></option>
-                            
+
                             <option value="solars" disabled>--- SOLARS ---</option>
                             <option value="Dawn">Dawn</option>
                             <option value="Zenith">Zenith</option>
                             <option value="Twilight">Twilight</option>
                             <option value="Night">Night</option>
                             <option value="Eclipse">Eclipse</option>
-                        
+
                             <option value="abyssals" disabled>--- ABYSSALS ---</option>
                             <option value="Dusk">Dusk</option>
                             <option value="Midnight">Midnight</option>
                             <option value="Daybreak">Daybreak</option>
                             <option value="Day">Day</option>
                             <option value="Moonshadow">Moonshadow</option>
-                        
+
                             <option value="db" disabled>--- DRAGON BLOODED ---</option>
                             <option value="Air">Air</option>
                             <option value="Earth">Earth</option>
                             <option value="Fire">Fire</option>
                             <option value="Water">Water</option>
                             <option value="Wood">Wood</option>
-                        
+
                             <option value="lunars" disabled>--- LUNARS ---</option>
                             <option value="Full Moon">Full Moon</option>
                             <option value="Changing Moon">Changing Moon</option>
                             <option value="No Moon">No Moon</option>
                             <option value="Casteless">Casteless</option>
-                        
+
                             <option value="sidereals" disabled>--- SIDEREALS ---</option>
                             <option value="Journeys">Journeys</option>
                             <option value="Serenity">Serenity</option>
                             <option value="Battles">Battles</option>
                             <option value="Secrets">Secrets</option>
                             <option value="Endings">Endings</option>
-                        
+
                             <option value="liminals" disabled>--- LIMINALS ---</option>
                             <option value="Blood">Blood</option>
                             <option value="Breath">Breath</option>
@@ -1707,7 +1707,7 @@
                             <option value="Defiler">Defiler</option>
                             <option value="Scourge">Scourge</option>
                             <option value="Fiend">Fiend</option>
-                        
+
                             <option value="alchemical" disabled>--- ALCHEMICALS ---</option>
                             <option value="Adamant">Adamant</option>
                             <option value="Orichalcum">Orichalcum</option>
@@ -1715,7 +1715,7 @@
                             <option value="Moonsilver">Moonsilver</option>
                             <option value="Starmetal">Starmetal</option>
                             <option value="Jade">Jade</option>
-                        
+
                             <option value="other" disabled>--- OTHER ---</option>
                             <option value="Exigent">Exigent</option>
                             <option value="Getimian">Getimian</option>
@@ -1738,7 +1738,7 @@
                         <label>Supernal Trait:
                         <select name="attr_supattr">
                             <option value="" selected="selected"></option>
-                            
+
                             <option value="Archery">Archery</option>
                             <option value="Athletics">Athletics</option>
                             <option value="Awareness">Awareness</option>
@@ -2818,7 +2818,7 @@
                             <input type="text" name="attr_repspecialty" style="margin-top: 3px" placeholder="Pirate Tactics">
                             <select name="attr_repspecialtyability">
                                 <option value=""></option>
-                                
+
                                     <option value="Archery">Archery</option>
                                     <option value="Athletics">Athletics</option>
                                     <option value="Awareness">Awareness</option>
@@ -2846,8 +2846,8 @@
                                     <option value="Thrown">Thrown</option>
                                     <option value="War">War</option>
                                     <option value="Custom">Custom</option>
-                                
-                                
+
+
                                     <option value="Strength">Strength</option>
                                     <option value="Dexterity">Dexterity</option>
                                     <option value="Stamina">Stamina</option>
@@ -2857,7 +2857,7 @@
                                     <option value="Perception">Perception</option>
                                     <option value="Intelligence">Intelligence</option>
                                     <option value="Wits">Wits</option>
-                                
+
                             </select>
                         </div>
                     </fieldset>
@@ -3907,12 +3907,12 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 2 CHARMS PAGE -->
 
         <div class="sheet-tab-content sheet-tab-charm-sheet">
             <h1><span>Charms &amp; Evocations</span></h1>
-            
+
             <div class="charm-tab-list">
                 <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-archery sheet-tab-charm-archery" name="attr__charm_sheet" title="Archery" type="radio" value="1">
                 <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-athletics sheet-tab-charm-athletics" name="attr__charm_sheet" title="Athletics" type="radio" value="2">
@@ -9759,7 +9759,7 @@
                                     <input type="number" name="attr_charm-page" class="sheet-charms-spells-trait" placeholder="255"><span> </span>
                                     <span>Duration: </span>
                                     <input type="text" name="attr_charm-duration" class="sheet-charms-spells-trait" placeholder="Instant"><span> </span>
-                                    <span>Artifact Name: </span> 
+                                    <span>Artifact Name: </span>
                                     <input type="text" name="attr_charm-skill" class="sheet-charms-spells-trait" placeholder="Fire form"><span> </span>
                                     <span>Keywords: </span>
                                     <input type="text" name="attr_charm-keywords" class="sheet-charms-spells-trait" placeholder="Uniform, Psyche">
@@ -9806,7 +9806,7 @@
                                     <option value="Reflexive">Reflexive</option>
                                     <option value="Permanent">Permanent</option>
                                     <option value="Enchantment">Enchantment</option>
-                                </select> 
+                                </select>
                                 <span>Cost: </span>
                                 <input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait sheet-charms-spells-trait-cost" placeholder="1m/die">
                                 <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
@@ -9830,7 +9830,7 @@
                                     <input type="number" name="attr_charm-page" class="sheet-charms-spells-trait" placeholder="255"><span> </span>
                                     <span>Duration: </span>
                                     <input type="text" name="attr_charm-duration" class="sheet-charms-spells-trait" placeholder="Instant"><span> </span>
-                                    <span>Trait: </span> 
+                                    <span>Trait: </span>
                                     <input type="text" name="attr_charm-skill" class="sheet-charms-spells-trait" placeholder="Fire form"><span> </span>
                                     <span>Keywords: </span>
                                     <input type="text" name="attr_charm-keywords" class="sheet-charms-spells-trait" placeholder="Uniform, Psyche">
@@ -9895,14 +9895,14 @@
                         </div>
                         <input type="text" name="attr_charm-short-desc" class="sheet-charms-spells-trait sheet-charms-spells-trait-short-desc" placeholder="short desc">
                     </div>
-                    <div class="sheet-table-row sheet-charms-spells-trait" style="width: 100%"> 
+                    <div class="sheet-table-row sheet-charms-spells-trait" style="width: 100%">
                         <span>Book: </span>
-                        <input type="text" name="attr_spell-book" style="width: calc(100% - 43em)" class="sheet-charms-spells-trait" placeholder="Core"><span> </span> 
-                        <span>Page #: </span> 
-                        <input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471" style="width: 5em;"><span> </span> 
-                        <span>Duration: </span> 
-                        <input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span> 
-                        <span>Cost: </span> 
+                        <input type="text" name="attr_spell-book" style="width: calc(100% - 43em)" class="sheet-charms-spells-trait" placeholder="Core"><span> </span>
+                        <span>Page #: </span>
+                        <input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471" style="width: 5em;"><span> </span>
+                        <span>Duration: </span>
+                        <input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span>
+                        <span>Cost: </span>
                         <input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp">
                         <span>Control: </span>
                         <input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span>
@@ -10483,7 +10483,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-brawl">
                                             <fieldset class="repeating_charms-brawl" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10509,7 +10509,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-bureaucracy">
                                             <fieldset class="repeating_charms-bureaucracy" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10535,7 +10535,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-craft">
                                             <fieldset class="repeating_charms-craft" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10561,7 +10561,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-dodge">
                                             <fieldset class="repeating_charms-dodge" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10587,7 +10587,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-integrity">
                                             <fieldset class="repeating_charms-integrity" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10613,7 +10613,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-investigation">
                                             <fieldset class="repeating_charms-investigation" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10639,7 +10639,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-larceny">
                                             <fieldset class="repeating_charms-larceny" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10665,7 +10665,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-linguistics">
                                             <fieldset class="repeating_charms-linguistics" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10691,7 +10691,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-lore">
                                             <fieldset class="repeating_charms-lore" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10717,7 +10717,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-medicine">
                                             <fieldset class="repeating_charms-medicine" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10743,7 +10743,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-melee">
                                             <fieldset class="repeating_charms-melee" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10769,7 +10769,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-occult">
                                             <fieldset class="repeating_charms-occult" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10795,7 +10795,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-performance">
                                             <fieldset class="repeating_charms-performance" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10821,7 +10821,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-presence">
                                             <fieldset class="repeating_charms-presence" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10847,7 +10847,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-resistance">
                                             <fieldset class="repeating_charms-resistance" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10873,7 +10873,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-ride">
                                             <fieldset class="repeating_charms-ride" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10899,7 +10899,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-sail">
                                             <fieldset class="repeating_charms-sail" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10925,7 +10925,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-socialize">
                                             <fieldset class="repeating_charms-socialize" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10951,7 +10951,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-stealth">
                                             <fieldset class="repeating_charms-stealth" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -10977,7 +10977,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-survival">
                                             <fieldset class="repeating_charms-survival" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -11003,7 +11003,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-thrown">
                                             <fieldset class="repeating_charms-thrown" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -11029,7 +11029,7 @@
                                                 </div>
                                                 <input type="text" name="attr_charm-short-desc" readonly>
                                             </fieldset>
-                                        </div> 
+                                        </div>
                                         <div class="reminder-charm-div reminder-charm-war">
                                             <fieldset class="repeating_charms-war" style="display: none;">
                                                 <input type="text" name="attr_charm-name" readonly>
@@ -13595,9 +13595,9 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 6 SOCIAL PAGE -->
-        
+
         <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">
             <h1><span>Social attributes and abilities</span></h1>
             <div class="sheet-table-body">
@@ -13720,9 +13720,9 @@
             <h1><span>Notepad</span></h1>
             <textarea name="attr_social-notepad"></textarea>
         </div>
-        
+
         <!-- 6.1 ANTI SOCIAL PAGE -->
-        
+
         <div class="sheet-body sheet-tab-content sheet-tab-antisocial-sheet">
             <h1><span>Social attributes and abilities</span></h1>
             <div class="sheet-table-body">
@@ -13831,9 +13831,9 @@
             <h1><span>Notepad</span></h1>
             <textarea name="attr_social-notepad"></textarea>
         </div>
-        
+
         <!-- 7 COMBAT PAGE -->
-        
+
         <div class="sheet-body sheet-tab-content sheet-tab-combat-sheet">
             <h1><span>Combat</span></h1>
             <div class="combat-header">
@@ -14356,7 +14356,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-brawl">
                                     <fieldset class="repeating_charms-brawl" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14382,7 +14382,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-bureaucracy">
                                     <fieldset class="repeating_charms-bureaucracy" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14408,7 +14408,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-craft">
                                     <fieldset class="repeating_charms-craft" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14434,7 +14434,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-dodge">
                                     <fieldset class="repeating_charms-dodge" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14460,7 +14460,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-integrity">
                                     <fieldset class="repeating_charms-integrity" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14486,7 +14486,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-investigation">
                                     <fieldset class="repeating_charms-investigation" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14512,7 +14512,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-larceny">
                                     <fieldset class="repeating_charms-larceny" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14538,7 +14538,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-linguistics">
                                     <fieldset class="repeating_charms-linguistics" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14564,7 +14564,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-lore">
                                     <fieldset class="repeating_charms-lore" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14590,7 +14590,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-medicine">
                                     <fieldset class="repeating_charms-medicine" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14616,7 +14616,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-melee">
                                     <fieldset class="repeating_charms-melee" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14642,7 +14642,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-occult">
                                     <fieldset class="repeating_charms-occult" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14668,7 +14668,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-performance">
                                     <fieldset class="repeating_charms-performance" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14694,7 +14694,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-presence">
                                     <fieldset class="repeating_charms-presence" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14720,7 +14720,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-resistance">
                                     <fieldset class="repeating_charms-resistance" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14746,7 +14746,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-ride">
                                     <fieldset class="repeating_charms-ride" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14772,7 +14772,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-sail">
                                     <fieldset class="repeating_charms-sail" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14798,7 +14798,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-socialize">
                                     <fieldset class="repeating_charms-socialize" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14824,7 +14824,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-stealth">
                                     <fieldset class="repeating_charms-stealth" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14850,7 +14850,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-survival">
                                     <fieldset class="repeating_charms-survival" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14876,7 +14876,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-thrown">
                                     <fieldset class="repeating_charms-thrown" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -14902,7 +14902,7 @@
                                         </div>
                                         <input type="text" name="attr_charm-short-desc" readonly>
                                     </fieldset>
-                                </div> 
+                                </div>
                                 <div class="reminder-charm-div reminder-charm-war">
                                     <fieldset class="repeating_charms-war" style="display: none;">
                                         <input type="text" name="attr_charm-name" readonly>
@@ -16969,7 +16969,7 @@
                             <div class="init-section third-line grow-normal flex">
                                 <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                 <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
-                            
+
                                 <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                 <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="=COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">
                                 <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -17219,7 +17219,7 @@
                                         <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-dmg-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-dmg-boost}"></p>d)
                                     </div>
                                     <div class="flex grow-normal">
-                                        + 
+                                        +
                                         <input type="text" name="attr_repcombat-wdmg-bonus-successes" class="sheet-wdmg-bonus-successes grow-double" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                                         <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw">
@@ -17401,7 +17401,7 @@
                                     <div class="flex-wrap grow-normal">
                                         <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <div class="flex grow-normal">
-                                            + 
+                                            +
                                             <input type="text" name="attr_repcombat-ddmg-bonus-successes" class="sheet-ddmg-bonus-successes grow-normal" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                                             <input type="text" name="attr_repcombat-ddmg-final-macro-options" class="sheet-init-macro-options grow-normal" value="-D" title="Macro options for the Roll. Type '!exr -help' in chat to learn more&#013;&#010;Default macro included is no 10 doubled as it's the default rule used for Decisive">
                                         </div>
