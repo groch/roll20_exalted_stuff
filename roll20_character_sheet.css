@@ -648,7 +648,8 @@ tier 2: couleurs
 .charsheet .btn:not([type=roll]) { font-family: Arial, sans-serif; }
 .charsheet .btn.pictos { font-family: Pictos; }
 
-.charsheet * { font-variant: small-caps; }
+.charsheet *,
+.charsheet .sheet-grouped-buttons .btn:not([type=roll]) { font-variant: small-caps; }
 
 .charsheet input,
 .charsheet select,
@@ -2765,6 +2766,7 @@ body.sheet-darkmode {
     flex-shrink: 0;
 }
 
+.charsheet div .sheet-grouped-buttons button[type="action"],
 .charsheet div .sheet-grouped-buttons button[type="roll"] {
 	margin: 0;
 	border-radius: 0;
@@ -2775,6 +2777,7 @@ body.sheet-darkmode {
     border-right: 1px solid;
 }
 
+.charsheet div .sheet-grouped-buttons button[type="action"]:last-child,
 .charsheet div .sheet-grouped-buttons button[type="roll"]:last-child {
 	padding: 0 7px 0 0;
     border-right: 0;
@@ -4106,6 +4109,7 @@ and (min-resolution:.001dpcm) {
         visibility: visible;
     }
     
+    .charsheet button[type="action"].sheet-blank-roll-button + span,
     .charsheet button[type="roll"].sheet-blank-roll-button + span {
         display: none !important;
         visibility: hidden !important;

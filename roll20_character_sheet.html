@@ -1588,6 +1588,27 @@
 
     on(`change:repeating_rolls-widget`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-')));
 
+    on('clicked:repeating_rolls-widget:roll-widget-cast clicked:repeating_rolls-widget:roll-widget-gmcast', setDebugWrapper(function castRoll(e){
+        if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
+        const id = e.sourceAttribute.split('_')[2];
+        const buttonClicked = e.sourceAttribute.split('_')[3];
+        const attr_name = `repeating_rolls-widget_${id}_`;
+        getAttrs([`${attr_name}reprolls-final-macro-replaced`, `${attr_name}rep-cost-macro`], setDebugWrapper(function getFinalMacros(values){
+            let queryRoll = buttonClicked === 'roll-widget-cast' ?
+                `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
+                `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
+            if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
+            startRoll(queryRoll, results => finishRoll(results.rollId));
+            const resetObj = {
+                [`${attr_name}reprolls-stunt-dices`]: 0,
+                [`${attr_name}reprolls-willpower-toggle`]: 0
+            };
+            setAttrs(resetObj);
+            updateWidgetRollForCost(e);
+            updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+        }));
+    }));
+
     /* ---- BEGIN: TheAaronSheet.js ---- */
     // Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
     // By:       The Aaron, Arcane Scriptomancer
@@ -16934,7 +16955,7 @@
                                 </div>
                                 <input type="hidden" name="attr_reprolls-toggle-desc" class="sheet-rolls-toggle-desc-val" value="0">
                                 <textarea name="attr_reprolls-desc" class="rolls-textarea"></textarea>
-                                <div class="flex roll-section show-on-edit">
+                                <div class="flex roll-section">
                                     <div class="inner-section">
                                         <div class="flex grow-normal dice-area inverted-color">
                                             <div class="flex flex-wrap grow-normal dice-area-details">
@@ -17105,8 +17126,8 @@
                                             <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
-                                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-widget-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-widget-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
                                             </div>
                                         </div>
                                     </div>
