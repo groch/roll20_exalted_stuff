@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.46, debug = 1;
+    const version = 2.47, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -456,6 +456,7 @@
         {version: 2.38, fn: upgradeto239},
         {version: 2.39, fn: upgradeto240},
         {version: 2.45, fn: upgradeto242},
+        {version: 2.46, fn: upgradeto247},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -519,6 +520,24 @@
              "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
             return true;
         return false;
+    }
+
+    function upgradeto247() {
+        getSectionIDs('rolls', function getHealthList(idRollsArray) {
+            const rollFieldNames = [], rollAttrs = ['reprolls-name', 'reprolls-attr', 'reprolls-abi', 'reprolls-final-macro-options'];
+            idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls_${id}_${i}`)));
+
+            getAttrs([...rollFieldNames], TAS._fn(function getRollFields(valuesSections) {
+                const finalObj = {'version': version}, arrayNewRollsWidget = [];
+                idRollsArray.forEach(id => {
+                    let newId = generateNewRowId(arrayNewRollsWidget);
+                    rollAttrs.forEach(i => finalObj[`repeating_rolls-widget_${newId}_${i}`] = valuesSections[`repeating_rolls_${id}_${i}`]);
+                })
+                setAttrs(finalObj);
+                for (const id of arrayNewRollsWidget)
+                    updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+            }));
+        });
     }
 
     function upgradeto242() {
@@ -1517,6 +1536,51 @@
             setAttrs(obj);
         }));
     }));
+
+    /* Rolls Widgets */
+    /* COST */
+    const widgetCostAttrs = [
+        'rep-cost-mote-offset',
+        'reprolls-willpower-toggle',
+        'reprolls-ycharm-dices',
+        'reprolls-ycharm-successes',
+        'reprolls-pool-starting'
+    ];
+    widgetCostAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, setDebugWrapper(updateWidgetRollForCost)));
+
+    function updateWidgetRollForCost(e) {
+        if (debug === 2) TAS.debug('updateWidgetRollForCost::updateWidgetRollForCost e=', JSON.stringify(e));
+        const sourceAttrSplit = e.sourceAttribute.split('_'),
+            id = sourceAttrSplit[2];
+        const attr_name = `repeating_rolls-widget_${id}_`;
+
+        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: attr_name=${attr_name}`);
+        if (e.sourceType === "sheetworker") {
+            TAS.debug('updateWidgetRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
+            return;
+        }
+        if (debug === 2) TAS.debug('updateWidgetRollForCost:: NORMAL TRIGGER COST EDIT');
+        getAttrs(widgetCostAttrs.map(attr => attr_name + attr), setDebugWrapper(val => {
+            if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
+            const mote = Number(val[attr_name + 'rep-cost-mote-offset']) + Number(val[attr_name + 'reprolls-ycharm-dices']) + Number(val[attr_name + 'reprolls-ycharm-successes']) * 2,
+                will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
+                starting = Number(val[attr_name + 'reprolls-pool-starting']);
+            let finalMacro = '=COST:@{character_id}';
+            if (mote < 0) mote = 0;
+            if (mote) finalMacro += `:peri=${starting};${mote}`;
+            if (will) finalMacro += `:will;${will}`;
+            TAS.debug(`updateWidgetRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
+            if (finalMacro.indexOf('@{') !== -1)
+                replaceAttrs(finalMacro, (out) => setAttrs({[attr_name+'rep-cost-macro']: out}));
+            else
+                setAttrs({[attr_name+'rep-cost-macro']: finalMacro});
+        }));
+    }
+
+    const rollWidgetSectionsToBind =  ['attr', 'abi', 'stunt-dices', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
+    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability]${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
+
+    on(`change:repeating_rolls-widget`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-')));
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
     // Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
@@ -16852,10 +16916,10 @@
                                                 Motes:
                                                 <span class="rounded-box grow-normal inline-flex">
                                                     <span class="rounded-box grow-normal inline-flex mote-color-border-dashed" title="Added Cost as Atome of Essence 1:1">
-                                                        +/-<input type="number" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal mote-hint-one inverted-color" value="0">
+                                                        +/-<input type="number" name="attr_rep-cost-mote-offset" class="sheet-cost-mote grow-normal mote-hint-one inverted-color" value="0">
                                                     </span>
                                                     <span class="rounded-box grow-normal inline-flex mote-total" title="Total Cost as Atome of Essence">
-                                                        =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote})" disabled data-formula="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote})">
+                                                        =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})" disabled data-formula="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})">
                                                     </span>
                                                 </span>
                                             </p>
