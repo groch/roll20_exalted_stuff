@@ -1576,10 +1576,7 @@
             if (mote) finalMacro += `:peri=${starting};${mote}`;
             if (will) finalMacro += `:will;${will}`;
             TAS.debug(`updateWidgetRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
-            if (finalMacro.indexOf('@{') !== -1)
-                replaceAttrs(finalMacro, (out) => setAttrs({[attr_name+'rep-cost-macro']: out}));
-            else
-                setAttrs({[attr_name+'rep-cost-macro']: finalMacro});
+            setAttrs({[attr_name+'rep-cost-macro']: finalMacro, [attr_name+'rep-cost-total-taint']: mote >= 5 ? starting : 0});
         }));
     }
 
@@ -16946,6 +16943,7 @@
                                                         +/-<input type="number" name="attr_rep-cost-mote-offset" class="sheet-cost-mote grow-normal mote-hint-one inverted-color" value="0">
                                                     </span>
                                                     <span class="rounded-box grow-normal inline-flex mote-total" title="Total Cost as Atome of Essence">
+                                                        <input type="hidden" name="attr_rep-cost-total-taint" class="sheet-cost-mote-total-taint">
                                                         =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})" disabled data-formula="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})">
                                                     </span>
                                                 </span>

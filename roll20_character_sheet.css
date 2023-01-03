@@ -3800,6 +3800,15 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     text-shadow: black 0 0 2px;
 }
 
+.charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
+    color: red;
+    font-weight: bolder;
+}
+
+.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
+    color: rgb(255, 84, 0);
+}
+
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-stunt-dices {
     background-color: rgba(var(--stunt-color), 0.65);
 }
