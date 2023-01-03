@@ -529,9 +529,15 @@
 
             getAttrs([...rollFieldNames], TAS._fn(function getRollFields(valuesSections) {
                 const finalObj = {'version': version}, arrayNewRollsWidget = [];
+                const allowedValued = attrNAbi.map(i => '@{'+i+'}');
+                for (let i = 0; i <= 20; i++) allowedValued.push(i);
                 idRollsArray.forEach(id => {
                     let newId = generateNewRowId(arrayNewRollsWidget);
                     rollAttrs.forEach(i => finalObj[`repeating_rolls-widget_${newId}_${i}`] = valuesSections[`repeating_rolls_${id}_${i}`]);
+                    if (!allowedValued.includes(finalObj[`repeating_rolls-widget_${newId}_reprolls-attr`]))
+                        finalObj[`repeating_rolls-widget_${newId}_reprolls-attr`] = '0';
+                    if (!allowedValued.includes(finalObj[`repeating_rolls-widget_${newId}_reprolls-abi`]))
+                        finalObj[`repeating_rolls-widget_${newId}_reprolls-abi`] = '0';
                 })
                 setAttrs(finalObj);
                 for (const id of arrayNewRollsWidget)
