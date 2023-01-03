@@ -3793,11 +3793,12 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 
 .charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total {
     border: 3px outset rgb(var(--mote-color));
-    font-size: large;
     border-radius: 10px;
     color: rgb(var(--mote-color));
     background-color: rgba(128, 128, 128, 0.65);
     text-shadow: black 0 0 2px;
+    font-size: 20px;
+    padding-top: 6px;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
