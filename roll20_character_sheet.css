@@ -210,6 +210,15 @@ tier 2: couleurs
     font-weight: normal;
 }
 
+.charsheet input[disabled]:not([title]) {
+    cursor: not-allowed;
+}
+
+.charsheet select[title]:not([readonly]):not([disabled]) {
+    cursor: pointer;
+}
+
+.charsheet input[title]:not([readonly]):not([disabled]):not([type="radio"]),
 .charsheet .woundpenalty-add-input[title],
 .charsheet .rollpenalty-input[title] {
     cursor: text;
@@ -222,6 +231,16 @@ tier 2: couleurs
 .charsheet input[type=number][disabled].woundpenalty-input,
 .charsheet .rollpenalty-input[title] {
     width: 27px;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .rollpen-box p,
+.charsheet .sheet-tab-rolls-widgets-sheet .rollpenalty-input[title] {
+    background-color: rgb(255, 128, 128);
+}
+
+.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .rollpen-box p,
+.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .rollpenalty-input[title] {
+    background-color: darkred;
 }
 
 .charsheet .rollpenalty-input[title] {
@@ -239,6 +258,12 @@ tier 2: couleurs
     font-weight: bold;
 }
 
+.sheet-darkmode .charsheet input[type=number][disabled].rollpenalty,
+.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
+.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
+    background-color: darkred;
+}
+
 .charsheet .roll-penalty-check[value="0"] ~ .combat-init input[type=number][disabled].rollpenalty,
 .charsheet .roll-penalty-check[value="0"] ~ .combat-attacks input[type=number][disabled].rollpenalty,
 .charsheet .roll-penalty-check[value="0"] ~ .rolls-area input[type=number][disabled].rollpenalty,
@@ -248,6 +273,16 @@ tier 2: couleurs
 .charsheet .wound-penalty-check[value="0"] ~ input[type=number][disabled].woundpenalty-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .inverted-color input[type=number][disabled].rollpenalty.not-inverted,
+.charsheet .sheet-tab-rolls-widgets-sheet .inverted-color input[type=number][disabled].woundpenalty.not-inverted {
+    color: white;
+}
+
+.sheet-darkmode .charsheet .roll-penalty-check[value="0"] ~ .rolls-area .inverted-color input[type=number][disabled].rollpenalty.not-inverted,
+.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .rolls-area .inverted-color input[type=number][disabled].woundpenalty.not-inverted {
+    color: black;
 }
 
 .charsheet div.qc-toggle-display-inv {
@@ -543,7 +578,11 @@ tier 2: couleurs
     display: inline-block;
 }
 
-.charsheet [title] { cursor: help; }
+.charsheet [title] input[disabled],
+.charsheet [title] {
+    cursor: help;
+}
+
 .charsheet .sheet-dotted { border-bottom: 1px dotted black; }
 
 .charsheet input[type=text],.charsheet input[type=number] {
@@ -2062,8 +2101,33 @@ body.sheet-darkmode {
     color: var(--dark-primarytext);
 }
 
+.inverted-color,
+.inverted-color input:not(.not-inverted),
+.inverted-color textarea:not(.not-inverted),
+.inverted-color select:not(.not-inverted),
+.inverted-color .uneditable-input:not(.not-inverted) {
+    color: white;
+}
+
+.sheet-darkmode .inverted-color input:not(.not-inverted),
+.sheet-darkmode .inverted-color textarea:not(.not-inverted),
+.sheet-darkmode .inverted-color select:not(.not-inverted),
+.sheet-darkmode .inverted-color .uneditable-input:not(.not-inverted) {
+    color: unset;
+}
+
+.sheet-darkmode .inverted-color {
+    color: black;
+}
+
 .sheet-darkmode .charsheet input[type=text], .sheet-darkmode .charsheet input[type=number], .sheet-darkmode .charsheet select {
     border-bottom: 1px solid var(--dark-primarytext);
+}
+
+.sheet-darkmode .charsheet .inverted-color input[type=text],
+.sheet-darkmode .charsheet .inverted-color input[type=number],
+.sheet-darkmode .charsheet .inverted-color select {
+    border-bottom: 1px solid;
 }
 
 .sheet-darkmode .charsheet select:focus, .sheet-darkmode .charsheet h1 span {
@@ -2529,6 +2593,10 @@ body.sheet-darkmode {
     margin: 0 0 9px;
 }
 
+.sheet-darkmode .ressource-line {
+    color: white;
+}
+
 /* -- INIT TOGGLER -- */
 
 .charsheet input.sheet-initeffect + span::before {
@@ -2633,6 +2701,10 @@ body.sheet-darkmode {
     align-items: center;
 }
 
+.charsheet .inline-flex {
+    display: inline-flex;
+}
+
 .charsheet .flex-col {
     flex-flow: column;
 }
@@ -2646,18 +2718,33 @@ body.sheet-darkmode {
 }
 
 .charsheet .flex .grow-normal,
+.charsheet .inline-flex .grow-normal,
 .charsheet .flex-wrap .grow-normal {
     flex-grow: 1;
 }
 
 .charsheet .flex .grow-double,
+.charsheet .inline-flex .grow-double,
 .charsheet .flex-wrap .grow-double {
     flex-grow: 2;
 }
 
 .charsheet .flex .grow-max,
+.charsheet .inline-flex .grow-max,
 .charsheet .flex-wrap .grow-max {
     flex-grow: 42000;
+}
+
+.charsheet .flex .basis-33,
+.charsheet .inline-flex .basis-33,
+.charsheet .flex-wrap .basis-33 {
+    flex-basis: 33%;
+}
+
+.charsheet .flex .basis-100,
+.charsheet .inline-flex .basis-100,
+.charsheet .flex-wrap .basis-100 {
+    flex-basis: 100%;
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
@@ -2701,12 +2788,14 @@ body.sheet-darkmode {
     --dark-accuracy-color: 0, 128, 0;
     --damage-color: 255, 0, 0;
     --dark-damage-color: 76, 25, 25;
-    --willpower-color: 162, 0, 255;
-    --dark-willpower-color: 97, 24, 142;
-    --mote-color: 255, 145, 0;
-    --dark-mote-color: 144, 88, 29;
-    --commited-mote-color: 255, 60, 0;
-    --dark-commited-mote-color: 144, 44, 14;
+    --willpower-color: 255, 255, 255;
+    --dark-willpower-color: 128, 128, 128;
+    --mote-color: 255, 215, 0;
+    --dark-mote-color: 100, 75, 0;
+    --commited-mote-color: 255, 128, 0;
+    --stunt-color: 128, 128, 128;
+    --dice-color: 0, 0, 0;
+    --dark-dice-color: 255, 255, 255;
 }
 
 .rounded-box {
@@ -2778,6 +2867,29 @@ body.sheet-darkmode {
     background: linear-gradient(var(--dark-surface1), rgb(var(--dark-mote-color)));
 }
 
+.mote-color-border-solid {
+    border: 1px solid rgb(var(--mote-color));
+}
+
+.charsheet input.mote-hint-one {
+    background: radial-gradient(circle, gold 0.3em ,transparent 50%);
+    text-shadow: black 0 0 2px;
+}
+
+.sheet-darkmode .charsheet input.mote-hint-one,
+.sheet-darkmode .charsheet input.mote-hint-two {
+    text-shadow: white 0 0 2px;
+}
+
+.mote-color-border-dashed {
+    border: 1px dashed rgb(var(--mote-color));
+}
+
+.charsheet input.mote-hint-two {
+    background: radial-gradient(circle, gold 20%, transparent, gold ,transparent 70%);
+    text-shadow: black 0 0 2px;
+}
+
 .ui-dialog .charsheet .ressource-line input[type="number"] {
     width: 2em;
 }
@@ -2805,6 +2917,10 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-spell-sheet .cost-section p input {
     flex-shrink: 1;
     min-width: 1em;
+}
+
+.cost-section p {
+    margin: 0;
 }
 
 /* -- desc textarea -- */
@@ -2855,12 +2971,16 @@ body.sheet-darkmode {
     resize: vertical;
     height: 3em;
     overflow: hidden;
-    background: var(--dark-surface1);
+    background: transparent;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .rolls-textarea {
+    width: 96.8%;
 }
 
 .charsheet .sheet-rolls-toggle-desc-val[value="1"] ~ .rolls-textarea,
 .charsheet .sheet-combat-toggle-desc-val[value="1"] ~ .combat-textarea {
-    display: block;
+    display: flex;
 }
 
 .charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .woundpenalty,
@@ -3066,10 +3186,14 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-rolls-sheet .roll-section select,
 .charsheet .combat-attacks .attack-section select {
-    width: 7.1em;
     text-align: center;
     height: 25px;
     border-radius: 13px;
+}
+
+.charsheet .sheet-tab-rolls-std-sheet .roll-section select,
+.charsheet .combat-attacks .attack-section select {
+    width: 7.1em;
 }
 
 .charsheet .combat-attacks .attack-section input[type="text"] {
@@ -3133,8 +3257,8 @@ body.sheet-darkmode {
     background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
 }
 
-.charsheet .sheet-tab-rolls-sheet .roll-section .inner-section > .flex-wrap > .flex.grow-normal,
-.charsheet .sheet-tab-rolls-sheet .roll-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
+.charsheet .sheet-tab-rolls-std-sheet .roll-section .inner-section > .flex-wrap > .flex.grow-normal,
+.charsheet .sheet-tab-rolls-std-sheet .roll-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),
@@ -3511,6 +3635,11 @@ body.sheet-darkmode {
     flex-grow: 1;
 }
 
+.charsheet .sheet-rolls {
+    display: flex;
+    flex-flow: column;
+}
+
 .charsheet .sheet-rolls .roll-section.show-on-edit .inner-section.flex-wrap {
     flex-grow: 1;
     flex-flow: wrap;
@@ -3523,9 +3652,16 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-tab-rolls-sheet .roll-section .inner-section {
-    width: calc(100% - 2em);
     display: flex;
     flex-flow: column;
+}
+
+.charsheet .sheet-tab-rolls-std-sheet .roll-section .inner-section {
+    width: calc(100% - 2em);
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
+    width: 100%;
 }
 
 .charsheet .left-column-rolls .sheet-rolls .first-line .stealth-btn {
@@ -3537,7 +3673,8 @@ body.sheet-darkmode {
     justify-content: space-between;
 }
 
-.charsheet input.sheet-tab-rolls-sheet:checked ~ div.sheet-tab-rolls-sheet {
+.charsheet input.sheet-tab-rolls-std-sheet:checked ~ div.sheet-tab-rolls-std-sheet,
+.charsheet input.sheet-tab-rolls-widget-sheet:checked ~ div.sheet-tab-rolls-widgets-sheet {
     display: flex;
 }
 
@@ -3592,6 +3729,12 @@ body.sheet-darkmode {
     margin-left: 2px;
 }
 
+.charsheet .sheet-tab-rolls-widgets-sheet .left-column-rolls .sheet-rolls-macro-options {
+    border-top: 1px solid rgb(140, 0, 255);
+    border-left: 1px solid rgb(140, 0, 255);
+    background-color: rgba(140, 0, 255,0.25);
+}
+
 .charsheet .right-column-notepads {
     display: inline-flex;
     width: 31%;
@@ -3614,6 +3757,126 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 .sheet-rolltemplate-exalted3e_cast.sheet-rolltemplate-darkmode,
 .sheet-rolltemplate-exalted3e_combatcast.sheet-rolltemplate-darkmode {
     color: black;
+}
+
+/* Roll Widget Area */
+
+.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem {
+    width: 22.9em;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
+    width: 2em;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
+    width: 2em;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .cost-section .mote-total {
+    color: rgb(var(--mote-color));
+    align-items: center;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total {
+    border: 3px outset rgb(var(--mote-color));
+    font-size: large;
+    border-radius: 10px;
+    color: rgb(var(--mote-color));
+    background-color: rgba(128, 128, 128, 0.65);
+    text-shadow: black 0 0 2px;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-stunt-dices {
+    background-color: rgba(var(--stunt-color), 0.65);
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-wp-toggle {
+    background-color: rgba(var(--willpower-color), 0.1);
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .dice-area,
+.charsheet .sheet-tab-rolls-widgets-sheet .dice-total,
+.charsheet .sheet-tab-rolls-widgets-sheet .success-area,
+.charsheet .sheet-tab-rolls-widgets-sheet .success-total {
+    border-radius: 8px;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .dice-area {
+    background-color: rgba(var(--dice-color), 0.35);
+}
+
+.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .dice-area {
+    background-color: rgba(var(--dark-dice-color), 0.80);
+}
+
+/* .charsheet .sheet-tab-rolls-widgets-sheet .success-area {
+    background-color: rgba(var(--success-color), 0.00);
+} */
+
+.charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting {
+    width: 5.8em;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0)
+and (min-resolution:.001dpcm) {
+    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-stunt-dices:has(option[value="2"]:checked),
+    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-wp-toggle:has(option[value="1"]:checked),
+    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
+        border: 2px solid;
+    }
+
+    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
+        border-color: rgb(var(--mote-color));
+    }
+}
+
+@-moz-document url-prefix() {
+    .charsheet .sheet-tab-rolls-widgets-sheet .stunt-dices-check[value="2"] ~ select.sheet-rolls-stunt-dices,
+    .charsheet .sheet-tab-rolls-widgets-sheet .willpower-toggle-check[value="1"] ~ select.sheet-rolls-wp-toggle,
+    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ select.sheet-rolls-pool-starting {
+        border: 2px solid;
+    }
+
+    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ select.sheet-rolls-pool-starting {
+        border-color: rgb(var(--mote-color));
+    }
+}
+
+.dice-area-details,
+.success-area-details {
+    border: 1px solid;
+    border-radius: 10px;
+}
+
+.charsheet .dice-area .flex.dice-area-total,
+.charsheet .success-area .flex.success-area-total {
+    flex-basis: 3.7em;
+    align-items: center;
+    padding-left: 0.4em;
+}
+
+.charsheet .flex.dice-area .flex.flex-wrap.dice-area-details {
+    flex-shrink: 1;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet input[type="number"] {
+    width: 2em;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-ycharm-dices input[type="number"],
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-ncharm-dices input[type="number"] {
+    width: 1em;
 }
 
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
