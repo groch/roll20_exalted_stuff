@@ -233,13 +233,13 @@ tier 2: couleurs
     width: 27px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .rollpen-box p,
-.charsheet .sheet-tab-rolls-widgets-sheet .rollpenalty-input[title] {
+.charsheet .sheet-tab-rolls-sheet .rollpen-box p,
+.charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title] {
     background-color: rgb(255, 128, 128);
 }
 
-.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .rollpen-box p,
-.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .rollpenalty-input[title] {
+.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpen-box p,
+.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title] {
     background-color: darkred;
 }
 
