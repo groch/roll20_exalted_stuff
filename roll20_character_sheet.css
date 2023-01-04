@@ -3776,6 +3776,8 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     width: 22.7em;
     border: 1px solid;
     border-radius: 5px;
+    resize: horizontal;
+    overflow: hidden;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
