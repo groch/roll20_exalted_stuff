@@ -1582,7 +1582,7 @@
                 moteSuccs = 0;
                 setAttrs({[attr_name + 'reprolls-ycharm-successes']: 0});
             }
-            const mote = moteOffset + moteDices + moteSuccs * 2;
+            let mote = moteOffset + moteDices + moteSuccs * 2;
             if (mote < 0) mote = 0;
             if (mote) finalMacro += `:peri=${starting};${mote}`;
             if (will) finalMacro += `:will;${will}`;
@@ -1591,10 +1591,16 @@
         }));
     }
 
-    const rollWidgetSectionsToBind =  ['attr', 'abi', 'stunt-dices', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
+    on('change:repeating_rolls-widget:reprolls-ncharm-successes', e => {
+        if (e.sourceType !== "player") return;
+        if (debug === 2) TAS.debug(`changeNCharmSucc::changeNCharmSucc e=${JSON.stringify(e)}`);
+        if (Number(e.newValue) < 0) setAttrs({[`repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_reprolls-ncharm-successes`]: 0});
+    });
+
+    const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
     function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability]${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
-    on(`change:repeating_rolls-widget`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-')));
+    rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
 
     on('clicked:repeating_rolls-widget:roll-widget-cast clicked:repeating_rolls-widget:roll-widget-gmcast', setDebugWrapper(function castRoll(e){
         if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
@@ -17118,7 +17124,7 @@
                                                     <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
                                                 </div>
                                                 <div class="inline-flex basis-33 grow-normal">
-                                                    <input type="number" name="attr_reprolls-ncharm-successes" class="sheet-rolls-ncharm-successes grow-normal" title="Non Charm successes for the roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0">
+                                                    <input type="number" name="attr_reprolls-ncharm-successes" class="sheet-rolls-ncharm-successes grow-normal" title="Non Charm successes for the roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0" min="0">
                                                 </div>
                                             </div>
                                             <div class="flex success-area-total">
