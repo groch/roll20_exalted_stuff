@@ -1568,10 +1568,21 @@
         if (debug === 2) TAS.debug('updateWidgetRollForCost:: NORMAL TRIGGER COST EDIT');
         getAttrs(widgetCostAttrs.map(attr => attr_name + attr), setDebugWrapper(val => {
             if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
-            const mote = Number(val[attr_name + 'rep-cost-mote-offset']) + Number(val[attr_name + 'reprolls-ycharm-dices']) + Number(val[attr_name + 'reprolls-ycharm-successes']) * 2,
+            const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
                 will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
                 starting = Number(val[attr_name + 'reprolls-pool-starting']);
-            let finalMacro = '=COST:@{character_id}';
+            let moteDices = Number(val[attr_name + 'reprolls-ycharm-dices']),
+                moteSuccs = Number(val[attr_name + 'reprolls-ycharm-successes']),
+                finalMacro = '=COST:@{character_id}';
+            if (moteDices < 0) {
+                moteDices = 0;
+                setAttrs({[attr_name + 'reprolls-ycharm-dices']: 0});
+            }
+            if (moteSuccs < 0) {
+                moteSuccs = 0;
+                setAttrs({[attr_name + 'reprolls-ycharm-successes']: 0});
+            }
+            const mote = moteOffset + moteDices + moteSuccs * 2;
             if (mote < 0) mote = 0;
             if (mote) finalMacro += `:peri=${starting};${mote}`;
             if (will) finalMacro += `:will;${will}`;
