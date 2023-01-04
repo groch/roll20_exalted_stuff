@@ -3293,6 +3293,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-exroll-div {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding-bottom: 1em;
     border-bottom: gold 3px solid;
@@ -3720,7 +3721,8 @@ body.sheet-darkmode {
 }
 
 .charsheet .left-column-rolls {
-    display: inline-block;
+    display: flex;
+    flex-flow: column;
     width: 69%;
 }
 
@@ -3739,7 +3741,7 @@ body.sheet-darkmode {
 }
 
 .charsheet .right-column-notepads {
-    display: inline-flex;
+    display: flex;
     width: 31%;
     margin-left: 1em;
 }
@@ -3912,6 +3914,14 @@ and (min-resolution:.001dpcm) {
 
 @media only screen and (max-width: 854px) {
 
+    .charsheet .rolls-area {
+        flex-flow: column;
+    }
+
+    .charsheet .left-column-rolls,
+    .charsheet .right-column-notepads {
+        width: unset;
+    }
 
     /* NIGHT MODE FOR MOBILE */
 
