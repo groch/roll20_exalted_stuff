@@ -3908,6 +3908,35 @@ and (min-resolution:.001dpcm) {
     border: 5px solid rgb(var(--willpower-color));
 }
 
+.charsheet .sheet-tab-rolls-widgets-sheet .dice-area-total .separator-box-mode {
+    position: absolute;
+    top: 2em;
+    right: 0.1em;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-separator {
+    display: none;
+    background-color: darkred;
+    justify-content: center;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-separator .sheet-rolls-name {
+    width: 10em;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem:has(.rolls-separator-check[value="1"]) {
+    width: 100%;
+    resize: none;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls {
+    display: none;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls-separator {
+    display: flex;
+}
+
 /* .sheet-rolls-wp-toggle */
 
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
