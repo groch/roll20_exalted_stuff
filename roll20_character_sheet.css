@@ -3642,6 +3642,7 @@ body.sheet-darkmode {
 .charsheet .sheet-rolls {
     display: flex;
     flex-flow: column;
+    flex-grow: 1;
 }
 
 .charsheet .sheet-rolls .roll-section.show-on-edit .inner-section.flex-wrap {
@@ -3773,15 +3774,16 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem {
-    width: 22.7em;
+    display: flex;
     border: 1px solid;
     border-radius: 5px;
-    resize: horizontal;
     overflow: hidden;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
-    width: 2em;
+.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls {
+    width: 22.7em;
+    resize: horizontal;
+    overflow: hidden;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
@@ -3918,17 +3920,13 @@ and (min-resolution:.001dpcm) {
     display: none;
     background-color: darkred;
     justify-content: center;
+    width: 420em;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-separator .sheet-rolls-name {
-    width: 10em;
     border: none;
     text-align: center;
-}
-
-.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem:has(.rolls-separator-check[value="1"]) {
-    width: 100%;
-    resize: none;
+    flex-grow: 1;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls {
@@ -3939,10 +3937,7 @@ and (min-resolution:.001dpcm) {
     display: flex;
 }
 
-/* .sheet-rolls-wp-toggle */
-
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
-
 /* --- MOBILE SHEET PAYSAGE --- */
 
 @media only screen and (max-width: 854px) {
