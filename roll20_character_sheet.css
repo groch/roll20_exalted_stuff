@@ -3743,7 +3743,7 @@ body.sheet-darkmode {
 
 .charsheet .right-column-notepads {
     display: flex;
-    width: 31%;
+    flex-grow: 1;
     margin-left: 1em;
 }
 
@@ -3781,9 +3781,10 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls {
-    width: 22.7em;
+    width: 22.5em;
     resize: horizontal;
     overflow: hidden;
+    min-width: 270px;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
@@ -3949,6 +3950,13 @@ and (min-resolution:.001dpcm) {
     .charsheet .left-column-rolls,
     .charsheet .right-column-notepads {
         width: unset;
+    }
+
+    .charsheet .right-column-notepads {
+        margin-top: 1em;
+        border-top: 1em solid gold;
+        padding-top: 1em;
+        border-radius: 10px;
     }
 
     /* NIGHT MODE FOR MOBILE */
