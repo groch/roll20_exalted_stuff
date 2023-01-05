@@ -1612,14 +1612,16 @@
                 `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
                 `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
             if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
-            startRoll(queryRoll, results => finishRoll(results.rollId));
-            const resetObj = {
-                [`${attr_name}reprolls-stunt-dices`]: 0,
-                [`${attr_name}reprolls-willpower-toggle`]: 0
-            };
-            setAttrs(resetObj);
-            updateWidgetRollForCost(e);
-            updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+            startRoll(queryRoll, results => {
+                const resetObj = {
+                    [`${attr_name}reprolls-stunt-dices`]: 0,
+                    [`${attr_name}reprolls-willpower-toggle`]: 0
+                };
+                setAttrs(resetObj);
+                updateWidgetRollForCost(e);
+                updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+                finishRoll(results.rollId);
+            });
         }));
     }));
 
