@@ -218,7 +218,7 @@ tier 2: couleurs
     cursor: pointer;
 }
 
-.charsheet input[title]:not([readonly]):not([disabled]):not([type="radio"]),
+.charsheet input[title]:not([readonly]):not([disabled]):not([type="radio"]):not([type="checkbox"]),
 .charsheet .woundpenalty-add-input[title],
 .charsheet .rollpenalty-input[title] {
     cursor: text;
