@@ -2930,13 +2930,13 @@ body.sheet-darkmode {
 }
 
 .charsheet input.mote-hint-one {
-    background: radial-gradient(circle, gold 0.3em ,transparent 50%);
+    background: radial-gradient(circle, #ffd70080 0.4em ,#00000054,transparent 60%);
     text-shadow: black 0 0 2px;
 }
 
 .sheet-darkmode .charsheet input.mote-hint-one,
 .sheet-darkmode .charsheet input.mote-hint-two {
-    text-shadow: white 0 0 2px;
+    text-shadow: black 0 0 2px;
 }
 
 .mote-color-border-dashed {
@@ -2944,7 +2944,7 @@ body.sheet-darkmode {
 }
 
 .charsheet input.mote-hint-two {
-    background: radial-gradient(circle, gold 20%, transparent, gold ,transparent 70%);
+    background: radial-gradient(circle, #ffd700ba 20%, transparent, #ffd700ba ,transparent 70%);
     text-shadow: black 0 0 2px;
 }
 
@@ -3128,7 +3128,7 @@ body.sheet-darkmode {
     }
 }
 
-@media only screen and (max-width: 399px) {
+@media only screen and (max-width: 401px) {
     .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
         justify-content: flex-end;
     }
@@ -3179,12 +3179,30 @@ body.sheet-darkmode {
     min-width: 0.5em;
 }
 
+.combat-attacks .attack-section.decisive-section .dmg-section > div.flex.grow-normal:first-child {
+    min-width: 30.8em;
+}
+
+@media only screen and (max-width: 580px) {
+    .combat-attacks .attack-section.decisive-section .dmg-section > div.flex.grow-normal:first-child {
+        min-width: 20em;
+    }
+}
+
 .combat-attacks .attack-section .dmg-section {
     display: none;
 }
 
 .ui-dialog .combat-attacks .attack-section .dmg-section {
     display: inline-flex;
+}
+
+@media only screen and (max-width: 402px) {
+    .charsheet .rolls-area .sheet-rolls-div .inner-section > div.flex.grow-normal,
+    .charsheet .combat-attacks .atk-section.flex-wrap > div.flex.grow-normal,
+    .charsheet .combat-attacks .dmg-section.flex-wrap > div.flex.grow-normal {
+        flex-wrap: wrap;
+    }
 }
 
 /* -- COMBAT 1ST LINE -- */
@@ -3870,12 +3888,12 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
-    color: red;
-    font-weight: bolder;
+    color: black;
+    background-color: red;
 }
 
 .sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
-    color: rgb(255, 84, 0);
+    background-color: rgb(255 129 0 / 86%);
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-stunt-dices {
@@ -4246,5 +4264,11 @@ and (min-resolution:.001dpcm) {
 @media only screen and (max-width: 446px) {
     .charsheet .sheet-col.stat-col .sheet-table-row {
         flex-grow: 0;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .sheet-combat-init .second-line {
+        flex-wrap: wrap;
     }
 }

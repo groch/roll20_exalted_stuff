@@ -15029,142 +15029,146 @@
                                     </div>
                                     <div class="inner-section">
                                         <div class="flex grow-normal">
-                                            (<select name="attr_reprolls-attr" title="Attribute for the Roll">
-                                                <option value="@{strength}">Strength</option>
-                                                <option value="@{dexterity}">Dexterity</option>
-                                                <option value="@{stamina}">Stamina</option>
-                                                <option value="@{charisma}">Charisma</option>
-                                                <option value="@{manipulation}">Manipulation</option>
-                                                <option value="@{appearance}">Appearance</option>
-                                                <option value="@{perception}">Perception</option>
-                                                <option value="@{intelligence}">Intelligence</option>
-                                                <option value="@{wits}">Wits</option>
-                                                <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                                <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                                <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                                <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
-                                                <option value="?{Custom Attribute}">Simple Prompt</option>
-                                                <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                            </select>+
-                                            <select name="attr_reprolls-abi" title="Ability for the Roll">
-                                                <option value="@{archery}">Archery</option>
-                                                <option value="@{athletics}">Athletics</option>
-                                                <option value="@{awareness}">Awareness</option>
-                                                <option value="@{brawl}">Brawl</option>
-                                                <option value="@{bureaucracy}">Bureaucracy</option>
-                                                <option value="@{dodge}">Dodge</option>
-                                                <option value="@{integrity}">Integrity</option>
-                                                <option value="@{investigation}">Investigation</option>
-                                                <option value="@{larceny}">Larceny</option>
-                                                <option value="@{linguistics}">Linguistics</option>
-                                                <option value="@{lore}">Lore</option>
-                                                <option value="@{medicine}">Medicine</option>
-                                                <option value="@{melee}">Melee</option>
-                                                <option value="@{occult}">Occult</option>
-                                                <option value="@{performance}">Performance</option>
-                                                <option value="@{presence}">Presence</option>
-                                                <option value="@{resistance}">Resistance</option>
-                                                <option value="@{ride}">Ride</option>
-                                                <option value="@{sail}">Sail</option>
-                                                <option value="@{socialize}">Socialize</option>
-                                                <option value="@{stealth}">Stealth</option>
-                                                <option value="@{survival}">Survival</option>
-                                                <option value="@{thrown}">Thrown</option>
-                                                <option value="@{war}">War</option>
-                                                <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
-                                                <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
-                                                <option value="?{Ability|
-                                                    Archery (@{archery}),@{archery}|
-                                                    Athletics (@{athletics}),@{athletics}|
-                                                    Awareness (@{awareness}),@{awareness}|
-                                                    Brawl (@{brawl}),@{brawl}|
-                                                    Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                                    Craft (...),?{Craft&amp;#124;
-                                                        Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                                        Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                                        Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                                        First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                                        Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                                        Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                                        Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                                        Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                                        Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                                        Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                    Dodge (@{dodge}),@{dodge}|
-                                                    Integrity (@{integrity}),@{integrity}|
-                                                    Investigation (@{investigation}),@{investigation}|
-                                                    Larceny (@{larceny}),@{larceny}|
-                                                    Linguistics (@{linguistics}),@{linguistics}|
-                                                    Lore (@{lore}),@{lore}|
-                                                    Martial Arts (...),?{Martial Arts&amp;#124;
-                                                        Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                                        Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                                        Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                                        White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                                        Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                                        Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                                        Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                                        Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                                        Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                                        Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                                        Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                                        Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                    Medicine (@{medicine}),@{medicine}|
-                                                    Melee (@{melee}),@{melee}|
-                                                    Occult (@{occult}),@{occult}|
-                                                    Performance (@{performance}),@{performance}|
-                                                    Presence (@{presence}),@{presence}|
-                                                    Resistance (@{resistance}),@{resistance}|
-                                                    Ride (@{ride}),@{ride}|
-                                                    Sail (@{sail}),@{sail}|
-                                                    Socialize (@{socialize}),@{socialize}|
-                                                    Stealth (@{stealth}),@{stealth}|
-                                                    Survival (@{survival}),@{survival}|
-                                                    Thrown (@{thrown}),@{thrown}|
-                                                    War (@{war}),@{war}|
-                                                    Thrown (@{thrown}),@{thrown}|
-                                                    Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                                }">Full Ability Prompt</option>
-                                                <option value="?{Custom Ability}">Simple Prompt</option>
-                                                <option value="@{strength}">Strength</option>
-                                                <option value="@{dexterity}">Dexterity</option>
-                                                <option value="@{stamina}">Stamina</option>
-                                                <option value="@{charisma}">Charisma</option>
-                                                <option value="@{manipulation}">Manipulation</option>
-                                                <option value="@{appearance}">Appearance</option>
-                                                <option value="@{perception}">Perception</option>
-                                                <option value="@{intelligence}">Intelligence</option>
-                                                <option value="@{wits}">Wits</option>
-                                                <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                                <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                                <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                                <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
-                                                <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                            </select>
-                                            <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                            <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
-                                            <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                            <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                            <div class="flex grow-normal">
+                                                (<select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal">
+                                                    <option value="@{strength}">Strength</option>
+                                                    <option value="@{dexterity}">Dexterity</option>
+                                                    <option value="@{stamina}">Stamina</option>
+                                                    <option value="@{charisma}">Charisma</option>
+                                                    <option value="@{manipulation}">Manipulation</option>
+                                                    <option value="@{appearance}">Appearance</option>
+                                                    <option value="@{perception}">Perception</option>
+                                                    <option value="@{intelligence}">Intelligence</option>
+                                                    <option value="@{wits}">Wits</option>
+                                                    <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                    <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                    <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                    <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
+                                                    <option value="?{Custom Attribute}">Simple Prompt</option>
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>+
+                                                <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal">
+                                                    <option value="@{archery}">Archery</option>
+                                                    <option value="@{athletics}">Athletics</option>
+                                                    <option value="@{awareness}">Awareness</option>
+                                                    <option value="@{brawl}">Brawl</option>
+                                                    <option value="@{bureaucracy}">Bureaucracy</option>
+                                                    <option value="@{dodge}">Dodge</option>
+                                                    <option value="@{integrity}">Integrity</option>
+                                                    <option value="@{investigation}">Investigation</option>
+                                                    <option value="@{larceny}">Larceny</option>
+                                                    <option value="@{linguistics}">Linguistics</option>
+                                                    <option value="@{lore}">Lore</option>
+                                                    <option value="@{medicine}">Medicine</option>
+                                                    <option value="@{melee}">Melee</option>
+                                                    <option value="@{occult}">Occult</option>
+                                                    <option value="@{performance}">Performance</option>
+                                                    <option value="@{presence}">Presence</option>
+                                                    <option value="@{resistance}">Resistance</option>
+                                                    <option value="@{ride}">Ride</option>
+                                                    <option value="@{sail}">Sail</option>
+                                                    <option value="@{socialize}">Socialize</option>
+                                                    <option value="@{stealth}">Stealth</option>
+                                                    <option value="@{survival}">Survival</option>
+                                                    <option value="@{thrown}">Thrown</option>
+                                                    <option value="@{war}">War</option>
+                                                    <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
+                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
+                                                    <option value="?{Ability|
+                                                        Archery (@{archery}),@{archery}|
+                                                        Athletics (@{athletics}),@{athletics}|
+                                                        Awareness (@{awareness}),@{awareness}|
+                                                        Brawl (@{brawl}),@{brawl}|
+                                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                                        Craft (...),?{Craft&amp;#124;
+                                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                        Dodge (@{dodge}),@{dodge}|
+                                                        Integrity (@{integrity}),@{integrity}|
+                                                        Investigation (@{investigation}),@{investigation}|
+                                                        Larceny (@{larceny}),@{larceny}|
+                                                        Linguistics (@{linguistics}),@{linguistics}|
+                                                        Lore (@{lore}),@{lore}|
+                                                        Martial Arts (...),?{Martial Arts&amp;#124;
+                                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                        Medicine (@{medicine}),@{medicine}|
+                                                        Melee (@{melee}),@{melee}|
+                                                        Occult (@{occult}),@{occult}|
+                                                        Performance (@{performance}),@{performance}|
+                                                        Presence (@{presence}),@{presence}|
+                                                        Resistance (@{resistance}),@{resistance}|
+                                                        Ride (@{ride}),@{ride}|
+                                                        Sail (@{sail}),@{sail}|
+                                                        Socialize (@{socialize}),@{socialize}|
+                                                        Stealth (@{stealth}),@{stealth}|
+                                                        Survival (@{survival}),@{survival}|
+                                                        Thrown (@{thrown}),@{thrown}|
+                                                        War (@{war}),@{war}|
+                                                        Thrown (@{thrown}),@{thrown}|
+                                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                                    }">Full Ability Prompt</option>
+                                                    <option value="?{Custom Ability}">Simple Prompt</option>
+                                                    <option value="@{strength}">Strength</option>
+                                                    <option value="@{dexterity}">Dexterity</option>
+                                                    <option value="@{stamina}">Stamina</option>
+                                                    <option value="@{charisma}">Charisma</option>
+                                                    <option value="@{manipulation}">Manipulation</option>
+                                                    <option value="@{appearance}">Appearance</option>
+                                                    <option value="@{perception}">Perception</option>
+                                                    <option value="@{intelligence}">Intelligence</option>
+                                                    <option value="@{wits}">Wits</option>
+                                                    <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                    <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                    <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                    <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex grow-max">
+                                                <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
+                                                <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
+                                                <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
+                                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                            </div>
                                         </div>
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
@@ -22279,150 +22283,155 @@
                             <input type="hidden" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc-val" value="0">
                             <textarea name="attr_repcombat-desc" class="combat-textarea"></textarea>
                             <div class="init-section second-line grow-normal flex">
-                                (<select name="attr_repinit-attr" title="Attribute for the Roll">
-                                    <option value="@{strength}">Strength</option>
-                                    <option value="@{dexterity}">Dexterity</option>
-                                    <option value="@{stamina}">Stamina</option>
-                                    <option value="@{charisma}">Charisma</option>
-                                    <option value="@{manipulation}">Manipulation</option>
-                                    <option value="@{appearance}">Appearance</option>
-                                    <option value="@{perception}">Perception</option>
-                                    <option value="@{intelligence}">Intelligence</option>
-                                    <option value="@{wits}" selected="selected">Wits</option>
-                                    <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                    <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                    <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                    <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
-                                    <option value="?{Custom Attribute}">Simple Prompt</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                </select>+
-                                <select name="attr_repinit-abi" title="Ability for the Roll">
-                                    <option value="@{archery}">Archery</option>
-                                    <option value="@{athletics}">Athletics</option>
-                                    <option value="@{awareness}" selected="selected">Awareness</option>
-                                    <option value="@{brawl}">Brawl</option>
-                                    <option value="@{bureaucracy}">Bureaucracy</option>
-                                    <option value="@{dodge}">Dodge</option>
-                                    <option value="@{integrity}">Integrity</option>
-                                    <option value="@{investigation}">Investigation</option>
-                                    <option value="@{larceny}">Larceny</option>
-                                    <option value="@{linguistics}">Linguistics</option>
-                                    <option value="@{lore}">Lore</option>
-                                    <option value="@{medicine}">Medicine</option>
-                                    <option value="@{melee}">Melee</option>
-                                    <option value="@{occult}">Occult</option>
-                                    <option value="@{performance}">Performance</option>
-                                    <option value="@{presence}">Presence</option>
-                                    <option value="@{resistance}">Resistance</option>
-                                    <option value="@{ride}">Ride</option>
-                                    <option value="@{sail}">Sail</option>
-                                    <option value="@{socialize}">Socialize</option>
-                                    <option value="@{stealth}">Stealth</option>
-                                    <option value="@{survival}">Survival</option>
-                                    <option value="@{thrown}">Thrown</option>
-                                    <option value="@{war}">War</option>
-                                    <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
-                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
-                                    <option value="?{Ability|
-                                        Archery (@{archery}),@{archery}|
-                                        Athletics (@{athletics}),@{athletics}|
-                                        Awareness (@{awareness}),@{awareness}|
-                                        Brawl (@{brawl}),@{brawl}|
-                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                        Craft (...),?{Craft&amp;#124;
-                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                        Dodge (@{dodge}),@{dodge}|
-                                        Integrity (@{integrity}),@{integrity}|
-                                        Investigation (@{investigation}),@{investigation}|
-                                        Larceny (@{larceny}),@{larceny}|
-                                        Linguistics (@{linguistics}),@{linguistics}|
-                                        Lore (@{lore}),@{lore}|
-                                        Martial Arts (...),?{Martial Arts&amp;#124;
-                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                        Medicine (@{medicine}),@{medicine}|
-                                        Melee (@{melee}),@{melee}|
-                                        Occult (@{occult}),@{occult}|
-                                        Performance (@{performance}),@{performance}|
-                                        Presence (@{presence}),@{presence}|
-                                        Resistance (@{resistance}),@{resistance}|
-                                        Ride (@{ride}),@{ride}|
-                                        Sail (@{sail}),@{sail}|
-                                        Socialize (@{socialize}),@{socialize}|
-                                        Stealth (@{stealth}),@{stealth}|
-                                        Survival (@{survival}),@{survival}|
-                                        Thrown (@{thrown}),@{thrown}|
-                                        War (@{war}),@{war}|
-                                        Thrown (@{thrown}),@{thrown}|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    }">Full Ability Prompt</option>
-                                    <option value="?{Custom Ability}">Simple Prompt</option>
-                                    <option value="@{strength}">Strength</option>
-                                    <option value="@{dexterity}">Dexterity</option>
-                                    <option value="@{stamina}">Stamina</option>
-                                    <option value="@{charisma}">Charisma</option>
-                                    <option value="@{manipulation}">Manipulation</option>
-                                    <option value="@{appearance}">Appearance</option>
-                                    <option value="@{perception}">Perception</option>
-                                    <option value="@{intelligence}">Intelligence</option>
-                                    <option value="@{wits}">Wits</option>
-                                    <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                    <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                    <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                    <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                </select>
-                                <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">-
-                                <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                <div class="flex grow-normal">
+                                    (<select name="attr_repinit-attr" title="Attribute for the Roll" class="grow-normal">
+                                        <option value="@{strength}">Strength</option>
+                                        <option value="@{dexterity}">Dexterity</option>
+                                        <option value="@{stamina}">Stamina</option>
+                                        <option value="@{charisma}">Charisma</option>
+                                        <option value="@{manipulation}">Manipulation</option>
+                                        <option value="@{appearance}">Appearance</option>
+                                        <option value="@{perception}">Perception</option>
+                                        <option value="@{intelligence}">Intelligence</option>
+                                        <option value="@{wits}" selected="selected">Wits</option>
+                                        <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                        <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                        <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                        <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
+                                        <option value="?{Custom Attribute}">Simple Prompt</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>+
+                                    <select name="attr_repinit-abi" title="Ability for the Roll" class="grow-normal">
+                                        <option value="@{archery}">Archery</option>
+                                        <option value="@{athletics}">Athletics</option>
+                                        <option value="@{awareness}" selected="selected">Awareness</option>
+                                        <option value="@{brawl}">Brawl</option>
+                                        <option value="@{bureaucracy}">Bureaucracy</option>
+                                        <option value="@{dodge}">Dodge</option>
+                                        <option value="@{integrity}">Integrity</option>
+                                        <option value="@{investigation}">Investigation</option>
+                                        <option value="@{larceny}">Larceny</option>
+                                        <option value="@{linguistics}">Linguistics</option>
+                                        <option value="@{lore}">Lore</option>
+                                        <option value="@{medicine}">Medicine</option>
+                                        <option value="@{melee}">Melee</option>
+                                        <option value="@{occult}">Occult</option>
+                                        <option value="@{performance}">Performance</option>
+                                        <option value="@{presence}">Presence</option>
+                                        <option value="@{resistance}">Resistance</option>
+                                        <option value="@{ride}">Ride</option>
+                                        <option value="@{sail}">Sail</option>
+                                        <option value="@{socialize}">Socialize</option>
+                                        <option value="@{stealth}">Stealth</option>
+                                        <option value="@{survival}">Survival</option>
+                                        <option value="@{thrown}">Thrown</option>
+                                        <option value="@{war}">War</option>
+                                        <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
+                                        <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
+                                        <option value="?{Ability|
+                                            Archery (@{archery}),@{archery}|
+                                            Athletics (@{athletics}),@{athletics}|
+                                            Awareness (@{awareness}),@{awareness}|
+                                            Brawl (@{brawl}),@{brawl}|
+                                            Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                            Craft (...),?{Craft&amp;#124;
+                                                Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                                Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                                Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                                First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                                Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                                Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                                Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                                Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                                Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                            Dodge (@{dodge}),@{dodge}|
+                                            Integrity (@{integrity}),@{integrity}|
+                                            Investigation (@{investigation}),@{investigation}|
+                                            Larceny (@{larceny}),@{larceny}|
+                                            Linguistics (@{linguistics}),@{linguistics}|
+                                            Lore (@{lore}),@{lore}|
+                                            Martial Arts (...),?{Martial Arts&amp;#124;
+                                                Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                                Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                                Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                            Medicine (@{medicine}),@{medicine}|
+                                            Melee (@{melee}),@{melee}|
+                                            Occult (@{occult}),@{occult}|
+                                            Performance (@{performance}),@{performance}|
+                                            Presence (@{presence}),@{presence}|
+                                            Resistance (@{resistance}),@{resistance}|
+                                            Ride (@{ride}),@{ride}|
+                                            Sail (@{sail}),@{sail}|
+                                            Socialize (@{socialize}),@{socialize}|
+                                            Stealth (@{stealth}),@{stealth}|
+                                            Survival (@{survival}),@{survival}|
+                                            Thrown (@{thrown}),@{thrown}|
+                                            War (@{war}),@{war}|
+                                            Thrown (@{thrown}),@{thrown}|
+                                            Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                        }">Full Ability Prompt</option>
+                                        <option value="?{Custom Ability}">Simple Prompt</option>
+                                        <option value="@{strength}">Strength</option>
+                                        <option value="@{dexterity}">Dexterity</option>
+                                        <option value="@{stamina}">Stamina</option>
+                                        <option value="@{charisma}">Charisma</option>
+                                        <option value="@{manipulation}">Manipulation</option>
+                                        <option value="@{appearance}">Appearance</option>
+                                        <option value="@{perception}">Perception</option>
+                                        <option value="@{intelligence}">Intelligence</option>
+                                        <option value="@{wits}">Wits</option>
+                                        <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                        <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                        <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                        <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
+                                <div class="flex grow-max">
+                                    <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
+                                    <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]">-
+                                    <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
+                                    <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                </div>
                             </div>
                             <div class="init-section third-line grow-normal flex">
-                                <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
-
-                                <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="=COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">
-                                <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
+                                <div class="flex grow-max">
+                                    <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
+                                    <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="3[Base Init]+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                    <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                    <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="=COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">
+                                    <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
+                                </div>
                                 <div class="sheet-grouped-buttons" title="Cast INIT Rolls (Remember to select you token to set INIT correctly)">
                                     <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_init-cast" value="!exr @{repinit-final-macro-replaced} -turn @{rep-cost-macro}">Cast</button>
                                     <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_init-gmcast" value="!exr @{repinit-final-macro-replaced} -turn -gm @{rep-cost-macro}">to GM</button>
@@ -22482,145 +22491,149 @@
                             <div class="inner-section">
                                 <div class="atk-section flex-wrap">
                                     <div class="flex grow-normal">
-                                        <p class="head" title="Trying to Hit an opponent with mostly narrative damage but build momentum (Initiative)">ATK</p>
-                                        (<select name="attr_repcombat-watk-attr" title="Attribute for the Roll">
-                                            <option value="@{strength}">Strength</option>
-                                            <option value="@{dexterity}" selected="selected">Dexterity</option>
-                                            <option value="@{stamina}">Stamina</option>
-                                            <option value="@{charisma}">Charisma</option>
-                                            <option value="@{manipulation}">Manipulation</option>
-                                            <option value="@{appearance}">Appearance</option>
-                                            <option value="@{perception}">Perception</option>
-                                            <option value="@{intelligence}">Intelligence</option>
-                                            <option value="@{wits}">Wits</option>
-                                            <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                            <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                            <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                            <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
-                                            <option value="?{Custom Attribute}">Simple Prompt</option>
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>+
-                                        <select name="attr_repcombat-watk-abi" title="Ability for the Roll">
-                                            <option value="@{archery}">Archery</option>
-                                            <option value="@{athletics}">Athletics</option>
-                                            <option value="@{awareness}">Awareness</option>
-                                            <option value="@{brawl}" selected="selected">Brawl</option>
-                                            <option value="@{bureaucracy}">Bureaucracy</option>
-                                            <option value="@{dodge}">Dodge</option>
-                                            <option value="@{integrity}">Integrity</option>
-                                            <option value="@{investigation}">Investigation</option>
-                                            <option value="@{larceny}">Larceny</option>
-                                            <option value="@{linguistics}">Linguistics</option>
-                                            <option value="@{lore}">Lore</option>
-                                            <option value="@{medicine}">Medicine</option>
-                                            <option value="@{melee}">Melee</option>
-                                            <option value="@{occult}">Occult</option>
-                                            <option value="@{performance}">Performance</option>
-                                            <option value="@{presence}">Presence</option>
-                                            <option value="@{resistance}">Resistance</option>
-                                            <option value="@{ride}">Ride</option>
-                                            <option value="@{sail}">Sail</option>
-                                            <option value="@{socialize}">Socialize</option>
-                                            <option value="@{stealth}">Stealth</option>
-                                            <option value="@{survival}">Survival</option>
-                                            <option value="@{thrown}">Thrown</option>
-                                            <option value="@{war}">War</option>
-                                            <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
-                                            <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
-                                            <option value="?{Ability|
-                                                Archery (@{archery}),@{archery}|
-                                                Athletics (@{athletics}),@{athletics}|
-                                                Awareness (@{awareness}),@{awareness}|
-                                                Brawl (@{brawl}),@{brawl}|
-                                                Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                                Craft (...),?{Craft&amp;#124;
-                                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                Dodge (@{dodge}),@{dodge}|
-                                                Integrity (@{integrity}),@{integrity}|
-                                                Investigation (@{investigation}),@{investigation}|
-                                                Larceny (@{larceny}),@{larceny}|
-                                                Linguistics (@{linguistics}),@{linguistics}|
-                                                Lore (@{lore}),@{lore}|
-                                                Martial Arts (...),?{Martial Arts&amp;#124;
-                                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                Medicine (@{medicine}),@{medicine}|
-                                                Melee (@{melee}),@{melee}|
-                                                Occult (@{occult}),@{occult}|
-                                                Performance (@{performance}),@{performance}|
-                                                Presence (@{presence}),@{presence}|
-                                                Resistance (@{resistance}),@{resistance}|
-                                                Ride (@{ride}),@{ride}|
-                                                Sail (@{sail}),@{sail}|
-                                                Socialize (@{socialize}),@{socialize}|
-                                                Stealth (@{stealth}),@{stealth}|
-                                                Survival (@{survival}),@{survival}|
-                                                Thrown (@{thrown}),@{thrown}|
-                                                War (@{war}),@{war}|
-                                                Thrown (@{thrown}),@{thrown}|
-                                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                            }">Full Ability Prompt</option>
-                                            <option value="?{Custom Ability}">Simple Prompt</option>
-                                            <option value="@{strength}">Strength</option>
-                                            <option value="@{dexterity}">Dexterity</option>
-                                            <option value="@{stamina}">Stamina</option>
-                                            <option value="@{charisma}">Charisma</option>
-                                            <option value="@{manipulation}">Manipulation</option>
-                                            <option value="@{appearance}">Appearance</option>
-                                            <option value="@{perception}">Perception</option>
-                                            <option value="@{intelligence}">Intelligence</option>
-                                            <option value="@{wits}">Wits</option>
-                                            <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                            <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                            <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                            <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>``
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>+
-                                        <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
-                                        <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability&#013;&#010;(Special for Archery & Thrown)">+</button>
-                                        <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
-                                        <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}"></p>
-                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                        <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                        <div class="flex grow-normal">
+                                            <p class="head" title="Trying to Hit an opponent with mostly narrative damage but build momentum (Initiative)">ATK</p>
+                                            (<select name="attr_repcombat-watk-attr" title="Attribute for the Roll" class="grow-normal">
+                                                <option value="@{strength}">Strength</option>
+                                                <option value="@{dexterity}" selected="selected">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
+                                                <option value="?{Custom Attribute}">Simple Prompt</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>+
+                                            <select name="attr_repcombat-watk-abi" title="Ability for the Roll" class="grow-normal">
+                                                <option value="@{archery}">Archery</option>
+                                                <option value="@{athletics}">Athletics</option>
+                                                <option value="@{awareness}">Awareness</option>
+                                                <option value="@{brawl}" selected="selected">Brawl</option>
+                                                <option value="@{bureaucracy}">Bureaucracy</option>
+                                                <option value="@{dodge}">Dodge</option>
+                                                <option value="@{integrity}">Integrity</option>
+                                                <option value="@{investigation}">Investigation</option>
+                                                <option value="@{larceny}">Larceny</option>
+                                                <option value="@{linguistics}">Linguistics</option>
+                                                <option value="@{lore}">Lore</option>
+                                                <option value="@{medicine}">Medicine</option>
+                                                <option value="@{melee}">Melee</option>
+                                                <option value="@{occult}">Occult</option>
+                                                <option value="@{performance}">Performance</option>
+                                                <option value="@{presence}">Presence</option>
+                                                <option value="@{resistance}">Resistance</option>
+                                                <option value="@{ride}">Ride</option>
+                                                <option value="@{sail}">Sail</option>
+                                                <option value="@{socialize}">Socialize</option>
+                                                <option value="@{stealth}">Stealth</option>
+                                                <option value="@{survival}">Survival</option>
+                                                <option value="@{thrown}">Thrown</option>
+                                                <option value="@{war}">War</option>
+                                                <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
+                                                <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
+                                                <option value="?{Ability|
+                                                    Archery (@{archery}),@{archery}|
+                                                    Athletics (@{athletics}),@{athletics}|
+                                                    Awareness (@{awareness}),@{awareness}|
+                                                    Brawl (@{brawl}),@{brawl}|
+                                                    Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                                    Craft (...),?{Craft&amp;#124;
+                                                        Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                                        Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                                        Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                                        First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                                        Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                                        Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                                        Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                                        Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                                        Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                                        Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                    Dodge (@{dodge}),@{dodge}|
+                                                    Integrity (@{integrity}),@{integrity}|
+                                                    Investigation (@{investigation}),@{investigation}|
+                                                    Larceny (@{larceny}),@{larceny}|
+                                                    Linguistics (@{linguistics}),@{linguistics}|
+                                                    Lore (@{lore}),@{lore}|
+                                                    Martial Arts (...),?{Martial Arts&amp;#124;
+                                                        Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                                        Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                                        Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                                        White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                                        Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                                        Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                                        Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                                        Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                                        Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                                        Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                                        Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                                        Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                    Medicine (@{medicine}),@{medicine}|
+                                                    Melee (@{melee}),@{melee}|
+                                                    Occult (@{occult}),@{occult}|
+                                                    Performance (@{performance}),@{performance}|
+                                                    Presence (@{presence}),@{presence}|
+                                                    Resistance (@{resistance}),@{resistance}|
+                                                    Ride (@{ride}),@{ride}|
+                                                    Sail (@{sail}),@{sail}|
+                                                    Socialize (@{socialize}),@{socialize}|
+                                                    Stealth (@{stealth}),@{stealth}|
+                                                    Survival (@{survival}),@{survival}|
+                                                    Thrown (@{thrown}),@{thrown}|
+                                                    War (@{war}),@{war}|
+                                                    Thrown (@{thrown}),@{thrown}|
+                                                    Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                                }">Full Ability Prompt</option>
+                                                <option value="?{Custom Ability}">Simple Prompt</option>
+                                                <option value="@{strength}">Strength</option>
+                                                <option value="@{dexterity}">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>``
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>+
+                                            <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
+                                        </div>
+                                        <div class="flex grow-max">
+                                            <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability&#013;&#010;(Special for Archery & Thrown)">+</button>
+                                            <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
+                                            <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}"></p>
+                                            -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
+                                            <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                        </div>
                                     </div>
                                     <div class="flex grow-normal">
                                         <button type="action" name="act_default-macro-watk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
@@ -22636,37 +22649,41 @@
                                 </div>
                                 <div class="dmg-section flex-wrap">
                                     <div class="flex grow-normal">
-                                        <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
-                                        (<select name="attr_repcombat-wdmg-attr" title="Attribute for the Roll">
-                                            <option value="@{strength}" selected="selected">Strength</option>
-                                            <option value="@{dexterity}">Dexterity</option>
-                                            <option value="@{stamina}">Stamina</option>
-                                            <option value="@{charisma}">Charisma</option>
-                                            <option value="@{manipulation}">Manipulation</option>
-                                            <option value="@{appearance}">Appearance</option>
-                                            <option value="@{perception}">Perception</option>
-                                            <option value="@{intelligence}">Intelligence</option>
-                                            <option value="@{wits}">Wits</option>
-                                            <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                            <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                            <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                            <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
-                                            <option value="?{Custom Attribute}">Simple Prompt</option>
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>+
-                                        <input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg dark-dmg-color" readonly="readonly" title="Damage of the Weapon used&#013;&#010;Auto Filled, edit the field above">+
-                                        <input type="text" name="attr_repcombat-wdmg-bonus-dices" class="sheet-wdmg-bonus-dices grow-normal" title="Bonus dices for the Roll (Threshold & Soak already included)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
-                                        <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-dmg-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-dmg-boost}"></p>d)
+                                        <div class="flex grow-normal">
+                                            <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
+                                            (<select name="attr_repcombat-wdmg-attr" title="Attribute for the Roll" class="grow-normal">
+                                                <option value="@{strength}" selected="selected">Strength</option>
+                                                <option value="@{dexterity}">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
+                                                <option value="?{Custom Attribute}">Simple Prompt</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>+
+                                            <input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg dark-dmg-color" readonly="readonly" title="Damage of the Weapon used&#013;&#010;Auto Filled, edit the field above">+
+                                        </div>
+                                        <div class="flex grow-max">
+                                            <input type="text" name="attr_repcombat-wdmg-bonus-dices" class="sheet-wdmg-bonus-dices grow-normal" title="Bonus dices for the Roll (Threshold & Soak already included)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                            <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-dmg-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-dmg-boost}"></p>d)
+                                        </div>
                                     </div>
                                     <div class="flex grow-normal">
                                         +
@@ -22692,144 +22709,148 @@
                             <div class="inner-section">
                                 <div class="atk-section flex-wrap">
                                     <div class="flex grow-normal">
-                                        <p class="head" title="Trying to Hit an opponent with real damage based on built momentum (Initiative)">ATK</p>
-                                        (<select name="attr_repcombat-datk-attr" title="Attribute for the Roll">
-                                            <option value="@{strength}">Strength</option>
-                                            <option value="@{dexterity}" selected="selected">Dexterity</option>
-                                            <option value="@{stamina}">Stamina</option>
-                                            <option value="@{charisma}">Charisma</option>
-                                            <option value="@{manipulation}">Manipulation</option>
-                                            <option value="@{appearance}">Appearance</option>
-                                            <option value="@{perception}">Perception</option>
-                                            <option value="@{intelligence}">Intelligence</option>
-                                            <option value="@{wits}">Wits</option>
-                                            <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                            <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                            <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                            <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
-                                            <option value="?{Custom Attribute}">Simple Prompt</option>
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>+
-                                        <select name="attr_repcombat-datk-abi" title="Ability for the Roll">
-                                            <option value="@{archery}">Archery</option>
-                                            <option value="@{athletics}">Athletics</option>
-                                            <option value="@{awareness}">Awareness</option>
-                                            <option value="@{brawl}" selected="selected">Brawl</option>
-                                            <option value="@{bureaucracy}">Bureaucracy</option>
-                                            <option value="@{dodge}">Dodge</option>
-                                            <option value="@{integrity}">Integrity</option>
-                                            <option value="@{investigation}">Investigation</option>
-                                            <option value="@{larceny}">Larceny</option>
-                                            <option value="@{linguistics}">Linguistics</option>
-                                            <option value="@{lore}">Lore</option>
-                                            <option value="@{medicine}">Medicine</option>
-                                            <option value="@{melee}">Melee</option>
-                                            <option value="@{occult}">Occult</option>
-                                            <option value="@{performance}">Performance</option>
-                                            <option value="@{presence}">Presence</option>
-                                            <option value="@{resistance}">Resistance</option>
-                                            <option value="@{ride}">Ride</option>
-                                            <option value="@{sail}">Sail</option>
-                                            <option value="@{socialize}">Socialize</option>
-                                            <option value="@{stealth}">Stealth</option>
-                                            <option value="@{survival}">Survival</option>
-                                            <option value="@{thrown}">Thrown</option>
-                                            <option value="@{war}">War</option>
-                                            <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
-                                            <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
-                                            <option value="?{Ability|
-                                                Archery (@{archery}),@{archery}|
-                                                Athletics (@{athletics}),@{athletics}|
-                                                Awareness (@{awareness}),@{awareness}|
-                                                Brawl (@{brawl}),@{brawl}|
-                                                Bureaucracy (@{bureaucracy}),@{bureaucracy}|
-                                                Craft (...),?{Craft&amp;#124;
-                                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
-                                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
-                                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
-                                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
-                                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
-                                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
-                                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
-                                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
-                                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
-                                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                Dodge (@{dodge}),@{dodge}|
-                                                Integrity (@{integrity}),@{integrity}|
-                                                Investigation (@{investigation}),@{investigation}|
-                                                Larceny (@{larceny}),@{larceny}|
-                                                Linguistics (@{linguistics}),@{linguistics}|
-                                                Lore (@{lore}),@{lore}|
-                                                Martial Arts (...),?{Martial Arts&amp;#124;
-                                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
-                                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
-                                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
-                                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
-                                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
-                                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
-                                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
-                                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
-                                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
-                                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
-                                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
-                                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
-                                                Medicine (@{medicine}),@{medicine}|
-                                                Melee (@{melee}),@{melee}|
-                                                Occult (@{occult}),@{occult}|
-                                                Performance (@{performance}),@{performance}|
-                                                Presence (@{presence}),@{presence}|
-                                                Resistance (@{resistance}),@{resistance}|
-                                                Ride (@{ride}),@{ride}|
-                                                Sail (@{sail}),@{sail}|
-                                                Socialize (@{socialize}),@{socialize}|
-                                                Stealth (@{stealth}),@{stealth}|
-                                                Survival (@{survival}),@{survival}|
-                                                Thrown (@{thrown}),@{thrown}|
-                                                War (@{war}),@{war}|
-                                                Thrown (@{thrown}),@{thrown}|
-                                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                            }">Full Ability Prompt</option>
-                                            <option value="?{Custom Ability}">Simple Prompt</option>
-                                            <option value="@{strength}">Strength</option>
-                                            <option value="@{dexterity}">Dexterity</option>
-                                            <option value="@{stamina}">Stamina</option>
-                                            <option value="@{charisma}">Charisma</option>
-                                            <option value="@{manipulation}">Manipulation</option>
-                                            <option value="@{appearance}">Appearance</option>
-                                            <option value="@{perception}">Perception</option>
-                                            <option value="@{intelligence}">Intelligence</option>
-                                            <option value="@{wits}">Wits</option>
-                                            <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
-                                            <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
-                                            <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
-                                            <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                        <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                        <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
-                                        <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}"></p>
-                                        -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                        <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                        <div class="flex grow-normal">
+                                            <p class="head" title="Trying to Hit an opponent with real damage based on built momentum (Initiative)">ATK</p>
+                                            (<select name="attr_repcombat-datk-attr" title="Attribute for the Roll" class="grow-normal">
+                                                <option value="@{strength}">Strength</option>
+                                                <option value="@{dexterity}" selected="selected">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Prompt</option>
+                                                <option value="?{Custom Attribute}">Simple Prompt</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>+
+                                            <select name="attr_repcombat-datk-abi" title="Ability for the Roll" class="grow-normal">
+                                                <option value="@{archery}">Archery</option>
+                                                <option value="@{athletics}">Athletics</option>
+                                                <option value="@{awareness}">Awareness</option>
+                                                <option value="@{brawl}" selected="selected">Brawl</option>
+                                                <option value="@{bureaucracy}">Bureaucracy</option>
+                                                <option value="@{dodge}">Dodge</option>
+                                                <option value="@{integrity}">Integrity</option>
+                                                <option value="@{investigation}">Investigation</option>
+                                                <option value="@{larceny}">Larceny</option>
+                                                <option value="@{linguistics}">Linguistics</option>
+                                                <option value="@{lore}">Lore</option>
+                                                <option value="@{medicine}">Medicine</option>
+                                                <option value="@{melee}">Melee</option>
+                                                <option value="@{occult}">Occult</option>
+                                                <option value="@{performance}">Performance</option>
+                                                <option value="@{presence}">Presence</option>
+                                                <option value="@{resistance}">Resistance</option>
+                                                <option value="@{ride}">Ride</option>
+                                                <option value="@{sail}">Sail</option>
+                                                <option value="@{socialize}">Socialize</option>
+                                                <option value="@{stealth}">Stealth</option>
+                                                <option value="@{survival}">Survival</option>
+                                                <option value="@{thrown}">Thrown</option>
+                                                <option value="@{war}">War</option>
+                                                <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}|Artifact (@{craft-artifact}),@{craft-artifact}|Cooking (@{craft-cooking}),@{craft-cooking}|First Age Artifice (@{craft-artifice}),@{craft-artifice}|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}|Geomancy (@{craft-geomancy}),@{craft-geomancy}|Jewelry (@{craft-jewelry}),@{craft-jewelry}|Tailoring (@{craft-tailoring}),@{craft-tailoring}|Weapon Forging (@{craft-forging}),@{craft-forging}|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;}">Craft Prompt</option>
+                                                <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}|Tiger Style (@{ma-tiger}),@{ma-tiger}|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}|White Reaper Style (@{ma-reaper}),@{ma-reaper}|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}|Crane Style (@{ma-crane}),@{ma-crane}|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}|Righteous Devil Style (@{ma-devil}),@{ma-devil}|Black Claw Style (@{ma-claw}),@{ma-claw}|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}|Steel Devil Style (@{ma-steel}),@{ma-steel}|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;}">Martial Arts Prompt</option>
+                                                <option value="?{Ability|
+                                                    Archery (@{archery}),@{archery}|
+                                                    Athletics (@{athletics}),@{athletics}|
+                                                    Awareness (@{awareness}),@{awareness}|
+                                                    Brawl (@{brawl}),@{brawl}|
+                                                    Bureaucracy (@{bureaucracy}),@{bureaucracy}|
+                                                    Craft (...),?{Craft&amp;#124;
+                                                        Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}&amp;#124;
+                                                        Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}&amp;#124;
+                                                        Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}&amp;#124;
+                                                        First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}&amp;#124;
+                                                        Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}&amp;#124;
+                                                        Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}&amp;#124;
+                                                        Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}&amp;#124;
+                                                        Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}&amp;#124;
+                                                        Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}&amp;#124;
+                                                        Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                    Dodge (@{dodge}),@{dodge}|
+                                                    Integrity (@{integrity}),@{integrity}|
+                                                    Investigation (@{investigation}),@{investigation}|
+                                                    Larceny (@{larceny}),@{larceny}|
+                                                    Linguistics (@{linguistics}),@{linguistics}|
+                                                    Lore (@{lore}),@{lore}|
+                                                    Martial Arts (...),?{Martial Arts&amp;#124;
+                                                        Snake Style (@{ma-snake})&amp;#44;@{ma-snake}&amp;#124;
+                                                        Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}&amp;#124;
+                                                        Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}&amp;#124;
+                                                        White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}&amp;#124;
+                                                        Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}&amp;#124;
+                                                        Crane Style (@{ma-crane})&amp;#44;@{ma-crane}&amp;#124;
+                                                        Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}&amp;#124;
+                                                        Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}&amp;#124;
+                                                        Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}&amp;#124;
+                                                        Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}&amp;#124;
+                                                        Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}&amp;#124;
+                                                        Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;|
+                                                    Medicine (@{medicine}),@{medicine}|
+                                                    Melee (@{melee}),@{melee}|
+                                                    Occult (@{occult}),@{occult}|
+                                                    Performance (@{performance}),@{performance}|
+                                                    Presence (@{presence}),@{presence}|
+                                                    Resistance (@{resistance}),@{resistance}|
+                                                    Ride (@{ride}),@{ride}|
+                                                    Sail (@{sail}),@{sail}|
+                                                    Socialize (@{socialize}),@{socialize}|
+                                                    Stealth (@{stealth}),@{stealth}|
+                                                    Survival (@{survival}),@{survival}|
+                                                    Thrown (@{thrown}),@{thrown}|
+                                                    War (@{war}),@{war}|
+                                                    Thrown (@{thrown}),@{thrown}|
+                                                    Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
+                                                }">Full Ability Prompt</option>
+                                                <option value="?{Custom Ability}">Simple Prompt</option>
+                                                <option value="@{strength}">Strength</option>
+                                                <option value="@{dexterity}">Dexterity</option>
+                                                <option value="@{stamina}">Stamina</option>
+                                                <option value="@{charisma}">Charisma</option>
+                                                <option value="@{manipulation}">Manipulation</option>
+                                                <option value="@{appearance}">Appearance</option>
+                                                <option value="@{perception}">Perception</option>
+                                                <option value="@{intelligence}">Intelligence</option>
+                                                <option value="@{wits}">Wits</option>
+                                                <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}}">Physical Prompt</option>
+                                                <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}}">Social Prompt</option>
+                                                <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Mental Prompt</option>
+                                                <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}|Dexterity (@{dexterity}),@{dexterity}|Stamina (@{stamina}), @{stamina}|Charisma (@{charisma}), @{charisma}|Manipulation (@{manipulation}), @{manipulation}|Appearance (@{appearance}), @{appearance}|Perception (@{perception}), @{perception}|Intelligence (@{intelligence}), @{intelligence}|Wits (@{wits}), @{wits}}">Full Attribute Prompt</option>
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                        </div>
+                                        <div class="flex grow-max">
+                                            <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
+                                            <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
+                                            <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}"></p>
+                                            -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
+                                            <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                        </div>
                                     </div>
                                     <div class="flex grow-normal">
                                         <button type="action" name="act_default-macro-datk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
@@ -22844,7 +22865,7 @@
                                     </div>
                                 </div>
                                 <div class="dmg-section flex-wrap">
-                                    <div class="flex grow-normal" style="min-width: 30.8em">
+                                    <div class="flex grow-normal">
                                         <p class="head" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)&#013;&#010;By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule">DMG</p>
                                         (<input type="text" name="attr_repcombat-ddmg-dices" class="sheet-ddmg-bonus-dices grow-normal" value="@{tracker|YOUR_TOKEN_NAME_HERE}" title="Number of dice to be rolled&#013;&#010;Already included a macro that target a token initiative value&#013;&#010;You only need to copy paste the exact token name instead of the placeholder&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">d)
                                     </div>
