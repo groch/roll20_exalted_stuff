@@ -85,6 +85,10 @@ input[type="number"] {
     flex: 1 1 auto;
 }
 
+.charsheet .sheet-body.flex.flex-col > .flex.flex-wrap {
+    width: 100%;
+}
+
 .charsheet .sheet-body::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 8px;
@@ -1733,24 +1737,24 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-charms-spells-trait{
     height:20px;
     font-size: 12px;
+    width: 5em;
 }
 
 .charsheet input.sheet-charms-spells-trait-name{
-    width: 33%;
+    width: 12em;
+    flex-grow: 2;
     color: #0095c6;
     font-weight: bold;
 }
 
 .charsheet input.sheet-charms-spells-trait-cost{
     width: 5em;
+    flex-grow: 1;
 }
 
 .charsheet input.sheet-charms-spells-trait-short-desc {
-    width: calc(67% - 109px - 5em - 128px - 39px);
-}
-
-.charsheet .sheet-tab-spell-sheet input.sheet-charms-spells-trait-short-desc {
-    width: calc(68% - 109px - 122px - 14px)
+    width: 5em;
+    flex-grow: 10;
 }
 
 @-moz-document url-prefix() {
@@ -2304,6 +2308,7 @@ body.sheet-darkmode {
     background: dimgray;
 }
 
+.sheet-tab-spell-sheet .sheet-table-row textarea,
 .charm-tab-list textarea {
     margin-bottom: 0;
 }
@@ -2319,7 +2324,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-spell-sheet .charm-buttons,
 .charsheet .sheet-tab-charm-sheet .charm-buttons {
-    display: contents;
+    display: flex;
 }
 
 .charsheet .charm-buttons-include-check[value="1"] ~ div.charm-buttons-show-default,
@@ -2772,14 +2777,14 @@ body.sheet-darkmode {
 	border-radius: 0;
 	border: 0;
 	background: none;
-	padding: 0;
+	padding: 0 2px;
 	height: 1.3em;
     border-right: 1px solid;
 }
 
 .charsheet div .sheet-grouped-buttons button[type="action"]:last-child,
 .charsheet div .sheet-grouped-buttons button[type="roll"]:last-child {
-	padding: 0 7px 0 0;
+	/* padding: 0 7px 0 0; */
     border-right: 0;
 }
 
@@ -3360,7 +3365,7 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem > .charm-buttons > button.sheet-roll {
-    height: 1em;
+    height: 1.5rem;
 }
 
 .charsheet .sheet-box-reminder .repcontainer .repitem {
@@ -3387,6 +3392,8 @@ body.sheet-darkmode {
 
 .charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-buttons {
     flex-shrink: 0;
+    align-items: center;
+    height: 2rem;
 }
 
 .charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-short-desc"][readonly] {
@@ -3541,6 +3548,10 @@ body.sheet-darkmode {
 .charsheet .reminder-charm-div {
     display: none;
     width: 100%;
+}
+
+.charsheet .reminder-charm-div > .repcontainer {
+    margin-bottom: 0;
 }
 
 .charsheet .reminder-charm-selector-input[value="archery"] ~ .reminder-charm-archery,
