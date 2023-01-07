@@ -17700,8 +17700,8 @@
 
         <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">
             <h1><span>Social attributes and abilities</span></h1>
-            <div class="sheet-table-body">
-                <div class="sheet-table-row">
+            <div class="head-line flex flex-wrap">
+                <div class="flex">
                     <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
@@ -17711,6 +17711,8 @@
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
                         <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display">
                     </div>
+                </div>
+                <div class="flex">
                     <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
@@ -17720,15 +17722,19 @@
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
                         <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display">
                     </div>
-                    <input type="hidden" name="attr_caste" class="def-exc-test">
-                    <div class="sheet-table-cell def-exc">
-                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
-                    </div>
+                </div>
+                <input type="hidden" name="attr_caste" class="def-exc-test">
+                <div class="sheet-table-cell def-exc">
+                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
+                </div>
+                <div class="flex">
                     <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
                         <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
                     </div>
+                </div>
+                <div class="flex will-color-down rounded-box">
                     <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="number" name="attr_willpower" value="5" min="0" max="15">
@@ -17828,9 +17834,9 @@
 
         <div class="sheet-body sheet-tab-content sheet-tab-antisocial-sheet">
             <h1><span>Social attributes and abilities</span></h1>
-            <div class="sheet-table-body">
-                <div class="sheet-table-row">
-                    <div class="sheet-table-cell sheet-text-right"><span>Resolve (wits + integrity)</span>:</div>
+            <div class="head-line flex flex-wrap">
+                <div class="flex">
+                    <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
                         <input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
@@ -17839,7 +17845,9 @@
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
                         <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display">
                     </div>
-                    <div class="sheet-table-cell sheet-text-right"><span>Guile (manipulation + socialize)</span>:</div>
+                </div>
+                <div class="flex">
+                    <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
                         <input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
@@ -17848,6 +17856,8 @@
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
                         <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display">
                     </div>
+                </div>
+                <div class="flex">
                     <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
                     <div class="sheet-table-cell">
                         <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">

@@ -1790,6 +1790,12 @@ and (min-resolution:.001dpcm) {
     height: 1em;
 }
 
+.charsheet .sheet-tab-antisocial-sheet .head-line,
+.charsheet .sheet-tab-intimacies-sheet .head-line {
+    width: 100%;
+    justify-content: space-around;
+}
+
 .charsheet .sheet-tab-antisocial-sheet textarea,
 .charsheet .sheet-tab-intimacies-sheet textarea {
     width: 98.8%;
@@ -2503,6 +2509,8 @@ body.sheet-darkmode {
     justify-content: space-between;
 }
 
+.sheet-tab-intimacies-sheet .head-line .sheet-table-cell input[type="number"][disabled],
+.sheet-tab-antisocial-sheet .head-line .sheet-table-cell input[type="number"][disabled],
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled],
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].wound-taint {
     width: 27px;
