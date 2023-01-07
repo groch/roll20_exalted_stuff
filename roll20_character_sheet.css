@@ -293,6 +293,7 @@ tier 2: couleurs
     color: black;
 }
 
+.charsheet .sheet-col.stat-col div.qc-toggle-display-inv,
 .charsheet div.qc-toggle-display-inv {
     display: none;
 }
@@ -309,8 +310,13 @@ tier 2: couleurs
     display: block;
 }
 
+.charsheet .sheet-col.stat-col .qc-panel-check[value="1"] ~ .qc-toggle-display,
 .charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display {
     display: none;
+}
+
+.charsheet .sheet-col.stat-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
+    display: flex;
 }
 
 .charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
@@ -576,14 +582,35 @@ tier 2: couleurs
 }
 
 .charsheet .sheet-3colrow .sheet-col.stat-col {
-	width: 135px;
-    margin-right: 10px;
+	width: 145px;
+    display: flex;
+    flex-flow: column;
+    flex-shrink: 0;
+    margin-right: 0;
+}
+
+.charsheet .sheet-col.stat-col .sheet-table {
+    justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.charsheet .sheet-col.stat-col .sheet-table-row {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    flex-basis: 8em;
 }
 
 .charsheet .sheet-3colrow .sheet-3col.inti-col {
-    width: calc(100% - 149px);
     margin-right: 0;
-    display: inline-block;
+    display: flex;
+    flex-flow: column;
+}
+
+.charsheet .sheet-tab-intimacies-sheet .sheet-3colrow,
+.charsheet .sheet-tab-antisocial-sheet .sheet-3colrow {
+    display: flex;
 }
 
 .charsheet [title] input[disabled],
@@ -3973,6 +4000,15 @@ and (min-resolution:.001dpcm) {
 
 @media only screen and (max-width: 854px) {
 
+    .charsheet .sheet-3colrow .sheet-col.stat-col {
+        width: 100%;
+    }
+
+    .charsheet .sheet-tab-intimacies-sheet .sheet-3colrow,
+    .charsheet .sheet-tab-antisocial-sheet .sheet-3colrow {
+        flex-flow: column;
+    }
+
     .charsheet .rolls-area {
         flex-flow: column;
     }
@@ -4200,5 +4236,11 @@ and (min-resolution:.001dpcm) {
         display: none !important;
         visibility: hidden !important;
         /* visibility: visible !important; */
+    }
+}
+
+@media only screen and (max-width: 446px) {
+    .charsheet .sheet-col.stat-col .sheet-table-row {
+        flex-grow: 0;
     }
 }
