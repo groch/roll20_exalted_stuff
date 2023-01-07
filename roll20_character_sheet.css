@@ -2483,6 +2483,10 @@ body.sheet-darkmode {
     flex-wrap: wrap;
 }
 
+.charsheet .health-line > div.flex.flex-wrap.flex-col {
+    width: 8em;
+}
+
 .charsheet .sheet-tab-combat-sheet .combat-header .health-line .health-block {
     vertical-align: middle;
     position: relative;
