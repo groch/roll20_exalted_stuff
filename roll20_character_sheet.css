@@ -3850,6 +3850,7 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    gap: 0.5em;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem {
