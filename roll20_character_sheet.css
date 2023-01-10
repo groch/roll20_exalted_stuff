@@ -552,8 +552,7 @@ tier 2: couleurs
     grid-template-columns: min-content calc(100% - 1em);
 }
 
-.charsheet .sheet-tab-settings-sheet .sheet-2colrow.sheet-checklist,
-.charsheet .sheet-tab-settings-sheet .sheet-3colrow.sheet-checklist {
+.charsheet .sheet-tab-settings-sheet .sheet-2colrow.sheet-checklist {
     white-space: nowrap;
     width: fit-content;
     margin: auto;
@@ -565,12 +564,34 @@ tier 2: couleurs
 }
 
 .charsheet .sheet-tab-settings-sheet .sheet-3colrow.sheet-checklist {
-    grid-template-columns: min-content min-content min-content;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+}
+
+.charsheet .sheet-tab-settings-sheet .sheet-3colrow > .sheet-col,
+.ui-dialog .charsheet .sheet-tab-settings-sheet .sheet-3colrow > .sheet-col {
+    width: unset;
+    margin-right: 0;
 }
 
 .charsheet .sheet-2colrow.sheet-checklist.sheet-main-config {
     width: 100%;
     justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 528px) {
+    .charsheet .sheet-2colrow.sheet-checklist.sheet-main-config {
+        justify-content: center;
+    }
+}
+
+.charsheet .sheet-2colrow.sheet-checklist.sheet-main-config > .sheet-checklist.sheet-col {
+    width: unset;
+    margin-right: 0;
 }
 
 .charsheet .sheet-2colrow.sheet-checklist .sheet-checklist.sheet-special > label {
