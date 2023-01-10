@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.47, debug = 1;
+    const version = 2.48, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -457,6 +457,7 @@
         {version: 2.39, fn: upgradeto240},
         {version: 2.45, fn: upgradeto242},
         {version: 2.46, fn: upgradeto247},
+        {version: 2.47, fn: upgradeto248},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -520,6 +521,107 @@
              "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
             return true;
         return false;
+    }
+
+    const convMap = {
+        '@{strength}': '@{strength}[Strength]',
+        '@{dexterity}': '@{dexterity}[Dexterity]',
+        '@{stamina}': '@{stamina}[Stamina]',
+        '@{charisma}': '@{charisma}[Charisma]',
+        '@{manipulation}': '@{manipulation}[Manipulation]',
+        '@{appearance}': '@{appearance}[Appearance]',
+        '@{perception}': '@{perception}[Perception]',
+        '@{intelligence}': '@{intelligence}[Intelligence]',
+        '@{wits}': '@{wits}[Wits]',
+        '@{archery}': '@{archery}[Archery]',
+        '@{athletics}': '@{athletics}[Athletics]',
+        '@{awareness}': '@{awareness}[Awareness]',
+        '@{brawl}': '@{brawl}[Brawl]',
+        '@{bureaucracy}': '@{bureaucracy}[Bureaucracy]',
+        '@{dodge}': '@{dodge}[Dodge]',
+        '@{integrity}': '@{integrity}[Integrity]',
+        '@{investigation}': '@{investigation}[Investigation]',
+        '@{larceny}': '@{larceny}[Larceny]',
+        '@{linguistics}': '@{linguistics}[Linguistics]',
+        '@{lore}': '@{lore}[Lore]',
+        '@{medicine}': '@{medicine}[Medicine]',
+        '@{melee}': '@{melee}[Melee]',
+        '@{occult}': '@{occult}[Occult]',
+        '@{performance}': '@{performance}[Performance]',
+        '@{presence}': '@{presence}[Presence]',
+        '@{resistance}': '@{resistance}[Resistance]',
+        '@{ride}': '@{ride}[Ride]',
+        '@{sail}': '@{sail}[Sail]',
+        '@{socialize}': '@{socialize}[Socialize]',
+        '@{stealth}': '@{stealth}[Stealth]',
+        '@{survival}': '@{survival}[Survival]',
+        '@{thrown}': '@{thrown}[Thrown]',
+        '@{war}': '@{war}[War]',
+        '@{craft-armoring}': '@{craft-armoring}[Armoring]',
+        '@{craft-artifact}': '@{craft-artifact}[Artifact]',
+        '@{craft-cooking}': '@{craft-cooking}[Cooking]',
+        '@{craft-artifice}': '@{craft-artifice}[First Age Artifice]',
+        '@{craft-gemcutting}': '@{craft-gemcutting}[Gemcutting]',
+        '@{craft-geomancy}': '@{craft-geomancy}[Geomancy]',
+        '@{craft-jewelry}': '@{craft-jewelry}[Jewelry]',
+        '@{craft-tailoring}': '@{craft-tailoring}[Tailoring]',
+        '@{craft-forging}': '@{craft-forging}[Weapon Forging]',
+        '@{ma-snake}': '@{ma-snake}[Snake Style]',
+        '@{ma-tiger}': '@{ma-tiger}[Tiger Style]',
+        '@{ma-void}': '@{ma-void}[Single Point Shining Into The Void Style]T',
+        '@{ma-reaper}': '@{ma-reaper}[White Reaper Style]',
+        '@{ma-ebon}': '@{ma-ebon}[Ebon Shadow Style]',
+        '@{ma-crane}': '@{ma-crane}[Crane Style]',
+        '@{ma-nightingale}': '@{ma-nightingale}[Silver-voiced Nightingale Style]',
+        '@{ma-devil}': '@{ma-devil}[Righteous Devil Style]',
+        '@{ma-claw}': '@{ma-claw}[Black Claw Style]',
+        '@{ma-pearl}': '@{ma-pearl}[Dreaming Pearl Courtesan Style]',
+        '@{ma-steel}': '@{ma-steel}[Steel Devil Style]',
+        '0': '0[RAW]',
+        '1': '1[RAW]',
+        '2': '2[RAW]',
+        '3': '3[RAW]',
+        '4': '4[RAW]',
+        '5': '5[RAW]',
+        '6': '6[RAW]',
+        '7': '7[RAW]',
+        '8': '8[RAW]',
+        '9': '9[RAW]',
+        '10': '10[RAW]',
+        '11': '11[RAW]',
+        '12': '12[RAW]',
+        '13': '13[RAW]',
+        '14': '14[RAW]',
+        '15': '15[RAW]',
+        '16': '16[RAW]',
+        '17': '17[RAW]',
+        '18': '18[RAW]',
+        '19': '19[RAW]',
+        '20': '20[RAW]'
+    };
+
+    function upgradeto248() {
+        getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
+            const rollFieldNames = [], rollAttrs = ['reprolls-attr', 'reprolls-abi'];
+            idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls-widget_${id}_${i}`)));
+
+            getAttrs([...rollFieldNames], TAS._fn(function getRollFields(valuesSections) {
+                const finalObj = {'version': version}, arrayNewRollsWidget = [];
+                const allowedValued = attrNAbi.map(i => '@{'+i+'}');
+                const convMapKeys = Object.keys(convMap);
+                for (let i = 0; i <= 20; i++) allowedValued.push(i);
+                idRollsArray.forEach(id => {
+                    rollAttrs.forEach(i => {
+                        if (convMapKeys.includes(valuesSections[`repeating_rolls-widget_${id}_${i}`]))
+                            finalObj[`repeating_rolls-widget_${id}_${i}`] = convMap[valuesSections[`repeating_rolls-widget_${id}_${i}`]];
+                    });
+                    finalObj[`repeating_rolls-widget_${id}_reprolls-specialty`] = '0';
+                })
+                setAttrs(finalObj);
+                for (const id of idRollsArray)
+                    updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+            }));
+        });
     }
 
     function upgradeto247() {
@@ -1598,7 +1700,7 @@
     });
 
     const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
-    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability]${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
+    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
     rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
 
@@ -18654,117 +18756,117 @@
                                             <div class="flex flex-wrap grow-normal dice-area-details">
                                                 <div class="flex grow-normal basis-100">
                                                     <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal">
-                                                        <option value="@{strength}">Strength</option>
-                                                        <option value="@{dexterity}">Dexterity</option>
-                                                        <option value="@{stamina}">Stamina</option>
-                                                        <option value="@{charisma}">Charisma</option>
-                                                        <option value="@{manipulation}">Manipulation</option>
-                                                        <option value="@{appearance}">Appearance</option>
-                                                        <option value="@{perception}">Perception</option>
-                                                        <option value="@{intelligence}">Intelligence</option>
-                                                        <option value="@{wits}">Wits</option>
+                                                        <option value="@{strength}[Strength]">Strength</option>
+                                                        <option value="@{dexterity}[Dexterity]">Dexterity</option>
+                                                        <option value="@{stamina}[Stamina]">Stamina</option>
+                                                        <option value="@{charisma}[Charisma]">Charisma</option>
+                                                        <option value="@{manipulation}[Manipulation]">Manipulation</option>
+                                                        <option value="@{appearance}[Appearance]">Appearance</option>
+                                                        <option value="@{perception}[Perception]">Perception</option>
+                                                        <option value="@{intelligence}[Intelligence]">Intelligence</option>
+                                                        <option value="@{wits}[Wits]">Wits</option>
                                                         <option disabled>-------RAW------</option>
-                                                        <option value="0">0</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
-                                                        <option value="13">13</option>
-                                                        <option value="14">14</option>
-                                                        <option value="15">15</option>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
-                                                        <option value="18">18</option>
-                                                        <option value="19">19</option>
-                                                        <option value="20">20</option>
+                                                        <option value="0[RAW]">0</option>
+                                                        <option value="1[RAW]">1</option>
+                                                        <option value="2[RAW]">2</option>
+                                                        <option value="3[RAW]">3</option>
+                                                        <option value="4[RAW]">4</option>
+                                                        <option value="5[RAW]">5</option>
+                                                        <option value="6[RAW]">6</option>
+                                                        <option value="7[RAW]">7</option>
+                                                        <option value="8[RAW]">8</option>
+                                                        <option value="9[RAW]">9</option>
+                                                        <option value="10[RAW]">10</option>
+                                                        <option value="11[RAW]">11</option>
+                                                        <option value="12[RAW]">12</option>
+                                                        <option value="13[RAW]">13</option>
+                                                        <option value="14[RAW]">14</option>
+                                                        <option value="15[RAW]">15</option>
+                                                        <option value="16[RAW]">16</option>
+                                                        <option value="17[RAW]">17</option>
+                                                        <option value="18[RAW]">18</option>
+                                                        <option value="19[RAW]">19</option>
+                                                        <option value="20[RAW]">20</option>
                                                     </select>+
                                                     <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal">
-                                                        <option value="@{archery}">Archery</option>
-                                                        <option value="@{athletics}">Athletics</option>
-                                                        <option value="@{awareness}">Awareness</option>
-                                                        <option value="@{brawl}">Brawl</option>
-                                                        <option value="@{bureaucracy}">Bureaucracy</option>
-                                                        <option value="@{dodge}">Dodge</option>
-                                                        <option value="@{integrity}">Integrity</option>
-                                                        <option value="@{investigation}">Investigation</option>
-                                                        <option value="@{larceny}">Larceny</option>
-                                                        <option value="@{linguistics}">Linguistics</option>
-                                                        <option value="@{lore}">Lore</option>
-                                                        <option value="@{medicine}">Medicine</option>
-                                                        <option value="@{melee}">Melee</option>
-                                                        <option value="@{occult}">Occult</option>
-                                                        <option value="@{performance}">Performance</option>
-                                                        <option value="@{presence}">Presence</option>
-                                                        <option value="@{resistance}">Resistance</option>
-                                                        <option value="@{ride}">Ride</option>
-                                                        <option value="@{sail}">Sail</option>
-                                                        <option value="@{socialize}">Socialize</option>
-                                                        <option value="@{stealth}">Stealth</option>
-                                                        <option value="@{survival}">Survival</option>
-                                                        <option value="@{thrown}">Thrown</option>
-                                                        <option value="@{war}">War</option>
+                                                        <option value="@{archery}[Archery]">Archery</option>
+                                                        <option value="@{athletics}[Athletics]">Athletics</option>
+                                                        <option value="@{awareness}[Awareness]">Awareness</option>
+                                                        <option value="@{brawl}[Brawl]">Brawl</option>
+                                                        <option value="@{bureaucracy}[Bureaucracy]">Bureaucracy</option>
+                                                        <option value="@{dodge}[Dodge]">Dodge</option>
+                                                        <option value="@{integrity}[Integrity]">Integrity</option>
+                                                        <option value="@{investigation}[Investigation]">Investigation</option>
+                                                        <option value="@{larceny}[Larceny]">Larceny</option>
+                                                        <option value="@{linguistics}[Linguistics]">Linguistics</option>
+                                                        <option value="@{lore}[Lore]">Lore</option>
+                                                        <option value="@{medicine}[Medicine]">Medicine</option>
+                                                        <option value="@{melee}[Melee]">Melee</option>
+                                                        <option value="@{occult}[Occult]">Occult</option>
+                                                        <option value="@{performance}[Performance]">Performance</option>
+                                                        <option value="@{presence}[Presence]">Presence</option>
+                                                        <option value="@{resistance}[Resistance]">Resistance</option>
+                                                        <option value="@{ride}[Ride]">Ride</option>
+                                                        <option value="@{sail}[Sail]">Sail</option>
+                                                        <option value="@{socialize}[Socialize]">Socialize</option>
+                                                        <option value="@{stealth}[Stealth]">Stealth</option>
+                                                        <option value="@{survival}[Survival]">Survival</option>
+                                                        <option value="@{thrown}[Thrown]">Thrown</option>
+                                                        <option value="@{war}[War]">War</option>
                                                         <option disabled>------CRAFTS-----</option>
-                                                        <option value="@{craft-armoring}">Armoring</option>
-                                                        <option value="@{craft-artifact}">Artifact</option>
-                                                        <option value="@{craft-cooking}">Cooking</option>
-                                                        <option value="@{craft-artifice}">First Age Artifice</option>
-                                                        <option value="@{craft-gemcutting}">Gemcutting</option>
-                                                        <option value="@{craft-geomancy}">Geomancy</option>
-                                                        <option value="@{craft-jewelry}">Jewelry</option>
-                                                        <option value="@{craft-tailoring}">Tailoring</option>
-                                                        <option value="@{craft-forging}">Weapon Forging</option>
+                                                        <option value="@{craft-armoring}[Armoring]">Armoring</option>
+                                                        <option value="@{craft-artifact}[Artifact]">Artifact</option>
+                                                        <option value="@{craft-cooking}[Cooking]">Cooking</option>
+                                                        <option value="@{craft-artifice}[First Age Artifice]">First Age Artifice</option>
+                                                        <option value="@{craft-gemcutting}[Gemcutting]">Gemcutting</option>
+                                                        <option value="@{craft-geomancy}[Geomancy]">Geomancy</option>
+                                                        <option value="@{craft-jewelry}[Jewelry]">Jewelry</option>
+                                                        <option value="@{craft-tailoring}[Tailoring]">Tailoring</option>
+                                                        <option value="@{craft-forging}[Weapon Forging]">Weapon Forging</option>
                                                         <option disabled>-------M-A------</option>
-                                                        <option value="@{ma-snake}">Snake Style</option>
-                                                        <option value="@{ma-tiger}">Tiger Style</option>
-                                                        <option value="@{ma-void}">Single Point Shining Into The Void Style</option>
-                                                        <option value="@{ma-reaper}">White Reaper Style</option>
-                                                        <option value="@{ma-ebon}">Ebon Shadow Style</option>
-                                                        <option value="@{ma-crane}">Crane Style</option>
-                                                        <option value="@{ma-nightingale}">Silver-voiced Nightingale Style</option>
-                                                        <option value="@{ma-devil}">Righteous Devil Style</option>
-                                                        <option value="@{ma-claw}">Black Claw Style</option>
-                                                        <option value="@{ma-pearl}">Dreaming Pearl Courtesan Style</option>
-                                                        <option value="@{ma-steel}">Steel Devil Style</option>
+                                                        <option value="@{ma-snake}[Snake Style]">Snake Style</option>
+                                                        <option value="@{ma-tiger}[Tiger Style]">Tiger Style</option>
+                                                        <option value="@{ma-void}[Single Point Shining Into The Void Style]">Single Point Shining Into The Void Style</option>
+                                                        <option value="@{ma-reaper}[White Reaper Style]">White Reaper Style</option>
+                                                        <option value="@{ma-ebon}[Ebon Shadow Style]">Ebon Shadow Style</option>
+                                                        <option value="@{ma-crane}[Crane Style]">Crane Style</option>
+                                                        <option value="@{ma-nightingale}[Silver-voiced Nightingale Style]">Silver-voiced Nightingale Style</option>
+                                                        <option value="@{ma-devil}[Righteous Devil Style]">Righteous Devil Style</option>
+                                                        <option value="@{ma-claw}[Black Claw Style]">Black Claw Style</option>
+                                                        <option value="@{ma-pearl}[Dreaming Pearl Courtesan Style]">Dreaming Pearl Courtesan Style</option>
+                                                        <option value="@{ma-steel}[Steel Devil Style]">Steel Devil Style</option>
                                                         <option disabled>----ATTRIBUTES---</option>
-                                                        <option value="@{strength}">Strength</option>
-                                                        <option value="@{dexterity}">Dexterity</option>
-                                                        <option value="@{stamina}">Stamina</option>
-                                                        <option value="@{charisma}">Charisma</option>
-                                                        <option value="@{manipulation}">Manipulation</option>
-                                                        <option value="@{appearance}">Appearance</option>
-                                                        <option value="@{perception}">Perception</option>
-                                                        <option value="@{intelligence}">Intelligence</option>
-                                                        <option value="@{wits}">Wits</option>
+                                                        <option value="@{strength}[Strength]">Strength</option>
+                                                        <option value="@{dexterity}[Dexterity]">Dexterity</option>
+                                                        <option value="@{stamina}[Stamina]">Stamina</option>
+                                                        <option value="@{charisma}[Charisma]">Charisma</option>
+                                                        <option value="@{manipulation}[Manipulation]">Manipulation</option>
+                                                        <option value="@{appearance}[Appearance]">Appearance</option>
+                                                        <option value="@{perception}[Perception]">Perception</option>
+                                                        <option value="@{intelligence}[Intelligence]">Intelligence</option>
+                                                        <option value="@{wits}[Wits]">Wits</option>
                                                         <option disabled>-------RAW------</option>
-                                                        <option value="0">0</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
-                                                        <option value="10">10</option>
-                                                        <option value="11">11</option>
-                                                        <option value="12">12</option>
-                                                        <option value="13">13</option>
-                                                        <option value="14">14</option>
-                                                        <option value="15">15</option>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
-                                                        <option value="18">18</option>
-                                                        <option value="19">19</option>
-                                                        <option value="20">20</option>
+                                                        <option value="0[RAW]">0</option>
+                                                        <option value="1[RAW]">1</option>
+                                                        <option value="2[RAW]">2</option>
+                                                        <option value="3[RAW]">3</option>
+                                                        <option value="4[RAW]">4</option>
+                                                        <option value="5[RAW]">5</option>
+                                                        <option value="6[RAW]">6</option>
+                                                        <option value="7[RAW]">7</option>
+                                                        <option value="8[RAW]">8</option>
+                                                        <option value="9[RAW]">9</option>
+                                                        <option value="10[RAW]">10</option>
+                                                        <option value="11[RAW]">11</option>
+                                                        <option value="12[RAW]">12</option>
+                                                        <option value="13[RAW]">13</option>
+                                                        <option value="14[RAW]">14</option>
+                                                        <option value="15[RAW]">15</option>
+                                                        <option value="16[RAW]">16</option>
+                                                        <option value="17[RAW]">17</option>
+                                                        <option value="18[RAW]">18</option>
+                                                        <option value="19[RAW]">19</option>
+                                                        <option value="20[RAW]">20</option>
                                                     </select>+
                                                 </div>
                                                 <div class="flex grow-normal basis-100">
