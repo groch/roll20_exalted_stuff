@@ -1597,8 +1597,8 @@
         if (Number(e.newValue) < 0) setAttrs({[`repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_reprolls-ncharm-successes`]: 0});
     });
 
-    const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
-    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability]${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
+    const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
+    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability]${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
     rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
 
@@ -18768,17 +18768,21 @@
                                                     </select>+
                                                 </div>
                                                 <div class="flex grow-normal basis-100">
-                                                    <div class="inline-flex basis-33 grow-normal">
+                                                    <div class="inline-flex grow-normal">
                                                         <input type="hidden" name="attr_reprolls-stunt-dices" class="stunt-dices-check" value="0">
                                                         <select name="attr_reprolls-stunt-dices" class="sheet-rolls-stunt-dices grow-normal" title="Bonus dices for the Roll awarded by the Stunt">
                                                             <option value="0" selected>(0) Std Stunt</option>
                                                             <option value="2">(2) Stunt 1+</option>
                                                         </select>+
+                                                        <span class="specialty-box">
+                                                            <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
+                                                            <span class="sheet-spelleffect" title="Spé"></span>
+                                                        </span>+
                                                     </div>
-                                                    <div class="inline-flex basis-33 grow-normal">
+                                                    <div class="inline-flex grow-normal">
                                                         <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint-one" title="Charm dices for the Roll&#013;&#010;Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
                                                     </div>
-                                                    <div class="inline-flex basis-33 grow-normal">
+                                                    <div class="inline-flex grow-normal">
                                                         <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0">-
                                                         <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty not-inverted" data-formula="@{roll-penalty}">-
                                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty not-inverted" data-formula="@{wound-penalty}">
@@ -18790,23 +18794,23 @@
                                                     <input type="checkbox" name="attr_reprolls-separator-mode" class="sheet-rolls-name" title="Toggle Separator Mode" value="1">
                                                     <span class="sheet-spelleffect" title="Toggle"></span>
                                                 </span>
-                                                <input type="hidden" name="attr_reprolls-dice-total-calc-base" value="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})" disabled data-formula="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})">
+                                                <input type="hidden" name="attr_reprolls-dice-total-calc-base" value="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})" disabled data-formula="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})">
                                                 =<input type="number" name="attr_reprolls-dice-total-calc" class="dice-total" value="(((@{reprolls-dice-total-calc-base}) + abs(@{reprolls-dice-total-calc-base})) / 2)" disabled data-formula="(((@{reprolls-dice-total-calc-base}) + abs(@{reprolls-dice-total-calc-base})) / 2)">D
                                             </div>
                                         </div>
                                         <div class="flex grow-normal success-area">
                                             <div class="flex grow-normal success-area-details">
-                                                <div class="inline-flex basis-33 grow-normal">
+                                                <div class="inline-flex grow-normal">
                                                     <input type="hidden" name="attr_reprolls-willpower-toggle" class="willpower-toggle-check" value="0">
                                                     <select name="attr_reprolls-willpower-toggle" class="sheet-rolls-wp-toggle grow-normal" title="Include a Success using 1 Willpower">
                                                         <option value="0" selected>(0) No</option>
                                                         <option value="1">(1) Yes</option>
                                                     </select>+
                                                 </div>
-                                                <div class="inline-flex basis-33 grow-normal">
+                                                <div class="inline-flex grow-normal">
                                                     <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
                                                 </div>
-                                                <div class="inline-flex basis-33 grow-normal">
+                                                <div class="inline-flex grow-normal">
                                                     <input type="number" name="attr_reprolls-ncharm-successes" class="sheet-rolls-ncharm-successes grow-normal" title="Non Charm successes for the roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0" min="0">
                                                 </div>
                                             </div>

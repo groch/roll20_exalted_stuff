@@ -3897,6 +3897,52 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     background-color: rgb(255 129 0 / 86%);
 }
 
+.charsheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child {
+    flex-basis: 41%;
+}
+
+.charsheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
+    flex-basis: 25%;
+}
+
+.charsheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
+    flex-basis: 33%;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box {
+    width: 1em;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box > input[type="checkbox"].sheet-rolls-specialty {
+    margin-top: 0;
+    height: 27px;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox] + span::before {
+    color: #a00;
+    content: "SPE";
+    height: 23px;
+    padding-right: 2px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-weight: bold;
+    writing-mode: vertical-lr;
+    font-size: unset;
+    transform: rotate(-180deg);
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:checked + span::before {
+    color: #0a0;
+    content: "1";
+    height: 15px;
+    padding-top: 6px;
+    padding-right: 0;
+    border-width: 2px;
+    writing-mode: initial;
+    font-size: large;
+    transform: none;
+}
+
 .charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-stunt-dices {
     background-color: rgba(var(--stunt-color), 0.65);
 }
