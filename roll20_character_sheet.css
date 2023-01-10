@@ -3198,7 +3198,7 @@ body.sheet-darkmode {
 }
 
 @media only screen and (max-width: 402px) {
-    .charsheet .rolls-area .sheet-rolls-div .inner-section > div.flex.grow-normal,
+    .charsheet .sheet-tab-rolls-std-sheet .rolls-area .sheet-rolls-div .inner-section > div.flex.grow-normal,
     .charsheet .combat-attacks .atk-section.flex-wrap > div.flex.grow-normal,
     .charsheet .combat-attacks .dmg-section.flex-wrap > div.flex.grow-normal {
         flex-wrap: wrap;
