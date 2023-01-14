@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.48, debug = 1;
+    const version = 2.49, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -458,6 +458,7 @@
         {version: 2.45, fn: upgradeto242},
         {version: 2.46, fn: upgradeto247},
         {version: 2.47, fn: upgradeto248},
+        {version: 2.48, fn: upgradeto249},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -599,6 +600,14 @@
         '19': '19[RAW]',
         '20': '20[RAW]'
     };
+
+    function upgradeto249() {
+        getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
+            setAttrs({'version': version});
+            for (const id of idRollsArray)
+                updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+        });
+    }
 
     function upgradeto248() {
         getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
@@ -1699,8 +1708,8 @@
         if (Number(e.newValue) < 0) setAttrs({[`repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_reprolls-ncharm-successes`]: 0});
     });
 
-    const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ncharm-successes', 'final-macro-options'];
-    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
+    const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ycharm-paid-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ycharm-paid-successes', 'ncharm-successes', 'final-macro-options'];
+    function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-dices'], '[Paid Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-successes'], '[Paid Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
     rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
 
@@ -18730,7 +18739,7 @@
                                             <span title="&lt;"></span>
                                         </div>
                                     </div>
-                                    <div class="flex-wrap hide-on-edit grow-normal">
+                                    <div class="flex-wrap grow-normal">
                                         <div class="cost-section grow-normal flex">
                                             <p class="mote-color-down mote-color-border-solid rounded-box grow-double flex peripheral-mote-toggle">
                                                 Motes:
@@ -18879,8 +18888,9 @@
                                                             <span class="sheet-spelleffect" title="Spé"></span>
                                                         </span>+
                                                     </div>
-                                                    <div class="inline-flex grow-normal">
+                                                    <div class="inline-flex grow-normal" title="Excellency Box">
                                                         <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint-one" title="Charm dices for the Roll&#013;&#010;Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
+                                                        <input type="number" name="attr_reprolls-ycharm-paid-dices" class="sheet-rolls-ycharm-dices grow-normal" title="Charm dices for the Roll&#013;&#010;Cost already paid" value="0" placeholder="0" min="0">+
                                                     </div>
                                                     <div class="inline-flex grow-normal">
                                                         <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0">-
@@ -18891,10 +18901,10 @@
                                             </div>
                                             <div class="flex dice-area-total">
                                                 <span class="separator-box-mode">
-                                                    <input type="checkbox" name="attr_reprolls-separator-mode" class="sheet-rolls-name" title="Toggle Separator Mode" value="1">
+                                                    <input type="checkbox" name="attr_reprolls-separator-mode" class="sheet-rolls-separator-hidden-checkbox" title="Toggle Separator Mode" value="1">
                                                     <span class="sheet-spelleffect" title="Toggle"></span>
                                                 </span>
-                                                <input type="hidden" name="attr_reprolls-dice-total-calc-base" value="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})" disabled data-formula="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})">
+                                                <input type="hidden" name="attr_reprolls-dice-total-calc-base" value="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})" disabled data-formula="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})">
                                                 =<input type="number" name="attr_reprolls-dice-total-calc" class="dice-total" value="(((@{reprolls-dice-total-calc-base}) + abs(@{reprolls-dice-total-calc-base})) / 2)" disabled data-formula="(((@{reprolls-dice-total-calc-base}) + abs(@{reprolls-dice-total-calc-base})) / 2)">D
                                             </div>
                                         </div>
@@ -18907,15 +18917,16 @@
                                                         <option value="1">(1) Yes</option>
                                                     </select>+
                                                 </div>
-                                                <div class="inline-flex grow-normal">
+                                                <div class="inline-flex grow-normal" title="Excellency Box">
                                                     <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
+                                                    <input type="number" name="attr_reprolls-ycharm-paid-successes" class="sheet-rolls-ycharm-successes grow-normal" title="Charm successes for the roll&#013;&#010;Cost already paid" value="0" placeholder="1" min="0">+
                                                 </div>
                                                 <div class="inline-flex grow-normal">
                                                     <input type="number" name="attr_reprolls-ncharm-successes" class="sheet-rolls-ncharm-successes grow-normal" title="Non Charm successes for the roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0" min="0">
                                                 </div>
                                             </div>
                                             <div class="flex success-area-total">
-                                                =<input type="number" name="attr_reprolls-successes-total-calc" class="success-total" value="(@{reprolls-willpower-toggle}+@{reprolls-ycharm-successes}+@{reprolls-ncharm-successes})" disabled data-formula="(@{reprolls-willpower-toggle}+@{reprolls-ycharm-successes}+@{reprolls-ncharm-successes})">S
+                                                =<input type="number" name="attr_reprolls-successes-total-calc" class="success-total" value="(@{reprolls-willpower-toggle}+@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes}+@{reprolls-ncharm-successes})" disabled data-formula="(@{reprolls-willpower-toggle}+@{reprolls-ycharm-successes}+@{reprolls-ncharm-successes})">S
                                             </div>
                                         </div>
                                         <div class="flex grow-normal">
@@ -18931,6 +18942,66 @@
                                                 <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-widget-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
                                                 <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-widget-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="excellency-cap-section" title="Limit Detail for the Excellency">
+                                        <input type="hidden" name="attr_reprolls-caste" class="sheet-rolls-caste-val" disabled value="@{caste}">
+                                        <div class="solar-type-excellency">
+                                            <img class="caste-img">
+                                            CAP
+                                            <input type="hidden" name="attr_sign" value="(@{reprolls-exc-total-calc} - @{reprolls-exc-sum-calc})" disabled>
+                                            <input type="number" name="attr_reprolls-exc-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                            <hr />
+                                            <input type="number" name="attr_reprolls-exc-total-calc" class="exc-total" value="(@{reprolls-attr}+@{reprolls-abi})" disabled title="Total limit of Excellency Cap">
+                                        </div>
+                                        <div class="lunar-type-excellency">
+                                            <img class="caste-img">
+                                            CAP
+                                            <select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal">
+                                                <option value="0">---</option>
+                                                <option value="@{strength}">str</option>
+                                                <option value="@{dexterity}">dex</option>
+                                                <option value="@{stamina}">sta</option>
+                                                <option value="@{charisma}">cha</option>
+                                                <option value="@{manipulation}">man</option>
+                                                <option value="@{appearance}">app</option>
+                                                <option value="@{perception}">per</option>
+                                                <option value="@{intelligence}">int</option>
+                                                <option value="@{wits}">wit</option>
+                                            </select>
+                                            <input type="hidden" name="attr_sign" value="(@{reprolls-exc-total-calc} - @{reprolls-exc-sum-calc})" disabled>
+                                            <input type="number" name="attr_reprolls-exc-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                            <hr />
+                                            <input type="number" name="attr_reprolls-exc-total-calc" class="exc-total" value="(@{reprolls-attr}+@{reprolls-attr-lunar-exc})" disabled title="Total limit of Excellency Cap">
+                                        </div>
+                                        <div class="db-type-excellency">
+                                            <img class="caste-img">
+                                            CAP
+                                            <input type="hidden" name="attr_sign" value="(@{reprolls-exc-total-calc} - @{reprolls-exc-sum-calc})" disabled>
+                                            <input type="number" name="attr_reprolls-exc-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                            <hr />
+                                            <input type="number" name="attr_reprolls-exc-total-calc" class="exc-total" value="(@{reprolls-abi}+@{reprolls-specialty})" disabled title="Total limit of Excellency Cap">
+                                        </div>
+                                        <div class="liminal-type-excellency">
+                                            <img class="caste-img">
+                                            CAP
+                                            <span class="anima-flare-box-mode">
+                                                <input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
+                                                <span class="sheet-spelleffect" title="Toggle"></span>
+                                            </span>
+                                            <input type="hidden" name="attr_sign" value="(@{reprolls-exc-total-calc} - @{reprolls-exc-sum-calc})" disabled>
+                                            <input type="number" name="attr_reprolls-exc-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                            <hr />
+                                            <input type="number" name="attr_reprolls-exc-total-calc" class="exc-total" value="(@{reprolls-abi}+@{reprolls-anima-flare})" disabled title="Total limit of Excellency Cap">
+                                        </div>
+                                        <div class="sidereal-type-excellency">
+                                            <img class="caste-img">
+                                            CAP
+                                            <input type="hidden" name="attr_sign" value="(@{reprolls-exc-total-calc} - @{reprolls-exc-sum-calc})" disabled>
+                                            <input type="number" name="attr_reprolls-exc-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                            <hr />
+                                            <input type="hidden" name="attr_reprolls-exc-total-calc-max" value="(((@{essence} + 3) + abs(@{essence} - 3)) / 2)" disabled>
+                                            <input type="number" name="attr_reprolls-exc-total-calc" class="exc-total" value="(((@{reprolls-exc-total-calc-max} + 5) - abs(@{reprolls-exc-total-calc-max} - 5)) / 2)" disabled title="Total limit of Excellency Cap">
                                         </div>
                                     </div>
                                 </div>
