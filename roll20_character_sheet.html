@@ -1185,23 +1185,20 @@
     const charmRollExprRegexp = /^!exr (?:\d+|\(.+\))#/;
     [...charmSections, 'spells'].forEach(section => {
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function clickGMCharmCast(e) {
-            // TAS.debug(`CHANGING charm-rollexpr, e=`, e);
-            // const button_name = e.sourceAttribute;
-            // const id = button_name.split('_').bits[2]; // if you just want the id, you can use e.sourceAttribute.split('_')[2];
-            // const attr_name = `repeating_${section}_${id}_charm-name`;
-            const attr_name = `repeating_${section}_charm-buttons-isextended`;
-            // console.log(`attr_name=${attr_name}`);
+            if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=`, e);
+            const attr_name = `repeating_${section}_${e.sourceAttribute.split('_')[2]}_charm-buttons-isextended`;
+            // TAS.debug(`attr_name=${attr_name}`);
             let test = e.newValue ? e.newValue.match(charmRollExprRegexp) : false;
             // console.log(`test=${test}`);
             const obj = {[attr_name] : test ? 1 : 0};
-            // console.log(JSON.stringify(obj));
+            // TAS.debug(obj);
             setAttrs(obj);
         }));
     });
 
     charmSections.forEach(section => {
         on(`change:repeating_${section}`, setDebugWrapper(function setAspectAndBalancedDefault(e) {
-            // TAS.debug(`CHANGING charm, e=`, e);
+            if (debug === 2) TAS.debug(`setAspectAndBalancedDefault::setAspectAndBalancedDefault e=`, e);
             if (e.sourceType !== "player") return;
             const id = e.sourceAttribute.split('_')[2];
             getAttrs([`caste`,`repeating_${section}_${id}_charm-aspect`,`repeating_${section}_${id}_charm-balanced`], setDebugWrapper(function clickGMCharmCast(val) {
@@ -1219,7 +1216,7 @@
     });
 
     function setCasteToAllCharms(casteStr) {
-        // TAS.debug(`setCasteToAllCharms casteStr=${casteStr}`);
+        if (debug === 2) TAS.debug(`setCasteToAllCharms::setCasteToAllCharms casteStr=${casteStr}`);
         var objSet = {}, workings = charmSections.length;
         charmSections.forEach(section => {
             getSectionIDs(section, setDebugWrapper(function getCombatAttackSection(idSections) {
