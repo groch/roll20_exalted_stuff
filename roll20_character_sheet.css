@@ -322,11 +322,11 @@ tier 2: couleurs
     text-align: center;
 }
 
-.charsheet div.repability-toggle {
+.charsheet div.rep-toggle {
     display: none;
 }
 
-.charsheet .repability-enabled-check[value="1"] ~ .repability-toggle {
+.charsheet .rep-enabled-check[value="1"] ~ .rep-toggle {
     display: block;
 }
 
@@ -839,6 +839,12 @@ tier 2: couleurs
 
 .charsheet input[type=number] {
     -moz-appearance: textfield;
+}
+
+.charsheet input.merits-length-check[value="1"] ~ .repcontainer[data-groupname="repeating_merits"] {
+    height: 24em;
+    overflow: auto;
+    resize: vertical;
 }
 
 .charsheet .sheet-motes span,.charsheet .sheet-battle-group-row span {

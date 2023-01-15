@@ -2,6 +2,96 @@
     const version = 2.50, debug = 1;
     var TAS;
 
+    /**
+     * 
+     *  FROM https://github.com/onyxring/Roll20Async
+     * 
+     */
+    function setActiveCharacterId(charId){
+        var oldAcid=getActiveCharacterId();
+        var ev = new CustomEvent("message");
+        ev.data={"id":"0", "type":"setActiveCharacter", "data":charId};
+        self.dispatchEvent(ev); 
+        return oldAcid;
+    }
+    var _sIn=setInterval;
+    setInterval=function(callback, timeout){
+        var acid=getActiveCharacterId();
+        _sIn(
+            function(){
+                var prevAcid=setActiveCharacterId(acid);
+                callback();
+                setActiveCharacterId(prevAcid);
+            }
+        ,timeout);
+    }
+    var _sto=setTimeout;
+    setTimeout=function(callback, timeout){
+        var acid=getActiveCharacterId();
+        _sto(
+            function(){
+                var prevAcid=setActiveCharacterId(acid);
+                callback();
+                setActiveCharacterId(prevAcid);
+            }
+        ,timeout);
+    }
+    function getAttrsAsync(props){
+        var acid=getActiveCharacterId(); //save the current activeCharacterID in case it has changed when the promise runs 
+        var prevAcid=null;               //local variable defined here, because it needs to be shared across the promise callbacks defined below
+        return new Promise((resolve,reject)=>{
+                prevAcid=setActiveCharacterId(acid);  //in case the activeCharacterId has changed, restore it to what we were expecting and save the current value to restore later
+                try{
+                    getAttrs(props,(values)=>{  resolve(values); }); 
+                }
+                catch{ reject(); }
+        }).finally(()=>{
+            setActiveCharacterId(prevAcid); //restore activeCharcterId to what it was when the promise first ran
+        });
+    }
+    //use the same pattern for each of the following...
+    function setAttrsAsync(propObj, options){
+        var acid=getActiveCharacterId(); 
+        var prevAcid=null;               
+        return new Promise((resolve,reject)=>{
+                prevAcid=setActiveCharacterId(acid);  
+                try{
+                    setAttrs(propObj,options,(values)=>{ resolve(values); });
+                }
+                catch{ reject(); }
+        }).finally(()=>{
+            setActiveCharacterId(prevAcid); 
+        });
+    }
+
+    function getSectionIDsAsync(sectionName){
+        var acid=getActiveCharacterId(); 
+        var prevAcid=null;               
+        return new Promise((resolve,reject)=>{
+                prevAcid=setActiveCharacterId(acid);  
+                try{
+                    getSectionIDs(sectionName,(values)=>{ resolve(values); });
+                }
+                catch{ reject(); }
+        }).finally(()=>{
+            setActiveCharacterId(prevAcid); 
+        });
+    }
+    function getSingleAttrAsync(prop){ 
+        var acid=getActiveCharacterId(); 
+        var prevAcid=null;               
+        return new Promise((resolve,reject)=>{
+                prevAcid=setActiveCharacterId(acid);  
+                try{
+                    getAttrs([prop],(values)=>{  resolve(values[prop]); }); 
+                }
+                catch{ reject(); }
+        }).finally(()=>{
+            setActiveCharacterId(prevAcid); 
+        });
+    }
+    /////////////////////////
+
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
     function cleanAttrs(attrs)  { return _.mapObject(attrs, function(e) { return e === undefined ? '' : e; }); };
 
@@ -1689,16 +1779,6 @@
         }));
     }));
 
-    on('remove:repeating_abilities change:repeating_abilities', TAS._fn(function updateShowCharm(eventInfo){
-        TAS.debug(`change:repeating_abilities`);
-        getSectionIDs("abilities", TAS._fn(function getVarState(values){
-            TAS.debug(`values.length=${values.length}, values=${JSON.stringify(values)}`);
-            const obj = {'reb-abi-enabled': (values.length ? "1" : "0")};
-            TAS.debug(`obj=${JSON.stringify(obj)}`);
-            setAttrs(obj);
-        }));
-    }));
-
     /* Rolls Widgets */
     /* COST */
     const widgetCostAttrs = [
@@ -1796,6 +1876,79 @@
             });
         }));
     }));
+
+    /**
+     * ASYNC SECTION - get/set repeatable section size vars
+     */
+
+    on('sheet:opened', saveAllRepeatableSectionSize);
+    async function saveAllRepeatableSectionSize(e) {
+        if (debug === 2) TAS.debug(`saveAllRepeatableSectionSize::saveAllRepeatableSectionSize e=`, e);
+        const finalObj = {
+            ...await getMeritsRepeatableSectionSize(),
+            ...await getAbilitiesRepeatableSectionSize(),
+            ...await getCraftsRepeatableSectionSize(),
+            ...await getMARepeatableSectionSize(),
+        };
+        TAS.debug(`saveAllRepeatableSectionSize:: set=`, finalObj);
+        setAttrs(finalObj);
+    }
+
+    on('change:repeating_merits remove:repeating_merits', saveMeritsRepeatableSectionSize);
+    async function saveMeritsRepeatableSectionSize(e) {
+        if (debug === 2) TAS.debug(`saveMeritsRepeatableSectionSize::saveMeritsRepeatableSectionSize e=`, e);
+        const oldVal = await getAttrsAsync(['merits-length']);
+        const finalObj = {...await getMeritsRepeatableSectionSize()};
+        if (finalObj['merits-length'] === oldVal) return;
+        setAttrs(finalObj);
+    }
+
+    async function getMeritsRepeatableSectionSize() {
+        const meritIdArray = await getSectionIDsAsync("merits");
+        return {'merits-length': meritIdArray.length > 10 ? 1 : 0};
+    }
+
+    on('change:repeating_abilities remove:repeating_abilities', saveAbilitiesRepeatableSectionSize);
+    async function saveAbilitiesRepeatableSectionSize(e) {
+        if (debug === 2) TAS.debug(`saveMeritsRepeatableSectionSize::saveMeritsRepeatableSectionSize e=`, e);
+        const oldVal = await getAttrsAsync(['rep-abi-enabled']);
+        const finalObj = {...await getAbilitiesRepeatableSectionSize()};
+        if (finalObj['rep-abi-enabled'] === oldVal) return;
+        setAttrs(finalObj);
+    }
+
+    async function getAbilitiesRepeatableSectionSize() {
+        const abilitiesIdArray = await getSectionIDsAsync("abilities");
+        return {'rep-abi-enabled': abilitiesIdArray.length ? 1 : 0};
+    }
+
+    on('change:repeating_crafts remove:repeating_crafts', saveCraftsRepeatableSectionSize);
+    async function saveCraftsRepeatableSectionSize(e) {
+        if (debug === 2) TAS.debug(`saveCraftsRepeatableSectionSize::saveCraftsRepeatableSectionSize e=`, e);
+        const oldVal = await getAttrsAsync(['rep-crafts-enabled']);
+        const finalObj = {...await getCraftsRepeatableSectionSize()};
+        if (finalObj['rep-crafts-enabled'] === oldVal) return;
+        setAttrs(finalObj);
+    }
+
+    async function getCraftsRepeatableSectionSize() {
+        const craftsIdArray = await getSectionIDsAsync("crafts");
+        return {'rep-crafts-enabled': craftsIdArray.length ? 1 : 0};
+    }
+
+    on('change:repeating_martialarts remove:repeating_martialarts', saveMARepeatableSectionSize);
+    async function saveMARepeatableSectionSize(e) {
+        if (debug === 2) TAS.debug(`saveMARepeatableSectionSize::saveMARepeatableSectionSize e=`, e);
+        const oldVal = await getAttrsAsync(['rep-ma-enabled']);
+        const finalObj = {...await getMARepeatableSectionSize()};
+        if (finalObj['rep-ma-enabled'] === oldVal) return;
+        setAttrs(finalObj);
+    }
+
+    async function getMARepeatableSectionSize() {
+        const masIdArray = await getSectionIDsAsync("martialarts");
+        return {'rep-ma-enabled': masIdArray.length ? 1 : 0};
+    }
     
     /* Not used, but help if i want to used button[type="action"] instead of button[type="roll"] + start playing with async */
     [...charmSections, 'spells'].forEach(section => {
@@ -3779,6 +3932,7 @@
                     </div>
                     <div><!-- 1.3.3.2 MERITS AREA -->
                         <h1><span>Merits</span></h1>
+                        <input type="hidden" name="attr_merits-length" class="merits-length-check">
                         <fieldset class="repeating_merits" style="display: none;">
                             <input type="hidden" name="attr_repmerits-toggle-desc" class="merits-toggle-desc" value="0">
                             <div class="merit-input-area">
@@ -15045,8 +15199,8 @@
                                             <input type="number" class="reminder-val" name="attr_war" readonly>
                                         </div>
                                     </div>
-                                    <input type="hidden" class="repability-enabled-check" name="attr_reb-abi-enabled" />
-                                    <div class="repability-toggle">
+                                    <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
+                                    <div class="rep-toggle">
                                         <hr />
                                         <fieldset class="repeating_abilities" style="display: none;">
                                             <div class="reminder-cell">
@@ -15103,13 +15257,16 @@
                                         <span>Wea</span>
                                         <input type="number" class="reminder-val" name="attr_craft-forging" readonly>
                                     </div>
-                                    <hr />
-                                    <fieldset class="repeating_crafts" style="display: none;">
-                                        <div class="reminder-cell">
-                                            <input type="text" name="attr_repcraftsname" readonly>
-                                            <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
-                                        </div>
-                                    </fieldset>
+                                    <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
+                                    <div class="rep-toggle">
+                                        <hr />
+                                        <fieldset class="repeating_crafts" style="display: none;">
+                                            <div class="reminder-cell">
+                                                <input type="text" name="attr_repcraftsname" readonly>
+                                                <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div>
                                 </div>
                             </div>
                             <div class="sheet-box-reminder sheet-ma-reminder qc-toggle-display">
@@ -15159,13 +15316,16 @@
                                         <span>SDS</span>
                                         <input type="number" class="reminder-val" name="attr_ma-steel" readonly>
                                     </div>
-                                    <hr />
-                                    <fieldset class="repeating_martialarts" style="display: none;">
-                                        <div class="reminder-cell">
-                                            <input type="text" name="attr_repmartialartsname" readonly>
-                                            <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
-                                        </div>
-                                    </fieldset>
+                                    <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
+                                    <div class="rep-toggle">
+                                        <hr />
+                                        <fieldset class="repeating_martialarts" style="display: none;">
+                                            <div class="reminder-cell">
+                                                <input type="text" name="attr_repmartialartsname" readonly>
+                                                <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div>
                                 </div>
                             </div>
                             <div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
@@ -18707,8 +18867,8 @@
                                             <input type="number" class="reminder-val" name="attr_war" readonly>
                                         </div>
                                     </div>
-                                    <input type="hidden" class="repability-enabled-check" name="attr_reb-abi-enabled" />
-                                    <div class="repability-toggle">
+                                    <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
+                                    <div class="rep-toggle">
                                         <hr />
                                         <fieldset class="repeating_abilities" style="display: none;">
                                             <div class="reminder-cell">
@@ -18765,13 +18925,16 @@
                                         <span>Wea</span>
                                         <input type="number" class="reminder-val" name="attr_craft-forging" readonly>
                                     </div>
-                                    <hr />
-                                    <fieldset class="repeating_crafts" style="display: none;">
-                                        <div class="reminder-cell">
-                                            <input type="text" name="attr_repcraftsname" readonly>
-                                            <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
-                                        </div>
-                                    </fieldset>
+                                    <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
+                                    <div class="rep-toggle">
+                                        <hr />
+                                        <fieldset class="repeating_crafts" style="display: none;">
+                                            <div class="reminder-cell">
+                                                <input type="text" name="attr_repcraftsname" readonly>
+                                                <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div>
                                 </div>
                             </div>
                             <div class="sheet-box-reminder sheet-ma-reminder qc-toggle-display">
@@ -18821,13 +18984,16 @@
                                         <span>SDS</span>
                                         <input type="number" class="reminder-val" name="attr_ma-steel" readonly>
                                     </div>
-                                    <hr />
-                                    <fieldset class="repeating_martialarts" style="display: none;">
-                                        <div class="reminder-cell">
-                                            <input type="text" name="attr_repmartialartsname" readonly>
-                                            <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
-                                        </div>
-                                    </fieldset>
+                                    <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
+                                    <div class="rep-toggle">
+                                        <hr />
+                                        <fieldset class="repeating_martialarts" style="display: none;">
+                                            <div class="reminder-cell">
+                                                <input type="text" name="attr_repmartialartsname" readonly>
+                                                <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div>
                                 </div>
                             </div>
                             <div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
@@ -22418,8 +22584,8 @@
                                     <input type="number" class="reminder-val" name="attr_war" readonly>
                                 </div>
                             </div>
-                            <input type="hidden" class="repability-enabled-check" name="attr_reb-abi-enabled" />
-                            <div class="repability-toggle">
+                            <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
+                            <div class="rep-toggle">
                                 <hr />
                                 <fieldset class="repeating_abilities" style="display: none;">
                                     <div class="reminder-cell">
@@ -22476,13 +22642,16 @@
                                 <span>Wea</span>
                                 <input type="number" class="reminder-val" name="attr_craft-forging" readonly>
                             </div>
-                            <hr />
-                            <fieldset class="repeating_crafts" style="display: none;">
-                                <div class="reminder-cell">
-                                    <input type="text" name="attr_repcraftsname" readonly>
-                                    <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
-                                </div>
-                            </fieldset>
+                            <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
+                            <div class="rep-toggle">
+                                <hr />
+                                <fieldset class="repeating_crafts" style="display: none;">
+                                    <div class="reminder-cell">
+                                        <input type="text" name="attr_repcraftsname" readonly>
+                                        <input type="number" class="reminder-val" name="attr_repcrafts" readonly>
+                                    </div>
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
                     <div class="sheet-box-reminder sheet-ma-reminder qc-toggle-display">
@@ -22532,13 +22701,16 @@
                                 <span>SDS</span>
                                 <input type="number" class="reminder-val" name="attr_ma-steel" readonly>
                             </div>
-                            <hr />
-                            <fieldset class="repeating_martialarts" style="display: none;">
-                                <div class="reminder-cell">
-                                    <input type="text" name="attr_repmartialartsname" readonly>
-                                    <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
-                                </div>
-                            </fieldset>
+                            <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
+                            <div class="rep-toggle">
+                                <hr />
+                                <fieldset class="repeating_martialarts" style="display: none;">
+                                    <div class="reminder-cell">
+                                        <input type="text" name="attr_repmartialartsname" readonly>
+                                        <input type="number" class="reminder-val" name="attr_repmartialarts" readonly>
+                                    </div>
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
                     <div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
