@@ -293,6 +293,11 @@ tier 2: couleurs
     color: black;
 }
 
+.charsheet .not-visible {
+    visibility: hidden;
+}
+
+.charsheet .sheet-tab-content input[type="text"].qc-toggle-display-inv.qc-have-exc,
 .charsheet .sheet-col.stat-col div.qc-toggle-display-inv,
 .charsheet div.qc-toggle-display-inv {
     display: none;
@@ -300,6 +305,16 @@ tier 2: couleurs
 
 .charsheet .qc-panel-check[value="1"] ~ .qc-toggle-visibility {
     visibility: hidden;
+}
+
+.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-content .sheet-defenses .flex-col .qc-have-exc,
+.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-content .qc-have-exc {
+    display: none;
+}
+
+.charsheet .sheet-tab-content .qc-have-exc {
+    background: #ffd70080;
+    text-align: center;
 }
 
 .charsheet div.repability-toggle {
@@ -315,6 +330,7 @@ tier 2: couleurs
     display: none;
 }
 
+.charsheet .sheet-defenses .flex-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv,
 .charsheet .sheet-col.stat-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
     display: flex;
 }
@@ -648,7 +664,6 @@ tier 2: couleurs
     height: 25px;
     border: 0px;
     border-bottom: 1px solid black;
-    border-radius: 0px;
     background-color: transparent;
 }
 
@@ -737,8 +752,12 @@ tier 2: couleurs
 .charsheet .sheet-trait {
     position: relative;
     display: grid;
-    grid-template-columns: auto 5.8em;
+    grid-template-columns: auto calc((1.75em + 2px) * 3);
     align-items: start;
+}
+
+.charsheet .caste-have-exc-check[value="1"] ~ .sheet-tab-content .sheet-trait.four-cell {
+    grid-template-columns: auto calc((1.75em + 2px) * 4);
 }
 
 .charsheet .sheet-trait > div.sheet-dots {
@@ -747,6 +766,7 @@ tier 2: couleurs
 
 .charsheet .sheet-trait > span:last-child,
 .charsheet .sheet-trait > input:last-child {
+    display: flex;
     position: absolute;
     right: 0;
     bottom: 0;
@@ -781,8 +801,11 @@ tier 2: couleurs
 
 .charsheet [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"] {
     font-size: 14px;
-    text-align: right;
     width: 3em;
+}
+
+.charsheet [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"]:not(.qc-have-exc) {
+    text-align: right;
 }
 
 .charsheet [data-groupname=repeating_qcattacks] .sheet-trait > input[type="text"] {
@@ -790,6 +813,7 @@ tier 2: couleurs
 }
 
 .charsheet .sheet-trait input[type="number"],
+.charsheet .sheet-trait span input[type="text"]:not(.sheet-qc-soc-influence-type),
 .charsheet .sheet-motes input[type=number],
 .charsheet .sheet-motes input[type=text],
 .charsheet .sheet-battle-group-row input[type=number] {
@@ -2575,10 +2599,15 @@ body.sheet-darkmode {
 .sheet-tab-intimacies-sheet .head-line .sheet-table-cell input[type="number"][disabled],
 .sheet-tab-antisocial-sheet .head-line .sheet-table-cell input[type="number"][disabled],
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled],
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].wound-taint {
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].wound-taint,
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="text"].qc-have-exc {
     width: 27px;
     flex-grow: 1;
     margin-right:2px;
+}
+
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="text"].qc-have-exc {
+    margin-left: 2px;
 }
 
 .sheet-defenses .flex-col .flex.grow-normal {
@@ -2591,7 +2620,8 @@ body.sheet-darkmode {
 
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled].wound-taint:last-child,
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled]:last-child,
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled] {
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled],
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] ~ input[type="text"].qc-have-exc {
     margin-right:0;
 }
 
@@ -3418,6 +3448,10 @@ body.sheet-darkmode {
     justify-content: flex-end;
 }
 
+.charsheet .sheet-box-reminder .repcontainer {
+    margin-bottom: 0;
+}
+
 .charsheet .sheet-box-reminder,
 .charsheet .sheet-box-reminder input[type="checkbox"].sheet-unnamed-toggle {
     width: 8.5em;
@@ -3442,7 +3476,13 @@ body.sheet-darkmode {
     flex-basis: 33%;
 }
 
-.charsheet .sheet-box-reminder .reminder-cell > input[type="number"] {
+.charsheet .sheet-box-reminder .reminder-cell > span {
+    display: flex;
+}
+
+.charsheet .sheet-box-reminder .reminder-cell > input[type="number"],
+.charsheet .sheet-box-reminder .reminder-cell > span > input[type="text"],
+.charsheet .sheet-box-reminder .reminder-cell > span > input[type="number"] {
     width: 1em;
     padding: 0;
 }
@@ -3736,6 +3776,11 @@ body.sheet-darkmode {
 .charsheet .reminder-charm-selector-input[value="evocations"] ~ .reminder-charm-evocations,
 .charsheet .reminder-charm-selector-input[value="charm"] ~ .reminder-charms {
     display: block;
+}
+
+.charsheet .caste-have-exc-check[value="1"] ~ .sheet-tab-content .sheet-qcattr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    width: 300px;
+    left: -192px;
 }
 
 .charsheet .sheet-tab-rolls-sheet .roll-section input[type="text"] {

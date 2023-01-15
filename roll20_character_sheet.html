@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.49, debug = 1;
+    const version = 2.50, debug = 1;
     var TAS;
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -377,16 +377,15 @@
         }));
     }));
 
-    on('change:caste', TAS._fn(function updateMotePool(eventInfo){
-        getAttrs(["caste"], setDebugWrapper(function determineMotePool(values){
+    on('change:caste change:force-exc', TAS._fn(function updateMotePool(eventInfo){
+        getAttrs(["caste", "force-exc"], setDebugWrapper(function determineMotePool(values){
             var periEquation = "0", persEquation = "0", showAnima = 1,
                 showSupernal = 0,   showLimit = 0,
                 casteLow = 'unknown',
                 succEx = 0,         diceEx = 1;
             if (["Dawn",    "Zenith",   "Twilight",   "Night",      "Eclipse",
                  "Dusk",    "Midnight", "Daybreak",   "Day",        "Moonshadow",
-                 "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer",
-                 "Adamant", "Jade",     "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal"].includes(values.caste)) {
+                 "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer"].includes(values.caste)) {
                 persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
                 periEquation = "@{essence} * 7 + 26 - @{committedesstotal}";
                 showSupernal = 1;
@@ -394,7 +393,8 @@
             } else if (["Air", "Earth", "Fire", "Water", "Wood"].includes(values.caste)){
                 persEquation = "@{essence} * 1 + 11 - @{committedessperso}";
                 periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
-            } else if (["Full Moon", "Changing Moon", "No Moon", "Casteless"].includes(values.caste)){
+            } else if (["Full Moon", "Changing Moon", "No Moon",    "Casteless",
+                        "Adamant",   "Jade",          "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal"].includes(values.caste)){
                 persEquation = "@{essence} * 1 + 15 - @{committedessperso}";
                 periEquation = "@{essence} * 4 + 34 - @{committedesstotal}";
                 showLimit = 1;
@@ -422,7 +422,10 @@
                 periEquation = "0";
                 showAnima = 0;
                 diceEx = 0;
-            } else return;
+            } else {
+                TAS.debug(`updateMotePool:: No settings found, stay as is !`);
+                return;
+            }
 
             if (hasCasteImg(values.caste))
                  casteLow = values.caste.toLowerCase();
@@ -434,6 +437,7 @@
                 "showsupdiv": showSupernal,
                 "showlimit": showLimit,
                 "caste-low": casteLow,
+                "caste-have-exc": Number(values['force-exc']) || succEx || diceEx,
                 "diceex": diceEx,
                 "succex": succEx
             };
@@ -459,6 +463,7 @@
         {version: 2.46, fn: upgradeto247},
         {version: 2.47, fn: upgradeto248},
         {version: 2.48, fn: upgradeto249},
+        {version: 2.49, fn: upgradeto250},
     ];
 
     on('sheet:opened', function versionCheck(e) {
@@ -600,6 +605,15 @@
         '19': '19[RAW]',
         '20': '20[RAW]'
     };
+
+    function upgradeto250() {
+        getAttrs(["caste"], setDebugWrapper(function determineMotePool(values){
+            setAttrs({
+                "caste-have-exc": !["God", "Elemental", "Demon", "Undead", "God-Blooded", "Mortal"].includes(values.caste) ? 1 : 0,
+                'version': version
+            });
+        }));
+    }
 
     function upgradeto249() {
         getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
@@ -1026,11 +1040,12 @@
         });
     }));
 
-    on('change:repeating_qcattacks', setDebugWrapper(function qcAttacksChange() {
+    on('change:repeating_qcattacks remove:repeating_qcattacks', setDebugWrapper(function qcAttacksChange() {
         getSectionIDs('qcattacks', setDebugWrapper(function getQcAttacksSections(idSections) {
             getSectionIDs('weapon', setDebugWrapper(function getQcAttacksSections(idWeaponSections) {
                 const qcFieldNames = [];
-                idSections.forEach(id => qcFieldNames.push(`repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdamage`));
+                idSections.forEach(id => qcFieldNames.push(`repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
+                qcFieldNames.push(`caste-have-exc`);
 
                 getAttrs(qcFieldNames, TAS._fn(function GetQCAttacksFieldsAndUpdateWeaponFields(valuesSections) {
                     // remove weapons
@@ -1039,16 +1054,21 @@
                     const weaponFieldToSet = {};
                     for (const id of idSections) {
                         const name_attr = `repeating_qcattacks_${id}_repqcattackname`,
-                            acc_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
+                            atk_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
+                            exc_attr  = `repeating_qcattacks_${id}_repqcattackdice-exc`,
+                            have_exc  = Boolean(valuesSections['caste-have-exc']),
                             dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
+                            ovw_attr  = `repeating_qcattacks_${id}_repqcattackovw`,
                             newWeapIndex = generateRowID(),
                             weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
                             weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
                             weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
-                            qcAccSplit = valuesSections[acc_attr].split('+');
-                        weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]})`;
+                            weap_ovw_attr  = `repeating_weapon_${newWeapIndex}_repweaponov`,
+                            qcAccSplit = valuesSections[atk_attr].split('+');
+                        weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]}${have_exc && valuesSections[exc_attr] ? `(+${valuesSections[exc_attr]})`:''})`;
                         weaponFieldToSet[weap_acc_attr] = qcAccSplit[1] ? Number(qcAccSplit[1]) : 0;
                         weaponFieldToSet[weap_dam_attr] = valuesSections[dam_attr];
+                        weaponFieldToSet[weap_ovw_attr] = valuesSections[ovw_attr];
                     }
 
                     TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(weaponFieldToSet)}`);
@@ -1862,6 +1882,8 @@
         <input class="charm-whisper-gm-check" name="attr_charmwhispergm" type="hidden" value="0">
         <input class="charm-whisper-both-check" name="attr_charmwhisperboth" type="hidden" value="0">
         <input class="charm-caste-check" name="attr_caste" type="hidden">
+        <input name="attr_force-exc" type="hidden" value="0">
+        <input class="caste-have-exc-check" name="attr_caste-have-exc" type="hidden" value="0">
 
         <!-- 1 CHARACTER PAGE -->
 
@@ -3525,58 +3547,84 @@
                     <h1><span>Actions</span></h1>
                     <div class="sheet-trait">
                         <span>Read Intentions</span>
-                        <input type="number" name="attr_qc-read-intentions">
+                        <span>
+                            <input type="number" name="attr_qc-read-intentions" title="Dice Pool">
+                            <input type="text" name="attr_qc-read-intentions-exc" class="qc-have-exc" title="Excellency cap">
+                        </span>
                     </div>
                     <div class="sheet-trait">
-                        <div>
+                        <span class="flex">
                             <span>S. Infl. :</span>
-                            <input type="text" name="attr_qc-social-influence-type" placeholder="Threaten" class="sheet-qc-soc-influence-type">
-                        </div>
-                        <input type="number" name="attr_qc-social-influence">
+                            <input type="text" name="attr_qc-social-influence-type" placeholder="Threaten" class="sheet-qc-soc-influence-type grow-normal" title="Type of Social Influence">
+                        </span>
+                        <span>
+                            <input type="number" name="attr_qc-social-influence" title="Dice Pool">
+                            <input type="text" name="attr_qc-social-influence-exc" class="qc-have-exc" title="Excellency cap">
+                        </span>
                     </div>
                     <div class="sheet-trait">
                         <span>Stealth/Larceny</span>
-                        <input type="number" name="attr_qc-stealth-larc">
+                        <span>
+                            <input type="number" name="attr_qc-stealth-larc" title="Dice Pool">
+                            <input type="text" name="attr_qc-stealth-larc-exc" class="qc-have-exc" title="Excellency cap">
+                        </span>
                     </div>
                     <div class="sheet-trait">
                         <span>Senses</span>
-                        <input type="number" name="attr_qc-senses">
+                        <span>
+                            <input type="number" name="attr_qc-senses" title="Dice Pool">
+                            <input type="text" name="attr_qc-senses-exc" class="qc-have-exc" title="Excellency cap">
+                        </span>
                     </div>
                     <div class="sheet-trait">
                         <span>Feats of Strength</span>
                         <span>
-                            <input type="number" name="attr_strength">
-                            <input type="number" name="attr_qc-fos-pool">
+                            <input type="number" name="attr_strength" title="Strength Cap for FoS">
+                            <input type="number" name="attr_qc-fos-pool" title="FoS Dice Pool">
+                            <input type="text" name="attr_qc-fos-pool-exc" class="qc-have-exc" title="FoS Excellency cap">
                         </span>
                     </div>
                     <fieldset class="repeating_qcactions" style="display: none;">
                         <div class="sheet-trait">
                             <input type="text" name="attr_repqcactionname" placeholder="Senses">
-                            <input type="number" name="attr_repqcactiondice">
+                            <span>
+                                <input type="number" name="attr_repqcactiondice" title="Dice Pool">
+                                <input type="text" name="attr_repqcactiondice-exc" class="qc-have-exc" title="Excellency cap">
+                            </span>
                         </div>
                     </fieldset>
                     <h1><span>Combat</span></h1>
                     <div class="sheet-trait">
                         <span>Join Battle</span>
-                        <input type="number" name="attr_qc-join-battle">
+                        <span>
+                            <input type="number" name="attr_qc-join-battle" title="Join Battle Dice Pool">
+                            <input type="text" name="attr_qc-join-battle-exc" class="qc-have-exc" title="Excellency cap">
+                        </span>
                     </div>
                     <div class="sheet-trait">
                         <span>Combat Movement</span>
-                        <input type="number" name="attr_qc-move">
-                    </div>
-                    <div class="sheet-trait">
-                        <span>Grapple</span>
                         <span>
-                            <input type="number" name="attr_qc-grapple">
-                            <input type="number" name="attr_qc-grapple-control">
+                            <input type="number" name="attr_qc-move" title="Dice Pool">
+                            <input type="text" name="attr_qc-move-exc" class="qc-have-exc" title="Excellency cap">    
+                        </span>
+                    </div>
+                    <div class="sheet-trait four-cell">
+                        <span>Grapple/Control</span>
+                        <span>
+                            <input type="number" name="attr_qc-grapple" title="Grapple Dice pool">
+                            <input type="text" name="attr_qc-grapple-exc" class="qc-have-exc" title="Grapple Excellency cap">
+                            <input type="number" name="attr_qc-grapple-control" title="Grapple Control Dice pool">
+                            <input type="text" name="attr_qc-grapple-control-exc" class="qc-have-exc" title="Grapple Control Excellency cap">
                         </span>
                     </div>
                     <fieldset class="repeating_qcattacks" style="display: none;">
-                        <div class="sheet-trait">
+                        <div class="sheet-trait four-cell">
                             <input type="text" name="attr_repqcattackname" placeholder="Unarmed">
                             <span>
-                                <input type="text" name="attr_repqcattackdice">
-                                <input type="number" name="attr_repqcattackdamage">
+                                <input type="text" name="attr_repqcattackdice" title="Attack pool">
+                                <input type="text" name="attr_repqcattackdice-exc" class="qc-have-exc" title="Attack Excellency cap">
+                                <input type="number" name="attr_repqcattackdamage" title="Damage pool">
+                                <input type="number" name="attr_repqcattackovw" title="Overwhelming" value="1" min="1">
                             </span>
                         </div>
                     </fieldset>
@@ -3808,27 +3856,45 @@
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Resolve</span>
-                                        <input type="number" name="attr_qc-resolve">
+                                        <span>
+                                            <input type="number" name="attr_qc-resolve">
+                                            <input type="text" name="attr_qc-resolve-exc" class="qc-have-exc" title="Excellency cap">
+                                        </span>
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Guile</span>
-                                        <input type="number" name="attr_qc-guile">
+                                        <span>
+                                            <input type="number" name="attr_qc-guile">
+                                            <input type="text" name="attr_qc-guile-exc" class="qc-have-exc" title="Excellency cap">
+                                        </span>
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Evasion</span>
-                                        <input type="number" name="attr_qc-evasion">
+                                        <span>
+                                            <input type="number" name="attr_qc-evasion">
+                                            <input type="text" name="attr_qc-evasion-exc" class="qc-have-exc" title="Excellency cap">
+                                        </span>
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Parry</span>
-                                        <input type="number" name="attr_qc-parry">
+                                        <span>
+                                            <input type="number" name="attr_qc-parry">
+                                            <input type="text" name="attr_qc-parry-exc" class="qc-have-exc" title="Excellency cap">
+                                        </span>
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Soak</span>
-                                        <input type="number" name="attr_qc-soak">
+                                        <span>
+                                            <input type="number" name="attr_qc-soak">
+                                            <input type="number" class="not-visible qc-have-exc">
+                                        </span>
                                     </div>
                                     <div class="sheet-trait">
                                         <span>Hardness</span>
-                                        <input type="number" name="attr_hardness">
+                                        <span>
+                                            <input type="number" name="attr_hardness">
+                                            <input type="number" class="not-visible qc-have-exc">
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -3958,7 +4024,7 @@
                                     <input type="hidden" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_repparry-base-s">
                                     <input type="number" value="@{repparry-base-s}" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
                                 </div>
-                                <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
+                                <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
                                 <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
                                 <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
                             </fieldset>
@@ -4029,7 +4095,7 @@
                         <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                         <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display">
+                        <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
                 <div class="flex-col">
@@ -4049,7 +4115,7 @@
                         <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
                         <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display">
+                        <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
                 <input type="hidden" name="attr_caste" class="def-exc-test">
@@ -4069,7 +4135,7 @@
                         <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                         <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display">
+                        <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
                 <div class="flex-col">
@@ -4085,7 +4151,7 @@
                         <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                         <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display">
+                        <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
             </div>
@@ -11527,6 +11593,10 @@
                         <span>Include Success Excellency</span>
                     </label>
                     <label>
+                        <input type="checkbox" name="attr_force-exc" value="1"><span></span>
+                        <span>Force Excellencies Display</span>
+                    </label>
+                    <label>
                         <input type="checkbox" name="attr_show-charname-in-charms" value="1"><span></span>
                         <span>Show Character Name in Charms</span>
                     </label>
@@ -15040,56 +15110,91 @@
                                     </fieldset>
                                 </div>
                             </div>
-                            <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display-inv">
+                            <div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
                                 <div class="sheet-layer5">
-                                    <div class="reminder-cell" title="Read Intentions">
-                                        <span>RI</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                                    <div class="flex flex-wrap">
+                                        <div class="reminder-cell" title="Read Intentions">
+                                            <span>RI</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-read-intentions-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Social Influence">
+                                            <span>SI</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-social-influence-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Stealth/Larceny">
+                                            <span>S/L</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-stealth-larc-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Senses">
+                                            <span>Sen</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-senses-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Feats of Strength">
+                                            <span>FoS</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-fos-pool-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <hr />
+                                        <div class="reminder-cell" title="Join Battle">
+                                            <span>JB</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-join-battle-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Combat Movement">
+                                            <span>Mvt</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-move" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-move-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Grapple">
+                                            <span>Gra</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Grapple Control">
+                                            <span>GrC</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-control-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
+                                        <div class="reminder-cell" title="Appearance">
+                                            <span>App</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_appearance" readonly>
+                                                <input type="number" class="reminder-val not-visible qc-have-exc">
+                                            </span>
+                                        </div>
+                                        <hr />
                                     </div>
-                                    <div class="reminder-cell" title="Social Influence">
-                                        <span>SI</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Stealth/Larceny">
-                                        <span>S/L</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Senses">
-                                        <span>Sen</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Feats of Strength">
-                                        <span>FoS</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
-                                    </div>
-                                    <hr />
-                                    <div class="reminder-cell" title="Join Battle">
-                                        <span>JB</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Combat Movement">
-                                        <span>Mvt</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-move" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Grapple">
-                                        <span>Gra</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Grapple Control">
-                                        <span>GrC</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
-                                    </div>
-                                    <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
-                                    <div class="reminder-cell" title="Appearance">
-                                        <span>App</span>
-                                        <input type="number" class="reminder-val" name="attr_appearance" readonly>
-                                    </div>
-                                    <hr />
                                     <fieldset class="repeating_qcactions" style="display: none;">
                                         <div class="reminder-cell">
                                             <input type="text" name="attr_repqcactionname" readonly>
-                                            <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_repqcactiondice-exc" readonly>
+                                            </span>
                                         </div>
                                     </fieldset>
                                 </div>
@@ -18667,56 +18772,91 @@
                                     </fieldset>
                                 </div>
                             </div>
-                            <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display-inv">
+                            <div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
                                 <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
                                 <div class="sheet-layer5">
-                                    <div class="reminder-cell" title="Read Intentions">
-                                        <span>RI</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                                    <div class="flex flex-wrap">
+                                        <div class="reminder-cell" title="Read Intentions">
+                                            <span>RI</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-read-intentions-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Social Influence">
+                                            <span>SI</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-social-influence-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Stealth/Larceny">
+                                            <span>S/L</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-stealth-larc-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Senses">
+                                            <span>Sen</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-senses-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Feats of Strength">
+                                            <span>FoS</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-fos-pool-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <hr />
+                                        <div class="reminder-cell" title="Join Battle">
+                                            <span>JB</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-join-battle-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Combat Movement">
+                                            <span>Mvt</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-move" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-move-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Grapple">
+                                            <span>Gra</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <div class="reminder-cell" title="Grapple Control">
+                                            <span>GrC</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-control-exc" readonly>
+                                            </span>
+                                        </div>
+                                        <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
+                                        <div class="reminder-cell" title="Appearance">
+                                            <span>App</span>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_appearance" readonly>
+                                                <input type="number" class="reminder-val not-visible qc-have-exc">
+                                            </span>
+                                        </div>
+                                        <hr />
                                     </div>
-                                    <div class="reminder-cell" title="Social Influence">
-                                        <span>SI</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Stealth/Larceny">
-                                        <span>S/L</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Senses">
-                                        <span>Sen</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Feats of Strength">
-                                        <span>FoS</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
-                                    </div>
-                                    <hr />
-                                    <div class="reminder-cell" title="Join Battle">
-                                        <span>JB</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Combat Movement">
-                                        <span>Mvt</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-move" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Grapple">
-                                        <span>Gra</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
-                                    </div>
-                                    <div class="reminder-cell" title="Grapple Control">
-                                        <span>GrC</span>
-                                        <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
-                                    </div>
-                                    <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
-                                    <div class="reminder-cell" title="Appearance">
-                                        <span>App</span>
-                                        <input type="number" class="reminder-val" name="attr_appearance" readonly>
-                                    </div>
-                                    <hr />
                                     <fieldset class="repeating_qcactions" style="display: none;">
                                         <div class="reminder-cell">
                                             <input type="text" name="attr_repqcactionname" readonly>
-                                            <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
+                                            <span>
+                                                <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
+                                                <input type="text" class="reminder-val qc-have-exc" name="attr_repqcactiondice-exc" readonly>
+                                            </span>
                                         </div>
                                     </fieldset>
                                 </div>
@@ -19352,7 +19492,7 @@
                                 <input type="hidden" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_repparry-base-s">
                                 <input type="number" value="@{repparry-base-s}" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint">
                             </div>
-                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1"></div>
+                            <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
                             <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
                             <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
                         </fieldset>
@@ -19385,7 +19525,7 @@
                                 <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                                 <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                                 <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display">
+                                <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                             </div>
                         </div>
                         <div class="flex-col">
@@ -19405,7 +19545,7 @@
                                 <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
                                 <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                                 <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display">
+                                <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                             </div>
                         </div>
                         <input type="hidden" name="attr_caste" class="def-exc-test">
@@ -19415,7 +19555,7 @@
                         <div class="flex-col">
                             <div class="flex grow-normal">
                                 <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-                                <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" class="grow-normal">
+                                <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}">
                             </div>
                             <div class="flex grow-normal">
                                 <span title="Wits + Integrity">Resolve</span>:
@@ -19425,13 +19565,13 @@
                                 <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                                 <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
                                 <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display">
+                                <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                             </div>
                         </div>
                         <div class="flex-col">
                             <div class="flex grow-normal">
                                 <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
-                                <input type="number" readonly="readonly" name="attr_hardness" title="Come from your armor" class="grow-normal">
+                                <input type="number" readonly="readonly" name="attr_hardness" title="Come from your armor">
                             </div>
                             <div class="flex grow-normal">
                                 <span title="Manipulation + Socialize">Guile</span>:
@@ -19441,7 +19581,7 @@
                                 <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                                 <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
                                 <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display">
+                                <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                             </div>
                         </div>
                     </div>
@@ -22343,56 +22483,91 @@
                             </fieldset>
                         </div>
                     </div>
-                    <div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display-inv">
+                    <div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
                         <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
                         <div class="sheet-layer5">
-                            <div class="reminder-cell" title="Read Intentions">
-                                <span>RI</span>
-                                <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                            <div class="flex flex-wrap">
+                                <div class="reminder-cell" title="Read Intentions">
+                                    <span>RI</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-read-intentions-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Social Influence">
+                                    <span>SI</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-social-influence-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Stealth/Larceny">
+                                    <span>S/L</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-stealth-larc-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Senses">
+                                    <span>Sen</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-senses-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Feats of Strength">
+                                    <span>FoS</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-fos-pool-exc" readonly>
+                                    </span>
+                                </div>
+                                <hr />
+                                <div class="reminder-cell" title="Join Battle">
+                                    <span>JB</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-join-battle-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Combat Movement">
+                                    <span>Mvt</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-move" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-move-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Grapple">
+                                    <span>Gra</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-exc" readonly>
+                                    </span>
+                                </div>
+                                <div class="reminder-cell" title="Grapple Control">
+                                    <span>GrC</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-control-exc" readonly>
+                                    </span>
+                                </div>
+                                <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
+                                <div class="reminder-cell" title="Appearance">
+                                    <span>App</span>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_appearance" readonly>
+                                        <input type="number" class="reminder-val not-visible qc-have-exc">
+                                    </span>
+                                </div>
+                                <hr />
                             </div>
-                            <div class="reminder-cell" title="Social Influence">
-                                <span>SI</span>
-                                <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Stealth/Larceny">
-                                <span>S/L</span>
-                                <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Senses">
-                                <span>Sen</span>
-                                <input type="number" class="reminder-val" name="attr_qc-senses" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Feats of Strength">
-                                <span>FoS</span>
-                                <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly>
-                            </div>
-                            <hr />
-                            <div class="reminder-cell" title="Join Battle">
-                                <span>JB</span>
-                                <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Combat Movement">
-                                <span>Mvt</span>
-                                <input type="number" class="reminder-val" name="attr_qc-move" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Grapple">
-                                <span>Gra</span>
-                                <input type="number" class="reminder-val" name="attr_qc-grapple" readonly>
-                            </div>
-                            <div class="reminder-cell" title="Grapple Control">
-                                <span>GrC</span>
-                                <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly>
-                            </div>
-                            <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
-                            <div class="reminder-cell" title="Appearance">
-                                <span>App</span>
-                                <input type="number" class="reminder-val" name="attr_appearance" readonly>
-                            </div>
-                            <hr />
                             <fieldset class="repeating_qcactions" style="display: none;">
                                 <div class="reminder-cell">
                                     <input type="text" name="attr_repqcactionname" readonly>
-                                    <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
+                                    <span>
+                                        <input type="number" class="reminder-val" name="attr_repqcactiondice" readonly>
+                                        <input type="text" class="reminder-val qc-have-exc" name="attr_repqcactiondice-exc" readonly>
+                                    </span>
                                 </div>
                             </fieldset>
                         </div>
