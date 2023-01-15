@@ -1336,6 +1336,10 @@
     dDmgInitResetAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-ddmg-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-'))));
 
     function updateAttackRollRepeating(e, sectionToBind, finalExprCb, attributePrefix = '', finalAttrNameAttrPrefix = '') {
+        if (e.sourceType !== "player") {
+            if (debug === 2) TAS.debug(`updateAttackRollRepeating:: NOT TRIGGERED BY THE PLAYER => RETURN`);
+            return;
+        }
         const repeatingSectionName = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         if (id[0] !== '-') {
@@ -1700,7 +1704,7 @@
 
         if (debug === 2) TAS.debug(`updateWidgetRollForCost:: attr_name=${attr_name}`);
         if (e.sourceType === "sheetworker") {
-            TAS.debug('updateWidgetRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
+            if (debug === 2) TAS.debug('updateWidgetRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
         if (debug === 2) TAS.debug('updateWidgetRollForCost:: NORMAL TRIGGER COST EDIT');
@@ -1715,10 +1719,12 @@
             if (moteDices < 0) {
                 moteDices = 0;
                 setAttrs({[attr_name + 'reprolls-ycharm-dices']: 0});
+                updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
             }
             if (moteSuccs < 0) {
                 moteSuccs = 0;
                 setAttrs({[attr_name + 'reprolls-ycharm-successes']: 0});
+                updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
             }
             let mote = moteOffset + moteDices + moteSuccs * 2;
             if (mote < 0) mote = 0;
@@ -1729,11 +1735,25 @@
         }));
     }
 
-    on('change:repeating_rolls-widget:reprolls-ncharm-successes', e => {
+    /**
+     * Reset negative value that doesnt have sense
+     */
+    const resetOnNegAttrs = [
+        'reprolls-ycharm-paid-dices',
+        'reprolls-ycharm-paid-successes',
+        'reprolls-ncharm-successes'
+    ];
+    resetOnNegAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, setDebugWrapper(resetAttrOnNeg)));
+    function resetAttrOnNeg(e) {
         if (e.sourceType !== "player") return;
-        if (debug === 2) TAS.debug(`changeNCharmSucc::changeNCharmSucc e=${JSON.stringify(e)}`);
-        if (Number(e.newValue) < 0) setAttrs({[`repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_reprolls-ncharm-successes`]: 0});
-    });
+        const sourceAttrSplit = e.sourceAttribute.split('_'),
+            id = sourceAttrSplit[2],
+            baseAttr = sourceAttrSplit[3];
+        const finalAttr = `repeating_rolls-widget_${id}_${baseAttr}`;
+        if (debug === 2) TAS.debug(`resetAttrOnNeg::resetAttrOnNeg e=${JSON.stringify(e)}`);
+        if (Number(e.newValue) < 0) setAttrs({[finalAttr]: 0});
+        updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
+    }
 
     const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ycharm-paid-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ycharm-paid-successes', 'ncharm-successes', 'final-macro-options'];
     function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-dices'], '[Paid Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-successes'], '[Paid Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
