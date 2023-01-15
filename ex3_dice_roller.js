@@ -1164,8 +1164,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         }
         if (removed < qty)
             sendGMStandardScriptMessage(`MOTE ERROR WHEN ${makeCharacterLink(characterObj, characterId)} CASTED<br /><b>ASKED=</b>${qty} <b>REMOVED=</b>${removed} !!! NO MORE MOTE TO SPEND`, undefined, undefined, undefined, 'background-color: red;');
-        const displayedEssenceTest = displayedEssenceObj.get('current') - removed;
-        displayedEssenceObj.set('current', displayedEssenceTest < 0 ? 0 : displayedEssenceTest);
+        let displayedEssenceTest = displayedEssenceObj.get('current') - removed;
+        if (displayedEssenceTest < 0) displayedEssenceTest = 0;
+        if (displayedEssenceTest === 0 && displayedEssenceObj.get('max') === 0) displayedEssenceTest = '';
+        displayedEssenceObj.set('current', displayedEssenceTest);
     },
 
     sortMoteAttr = (attrList, periFirst = true) => {
