@@ -105,6 +105,10 @@ input[type="number"] {
     background-color: rgba(0, 0, 0, .5);
 }
 
+.ui-dialog::-webkit-scrollbar-thumb:hover {
+    background-color: #7a8991;
+}
+
 .charsheet .sheet-footer {
     padding-top: 3px;
     text-align: right;
@@ -3169,8 +3173,10 @@ textarea::-webkit-scrollbar-track,
     height: 95%;
     resize: horizontal;
     margin-bottom: 0;
+    margin-right: 1px;
     border: 0;
     border-left: 1px solid;
+    padding-bottom: 1px;
 }
 
 .charsheet .sheet-rolls-toggle-desc-val[value="1"] ~ .rolls-textarea,
@@ -3931,7 +3937,10 @@ textarea::-webkit-scrollbar-track,
 }
 
 .charsheet .rolls-area .rollpad textarea {
-    height: 98%;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 .charsheet .rolls-area input.sheet-rollseffect + span::before {
@@ -4599,6 +4608,12 @@ and (min-resolution:.001dpcm) {
 }
 
 /* --- MOBILE SHEET PORTRAIT --- */
+
+@media only screen and (max-width: 828px) {
+    .charsheet .sheet-tab-character-sheet > div.sheet-3colrow.sheet-centerblock > div.sheet-2col > div:nth-child(3) > div {
+        grid-template-columns: 100%;
+    }
+}
 
 @media only screen and (max-width: 630px) {
 
