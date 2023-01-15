@@ -123,9 +123,14 @@ input[type="number"] {
 .charsheet .sheet-text-center { text-align: center; }
 
 .charsheet button[type=roll]::before { content: "" !important; }
+.charsheet .reminder-charm-div button[type=action].btn,
 .charsheet button[type=roll].btn {
     font-size: 13px;
     line-height: 13px;
+}
+
+.charsheet .reminder-charm-div button[type=action].btn {
+    line-height: 22px;
 }
 
 .charsheet .sheet-fixedwidth { display: inline-block; }
@@ -651,7 +656,7 @@ tier 2: couleurs
 }
 
 .charsheet [title] input[disabled],
-.charsheet [title] {
+.charsheet [title]:not([type="action"]) {
     cursor: help;
 }
 
@@ -1850,14 +1855,18 @@ and (min-resolution:.001dpcm) {
     flex-grow: 10;
 }
 
-.charsheet button.sheet-roll{
+.charsheet button.sheet-roll {
     height:30px;
-    width:50px;
+    width:42px;
     font-family: Cimiez, Arial, sans-serif;
     font-size:18px !important;
     font-weight:bold;
     padding: 2px 3px;
     margin: 0 3px 0 3px;
+}
+
+.charsheet button.sheet-roll.gm-whisper {
+    width:55px;
 }
 
 .charsheet .def-exc-test[value="Mortal"] ~ .def-exc {
@@ -3501,7 +3510,7 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem > .charm-buttons > button.sheet-roll {
-    height: 1.5rem;
+    height: 2rem;
 }
 
 .charsheet .sheet-box-reminder .repcontainer .repitem {
