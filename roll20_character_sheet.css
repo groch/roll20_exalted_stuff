@@ -845,6 +845,27 @@ tier 2: couleurs
     height: 24em;
     overflow: auto;
     resize: vertical;
+    scrollbar-width: thin;
+    scrollbar-color: #90A4AE #CFD8DC;
+}
+
+.charsheet input.merits-length-check[value="1"] ~ .repcontainer[data-groupname="repeating_merits"]::-webkit-scrollbar {
+    width: 9px;
+    cursor: pointer;
+}
+
+.charsheet input.merits-length-check[value="1"] ~ .repcontainer[data-groupname="repeating_merits"]::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 5px;
+    border: 1px solid #CFD8DC;
+}
+
+.charsheet input.merits-length-check[value="1"] ~ .repcontainer[data-groupname="repeating_merits"]::-webkit-scrollbar-thumb:hover {
+    background-color: #7a8991;
+}
+
+.charsheet input.merits-length-check[value="1"] ~ .repcontainer[data-groupname="repeating_merits"]::-webkit-scrollbar-track {
+    background: #CFD8DC;
 }
 
 .charsheet .sheet-motes span,.charsheet .sheet-battle-group-row span {
@@ -2005,6 +2026,7 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar,
 .sheet-rolltemplate-exalted3e_cast *::-webkit-scrollbar {
     width: 9px;
+    cursor: pointer;
 }
 
 .sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar-thumb,
@@ -2012,6 +2034,11 @@ and (min-resolution:.001dpcm) {
     background-color: #90A4AE;
     border-radius: 2px;
     border: 1px solid #CFD8DC;
+}
+
+.sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar-thumb:hover,
+.sheet-rolltemplate-exalted3e_cast *::-webkit-scrollbar-thumb:hover {
+    background-color: #7a8991;
 }
 
 .sheet-rolltemplate-exalted3e_combatcast *::-webkit-scrollbar-track,
@@ -2678,12 +2705,17 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar {
     width: 9px;
+    cursor: pointer;
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar-thumb {
     background-color: #90A4AE;
     border-radius: 2px;
     border: 1px solid #CFD8DC;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar-thumb:hover {
+    background-color: #7a8991;
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line::-webkit-scrollbar-track {
@@ -3094,8 +3126,41 @@ body.sheet-darkmode {
     margin-bottom: 0.5em;
     resize: vertical;
     height: 3em;
-    overflow: hidden;
     background: transparent;
+}
+
+textarea,
+.charsheet .rolls-textarea,
+.charsheet .combat-textarea {
+    cursor: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #90A4AE #CFD8DC;
+}
+
+textarea::-webkit-scrollbar,
+.charsheet .rolls-textarea::-webkit-scrollbar,
+.charsheet .combat-textarea::-webkit-scrollbar {
+    width: 9px;
+}
+
+textarea::-webkit-scrollbar-thumb,
+.charsheet .rolls-textarea::-webkit-scrollbar-thumb,
+.charsheet .combat-textarea::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 5px;
+    border: 1px solid #CFD8DC;
+}
+
+textarea::-webkit-scrollbar-thumb:hover,
+.charsheet .rolls-textarea::-webkit-scrollbar-thumb:hover,
+.charsheet .combat-textarea::-webkit-scrollbar-thumb:hover {
+    background-color: #7a8991;
+}
+
+textarea::-webkit-scrollbar-track,
+.charsheet .rolls-textarea::-webkit-scrollbar-track,
+.charsheet .combat-textarea::-webkit-scrollbar-track {
+    background: #CFD8DC;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .rolls-textarea {
