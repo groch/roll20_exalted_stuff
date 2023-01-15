@@ -4306,33 +4306,13 @@ and (min-resolution:.001dpcm) {
 }
 
 /* Hide Excellencies & Cap */
-.charsheet .charm-caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .charm-caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2),
-.charsheet .charm-caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .charm-caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2),
-.charsheet .charm-caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .charm-caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2),
-.charsheet .charm-caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .charm-caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2),
-.charsheet .charm-caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .charm-caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2),
-.charsheet .charm-caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .charm-caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
+.charsheet .caste-have-exc-check[value="0"]          ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
+.charsheet .caste-have-exc-check[value="0"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
     display: none;
 }
 
-.charsheet .charm-caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .charm-caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child,
-.charsheet .charm-caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .charm-caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child,
-.charsheet .charm-caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .charm-caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child,
-.charsheet .charm-caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .charm-caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child,
-.charsheet .charm-caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .charm-caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child,
-.charsheet .charm-caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .charm-caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
+.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
+.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
     flex-basis: 50%;
 }
 
