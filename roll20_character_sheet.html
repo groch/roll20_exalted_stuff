@@ -627,7 +627,7 @@
         getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
             setAttrs({'version': version});
             for (const id of idRollsArray)
-                updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+                computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
         });
     }
 
@@ -650,7 +650,7 @@
                 })
                 setAttrs(finalObj);
                 for (const id of idRollsArray)
-                    updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+                    computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
             }));
         });
     }
@@ -674,21 +674,21 @@
                 })
                 setAttrs(finalObj);
                 for (const id of arrayNewRollsWidget)
-                    updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+                    computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
             }));
         });
     }
 
     function upgradeto242() {
         setAttrs({'version': version});
-        updateAllRolls({sourceType: 'player'}, false);
+        computeAllRolls({sourceType: 'player'}, false);
     }
 
     function upgradeto240() {
         getAttrs(["battlegroup"], TAS._fn(function determineIfBG(values){
             if (values['battlegroup'] && Number(values['battlegroup'])) {
                 setAttrs({'version': version});
-                updateAllRolls({sourceType: 'player'}, false);
+                computeAllRolls({sourceType: 'player'}, false);
             }
         }));
     }
@@ -699,7 +699,7 @@
                 'wound-penalty': Math.abs(values['wound-penalty']),
                 'version': version
             });
-            updateAllRolls({sourceType: 'player'}, false);
+            computeAllRolls({sourceType: 'player'}, false);
         }));
     }
 
@@ -709,7 +709,7 @@
             'rollpenalty-input': 0,
             'version': version
         });
-        updateAllRolls({sourceType: 'player'}, false);
+        computeAllRolls({sourceType: 'player'}, false);
     }
 
     function upgradeto237() {
@@ -989,6 +989,10 @@
         initIntimacies();
     }
 
+    /* ********** */
+    /* *** QC *** */
+    /* ********** */
+
     function changeJoinResolve() {
         getAttrs(['qc-join-battle', 'qc-resolve'], values => {
             let valJb = Number(values['qc-join-battle']),
@@ -1087,7 +1091,11 @@
         }));
     }));
 
-    const sections = [
+    /* ************** */
+    /* *** CHARMS *** */
+    /* ************** */
+
+    const charmSections = [
         'charms-archery',
         'charms-athletics',
         'charms-awareness',
@@ -1175,7 +1183,7 @@
         'charms'
     ];
     const charmRollExprRegexp = /^!exr (?:\d+|\(.+\))#/;
-    [...sections, 'spells'].forEach(section => {
+    [...charmSections, 'spells'].forEach(section => {
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function clickGMCharmCast(e) {
             // TAS.debug(`CHANGING charm-rollexpr, e=`, e);
             // const button_name = e.sourceAttribute;
@@ -1191,7 +1199,7 @@
         }));
     });
 
-    sections.forEach(section => {
+    charmSections.forEach(section => {
         on(`change:repeating_${section}`, setDebugWrapper(function setAspectAndBalancedDefault(e) {
             // TAS.debug(`CHANGING charm, e=`, e);
             if (e.sourceType !== "player") return;
@@ -1212,8 +1220,8 @@
 
     function setCasteToAllCharms(casteStr) {
         // TAS.debug(`setCasteToAllCharms casteStr=${casteStr}`);
-        var objSet = {}, workings = sections.length;
-        sections.forEach(section => {
+        var objSet = {}, workings = charmSections.length;
+        charmSections.forEach(section => {
             getSectionIDs(section, setDebugWrapper(function getCombatAttackSection(idSections) {
                 for (const id of idSections) {
                     objSet[`repeating_${section}_${id}_charm-aspect`] = casteStr.toLowerCase();
@@ -1238,28 +1246,28 @@
         'rep-cost-will',
         'rep-cost-init'
     ];
-    [...sections, ...costSectionsToBind].forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(updateRollForCost))));
+    [...charmSections, ...costSectionsToBind].forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(computeRepeatingRollCost))));
 
-    function updateRollForCost(e) {
-        if (debug === 2) TAS.debug('updateRollForCost::updateRollForCost e=', JSON.stringify(e));
+    function computeRepeatingRollCost(e) {
+        if (debug === 2) TAS.debug('computeRepeatingRollCost::computeRepeatingRollCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
             repSectionName = sourceAttrSplit[1],
             id = sourceAttrSplit[2];
         const attr_name = `repeating_${repSectionName}_${id}_`;
 
-        if (debug === 2) TAS.debug(`updateRollForCost:: attr_name=${attr_name}`);
+        if (debug === 2) TAS.debug(`computeRepeatingRollCost:: attr_name=${attr_name}`);
         if (e.sourceType === "sheetworker") {
-            TAS.debug('updateRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
+            TAS.debug('computeRepeatingRollCost:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
-        if (debug === 2) TAS.debug('updateRollForCost:: NORMAL TRIGGER COST EDIT');
+        if (debug === 2) TAS.debug('computeRepeatingRollCost:: NORMAL TRIGGER COST EDIT');
         getAttrs(costAttrs.map(attr => attr_name + attr), setDebugWrapper(val => {
-            if (debug === 2) TAS.debug(`updateRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
+            if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
             const mote = val[attr_name + 'rep-cost-mote'],
                 will = val[attr_name + 'rep-cost-will'],
                 init = val[attr_name + 'rep-cost-init'];
             if (!mote && !will && !init) {
-                TAS.debug(`updateRollForCost:: NOTHING TO DO => RESET & QUIT`);
+                TAS.debug(`computeRepeatingRollCost:: NOTHING TO DO => RESET & QUIT`);
                 setAttrs({[attr_name+'rep-cost-macro']: ''});
                 return;
             }
@@ -1267,7 +1275,7 @@
             if (mote && String(mote).trim()) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
             if (will && String(will).trim()) finalMacro += `:will;${will}`;
             if (init) finalMacro += `:init;${init}`;
-            TAS.debug(`updateRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
+            TAS.debug(`computeRepeatingRollCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
             if (finalMacro.indexOf('@{') !== -1)
                 replaceAttrs(finalMacro, (out) => setAttrs({[attr_name+'rep-cost-macro']: out}));
             else
@@ -1315,46 +1323,46 @@
           dDmgInitResetAttrsToBind =           ['init-to-set'],
           allCombatBind =  ['repcombat-name',     'combat-toggle-desc'];
 
-    on(`change:repeating_rolls`, setDebugWrapper((e) => updateAttackRollRepeating(e, initSectionsToBind, defaultInitFinalExpr, 'reprolls-')));
-    on(`change:repeating_combat-init`, setDebugWrapper((e) => updateAttackRollRepeating(e, initSectionsToBind, defaultInitFinalExpr, 'repinit-')));
+    on(`change:repeating_rolls`, setDebugWrapper((e) => computeRepeatingRoll(e, initSectionsToBind, defaultInitFinalExpr, 'reprolls-')));
+    on(`change:repeating_combat-init`, setDebugWrapper((e) => computeRepeatingRoll(e, initSectionsToBind, defaultInitFinalExpr, 'repinit-')));
 
     allCombatBind.forEach(section => on(`change:repeating_combat-attack:${section}`, setDebugWrapper((e) => {
-        updateAttackRollRepeating(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-');
-        updateAttackRollRepeating(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-');
-        updateAttackRollRepeating(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-');
-        updateAttackRollRepeating(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-');
+        computeRepeatingRoll(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-');
+        computeRepeatingRoll(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-');
+        computeRepeatingRoll(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-');
+        computeRepeatingRoll(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-');
 
-        updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
+        computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
     })));
 
-    on('change:battlegroup-size', setDebugWrapper((e) => updatAttackRolls(false, true)));
-    on('change:battlegroup-dmg-boost', setDebugWrapper((e) => updatAttackRolls(false, true)));
-    wAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-'))));
-    wDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-'))));
-    dAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-'))));
-    dDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-'))));
-    dDmgInitResetAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-ddmg-${section}`, setDebugWrapper((e) => updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-'))));
+    on('change:battlegroup-size', setDebugWrapper((e) => computeAttackRolls(false, true)));
+    on('change:battlegroup-dmg-boost', setDebugWrapper((e) => computeAttackRolls(false, true)));
+    wAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-'))));
+    wDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-'))));
+    dAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-'))));
+    dDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-'))));
+    dDmgInitResetAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-ddmg-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-'))));
 
-    function updateAttackRollRepeating(e, sectionToBind, finalExprCb, attributePrefix = '', finalAttrNameAttrPrefix = '') {
+    function computeRepeatingRoll(e, sectionToBind, finalExprCb, attributePrefix = '', finalAttrNameAttrPrefix = '') {
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`updateAttackRollRepeating:: NOT TRIGGERED BY THE PLAYER => RETURN`);
+            if (debug === 2) TAS.debug(`computeRepeatingRoll:: NOT TRIGGERED BY THE PLAYER => RETURN`);
             return;
         }
         const repeatingSectionName = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         if (id[0] !== '-') {
-            if (debug === 2) TAS.debug(`updateAttackRollRepeating:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
+            if (debug === 2) TAS.debug(`computeRepeatingRoll:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
             return;
         }
-        if (debug === 2) TAS.debug(`updateAttackRollRepeating::updateAttackRollRepeating e=${JSON.stringify(e)}`);
-        updateAttackRollRepeatingId(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
+        if (debug === 2) TAS.debug(`computeRepeatingRoll::computeRepeatingRoll e=${JSON.stringify(e)}`);
+        computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
     }
 
-    function updateAttackRollRepeatingId(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
+    function computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
         const attr_name = `repeating_${repeatingSectionName}_${id}_${attributePrefix}`;
 
-        getAttrs([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)], setDebugWrapper(function getAllValuesForAttackRoll(val) {
-            if (debug === 2) TAS.debug(`updateAttackRollRepeating::getAllValuesForAttackRoll val=${JSON.stringify(val)}`);
+        getAttrs([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)], setDebugWrapper(function getAllValuesForRoll(val) {
+            if (debug === 2) TAS.debug(`computeRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
             let replaced = false;
             for (const section of sectionToBind) {
                 for (const attr_tested of attrNAbi) {
@@ -1367,43 +1375,43 @@
             }
 
             if (!setIfReplaced || replaced) {
-                if (debug === 2) TAS.debug(`updateAttackRollRepeating:: OUT val=${JSON.stringify(val)}`);
+                if (debug === 2) TAS.debug(`computeRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
                 let finalExpr = finalExprCb(val, attr_name);
                 let finalAttrName = attr_name + finalAttrNameAttrPrefix + 'final-macro-replaced';
-                TAS.debug(`updateAttackRollRepeating:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
+                TAS.debug(`computeRepeatingRoll:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
                 setAttrs({ [finalAttrName]: finalExpr });
             } else {
-                TAS.debug(`updateAttackRollRepeating:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
+                TAS.debug(`computeRepeatingRoll:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
             }
         }));
     }
 
     /* Combat Tab ALL Binds */
-    attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(updateAllRolls)));
+    attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(computeAllRolls)));
 
-    function updateAllRolls(e, setIfReplaced = true) {
+    function computeAllRolls(e, setIfReplaced = true) {
         if (e.sourceType !== "player") {
             TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        TAS.debug('updateAllRolls::updateAllRolls e=', JSON.stringify(e));
+        TAS.debug('computeAllRolls::computeAllRolls e=', JSON.stringify(e));
 
         getSectionIDs('rolls', setDebugWrapper(function getRollsSection(idSections) {
-            if (debug === 2) TAS.debug('updateAllRolls::getRollsSection idSections=', JSON.stringify(idSections));
+            if (debug === 2) TAS.debug('computeAllRolls::getRollsSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
-                updateAttackRollRepeatingId('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
+                computeIdRepeatingRoll('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
         }));
 
         getSectionIDs('combat-init', setDebugWrapper(function getCombatInitSection(idSections) {
-            if (debug === 2) TAS.debug('updateAllRolls::getCombatInitSection idSections=', JSON.stringify(idSections));
+            if (debug === 2) TAS.debug('computeAllRolls::getCombatInitSection idSections=', JSON.stringify(idSections));
             for (const id of idSections)
-                updateAttackRollRepeatingId('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
+                computeIdRepeatingRoll('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
         }));
 
-        updatAttackRolls(setIfReplaced);
+        computeAttackRolls(setIfReplaced);
 
-        if (debug === 2) TAS.debug('updateAllRolls:: UPDATING CHARMS');
-        sections.forEach(section => {
+        if (debug === 2) TAS.debug('computeAllRolls:: UPDATING CHARMS');
+        charmSections.forEach(section => {
             getSectionIDs(section, setDebugWrapper(function getCharmOrEquivalentSection(idSections) {
                 for (const id of idSections) {
                     const attr_name = `repeating_${section}_${id}_charm-buttons-isextended`,
@@ -1418,14 +1426,14 @@
         })
     }
 
-    function updatAttackRolls(setIfReplaced = true, onlyWDmg = false) {
+    function computeAttackRolls(setIfReplaced = true, onlyWDmg = false) {
         getSectionIDs('combat-attack', setDebugWrapper(function getCombatAttackSection(idSections) {
-            if (debug === 2) TAS.debug('updateAllAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
+            if (debug === 2) TAS.debug('computeAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
             for (const id of idSections) {
-                if (!onlyWDmg) updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
-                               updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
-                if (!onlyWDmg) updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
-                if (!onlyWDmg) updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
+                if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
+                               computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
+                if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
+                if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
             }
         }));
     }
@@ -1459,80 +1467,78 @@
     }
 
     /* Combat Tab Roll Section '+' Triggers */
-    on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
+    on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickPlusWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
-        getAttrs(['diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
-            clickDefaultMacro(e, (setParameterCallback, attr_name) => {
-                    const tested_attr = `${attr_name}repcombat-watk-abi`,
-                          written_attr = `${attr_name}repcombat-watk-bonus-dices`,
-                          mote_attr = `${attr_name}rep-cost-mote`;
-                    getAttrs([tested_attr, 'diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
-                        const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
-                        setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
-                        let writtenValue;
-                        if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-                        else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-                        else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
-                        setParameterCallback(written_attr, writtenValue);
-                    }));
-                },
-                id => {
-                    updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                    updateRollForCost(e);
-                }
-            );
-            defaultMacroDAtkDice(e);
-        }));
+        setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name) => {
+                const tested_attr = `${attr_name}repcombat-watk-abi`,
+                      written_attr = `${attr_name}repcombat-watk-bonus-dices`,
+                      mote_attr = `${attr_name}rep-cost-mote`;
+                getAttrs([tested_attr, 'diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
+                    const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+                    setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
+                    let writtenValue;
+                    if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+                    else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+                    else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
+                    setParameterCallback(written_attr, writtenValue);
+                }));
+            },
+            id => {
+                computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                computeRepeatingRollCost(e);
+            }
+        );
+        setDefaultsOnDAtkDice(e);
     }));
 
     on('clicked:repeating_combat-attack:default-macro-datk-d', setDebugWrapper(function clickDefaultMacroDAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK datk-d !!! e=${JSON.stringify(e)}`);
-        defaultMacroDAtkDice(e);
+        setDefaultsOnDAtkDice(e);
     }));
 
-    function defaultMacroDAtkDice(e) {
+    function setDefaultsOnDAtkDice(e) {
         getAttrs(['diceex'], setDebugWrapper(function getDiceExVal(val) {
             const diceExTest = val['diceex'] === '1';
-            clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')),
-                id => updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
+            setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')),
+                id => computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
             );
         }));
     }
 
     on('clicked:repeating_combat-attack:default-macro-watk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
-        defaultMacroAtkSucc(e, true);
+        setDefaultsOnAtkSuccType(e, true);
     }));
 
     on('clicked:repeating_combat-attack:default-macro-datk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
-        defaultMacroAtkSucc(e);
+        setDefaultsOnAtkSuccType(e);
     }));
 
-    function defaultMacroAtkSucc(e, setWill = false) {
+    function setDefaultsOnAtkSuccType(e, setWill = false) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
         getAttrs(['succex'], setDebugWrapper(function getDiceExVal(val) {
             const succExTest = val['succex'] === '1';
-            clickDefaultMacro(e, (setParameterCallback, attr_name, section) => {
+            setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name, section) => {
                     if (setWill) setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
                     setParameterCallback(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
                 },
                 (id, section) => {
-                    if (section === 'watk')      updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                    else if (section === 'datk') updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+                    if (section === 'watk')      computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                    else if (section === 'datk') computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
                 }
             );
-            TAS.debug(`clickDefaultMacroWAtkDice:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
+            TAS.debug(`setDefaultsOnAtkSuccType:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
             if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
-                clickDefaultMacro(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : '')),
+                setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : '')),
                     id => {
-                        updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-                        updateRollForCost(e);
+                        computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+                        computeRepeatingRollCost(e);
                     }
                 );
             }
         }));
     }
 
-    /* QC special */
+    /* QC special trigger when changing attr for withering damage => simulate all '+' pressed to gain time */
     on('change:repeating_combat-attack:repcombat-wdmg-attr', setDebugWrapper(function testQCSetup(e) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
         getAttrs(['qc', 'diceex', 'succex'], TAS._fn(function ifQCSetupAll(values) {
@@ -1550,10 +1556,10 @@
                     [`${attr_name}rep-cost-mote`]: getMoteCostToSet(diceExTest, succExTest),
                     [`${attr_name}rep-cost-will`]: '?{Willpower ?|No,0|Yes,1}'
                 });
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                updateAttackRollRepeatingId('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-                updateAttackRollRepeating(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
-                updateRollForCost(e);
+                computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+                computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+                computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
+                computeRepeatingRollCost(e);
             }
         }));
     }));
@@ -1561,7 +1567,7 @@
     /* Character Tab Roll Section '+' Triggers */
     on('clicked:repeating_rolls:default-macro-d clicked:repeating_combat-init:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
+        setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
                 const mote_attr = `${attr_name}rep-cost-mote`;
                 getAttrs(['diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
                     const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
@@ -1572,15 +1578,15 @@
             },
             (id, section, repeatingSectionName) => {
                 const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-                updateAttackRollRepeatingId(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
-                updateRollForCost(e);
+                computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
+                computeRepeatingRollCost(e);
             }
         );
     }));
 
     on('clicked:repeating_rolls:default-macro-s clicked:repeating_combat-init:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
-        clickDefaultMacro(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
+        setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
                 getAttrs(['succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
                     const succExTest = val['succex'] === '1';
                     setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
@@ -1590,21 +1596,32 @@
             },
             (id, section, repeatingSectionName) => {
                 const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-                updateAttackRollRepeatingId(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
-                updateRollForCost(e);
+                computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
+                computeRepeatingRollCost(e);
             }
         );
     }));
 
-    function clickDefaultMacro(e, afterSetupCallback, finalCallback) {
-        if (debug === 2) TAS.debug(`clickDefaultMacro::clickDefaultMacro e=${JSON.stringify(e)}`);
+    /**
+     * Complex function
+     * setup some variables used in all callbacks from the roll20 repeatable item event object
+     * this first callback is used to set 1 roll20 attribute and his value
+     * in the first callback, you end by calling the given first parameter which is a callback
+     * this one call a setAttrs of roll20 and then call your 2nd callback,
+     * forwarding it all the variable needed to finally compute the roll
+     * @param {Roll20EventObj} e 
+     * @param {Function} afterSetupCallback (Function(string, string), string, string, string)
+     * @param {Function} finalCallback (string, string, string)
+     */
+    function setupVarSetCBThenFinaliseCB(e, afterSetupCallback, finalCallback) {
+        if (debug === 2) TAS.debug(`setupVarSetCBThenFinaliseCB::setupVarSetCBThenFinaliseCB e=${JSON.stringify(e)}`);
         const repeatingSectionName = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         const section = e.sourceAttribute.split('_')[3].split('-')[2];
         const attr_name = `repeating_${repeatingSectionName}_${id}_`;
 
         afterSetupCallback((written_attr, writtenValue) => {
-            TAS.debug(`clickDefaultMacro:: setting ${written_attr} = ${writtenValue}`);
+            TAS.debug(`setupVarSetCBThenFinaliseCB:: setting ${written_attr} = ${writtenValue}`);
             setAttrs({[written_attr]: writtenValue});
             if (debug === 2) TAS.debug(`updating macro`);
             finalCallback(id, section, repeatingSectionName);
@@ -1694,9 +1711,9 @@
         'reprolls-ycharm-successes',
         'reprolls-pool-starting'
     ];
-    widgetCostAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, setDebugWrapper(updateWidgetRollForCost)));
+    widgetCostAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, setDebugWrapper(updateRollWidgetForCost)));
 
-    function updateWidgetRollForCost(e) {
+    function updateRollWidgetForCost(e) {
         if (debug === 2) TAS.debug('updateWidgetRollForCost::updateWidgetRollForCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
             id = sourceAttrSplit[2];
@@ -1719,12 +1736,12 @@
             if (moteDices < 0) {
                 moteDices = 0;
                 setAttrs({[attr_name + 'reprolls-ycharm-dices']: 0});
-                updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
+                computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
             }
             if (moteSuccs < 0) {
                 moteSuccs = 0;
                 setAttrs({[attr_name + 'reprolls-ycharm-successes']: 0});
-                updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
+                computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
             }
             let mote = moteOffset + moteDices + moteSuccs * 2;
             if (mote < 0) mote = 0;
@@ -1752,13 +1769,13 @@
         const finalAttr = `repeating_rolls-widget_${id}_${baseAttr}`;
         if (debug === 2) TAS.debug(`resetAttrOnNeg::resetAttrOnNeg e=${JSON.stringify(e)}`);
         if (Number(e.newValue) < 0) setAttrs({[finalAttr]: 0});
-        updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
+        computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
     }
 
     const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ycharm-paid-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ycharm-paid-successes', 'ncharm-successes', 'final-macro-options'];
     function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-dices'], '[Paid Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-successes'], '[Paid Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
-    rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => updateAttackRollRepeating(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
+    rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
 
     on('clicked:repeating_rolls-widget:roll-widget-cast clicked:repeating_rolls-widget:roll-widget-gmcast', setDebugWrapper(function castRoll(e){
         if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
@@ -1776,8 +1793,8 @@
                     [`${attr_name}reprolls-willpower-toggle`]: 0
                 };
                 setAttrs(resetObj);
-                updateWidgetRollForCost(e);
-                updateAttackRollRepeatingId('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+                updateRollWidgetForCost(e);
+                computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
                 finishRoll(results.rollId);
             });
         }));
