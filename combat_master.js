@@ -798,8 +798,10 @@ var CombatMaster = CombatMaster || (function() {
             if (added >= qty) break;
         }
 
-        const displayedEssenceTest = Number(displayedEssenceObj.get('current')) + added;
-        displayedEssenceObj.set('current', displayedEssenceTest > displayedEssenceObj.get('max') ? displayedEssenceObj.get('max') : displayedEssenceTest);
+        let displayedEssenceTest = Number(displayedEssenceObj.get('current')) + added;
+        if (displayedEssenceTest > displayedEssenceObj.get('max')) displayedEssenceTest = displayedEssenceObj.get('max');
+        if (displayedEssenceTest === 0 && displayedEssenceObj.get('max') === 0) displayedEssenceTest = '';
+        displayedEssenceObj.set('current', displayedEssenceTest);
         return added && controlledBy.length ? true : false;
     },
 
