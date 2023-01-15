@@ -1799,6 +1799,27 @@
             });
         }));
     }));
+    
+    /* Not used, but help if i want to used button[type="action"] instead of button[type="roll"] + start playing with async */
+    [...charmSections, 'spells'].forEach(section => {
+        on(`clicked:repeating_${section}:charmcast-show`, TAS._fn(async function clickShowCharm(e) {
+            if (debug === 2) TAS.debug(`clickShowCharm::clickShowCharm e=${JSON.stringify(e)}`);
+            const split = e.sourceAttribute.split('_'), section = split[1], id = split[2], buttonClicked = split[3];
+            const attr_name = `repeating_${section}_${id}_`;
+            const orig_roll = e.htmlAttributes.value, regexp = /@\{([^\}]+)\}/g;
+            const roll20Attrs = [...orig_roll.matchAll(regexp)].map(i => i[1]).filter(i => i.includes('charm-'));
+            const finalRoll20Attrs = roll20Attrs.map(i => `${attr_name}${i}`);
+            if (debug === 2) TAS.debug(`clickShowCharm:: roll20Attrs=${JSON.stringify(finalRoll20Attrs)}`);
+
+            let final_roll = orig_roll;
+            roll20Attrs.forEach((attr, index) => { final_roll = final_roll.replaceAll(`@{${attr}}`, `@{${finalRoll20Attrs[index]}}`); });
+            if (debug === 2) TAS.debug(`clickShowCharm:: final_roll=${final_roll}`);
+
+            const results = await startRoll(final_roll);
+            if (debug === 2) TAS.debug(`clickShowCharm:: results=${JSON.stringify(results)}`, results);
+            finishRoll(results.rollId);
+        }));
+    });
 
     /* ---- BEGIN: TheAaronSheet.js ---- */
     // Github:   https://github.com/shdwjk/TheAaronSheet/blob/master/TheAaronSheet.js
