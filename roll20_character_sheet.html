@@ -377,8 +377,8 @@
         }));
     }));
 
-    on('change:caste change:force-exc', TAS._fn(function updateMotePool(eventInfo){
-        getAttrs(["caste", "force-exc"], setDebugWrapper(function determineMotePool(values){
+    on('change:caste', TAS._fn(function updateMotePool(eventInfo){
+        getAttrs(["caste"], setDebugWrapper(function determineMotePool(values){
             var periEquation = "0", persEquation = "0", showAnima = 1,
                 showSupernal = 0,   showLimit = 0,
                 casteLow = 'unknown',
@@ -437,11 +437,19 @@
                 "showsupdiv": showSupernal,
                 "showlimit": showLimit,
                 "caste-low": casteLow,
-                "caste-have-exc": Number(values['force-exc']) || succEx || diceEx,
+                "caste-have-exc": succEx || diceEx,
                 "diceex": diceEx,
                 "succex": succEx
             };
             TAS.debug(`updateMotePool:: Setting=`, finalObj);
+            setAttrs(finalObj);
+        }));
+    }));
+
+    on('change:diceex change:succex', TAS._fn(function updateCasteHaveExc(eventInfo){
+        getAttrs(["diceex", "succex"], setDebugWrapper(function determineCasteHaveExc(values){
+            const finalObj = {"caste-have-exc": Number(values['diceex']) || Number(values['succex'])};
+            TAS.debug(`updateCasteHaveExc:: Setting=`, finalObj);
             setAttrs(finalObj);
         }));
     }));
@@ -1044,8 +1052,7 @@
         getSectionIDs('qcattacks', setDebugWrapper(function getQcAttacksSections(idSections) {
             getSectionIDs('weapon', setDebugWrapper(function getQcAttacksSections(idWeaponSections) {
                 const qcFieldNames = [];
-                idSections.forEach(id => qcFieldNames.push(`repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
-                qcFieldNames.push(`caste-have-exc`);
+                idSections.forEach(id => qcFieldNames.push(`caste-have-exc`, `repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
 
                 getAttrs(qcFieldNames, TAS._fn(function GetQCAttacksFieldsAndUpdateWeaponFields(valuesSections) {
                     // remove weapons
@@ -11591,10 +11598,6 @@
                     <label>
                         <input type="checkbox" name="attr_succex" value="1"><span></span>
                         <span>Include Success Excellency</span>
-                    </label>
-                    <label>
-                        <input type="checkbox" name="attr_force-exc" value="1"><span></span>
-                        <span>Force Excellencies Display</span>
                     </label>
                     <label>
                         <input type="checkbox" name="attr_show-charname-in-charms" value="1"><span></span>
