@@ -373,28 +373,28 @@ tier 2: couleurs
     display: none;
 }
 
-.charsheet .charm-caste-check[value="Air"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .charm-caste-check[value="Air"]   ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
 .charsheet .charm-caste-check[value="Earth"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .charm-caste-check[value="Fire"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .charm-caste-check[value="Fire"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
 .charsheet .charm-caste-check[value="Water"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .charm-caste-check[value="Wood"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
+.charsheet .charm-caste-check[value="Wood"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
     display: inline;
 }
 
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-character-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-character-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-character-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-character-sheet .gm-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-character-sheet .sheet-roll.default-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-character-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-rolls-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-rolls-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-rolls-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-rolls-sheet .gm-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.default-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-spell-sheet .gm-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.default-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-charm-sheet .gm-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.default-whisper,
 .charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
     display: inline-block;
