@@ -1445,32 +1445,37 @@
         computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
     }
 
-    function computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
+    function computeIdRepeatingRollAsync(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
+        return new Promise((resolve,reject)=>{
+            try  { computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced,(values)=>{ resolve(values); }); }
+            catch{ reject(); }});
+    }
+    async function computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false, cb) {
         const attr_name = `repeating_${repeatingSectionName}_${id}_${attributePrefix}`;
 
-        getAttrs([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)], setDebugWrapper(function getAllValuesForRoll(val) {
-            if (debug === 2) TAS.debug(`computeRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
-            let replaced = false;
-            for (const section of sectionToBind) {
-                for (const attr_tested of attrNAbi) {
-                    const testedAttr = `@{${attr_tested}}`;
-                    if (val[`${attr_name}${section}`] && val[`${attr_name}${section}`].includes(testedAttr)) {
-                        val[`${attr_name}${section}`] = val[`${attr_name}${section}`].replaceAll(testedAttr, val[attr_tested]);
-                        replaced = true;
-                    }
+        const val = await getAttrsAsync([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)]);
+        if (debug === 2) TAS.debug(`computeRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
+        let replaced = false;
+        for (const section of sectionToBind) {
+            for (const attr_tested of attrNAbi) {
+                const testedAttr = `@{${attr_tested}}`;
+                if (val[`${attr_name}${section}`] && val[`${attr_name}${section}`].includes(testedAttr)) {
+                    val[`${attr_name}${section}`] = val[`${attr_name}${section}`].replaceAll(testedAttr, val[attr_tested]);
+                    replaced = true;
                 }
             }
+        }
 
-            if (!setIfReplaced || replaced) {
-                if (debug === 2) TAS.debug(`computeRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
-                let finalExpr = finalExprCb(val, attr_name);
-                let finalAttrName = attr_name + finalAttrNameAttrPrefix + 'final-macro-replaced';
-                TAS.debug(`computeRepeatingRoll:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
-                setAttrs({ [finalAttrName]: finalExpr });
-            } else {
-                TAS.debug(`computeRepeatingRoll:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
-            }
-        }));
+        if (!setIfReplaced || replaced) {
+            if (debug === 2) TAS.debug(`computeRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
+            let finalExpr = finalExprCb(val, attr_name);
+            let finalAttrName = attr_name + finalAttrNameAttrPrefix + 'final-macro-replaced';
+            TAS.debug(`computeRepeatingRoll:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
+            await setAttrsAsync({ [finalAttrName]: finalExpr });
+        } else {
+            TAS.debug(`computeRepeatingRoll:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
+        }
+        if (cb) cb();
     }
 
     /* Combat Tab ALL Binds */
@@ -1702,9 +1707,9 @@
      */
     function setupVarSetCBThenFinaliseCB(e, afterSetupCallback, finalCallback) {
         if (debug === 2) TAS.debug(`setupVarSetCBThenFinaliseCB::setupVarSetCBThenFinaliseCB e=${JSON.stringify(e)}`);
-        const repeatingSectionName = e.sourceAttribute.split('_')[1];
-        const id = e.sourceAttribute.split('_')[2];
-        const section = e.sourceAttribute.split('_')[3].split('-')[2];
+        const split = e.sourceAttribute.split('_'),
+              repeatingSectionName = split[1], id = split[2],
+              section = split[3].split('-')[2];
         const attr_name = `repeating_${repeatingSectionName}_${id}_`;
 
         afterSetupCallback((written_attr, writtenValue) => {
@@ -1779,7 +1784,10 @@
         }));
     }));
 
-    /* Rolls Widgets */
+    /* ***************** */
+    /* * Rolls Widgets * */
+    /* ***************** */
+
     /* COST */
     const widgetCostAttrs = [
         'rep-cost-mote-offset',
@@ -1788,56 +1796,65 @@
         'reprolls-ycharm-successes',
         'reprolls-pool-starting'
     ];
-    widgetCostAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, setDebugWrapper(updateRollWidgetForCost)));
 
-    function updateRollWidgetForCost(e) {
+    function updateRollWidgetForCostAsync(e) {
+        return new Promise((resolve,reject)=>{
+            try  { updateRollWidgetForCost(e,(values)=>{ resolve(values); });}
+            catch{ reject(); }});
+    }
+    async function updateRollWidgetForCost(e, cb) {
         if (debug === 2) TAS.debug('updateWidgetRollForCost::updateWidgetRollForCost e=', JSON.stringify(e));
-        const sourceAttrSplit = e.sourceAttribute.split('_'),
-            id = sourceAttrSplit[2];
-        const attr_name = `repeating_rolls-widget_${id}_`;
 
+        const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
         if (debug === 2) TAS.debug(`updateWidgetRollForCost:: attr_name=${attr_name}`);
+
         if (e.sourceType === "sheetworker") {
             if (debug === 2) TAS.debug('updateWidgetRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
-        if (debug === 2) TAS.debug('updateWidgetRollForCost:: NORMAL TRIGGER COST EDIT');
-        getAttrs(widgetCostAttrs.map(attr => attr_name + attr), setDebugWrapper(val => {
-            if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
-            const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
-                will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
-                starting = Number(val[attr_name + 'reprolls-pool-starting']);
-            let moteDices = Number(val[attr_name + 'reprolls-ycharm-dices']),
-                moteSuccs = Number(val[attr_name + 'reprolls-ycharm-successes']),
-                finalMacro = '=COST:@{character_id}';
-            if (moteDices < 0) {
-                moteDices = 0;
-                setAttrs({[attr_name + 'reprolls-ycharm-dices']: 0});
-                computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
-            }
-            if (moteSuccs < 0) {
-                moteSuccs = 0;
-                setAttrs({[attr_name + 'reprolls-ycharm-successes']: 0});
-                computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
-            }
-            let mote = moteOffset + moteDices + moteSuccs * 2;
-            if (mote < 0) mote = 0;
-            if (mote) finalMacro += `:peri=${starting};${mote}`;
-            if (will) finalMacro += `:will;${will}`;
-            TAS.debug(`updateWidgetRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
-            setAttrs({[attr_name+'rep-cost-macro']: finalMacro, [attr_name+'rep-cost-total-taint']: mote >= 5 ? starting : 0});
-        }));
+
+        const val = await getAttrsAsync(widgetCostAttrs.map(attr => attr_name + attr));
+        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
+        const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
+              will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
+              starting = Number(val[attr_name + 'reprolls-pool-starting']);
+        let moteDices = Number(val[attr_name + 'reprolls-ycharm-dices']),
+            moteSuccs = Number(val[attr_name + 'reprolls-ycharm-successes']),
+            finalMacro = '=COST:@{character_id}',
+            finalObj = {};
+        if (moteDices < 0) {
+            moteDices = 0;
+            finalObj = {...finalObj, [attr_name + 'reprolls-ycharm-dices']: 0};
+        }
+        if (moteSuccs < 0) {
+            moteSuccs = 0;
+            finalObj = {...finalObj, [attr_name + 'reprolls-ycharm-successes']: 0};
+        }
+        let moteCost = moteOffset + moteDices + moteSuccs * 2;
+        if (moteCost < 0) moteCost = 0;
+        if (moteCost) finalMacro += `:peri=${starting};${moteCost}`;
+        if (will) finalMacro += `:will;${will}`;
+        TAS.debug(`updateWidgetRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
+        finalObj = {
+            ...finalObj,
+            [attr_name+'rep-cost-macro']: finalMacro,
+            [attr_name+'rep-cost-total-taint']: moteCost >= 5 ? starting : 0
+        };
+        await setAttrsAsync(finalObj);
+        if (cb) cb();
     }
 
     /**
      * Reset negative value that doesnt have sense
      */
     const resetOnNegAttrs = [
+        'reprolls-ycharm-dices',
         'reprolls-ycharm-paid-dices',
+        'reprolls-ycharm-successes',
         'reprolls-ycharm-paid-successes',
         'reprolls-ncharm-successes'
     ];
-    resetOnNegAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, setDebugWrapper(resetAttrOnNeg)));
+    resetOnNegAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, resetAttrOnNeg));
     function resetAttrOnNeg(e) {
         if (e.sourceType !== "player") return;
         const sourceAttrSplit = e.sourceAttribute.split('_'),
@@ -1846,39 +1863,41 @@
         const finalAttr = `repeating_rolls-widget_${id}_${baseAttr}`;
         if (debug === 2) TAS.debug(`resetAttrOnNeg::resetAttrOnNeg e=${JSON.stringify(e)}`);
         if (Number(e.newValue) < 0) setAttrs({[finalAttr]: 0});
-        computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-');
     }
 
+    /**
+     * Roll Widget Compute and startRoll !!!
+     */
     const rollWidgetSectionsToBind =  ['toggle-desc', 'attr', 'abi', 'stunt-dices', 'specialty', 'ycharm-dices', 'ycharm-paid-dices', 'ncharm-dices', 'willpower-toggle', 'ycharm-successes', 'ycharm-paid-successes', 'ncharm-successes', 'final-macro-options'];
     function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-dices'], '[Paid Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-successes'], '[Paid Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
-    rollWidgetSectionsToBind.map(i => `reprolls-${i}`).forEach(bind => on(`change:repeating_rolls-widget:${bind}`, setDebugWrapper((e) => computeRepeatingRoll(e, rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, 'reprolls-'))));
-
-    on('clicked:repeating_rolls-widget:roll-widget-cast clicked:repeating_rolls-widget:roll-widget-gmcast', setDebugWrapper(function castRoll(e){
+    on('clicked:repeating_rolls-widget:roll-widget-cast clicked:repeating_rolls-widget:roll-widget-gmcast', setDebugWrapper(async function castRoll(e){
         if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
         const id = e.sourceAttribute.split('_')[2];
         const buttonClicked = e.sourceAttribute.split('_')[3];
         const attr_name = `repeating_rolls-widget_${id}_`;
-        getAttrs([`${attr_name}reprolls-final-macro-replaced`, `${attr_name}rep-cost-macro`], setDebugWrapper(function getFinalMacros(values){
-            let queryRoll = buttonClicked === 'roll-widget-cast' ?
-                `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
-                `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
-            if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
-            startRoll(queryRoll, results => {
-                const resetObj = {
-                    [`${attr_name}reprolls-stunt-dices`]: 0,
-                    [`${attr_name}reprolls-willpower-toggle`]: 0
-                };
-                setAttrs(resetObj);
-                updateRollWidgetForCost(e);
-                computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
-                finishRoll(results.rollId);
-            });
-        }));
+        await updateRollWidgetForCostAsync(e);
+        await computeIdRepeatingRollAsync('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+        const values = await getAttrsAsync([`${attr_name}reprolls-final-macro-replaced`, `${attr_name}rep-cost-macro`]);
+        let queryRoll = buttonClicked === 'roll-widget-cast' ?
+            `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
+            `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
+        if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
+        const results = await startRoll(queryRoll);
+        const resetObj = {
+            [`${attr_name}reprolls-stunt-dices`]: 0,
+            [`${attr_name}reprolls-willpower-toggle`]: 0
+        };
+        setAttrs(resetObj);
+        finishRoll(results.rollId);
     }));
 
+    /* ****************** */
+    /* * UTILIY SECTION * */
+    /* ****************** */
+
     /**
-     * ASYNC SECTION - get/set repeatable section size vars
+     * get/set repeatable section size vars
      */
 
     on('sheet:opened', saveAllRepeatableSectionSize);
