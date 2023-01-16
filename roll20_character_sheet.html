@@ -1455,16 +1455,7 @@
 
         const val = await getAttrsAsync([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)]);
         if (debug === 2) TAS.debug(`computeRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
-        let replaced = false;
-        for (const section of sectionToBind) {
-            for (const attr_tested of attrNAbi) {
-                const testedAttr = `@{${attr_tested}}`;
-                if (val[`${attr_name}${section}`] && val[`${attr_name}${section}`].includes(testedAttr)) {
-                    val[`${attr_name}${section}`] = val[`${attr_name}${section}`].replaceAll(testedAttr, val[attr_tested]);
-                    replaced = true;
-                }
-            }
-        }
+        const replaced = replaceRoll20Attr(attr_name, sectionToBind, val);
 
         if (!setIfReplaced || replaced) {
             if (debug === 2) TAS.debug(`computeRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
@@ -1476,6 +1467,19 @@
             TAS.debug(`computeRepeatingRoll:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
         }
         if (cb) cb();
+    }
+
+    function replaceRoll20Attr(attr_name, sectionToBind, val) {
+        for (const section of sectionToBind) {
+            for (const attr_tested of attrNAbi) {
+                const testedAttr = `@{${attr_tested}}`;
+                if (val[`${attr_name}${section}`] && val[`${attr_name}${section}`].includes(testedAttr)) {
+                    val[`${attr_name}${section}`] = val[`${attr_name}${section}`].replaceAll(testedAttr, val[attr_tested]);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /* Combat Tab ALL Binds */
@@ -1559,27 +1563,22 @@
     }
 
     /* Combat Tab Roll Section '+' Triggers */
-    on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(function clickPlusWAtkDice(e) {
+    on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(async function clickPlusWAtkDice(e) {
         if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
-        setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name) => {
-                const tested_attr = `${attr_name}repcombat-watk-abi`,
-                      written_attr = `${attr_name}repcombat-watk-bonus-dices`,
-                      mote_attr = `${attr_name}rep-cost-mote`;
-                getAttrs([tested_attr, 'diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
-                    const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
-                    setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
-                    let writtenValue;
-                    if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-                    else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-                    else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
-                    setParameterCallback(written_attr, writtenValue);
-                }));
-            },
-            id => {
-                computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                computeRepeatingRollCost(e);
-            }
-        );
+        const {attr_name, repeatingSectionName, id, section} = setupVar(e);
+        const tested_attr = `${attr_name}repcombat-watk-abi`,
+              written_attr = `${attr_name}repcombat-watk-bonus-dices`,
+              mote_attr = `${attr_name}rep-cost-mote`;
+        const val = await getAttrsAsync([tested_attr, 'diceex', 'succex']);
+        const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+        setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
+        let writtenValue;
+        if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+        else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+        else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
+        await setCb(written_attr, writtenValue);
+        computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+        computeRepeatingRollCost(e);
         setDefaultsOnDAtkDice(e);
     }));
 
@@ -1588,13 +1587,11 @@
         setDefaultsOnDAtkDice(e);
     }));
 
-    function setDefaultsOnDAtkDice(e) {
-        getAttrs(['diceex'], setDebugWrapper(function getDiceExVal(val) {
-            const diceExTest = val['diceex'] === '1';
-            setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')),
-                id => computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-')
-            );
-        }));
+    async function setDefaultsOnDAtkDice(e) {
+        const val = await getAttrsAsync(['diceex']);
+        const {attr_name, repeatingSectionName, id, section} = setupVar(e);
+        await setCb(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (val['diceex'] === '1' ? diceExAddedPrompt : ''));
+        computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
     }
 
     on('clicked:repeating_combat-attack:default-macro-watk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
@@ -1605,120 +1602,76 @@
         setDefaultsOnAtkSuccType(e);
     }));
 
-    function setDefaultsOnAtkSuccType(e, setWill = false) {
+    async function setDefaultsOnAtkSuccType(e, setWill = false) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
-        getAttrs(['succex'], setDebugWrapper(function getDiceExVal(val) {
-            const succExTest = val['succex'] === '1';
-            setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name, section) => {
-                    if (setWill) setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
-                    setParameterCallback(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
-                },
-                (id, section) => {
-                    if (section === 'watk')      computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                    else if (section === 'datk') computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-                }
-            );
-            TAS.debug(`setDefaultsOnAtkSuccType:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
-            if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
-                setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name) => setParameterCallback(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : '')),
-                    id => {
-                        computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-                        computeRepeatingRollCost(e);
-                    }
-                );
-            }
-        }));
+        const val = await getAttrsAsync(['succex']);
+        const succExTest = val['succex'] === '1';
+
+        const {attr_name, repeatingSectionName, id, section} = setupVar(e);
+        if (setWill) setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
+
+        await setCb(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
+
+        if      (section === 'watk') computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+        else if (section === 'datk') computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+
+        TAS.debug(`setDefaultsOnAtkSuccType:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
+        if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
+            await setCb(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
+
+            computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+            computeRepeatingRollCost(e);
+        }
     }
 
     /* QC special trigger when changing attr for withering damage => simulate all '+' pressed to gain time */
-    on('change:repeating_combat-attack:repcombat-wdmg-attr', setDebugWrapper(function testQCSetup(e) {
+    on('change:repeating_combat-attack:repcombat-wdmg-attr', setDebugWrapper(async function testQCSetup(e) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
-        getAttrs(['qc', 'diceex', 'succex'], TAS._fn(function ifQCSetupAll(values) {
-            TAS.debug(`ifQCSetupAll:: values=${JSON.stringify(values)} values.qc=${values.qc}`);
-            if (values.qc) {
-                const id = e.sourceAttribute.split('_')[2];
-                const attr_name = `repeating_combat-attack_${id}_`;
-                const diceExTest = values['diceex'] === '1', succExTest = values['succex'] === '1';
-                setAttrs({
-                    [`${attr_name}repcombat-watk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
-                    [`${attr_name}repcombat-datk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
-                    [`${attr_name}repcombat-watk-bonus-successes`]: defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''),
-                    [`${attr_name}repcombat-datk-bonus-successes`]: defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''),
-                    [`${attr_name}repcombat-ddmg-init-to-set`]: '3',
-                    [`${attr_name}rep-cost-mote`]: getMoteCostToSet(diceExTest, succExTest),
-                    [`${attr_name}rep-cost-will`]: '?{Willpower ?|No,0|Yes,1}'
-                });
-                computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-                computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-                computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
-                computeRepeatingRollCost(e);
-            }
-        }));
+        const values = await getAttrsAsync(['qc', 'diceex', 'succex']);
+        TAS.debug(`ifQCSetupAll:: values=${JSON.stringify(values)} values.qc=${values.qc}`);
+        if (values.qc) {
+            const id = e.sourceAttribute.split('_')[2];
+            const attr_name = `repeating_combat-attack_${id}_`;
+            const diceExTest = values['diceex'] === '1', succExTest = values['succex'] === '1';
+            setAttrs({
+                [`${attr_name}repcombat-watk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
+                [`${attr_name}repcombat-datk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
+                [`${attr_name}repcombat-watk-bonus-successes`]: defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''),
+                [`${attr_name}repcombat-datk-bonus-successes`]: defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''),
+                [`${attr_name}repcombat-ddmg-init-to-set`]: '3',
+                [`${attr_name}rep-cost-mote`]: getMoteCostToSet(diceExTest, succExTest),
+                [`${attr_name}rep-cost-will`]: '?{Willpower ?|No,0|Yes,1}'
+            });
+            computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
+            computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
+            computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
+            computeRepeatingRollCost(e);
+        }
     }));
 
-    /* Character Tab Roll Section '+' Triggers */
-    on('clicked:repeating_rolls:default-macro-d clicked:repeating_combat-init:default-macro-d', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
+    /* Roll Section & Init '+' Triggers */
+    on('clicked:repeating_rolls:default-macro-d clicked:repeating_combat-init:default-macro-d', setDebugWrapper(async function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
-        setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
-                const mote_attr = `${attr_name}rep-cost-mote`;
-                getAttrs(['diceex', 'succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
-                    const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
-                    setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
-                    const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-                    setParameterCallback(`${attr_name}${prefix}bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
-                }));
-            },
-            (id, section, repeatingSectionName) => {
-                const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-                computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
-                computeRepeatingRollCost(e);
-            }
-        );
+        const {attr_name, repeatingSectionName, id, section} = setupVar(e);
+        const val = await getAttrsAsync(['diceex', 'succex']);
+        const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+        setAttrs({[`${attr_name}rep-cost-mote`] : getMoteCostToSet(diceExTest, succExTest)});
+        const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
+        await setCb(`${attr_name}${prefix}bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
+        computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
+        computeRepeatingRollCost(e);
     }));
 
-    on('clicked:repeating_rolls:default-macro-s clicked:repeating_combat-init:default-macro-s', setDebugWrapper(function clickDefaultMacroRollsDice(e) {
+    on('clicked:repeating_rolls:default-macro-s clicked:repeating_combat-init:default-macro-s', setDebugWrapper(async function clickDefaultMacroRollsDice(e) {
         if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
-        setupVarSetCBThenFinaliseCB(e, (setParameterCallback, attr_name, section, repeatingSectionName) => {
-                getAttrs(['succex'], setDebugWrapper(function clickDefaultMacroWAtkDiceGet(val) {
-                    const succExTest = val['succex'] === '1';
-                    setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
-                    const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-                    setParameterCallback(`${attr_name}${prefix}bonus-successes`, (repeatingSectionName === "combat-init" ? baseInit : '') + defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
-                }));
-            },
-            (id, section, repeatingSectionName) => {
-                const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-                computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
-                computeRepeatingRollCost(e);
-            }
-        );
+        const {attr_name, repeatingSectionName, id, section} = setupVar(e);
+        const val = await getAttrsAsync(['succex']);
+        setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
+        const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
+        await setCb(`${attr_name}${prefix}bonus-successes`, (repeatingSectionName === "combat-init" ? baseInit : '') + defaultRoll20AddedSuccPrompt + (val['succex'] === '1' ? succExAddedPrompt : ''));
+        computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
+        computeRepeatingRollCost(e);
     }));
-
-    /**
-     * Complex function
-     * setup some variables used in all callbacks from the roll20 repeatable item event object
-     * this first callback is used to set 1 roll20 attribute and his value
-     * in the first callback, you end by calling the given first parameter which is a callback
-     * this one call a setAttrs of roll20 and then call your 2nd callback,
-     * forwarding it all the variable needed to finally compute the roll
-     * @param {Roll20EventObj} e 
-     * @param {Function} afterSetupCallback (Function(string, string), string, string, string)
-     * @param {Function} finalCallback (string, string, string)
-     */
-    function setupVarSetCBThenFinaliseCB(e, afterSetupCallback, finalCallback) {
-        if (debug === 2) TAS.debug(`setupVarSetCBThenFinaliseCB::setupVarSetCBThenFinaliseCB e=${JSON.stringify(e)}`);
-        const split = e.sourceAttribute.split('_'),
-              repeatingSectionName = split[1], id = split[2],
-              section = split[3].split('-')[2];
-        const attr_name = `repeating_${repeatingSectionName}_${id}_`;
-
-        afterSetupCallback((written_attr, writtenValue) => {
-            TAS.debug(`setupVarSetCBThenFinaliseCB:: setting ${written_attr} = ${writtenValue}`);
-            setAttrs({[written_attr]: writtenValue});
-            if (debug === 2) TAS.debug(`updating macro`);
-            finalCallback(id, section, repeatingSectionName);
-        }, attr_name, section, repeatingSectionName);
-    }
 
     /* replicate withering to decisive */
     on('change:repeating_combat-attack:repcombat-watk-attr change:repeating_combat-attack:repcombat-watk-abi', setDebugWrapper(function qcDamageAttacksChange(e) {
@@ -1895,6 +1848,24 @@
     /* ****************** */
     /* * UTILIY SECTION * */
     /* ****************** */
+
+    /**
+     * 2 functions used for '+' hidden buttons
+     */
+
+    function setupVar(e) {
+        if (debug === 2) TAS.debug(`setupVar::setupVar e=${JSON.stringify(e)}`);
+        const split = e.sourceAttribute.split('_'),
+              repeatingSectionName = split[1], id = split[2],
+              section = split[3].split('-')[2];
+        const attr_name = `repeating_${repeatingSectionName}_${id}_`;
+        return {attr_name: attr_name, repeatingSectionName: repeatingSectionName, id: id, section: section};
+    }
+
+    function setCb(written_attr, writtenValue) {
+        TAS.debug(`setupVarSetCBThenFinaliseCB:: setting ${written_attr} = ${writtenValue}`);
+        return setAttrsAsync({[written_attr]: writtenValue});
+    }
 
     /**
      * get/set repeatable section size vars
