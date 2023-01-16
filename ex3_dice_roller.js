@@ -2082,7 +2082,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 affectedTextShadow += ';';
             html += `<div data-origindex="${idx}" class="diceroll d10" style="padding: 3px 0;${item.rerolled ? rerolledStyle : ''}">`;
             logger(`displayRolls::title =\n${item.title.join('\n')}\nJSON=${JSON.stringify(item.title)}`);
-            html += '<div class="dicon" style="min-width: 36px;' + (item.v == 10 ? ' top: -1px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
+            html += '<div class="dicon" style="min-width: 36px;' + (item.v == 10 ? ' top: -3px;' : '') + (item.title.length ? '" title="' + item.title.join('&#013;&#010;') : '') + '">';
             html += '<div class="didroll" style="' + diceRollStyle
                 + ((item.success ? (item.doubled ? doubleColorStyle : successColorStyle) : ` text-shadow: 0 0 0.03em ${baseColor}`)
                     + (result.rollSetup.colored ? affectedTextShadow : '') + ';')
