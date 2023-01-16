@@ -102,86 +102,75 @@
     on('change:repeating_health remove:repeating_health', TAS._fn(updateWound));
     on('change:combat-crippling-pen change:combat-disable-pen change:woundpenalty-add', TAS._fn(updateWound));
 
-    function sortHealth(idHealthArray) {
+    async function sortHealthRepeatableSection(idHealthArray) {
         var attribs = ["_reporder_repeating_health"];
-        idHealthArray.forEach(id => attribs.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
-        getAttrs(attribs, function(v) {
-            var final_array = _(idHealthArray).chain().sortBy(function(id) {
-                return v["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(v["repeating_health_" + id + "_hl-penalty"]);
-            }).value();
-            if(final_array && final_array.length > 0) {
-                setSectionOrder("health", final_array);
-            };
-        });
+        for (const id of idHealthArray) attribs.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`);
+        const v = await getAttrsAsync(attribs);
+        var final_array = _(idHealthArray).chain().sortBy(function(id) {
+            return v["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(v["repeating_health_" + id + "_hl-penalty"]);
+        }).value();
+        if(final_array && final_array.length > 0) {
+            setSectionOrder("health", final_array);
+        };
     }
 
-    function updateWound(e) {
+    async function updateWound(e) {
         if (e.sourceType !== "player") {
-            TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
+            TAS.debug(`updateWound:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
-        getSectionIDs('health', function getHealthList(idHealthArray) {
-            sortHealth(idHealthArray);
-            var finalAttr = {};
-            const healthFieldNames = [];
-            idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
 
-            getAttrs([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'], setDebugWrapper(function getHealthFields(valuesSections) {
-                var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-                    return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
-                }).value();
+        const idHealthArray = await getSectionIDsAsync("health");
+        sortHealthRepeatableSection(idHealthArray);
+        let finalAttr = {};
+        const healthFieldNames = [];
+        idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
 
-                const oldPen = Number(valuesSections['wound-penalty']) || 0,
-                      oldActual = Number(valuesSections['health-displayed']) || 0,
-                      oldMax = Number(valuesSections['health-displayed_max']) || 0,
-                      disablePen = Number(valuesSections['combat-disable-pen']) || 0;
-                var pen = 0;
-                let actualHealth = 0;
-                for (const id of sortedIdHealthArray.reverse()) {
-                    let dmg =       valuesSections[`repeating_health_${id}_hl-damage`],
-                        localPen =  valuesSections[`repeating_health_${id}_hl-penalty`];
-                    if (dmg && (!dmg || dmg !== 'healthy')) {
-                        if (localPen)    pen = localPen;
-                        else             pen = 0;
-                        if (pen === 'I') pen = -4;
-                        if (pen === '')  pen = 0;
-                        found = true;
-                        break;
-                    } else
-                        actualHealth++;
-                }
+        const valuesSections = await getAttrsAsync([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup']);
+        let sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
+            return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+        }).value();
 
-                let maxHealth = sortedIdHealthArray.length;
-                if (debug === 2) TAS.debug(`updateWound:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+        const oldPen = Number(valuesSections['wound-penalty']) || 0,
+              oldActual = Number(valuesSections['health-displayed']) || 0,
+              oldMax = Number(valuesSections['health-displayed_max']) || 0,
+              disablePen = Number(valuesSections['combat-disable-pen']) || 0;
+        let pen = 0, actualHealth = 0, maxHealth = sortedIdHealthArray.length;
+        for (const id of sortedIdHealthArray.reverse()) {
+            let dmg =       valuesSections[`repeating_health_${id}_hl-damage`],
+                localPen =  valuesSections[`repeating_health_${id}_hl-penalty`];
+            if (dmg && (!dmg || dmg !== 'healthy')) {
+                if (localPen)    pen = localPen;
+                else             pen = 0;
+                if (pen === 'I') pen = -4;
+                if (pen === '')  pen = 0;
+                found = true;
+                break;
+            } else
+                actualHealth++;
+        }
+        pen = Math.abs(Number(pen));
+        if (pen > 1 && Number(valuesSections['pain-tolerance'])) pen--;
+        pen = Number(valuesSections['combat-crippling-pen'])
+            ? Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
+            : Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
+        if (disablePen) pen = 0;
+        if (oldPen !== pen) finalAttr = { 'wound-penalty': pen };
+        if (!Number(valuesSections['battlegroup'])) {
+            TAS.debug(`updateWound:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+            if (oldActual !== actualHealth) finalAttr = { ...finalAttr, 'health-displayed': actualHealth};
+            if (oldMax !== maxHealth)       finalAttr = { ...finalAttr, 'health-displayed_max': maxHealth };
+        }
+        if (Object.keys(finalAttr).length !== 0) {
+            TAS.debug('UPDATE WOUNDPEN & Health Displayed', finalAttr);
+            setAttrs(finalAttr);
+        }
 
-                if (debug === 2) TAS.debug(`updateWound:: combat-crippling-pen=${valuesSections['combat-crippling-pen']}`);
-                pen = Math.abs(Number(pen));
-                if (debug === 2) TAS.debug('1st Calculated penalty=' + pen);
-                if (pen > 1 && Number(valuesSections['pain-tolerance'])) pen--;
-                if (debug === 2) TAS.debug('Pain-Tolerance Calculated penalty=' + pen);
-                pen = Number(valuesSections['combat-crippling-pen'])
-                    ? Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
-                    : Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
-                if (disablePen) pen = 0;
-                if (debug === 2) TAS.debug('Final Calculated penalty w/ Crippling=' + pen);
-                if (oldPen !== pen) finalAttr = { 'wound-penalty': pen };
-                if (!Number(valuesSections['battlegroup'])) {
-                    TAS.debug(`updateWound:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
-                    if (oldActual !== actualHealth) finalAttr = { ...finalAttr, 'health-displayed': actualHealth};
-                    if (oldMax !== maxHealth)       finalAttr = { ...finalAttr, 'health-displayed_max': maxHealth };
-                }
-                if (Object.keys(finalAttr).length !== 0) {
-                    TAS.debug('UPDATE WOUNDPEN & Health Displayed', finalAttr);
-                    setAttrs(finalAttr);
-                }
-
-                if (oldPen !== pen) {
-                    TAS.debug('PEN CHANGED ! calling updateParry');
-                    updateParry(e);
-                }
-            }));
-        });
+        if (oldPen !== pen) {
+            TAS.debug('PEN CHANGED ! calling updateParry');
+            updateParry(e);
+        }
     }
 
     on('sheet:opened', TAS._fn(updateParry));
@@ -191,85 +180,81 @@
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef change:repeating_weapon:repweaponabi remove:repeating_weapon', TAS._fn(updateParry));
     on('change:qc-parry', TAS._fn(updateParry));
 
-    function updateParry(e) {
+    async function updateParry(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
-            TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
+            TAS.debug(`updateParry:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        getAttrs(['wound-penalty', 'qc', 'brawl', 'melee', 'dexterity', 'qc-parry'], setDebugWrapper(function determineIfQC(values){
-            const pen = values['wound-penalty'] || 0;
-            var finalAttr = {};
-            if (debug === 2) TAS.debug('Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
-            TAS.repeating('martialarts').fields('repmartialarts').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
-                'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(setDebugWrapper(function getMaxMaAndApply(rows, attrs) {
-                var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
-                                    attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
-                                    attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']);
-                const dex = Number(values['dexterity']),
-                    brawl = Number(values['brawl']),
-                    melee = Number(values['melee']),
-                    qcParry = Number(values['qc-parry']),
-                    isQc = Number(values['qc']),
-                    correspondingTable = {
-                        'brawl': brawl,
-                        'melee': melee,
-                        'snake': attrs.I['ma-snake'],
-                        'tiger': attrs.I['ma-tiger'],
-                        'void': attrs.I['ma-void'],
-                        'reaper': attrs.I['ma-reaper'],
-                        'ebon': attrs.I['ma-ebon'],
-                        'crane': attrs.I['ma-crane'],
-                        'nightingale': attrs.I['ma-nightingale'],
-                        'devil': attrs.I['ma-devil'],
-                        'claw': attrs.I['ma-claw'],
-                        'pearl': attrs.I['ma-pearl'],
-                        'steel': attrs.I['ma-steel']
-                    };
+        const values = await getAttrsAsync(['wound-penalty', 'qc', 'brawl', 'melee', 'dexterity', 'qc-parry']);
+        const pen = values['wound-penalty'] || 0;
+        var finalAttr = {};
+        if (debug === 2) TAS.debug('Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
+        TAS.repeating('martialarts').fields('repmartialarts').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
+            'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(setDebugWrapper(async function getMaxMaAndApply(rows, attrs) {
+            var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
+                                attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
+                                attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']);
+            const dex = Number(values['dexterity']),
+                brawl = Number(values['brawl']),
+                melee = Number(values['melee']),
+                qcParry = Number(values['qc-parry']),
+                isQc = Number(values['qc']),
+                correspondingTable = {
+                    'brawl': brawl,
+                    'melee': melee,
+                    'snake': attrs.I['ma-snake'],
+                    'tiger': attrs.I['ma-tiger'],
+                    'void': attrs.I['ma-void'],
+                    'reaper': attrs.I['ma-reaper'],
+                    'ebon': attrs.I['ma-ebon'],
+                    'crane': attrs.I['ma-crane'],
+                    'nightingale': attrs.I['ma-nightingale'],
+                    'devil': attrs.I['ma-devil'],
+                    'claw': attrs.I['ma-claw'],
+                    'pearl': attrs.I['ma-pearl'],
+                    'steel': attrs.I['ma-steel']
+                };
 
-                if (debug === 2) TAS.debug(`values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
-                _.each(rows, function(v, k) {
-                    if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
-                    ma = Math.max(ma, Number(v.repmartialarts));
-                });
+            if (debug === 2) TAS.debug(`values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
+            _.each(rows, function(v, k) {
+                if (debug === 2) TAS.debug(`v=${JSON.stringify(v)}, k=${k}`);
+                ma = Math.max(ma, Number(v.repmartialarts));
+            });
 
-                if (debug === 2) TAS.debug(`Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
-                if (debug === 2) TAS.debug('Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen);
-                var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2)) - pen;
-                if (debug === 2) TAS.debug('Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen);
-                var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2)) - pen;
-                if (debug === 2) TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-                finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
+            if (debug === 2) TAS.debug(`Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
+            if (debug === 2) TAS.debug('Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen);
+            var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2)) - pen;
+            if (debug === 2) TAS.debug('Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen);
+            var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2)) - pen;
+            if (debug === 2) TAS.debug('setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
+            finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
 
-                if (debug === 2) TAS.debug('Updating Weapon Parry value');
-                getSectionIDs('weapon', function ForgeWeaponList(idarray) {
-                    const weaponFieldNames = [];
-                    idarray.forEach(id => weaponFieldNames.push(`repeating_weapon_${id}_repweapondef`, `repeating_weapon_${id}_repweaponabi`));
+            if (debug === 2) TAS.debug('Updating Weapon Parry value');
+            const idarray = await getSectionIDsAsync("weapon");
+            const weaponFieldNames = [];
+            idarray.forEach(id => weaponFieldNames.push(`repeating_weapon_${id}_repweapondef`, `repeating_weapon_${id}_repweaponabi`));
 
-                    getAttrs(weaponFieldNames, setDebugWrapper(function GetWeapondFieldsAndUpdateWeaponParrys(valuesSections) {
-                        if (debug === 2) TAS.debug(`valuesSections=${JSON.stringify(valuesSections)}`);
-                        idarray.forEach(id => {
-                            let row = 'repeating_weapon_' + id,
-                                def = valuesSections[`${row}_repweapondef`] || 0,
-                                abi = valuesSections[`${row}_repweaponabi`] || 'brawl';
-                            finalAttr[`${row}_repweaponparry`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))) / 2) + Number(def) - pen;
-                            finalAttr[`${row}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) - pen;
-                        });
-                        TAS.debug('UPDATE WEAPONS PARRY', finalAttr);
-                        setAttrs(finalAttr);
-                    }));
-                });
-            })).execute();
-        }));
+            const valuesSections = await getAttrsAsync(weaponFieldNames);
+            if (debug === 2) TAS.debug(`valuesSections=${JSON.stringify(valuesSections)}`);
+            for (const id of idarray) {
+                let row = 'repeating_weapon_' + id,
+                    def = valuesSections[`${row}_repweapondef`] || 0,
+                    abi = valuesSections[`${row}_repweaponabi`] || 'brawl';
+                finalAttr[`${row}_repweaponparry`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))) / 2) + Number(def) - pen;
+                finalAttr[`${row}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) - pen;
+            }
+            TAS.debug('UPDATE WEAPONS PARRY', finalAttr);
+            setAttrs(finalAttr);
+        })).execute();
     }
 
     on('change:rollpenalty-input', TAS._fn(updateRollPenalty));
 
-    function updateRollPenalty() {
-        getAttrs(['rollpenalty-input'], TAS._fn(function getEssence(values) {
-            TAS.debug(`updateRollPenalty:: ${JSON.stringify(values)}`);
-            const rollPenInput = Number(values['rollpenalty-input']);
-            setAttrs({'roll-penalty': isNaN(rollPenInput) ? 0 : Math.abs(rollPenInput)});
-        }));
+    async function updateRollPenalty() {
+        const rollpenalty = await getSingleAttrAsync('rollpenalty-input');
+        TAS.debug(`updateRollPenalty:: ${JSON.stringify(rollpenalty)}`);
+        const rollPenInput = Number(rollpenalty);
+        setAttrs({'roll-penalty': isNaN(rollPenInput) ? 0 : Math.abs(rollPenInput)});
     }
 
     on('sheet:opened', onCraftChange);
@@ -296,70 +281,66 @@
         })).execute();
     }
 
-    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', function updateBattleGroupMagnitude(e) {
-        getSectionIDs('health', function getHealthList(idHealthArray) {
-            getAttrs(["battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale"], TAS._fn(function determineBattleGroupMagnitude(values) {
-                let bgSize =    Number(values["battlegroup-size"]),
-                    bgSizeMax = Number(values["battlegroup-size_max"]),
-                    bgHL =      Number(values["battlegroup-health-levels"]),
-                    bgPM =      Number(values["battlegroup-perfect-morale"]);
-                const objSet = {};
-                if (e.sourceAttribute === 'battlegroup' && e.newValue === '1') {
-                    bgHL = idHealthArray.length;
-                    objSet['battlegroup-health-levels'] = bgHL;
-                    bgSize = bgSizeMax;
-                    objSet['battlegroup-size'] = bgSizeMax;
-                }
-                objSet["battlegroup-magnitude_max"] = bgSize + bgHL + (bgPM == 1 ? 3 : 0);
-                if (e.sourceAttribute === 'battlegroup' && e.newValue === '1')
-                    objSet['battlegroup-magnitude'] = objSet["battlegroup-magnitude_max"];
-                TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
-                setAttrs(objSet);
-            }));
-        });
+    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale', async function updateBattleGroupMagnitude(e) {
+        const idHealthArray = await getSectionIDsAsync("health");
+        const values = await getAttrsAsync(["battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale"]);    
+        let bgSize =    Number(values["battlegroup-size"]),
+            bgSizeMax = Number(values["battlegroup-size_max"]),
+            bgHL =      Number(values["battlegroup-health-levels"]),
+            bgPM =      Number(values["battlegroup-perfect-morale"]);
+        const objSet = {};
+        if (e.sourceAttribute === 'battlegroup' && e.newValue === '1') {
+            bgHL = idHealthArray.length;
+            objSet['battlegroup-health-levels'] = bgHL;
+            bgSize = bgSizeMax;
+            objSet['battlegroup-size'] = bgSizeMax;
+        }
+        objSet["battlegroup-magnitude_max"] = bgSize + bgHL + (bgPM == 1 ? 3 : 0);
+        if (e.sourceAttribute === 'battlegroup' && e.newValue === '1')
+            objSet['battlegroup-magnitude'] = objSet["battlegroup-magnitude_max"];
+        TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
+        setAttrs(objSet);
     });
 
     function triangularNumberSum(nb) { return (nb * (nb+1) / 2);}
 
-    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale change:battlegroup-magnitude', function updateBattleGroupHealthDisplayed(e) {
-        getSectionIDs('health', function getHealthList(idHealthArray) {
-            const healthFieldNames = [];
-            idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
+    on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-health-levels change:battlegroup-perfect-morale change:battlegroup-magnitude', async function updateBattleGroupHealthDisplayed(e) {
+        const idHealthArray = await getSectionIDsAsync("health");
+        const healthFieldNames = [];
+        idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
 
-            getAttrs([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"], TAS._fn(function getHealthFields(valuesSections) {
-                if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
-                    TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
-                    var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-                        return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
-                    }).value();
+        const valuesSections = await getAttrsAsync([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"]);    
+        if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
+            TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
+            var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
+                return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+            }).value();
 
-                    let actualHealth = 0;
-                    for (const id of sortedIdHealthArray.reverse()) {
-                        let dmg =       valuesSections[`repeating_health_${id}_hl-damage`];
-                        if (dmg && (!dmg || dmg !== 'healthy')) break;
-                        else                                    actualHealth++;
-                    }
+            let actualHealth = 0;
+            for (const id of sortedIdHealthArray.reverse()) {
+                let dmg =       valuesSections[`repeating_health_${id}_hl-damage`];
+                if (dmg && (!dmg || dmg !== 'healthy')) break;
+                else                                    actualHealth++;
+            }
 
-                    let maxHealth = sortedIdHealthArray.length;
-                    TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
-                    setAttrs({'health-displayed': actualHealth, 'health-displayed_max': maxHealth});
-                } else if (Number(valuesSections['battlegroup'])) {
-                    TAS.debug(`updateBattleGroupHealthDisplayed:: normal trigger`);
-                    let bgSize =    Number(valuesSections["battlegroup-size"]),
-                        bgSizeMax = Number(valuesSections["battlegroup-size_max"]),
-                        bgHL =      Number(valuesSections["battlegroup-health-levels"]),
-                        bgPM =      Number(valuesSections["battlegroup-perfect-morale"]),
-                        bgMag =     Number(valuesSections["battlegroup-magnitude"]);
-                    const displayedHealth = bgSize === 0 ? 0 : (bgSize - 1) * bgHL + triangularNumberSum(bgSize - 1) + (bgPM ? (bgSize - 1) * 3 : 0) + bgMag;
-                    const displayedHealthMax =                    bgSizeMax * bgHL + triangularNumberSum(bgSizeMax)  + (bgPM ? bgSizeMax    * 3 : 0);
-                    TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${displayedHealthMax} actualHealth=${displayedHealth}`);
-                    setAttrs({"health-displayed": displayedHealth, "health-displayed_max": displayedHealthMax});
-                }
-            }));
-        });
+            let maxHealth = sortedIdHealthArray.length;
+            TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+            setAttrs({'health-displayed': actualHealth, 'health-displayed_max': maxHealth});
+        } else if (Number(valuesSections['battlegroup'])) {
+            TAS.debug(`updateBattleGroupHealthDisplayed:: normal trigger`);
+            let bgSize =    Number(valuesSections["battlegroup-size"]),
+                bgSizeMax = Number(valuesSections["battlegroup-size_max"]),
+                bgHL =      Number(valuesSections["battlegroup-health-levels"]),
+                bgPM =      Number(valuesSections["battlegroup-perfect-morale"]),
+                bgMag =     Number(valuesSections["battlegroup-magnitude"]);
+            const displayedHealth = bgSize === 0 ? 0 : (bgSize - 1) * bgHL + triangularNumberSum(bgSize - 1) + (bgPM ? (bgSize - 1) * 3 : 0) + bgMag;
+            const displayedHealthMax =                    bgSizeMax * bgHL + triangularNumberSum(bgSizeMax)  + (bgPM ? bgSizeMax    * 3 : 0);
+            TAS.debug(`updateBattleGroupHealthDisplayed:: maxHealth=${displayedHealthMax} actualHealth=${displayedHealth}`);
+            setAttrs({"health-displayed": displayedHealth, "health-displayed_max": displayedHealthMax});
+        }
     });
 
-    on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', function setOrDisableBattleGroupSpecialAttrs(e) {
+    on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', async function setOrDisableBattleGroupSpecialAttrs(e) {
         if (e.sourceType !== "player") {
             TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
@@ -375,173 +356,166 @@
                 "battlegroup-dmg-boost": 0
             });
         } else {
-            getAttrs(["battlegroup-drill", "battlegroup-might"], TAS._fn(function getBGAttrs(values) {
-                TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
-                TAS.debug(`updating special bg attrs`);
-                setAttrs({
-                    "battlegroup-def-boost": (values["battlegroup-drill"] === 'Average' ? 1 : values["battlegroup-drill"] === 'Elite' ? 2 : 0) + (['1','2'].includes(values["battlegroup-might"]) ? 1 : values["battlegroup-might"] === '3' ? 2 : 0),
-                    "battlegroup-acc-boost": Number(values["battlegroup-might"]),
-                    "battlegroup-dmg-boost": Number(values["battlegroup-might"])
-                });
-            }));
+            const values = await getAttrsAsync(["battlegroup-drill", "battlegroup-might"]);
+            TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
+            TAS.debug(`updating special bg attrs`);
+            setAttrs({
+                "battlegroup-def-boost": (values["battlegroup-drill"] === 'Average' ? 1 : values["battlegroup-drill"] === 'Elite' ? 2 : 0) + (['1','2'].includes(values["battlegroup-might"]) ? 1 : values["battlegroup-might"] === '3' ? 2 : 0),
+                "battlegroup-acc-boost": Number(values["battlegroup-might"]),
+                "battlegroup-dmg-boost": Number(values["battlegroup-might"])
+            });
         }
     });
 
-    on('sheet:opened', function testEssenceValue(e) {
-        getAttrs(['essence', 'caste'], TAS._fn(function getEssence(values) {
-            TAS.debug(`essence=${JSON.stringify(values['essence'])}`);
-            if (!values['essence']) {
-                TAS.debug(`SETTING ESSENCE !`);
-                setAttrs({'essence': 1});
-            }
-            TAS.debug(`caste=${JSON.stringify(values['caste'])}`);
-            if (!values['essence']) {
-                TAS.debug(`SETTING CASTE !`);
-                setAttrs({
-                    'caste': 'Mortal',
-                    'personal-equation': '0',
-                    'peripheral-equation': '0',
-                    'showanimadiv': 0,
-                    'showsupdiv': 0,
-                    'showlimit': 0
-                });
-            }
-        }));
+    on('sheet:opened', async function testEssenceValue(e) {
+        const values = await getAttrsAsync(['essence', 'caste']);
+        TAS.debug(`testEssenceValue:: essence=${JSON.stringify(values['essence'])}`);
+        if (!values['essence']) {
+            TAS.debug(`testEssenceValue:: SETTING ESSENCE !`);
+            setAttrs({'essence': 1});
+        }
+        TAS.debug(`caste=${JSON.stringify(values['caste'])}`);
+        if (!values['caste']) {
+            TAS.debug(`testEssenceValue:: SETTING DEFAULT CASTE !`);
+            setAttrs({
+                'caste': 'Mortal',
+                'personal-equation': '0',
+                'peripheral-equation': '0',
+                'showanimadiv': 0,
+                'showsupdiv': 0,
+                'showlimit': 0
+            });
+        }
     });
 
-    on('change:essence change:personal-equation change:peripheral-equation change:committedessperso change:committedesstotal', TAS._fn(function updateMaxPeripheral(e) {
-        getAttrs(['essence', 'personal-equation', 'peripheral-equation', 'committedessperso', 'committedesstotal'], setDebugWrapper(function getAttrToUpdate(values){
-            let periEquationStr = values['peripheral-equation'],
-                persoEquationStr = values['personal-equation'],
-                essence = Number(values['essence']),
-                committedPerso = Number(values['committedessperso']),
-                committedPeri = Number(values['committedesstotal']),
-                pattern = /[^0-9\(\)\+\-\*\/\.]/g;
+    on('change:essence change:personal-equation change:peripheral-equation change:committedessperso change:committedesstotal', TAS._fn(async function updateMaxPeripheral(e) {
+        const values = await getAttrsAsync(['essence', 'personal-equation', 'peripheral-equation', 'committedessperso', 'committedesstotal']);
+        let periEquationStr = values['peripheral-equation'],
+            persoEquationStr = values['personal-equation'],
+            essence = Number(values['essence']),
+            committedPerso = Number(values['committedessperso']),
+            committedPeri = Number(values['committedesstotal']),
+            pattern = /[^0-9\(\)\+\-\*\/\.]/g;
 
-            if (isNaN(committedPerso) || String(values['committedessperso']).trim() === "") {
-                committedPerso = 0;
-                setAttrs({'committedessperso':0});
-            }
-            if (isNaN(committedPeri) || String(values['committedesstotal']).trim() === "") {
-                committedPeri = 0;
-                setAttrs({'committedesstotal':0});
-            }
+        if (isNaN(committedPerso) || String(values['committedessperso']).trim() === "") {
+            committedPerso = 0;
+            setAttrs({'committedessperso':0});
+        }
+        if (isNaN(committedPeri) || String(values['committedesstotal']).trim() === "") {
+            committedPeri = 0;
+            setAttrs({'committedesstotal':0});
+        }
 
-            persoEquationStr = persoEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
-            persoEquationStr = persoEquationStr.replace('@{committedessperso}', committedPerso);
-            persoEquationStr = persoEquationStr.replace(pattern, '');
+        persoEquationStr = persoEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
+        persoEquationStr = persoEquationStr.replace('@{committedessperso}', committedPerso);
+        persoEquationStr = persoEquationStr.replace(pattern, '');
 
-            periEquationStr = periEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
-            periEquationStr = periEquationStr.replace('@{committedesstotal}', committedPeri);
-            periEquationStr = periEquationStr.replace(pattern, '');
-            let finalPerso = eval(persoEquationStr), finalPeri = eval(periEquationStr), maxDisplayed = Number(finalPerso) + Number(finalPeri);
-            TAS.debug(`SETTING personal-essence_max=${finalPerso} peripheral-essence_max=${finalPeri}`);
-            TAS.debug(`SETTING displayed-essence_max=${maxDisplayed}`);
-            setAttrs({'personal-essence_max': finalPerso, 'peripheral-essence_max': finalPeri, 'displayed-essence_max': maxDisplayed});
-        }));
+        periEquationStr = periEquationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
+        periEquationStr = periEquationStr.replace('@{committedesstotal}', committedPeri);
+        periEquationStr = periEquationStr.replace(pattern, '');
+        let finalPerso = eval(persoEquationStr), finalPeri = eval(periEquationStr), maxDisplayed = Number(finalPerso) + Number(finalPeri);
+        TAS.debug(`SETTING personal-essence_max=${finalPerso} peripheral-essence_max=${finalPeri}`);
+        TAS.debug(`SETTING displayed-essence_max=${maxDisplayed}`);
+        setAttrs({'personal-essence_max': finalPerso, 'peripheral-essence_max': finalPeri, 'displayed-essence_max': maxDisplayed});
     }));
 
-    on('change:personal-essence change:peripheral-essence', TAS._fn(function updateDisplayedMotes(e) {
-        getAttrs(['personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], setDebugWrapper(function getMoteAttrs(values){
-            let perso = Number(values['personal-essence']),
-                persoMax = Number(values['personal-essence_max']),
-                peri = Number(values['peripheral-essence']);
-                periMax = Number(values['peripheral-essence_max']);
+    on('change:personal-essence change:peripheral-essence', TAS._fn(async function updateDisplayedMotes(e) {
+        const values = await getAttrsAsync(['personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max']);
+        let perso = Number(values['personal-essence']),
+            persoMax = Number(values['personal-essence_max']),
+            peri = Number(values['peripheral-essence']);
+            periMax = Number(values['peripheral-essence_max']);
 
-            if (isNaN(perso)) {
-                perso = 0;
-                TAS.error(`NaN Value ! SETTING personal-essence=0`);
-                setAttrs({'personal-essence':0});
-            }
-            if (isNaN(persoMax)) persoMax = 0;
-            if (isNaN(periMax))  periMax = 0;
-            if (isNaN(peri)) {
-                peri = 0;
-                TAS.error(`NaN Value ! SETTING peripheral-essence=0`);
-                setAttrs({'peripheral-essence':0});
-            }
+        if (isNaN(perso)) {
+            perso = 0;
+            TAS.error(`NaN Value ! SETTING personal-essence=0`);
+            setAttrs({'personal-essence':0});
+        }
+        if (isNaN(persoMax)) persoMax = 0;
+        if (isNaN(periMax))  periMax = 0;
+        if (isNaN(peri)) {
+            peri = 0;
+            TAS.error(`NaN Value ! SETTING peripheral-essence=0`);
+            setAttrs({'peripheral-essence':0});
+        }
 
-            let displayedMotes = perso + peri;
-            TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
-            setAttrs({'displayed-essence': (displayedMotes === 0 && persoMax === 0 && periMax === 0) ? '' : displayedMotes});
-        }));
+        let displayedMotes = perso + peri;
+        TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
+        setAttrs({'displayed-essence': (displayedMotes === 0 && persoMax === 0 && periMax === 0) ? '' : displayedMotes});
     }));
 
-    on('change:caste', TAS._fn(function updateMotePool(eventInfo){
-        getAttrs(["caste"], setDebugWrapper(function determineMotePool(values){
-            var periEquation = "0", persEquation = "0", showAnima = 1,
-                showSupernal = 0,   showLimit = 0,
-                casteLow = 'unknown',
-                succEx = 0,         diceEx = 1;
-            if (["Dawn",    "Zenith",   "Twilight",   "Night",      "Eclipse",
-                 "Dusk",    "Midnight", "Daybreak",   "Day",        "Moonshadow",
-                 "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer"].includes(values.caste)) {
-                persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
-                periEquation = "@{essence} * 7 + 26 - @{committedesstotal}";
-                showSupernal = 1;
-                showLimit = 1;
-            } else if (["Air", "Earth", "Fire", "Water", "Wood"].includes(values.caste)){
-                persEquation = "@{essence} * 1 + 11 - @{committedessperso}";
-                periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
-            } else if (["Full Moon", "Changing Moon", "No Moon",    "Casteless",
-                        "Adamant",   "Jade",          "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal"].includes(values.caste)){
-                persEquation = "@{essence} * 1 + 15 - @{committedessperso}";
-                periEquation = "@{essence} * 4 + 34 - @{committedesstotal}";
-                showLimit = 1;
-                succEx = 1;
-            } else if (["Journeys", "Serenity", "Battles", "Secrets", "Endings"].includes(values.caste)){
-                persEquation = "@{essence} * 2 + 9 - @{committedessperso}";
-                periEquation = "@{essence} * 6 + 25 - @{committedesstotal}";
-                showLimit = 1;
-            } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(values.caste)){
-                persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
-                periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
-                succEx = 1;
-            } else if (["God", "Elemental", "Demon", "Undead"].includes(values.caste)){
-                persEquation = "@{essence} * 10 + 50 - @{committedessperso}";
-                periEquation = "@{essence} * 0 - @{committedesstotal}";
-                showAnima = 0;
-                diceEx = 0;
-            } else if (values.caste === "God-Blooded"){
-                persEquation = "@{essence} * 0 - @{committedessperso}";
-                periEquation = "@{essence} * 10 - @{committedesstotal}";
-                showAnima = 0;
-                diceEx = 0;
-            } else if (values.caste === "Mortal"){
-                persEquation = "0";
-                periEquation = "0";
-                showAnima = 0;
-                diceEx = 0;
-            } else {
-                TAS.debug(`updateMotePool:: No settings found, stay as is !`);
-                return;
-            }
+    on('change:caste', TAS._fn(async function updateMotePool(eventInfo){
+        const caste = await getSingleAttrAsync("caste");
+        let periEquation = "0", persEquation = "0", showAnima = 1,
+            showSupernal = 0,   showLimit = 0,
+            casteLow = 'unknown',
+            succEx = 0,         diceEx = 1;
+        if (["Dawn",    "Zenith",   "Twilight",   "Night",      "Eclipse",
+                "Dusk",    "Midnight", "Daybreak",   "Day",        "Moonshadow",
+                "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer"].includes(caste)) {
+            persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
+            periEquation = "@{essence} * 7 + 26 - @{committedesstotal}";
+            showSupernal = 1;
+            showLimit = 1;
+        } else if (["Air", "Earth", "Fire", "Water", "Wood"].includes(caste)){
+            persEquation = "@{essence} * 1 + 11 - @{committedessperso}";
+            periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
+        } else if (["Full Moon", "Changing Moon", "No Moon",    "Casteless",
+                    "Adamant",   "Jade",          "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal"].includes(caste)){
+            persEquation = "@{essence} * 1 + 15 - @{committedessperso}";
+            periEquation = "@{essence} * 4 + 34 - @{committedesstotal}";
+            showLimit = 1;
+            succEx = 1;
+        } else if (["Journeys", "Serenity", "Battles", "Secrets", "Endings"].includes(caste)){
+            persEquation = "@{essence} * 2 + 9 - @{committedessperso}";
+            periEquation = "@{essence} * 6 + 25 - @{committedesstotal}";
+            showLimit = 1;
+        } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(caste)){
+            persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
+            periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
+            succEx = 1;
+        } else if (["God", "Elemental", "Demon", "Undead"].includes(caste)){
+            persEquation = "@{essence} * 10 + 50 - @{committedessperso}";
+            periEquation = "@{essence} * 0 - @{committedesstotal}";
+            showAnima = 0;
+            diceEx = 0;
+        } else if (caste === "God-Blooded"){
+            persEquation = "@{essence} * 0 - @{committedessperso}";
+            periEquation = "@{essence} * 10 - @{committedesstotal}";
+            showAnima = 0;
+            diceEx = 0;
+        } else if (caste === "Mortal"){
+            persEquation = "0";
+            periEquation = "0";
+            showAnima = 0;
+            diceEx = 0;
+        } else {
+            TAS.debug(`updateMotePool:: No settings found, stay as is !`);
+            return;
+        }
 
-            if (hasCasteImg(values.caste))
-                 casteLow = values.caste.toLowerCase();
+        if (hasCasteImg(caste))
+            casteLow = caste.toLowerCase();
 
-            const finalObj = {
-                "personal-equation": persEquation,
-                "peripheral-equation": periEquation,
-                "showanimadiv": showAnima,
-                "showsupdiv": showSupernal,
-                "showlimit": showLimit,
-                "caste-low": casteLow,
-                "caste-have-exc": succEx || diceEx,
-                "diceex": diceEx,
-                "succex": succEx
-            };
-            TAS.debug(`updateMotePool:: Setting=`, finalObj);
-            setAttrs(finalObj);
-        }));
+        const finalObj = {
+            "personal-equation": persEquation,
+            "peripheral-equation": periEquation,
+            "showanimadiv": showAnima,
+            "showsupdiv": showSupernal,
+            "showlimit": showLimit,
+            "caste-low": casteLow,
+            "caste-have-exc": succEx || diceEx,
+            "diceex": diceEx,
+            "succex": succEx
+        };
+        TAS.debug(`updateMotePool:: Setting=`, finalObj);
+        setAttrs(finalObj);
     }));
 
-    on('change:diceex change:succex', TAS._fn(function updateCasteHaveExc(eventInfo){
-        getAttrs(["diceex", "succex"], setDebugWrapper(function determineCasteHaveExc(values){
-            const finalObj = {"caste-have-exc": Number(values['diceex']) || Number(values['succex'])};
-            TAS.debug(`updateCasteHaveExc:: Setting=`, finalObj);
-            setAttrs(finalObj);
-        }));
+    on('change:diceex change:succex', TAS._fn(async function updateCasteHaveExc(eventInfo){
+        const finalObj = {"caste-have-exc": Number(await getSingleAttrAsync('diceex')) || Number(await getSingleAttrAsync('succex'))};
+        TAS.debug(`updateCasteHaveExc:: Setting=`, finalObj);
+        setAttrs(finalObj);
     }));
 
     const updateList = [
@@ -564,31 +538,31 @@
         {version: 2.49, fn: upgradeto250},
     ];
 
-    on('sheet:opened', function versionCheck(e) {
-        getAttrs(['version', 'init-intimacies'], TAS._fn(function checkIfSheetUpgradeIsNeeded(values) {
-            TAS.debug(`values=${JSON.stringify(values)}`);
-            if (!values.version) {
-                TAS.debug('NO VERSION FOUND !!!!!!');
-                // TAS.debug('NO VERSION FOUND => INITIALIZING A NEW SHEET');
-                // initCharacterSheet();
-            } else {
-                const v = parseFloat(values.version);
-                TAS.debug(`v = ${v}`);
+    on('sheet:opened', async function versionCheck(e) {
+        const values = await getAttrsAsync(['version', 'init-intimacies']);
+        TAS.debug(`values=${JSON.stringify(values)}`);
+        if (!values.version) {
+            TAS.debug('NO VERSION FOUND !!!!!!');
+            // TAS.debug('NO VERSION FOUND => INITIALIZING A NEW SHEET');
+            // initCharacterSheet();
+        } else {
+            const v = parseFloat(values.version);
+            TAS.debug(`v = ${v}`);
 
-                if (!values['init-intimacies'] || !Number(values['init-intimacies']))
-                    initIntimacies()
+            if (!values['init-intimacies'] || !Number(values['init-intimacies']))
+                initIntimacies()
 
-                const upgradeRemaining = updateList.filter(i => i.version >= v).sort((a,b) => a.version - b.version);
-                for (const u of upgradeRemaining) {
-                    TAS.debug(`Upgrade to do = v=${u.version}`);
-                    TAS._fn(u.fn());
-                }
+            const upgradeRemaining = updateList.filter(i => i.version >= v).sort((a,b) => a.version - b.version);
+            for (const u of upgradeRemaining) {
+                TAS.debug(`Upgrade to do = v=${u.version}`);
+                TAS._fn(u.fn());
             }
-        }));
+        }
     });
 
     function addGenericCharmsToObj(caste, charmObj) {
-        const idCharm1 = generateRowID();
+        const idHealthArray = [];
+        const idCharm1 = generateNewRowId(idHealthArray);
         charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Generic Excellency';
         charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Supplemental';
         charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '[[?{Dice Added ?|1}]]';
@@ -600,8 +574,7 @@
         charmObj[`repeating_charms_${idCharm1}_charm-description`] = 'The Exalt infuse her essence inside the action to magnify it.';
         charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The Exalt add [[?{Dice Added ?|1}]] dices to the action.';
 
-        let idCharm2 = generateRowID();
-        while (idCharm1 === idCharm2) idCharm2 = generateRowID();
+        const idCharm2 = generateNewRowId(idHealthArray);
         charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Generic Defense Excellency';
         charmObj[`repeating_charms_${idCharm2}_charm-type`] = 'Supplemental';
         charmObj[`repeating_charms_${idCharm2}_charm-cost`] = '[[?{Defense Added ?|1} * 2]]';
@@ -704,69 +677,62 @@
         '20': '20[RAW]'
     };
 
-    function upgradeto250() {
-        getAttrs(["caste"], setDebugWrapper(function determineMotePool(values){
-            setAttrs({
-                "caste-have-exc": !["God", "Elemental", "Demon", "Undead", "God-Blooded", "Mortal"].includes(values.caste) ? 1 : 0,
-                'version': version
+    async function upgradeto250() {
+        setAttrs({
+            "caste-have-exc": !["God", "Elemental", "Demon", "Undead", "God-Blooded", "Mortal"].includes(await getSingleAttrAsync("caste")) ? 1 : 0,
+            'version': version
+        });
+    }
+
+    async function upgradeto249() {
+        const idRollsArray = await getSectionIDsAsync("rolls-widget");
+        setAttrs({'version': version});
+        for (const id of idRollsArray)
+            computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+    }
+
+    async function upgradeto248() {
+        const idRollsArray = await getSectionIDsAsync("rolls-widget");
+        const rollFieldNames = [], rollAttrs = ['reprolls-attr', 'reprolls-abi'];
+        idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls-widget_${id}_${i}`)));
+
+        const valuesSections = await getAttrsAsync([...rollFieldNames]);
+        const finalObj = {'version': version};
+        const allowedValued = attrNAbi.map(i => '@{'+i+'}');
+        const convMapKeys = Object.keys(convMap);
+        for (let i = 0; i <= 20; i++) allowedValued.push(i);
+        idRollsArray.forEach(id => {
+            rollAttrs.forEach(i => {
+                if (convMapKeys.includes(valuesSections[`repeating_rolls-widget_${id}_${i}`]))
+                    finalObj[`repeating_rolls-widget_${id}_${i}`] = convMap[valuesSections[`repeating_rolls-widget_${id}_${i}`]];
             });
-        }));
+            finalObj[`repeating_rolls-widget_${id}_reprolls-specialty`] = '0';
+        })
+        setAttrs(finalObj);
+        for (const id of idRollsArray)
+            computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }
 
-    function upgradeto249() {
-        getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
-            setAttrs({'version': version});
-            for (const id of idRollsArray)
-                computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
-        });
-    }
+    async function upgradeto247() {
+        const idRollsArray = await getSectionIDsAsync("rolls");
+        const rollFieldNames = [], rollAttrs = ['reprolls-name', 'reprolls-attr', 'reprolls-abi', 'reprolls-final-macro-options'];
+        idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls_${id}_${i}`)));
 
-    function upgradeto248() {
-        getSectionIDs('rolls-widget', function getHealthList(idRollsArray) {
-            const rollFieldNames = [], rollAttrs = ['reprolls-attr', 'reprolls-abi'];
-            idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls-widget_${id}_${i}`)));
-
-            getAttrs([...rollFieldNames], TAS._fn(function getRollFields(valuesSections) {
-                const finalObj = {'version': version}, arrayNewRollsWidget = [];
-                const allowedValued = attrNAbi.map(i => '@{'+i+'}');
-                const convMapKeys = Object.keys(convMap);
-                for (let i = 0; i <= 20; i++) allowedValued.push(i);
-                idRollsArray.forEach(id => {
-                    rollAttrs.forEach(i => {
-                        if (convMapKeys.includes(valuesSections[`repeating_rolls-widget_${id}_${i}`]))
-                            finalObj[`repeating_rolls-widget_${id}_${i}`] = convMap[valuesSections[`repeating_rolls-widget_${id}_${i}`]];
-                    });
-                    finalObj[`repeating_rolls-widget_${id}_reprolls-specialty`] = '0';
-                })
-                setAttrs(finalObj);
-                for (const id of idRollsArray)
-                    computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
-            }));
-        });
-    }
-
-    function upgradeto247() {
-        getSectionIDs('rolls', function getHealthList(idRollsArray) {
-            const rollFieldNames = [], rollAttrs = ['reprolls-name', 'reprolls-attr', 'reprolls-abi', 'reprolls-final-macro-options'];
-            idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls_${id}_${i}`)));
-
-            getAttrs([...rollFieldNames], TAS._fn(function getRollFields(valuesSections) {
-                const finalObj = {'version': version}, arrayNewRollsWidget = [];
-                const allowedValued = attrNAbi.map(i => '@{'+i+'}');
-                for (let i = 0; i <= 20; i++) allowedValued.push(i);
-                idRollsArray.forEach(id => {
-                    let newId = generateNewRowId(arrayNewRollsWidget);
-                    rollAttrs.forEach(i => finalObj[`repeating_rolls-widget_${newId}_${i}`] = valuesSections[`repeating_rolls_${id}_${i}`]);
-                    if (!allowedValued.includes(finalObj[`repeating_rolls-widget_${newId}_reprolls-attr`]))
-                        finalObj[`repeating_rolls-widget_${newId}_reprolls-attr`] = '0';
-                    if (!allowedValued.includes(finalObj[`repeating_rolls-widget_${newId}_reprolls-abi`]))
-                        finalObj[`repeating_rolls-widget_${newId}_reprolls-abi`] = '0';
-                })
-                setAttrs(finalObj);
-                for (const id of arrayNewRollsWidget)
-                    computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
-            }));
-        });
+        const valuesSections = await getAttrsAsync([...rollFieldNames]);
+        const finalObj = {'version': version}, arrayNewRollsWidget = [];
+        const allowedValued = attrNAbi.map(i => '@{'+i+'}');
+        for (let i = 0; i <= 20; i++) allowedValued.push(i);
+        idRollsArray.forEach(id => {
+            let newId = generateNewRowId(arrayNewRollsWidget);
+            rollAttrs.forEach(i => finalObj[`repeating_rolls-widget_${newId}_${i}`] = valuesSections[`repeating_rolls_${id}_${i}`]);
+            if (!allowedValued.includes(finalObj[`repeating_rolls-widget_${newId}_reprolls-attr`]))
+                finalObj[`repeating_rolls-widget_${newId}_reprolls-attr`] = '0';
+            if (!allowedValued.includes(finalObj[`repeating_rolls-widget_${newId}_reprolls-abi`]))
+                finalObj[`repeating_rolls-widget_${newId}_reprolls-abi`] = '0';
+        })
+        setAttrs(finalObj);
+        for (const id of arrayNewRollsWidget)
+            computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }
 
     function upgradeto242() {
@@ -774,23 +740,19 @@
         computeAllRolls({sourceType: 'player'}, false);
     }
 
-    function upgradeto240() {
-        getAttrs(["battlegroup"], TAS._fn(function determineIfBG(values){
-            if (values['battlegroup'] && Number(values['battlegroup'])) {
-                setAttrs({'version': version});
-                computeAllRolls({sourceType: 'player'}, false);
-            }
-        }));
+    async function upgradeto240() {
+        const bg = await getSingleAttrAsync("battlegroup");
+        if (bg && Number(bg))
+            computeAllRolls({sourceType: 'player'}, false);
+        setAttrs({'version': version});
     }
 
-    function upgradeto239() {
-        getAttrs(["wound-penalty"], TAS._fn(function determineCaste(values){
-            setAttrs({
-                'wound-penalty': Math.abs(values['wound-penalty']),
-                'version': version
-            });
-            computeAllRolls({sourceType: 'player'}, false);
-        }));
+    async function upgradeto239() {
+        setAttrs({
+            'wound-penalty': Math.abs(await getSingleAttrAsync("wound-penalty")),
+            'version': version
+        });
+        computeAllRolls({sourceType: 'player'}, false);
     }
 
     function upgradeto238() {
@@ -802,125 +764,116 @@
         computeAllRolls({sourceType: 'player'}, false);
     }
 
-    function upgradeto237() {
-        getAttrs(['personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], TAS._fn(function geMotesAndSetDisplayedAgain(valuesSections) {
-            let perso =     Number(valuesSections['personal-essence']),
-                persoMax =  Number(valuesSections['personal-essence_max']),
-                peri =      Number(valuesSections['peripheral-essence']);
-                periMax =   Number(valuesSections['peripheral-essence_max']);
-            for (const [variable, attrToSet] of [[perso, 'personal-essence'], [peri, 'peripheral-essence'], [persoMax, 'peripheral-essence_max'], [periMax, 'peripheral-essence_max']]) {
-                if (isNaN(variable)) {
-                    perso = 0;
-                    TAS.error(`NaN Value ! SETTING ${attrToSet}=0`);
-                    setAttrs({[attrToSet]:0});
-                }
+    async function upgradeto237() {
+        const valuesSections = await getAttrsAsync(['personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max']);
+        let perso =     Number(valuesSections['personal-essence']),
+            persoMax =  Number(valuesSections['personal-essence_max']),
+            peri =      Number(valuesSections['peripheral-essence']);
+            periMax =   Number(valuesSections['peripheral-essence_max']);
+        for (const [variable, attrToSet] of [[perso, 'personal-essence'], [peri, 'peripheral-essence'], [persoMax, 'peripheral-essence_max'], [periMax, 'peripheral-essence_max']]) {
+            if (isNaN(variable)) {
+                perso = 0;
+                TAS.error(`NaN Value ! SETTING ${attrToSet}=0`);
+                setAttrs({[attrToSet]:0});
             }
-            let displayedMotes = perso + peri, maxDisplayed = persoMax + periMax;
-            if (maxDisplayed === 0 && displayedMotes === 0)
-                displayedMotes = '';
-            TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
+        }
+        let displayedMotes = perso + peri, maxDisplayed = persoMax + periMax;
+        if (maxDisplayed === 0 && displayedMotes === 0)
+            displayedMotes = '';
+        TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
 
-            const finalAttr = {
-                'displayed-essence': displayedMotes,
-                'displayed-essence_max': maxDisplayed,
-                'version': version
-            };
-            setAttrs(finalAttr);
-        }));
+        const finalAttr = {
+            'displayed-essence': displayedMotes,
+            'displayed-essence_max': maxDisplayed,
+            'version': version
+        };
+        setAttrs(finalAttr);
     }
 
-    function upgradeto236() {
-        getAttrs(["personal-equation"], TAS._fn(function determineCaste(values){
-            const personalEq = values['personal-equation'] || '0',
-                  stringToCheck = ' - @{committedessperso}',
-                  attrObj = {};
+    async function upgradeto236() {
+        const personalEq = await getSingleAttrAsync("personal-equation") || '0',
+              stringToCheck = ' - @{committedessperso}',
+              attrObj = {};
 
-            if (personalEq.slice(personalEq.length - stringToCheck.length) !== stringToCheck && personalEq !== '0' && personalEq !== '')
-                attrObj['personal-equation'] = personalEq + stringToCheck;
-            attrObj['committedessperso'] = 0;
-            attrObj['version'] = version;
+        if (personalEq.slice(personalEq.length - stringToCheck.length) !== stringToCheck && personalEq !== '0' && personalEq !== '')
+            attrObj['personal-equation'] = personalEq + stringToCheck;
+        attrObj['committedessperso'] = 0;
+        attrObj['version'] = version;
 
-            TAS.debug(`upgradeto236:: Setting=`, attrObj);
-            setAttrs(attrObj);
-        }));
+        TAS.debug(`upgradeto236:: Setting=`, attrObj);
+        setAttrs(attrObj);
     }
 
-    function upgradeto235() {
-        getAttrs(["caste"], TAS._fn(function determineCaste(values){
-            const caste = values['caste'] || 'Unknown',
-                  charmObj = {}
+    async function upgradeto235() {
+        const caste = await getSingleAttrAsync("personal-equation") || 'Unknown',
+              charmObj = {}
 
-            if (hasCasteImg(caste))
-                charmObj['caste-low'] = caste.toLowerCase();
-            else
-                charmObj['caste-low'] = 'unknown';
-            charmObj['version'] = version;
+        if (hasCasteImg(caste))
+            charmObj['caste-low'] = caste.toLowerCase();
+        else
+            charmObj['caste-low'] = 'unknown';
+        charmObj['version'] = version;
 
-            TAS.debug(`upgradeto235:: Setting=`, charmObj);
-            setAttrs(charmObj);
-        }));
+        TAS.debug(`upgradeto235:: Setting=`, charmObj);
+        setAttrs(charmObj);
     }
 
-    function upgradeto233() {
-        getAttrs(["caste"], TAS._fn(function determineMotePool(values){
-            const caste = values['caste'] || 'Unknown',
-                  charmObj = {};
+    async function upgradeto233() {
+        const caste = await getSingleAttrAsync("personal-equation") || 'Unknown',
+              charmObj = {};
 
-            addGenericCharmsToObj(caste, charmObj);
-            if (values['caste'] !== 'Mortal') {
-                charmObj['charm-old'] = 1;
-                charmObj['_charm_sheet'] = 28;
+        addGenericCharmsToObj(caste, charmObj);
+        if (values['caste'] !== 'Mortal') {
+            charmObj['charm-old'] = 1;
+            charmObj['_charm_sheet'] = 28;
+        }
+        charmObj['version'] = version;
+
+        TAS.debug(`upgradeto233:: Setting=`, charmObj);
+        setAttrs(charmObj);
+    }
+
+    async function upgradeto232() {
+        const idHealthArray = await getSectionIDsAsync("health");
+        const healthFieldNames = [];
+        idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
+
+        const valuesSections = await getAttrsAsync([...healthFieldNames, 'personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max']);
+        var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
+            return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+        }).value();
+
+        let actualHealth = 0;
+        for (const id of sortedIdHealthArray.reverse()) {
+            let dmg = valuesSections[`repeating_health_${id}_hl-damage`];
+            if (dmg && (!dmg || dmg !== 'healthy')) break;
+            else                                    actualHealth++;
+        }
+        let maxHealth = sortedIdHealthArray.length;
+        TAS.debug(`getHealthFields:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+
+        let perso =     Number(valuesSections['personal-essence']),
+            persoMax =  Number(valuesSections['personal-essence_max']),
+            peri =      Number(valuesSections['peripheral-essence']);
+            periMax =   Number(valuesSections['peripheral-essence_max']);
+        for (const [variable, attrToSet] of [[perso, 'personal-essence'], [peri, 'peripheral-essence'], [persoMax, 'peripheral-essence_max'], [periMax, 'peripheral-essence_max']]) {
+            if (isNaN(variable)) {
+                perso = 0;
+                TAS.error(`NaN Value ! SETTING ${attrToSet}=0`);
+                setAttrs({[attrToSet]:0});
             }
-            charmObj['version'] = version;
+        }
+        let displayedMotes = perso + peri, maxDisplayed = persoMax + periMax;
+        TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
 
-            TAS.debug(`upgradeto233:: Setting=`, charmObj);
-            setAttrs(charmObj);
-        }));
-    }
-
-    function upgradeto232() {
-        getSectionIDs('health', function getHealthList(idHealthArray) {
-            const healthFieldNames = [];
-            idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
-
-            getAttrs([...healthFieldNames, 'personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max'], TAS._fn(function getHealthFields(valuesSections) {
-                var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-                    return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
-                }).value();
-
-                let actualHealth = 0;
-                for (const id of sortedIdHealthArray.reverse()) {
-                    let dmg = valuesSections[`repeating_health_${id}_hl-damage`];
-                    if (dmg && (!dmg || dmg !== 'healthy')) break;
-                    else                                    actualHealth++;
-                }
-                let maxHealth = sortedIdHealthArray.length;
-                TAS.debug(`getHealthFields:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
-
-                let perso =     Number(valuesSections['personal-essence']),
-                    persoMax =  Number(valuesSections['personal-essence_max']),
-                    peri =      Number(valuesSections['peripheral-essence']);
-                    periMax =   Number(valuesSections['peripheral-essence_max']);
-                for (const [variable, attrToSet] of [[perso, 'personal-essence'], [peri, 'peripheral-essence'], [persoMax, 'peripheral-essence_max'], [periMax, 'peripheral-essence_max']]) {
-                    if (isNaN(variable)) {
-                        perso = 0;
-                        TAS.error(`NaN Value ! SETTING ${attrToSet}=0`);
-                        setAttrs({[attrToSet]:0});
-                    }
-                }
-                let displayedMotes = perso + peri, maxDisplayed = persoMax + periMax;
-                TAS.debug(`SETTING displayed-essence=[${perso}+${peri} ==> ${displayedMotes}]`);
-
-                const finalAttr = {
-                    'health-displayed': actualHealth,
-                    'health-displayed_max': maxHealth,
-                    'displayed-essence': displayedMotes,
-                    'displayed-essence_max': maxDisplayed,
-                    'version': version
-                };
-                setAttrs(finalAttr);
-            }));
-        });
+        const finalAttr = {
+            'health-displayed': actualHealth,
+            'health-displayed_max': maxHealth,
+            'displayed-essence': displayedMotes,
+            'displayed-essence_max': maxDisplayed,
+            'version': version
+        };
+        setAttrs(finalAttr);
     }
 
     function upgradeto231() {
@@ -948,56 +901,53 @@
         });
     }
 
-    function upgradeHealthBars() {
+    async function upgradeHealthBars() {
         TAS.debug('Upgrade Health Bars v1 => 2.25');
         var healthList = [];
         for (var i = 1; i <= 32; i++) {
             healthList.push('hl' + i + '-damage');
             healthList.push('hl' + i + '-penalty');
         }
-        getAttrs(healthList, TAS._fn(function getHealth(values) {
-            var attrs = {}, healthValues = [];
-            for (var i = 1; i <= 32; i++) {
-                if (values[`hl${i}-damage`] !== 'healthy' || values[`hl${i}-penalty`])
-                    healthValues.push({damage:values[`hl${i}-damage`],penalty:values[`hl${i}-penalty`]});
-            }
+        const values = await getAttrsAsync(healthList);
+        var attrs = {}, healthValues = [];
+        for (var i = 1; i <= 32; i++) {
+            if (values[`hl${i}-damage`] !== 'healthy' || values[`hl${i}-penalty`])
+                healthValues.push({damage:values[`hl${i}-damage`],penalty:values[`hl${i}-penalty`]});
+        }
 
-            var indexesIntimacies = _.times(healthValues.length, generateRowID);
-            TAS.debug('Creating new intimacies', indexesIntimacies);
-            _.each(indexesIntimacies, function(id, k) {
-                attrs['repeating_health_' + id + '_hl-damage'] = healthValues[k].damage;
-                attrs['repeating_health_' + id + '_hl-penalty'] = healthValues[k].penalty;
-            });
+        var indexesIntimacies = _.times(healthValues.length, generateRowID);
+        TAS.debug('Creating new intimacies', indexesIntimacies);
+        _.each(indexesIntimacies, function(id, k) {
+            attrs['repeating_health_' + id + '_hl-damage'] = healthValues[k].damage;
+            attrs['repeating_health_' + id + '_hl-penalty'] = healthValues[k].penalty;
+        });
 
-            attrs.version = version;
-            attrs = cleanAttrs(attrs);
-            TAS.debug('Saving attributes!', attrs);
-            setAttrs(cleanAttrs(attrs));
-        }));
+        attrs.version = version;
+        attrs = cleanAttrs(attrs);
+        TAS.debug('Saving attributes!', attrs);
+        setAttrs(cleanAttrs(attrs));
     }
 
-    function initIntimacies() {
+    async function initIntimacies() {
         TAS.debug(`initIntimacies::initIntimacies Initializing 1st time Intimacies`);
-        getSectionIDs('intimacies', TAS._fn(function getIntimaciesList(idIntimaciesArray) {
-            getAttrs(['init-intimacies'], TAS._fn(function checkInitialized(values) {
-                if (idIntimaciesArray.length || Number(values['init-intimacies']) !== 0) {
-                    TAS.debug(`ALREADY DONE => CANCEL init-intimacies=${Number(values['init-intimacies'])} len=${idIntimaciesArray.length}`);
-                    return;
-                }
+        const idIntimaciesArray = await getSectionIDsAsync("intimacies");
+        const values = await getAttrsAsync(['init-intimacies']);
+        if (idIntimaciesArray.length || Number(values['init-intimacies']) !== 0) {
+            TAS.debug(`ALREADY DONE => CANCEL init-intimacies=${Number(values['init-intimacies'])} len=${idIntimaciesArray.length}`);
+            return;
+        }
 
-                var attrs = {}, indexesIntimacies = _.times(4, generateRowID);
-                TAS.debug('Creating new intimacies', indexesIntimacies);
-                _.each(indexesIntimacies, function(id, k) {
-                    var v;
-                    if (k === 0) v = 'Defining';
-                    else if (k === 1) v = 'Major';
-                    else v = 'Minor';
-                    attrs['repeating_intimacies_' + id + '_intimacyrepeatingtype'] = v;
-                });
-                attrs['init-intimacies'] = 1;
-                setAttrs(attrs);
-            }));
-        }));
+        var attrs = {}, indexesIntimacies = _.times(4, generateRowID);
+        TAS.debug('Creating new intimacies', indexesIntimacies);
+        _.each(indexesIntimacies, function(id, k) {
+            var v;
+            if (k === 0) v = 'Defining';
+            else if (k === 1) v = 'Major';
+            else v = 'Minor';
+            attrs['repeating_intimacies_' + id + '_intimacyrepeatingtype'] = v;
+        });
+        attrs['init-intimacies'] = 1;
+        setAttrs(attrs);
     }
 
     function initCharacterSheet() {
@@ -1083,109 +1033,89 @@
     /* *** QC *** */
     /* ********** */
 
-    function changeJoinResolve() {
-        getAttrs(['qc-join-battle', 'qc-resolve'], values => {
-            let valJb = Number(values['qc-join-battle']),
-                valRes = Number(values['qc-resolve']),
-                valWits = 0,
-                valIntegrity = 0,
-                valAwareness = 0;
-            TAS.debug('changeJoinResolve valJb=' + valJb + ', valRes=' + valRes);
-            if (valJb <= valRes) {
-                valWits = valJb;
-                valIntegrity = valWits + (valRes - valJb) * 2;
-            } else {
-                valWits = valRes;
-                valIntegrity = valRes;
-                valAwareness = valJb - valRes;
-            }
-            TAS.debug('set wits=' + valWits + ', integrity=' + valIntegrity + ', awareness=' + valAwareness);
-            setAttrs({
-                'wits': valWits,
-                'integrity': valIntegrity,
-                'awareness': valAwareness
-            });
+    async function changeJoinResolve() {
+        let valJb = Number(await getSingleAttrAsync('qc-join-battle')),
+            valRes = Number(await getSingleAttrAsync('qc-resolve')),
+            valWits = 0,
+            valIntegrity = 0,
+            valAwareness = 0;
+        TAS.debug('changeJoinResolve valJb=' + valJb + ', valRes=' + valRes);
+        if (valJb <= valRes) {
+            valWits = valJb;
+            valIntegrity = valWits + (valRes - valJb) * 2;
+        } else {
+            valWits = valRes;
+            valIntegrity = valRes;
+            valAwareness = valJb - valRes;
+        }
+        TAS.debug('set wits=' + valWits + ', integrity=' + valIntegrity + ', awareness=' + valAwareness);
+        setAttrs({
+            'wits': valWits,
+            'integrity': valIntegrity,
+            'awareness': valAwareness
         });
     }
 
-    on('change:qc-guile', TAS._fn(function quickGuileChange(e) {
-        getAttrs(['qc-guile'], values => {
-            let val = Number(values['qc-guile']);
-            setAttrs({
-                'manipulation': val,
-                'socialize': val
-            });
-        });
+    on('change:qc-guile', TAS._fn(async function quickGuileChange(e) {
+        const val = Number(await getSingleAttrAsync('qc-guile'));
+        setAttrs({'manipulation': val, 'socialize': val});
     }));
 
     on('change:qc-resolve change:qc-join-battle', TAS._fn(function quickResolveChange(e) {
         changeJoinResolve();
     }));
 
-    on('change:qc-evasion', TAS._fn(function quickEvasionChange(e) {
-        getAttrs(['qc-evasion'], values => {
-            let val = Number(values['qc-evasion']);
-            setAttrs({
-                'dexterity': val,
-                'dodge': val
-            });
-        });
+    on('change:qc-evasion', TAS._fn(async function quickEvasionChange(e) {
+        const val = Number(await getSingleAttrAsync('qc-evasion'));
+        setAttrs({'dexterity': val, 'dodge': val});
     }));
 
-    on('change:qc-soak', TAS._fn(function quickSoakChange(e) {
-        getAttrs(['qc-soak'], values => {
-            let val = Number(values['qc-soak']);
-            let setVal = (val > 1 ? val : 1);
-            setAttrs({
-                'naturalsoak': setVal-1
-            });
-        });
+    on('change:qc-soak', TAS._fn(async function quickSoakChange(e) {
+        const val = Number(await getSingleAttrAsync('qc-soak'));
+        setAttrs({'naturalsoak': val > 1 ? val : 0});
     }));
 
-    on('change:repeating_qcattacks remove:repeating_qcattacks', setDebugWrapper(function qcAttacksChange() {
-        getSectionIDs('qcattacks', setDebugWrapper(function getQcAttacksSections(idSections) {
-            getSectionIDs('weapon', setDebugWrapper(function getQcAttacksSections(idWeaponSections) {
-                const qcFieldNames = [];
-                idSections.forEach(id => qcFieldNames.push(`caste-have-exc`, `repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
+    on('change:repeating_qcattacks remove:repeating_qcattacks', setDebugWrapper(async function qcAttacksChange() {
+        const idSections = await getSectionIDsAsync('qcattacks');
+        const idWeaponSections = await getSectionIDsAsync('weapon');
+        const qcFieldNames = [];
+        idSections.forEach(id => qcFieldNames.push(`caste-have-exc`, `repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
 
-                getAttrs(qcFieldNames, TAS._fn(function GetQCAttacksFieldsAndUpdateWeaponFields(valuesSections) {
-                    // remove weapons
-                    idWeaponSections.forEach(id => removeRepeatingRow(`repeating_weapon_${id}`));
+        const valuesSections = await getAttrsAsync(qcFieldNames);
+        // remove weapons
+        idWeaponSections.forEach(id => removeRepeatingRow(`repeating_weapon_${id}`));
 
-                    const weaponFieldToSet = {};
-                    for (const id of idSections) {
-                        const name_attr = `repeating_qcattacks_${id}_repqcattackname`,
-                            atk_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
-                            exc_attr  = `repeating_qcattacks_${id}_repqcattackdice-exc`,
-                            have_exc  = Boolean(valuesSections['caste-have-exc']),
-                            dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
-                            ovw_attr  = `repeating_qcattacks_${id}_repqcattackovw`,
-                            newWeapIndex = generateRowID(),
-                            weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
-                            weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
-                            weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
-                            weap_ovw_attr  = `repeating_weapon_${newWeapIndex}_repweaponov`,
-                            qcAccSplit = valuesSections[atk_attr].split('+');
-                        weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]}${have_exc && valuesSections[exc_attr] ? `(+${valuesSections[exc_attr]})`:''})`;
-                        weaponFieldToSet[weap_acc_attr] = qcAccSplit[1] ? Number(qcAccSplit[1]) : 0;
-                        weaponFieldToSet[weap_dam_attr] = valuesSections[dam_attr];
-                        weaponFieldToSet[weap_ovw_attr] = valuesSections[ovw_attr];
-                    }
+        const weaponFieldToSet = {};
+        for (const id of idSections) {
+            const name_attr = `repeating_qcattacks_${id}_repqcattackname`,
+                atk_attr  = `repeating_qcattacks_${id}_repqcattackdice`,
+                exc_attr  = `repeating_qcattacks_${id}_repqcattackdice-exc`,
+                have_exc  = Boolean(valuesSections['caste-have-exc']),
+                dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
+                ovw_attr  = `repeating_qcattacks_${id}_repqcattackovw`,
+                newWeapIndex = generateRowID(),
+                weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
+                weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
+                weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
+                weap_ovw_attr  = `repeating_weapon_${newWeapIndex}_repweaponov`,
+                qcAccSplit = valuesSections[atk_attr].split('+');
+            weaponFieldToSet[weap_name_attr] = `${valuesSections[name_attr]} (P:${qcAccSplit[0]}${have_exc && valuesSections[exc_attr] ? `(+${valuesSections[exc_attr]})`:''})`;
+            weaponFieldToSet[weap_acc_attr] = qcAccSplit[1] ? Number(qcAccSplit[1]) : 0;
+            weaponFieldToSet[weap_dam_attr] = valuesSections[dam_attr];
+            weaponFieldToSet[weap_ovw_attr] = valuesSections[ovw_attr];
+        }
 
-                    TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(weaponFieldToSet)}`);
-                    setAttrs(weaponFieldToSet);
+        TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(weaponFieldToSet)}`);
+        setAttrs(weaponFieldToSet);
 
-                    updateParry({sourceType: "player", triggerName: "qc-parry"});
-                }));
-            }));
-        }));
+        updateParry({sourceType: "player", triggerName: "qc-parry"});
     }));
 
     /* ************** */
     /* *** CHARMS *** */
     /* ************** */
 
-    const charmSections = [
+    const charmRepeatableSectionArray = [
         'charms-archery',
         'charms-athletics',
         'charms-awareness',
@@ -1273,7 +1203,7 @@
         'charms'
     ];
     const charmRollExprRegexp = /^!exr (?:\d+|\(.+\))#/;
-    [...charmSections, 'spells'].forEach(section => {
+    [...charmRepeatableSectionArray, 'spells'].forEach(section => {
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function clickGMCharmCast(e) {
             if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=`, e);
             const attr_name = `repeating_${section}_${e.sourceAttribute.split('_')[2]}_charm-buttons-isextended`;
@@ -1286,40 +1216,36 @@
         }));
     });
 
-    charmSections.forEach(section => {
-        on(`change:repeating_${section}`, setDebugWrapper(function setAspectAndBalancedDefault(e) {
+    charmRepeatableSectionArray.forEach(section => {
+        on(`change:repeating_${section}`, setDebugWrapper(async function setAspectAndBalancedDefault(e) {
             if (debug === 2) TAS.debug(`setAspectAndBalancedDefault::setAspectAndBalancedDefault e=`, e);
             if (e.sourceType !== "player") return;
             const id = e.sourceAttribute.split('_')[2];
-            getAttrs([`caste`,`repeating_${section}_${id}_charm-aspect`,`repeating_${section}_${id}_charm-balanced`], setDebugWrapper(function clickGMCharmCast(val) {
-                // TAS.debug(`CHANGING charm, e=`, val);
-                let objSet = {};
-                if (!val[`repeating_${section}_${id}_charm-aspect`] ||
-                    !['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && val['caste'].toLowerCase() !== val[`repeating_${section}_${id}_charm-aspect`] ||
-                     ['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && !['air', 'earth', 'fire', 'water', 'wood', 'none'].includes(val[`repeating_${section}_${id}_charm-aspect`])) {
-                    objSet[`repeating_${section}_${id}_charm-aspect`] = val['caste'].toLowerCase();
-                    objSet[`repeating_${section}_${id}_charm-balanced`] = 0;
-                    setAttrs(objSet);
-                }
-            }));
+            const val = await getAttrsAsync([`caste`,`repeating_${section}_${id}_charm-aspect`,`repeating_${section}_${id}_charm-balanced`]);
+            // TAS.debug(`CHANGING charm, e=`, val);
+            let objSet = {};
+            if (!val[`repeating_${section}_${id}_charm-aspect`] ||
+                !['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && val['caste'].toLowerCase() !== val[`repeating_${section}_${id}_charm-aspect`] ||
+                 ['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(val['caste']) && !['air', 'earth', 'fire', 'water', 'wood', 'none'].includes(val[`repeating_${section}_${id}_charm-aspect`])) {
+                objSet[`repeating_${section}_${id}_charm-aspect`] = val['caste'].toLowerCase();
+                objSet[`repeating_${section}_${id}_charm-balanced`] = 0;
+                setAttrs(objSet);
+            }
         }));
     });
 
-    function setCasteToAllCharms(casteStr) {
+    async function setCasteToAllCharms(casteStr) {
         if (debug === 2) TAS.debug(`setCasteToAllCharms::setCasteToAllCharms casteStr=${casteStr}`);
-        var objSet = {}, workings = charmSections.length;
-        charmSections.forEach(section => {
-            getSectionIDs(section, setDebugWrapper(function getCombatAttackSection(idSections) {
-                for (const id of idSections) {
-                    objSet[`repeating_${section}_${id}_charm-aspect`] = casteStr.toLowerCase();
-                    objSet[`repeating_${section}_${id}_charm-balanced`] = 0;
-                }
-                if (--workings === 0) {
-                    TAS.debug(`UPDATING charms, objSet=`, objSet);
-                    setAttrs(objSet);
-                }
-            }));
-        });
+        var objSet = {};
+        for (const section of charmRepeatableSectionArray) {
+            const idSections = await getSectionIDsAsync(section);
+            for (const id of idSections) {
+                objSet[`repeating_${section}_${id}_charm-aspect`] = casteStr.toLowerCase();
+                objSet[`repeating_${section}_${id}_charm-balanced`] = 0;
+            }
+        }
+        TAS.debug(`UPDATING charms, objSet=`, objSet);
+        setAttrs(objSet);
     }
 
     const costSectionsToBind = [
@@ -1333,9 +1259,9 @@
         'rep-cost-will',
         'rep-cost-init'
     ];
-    [...charmSections, ...costSectionsToBind].forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(computeRepeatingRollCost))));
+    [...charmRepeatableSectionArray, ...costSectionsToBind].forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(computeRepeatingRollCost))));
 
-    function computeRepeatingRollCost(e) {
+    async function computeRepeatingRollCost(e) {
         if (debug === 2) TAS.debug('computeRepeatingRollCost::computeRepeatingRollCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
             repSectionName = sourceAttrSplit[1],
@@ -1347,37 +1273,24 @@
             TAS.debug('computeRepeatingRollCost:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
-        if (debug === 2) TAS.debug('computeRepeatingRollCost:: NORMAL TRIGGER COST EDIT');
-        getAttrs(costAttrs.map(attr => attr_name + attr), setDebugWrapper(val => {
-            if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
-            const mote = val[attr_name + 'rep-cost-mote'],
-                will = val[attr_name + 'rep-cost-will'],
-                init = val[attr_name + 'rep-cost-init'];
-            if (!mote && !will && !init) {
-                TAS.debug(`computeRepeatingRollCost:: NOTHING TO DO => RESET & QUIT`);
-                setAttrs({[attr_name+'rep-cost-macro']: ''});
-                return;
-            }
-            let finalMacro = '=COST:@{character_id}';
-            if (mote && String(mote).trim()) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
-            if (will && String(will).trim()) finalMacro += `:will;${will}`;
-            if (init) finalMacro += `:init;${init}`;
-            TAS.debug(`computeRepeatingRollCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
-            if (finalMacro.indexOf('@{') !== -1)
-                replaceAttrs(finalMacro, (out) => setAttrs({[attr_name+'rep-cost-macro']: out}));
-            else
-                setAttrs({[attr_name+'rep-cost-macro']: finalMacro});
-        }));
-    }
-
-    function replaceAttrs(string, cb) {
-        getAttrs(attrNAbi, setDebugWrapper(val => {
-            for (const attr_tested of attrNAbi) {
-                const testedAttr = `@{${attr_tested}}`;
-                if (string.includes(testedAttr)) string = string.replaceAll(testedAttr, val[attr_tested]);
-            }
-            if (cb) cb(string);
-        }));
+        const val = await getAttrsAsync(costAttrs.map(attr => attr_name + attr));
+        if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
+        const mote = val[attr_name + 'rep-cost-mote'],
+            will = val[attr_name + 'rep-cost-will'],
+            init = val[attr_name + 'rep-cost-init'];
+        if (!mote && !will && !init) {
+            TAS.debug(`computeRepeatingRollCost:: NOTHING TO DO => RESET & QUIT`);
+            setAttrs({[attr_name+'rep-cost-macro']: ''});
+            return;
+        }
+        let finalMacro = '=COST:@{character_id}';
+        if (mote && String(mote).trim()) finalMacro += `:peri=?{Spend Peripheral First ?|Yes,1|No,0};${mote}`;
+        if (will && String(will).trim()) finalMacro += `:will;${will}`;
+        if (init) finalMacro += `:init;${init}`;
+        TAS.debug(`computeRepeatingRollCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
+        if (finalMacro.indexOf('@{') !== -1)
+            finalMacro = await replaceRoll20Attrs(finalMacro);
+        setAttrs({[attr_name+'rep-cost-macro']: finalMacro});
     }
 
     /* Combat Tab Standard Binds */
@@ -1455,7 +1368,7 @@
 
         const val = await getAttrsAsync([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)]);
         if (debug === 2) TAS.debug(`computeRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
-        const replaced = replaceRoll20Attr(attr_name, sectionToBind, val);
+        const replaced = replaceRoll20AttrInArray(attr_name, sectionToBind, val);
 
         if (!setIfReplaced || replaced) {
             if (debug === 2) TAS.debug(`computeRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
@@ -1469,12 +1382,12 @@
         if (cb) cb();
     }
 
-    function replaceRoll20Attr(attr_name, sectionToBind, val) {
-        for (const section of sectionToBind) {
+    function replaceRoll20AttrInArray(repeatable_name_base, repeatable_name_end_array, array) {
+        for (const end of repeatable_name_end_array) {
             for (const attr_tested of attrNAbi) {
                 const testedAttr = `@{${attr_tested}}`;
-                if (val[`${attr_name}${section}`] && val[`${attr_name}${section}`].includes(testedAttr)) {
-                    val[`${attr_name}${section}`] = val[`${attr_name}${section}`].replaceAll(testedAttr, val[attr_tested]);
+                if (array[`${repeatable_name_base}${end}`] && array[`${repeatable_name_base}${end}`].includes(testedAttr)) {
+                    array[`${repeatable_name_base}${end}`] = array[`${repeatable_name_base}${end}`].replaceAll(testedAttr, array[attr_tested]);
                     return true;
                 }
             }
@@ -1482,56 +1395,65 @@
         return false;
     }
 
+    function replaceRoll20AttrsAsync(string) {
+        return new Promise((resolve,reject)=>{
+            try  { replaceRoll20Attrs(string,(values)=>{ resolve(values);}); }
+            catch{ reject(); }});
+    }
+
+    async function replaceRoll20Attrs(string, cb) {
+        const val = await getAttrsAsync(attrNAbi);
+        for (const attr_tested of attrNAbi) {
+            const testedAttr = `@{${attr_tested}}`;
+            if (string && string.includes(testedAttr)) string = string.replaceAll(testedAttr, val[attr_tested]);
+        }
+        if (cb) cb(string);
+    }
+
     /* Combat Tab ALL Binds */
     attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(computeAllRolls)));
 
-    function computeAllRolls(e, setIfReplaced = true) {
+    async function computeAllRolls(e, setIfReplaced = true) {
         if (e.sourceType !== "player") {
             TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         TAS.debug('computeAllRolls::computeAllRolls e=', JSON.stringify(e));
 
-        getSectionIDs('rolls', setDebugWrapper(function getRollsSection(idSections) {
-            if (debug === 2) TAS.debug('computeAllRolls::getRollsSection idSections=', JSON.stringify(idSections));
-            for (const id of idSections)
-                computeIdRepeatingRoll('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
-        }));
+        const arrayIdsRollsSection = await getSectionIDsAsync("rolls");
+        if (debug === 2) TAS.debug('computeAllRolls::getRollsSection idSections=', JSON.stringify(arrayIdsRollsSection));
+        for (const id of arrayIdsRollsSection)
+            computeIdRepeatingRoll('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
 
-        getSectionIDs('combat-init', setDebugWrapper(function getCombatInitSection(idSections) {
-            if (debug === 2) TAS.debug('computeAllRolls::getCombatInitSection idSections=', JSON.stringify(idSections));
-            for (const id of idSections)
-                computeIdRepeatingRoll('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
-        }));
+        const arrayIdCombatInitSection = await getSectionIDsAsync("combat-init");
+        if (debug === 2) TAS.debug('computeAllRolls::getCombatInitSection idSections=', JSON.stringify(arrayIdCombatInitSection));
+        for (const id of arrayIdCombatInitSection)
+            computeIdRepeatingRoll('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
 
         computeAttackRolls(setIfReplaced);
 
         if (debug === 2) TAS.debug('computeAllRolls:: UPDATING CHARMS');
-        charmSections.forEach(section => {
-            getSectionIDs(section, setDebugWrapper(function getCharmOrEquivalentSection(idSections) {
-                for (const id of idSections) {
-                    const attr_name = `repeating_${section}_${id}_charm-buttons-isextended`,
-                          rollexpr_name = `repeating_${section}_${id}_charm-rollexpr`;
-                    getAttrs([rollexpr_name], setDebugWrapper(function getCharmRollExpr(val) {
-                        if (!(val[rollexpr_name] && val[rollexpr_name].match(charmRollExprRegexp))) return;
-                        TAS.debug(`SETTING attr_name=${attr_name}`);
-                        setAttrs({[attr_name] : 1});
-                    }));
-                }
-            }));
-        })
+        for (const repeatableCharmSection of charmRepeatableSectionArray) {
+            const arrayIdCharmSection = await getSectionIDsAsync(repeatableCharmSection);
+            for (const id of arrayIdCharmSection) {
+                const attr_name = `repeating_${repeatableCharmSection}_${id}_charm-buttons-isextended`;
+                const val = await getSingleAttrAsync(`repeating_${repeatableCharmSection}_${id}_charm-rollexpr`);
+                if (!(val && val.match(charmRollExprRegexp))) return;
+                TAS.debug(`SETTING attr_name=${attr_name}`);
+                setAttrs({[attr_name] : 1});
+            }
+        }
     }
 
-    function computeAttackRolls(setIfReplaced = true, onlyWDmg = false) {
-        getSectionIDs('combat-attack', setDebugWrapper(function getCombatAttackSection(idSections) {
-            if (debug === 2) TAS.debug('computeAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
-            for (const id of idSections) {
-                if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
-                               computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
-                if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
-                if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
-            }
-        }));
+    async function computeAttackRolls(setIfReplaced = true, onlyWDmg = false) {
+        const idSections = await getSectionIDsAsync("combat-attack");
+        if (debug === 2) TAS.debug('computeAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
+        for (const id of idSections) {
+            if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
+                           computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
+            if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
+            if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
+        }
     }
 
     function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}[Attribute]+ ${val[attr_name+'abi']}[Ability] ${checkValReturnValidString(val[attr_name+'bonus-dices'], ' ')}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
@@ -1674,16 +1596,12 @@
     }));
 
     /* replicate withering to decisive */
-    on('change:repeating_combat-attack:repcombat-watk-attr change:repeating_combat-attack:repcombat-watk-abi', setDebugWrapper(function qcDamageAttacksChange(e) {
+    on('change:repeating_combat-attack:repcombat-watk-attr change:repeating_combat-attack:repcombat-watk-abi', setDebugWrapper(async function qcDamageAttacksChange(e) {
         const id = e.sourceAttribute.split('_')[2];
         const repAttr = e.sourceAttribute.split('_')[3].split('-')[2];
-
-        getAttrs([`repeating_combat-attack_${id}_repcombat-watk-${repAttr}`], TAS._fn(function get(values) {
-            const finalObj = {
-                [`repeating_combat-attack_${id}_repcombat-datk-${repAttr}`]: values[`repeating_combat-attack_${id}_repcombat-watk-${repAttr}`],
-            };
-            setAttrs(finalObj);
-        }));
+        const values = await getSingleAttrAsync(`repeating_combat-attack_${id}_repcombat-watk-${repAttr}`);
+        const finalObj = {[`repeating_combat-attack_${id}_repcombat-datk-${repAttr}`]: values};
+        setAttrs(finalObj);
     }));
 
     /* trigger sheet initialize manually */
@@ -1691,31 +1609,28 @@
         initCharacterSheet();
     }));
 
-    on('clicked:init-charm-img', TAS._fn(function updateMotePool(eventInfo){
-        getAttrs(["caste"], TAS._fn(function determineMotePool(values){
-            setCasteToAllCharms(values.caste);
-        }));
+    on('clicked:init-charm-img', TAS._fn(async function updateMotePool(eventInfo){
+        const caste = await getSingleAttrAsync(`caste`);
+        setCasteToAllCharms(caste);
     }));
 
     /* multiple HL add mechanism */
-    on('clicked:add-multiple-hl', TAS._fn(function updateMotePool(eventInfo){
-        getAttrs(["add-multiple-qty", "add-multiple-penalty"], TAS._fn(function getAddMultipleValues(values){
-            const qty     = values["add-multiple-qty"] || 1,
-                  penalty = values["add-multiple-penalty"] || "0";
-            getSectionIDs('health', function getHealthList(idHealthArray) {
-                const healthIndexes = {};
-                for (let i = 0; i < qty; i++) {
-                    TAS.debug(`before generateNewRowId idHealthArray=${idHealthArray}`);
-                    let newId = generateNewRowId(idHealthArray);
-                    TAS.debug(`id=${newId}, i=${i}, penalty=${penalty}`);
-                    healthIndexes['repeating_health_' + newId + '_hl-damage'] = 'healthy';
-                    healthIndexes['repeating_health_' + newId + '_hl-penalty'] = penalty;
-                }
-                TAS.debug(`Setting Health levels :`, healthIndexes);
-                setAttrs(healthIndexes);
-                updateWound({sourceType: "player", triggerName: "other"});
-            });
-        }));
+    on('clicked:add-multiple-hl', TAS._fn(async function updateMotePool(eventInfo){
+        const values = await getAttrsAsync(["add-multiple-qty", "add-multiple-penalty"]);
+        const qty     = values["add-multiple-qty"] || 1,
+              penalty = values["add-multiple-penalty"] || "0";
+        const idHealthArray = await getSectionIDsAsync("health");
+        const healthIndexes = {};
+        for (let i = 0; i < qty; i++) {
+            TAS.debug(`before generateNewRowId idHealthArray=${idHealthArray}`);
+            let newId = generateNewRowId(idHealthArray);
+            TAS.debug(`id=${newId}, i=${i}, penalty=${penalty}`);
+            healthIndexes['repeating_health_' + newId + '_hl-damage'] = 'healthy';
+            healthIndexes['repeating_health_' + newId + '_hl-penalty'] = penalty;
+        }
+        TAS.debug(`Setting Health levels :`, healthIndexes);
+        setAttrs(healthIndexes);
+        updateWound({sourceType: "player", triggerName: "other"});
     }));
 
     function generateNewRowId(array_existing) {
@@ -1727,14 +1642,13 @@
         return ret;
     }
 
-    on('change:show-charname-in-charms', TAS._fn(function updateShowCharm(eventInfo){
+    on('change:show-charname-in-charms', TAS._fn(async function updateShowCharm(eventInfo){
         TAS.debug(`change:show-charname-in-charms`);
-        getAttrs(["show-charname-in-charms"], TAS._fn(function getVarState(values){
-            TAS.debug(`values["show-charname-in-charms"]=${values["show-charname-in-charms"]}`);
-            const obj = {'show_character_name': (values["show-charname-in-charms"] === "1" ? "1" : "")};
-            TAS.debug(`obj=${JSON.stringify(obj)}`);
-            setAttrs(obj);
-        }));
+        const value = await getSingleAttrAsync(`show-charname-in-charms`);
+        TAS.debug(`values["show-charname-in-charms"]=${value}`);
+        const obj = {'show_character_name': (value === "1" ? "1" : "")};
+        TAS.debug(`obj=${JSON.stringify(obj)}`);
+        setAttrs(obj);
     }));
 
     /* ***************** */
@@ -1767,7 +1681,7 @@
         }
 
         const val = await getAttrsAsync(widgetCostAttrs.map(attr => attr_name + attr));
-        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrs(COST ATTRS) val=${JSON.stringify(val)}`);
+        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
         const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
               will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
               starting = Number(val[attr_name + 'reprolls-pool-starting']);
@@ -1941,7 +1855,7 @@
     }
     
     /* Not used, but help if i want to used button[type="action"] instead of button[type="roll"] + start playing with async */
-    [...charmSections, 'spells'].forEach(section => {
+    [...charmRepeatableSectionArray, 'spells'].forEach(section => {
         on(`clicked:repeating_${section}:charmcast-show`, TAS._fn(async function clickShowCharm(e) {
             if (debug === 2) TAS.debug(`clickShowCharm::clickShowCharm e=${JSON.stringify(e)}`);
             const split = e.sourceAttribute.split('_'), section = split[1], id = split[2], buttonClicked = split[3];
