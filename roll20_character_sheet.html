@@ -915,7 +915,8 @@
                 healthValues.push({damage:values[`hl${i}-damage`],penalty:values[`hl${i}-penalty`]});
         }
 
-        var indexesIntimacies = _.times(healthValues.length, generateRowID);
+        const healthIndexes = [];
+        var indexesIntimacies = _.times(healthValues.length, () => generateNewRowId(healthIndexes));
         TAS.debug('Creating new intimacies', indexesIntimacies);
         _.each(indexesIntimacies, function(id, k) {
             attrs['repeating_health_' + id + '_hl-damage'] = healthValues[k].damage;
@@ -937,7 +938,7 @@
             return;
         }
 
-        var attrs = {}, indexesIntimacies = _.times(4, generateRowID);
+        var attrs = {}, indexesIntimacies = _.times(4, () => generateNewRowId(idIntimaciesArray));
         TAS.debug('Creating new intimacies', indexesIntimacies);
         _.each(indexesIntimacies, function(id, k) {
             var v;
@@ -994,7 +995,7 @@
             'roll-penalty': 0
         });
 
-        let healthAttrs = {}, healthIndexes = _.times(7, generateRowID);
+        let healthAttrs = {}, idHealthArray = [], healthIndexes = _.times(7, () => generateNewRowId(idHealthArray));
         _.each(healthIndexes, function(id, k) {
             var pen;
             if (k === 0) pen = '0';
@@ -1093,7 +1094,7 @@
                 have_exc  = Boolean(valuesSections['caste-have-exc']),
                 dam_attr  = `repeating_qcattacks_${id}_repqcattackdamage`,
                 ovw_attr  = `repeating_qcattacks_${id}_repqcattackovw`,
-                newWeapIndex = generateRowID(),
+                newWeapIndex = generateNewRowId(idWeaponSections),
                 weap_name_attr = `repeating_weapon_${newWeapIndex}_repweaponname`,
                 weap_acc_attr  = `repeating_weapon_${newWeapIndex}_repweaponacc`,
                 weap_dam_attr  = `repeating_weapon_${newWeapIndex}_repweapondam`,
