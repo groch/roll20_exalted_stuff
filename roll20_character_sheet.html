@@ -1249,24 +1249,23 @@
         setAttrs(objSet);
     }
 
-    const costSectionsToBind = [
-        'rolls',
-        'combat-init',
-        'combat-attack',
-        'spells'
-    ];
     const costAttrs = [
         'rep-cost-mote',
         'rep-cost-will',
         'rep-cost-init'
     ];
-    [...charmRepeatableSectionArray, ...costSectionsToBind].forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(computeRepeatingRollCost))));
+    [...charmRepeatableSectionArray, 'spells'].forEach(section => costAttrs.forEach(attr => on(`change:repeating_${section}:${attr}`, setDebugWrapper(computeRepeatingRollCost))));
 
-    async function computeRepeatingRollCost(e) {
+    function computeRepeatingRollCostAsync(e) {
+        return new Promise((resolve,reject)=>{
+            try  { computeRepeatingRollCost(e,(values)=>{ resolve(values); });}
+            catch{ reject(); }});
+    }
+    async function computeRepeatingRollCost(e, cb) {
         if (debug === 2) TAS.debug('computeRepeatingRollCost::computeRepeatingRollCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
-            repSectionName = sourceAttrSplit[1],
-            id = sourceAttrSplit[2];
+              repSectionName = sourceAttrSplit[1],
+              id = sourceAttrSplit[2];
         const attr_name = `repeating_${repSectionName}_${id}_`;
 
         if (debug === 2) TAS.debug(`computeRepeatingRollCost:: attr_name=${attr_name}`);
@@ -1277,8 +1276,8 @@
         const val = await getAttrsAsync(costAttrs.map(attr => attr_name + attr));
         if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
         const mote = val[attr_name + 'rep-cost-mote'],
-            will = val[attr_name + 'rep-cost-will'],
-            init = val[attr_name + 'rep-cost-init'];
+              will = val[attr_name + 'rep-cost-will'],
+              init = val[attr_name + 'rep-cost-init'];
         if (!mote && !will && !init) {
             TAS.debug(`computeRepeatingRollCost:: NOTHING TO DO => RESET & QUIT`);
             setAttrs({[attr_name+'rep-cost-macro']: ''});
@@ -1290,8 +1289,9 @@
         if (init) finalMacro += `:init;${init}`;
         TAS.debug(`computeRepeatingRollCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
         if (finalMacro.indexOf('@{') !== -1)
-            finalMacro = await replaceRoll20Attrs(finalMacro);
-        setAttrs({[attr_name+'rep-cost-macro']: finalMacro});
+            finalMacro = await replaceRoll20AttrsAsync(finalMacro);
+        await setAttrsAsync({[attr_name+'rep-cost-macro']: finalMacro});
+        if (cb) cb();
     }
 
     /* Combat Tab Standard Binds */
@@ -1321,43 +1321,79 @@
           wDmgAttrsToBind =     ['wdmg-attr',   'weap-dmg', 'wdmg-bonus-dices', 'wdmg-bonus-successes',     'wdmg-final-macro-options', 'weap-ovw'],
           dAtkAttrsToBind =     ['datk-attr',   'datk-abi', 'datk-bonus-dices', 'datk-bonus-successes',     'datk-final-macro-options'],
           dDmgAttrsToBind =     ['ddmg-dices',  'ddmg-bonus-successes',         'ddmg-final-macro-options'],
-          dDmgInitResetAttrsToBind =           ['init-to-set'],
-          allCombatBind =  ['repcombat-name',     'combat-toggle-desc'];
+          dDmgInitResetAttrsToBind =           ['init-to-set'];
 
-    on(`change:repeating_rolls`, setDebugWrapper((e) => computeRepeatingRoll(e, initSectionsToBind, defaultInitFinalExpr, 'reprolls-')));
-    on(`change:repeating_combat-init`, setDebugWrapper((e) => computeRepeatingRoll(e, initSectionsToBind, defaultInitFinalExpr, 'repinit-')));
-
-    allCombatBind.forEach(section => on(`change:repeating_combat-attack:${section}`, setDebugWrapper((e) => {
-        computeRepeatingRoll(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-');
-        computeRepeatingRoll(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-');
-        computeRepeatingRoll(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-');
-        computeRepeatingRoll(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-');
-
-        computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
-    })));
-
-    on('change:battlegroup-size', setDebugWrapper((e) => computeAttackRolls(false, true)));
-    on('change:battlegroup-dmg-boost', setDebugWrapper((e) => computeAttackRolls(false, true)));
-    wAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-'))));
-    wDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-'))));
-    dAtkAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-'))));
-    dDmgAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-'))));
-    dDmgInitResetAttrsToBind.forEach(section => on(`change:repeating_combat-attack:repcombat-ddmg-${section}`, setDebugWrapper((e) => computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-'))));
-
-    function computeRepeatingRoll(e, sectionToBind, finalExprCb, attributePrefix = '', finalAttrNameAttrPrefix = '') {
-        if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`computeRepeatingRoll:: NOT TRIGGERED BY THE PLAYER => RETURN`);
-            return;
-        }
-        const repeatingSectionName = e.sourceAttribute.split('_')[1];
+    on('clicked:repeating_rolls:roll-cast clicked:repeating_rolls:roll-gmcast clicked:repeating_combat-init:init-cast clicked:repeating_combat-init:init-gmcast', setDebugWrapper(async function castRoll(e){
+        if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
+        const section = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
-        if (id[0] !== '-') {
-            if (debug === 2) TAS.debug(`computeRepeatingRoll:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
-            return;
+        const buttonClickedIsGm = e.sourceAttribute.split('_')[3].split('-')[1] === 'gmcast';
+        const subSection = section === 'rolls' ? 'reprolls-' : 'repinit-';
+        const attr_name = `repeating_${section}_${id}_`;
+        await computeRepeatingRollCostAsync(e);
+        await computeIdRepeatingRollAsync(section, id, subSection, initSectionsToBind, defaultInitFinalExpr, '', false);
+        const values = await getAttrsAsync([`${attr_name}${subSection}final-macro-replaced`, `${attr_name}rep-cost-macro`]);
+        let queryRoll = !buttonClickedIsGm ?
+            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
+            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
+        if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
+        const results = await startRoll(queryRoll);
+        finishRoll(results.rollId);
+    }));
+
+    on('clicked:repeating_rolls:roll-cast clicked:repeating_rolls:roll-gmcast clicked:repeating_combat-init:init-cast clicked:repeating_combat-init:init-gmcast', setDebugWrapper(async function castRoll(e){
+        if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
+        const section = e.sourceAttribute.split('_')[1];
+        const id = e.sourceAttribute.split('_')[2];
+        const buttonClickedIsGm = e.sourceAttribute.split('_')[3].split('-')[1] === 'gmcast';
+        const subSection = section === 'rolls' ? 'reprolls-' : 'repinit-';
+        const attr_name = `repeating_${section}_${id}_`;
+        await computeRepeatingRollCostAsync(e);
+        await computeIdRepeatingRollAsync(section, id, subSection, initSectionsToBind, defaultInitFinalExpr, '', false);
+        const values = await getAttrsAsync([`${attr_name}${subSection}final-macro-replaced`, `${attr_name}rep-cost-macro`]);
+        let queryRoll = !buttonClickedIsGm ?
+            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
+            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
+        if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
+        const results = await startRoll(queryRoll);
+        finishRoll(results.rollId);
+    }));
+
+    on('clicked:repeating_combat-attack:cbt-watk-cast clicked:repeating_combat-attack:cbt-watk-gmcast '
+      +'clicked:repeating_combat-attack:cbt-wdmg-cast clicked:repeating_combat-attack:cbt-wdmg-gmcast '
+      +'clicked:repeating_combat-attack:cbt-datk-cast clicked:repeating_combat-attack:cbt-datk-gmcast '
+      +'clicked:repeating_combat-attack:cbt-ddmg-cast-std clicked:repeating_combat-attack:cbt-ddmg-gmcast-std '
+      +'clicked:repeating_combat-attack:cbt-ddmg-cast-rst clicked:repeating_combat-attack:cbt-ddmg-gmcast-rst', setDebugWrapper(async function combatCastRoll(e){
+        if (debug === 2) TAS.debug(`combatCastRoll::combatCastRoll e=${JSON.stringify(e)}`);
+        const section = e.sourceAttribute.split('_')[1];
+        const id = e.sourceAttribute.split('_')[2];
+        const split = e.sourceAttribute.split('_')[3].split('-');
+        const subSection = split[1];
+        const buttonClickedIsGm = split[2] === 'gmcast';
+        const doReset = split[3] && split[3] === 'rst';
+        const attr_name = `repeating_${section}_${id}_`;
+        if (['watk', 'datk'].includes(subSection)) await computeRepeatingRollCostAsync(e);
+        if (subSection === 'watk') await computeIdRepeatingRollAsync(section, id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', false);
+        if (subSection === 'wdmg') await computeIdRepeatingRollAsync(section, id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', false);
+        if (subSection === 'datk') await computeIdRepeatingRollAsync(section, id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', false);
+        if (subSection === 'ddmg') await computeIdRepeatingRollAsync(section, id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', false);
+
+        let queryRoll = `!exr ${await getSingleAttrAsync(`${attr_name}repcombat-${subSection}-final-macro-replaced`)}`;
+        if (buttonClickedIsGm) queryRoll += ' -gm';
+        if (['watk', 'datk'].includes(subSection)) queryRoll += `${await getSingleAttrAsync(`${attr_name}rep-cost-macro`)}`;
+        
+        if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
+        const results = await startRoll(queryRoll);
+        finishRoll(results.rollId);
+
+        if (doReset) {
+            await computeIdRepeatingRollAsync(section, id, `repcombat-${subSection}-`, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'init-to-set-', false);
+            queryRoll = `/${buttonClickedIsGm ? 'g' : ''}r ${await getSingleAttrAsync(`${attr_name}repcombat-ddmg-init-to-set-final-macro-replaced`)} &{tracker}`;
+            if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
+            const results = await startRoll(queryRoll);
+            finishRoll(results.rollId);
         }
-        if (debug === 2) TAS.debug(`computeRepeatingRoll::computeRepeatingRoll e=${JSON.stringify(e)}`);
-        computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
-    }
+    }));
 
     function computeIdRepeatingRollAsync(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
         return new Promise((resolve,reject)=>{
@@ -1411,7 +1447,7 @@
         if (cb) cb(string);
     }
 
-    /* Combat Tab ALL Binds */
+    /* ALL Binds to update charms */
     attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(computeAllRolls)));
 
     async function computeAllRolls(e, setIfReplaced = true) {
@@ -1420,18 +1456,6 @@
             return;
         }
         TAS.debug('computeAllRolls::computeAllRolls e=', JSON.stringify(e));
-
-        const arrayIdsRollsSection = await getSectionIDsAsync("rolls");
-        if (debug === 2) TAS.debug('computeAllRolls::getRollsSection idSections=', JSON.stringify(arrayIdsRollsSection));
-        for (const id of arrayIdsRollsSection)
-            computeIdRepeatingRoll('rolls', id, 'reprolls-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
-
-        const arrayIdCombatInitSection = await getSectionIDsAsync("combat-init");
-        if (debug === 2) TAS.debug('computeAllRolls::getCombatInitSection idSections=', JSON.stringify(arrayIdCombatInitSection));
-        for (const id of arrayIdCombatInitSection)
-            computeIdRepeatingRoll('combat-init', id, 'repinit-', initSectionsToBind, defaultInitFinalExpr, '', setIfReplaced);
-
-        computeAttackRolls(setIfReplaced);
 
         if (debug === 2) TAS.debug('computeAllRolls:: UPDATING CHARMS');
         for (const repeatableCharmSection of charmRepeatableSectionArray) {
@@ -1443,17 +1467,6 @@
                 TAS.debug(`SETTING attr_name=${attr_name}`);
                 setAttrs({[attr_name] : 1});
             }
-        }
-    }
-
-    async function computeAttackRolls(setIfReplaced = true, onlyWDmg = false) {
-        const idSections = await getSectionIDsAsync("combat-attack");
-        if (debug === 2) TAS.debug('computeAttackRolls::getCombatAttackSection idSections=', JSON.stringify(idSections));
-        for (const id of idSections) {
-            if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-', setIfReplaced);
-                           computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-', setIfReplaced);
-            if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-', setIfReplaced);
-            if (!onlyWDmg) computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dDmgAttrsToBind, defaultDDamageFinalExpr, 'ddmg-', setIfReplaced);
         }
     }
 
@@ -1500,8 +1513,6 @@
         else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
         else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
         await setCb(written_attr, writtenValue);
-        computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-        computeRepeatingRollCost(e);
         setDefaultsOnDAtkDice(e);
     }));
 
@@ -1514,7 +1525,6 @@
         const val = await getAttrsAsync(['diceex']);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         await setCb(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (val['diceex'] === '1' ? diceExAddedPrompt : ''));
-        computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
     }
 
     on('clicked:repeating_combat-attack:default-macro-watk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
@@ -1535,16 +1545,9 @@
 
         await setCb(`${attr_name}repcombat-${section}-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
 
-        if      (section === 'watk') computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-        else if (section === 'datk') computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-
         TAS.debug(`setDefaultsOnAtkSuccType:: SECTION=${e.sourceAttribute.split('_')[3].split('-')[2]}`);
-        if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk') {
+        if (e.sourceAttribute.split('_')[3].split('-')[2] === 'watk')
             await setCb(`${attr_name}repcombat-datk-bonus-successes`, defaultRoll20AddedSuccPrompt + (succExTest ? succExAddedPrompt : ''));
-
-            computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-            computeRepeatingRollCost(e);
-        }
     }
 
     /* QC special trigger when changing attr for withering damage => simulate all '+' pressed to gain time */
@@ -1565,10 +1568,6 @@
                 [`${attr_name}rep-cost-mote`]: getMoteCostToSet(diceExTest, succExTest),
                 [`${attr_name}rep-cost-will`]: '?{Willpower ?|No,0|Yes,1}'
             });
-            computeIdRepeatingRoll('combat-attack', id, 'repcombat-', wAtkAttrsToBind, defaultWAttackFinalExpr, 'watk-');
-            computeIdRepeatingRoll('combat-attack', id, 'repcombat-', dAtkAttrsToBind, defaultDAttackFinalExpr, 'datk-');
-            computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
-            computeRepeatingRollCost(e);
         }
     }));
 
@@ -1581,8 +1580,6 @@
         setAttrs({[`${attr_name}rep-cost-mote`] : getMoteCostToSet(diceExTest, succExTest)});
         const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
         await setCb(`${attr_name}${prefix}bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
-        computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
-        computeRepeatingRollCost(e);
     }));
 
     on('clicked:repeating_rolls:default-macro-s clicked:repeating_combat-init:default-macro-s', setDebugWrapper(async function clickDefaultMacroRollsDice(e) {
@@ -1592,8 +1589,6 @@
         setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
         const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
         await setCb(`${attr_name}${prefix}bonus-successes`, (repeatingSectionName === "combat-init" ? baseInit : '') + defaultRoll20AddedSuccPrompt + (val['succex'] === '1' ? succExAddedPrompt : ''));
-        computeIdRepeatingRoll(repeatingSectionName, id, prefix, initSectionsToBind, defaultInitFinalExpr, '');
-        computeRepeatingRollCost(e);
     }));
 
     /* replicate withering to decisive */
@@ -15512,8 +15507,8 @@
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
-                                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
                                             </div>
                                         </div>
                                     </div>
@@ -15529,8 +15524,8 @@
                                         <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <div class="sheet-grouped-buttons end" title="Cast Custom Roll">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
                                         </div>
                                     </div>
                                 </div>
@@ -22912,8 +22907,8 @@
                                     <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                 </div>
                                 <div class="sheet-grouped-buttons" title="Cast INIT Rolls (Remember to select you token to set INIT correctly)">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_init-cast" value="!exr @{repinit-final-macro-replaced} -turn @{rep-cost-macro}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_init-gmcast" value="!exr @{repinit-final-macro-replaced} -turn -gm @{rep-cost-macro}">to GM</button>
+                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_init-cast" value="!exr @{repinit-final-macro-replaced} -turn @{rep-cost-macro}">Cast</button>
+                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_init-gmcast" value="!exr @{repinit-final-macro-replaced} -turn -gm @{rep-cost-macro}">to GM</button>
                                 </div>
                             </div>
                         </div>
@@ -23121,8 +23116,8 @@
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <input type="text" name="attr_repcombat-watk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                         <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
                                         </div>
                                     </div>
                                 </div>
@@ -23171,8 +23166,8 @@
                                         <input type="hidden" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw">
                                         <input type="text" name="attr_repcombat-wdmg-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                         <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
                                         </div>
                                     </div>
                                 </div>
@@ -23338,8 +23333,8 @@
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <input type="text" name="attr_repcombat-datk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                         <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
                                         </div>
                                     </div>
                                 </div>
@@ -23363,12 +23358,12 @@
                                             </p>
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
-                                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
-                                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
                                             </div>
                                             <div class="sheet-grouped-buttons end noreset-init" title="Do not Reset Initiative (Gambits Usually)">
-                                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
-                                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
+                                                <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
                                             </div>
                                         </div>
                                     </div>
@@ -23389,16 +23384,16 @@
                                         <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
                                         </div>
                                     </div>
                                     <div class="dmg-section flex">
                                         <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
                                         <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
                                         </div>
                                     </div>
                                 </div>
@@ -23416,8 +23411,8 @@
                                         <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                         <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
                                         </div>
                                     </div>
                                     <div class="dmg-section flex grow-normal">
@@ -23430,12 +23425,12 @@
                                         </p>
                                         <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                         <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
                                         </div>
                                         <div class="sheet-grouped-buttons end noreset-init" title="Do not Reset Initiative (Gambits Usually)">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
+                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
                                         </div>
                                     </div>
                                 </div>
