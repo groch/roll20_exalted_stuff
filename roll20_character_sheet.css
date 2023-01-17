@@ -1818,6 +1818,8 @@ and (min-resolution:.001dpcm) {
     flex-wrap: wrap;
 }
 
+.charsheet .sheet-charm-effect > label > div.flex > input[type="checkbox"],
+.charsheet .sheet-charm-effect > div.flex > label > div.flex > input[type="checkbox"],
 .charsheet .sheet-charm-effect > div.flex > div.flex > input[type="checkbox"] {
     position: unset;
     width: 2em;
@@ -2487,10 +2489,42 @@ body.sheet-darkmode {
     height: 100px;
 }
 
-.sheet-charms-spells-trait > label {
+.charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect > input[name="attr_charm-rollexpr"],
+.charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect > input[name="attr_charm-rollexpr"] {
+    width: 100%;
+}
+
+.sheet-tab-content .flex.flex-col.sheet-body > .flex.flex-wrap label,
+.sheet-charm-effect label,
+.sheet-charms-spells-trait label {
     display: contents;
     font-weight: normal;
     font-size: 13px;
+}
+
+.sheet-tab-spell-sheet .repcontainer,
+.sheet-tab-charm-sheet .sheet-tab-content .repcontainer {
+    gap: 1em;
+    display: flex;
+    flex-flow: column;
+}
+
+.sheet-tab-spell-sheet .repcontainer .repitem,
+.sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
+    border: 4px solid transparent;
+    border-radius: 10px;
+}
+
+.sheet-tab-spell-sheet .repcontainer .repitem {
+    box-shadow: 1px 1px 5px purple, -1px 1px 5px purple, 1px -1px 5px purple, -1px -1px 5px purple;
+}
+
+.sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
+    box-shadow: 1px 1px 5px gold, -1px 1px 5px gold, 1px -1px 5px gold, -1px -1px 5px gold;
+}
+
+.sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
+    box-shadow: 1px 1px 5px rgba(255, 217, 0, 0.5), -1px 1px 5px rgba(255, 217, 0, 0.5), 1px -1px 5px rgba(255, 217, 0, 0.5), -1px -1px 5px rgba(255, 217, 0, 0.5);
 }
 
 /* --- ANTI SOCIAL TAB --- */
