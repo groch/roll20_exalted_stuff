@@ -2503,7 +2503,10 @@ body.sheet-darkmode {
 }
 
 .sheet-tab-spell-sheet .repcontainer,
-.sheet-tab-charm-sheet .sheet-tab-content .repcontainer {
+.sheet-tab-charm-sheet .sheet-tab-content .repcontainer,
+.sheet-tab-rolls-std-sheet .repcontainer,
+.sheet-tab-combat-sheet .combat-init .repcontainer,
+.sheet-tab-combat-sheet .combat-attacks .repcontainer {
     gap: 1em;
     display: flex;
     flex-flow: column;
@@ -2819,15 +2822,17 @@ body.sheet-darkmode {
 
 .charsheet input.sheet-initeffect + span::before {
     width: 99%;
-    height: calc(100% - 3px);
+    height: 100%;
     content: attr(title);
     text-align: center;
     line-height: 100%;
     font-size: 18px;
+    margin-bottom: 1em;
 }
 
 .charsheet input.sheet-initeffect:checked + span:before {
     content: attr(title) !important;
+    margin-bottom: 0;
 }
 
 .charsheet input.sheet-initeffect {
@@ -2843,6 +2848,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-init input.sheet-initeffect:checked ~ div.sheet-init-div {
     display: block;
+    margin-bottom: 1em;
 }
 
 /* -- INIT -- */
