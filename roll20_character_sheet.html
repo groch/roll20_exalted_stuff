@@ -1996,7 +1996,7 @@
         <input class="sheet-long-merit" name="attr_longmerit" type="hidden" value="1">
         <input class="charm-whisper-gm-check" name="attr_charmwhispergm" type="hidden" value="0">
         <input class="charm-whisper-both-check" name="attr_charmwhisperboth" type="hidden" value="0">
-        <input class="charm-caste-check" name="attr_caste" type="hidden">
+        <input class="caste-check" name="attr_caste" type="hidden">
         <input name="attr_force-exc" type="hidden" value="0">
         <input class="caste-have-exc-check" name="attr_caste-have-exc" type="hidden" value="0">
 
@@ -4215,7 +4215,7 @@
                         <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                         <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                        <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
                 <div class="flex-col">
@@ -4235,10 +4235,9 @@
                         <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
                         <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                        <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
-                <input type="hidden" name="attr_caste" class="def-exc-test">
                 <div class="flex-col def-exc">
                     <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                 </div>
@@ -4255,7 +4254,7 @@
                         <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                         <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                        <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
                 <div class="flex-col">
@@ -4271,7 +4270,7 @@
                         <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                         <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                        <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                     </div>
                 </div>
             </div>
@@ -17586,7 +17585,6 @@
                         <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display">
                     </div>
                 </div>
-                <input type="hidden" name="attr_caste" class="def-exc-test">
                 <div class="sheet-table-cell def-exc">
                     <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                 </div>
@@ -17934,7 +17932,6 @@
                                 <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
                             </div>
                         </div>
-                        <input type="hidden" name="attr_caste" class="def-exc-test">
                         <div class="flex-col def-exc">
                             <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]">Def Exc</button>
                         </div>

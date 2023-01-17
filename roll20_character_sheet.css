@@ -383,11 +383,11 @@ tier 2: couleurs
     display: none;
 }
 
-.charsheet .charm-caste-check[value="Air"]   ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .charm-caste-check[value="Earth"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .charm-caste-check[value="Fire"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .charm-caste-check[value="Water"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .charm-caste-check[value="Wood"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
+.charsheet .caste-check[value="Air"]   ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Earth"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Fire"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Water"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Wood"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
     display: inline;
 }
 
@@ -1894,7 +1894,7 @@ and (min-resolution:.001dpcm) {
     width:55px;
 }
 
-.charsheet .def-exc-test[value="Mortal"] ~ .def-exc {
+.charsheet .caste-check[value="Mortal"] ~ .sheet-tab-content .def-exc {
     display: none;
 }
 
@@ -4582,14 +4582,14 @@ and (min-resolution:.001dpcm) {
     flex-basis: 50%;
 }
 
-.charsheet .charm-caste-check[value="Exigent"]      ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section, /* will change */
-.charsheet .charm-caste-check[value="Getimian"]     ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .charm-caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .charm-caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .charm-caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .charm-caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .charm-caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .charm-caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
+.charsheet .caste-check[value="Exigent"]      ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section, /* will change */
+.charsheet .caste-check[value="Getimian"]     ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
     width: 100%;
 }
 
