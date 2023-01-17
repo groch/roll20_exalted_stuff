@@ -2617,10 +2617,25 @@ body.sheet-darkmode {
 
 /* -- HEADER -- */
 
-.charsheet .sheet-tab-combat-sheet .combat-header > div {
+.charsheet .sheet-tab-combat-sheet .combat-header {
     border: 1px solid #0b0;
     border-radius: 5px;
-    padding: 3px;
+    margin-bottom: 1em;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div {
+    border-bottom: 1px solid #0b0;
+    padding: 1em;
+}
+
+@media only screen and (max-width: 480px) {
+    .charsheet .sheet-tab-combat-sheet .combat-header > div:first-child {
+        padding: 1em 5px 0;
+    }
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-header > div:last-child {
+    border-bottom: 0;
 }
 
 .charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-combat-sheet .sheet-bg-show,
@@ -2735,7 +2750,7 @@ body.sheet-darkmode {
 }
 
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled].wound-taint:last-child,
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled]:last-child,
+.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].last-visible,
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled],
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] ~ input[type="text"].qc-have-exc {
     margin-right:0;
@@ -2812,10 +2827,6 @@ body.sheet-darkmode {
 
 .ressource-line p {
     margin: 0;
-}
-
-.ressource-line {
-    margin: 0 0 9px;
 }
 
 .sheet-darkmode .ressource-line {
