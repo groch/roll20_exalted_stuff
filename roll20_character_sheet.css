@@ -2714,6 +2714,40 @@ body.sheet-darkmode {
 
 /* -- DEFENSE -- */
 
+.sheet-defenses .flex-col.def-exc {
+    flex-basis: 133px;
+}
+
+.sheet-defenses .flex-col:nth-child(2) {
+    flex-basis: 100px;
+}
+
+@media only screen and (max-width: 422px) {
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col.def-exc {
+        order: 1;
+    }
+
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(3),
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(4),
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(6),
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(7) {
+        order: 2;
+    }
+}
+
+@media only screen and (max-width: 394px) {
+    .sheet-tab-character-sheet .sheet-defenses .flex-col.def-exc {
+        order: 1;
+    }
+
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(3),
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(4),
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(6),
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(7) {
+        order: 2;
+    }
+}
+
 .charsheet .sheet-tab-combat-sheet .combat-header .defense-line .sheet-table {
     width: 100%;
 }
@@ -2735,6 +2769,7 @@ body.sheet-darkmode {
 .sheet-defenses .flex-col:nth-child(4) .flex.grow-normal:nth-child(2) input[type="number"],
 .sheet-defenses .flex-col .flex.grow-normal:first-child input[type="number"] {
     width: 56px;
+    flex-grow: 1;
 }
 
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="text"].qc-have-exc {
