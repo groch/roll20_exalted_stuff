@@ -241,12 +241,9 @@ tier 2: couleurs
     cursor: text;
 }
 
-.ui-dialog .charsheet .woundpenalty-add-input[title],
-.ui-dialog .charsheet input[type=number][disabled].woundpenalty-input,
-.ui-dialog .charsheet .rollpenalty-input[title],
-.charsheet .woundpenalty-add-input[title],
-.charsheet input[type=number][disabled].woundpenalty-input,
-.charsheet .rollpenalty-input[title] {
+.charsheet .sheet-content .sheet-tab-content .woundpenalty-add-input[title],
+.charsheet .sheet-content .sheet-tab-content input[type=number][disabled].woundpenalty-input,
+.charsheet .sheet-content .sheet-tab-content .rollpenalty-input[title] {
     width: 27px;
 }
 
@@ -466,8 +463,9 @@ tier 2: couleurs
 .charsheet [data-groupname=repeating_weapon].editmode .sheet-table-cell { left: -41px; }
 .charsheet [data-groupname=repeating_armor].editmode .sheet-table-cell { left: -30px; }
  
-.charsheet .sheet-flexbox-h > label,.charsheet .sheet-flexbox0 {
-    width: 100%;
+.charsheet .sheet-flexbox-h > label > label,
+.charsheet .sheet-flexbox-h > label,
+.charsheet .sheet-flexbox0 {
     line-height: 28px;
     margin-bottom: 0;
     
@@ -476,26 +474,20 @@ tier 2: couleurs
     
     -webkit-flex-direction: row;
             flex-direction: row;
+
+    flex-grow: 1;
+    flex-basis: 10em;
+    white-space: nowrap;
+}
+
+.charsheet .sheet-flexbox-h.sheet-flexbox-inline > label {
+    flex-wrap: wrap;
+    flex-basis: 20em;
 }
 
 .charsheet .sheet-flexbox-inline {
-    /* display: -webkit-inline-flex; */
-    /* display:         inline-flex; */
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(4, 1fr);
-}
-
-@media only screen and (max-width: 847px) {
-    .charsheet .sheet-flexbox-inline {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media only screen and (max-width: 200px) {
-    .charsheet .sheet-flexbox-inline {
-        grid-template-columns: repeat(1, 1fr);
-    }
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .charsheet .sheet-flexbox-inline > label > span {
@@ -519,61 +511,49 @@ tier 2: couleurs
 .charsheet .sheet-3colrow .sheet-2col:last-child { margin-right: 0; }
 
 .charsheet .sheet-3colrow .sheet-2col:last-child,
-.charsheet .sheet-col,
-.ui-dialog .charsheet .sheet-col {
+.charsheet .sheet-tab-content .sheet-col {
     display: grid;
     align-items: start;
     grid-template-columns: repeat(1, 1fr );
 }
 
-.charsheet .sheet-2colrow,
-.charsheet .sheet-3colrow,
-.ui-dialog .charsheet .sheet-2colrow,
-.ui-dialog .charsheet .sheet-3colrow {
+.charsheet .sheet-tab-content .sheet-2colrow,
+.charsheet .sheet-tab-content .sheet-3colrow {
     display: grid;
     align-items: start;
     gap: 0 1em;
 }
 
-.charsheet .sheet-2colrow,
-.ui-dialog .charsheet .sheet-2colrow {
+.charsheet .sheet-tab-content .sheet-2colrow {
     grid-template-columns: repeat(2, 1fr );
 }
 
-.charsheet .sheet-3colrow,
-.ui-dialog .charsheet .sheet-3colrow {
+.charsheet .sheet-tab-content .sheet-3colrow {
     grid-template-columns: repeat(3, 1fr );
 }
 
 .charsheet .sheet-3colrow .sheet-2col:last-child > div,
-.charsheet .sheet-2colrow > .sheet-col,
-.charsheet .sheet-3colrow > .sheet-col,
-.ui-dialog .charsheet .sheet-2colrow > .sheet-col,
-.ui-dialog .charsheet .sheet-3colrow > .sheet-col {
+.charsheet .sheet-tab-content .sheet-2colrow > .sheet-col,
+.charsheet .sheet-tab-content .sheet-3colrow > .sheet-col {
     display: grid;
     width: 100%;
     margin-right: auto;
 }
  
-.charsheet .sheet-3colrow.sheet-centerblock,
-.ui-dialog .charsheet .sheet-3colrow.sheet-centerblock {
+.charsheet .sheet-tab-content .sheet-3colrow.sheet-centerblock {
     grid-template-areas: "a b b";
 }
 
-.charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
-.ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities {
+.charsheet .sheet-tab-content .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities {
     grid-area: a;
 }
 
-.charsheet .sheet-3colrow .sheet-2col,
-.ui-dialog .charsheet .sheet-3colrow .sheet-2col {
+.charsheet .sheet-tab-content .sheet-3colrow .sheet-2col {
     grid-area: b;
 }
 
-.charsheet .sheet-tab-antisocial-sheet .sheet-3colrow,
-.ui-dialog .charsheet .sheet-tab-antisocial-sheet .sheet-3colrow,
-.charsheet .sheet-tab-intimacies-sheet .sheet-3colrow,
-.ui-dialog .charsheet .sheet-tab-intimacies-sheet .sheet-3colrow {
+.charsheet .sheet-content .sheet-tab-antisocial-sheet .sheet-3colrow,
+.charsheet .sheet-content .sheet-tab-intimacies-sheet .sheet-3colrow {
     grid-template-columns: min-content calc(100% - 1em);
 }
 
@@ -595,8 +575,7 @@ tier 2: couleurs
     margin: 0;
 }
 
-.charsheet .sheet-tab-settings-sheet .sheet-3colrow > .sheet-col,
-.ui-dialog .charsheet .sheet-tab-settings-sheet .sheet-3colrow > .sheet-col {
+.charsheet .sheet-content .sheet-tab-settings-sheet .sheet-3colrow > .sheet-col {
     width: unset;
     margin-right: 0;
 }
@@ -783,8 +762,7 @@ tier 2: couleurs
     bottom: 0;
 }
 
-.charsheet .sheet-attributes.sheet-3colrow,
-.ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
+.charsheet .sheet-tab-content .sheet-attributes.sheet-3colrow {
     grid-template-rows: repeat(3, 1fr);
     grid-auto-flow: column;
 }
@@ -845,6 +823,14 @@ tier 2: couleurs
 
 .charsheet input[type=number] {
     -moz-appearance: textfield;
+}
+
+/* fucked up em in companion */
+.charsheet input[type=number] {
+    width: 56px;
+}
+.ui-dialog .charsheet input[type=number] {
+    width: 3.5em;
 }
 
 .charsheet input.merits-length-check[value="1"] ~ .repcontainer[data-groupname="repeating_merits"] {
@@ -2663,6 +2649,11 @@ body.sheet-darkmode {
     margin-right:2px;
 }
 
+.sheet-defenses .flex-col:nth-child(4) .flex.grow-normal:nth-child(2) input[type="number"],
+.sheet-defenses .flex-col .flex.grow-normal:first-child input[type="number"] {
+    width: 56px;
+}
+
 .sheet-defenses .flex-col .flex.grow-normal:last-child input[type="text"].qc-have-exc {
     margin-left: 2px;
 }
@@ -3066,18 +3057,29 @@ body.sheet-darkmode {
     text-shadow: black 0 0 2px;
 }
 
-.ui-dialog .charsheet .ressource-line input[type="number"] {
+.charsheet .sheet-tab-content .ressource-line input[type="number"] {
     width: 2em;
 }
 
 /* -- COST -- */
 
 .cost-section input[type="text"] {
-    width: 5em;
     text-align: center;
 }
 
+/* fucked up em in companion */
+.cost-section input[type="text"] {
+    width: 80px;
+}
+.ui-dialog .cost-section input[type="text"] {
+    width: 5em;
+}
+
+/* fucked up em in companion */
 .cost-section input[type="text"].sheet-cost-will {
+    width: 32px;
+}
+.ui-dialog .cost-section input[type="text"].sheet-cost-will {
     width: 2em;
 }
 
@@ -3304,12 +3306,14 @@ textarea::-webkit-scrollbar-track,
         justify-content: center;
     }
 
+    /* button alignment for pc only */
     .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
         justify-content: space-between;
     }
 }
 
-@media only screen and (max-width: 401px) {
+@media only screen and (max-width: 395px) {
+    /* button alignment for pc only */
     .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
         justify-content: flex-end;
     }
@@ -3370,10 +3374,10 @@ textarea::-webkit-scrollbar-track,
     }
 }
 
+/* hide damage section on companion because cannot target */
 .combat-attacks .attack-section .dmg-section {
     display: none;
 }
-
 .ui-dialog .combat-attacks .attack-section .dmg-section {
     display: inline-flex;
 }
@@ -4654,37 +4658,31 @@ and (min-resolution:.001dpcm) {
 
 @media only screen and (max-width: 630px) {
 
-    .charsheet div.sheet-2colrow,
-    .charsheet div.sheet-3colrow,
-    .ui-dialog .charsheet div.sheet-2colrow,
-    .ui-dialog .charsheet div.sheet-3colrow {
+    .charsheet .sheet-tab-content div.sheet-2colrow,
+    .charsheet .sheet-tab-content div.sheet-3colrow {
         grid-template-columns: 100%;
     }
 
-    .charsheet div.sheet-3colrow.sheet-centerblock,
-    .ui-dialog .charsheet div.sheet-3colrow.sheet-centerblock {
+    .charsheet .sheet-tab-content div.sheet-3colrow.sheet-centerblock {
         grid-template-areas: none;
         grid-template-columns: 100%;
     }
 
-    .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
-    .charsheet .sheet-3colrow .sheet-2col,
-    .ui-dialog .charsheet .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
-    .ui-dialog .charsheet .sheet-3colrow .sheet-2col {
+    .charsheet .sheet-tab-content .sheet-3colrow.sheet-centerblock .sheet-col.sheet-abilities,
+    .charsheet .sheet-tab-content .sheet-3colrow .sheet-2col {
         grid-area: unset;
-        width: 100%;
     }
 
-    /* .charsheet .sheet-3colrow .sheet-2col:last-child > div,
-    .charsheet .sheet-2colrow > .sheet-col,
-    .charsheet .sheet-3colrow > .sheet-col,
-    .ui-dialog .charsheet .sheet-2colrow > .sheet-col,
-    .ui-dialog .charsheet .sheet-3colrow > .sheet-col {
-        grid-template-columns: 100%;
-    } */
+    .charsheet .sheet-tab-content .sheet-3colrow.sheet-centerblock > .sheet-2col {
+        display: flex;
+        flex-flow: column;
+    }
 
-    .charsheet .sheet-attributes.sheet-3colrow,
-    .ui-dialog .charsheet .sheet-attributes.sheet-3colrow {
+    .charsheet .sheet-tab-content .sheet-3colrow.sheet-centerblock > .sheet-2col > div {
+        flex-shrink: 1;
+    }
+
+    .charsheet .sheet-tab-content .sheet-attributes.sheet-3colrow {
         grid-template-columns: repeat(1, 1fr);
         grid-auto-flow: unset;
     }
