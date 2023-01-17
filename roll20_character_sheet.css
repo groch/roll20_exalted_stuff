@@ -2487,6 +2487,12 @@ body.sheet-darkmode {
     height: 100px;
 }
 
+.sheet-charms-spells-trait > label {
+    display: contents;
+    font-weight: normal;
+    font-size: 13px;
+}
+
 /* --- ANTI SOCIAL TAB --- */
 
 .charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .sheet-tab-antisocial {

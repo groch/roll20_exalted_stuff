@@ -11631,31 +11631,21 @@
                         <input type="text" name="attr_charm-short-desc" class="sheet-charms-spells-trait sheet-charms-spells-trait-short-desc" placeholder="short desc">
                     </div>
                     <div class="flex flex-wrap sheet-charms-spells-trait">
-                        <span>Book: </span>
-                        <input type="text" name="attr_spell-book" style="width: 5em" class="sheet-charms-spells-trait grow-normal" placeholder="Core"><span> </span>
-                        <span>Page #: </span>
-                        <input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471" style="width: 5em;"><span> </span>
-                        <span>Duration: </span>
-                        <input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span>
-                        <span>Cost: </span>
-                        <input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp">
-                        <div class="flex">
-                            <span>Control: </span>
-                            <div class="flex">
-                                <input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span>
-                            </div>
-                        </div>
+                        <label><span>Book: </span><input type="text" name="attr_spell-book" style="width: 5em" class="sheet-charms-spells-trait grow-normal" placeholder="Core"><span> </span></label>
+                        <label><span>Page #: </span><input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471" style="width: 5em;"><span> </span></label>
+                        <label><span>Duration: </span><input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span></label>
+                        <label><span>Cost: </span><input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp"></label>
+                        <label><span>Control: </span><div class="flex"><input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span></div></label>
                         <div class="cost-section grow-normal">
                             <p class="will-color-down rounded-box grow-normal flex">
-                                Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
                             </p>
                         </div>
                         <input type="hidden" name="attr_charm-aspect" value="sorceries">
                         <input type="hidden" name="attr_charm-balanced" value="0">
                     </div>
                     <div class="flex flex-wrap sheet-charms-spells-trait">
-                        <span>Keywords: </span>
-                        <input type="text" name="attr_spell-keywords" class="sheet-charms-spells-trait grow-normal" placeholder="None">
+                        <label><span>Keywords: </span><input type="text" name="attr_spell-keywords" class="sheet-charms-spells-trait grow-normal" placeholder="None"></label>
                     </div>
                     <div class="sheet-table-row" style="width: 100%">
                         <input type="checkbox" name="attr_spell-effect-display" class="sheet-spelleffect" value="1"><span class="sheet-spelleffect" title="Show Description &amp; Effect"></span>
