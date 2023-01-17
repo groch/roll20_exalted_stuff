@@ -2532,27 +2532,33 @@ body.sheet-darkmode {
     --bs-spell-color: purple;
     --bs-charm-color: gold;
     --bs-charm-color-dark: rgba(255, 217, 0, 0.5);
+    --bs-header-color: #0b0;
+    --bs-init-color: rgb(255, 204, 0);
+    --bs-combat-color: red;
 }
 
 .sheet-tab-spell-sheet .repcontainer .repitem {
-    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-spell-color),
-                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-spell-color),
-                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-spell-color),
-                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-spell-color);
+    --bs-section-color: var(--bs-spell-color);
 }
 
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
-    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color),
-                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color),
-                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color),
-                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color);
+    --bs-section-color: var(--bs-charm-color);
 }
 
 .sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
-    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color-dark),
-                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color-dark),
-                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color-dark),
-                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color-dark);
+    --bs-section-color: var(--bs-charm-color-dark);
+}
+
+.sheet-tab-spell-sheet .repcontainer .repitem,
+.sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem,
+.sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem,
+.charsheet .sheet-tab-combat-sheet .combat-header,
+.charsheet .sheet-tab-combat-sheet .combat-init .repitem,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
+    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-section-color),
+                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-section-color),
+                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-section-color),
+                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-section-color);
 }
 
 /* --- ANTI SOCIAL TAB --- */
@@ -2615,16 +2621,24 @@ body.sheet-darkmode {
     width: auto;
 }
 
+.charsheet .sheet-tab-combat-sheet .combat-header,
+.charsheet .sheet-tab-combat-sheet .combat-init .repitem,
+.charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
+	border: 1px solid var(--bs-section-color);
+    border-radius: 5px;
+}
+
 /* -- HEADER -- */
 
 .charsheet .sheet-tab-combat-sheet .combat-header {
-    border: 1px solid #0b0;
-    border-radius: 5px;
+    --bs-section-color: var(--bs-header-color);
     margin-bottom: 1em;
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div {
-    border-bottom: 1px solid #0b0;
+    border-bottom: 1px solid var(--bs-section-color);
+    box-shadow: 0 var(--bs-default-poffset) var(--bs-default-blur) var(--bs-section-color),
+                0 var(--bs-default-noffset) var(--bs-default-blur) var(--bs-section-color);
     padding: 1em;
 }
 
@@ -2922,8 +2936,7 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-init .repitem {
-	border: 1px solid gold;
-    border-radius: 5px;
+	--bs-section-color: var(--bs-init-color);
     background: linear-gradient(15.5deg ,transparent,rgba(var(--init-color), 0.10),transparent,rgba(var(--init-color), 0.15), transparent, rgba(var(--init-color), 0.20),transparent,rgba(var(--init-color), 0.25),transparent,rgba(var(--init-color), 0.30), rgba(var(--init-color), 0.35), rgba(var(--init-color), 0.45),rgba(var(--init-color), 0.5));
 }
 
@@ -2956,6 +2969,10 @@ body.sheet-darkmode {
 }
 
 /* -- ATTACKS -- */
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
+	--bs-section-color: var(--bs-combat-color);
+}
 
 .charsheet .sheet-tab-character-sheet .sheet-rolls-div .first-line .sheet-rolls-name,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .first-line .sheet-atk-name {
@@ -3020,11 +3037,6 @@ body.sheet-darkmode {
 .charsheet .inline-flex .basis-100,
 .charsheet .flex-wrap .basis-100 {
     flex-basis: 100%;
-}
-
-.charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
-	border: 1px solid red;
-    border-radius: 5px;
 }
 
 .charsheet div .sheet-grouped-buttons {
