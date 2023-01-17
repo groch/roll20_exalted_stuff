@@ -4301,6 +4301,12 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     writing-mode: vertical-lr;
     font-size: unset;
     transform: rotate(-180deg);
+    background: transparent;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:hover + span::before,
+.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:focus + span::before {
+    background-color: white;
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:checked + span::before {
