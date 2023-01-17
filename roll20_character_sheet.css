@@ -4351,11 +4351,11 @@ and (min-resolution:.001dpcm) {
     .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-stunt-dices:has(option[value="2"]:checked),
     .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-wp-toggle:has(option[value="1"]:checked),
     .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
-        border: 2px solid;
+        outline: 3px solid;
     }
 
     .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
-        border-color: rgb(var(--mote-color));
+        outline-color: rgb(var(--mote-color));
     }
 }
 
@@ -4363,11 +4363,11 @@ and (min-resolution:.001dpcm) {
     .charsheet .sheet-tab-rolls-widgets-sheet .stunt-dices-check[value="2"] ~ select.sheet-rolls-stunt-dices,
     .charsheet .sheet-tab-rolls-widgets-sheet .willpower-toggle-check[value="1"] ~ select.sheet-rolls-wp-toggle,
     .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
-        border: 2px solid;
+        outline: 3px solid;
     }
 
     .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
-        border-color: rgb(var(--mote-color));
+        outline-color: rgb(var(--mote-color));
     }
 }
 
