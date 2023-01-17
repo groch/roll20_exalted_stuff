@@ -2426,6 +2426,14 @@ body.sheet-darkmode {
     color: white;
 }
 
+.charsheet .sheet-grouped-buttons .btn:hover {
+    border-color: black;
+}
+
+.charsheet .sheet-grouped-buttons .btn:focus-visible {
+    outline: none;
+}
+
 .sheet-darkmode .merits-div-checkbox input + strong:before{
     background: dimgray;
     color: #e6e6e6;
@@ -2835,6 +2843,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-init .sheet-grouped-buttons .btn:hover {
     color: rgb(var(--init-color));
+    border-color: black;
 }
 
 .charsheet .sheet-combat-init .sheet-init-macro-options {
@@ -2924,6 +2933,13 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-combat-sheet div .sheet-grouped-buttons {
     flex-grow: unset;
     flex-shrink: 0;
+}
+
+.charsheet div button[type="action"]:focus,
+.charsheet div button[type="roll"]:focus,
+.charsheet div .sheet-grouped-buttons button[type="action"]:focus,
+.charsheet div .sheet-grouped-buttons button[type="roll"]:focus {
+    background: linear-gradient(rgb(163, 163, 163), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
 }
 
 .charsheet div .sheet-grouped-buttons button[type="action"],
@@ -3124,6 +3140,27 @@ body.sheet-darkmode {
     line-height: 100%;
     font-size: 18px;
     font-weight: normal;
+}
+
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:focus:checked + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:focus:checked + span::before {
+    content: attr(title) "(*o*" attr(title) ")";
+}
+
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc:focus + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc:focus + span::before {
+    content: attr(title) "(*-*" attr(title) ")";
+    background: gray;
+}
+
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:hover:checked + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:hover:checked + span::before {
+    content: attr(title) "('o'" attr(title) ")";
+}
+
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc:hover + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc:hover + span::before {
+    content: attr(title) "(*-*" attr(title) ")";
 }
 
 .charsheet .rolls-textarea,
