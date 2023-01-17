@@ -2515,16 +2515,37 @@ body.sheet-darkmode {
     border-radius: 10px;
 }
 
+:root {
+    --bs-default-poffset: 1px;
+    --bs-default-noffset: -1px;
+    --bs-default-poffsetbig: 3px;
+    --bs-default-noffsetbig: -3px;
+    --bs-default-blur: 5px;
+    --bs-default-blurbig: 12px;
+    --bs-spell-color: purple;
+    --bs-charm-color: gold;
+    --bs-charm-color-dark: rgba(255, 217, 0, 0.5);
+}
+
 .sheet-tab-spell-sheet .repcontainer .repitem {
-    box-shadow: 1px 1px 5px purple, -1px 1px 5px purple, 1px -1px 5px purple, -1px -1px 5px purple;
+    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-spell-color),
+                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-spell-color),
+                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-spell-color),
+                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-spell-color);
 }
 
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
-    box-shadow: 1px 1px 5px gold, -1px 1px 5px gold, 1px -1px 5px gold, -1px -1px 5px gold;
+    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color),
+                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color),
+                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color),
+                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color);
 }
 
 .sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
-    box-shadow: 1px 1px 5px rgba(255, 217, 0, 0.5), -1px 1px 5px rgba(255, 217, 0, 0.5), 1px -1px 5px rgba(255, 217, 0, 0.5), -1px -1px 5px rgba(255, 217, 0, 0.5);
+    box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color-dark),
+                var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-color-dark),
+                var(--bs-default-poffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color-dark),
+                var(--bs-default-noffset) var(--bs-default-noffset) var(--bs-default-blur) var(--bs-charm-color-dark);
 }
 
 /* --- ANTI SOCIAL TAB --- */
@@ -4269,11 +4290,11 @@ and (min-resolution:.001dpcm) {
 @-moz-document url-prefix() {
     .charsheet .sheet-tab-rolls-widgets-sheet .stunt-dices-check[value="2"] ~ select.sheet-rolls-stunt-dices,
     .charsheet .sheet-tab-rolls-widgets-sheet .willpower-toggle-check[value="1"] ~ select.sheet-rolls-wp-toggle,
-    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ select.sheet-rolls-pool-starting {
+    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
         border: 2px solid;
     }
 
-    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ select.sheet-rolls-pool-starting {
+    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
         border-color: rgb(var(--mote-color));
     }
 }
@@ -4314,12 +4335,32 @@ and (min-resolution:.001dpcm) {
     border: 5px solid transparent;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet:has(.sheet-rolls-wp-toggle:hover) .ressource-line p.will-color {
-    border: 5px solid black;
+.charsheet .sheet-tab-rolls-widgets-sheet .ressource-line p.will-color {
+    border: 1px solid;
+    padding: 4px;
 }
 
-.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet:has(.sheet-rolls-wp-toggle:hover) .ressource-line p.will-color {
-    border: 5px solid rgb(var(--willpower-color));
+.charsheet .sheet-tab-rolls-widgets-sheet:has(input[value="@{roll-penalty}"]:hover) .ressource-line .rollpen-box p {
+    border: 2px solid;
+    padding: 3px;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet:has(.sheet-rolls-wp-toggle:hover) .ressource-line input[name="attr_willpower"] {
+    outline: 5px solid;
+}
+
+.charsheet .sheet-tab-rolls-widgets-sheet:has(.pool-starting-check[value="0"] ~ .sheet-rolls .mote-hint:hover) .ressource-line input[name="attr_personal-essence"],
+.charsheet .sheet-tab-rolls-widgets-sheet:has(.pool-starting-check[value="1"] ~ .sheet-rolls .mote-hint:hover) .ressource-line input[name="attr_peripheral-essence"],
+.roll-section:has(.exc-sum:hover) .inner-section .excellency-box,
+.roll-section:has(.solar-type-excellency .exc-total:hover) .inner-section .solar-hint,
+.sheet-rolls:has(.lunar-type-excellency .exc-total:hover) .roll-section .lunar-hint,
+.roll-section:has(.db-type-excellency .exc-total:hover) .inner-section .db-hint,
+.sheet-rolls:has(.liminal-type-excellency .exc-total:hover) .roll-section .liminal-hint,
+.roll-section .sidereal-type-excellency .exc-total:hover {
+    box-shadow: var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-color),
+                var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-color),
+                var(--bs-default-poffsetbig) var(--bs-default-noffsetbig) var(--bs-default-blurbig) var(--bs-charm-color),
+                var(--bs-default-noffsetbig) var(--bs-default-noffsetbig) var(--bs-default-blurbig) var(--bs-charm-color);
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .dice-area-total .separator-box-mode {

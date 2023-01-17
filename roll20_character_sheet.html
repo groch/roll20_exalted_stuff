@@ -17252,6 +17252,7 @@
                     <div class="sheet-rolls-div">
                         <fieldset class="repeating_rolls-widget">
                             <input type="hidden" name="attr_reprolls-separator-mode" class="rolls-separator-check" value="0">
+                            <input type="hidden" name="attr_reprolls-pool-starting" class="pool-starting-check" value="1">
                             <div class="sheet-rolls">
                                 <input type="hidden" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit-val" value="0">
                                 <div class="first-line flex-wrap">
@@ -17271,12 +17272,12 @@
                                                 Motes:
                                                 <span class="rounded-box grow-normal inline-flex">
                                                     <span class="rounded-box grow-normal inline-flex mote-color-border-dashed" title="Added Cost as Atome of Essence 1:1">
-                                                        +/-<input type="number" name="attr_rep-cost-mote-offset" class="sheet-cost-mote grow-normal mote-hint-one inverted-color" value="0">
+                                                        +/-<input type="number" name="attr_rep-cost-mote-offset" class="sheet-cost-mote grow-normal mote-hint mote-hint-one inverted-color" value="0">
                                                     </span>
                                                     <span class="rounded-box grow-normal inline-flex mote-total" title="Total Cost as Atome of Essence">
                                                         <input type="hidden" name="attr_rep-cost-total-taint" class="sheet-cost-mote-total-taint">
                                                         <input type="hidden" name="attr_rep-cost-total-base" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})" disabled data-formula="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})">
-                                                        =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal" value="(((@{rep-cost-total-base}) + abs(@{rep-cost-total-base})) / 2)" disabled data-formula="(((@{rep-cost-total-base}) + abs(@{rep-cost-total-base})) / 2)">
+                                                        =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal mote-hint" value="(((@{rep-cost-total-base}) + abs(@{rep-cost-total-base})) / 2)" disabled data-formula="(((@{rep-cost-total-base}) + abs(@{rep-cost-total-base})) / 2)">
                                                     </span>
                                                 </span>
                                             </p>
@@ -17288,7 +17289,7 @@
                                         <div class="flex grow-normal dice-area inverted-color">
                                             <div class="flex flex-wrap grow-normal dice-area-details">
                                                 <div class="flex grow-normal basis-100">
-                                                    <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal">
+                                                    <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal solar-hint lunar-hint">
                                                         <option value="@{strength}[Strength]">Strength</option>
                                                         <option value="@{dexterity}[Dexterity]">Dexterity</option>
                                                         <option value="@{stamina}[Stamina]">Stamina</option>
@@ -17321,7 +17322,7 @@
                                                         <option value="19[RAW]">19</option>
                                                         <option value="20[RAW]">20</option>
                                                     </select>+
-                                                    <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal">
+                                                    <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal solar-hint db-hint liminal-hint">
                                                         <option value="@{archery}[Archery]">Archery</option>
                                                         <option value="@{athletics}[Athletics]">Athletics</option>
                                                         <option value="@{awareness}[Awareness]">Awareness</option>
@@ -17409,13 +17410,13 @@
                                                             <option value="0" selected>(0) Std Stunt</option>
                                                             <option value="2">(2) Stunt 1+</option>
                                                         </select>+
-                                                        <span class="specialty-box">
+                                                        <span class="specialty-box db-hint">
                                                             <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
                                                             <span class="sheet-spelleffect" title="Spé"></span>
                                                         </span>+
                                                     </div>
-                                                    <div class="inline-flex grow-normal" title="Excellency Box">
-                                                        <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint-one" title="Charm dices for the Roll&#013;&#010;Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
+                                                    <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
+                                                        <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint mote-hint-one" title="Charm dices for the Roll&#013;&#010;Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
                                                         <input type="number" name="attr_reprolls-ycharm-paid-dices" class="sheet-rolls-ycharm-dices grow-normal" title="Charm dices for the Roll&#013;&#010;Cost already paid" value="0" placeholder="0" min="0">+
                                                     </div>
                                                     <div class="inline-flex grow-normal">
@@ -17443,8 +17444,8 @@
                                                         <option value="1">(1) Yes</option>
                                                     </select>+
                                                 </div>
-                                                <div class="inline-flex grow-normal" title="Excellency Box">
-                                                    <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
+                                                <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
+                                                    <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
                                                     <input type="number" name="attr_reprolls-ycharm-paid-successes" class="sheet-rolls-ycharm-successes grow-normal" title="Charm successes for the roll&#013;&#010;Cost already paid" value="0" placeholder="1" min="0">+
                                                 </div>
                                                 <div class="inline-flex grow-normal">
@@ -17456,7 +17457,6 @@
                                             </div>
                                         </div>
                                         <div class="flex grow-normal">
-                                            <input type="hidden" name="attr_reprolls-pool-starting" class="pool-starting-check" value="1">
                                             <select name="attr_reprolls-pool-starting" class="sheet-rolls-pool-starting" title="Bonus dices for the Roll awarded by the Stunt">
                                                 <option value="1" selected>Peripheral</option>
                                                 <option value="0">Personal</option>
@@ -17483,7 +17483,7 @@
                                         <div class="lunar-type-excellency">
                                             <img class="caste-img">
                                             CAP
-                                            <select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal">
+                                            <select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint">
                                                 <option value="0">---</option>
                                                 <option value="@{strength}">str</option>
                                                 <option value="@{dexterity}">dex</option>
@@ -17511,7 +17511,7 @@
                                         <div class="liminal-type-excellency">
                                             <img class="caste-img">
                                             CAP
-                                            <span class="anima-flare-box-mode">
+                                            <span class="anima-flare-box-mode liminal-hint">
                                                 <input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
                                                 <span class="sheet-spelleffect" title="Toggle"></span>
                                             </span>
