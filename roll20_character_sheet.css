@@ -3007,7 +3007,11 @@ body.sheet-darkmode {
 
 .rounded-box {
     border-radius: 5px;
-    overflow: hidden;
+}
+
+.rounded-box *:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .init-color {
