@@ -4107,6 +4107,10 @@ textarea::-webkit-scrollbar-track,
     width: calc(100% - 2em);
 }
 
+.charsheet .sheet-tab-rolls-widgets-sheet .roll-section {
+    flex-direction: row-reverse;
+}
+
 .charsheet .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
     width: calc(100% - 2.6rem - 1px);
 }
@@ -4371,7 +4375,10 @@ and (min-resolution:.001dpcm) {
 .success-area-details {
     border: 1px solid;
     border-radius: 10px;
-    overflow: hidden;
+}
+
+.success-area-details *:last-child {
+    border-bottom-right-radius: 6px;
 }
 
 .charsheet .dice-area .flex.dice-area-total,
@@ -4471,7 +4478,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section {
     display: flex;
     flex-flow: column;
-    border-left: 1px solid;
+    border-right: 1px solid;
     text-align: center;
     text-decoration: underline;
     font-weight: bold;
