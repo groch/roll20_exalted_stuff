@@ -2743,14 +2743,11 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ div.peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .personal-mote-val[value="@{essence} * 0 - @{committedessperso}"] ~ div.personal-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ div.peripheral-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .combat-init .peripheral-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="@{essence} * 0 - @{committedesstotal}"] ~ .combat-attacks .peripheral-mote-toggle,
 .charsheet .sheet-tab-rolls-sheet .personal-mote-val[value="0"] ~ div.personal-mote-toggle,
 .charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ div.personal-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-init .peripheral-mote-toggle,
-.charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ .combat-attacks .peripheral-mote-toggle {
+.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-content .caste-have-exc-toggle {
     display: none;
 }
 
