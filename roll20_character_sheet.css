@@ -3006,6 +3006,10 @@ body.sheet-darkmode {
     background-color: rgb(var(--dark-damage-color));
 }
 
+.ovw-color {
+    background: rgba(0, 0, 0, 0.2);
+}
+
 .will-color {
     background: rgba(var(--willpower-color), 0.5);
 }
@@ -3099,6 +3103,32 @@ body.sheet-darkmode {
 
 .cost-section p {
     margin: 0;
+}
+
+.ui-dialog .ressource-line p label {
+    color: black;
+}
+
+.sheet-darkmode .ressource-line p label {
+    color: white;
+}
+
+.ressource-line p label {
+    flex-basis: 16px;
+}
+.ui-dialog .ressource-line p label {
+    flex-basis: 1em;
+}
+
+.ressource-line p label,
+.cost-section p label,
+.weapon-section p label,
+.dmg-section p.dark-init-color label {
+    display: flex;
+    font-size: 13px;
+    font-weight: normal;
+    align-items: center;
+    margin-bottom: 0;
 }
 
 /* -- desc textarea -- */
@@ -4558,6 +4588,10 @@ and (min-resolution:.001dpcm) {
     
     h1, h2, h3, h4, h5, h6 {
         color: #E6E6E6;
+    }
+
+    .ressource-line p label {
+        color: white;
     }
     
     .charsheet input.sheet-tab::before {
