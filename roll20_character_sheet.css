@@ -2680,8 +2680,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-header {
     --bs-section-color: var(--bs-header-color);
-    margin-bottom: 1em;
-    margin-left: 4px;
+    margin: 0 4px 1em;
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div {
