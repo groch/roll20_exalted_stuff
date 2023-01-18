@@ -51,9 +51,9 @@ input[type="number"] {
 .charsheet {
     position: absolute;
     left: 0;
-    padding: 0 0 0 10px !important;
-    height: calc(100% - 70px);
-    width: calc(100% - 12px);
+    padding: 0 0 0 0 !important;
+    height: -webkit-fill-available;
+    width: calc(100% - 1px);
 }
 
 .charsheet .solar-style {
@@ -71,13 +71,17 @@ input[type="number"] {
     color: yellow;
 }
 
+.charsheet .sheet-content > div:first-child {
+    flex: 1 1 auto;
+    overflow: visible;
+    padding-left: 10px;
+    height: calc(100% - 2em);
+}
+
 .charsheet .sheet-content {
     height: 100%;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-direction: row;
     flex-direction: column;
-    padding: 0 10px 0 0 !important;
 }
 
 .charsheet .sheet-body {
@@ -142,11 +146,6 @@ input[type="number"] {
 }
 
 .charsheet .sheet-fixedwidth { display: inline-block; }
-
-/* .charsheet .sheet-center-table.sheet-80pct {
-    margin-left: 10%;
-    margin-right: 10%;
-} */
 
 /*
 
@@ -317,8 +316,8 @@ tier 2: couleurs
     visibility: hidden;
 }
 
-.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-content .sheet-defenses .flex-col .qc-have-exc,
-.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-content .qc-have-exc {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-content .sheet-defenses .flex-col .qc-have-exc,
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-content .qc-have-exc {
     display: none;
 }
 
@@ -370,47 +369,47 @@ tier 2: couleurs
 }
 
 
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-character-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-character-sheet .gm-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-rolls-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-rolls-sheet .gm-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-spell-sheet .gm-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-character-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-spell-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-charm-sheet .gm-whisper,
 .charsheet .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only
 {
     display: none;
 }
 
-.charsheet .caste-check[value="Air"]   ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .caste-check[value="Earth"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .caste-check[value="Fire"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .caste-check[value="Water"] ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
-.charsheet .caste-check[value="Wood"]  ~ .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
+.charsheet .caste-check[value="Air"]   ~ .flex.main-page .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Earth"] ~ .flex.main-page .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Fire"]  ~ .flex.main-page .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Water"] ~ .flex.main-page .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only,
+.charsheet .caste-check[value="Wood"]  ~ .flex.main-page .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only {
     display: inline;
 }
 
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-character-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-character-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-character-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-character-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-rolls-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-rolls-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-spell-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .sheet-tab-charm-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-character-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-character-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-roll.gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-rolls-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-rolls-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-roll.gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-spell-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-spell-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-spell-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-charm-sheet .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-charm-sheet .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
     display: inline-block;
 }
 
-.charsheet .charm-whisper-both-check[value="1"] ~ .sheet-tab-settings-sheet .sheet-cast-to-gm {
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-settings-sheet .sheet-cast-to-gm {
     text-decoration: line-through;
 }
 
@@ -750,7 +749,7 @@ tier 2: couleurs
     align-items: start;
 }
 
-.charsheet .caste-have-exc-check[value="1"] ~ .sheet-tab-content .sheet-trait.four-cell {
+.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .sheet-trait.four-cell {
     grid-template-columns: auto calc((1.75em + 2px) * 4);
 }
 
@@ -1504,10 +1503,58 @@ and (min-resolution:.001dpcm) {
 
 
 
-.charsheet div.sheet-tab-content { 
-   display: none; 
-   margin-top:2px;
-   width: 100%;
+.charsheet div.sheet-tab-content {
+    display: none; 
+    margin-top: 2px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: visible;
+    scrollbar-width: thin;
+    scrollbar-color: #90A4AE #CFD8DC;
+}
+
+.charsheet .rolls-area .sheet-rolls-div::-webkit-scrollbar,
+.charsheet div.sheet-tab-content::-webkit-scrollbar {
+    width: 9px;
+    cursor: pointer;
+}
+
+.charsheet .rolls-area .sheet-rolls-div::-webkit-scrollbar-thumb,
+.charsheet div.sheet-tab-content::-webkit-scrollbar-thumb {
+    background-color: #90A4AE;
+    border-radius: 2px;
+    border: 1px solid #CFD8DC;
+}
+
+.charsheet .rolls-area .sheet-rolls-div::-webkit-scrollbar-thumb:hover,
+.charsheet div.sheet-tab-content::-webkit-scrollbar-thumb:hover {
+    background-color: #7a8991;
+}
+
+.charsheet .rolls-area .sheet-rolls-div::-webkit-scrollbar-track,
+.charsheet div.sheet-tab-content::-webkit-scrollbar-track {
+    background: #CFD8DC;
+}
+
+.charsheet > .sheet-content > div > div.flex.main-page {
+    overflow: visible;
+    height: calc(100% - 2.4em);
+}
+
+@media only screen and (max-width: 563px) {
+    .charsheet > .sheet-content > div > div.flex.main-page {
+        height: calc(100% - 4.6em);
+    }
+}
+
+.charsheet > .sheet-content > div > div.flex.main-page > div.sheet-tab-content {
+    padding: 0px 9px 0 0;
+    width: calc(100% - 9px);
+}
+
+.charsheet div.sheet-tab-content.sheet-tab-charm-sheet .charm-tab-list div.sheet-tab-content {
+    height: 100%;
 }
 
 .charsheet input.show-anima[value="1"] ~ div.anima-box,
@@ -1523,13 +1570,13 @@ and (min-resolution:.001dpcm) {
 }
 
 
-.charsheet input.sheet-tab-character-sheet:checked				        ~ div.sheet-tab-character-sheet, 
-.charsheet input.sheet-tab-spell-sheet:checked					        ~ div.sheet-tab-spell-sheet,
-.charsheet input.sheet-tab-charm-sheet:checked					        ~ div.sheet-tab-charm-sheet,
-.charsheet input.sheet-tab-settings-sheet:checked				        ~ div.sheet-tab-settings-sheet,
-.charsheet input.sheet-tab-intimacies-sheet:checked				        ~ div.sheet-tab-intimacies-sheet,
-.charsheet input.sheet-tab-combat-sheet:checked				            ~ div.sheet-tab-combat-sheet,
-.charsheet input.sheet-tab-antisocial-sheet:checked			            ~ div.sheet-tab-antisocial-sheet,
+.charsheet input.sheet-tab-character-sheet:checked				        ~ .flex.main-page div.sheet-tab-character-sheet, 
+.charsheet input.sheet-tab-spell-sheet:checked					        ~ .flex.main-page div.sheet-tab-spell-sheet,
+.charsheet input.sheet-tab-charm-sheet:checked					        ~ .flex.main-page div.sheet-tab-charm-sheet,
+.charsheet input.sheet-tab-settings-sheet:checked				        ~ .flex.main-page div.sheet-tab-settings-sheet,
+.charsheet input.sheet-tab-intimacies-sheet:checked				        ~ .flex.main-page div.sheet-tab-intimacies-sheet,
+.charsheet input.sheet-tab-combat-sheet:checked				            ~ .flex.main-page div.sheet-tab-combat-sheet,
+.charsheet input.sheet-tab-antisocial-sheet:checked			            ~ .flex.main-page div.sheet-tab-antisocial-sheet,
 .charsheet input.sheet-tab-charm-sheet-archery:checked			        ~ div.sheet-tab-charm-sheet-archery,
 .charsheet input.sheet-tab-charm-sheet-athletics:checked		        ~ div.sheet-tab-charm-sheet-athletics,
 .charsheet input.sheet-tab-charm-sheet-awareness:checked		        ~ div.sheet-tab-charm-sheet-awareness,
@@ -1619,119 +1666,119 @@ and (min-resolution:.001dpcm) {
    display: block;
 }
 
-.charsheet .sheet-charm-archery[value="0"] 			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-archery,
-.charsheet .sheet-charm-athletics[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-athletics,
-.charsheet .sheet-charm-awareness[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-awareness,
-.charsheet .sheet-charm-brawl[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-brawl,
-.charsheet .sheet-charm-bureaucracy[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-bureaucracy,
-.charsheet .sheet-charm-craft[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-craft,
-.charsheet .sheet-charm-dodge[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-dodge,
-.charsheet .sheet-charm-integrity[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-integrity,
-.charsheet .sheet-charm-investigation[value="0"]	    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-investigation,
-.charsheet .sheet-charm-larceny[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-larceny,
-.charsheet .sheet-charm-linguistics[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-linguistics,
-.charsheet .sheet-charm-lore[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-lore,
-.charsheet .sheet-charm-medicine[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-medicine,
-.charsheet .sheet-charm-melee[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-melee,
-.charsheet .sheet-charm-occult[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-occult,
-.charsheet .sheet-charm-performance[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-performance,
-.charsheet .sheet-charm-presence[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-presence,
-.charsheet .sheet-charm-resistance[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-resistance,
-.charsheet .sheet-charm-ride[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-ride,
-.charsheet .sheet-charm-sail[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-sail,
-.charsheet .sheet-charm-socialize[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-socialize,
-.charsheet .sheet-charm-stealth[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-stealth,
-.charsheet .sheet-charm-survival[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-survival,
-.charsheet .sheet-charm-thrown[value="0"]			    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-thrown,
-.charsheet .sheet-charm-war[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-war,
-.charsheet .sheet-charm-str-offense[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-str-offense,
-.charsheet .sheet-charm-str-mobility[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-str-mobility,
-.charsheet .sheet-charm-str-fos[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-str-fos,
-.charsheet .sheet-charm-dex-offensive[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-offensive,
-.charsheet .sheet-charm-dex-defense[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-defense,
-.charsheet .sheet-charm-dex-subterfuge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-subterfuge,
-.charsheet .sheet-charm-dex-mobility[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-mobility,
-.charsheet .sheet-charm-dex-swarm[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-dex-swarm,
-.charsheet .sheet-charm-sta-defense[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-sta-defense,
-.charsheet .sheet-charm-sta-endurance[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-sta-endurance,
-.charsheet .sheet-charm-sta-berserker[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-sta-berserker,
-.charsheet .sheet-charm-cha-influence[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-cha-influence,
-.charsheet .sheet-charm-cha-territory[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-cha-territory,
-.charsheet .sheet-charm-cha-warfare[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-cha-warfare,
-.charsheet .sheet-charm-man-influence[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-man-influence,
-.charsheet .sheet-charm-man-subterfuge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-man-subterfuge,
-.charsheet .sheet-charm-man-guile[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-man-guile,
-.charsheet .sheet-charm-app-influence[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-app-influence,
-.charsheet .sheet-charm-app-subterfuge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-app-subterfuge,
-.charsheet .sheet-charm-app-warfare[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-app-warfare,
-.charsheet .sheet-charm-per-senses[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-per-senses,
-.charsheet .sheet-charm-per-scrutiny[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-per-scrutiny,
-.charsheet .sheet-charm-per-mysticism[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-per-mysticism,
-.charsheet .sheet-charm-int-knowledge[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-knowledge,
-.charsheet .sheet-charm-int-mysticism[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-mysticism,
-.charsheet .sheet-charm-int-crafting[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-crafting,
-.charsheet .sheet-charm-int-warfare[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-warfare,
-.charsheet .sheet-charm-int-sorcery[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-int-sorcery,
-.charsheet .sheet-charm-wit-resolve[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-resolve,
-.charsheet .sheet-charm-wit-animalken[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-animalken,
-.charsheet .sheet-charm-wit-navigation[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-navigation,
-.charsheet .sheet-charm-wit-cache[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-cache,
-.charsheet .sheet-charm-wit-territory[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-wit-territory,
-.charsheet .sheet-charm-ma-snake[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-snake,
-.charsheet .sheet-charm-ma-tiger[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-tiger,
-.charsheet .sheet-charm-ma-spsitv[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-spsitv,
-.charsheet .sheet-charm-ma-whitereaper[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whitereaper,
-.charsheet .sheet-charm-ma-ebonshadow[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-ebonshadow,
-.charsheet .sheet-charm-ma-crane[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-crane,
-.charsheet .sheet-charm-ma-silvervoice[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-silvervoice,
-.charsheet .sheet-charm-ma-righteousdevil[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-righteousdevil,
-.charsheet .sheet-charm-ma-blackclaw[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-blackclaw,
-.charsheet .sheet-charm-ma-dreamingpearl[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-dreamingpearl,
-.charsheet .sheet-charm-ma-steeldevil[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-steeldevil,
-.charsheet .sheet-charm-ma-centipede[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-centipede,
-.charsheet .sheet-charm-ma-falcon[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-falcon,
-.charsheet .sheet-charm-ma-laughingmonster[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-laughingmonster,
-.charsheet .sheet-charm-ma-swayinggrass[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-swayinggrass,
-.charsheet .sheet-charm-ma-airdragon[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-airdragon,
-.charsheet .sheet-charm-ma-earthdragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-earthdragon,
-.charsheet .sheet-charm-ma-firedragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-firedragon,
-.charsheet .sheet-charm-ma-waterdragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-waterdragon,
-.charsheet .sheet-charm-ma-wooddragon[value="0"]		~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-wooddragon,
-.charsheet .sheet-charm-ma-goldenjanissar[value="0"]	~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-goldenjanissar,
-.charsheet .sheet-charm-ma-mantis[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-mantis,
-.charsheet .sheet-charm-ma-whiteveil[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whiteveil,
-.charsheet .sheet-charm-ma-other[value="0"]				~ div.sheet-tab-charm-sheet .sheet-tab-charm-ma-other,
-.charsheet .sheet-charm-evocation[value="0"]		    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-evocation,
-.charsheet .sheet-charm-old[value="0"]				    ~ div.sheet-tab-charm-sheet .sheet-tab-charm-old,
-.charsheet .sheet-charm-universal[value="0"]			~ div.sheet-tab-charm-sheet .sheet-tab-charm-universal {
+.charsheet .sheet-charm-archery[value="0"] 			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-archery,
+.charsheet .sheet-charm-athletics[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-athletics,
+.charsheet .sheet-charm-awareness[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-awareness,
+.charsheet .sheet-charm-brawl[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-brawl,
+.charsheet .sheet-charm-bureaucracy[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-bureaucracy,
+.charsheet .sheet-charm-craft[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-craft,
+.charsheet .sheet-charm-dodge[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-dodge,
+.charsheet .sheet-charm-integrity[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-integrity,
+.charsheet .sheet-charm-investigation[value="0"]	    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-investigation,
+.charsheet .sheet-charm-larceny[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-larceny,
+.charsheet .sheet-charm-linguistics[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-linguistics,
+.charsheet .sheet-charm-lore[value="0"]				    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-lore,
+.charsheet .sheet-charm-medicine[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-medicine,
+.charsheet .sheet-charm-melee[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-melee,
+.charsheet .sheet-charm-occult[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-occult,
+.charsheet .sheet-charm-performance[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-performance,
+.charsheet .sheet-charm-presence[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-presence,
+.charsheet .sheet-charm-resistance[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-resistance,
+.charsheet .sheet-charm-ride[value="0"]				    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ride,
+.charsheet .sheet-charm-sail[value="0"]				    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sail,
+.charsheet .sheet-charm-socialize[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-socialize,
+.charsheet .sheet-charm-stealth[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-stealth,
+.charsheet .sheet-charm-survival[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-survival,
+.charsheet .sheet-charm-thrown[value="0"]			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-thrown,
+.charsheet .sheet-charm-war[value="0"]				    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-war,
+.charsheet .sheet-charm-str-offense[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-str-offense,
+.charsheet .sheet-charm-str-mobility[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-str-mobility,
+.charsheet .sheet-charm-str-fos[value="0"]				~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-str-fos,
+.charsheet .sheet-charm-dex-offensive[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-dex-offensive,
+.charsheet .sheet-charm-dex-defense[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-dex-defense,
+.charsheet .sheet-charm-dex-subterfuge[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-dex-subterfuge,
+.charsheet .sheet-charm-dex-mobility[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-dex-mobility,
+.charsheet .sheet-charm-dex-swarm[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-dex-swarm,
+.charsheet .sheet-charm-sta-defense[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sta-defense,
+.charsheet .sheet-charm-sta-endurance[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sta-endurance,
+.charsheet .sheet-charm-sta-berserker[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sta-berserker,
+.charsheet .sheet-charm-cha-influence[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-cha-influence,
+.charsheet .sheet-charm-cha-territory[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-cha-territory,
+.charsheet .sheet-charm-cha-warfare[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-cha-warfare,
+.charsheet .sheet-charm-man-influence[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-man-influence,
+.charsheet .sheet-charm-man-subterfuge[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-man-subterfuge,
+.charsheet .sheet-charm-man-guile[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-man-guile,
+.charsheet .sheet-charm-app-influence[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-app-influence,
+.charsheet .sheet-charm-app-subterfuge[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-app-subterfuge,
+.charsheet .sheet-charm-app-warfare[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-app-warfare,
+.charsheet .sheet-charm-per-senses[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-per-senses,
+.charsheet .sheet-charm-per-scrutiny[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-per-scrutiny,
+.charsheet .sheet-charm-per-mysticism[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-per-mysticism,
+.charsheet .sheet-charm-int-knowledge[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-int-knowledge,
+.charsheet .sheet-charm-int-mysticism[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-int-mysticism,
+.charsheet .sheet-charm-int-crafting[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-int-crafting,
+.charsheet .sheet-charm-int-warfare[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-int-warfare,
+.charsheet .sheet-charm-int-sorcery[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-int-sorcery,
+.charsheet .sheet-charm-wit-resolve[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-resolve,
+.charsheet .sheet-charm-wit-animalken[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-animalken,
+.charsheet .sheet-charm-wit-navigation[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-navigation,
+.charsheet .sheet-charm-wit-cache[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-cache,
+.charsheet .sheet-charm-wit-territory[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-territory,
+.charsheet .sheet-charm-ma-snake[value="0"]				~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-snake,
+.charsheet .sheet-charm-ma-tiger[value="0"]				~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-tiger,
+.charsheet .sheet-charm-ma-spsitv[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-spsitv,
+.charsheet .sheet-charm-ma-whitereaper[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whitereaper,
+.charsheet .sheet-charm-ma-ebonshadow[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-ebonshadow,
+.charsheet .sheet-charm-ma-crane[value="0"]				~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-crane,
+.charsheet .sheet-charm-ma-silvervoice[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-silvervoice,
+.charsheet .sheet-charm-ma-righteousdevil[value="0"]	~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-righteousdevil,
+.charsheet .sheet-charm-ma-blackclaw[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-blackclaw,
+.charsheet .sheet-charm-ma-dreamingpearl[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-dreamingpearl,
+.charsheet .sheet-charm-ma-steeldevil[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-steeldevil,
+.charsheet .sheet-charm-ma-centipede[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-centipede,
+.charsheet .sheet-charm-ma-falcon[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-falcon,
+.charsheet .sheet-charm-ma-laughingmonster[value="0"]	~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-laughingmonster,
+.charsheet .sheet-charm-ma-swayinggrass[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-swayinggrass,
+.charsheet .sheet-charm-ma-airdragon[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-airdragon,
+.charsheet .sheet-charm-ma-earthdragon[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-earthdragon,
+.charsheet .sheet-charm-ma-firedragon[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-firedragon,
+.charsheet .sheet-charm-ma-waterdragon[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-waterdragon,
+.charsheet .sheet-charm-ma-wooddragon[value="0"]		~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-wooddragon,
+.charsheet .sheet-charm-ma-goldenjanissar[value="0"]	~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-goldenjanissar,
+.charsheet .sheet-charm-ma-mantis[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-mantis,
+.charsheet .sheet-charm-ma-whiteveil[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-whiteveil,
+.charsheet .sheet-charm-ma-other[value="0"]				~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-other,
+.charsheet .sheet-charm-evocation[value="0"]		    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-evocation,
+.charsheet .sheet-charm-old[value="0"]				    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-old,
+.charsheet .sheet-charm-universal[value="0"]			~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-universal {
 	display: none;
 }
 
-.charsheet .sheet-quick-character[value="0"] ~ div.sheet-tab-character-sheet .sheet-qc-pools,
-.charsheet .sheet-quick-character[value="0"] ~ div.sheet-tab-character-sheet .sheet-qc-defenses {
+.charsheet .sheet-quick-character[value="0"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-qc-pools,
+.charsheet .sheet-quick-character[value="0"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-qc-defenses {
     display: none;
 }
 
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet > .sheet-attributes,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-abilities,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-limit,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-experience,
-.charsheet .sheet-quick-character[value="1"] ~ div.sheet-tab-character-sheet .sheet-gear {
+.charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet > .sheet-attributes,
+.charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-abilities,
+.charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-limit,
+.charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-experience,
+.charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-gear {
     display: none;
 }
 
-.charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-character-sheet .sheet-battle-group-header,
-.charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-character-sheet .sheet-battle-group-body {
+.charsheet .sheet-battle-group[value="0"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-battle-group-header,
+.charsheet .sheet-battle-group[value="0"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-battle-group-body {
     display: none;
 }
 
-.charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-character-sheet > .sheet-health-track,
-.charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-character-sheet > .sheet-health-header,
-.charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-character-sheet h1.sheet-qc-health {
+.charsheet .sheet-battle-group[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet > .sheet-health-track,
+.charsheet .sheet-battle-group[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet > .sheet-health-header,
+.charsheet .sheet-battle-group[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet h1.sheet-qc-health {
     display: none;
 }
 
-.charsheet .sheet-player-caste[value="Mortal"] ~ div.sheet-hide-to-mortal {
+.charsheet .caste-check[value="Mortal"] ~ .flex.main-page div.sheet-hide-to-mortal {
     display: none;
 }
 
@@ -1894,7 +1941,7 @@ and (min-resolution:.001dpcm) {
     width:55px;
 }
 
-.charsheet .caste-check[value="Mortal"] ~ .sheet-tab-content .def-exc {
+.charsheet .caste-check[value="Mortal"] ~ .flex.main-page .sheet-tab-content .def-exc {
     display: none;
 }
 
@@ -2514,6 +2561,7 @@ body.sheet-darkmode {
     gap: 1em;
     display: flex;
     flex-flow: column;
+    padding: 0px 4px 0px;
 }
 
 .sheet-tab-spell-sheet .repcontainer .repitem,
@@ -2563,7 +2611,7 @@ body.sheet-darkmode {
 
 /* --- ANTI SOCIAL TAB --- */
 
-.charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .sheet-tab-antisocial {
+.charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .flex.main-page .sheet-tab-antisocial {
     display: none;
 }
 
@@ -2609,7 +2657,7 @@ body.sheet-darkmode {
 
 /* --- COMBAT TAB --- */
 
-.charsheet .sheet-content .sheet-show-combat-tab[value="0"] ~ .sheet-tab-combat {
+.charsheet .sheet-content .sheet-show-combat-tab[value="0"] ~ .flex.main-page .sheet-tab-combat {
     display: none;
 }
 
@@ -2633,6 +2681,7 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-combat-sheet .combat-header {
     --bs-section-color: var(--bs-header-color);
     margin-bottom: 1em;
+    margin-left: 4px;
 }
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div {
@@ -2652,8 +2701,8 @@ body.sheet-darkmode {
     border-bottom: 0;
 }
 
-.charsheet .sheet-battle-group[value="0"] ~ div.sheet-tab-combat-sheet .sheet-bg-show,
-.charsheet .sheet-battle-group[value="1"] ~ div.sheet-tab-combat-sheet .sheet-bg-hide {
+.charsheet .sheet-battle-group[value="0"] ~ .flex.main-page div.sheet-tab-combat-sheet .sheet-bg-show,
+.charsheet .sheet-battle-group[value="1"] ~ .flex.main-page div.sheet-tab-combat-sheet .sheet-bg-hide {
     display: none;
 }
 
@@ -2870,7 +2919,7 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ div.personal-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
-.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-content .caste-have-exc-toggle {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-content .caste-have-exc-toggle {
     display: none;
 }
 
@@ -3220,10 +3269,6 @@ body.sheet-darkmode {
     width: 2em;
 }
 
-.charsheet .combat-attacks .sheet-atk-decisive-init-to-reset {
-    width: 3em;
-}
-
 .charsheet .sheet-tab-spell-sheet .cost-section {
     display: inline-flex;
     width: 5em;
@@ -3328,44 +3373,38 @@ body.sheet-darkmode {
 .charsheet .rolls-textarea,
 .charsheet .combat-textarea {
     display: none;
-    width: 98.8%;
+    width: calc(100% - 1em);
     margin-bottom: 0.5em;
+    margin-left: 1px;
     resize: vertical;
     height: 3em;
     background: transparent;
 }
 
-textarea,
-.charsheet .rolls-textarea,
-.charsheet .combat-textarea {
+textarea {
     cursor: auto;
+}
+
+textarea {
     scrollbar-width: thin;
     scrollbar-color: #90A4AE #CFD8DC;
 }
 
-textarea::-webkit-scrollbar,
-.charsheet .rolls-textarea::-webkit-scrollbar,
-.charsheet .combat-textarea::-webkit-scrollbar {
+textarea::-webkit-scrollbar {
     width: 9px;
 }
 
-textarea::-webkit-scrollbar-thumb,
-.charsheet .rolls-textarea::-webkit-scrollbar-thumb,
-.charsheet .combat-textarea::-webkit-scrollbar-thumb {
+textarea::-webkit-scrollbar-thumb {
     background-color: #90A4AE;
     border-radius: 5px;
     border: 1px solid #CFD8DC;
 }
 
-textarea::-webkit-scrollbar-thumb:hover,
-.charsheet .rolls-textarea::-webkit-scrollbar-thumb:hover,
-.charsheet .combat-textarea::-webkit-scrollbar-thumb:hover {
+textarea::-webkit-scrollbar-thumb:hover {
     background-color: #7a8991;
 }
 
-textarea::-webkit-scrollbar-track,
-.charsheet .rolls-textarea::-webkit-scrollbar-track,
-.charsheet .combat-textarea::-webkit-scrollbar-track {
+textarea::-webkit-scrollbar-track {
     background: #CFD8DC;
 }
 
@@ -3475,7 +3514,7 @@ textarea::-webkit-scrollbar-track,
     }
 }
 
-@media only screen and (max-width: 395px) {
+@media only screen and (max-width: 401px) {
     /* button alignment for pc only */
     .ui-dialog .charsheet .combat-attacks .attack-section.hide-on-edit .inner-section {
         justify-content: flex-end;
@@ -3534,6 +3573,26 @@ textarea::-webkit-scrollbar-track,
 @media only screen and (max-width: 580px) {
     .combat-attacks .attack-section.decisive-section .dmg-section > div.flex.grow-normal:first-child {
         min-width: 20em;
+    }
+}
+
+@media only screen and (max-width: 335px) {
+    .combat-attacks .attack-section.decisive-section .dmg-section > div.flex.grow-normal:first-child {
+        min-width: 19em;
+    }
+}
+
+.charsheet .combat-attacks .attack-section input[type="text"].sheet-wdmg-bonus-dices {
+    width: 5.31em;
+}
+
+.charsheet .combat-attacks .attack-section input[type="text"].sheet-atk-decisive-init-to-reset {
+    width: 3em;
+}
+
+@media only screen and (max-width: 390px) {
+    .charsheet .combat-attacks .attack-section input[type="text"].sheet-atk-decisive-init-to-reset {
+        width: 1em;
     }
 }
 
@@ -3700,14 +3759,14 @@ textarea::-webkit-scrollbar-track,
     display: none;
 }
 
-.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="0"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-vanilla,
-.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="0"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-diceex,
-.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="1"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-succex,
-.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="1"] ~ .sheet-tab-character-sheet .sheet-exroll.exroll-full,
-.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="0"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-vanilla,
-.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="0"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-diceex,
-.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-succex,
-.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="1"] ~ .sheet-tab-rolls-sheet .sheet-exroll.exroll-full {
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="0"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-exroll.exroll-vanilla,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="0"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-exroll.exroll-diceex,
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-exroll.exroll-succex,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-exroll.exroll-full,
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-exroll.exroll-vanilla,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-exroll.exroll-diceex,
+.charsheet .roll-diceex-check[value="0"] + .roll-succex-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-exroll.exroll-succex,
+.charsheet .roll-diceex-check[value="1"] + .roll-succex-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-exroll.exroll-full {
     display: flex;
     justify-content: center;
 }
@@ -4068,7 +4127,7 @@ textarea::-webkit-scrollbar-track,
     display: block;
 }
 
-.charsheet .caste-have-exc-check[value="1"] ~ .sheet-tab-content .sheet-qcattr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .sheet-qcattr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
     width: 300px;
     left: -192px;
 }
@@ -4124,8 +4183,8 @@ textarea::-webkit-scrollbar-track,
     justify-content: space-between;
 }
 
-.charsheet input.sheet-tab-rolls-std-sheet:checked ~ div.sheet-tab-rolls-std-sheet,
-.charsheet input.sheet-tab-rolls-widget-sheet:checked ~ div.sheet-tab-rolls-widgets-sheet {
+.charsheet input.sheet-tab-rolls-std-sheet:checked ~ .flex.main-page div.sheet-tab-rolls-std-sheet,
+.charsheet input.sheet-tab-rolls-widget-sheet:checked ~ .flex.main-page div.sheet-tab-rolls-widgets-sheet {
     display: flex;
 }
 
@@ -4136,12 +4195,12 @@ textarea::-webkit-scrollbar-track,
 
 .charsheet .rolls-area {
     display: flex;
+    height: calc(100% - 6em);
+    overflow: hidden;
 }
 
-.charsheet .rolls-area,
-.charsheet .right-column-notepads,
-.charsheet .rolls-area .rollpad {
-    height: 100%;
+.charsheet .rolls-area .sheet-rolls-div {
+    overflow: auto;
 }
 
 .charsheet .rolls-area .rollpad textarea {
@@ -4632,24 +4691,24 @@ and (min-resolution:.001dpcm) {
 }
 
 /* Hide Excellencies & Cap */
-.charsheet .caste-have-exc-check[value="0"]          ~ .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .caste-have-exc-check[value="0"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
     display: none;
 }
 
-.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .caste-have-exc-check[value="0"] ~ .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
     flex-basis: 50%;
 }
 
-.charsheet .caste-check[value="Exigent"]      ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section, /* will change */
-.charsheet .caste-check[value="Getimian"]     ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="God"]          ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="God-Blooded"]  ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Elemental"]    ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Demon"]        ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Undead"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Mortal"]       ~ .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
+.charsheet .caste-check[value="Exigent"]      ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section, /* will change */
+.charsheet .caste-check[value="Getimian"]     ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="God"]          ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="God-Blooded"]  ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Elemental"]    ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Demon"]        ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Undead"]       ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
+.charsheet .caste-check[value="Mortal"]       ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
     width: 100%;
 }
 
@@ -4719,11 +4778,13 @@ and (min-resolution:.001dpcm) {
 
     .charsheet .rolls-area {
         flex-flow: column;
+        overflow: visible;
     }
 
     .charsheet .left-column-rolls,
     .charsheet .right-column-notepads {
         width: unset;
+        margin-left: 0;
     }
 
     .charsheet .right-column-notepads {
