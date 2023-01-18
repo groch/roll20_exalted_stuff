@@ -2883,6 +2883,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-header > div.weapon-line {
     height: 7em;
+    min-height: 32px;
     overflow-y: auto;
     resize: vertical;
     scrollbar-width: thin;
