@@ -3353,20 +3353,25 @@ body.sheet-darkmode {
     font-weight: normal;
 }
 
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc:focus + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc:focus + span::before {
+    background: gray;
+}
+
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc:focus:hover + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc:focus:hover + span::before,
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:hover:checked + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:hover:checked + span::before,
 .charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:focus:checked + span::before,
 .charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:focus:checked + span::before {
     content: attr(title) "(*o*" attr(title) ")";
 }
 
+.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:focus:hover:checked + span::before,
+.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:focus:hover:checked + span::before,
 .charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc:focus + span::before,
 .charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input.sheet-combat-toggle-desc:focus + span::before {
     content: attr(title) "(*-*" attr(title) ")";
-    background: gray;
-}
-
-.charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input[type="checkbox"].sheet-rolls-toggle-desc:hover:checked + span::before,
-.charsheet .sheet-tab-combat-sheet .first-line .desc-toggle input[type="checkbox"].sheet-combat-toggle-desc:hover:checked + span::before {
-    content: attr(title) "('o'" attr(title) ")";
 }
 
 .charsheet .sheet-tab-rolls-sheet .first-line .desc-toggle input.sheet-rolls-toggle-desc:hover + span::before,
