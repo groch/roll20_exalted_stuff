@@ -297,6 +297,10 @@ tier 2: couleurs
     color: white;
 }
 
+.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .inverted-color input[type=number][disabled].rollpenalty.not-inverted {
+    border-color: black;
+}
+
 .sheet-darkmode .charsheet .roll-penalty-check[value="0"] ~ .rolls-area .inverted-color input[type=number][disabled].rollpenalty.not-inverted,
 .sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .rolls-area .inverted-color input[type=number][disabled].woundpenalty.not-inverted {
     color: black;
