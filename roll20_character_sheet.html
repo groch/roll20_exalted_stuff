@@ -17908,7 +17908,9 @@
                                                         </div>
                                                         <div class="inline-flex grow-normal">
                                                             <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0">-
-                                                            <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty not-inverted" data-formula="@{roll-penalty}">-
+                                                            <input type="hidden" value="@{roll-penalty}" disabled="disabled" name="attr_rollpenalty2">
+                                                            <span name="attr_rollpenalty2" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." class="rollpenalty not-inverted"></span>-
+                                                            <!-- <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty not-inverted" data-formula="@{roll-penalty}">- -->
                                                             <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty not-inverted" data-formula="@{wound-penalty}">
                                                         </div>
                                                     </div>
