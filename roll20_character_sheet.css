@@ -4204,8 +4204,13 @@ textarea::-webkit-scrollbar-track {
 
 .charsheet .rolls-area {
     display: flex;
-    height: calc(100% - 6em);
+    padding-top: 1em;
+    height: calc(100% - 6.5em);
     overflow: hidden;
+}
+
+.sheet-tab-rolls-widgets-sheet .rolls-area {
+    height: calc(100% - 7.3em);
 }
 
 .charsheet .rolls-area .sheet-rolls-div {
@@ -4214,7 +4219,7 @@ textarea::-webkit-scrollbar-track {
 }
 
 .charsheet .rolls-area .rollpad textarea {
-    height: 100%;
+    height: calc(100% - 2px);
     width: 100%;
     padding: 0;
     margin: 0;
