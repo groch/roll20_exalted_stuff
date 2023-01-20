@@ -3859,6 +3859,7 @@ textarea::-webkit-scrollbar-track {
     flex-wrap: wrap;
     justify-content: space-between;
     padding-bottom: 1em;
+    margin-bottom: 1em;
     border-bottom: gold 3px solid;
     border-radius: 2px;
     align-items: center;
