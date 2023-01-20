@@ -2525,6 +2525,7 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect .charm-buttons-include-check[value="1"] ~ input[type="text"] {
     border: 1px solid darkgreen;
     border-radius: 5px 5px;
+    background-color: #00FF0020;
 }
 
 .charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect textarea,
