@@ -753,8 +753,16 @@ tier 2: couleurs
     align-items: start;
 }
 
+.charsheet .repcontainer[data-groupname="repeating_qcattacks"] .sheet-trait {
+    grid-template-columns: auto calc(3em + 2px + (1.75em + 2px) * 2);
+}
+
 .charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .sheet-trait.four-cell {
     grid-template-columns: auto calc((1.75em + 2px) * 4);
+}
+
+.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .repcontainer[data-groupname="repeating_qcattacks"] .sheet-trait.four-cell {
+    grid-template-columns: auto calc(3em + 2px + (1.75em + 2px) * 3);
 }
 
 .charsheet .sheet-trait > div.sheet-dots {
@@ -795,7 +803,7 @@ tier 2: couleurs
     padding-left: 30px;
 }
 
-.charsheet [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"] {
+.charsheet .main-page [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"].sheet-qc-attack-pool {
     font-size: 14px;
     width: 3em;
 }
@@ -808,11 +816,11 @@ tier 2: couleurs
     width: 100%;
 }
 
-.charsheet .sheet-trait input[type="number"],
-.charsheet .sheet-trait span input[type="text"]:not(.sheet-qc-soc-influence-type),
-.charsheet .sheet-motes input[type=number],
-.charsheet .sheet-motes input[type=text],
-.charsheet .sheet-battle-group-row input[type=number] {
+.charsheet .main-page .sheet-trait input[type="number"],
+.charsheet .main-page .sheet-trait span input[type="text"]:not(.sheet-qc-soc-influence-type, .sheet-qc-attack-pool),
+.charsheet .main-page .sheet-motes input[type=number],
+.charsheet .main-page .sheet-motes input[type=text],
+.charsheet .main-page .sheet-battle-group-row input[type=number] {
     width: 1.75em;
     font-size: 14px;
 }
