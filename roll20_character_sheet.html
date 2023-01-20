@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.50, debug = 1;
+    const version = 2.51, debug = 1;
     var TAS;
 
     /**
@@ -444,33 +444,49 @@
         setAttrs({'displayed-essence': (displayedMotes === 0 && persoMax === 0 && periMax === 0) ? '' : displayedMotes});
     }));
 
+    const casteTree = {
+        Solar:      ["Dawn",        "Zenith",           "Twilight",     "Night",        "Eclipse"],
+        Abyssal:    ["Dusk",        "Midnight",         "Daybreak",     "Day",          "Moonshadow"],
+        Infernal:   ["Defiler",     "Fiend",            "Malefactor",   "Scourge",      "Slayer"],
+        DB:         ["Air",         "Earth",            "Fire",         "Water",        "Wood"],
+        Lunar:      ["Full Moon",   "Changing Moon",    "No Moon",      "Casteless"],
+        Alchemical: ["Adamant",     "Jade",             "Moonsilver",   "Orichalcum",   "Soulsteel", "Starmetal"],
+        Sidereal:   ["Journeys",    "Serenity",         "Battles",      "Secrets",      "Endings"],
+        Liminal:    ["Blood",       "Breath",           "Flesh",        "Marrow",       "Soil"]
+    };
+    function isSolar(caste)         { return (caste && typeof caste === 'string' && casteTree.Solar.includes(caste)); }
+    function isAbyssal(caste)       { return (caste && typeof caste === 'string' && casteTree.Abyssal.includes(caste)); }
+    function isInfernal(caste)      { return (caste && typeof caste === 'string' && casteTree.Infernal.includes(caste)); }
+    function isDB(caste)            { return (caste && typeof caste === 'string' && casteTree.DB.includes(caste)); }
+    function isLunar(caste)         { return (caste && typeof caste === 'string' && casteTree.Lunar.includes(caste)); }
+    function isAlchemical(caste)    { return (caste && typeof caste === 'string' && casteTree.Alchemical.includes(caste)); }
+    function isSidereal(caste)      { return (caste && typeof caste === 'string' && casteTree.Sidereal.includes(caste)); }
+    function isLiminal(caste)       { return (caste && typeof caste === 'string' && casteTree.Liminal.includes(caste)); }
+
     on('change:caste', TAS._fn(async function updateMotePool(eventInfo){
         const caste = await getSingleAttrAsync("caste");
-        let periEquation = "0", persEquation = "0", showAnima = 1,
-            showSupernal = 0,   showLimit = 0,
-            casteLow = 'unknown',
-            succEx = 0,         diceEx = 1;
-        if (["Dawn",    "Zenith",   "Twilight",   "Night",      "Eclipse",
-                "Dusk",    "Midnight", "Daybreak",   "Day",        "Moonshadow",
-                "Defiler", "Fiend",    "Malefactor", "Scourge",    "Slayer"].includes(caste)) {
+        let periEquation = "0",   persEquation = "0", showAnima = 1,
+            showSupernal = 0,     showLimit = 0,
+            casteLow = 'unknown', exaltType = 'None',
+            succEx = 0,           diceEx = 1;
+        if ([...casteTree.Solar, ...casteTree.Abyssal, ...casteTree.Infernal].includes(caste)) {
             persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
             periEquation = "@{essence} * 7 + 26 - @{committedesstotal}";
             showSupernal = 1;
             showLimit = 1;
-        } else if (["Air", "Earth", "Fire", "Water", "Wood"].includes(caste)){
+        } else if (casteTree.DB.includes(caste)){
             persEquation = "@{essence} * 1 + 11 - @{committedessperso}";
             periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
-        } else if (["Full Moon", "Changing Moon", "No Moon",    "Casteless",
-                    "Adamant",   "Jade",          "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal"].includes(caste)){
+        } else if ([...casteTree.Lunar, ...casteTree.Alchemical].includes(caste)){
             persEquation = "@{essence} * 1 + 15 - @{committedessperso}";
             periEquation = "@{essence} * 4 + 34 - @{committedesstotal}";
             showLimit = 1;
             succEx = 1;
-        } else if (["Journeys", "Serenity", "Battles", "Secrets", "Endings"].includes(caste)){
+        } else if (casteTree.Sidereal.includes(caste)){
             persEquation = "@{essence} * 2 + 9 - @{committedessperso}";
             periEquation = "@{essence} * 6 + 25 - @{committedesstotal}";
             showLimit = 1;
-        } else if (["Blood", "Breath", "Flesh", "Marrow", "Soil"].includes(caste)){
+        } else if (casteTree.Liminal.includes(caste)){
             persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
             periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
             succEx = 1;
@@ -494,6 +510,13 @@
             return;
         }
 
+        for (const exaltTypeName of Object.keys(casteTree)) {
+            if (casteTree[exaltTypeName].includes(caste)) {
+                exaltType = exaltTypeName;
+                break;
+            }
+        }
+
         if (hasCasteImg(caste))
             casteLow = caste.toLowerCase();
 
@@ -506,7 +529,8 @@
             "caste-low": casteLow,
             "caste-have-exc": succEx || diceEx,
             "diceex": diceEx,
-            "succex": succEx
+            "succex": succEx,
+            "exalt-type": exaltType
         };
         TAS.debug(`updateMotePool:: Setting=`, finalObj);
         setAttrs(finalObj);
@@ -536,6 +560,7 @@
         {version: 2.47, fn: upgradeto248},
         {version: 2.48, fn: upgradeto249},
         {version: 2.49, fn: upgradeto250},
+        {version: 2.50, fn: upgradeto251},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -676,6 +701,18 @@
         '19': '19[RAW]',
         '20': '20[RAW]'
     };
+
+    async function upgradeto251() {
+        let exaltType = 'None';
+        const caste = await getSingleAttrAsync('caste');
+        for (const exaltTypeName of Object.keys(casteTree)) {
+            if (casteTree[exaltTypeName].includes(caste)) {
+                exaltType = exaltTypeName;
+                break;
+            }
+        }
+        setAttrs({"exalt-type": exaltType, 'version': version});
+    }
 
     async function upgradeto250() {
         setAttrs({
@@ -1341,24 +1378,6 @@
         finishRoll(results.rollId);
     }));
 
-    on('clicked:repeating_rolls:roll-cast clicked:repeating_rolls:roll-gmcast clicked:repeating_combat-init:init-cast clicked:repeating_combat-init:init-gmcast', setDebugWrapper(async function castRoll(e){
-        if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
-        const section = e.sourceAttribute.split('_')[1];
-        const id = e.sourceAttribute.split('_')[2];
-        const buttonClickedIsGm = e.sourceAttribute.split('_')[3].split('-')[1] === 'gmcast';
-        const subSection = section === 'rolls' ? 'reprolls-' : 'repinit-';
-        const attr_name = `repeating_${section}_${id}_`;
-        await computeRepeatingRollCostAsync(e);
-        await computeIdRepeatingRollAsync(section, id, subSection, initSectionsToBind, defaultInitFinalExpr, '', false);
-        const values = await getAttrsAsync([`${attr_name}${subSection}final-macro-replaced`, `${attr_name}rep-cost-macro`]);
-        let queryRoll = !buttonClickedIsGm ?
-            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
-            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
-        if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
-        const results = await startRoll(queryRoll);
-        finishRoll(results.rollId);
-    }));
-
     on('clicked:repeating_combat-attack:cbt-watk-cast clicked:repeating_combat-attack:cbt-watk-gmcast '
       +'clicked:repeating_combat-attack:cbt-wdmg-cast clicked:repeating_combat-attack:cbt-wdmg-gmcast '
       +'clicked:repeating_combat-attack:cbt-datk-cast clicked:repeating_combat-attack:cbt-datk-gmcast '
@@ -1998,6 +2017,7 @@
         <input class="caste-check" name="attr_caste" type="hidden">
         <input name="attr_force-exc" type="hidden" value="0">
         <input class="caste-have-exc-check" name="attr_caste-have-exc" type="hidden" value="0">
+        <input class="exalt-type-check" name="attr_exalt-type" type="hidden" value="None">
 
         <div class="flex main-page">
             <!-- 1 CHARACTER PAGE -->
