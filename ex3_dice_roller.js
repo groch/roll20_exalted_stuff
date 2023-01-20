@@ -949,7 +949,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         title:           'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
         titleText:       'color:white',
         overflow:        'overflow: hidden;',
-        buttonRight:     'display:inline-block;float:right;vertical-aligh:middle'
+        buttonRight:     'display:inline-block;float:right;vertical-aligh:middle',
+        defaultDivStyle: 'display:inline-block;width:100%;vertical-align:middle;'
     };
 
     // Script specific CONST
@@ -1201,7 +1202,9 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     },
 
     sendMoteWhispers = (characterObj, characterId, attr, current, toRemove) => {
-        const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attr.get('name')}</b>`;
+        const attrName = attr.get('name');
+        const attrNameStylised = attrName.indexOf('personal') !== -1 ? attrName : `<u>${attrName}</u>`;
+        const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attrNameStylised}</b>`;
         let controlledBy = characterObj.get('controlledby');
         controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
         attr.set('current', current - toRemove);
@@ -1213,18 +1216,23 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${playerId}`);
                 continue;
             }
-            sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString);
+            sendStylizedMoteWhisper(outString, attrName, playerObj.get('_displayname'));
         }
 
-        sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
+        sendStylizedMoteWhisper(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
             const playerObj = getObj('player', i);
             if (playerObj) return playerObj.get('_displayname');
             logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
             return false;
-        }).filter(i => i).join(', ')}])` : ''}`);
+        }).filter(i => i).join(', ')}])` : ''}`, attrName);
 
         if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
             sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');
+    },
+
+    sendStylizedMoteWhisper = (outString, attrName, playerStrName = 'gm') => {
+        if (attrName.indexOf('personal') !== -1) sendWhisperStandardScriptMessage(playerStrName, outString, '', `${styles.defaultDivStyle}font-style:italic;`, false, 'background: #333;');// linear-gradient(transparent, gray, transparent)
+        else                                     sendWhisperStandardScriptMessage(playerStrName, outString, '', `${styles.defaultDivStyle}color:orange;`, false, 'background: darkred;');// linear-gradient(transparent, darkred)
     },
 
     /**
@@ -1268,15 +1276,15 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
      * GENERIC SEND WHISPER FUNCTIONS
      */
 
-    sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
+    sendStandardScriptMessage = (innerHtml, image = '', divStyle = styles.defaultDivStyle, noarchive = false) => {
         sendChat(script_name, '<div style="' + styles.menu + '"><div style="display:inherit;">' + (image != '' ? '<div style="text-align:center;">' + image + '</div>' : '') + '<div style="' + divStyle + '">' + innerHtml + '</div></div></div>', null, { noarchive: noarchive });
     },
 
-    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
+    sendWhisperStandardScriptMessage = (whisperName, innerHtml, image = '', divStyle = styles.defaultDivStyle, noarchive = false, rootDivStyle = '') => {
         sendChat(script_name, '/w ' + whisperName + ' <div style="' + styles.menu + rootDivStyle + '"><div style="display:inherit;">' + (image != '' ? '<div style="text-align:center;">' + image + '</div>' : '') + '<div style="' + divStyle + '">' + innerHtml + '</div></div></div>', null, { noarchive: noarchive });
     },
 
-    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false, rootDivStyle = '') => {
+    sendGMStandardScriptMessage = (innerHtml, image = '', divStyle = styles.defaultDivStyle, noarchive = false, rootDivStyle = '') => {
         sendWhisperStandardScriptMessage('gm', innerHtml, image, divStyle, noarchive, rootDivStyle);
     },
 
