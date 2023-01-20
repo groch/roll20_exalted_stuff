@@ -1916,7 +1916,7 @@ and (min-resolution:.001dpcm) {
     width: 12em;
     height: 28px;
     margin-right: 2px;
-    flex-grow: 2;
+    flex-grow: 4;
     color: #0095c6;
     font-weight: bold;
 }
@@ -1928,7 +1928,7 @@ and (min-resolution:.001dpcm) {
 
 .charsheet input.sheet-charms-spells-trait-short-desc {
     width: 6em;
-    flex-grow: 10;
+    flex-grow: 20;
 }
 
 .charsheet button.sheet-roll {
@@ -3178,7 +3178,8 @@ body.sheet-darkmode {
     border-radius: 5px;
 }
 
-.rounded-box *:last-child {
+.rounded-box > label:last-child *:last-child,
+.rounded-box > *:last-child {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
@@ -3314,6 +3315,36 @@ body.sheet-darkmode {
     margin: 0;
 }
 
+.cost-section select {
+    width: 5.5em;
+    padding-bottom: 0px;
+    height: 25px;
+}
+
+.cost-section select option {
+    background-color: gray;
+    color: white;
+}
+
+.cost-section select option[value="1"] {
+    background-color: orangered;
+    color: white;
+}
+
+.cost-section select option[value="0"] {
+    background-color: black;
+    color: white;
+}
+
+.cost-section select:has(option[value="1"]:checked) {
+    background-color: rgba(255, 68, 0, 0.5);
+}
+
+.cost-section select:has(option[value="0"]:checked) {
+    background-color: black;
+    color: white;
+}
+
 .ui-dialog .ressource-line p label {
     color: black;
 }
@@ -3330,10 +3361,17 @@ body.sheet-darkmode {
 }
 
 .ressource-line p label,
-.cost-section p label,
+.sheet-tab-combat-sheet .cost-section p label,
+.sheet-tab-rolls-sheet .cost-section p label,
 .weapon-section p label,
 .dmg-section p.dark-init-color label {
     display: flex;
+}
+
+.ressource-line p label,
+.cost-section p label,
+.weapon-section p label,
+.dmg-section p.dark-init-color label {
     font-size: 13px;
     font-weight: normal;
     align-items: center;
