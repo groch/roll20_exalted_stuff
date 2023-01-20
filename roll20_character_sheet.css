@@ -2583,6 +2583,8 @@ body.sheet-darkmode {
     --bs-default-blurbig: 12px;
     --bs-spell-color: purple;
     --bs-charm-color: gold;
+    --bs-charm-warning-color: red;
+    --bs-charm-warning-color-dark: darkred;
     --bs-charm-color-dark: rgba(255, 217, 0, 0.5);
     --bs-header-color: #0b0;
     --bs-init-color: rgb(255, 204, 0);
@@ -4637,7 +4639,8 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-3"] ~ input.exc-sum,
 .charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-2"] ~ input.exc-sum,
 .charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-1"] ~ input.exc-sum {
-    background-color: darkred;
+    background-color: var(--bs-charm-warning-color-dark);
+}
 }
 
 .charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input.exc-sum {
