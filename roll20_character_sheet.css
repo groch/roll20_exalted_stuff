@@ -373,14 +373,8 @@ tier 2: couleurs
 }
 
 
-.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-character-sheet .gm-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-sheet .gm-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-spell-sheet .gm-whisper,
-.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .sheet-tab-charm-sheet .gm-whisper,
+.charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .default-whisper,
+.charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .gm-whisper,
 .charsheet .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only
 {
     display: none;
@@ -394,22 +388,10 @@ tier 2: couleurs
     display: inline;
 }
 
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-character-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-character-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-character-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-rolls-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-rolls-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-rolls-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-spell-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-spell-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-spell-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-spell-sheet .sheet-roll.gm-whisper,
-.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .sheet-tab-charm-sheet .default-whisper,
-.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .sheet-tab-charm-sheet .gm-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-charm-sheet .sheet-roll.default-whisper,
-.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-tab-charm-sheet .sheet-roll.gm-whisper {
+.charsheet .charm-whisper-gm-check[value="0"]   ~ .flex.main-page .default-whisper,
+.charsheet .charm-whisper-gm-check[value="1"]   ~ .flex.main-page .gm-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-roll.default-whisper,
+.charsheet .charm-whisper-both-check[value="1"] ~ .flex.main-page .sheet-roll.gm-whisper {
     display: inline-block;
 }
 
@@ -2614,7 +2596,6 @@ body.sheet-darkmode {
 
 .sheet-tab-spell-sheet .repcontainer .repitem,
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem,
-.sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem,
 .charsheet .sheet-tab-combat-sheet .combat-header,
 .charsheet .sheet-tab-combat-sheet .combat-init .repitem,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
@@ -5299,6 +5280,18 @@ test removing :after which i assume prevent roll20 clicks
 
 /* .ui-dialog .charsheet => NOT ON COMPANION !!! */
 /* --- MOBILE SHEET PAYSAGE --- */
+
+.sheet-grouped-buttons .interactive-roll {
+    display: none;
+}
+
+.ui-dialog .sheet-grouped-buttons .interactive-roll {
+    display: block;
+}
+
+.ui-dialog .sheet-grouped-buttons .companion-roll {
+    display: none;
+}
 
 @media only screen and (max-width: 854px) {
 
