@@ -1808,6 +1808,29 @@
         computeIdRepeatingRoll('rolls-widget', e.sourceAttribute.split('_')[2], 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }));
 
+    /* *************************** */
+    /* * Inputs to Spans SECTION * */
+    /* *************************** */
+
+    const attrToPushOnUpdate = ['roll-penalty'];
+    const allRepeatablesToPush = ['rolls-widget'];
+
+    attrToPushOnUpdate.forEach(attrName => on(`change:${attrName}`, setDebugWrapper(async (e) => {
+        // if (debug === 2)
+            TAS.debug(`pushGlobalToRepeatables::pushGlobalToRepeatables e=${JSON.stringify(e)}`);
+        if (isNaN(e.newValue) && isNaN(e.previousValue)) return;
+        const value = Number(e.newValue) || 0;
+        let finalSetObj = {};
+        for (const sectionName of allRepeatablesToPush) {
+            const sectionIds = await getSectionIDsAsync(sectionName);
+            for (const id of sectionIds)
+                finalSetObj[`repeating_${sectionName}_${id}_${attrName}`] = value;
+        }
+        // if (debug === 2)
+            TAS.debug(`pushGlobalToRepeatables:: finalSetObj=${JSON.stringify(finalSetObj)}`);
+        setAttrs(finalSetObj);
+    })));
+
     /* ****************** */
     /* * UTILIY SECTION * */
     /* ****************** */
@@ -2052,6 +2075,8 @@
         <input name="attr_force-exc" type="hidden" value="0">
         <input class="caste-have-exc-check" name="attr_caste-have-exc" type="hidden" value="0">
         <input class="exalt-type-check" name="attr_exalt-type" type="hidden" value="None">
+        <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
+        <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
 
         <div class="flex main-page">
             <!-- 1 CHARACTER PAGE -->
@@ -4264,7 +4289,6 @@
                             <span title="(Dex + Brawl)/2">Unarmed Parry</span>:
                             <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                             <input type="hidden" class="onslaught-check" name="attr_onslaught">
-                            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                             <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                             <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
@@ -4280,7 +4304,6 @@
                         <div class="flex grow-normal">
                             <span title="Dexterity + Dodge">Evasion</span>:
                             <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                             <input type="hidden" value="(@{dexterity} + @{dodge})" disabled="disabled" name="attr_evasion-root">
                             <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
                             <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_evasion-base">
@@ -4301,7 +4324,6 @@
                         </div>
                         <div class="flex grow-normal">
                             <span title="Wits + Integrity">Resolve</span>:
-                            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                             <input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
                             <input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
                             <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
@@ -4317,7 +4339,6 @@
                         </div>
                         <div class="flex grow-normal">
                             <span title="Manipulation + Socialize">Guile</span>:
-                            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                             <input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
                             <input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
                             <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
@@ -10655,8 +10676,6 @@
                         </p>
                     </div>
                 </div>
-                <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
-                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                 <div class="rolls-area">
                     <div class="left-column-rolls">
                         <div class="sheet-exroll-div">
@@ -14329,12 +14348,10 @@
                     <div class="flex grow-normal rollpen-box">
                         <p class="flex grow-normal rounded-box">
                             RollPen:
-                            <input type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
+                            <input id="rollpen-input-widget" type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
                         </p>
                     </div>
                 </div>
-                <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
-                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                 <div class="rolls-area">
                     <div class="left-column-rolls">
                         <div class="sheet-exroll-div">
@@ -17908,9 +17925,7 @@
                                                         </div>
                                                         <div class="inline-flex grow-normal">
                                                             <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0">-
-                                                            <input type="hidden" value="@{roll-penalty}" disabled="disabled" name="attr_rollpenalty2">
-                                                            <span name="attr_rollpenalty2" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." class="rollpenalty not-inverted"></span>-
-                                                            <!-- <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty not-inverted" data-formula="@{roll-penalty}">- -->
+                                                            <label for="rollpen-input-widget"><span name="attr_roll-penalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." class="rollpenalty not-inverted"></span></label>-
                                                             <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty not-inverted" data-formula="@{wound-penalty}">
                                                         </div>
                                                     </div>
@@ -18401,7 +18416,6 @@
                                     <span title="(Dex + Brawl)/2">Unarmed Parry</span>:
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" class="onslaught-check" name="attr_onslaught">
-                                    <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                                     <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                                     <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
@@ -18417,7 +18431,6 @@
                                 <div class="flex grow-normal">
                                     <span title="Dexterity + Dodge">Evasion</span>:
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                                     <input type="hidden" value="(@{dexterity} + @{dodge})" disabled="disabled" name="attr_evasion-root">
                                     <input type="hidden" value="(@{evasion-root} + 1)" disabled="disabled" name="attr_evasion-root-s">
                                     <input type="hidden" value="(ceil(@{evasion-root} / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_evasion-base">
@@ -18438,7 +18451,6 @@
                                 </div>
                                 <div class="flex grow-normal">
                                     <span title="Wits + Integrity">Resolve</span>:
-                                    <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                                     <input type="hidden" value="(@{wits} + @{integrity})" disabled="disabled" name="attr_resolve-root">
                                     <input type="hidden" value="(@{resolve-root} + 1)" disabled="disabled" name="attr_resolve-root-s">
                                     <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
@@ -18454,7 +18466,6 @@
                                 </div>
                                 <div class="flex grow-normal">
                                     <span title="Manipulation + Socialize">Guile</span>:
-                                    <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                                     <input type="hidden" value="(@{manipulation} + @{socialize})" disabled="disabled" name="attr_guile-root">
                                     <input type="hidden" value="(@{guile-root} + 1)" disabled="disabled" name="attr_guile-root-s">
                                     <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
@@ -21482,8 +21493,6 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
-                <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
                 <div class="combat-init">
                     <input type="checkbox" name="attr_combat-init-display" class="sheet-initeffect" value="1"><span class="sheet-spelleffect" title="Show Initiative Rolls"></span>
                     <div class="sheet-init-div">
