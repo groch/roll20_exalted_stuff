@@ -1307,10 +1307,6 @@
         const attr_name = `repeating_${repSectionName}_${id}_`;
 
         if (debug === 2) TAS.debug(`computeRepeatingRollCost:: attr_name=${attr_name}`);
-        if (e.sourceType === "sheetworker") {
-            TAS.debug('computeRepeatingRollCost:: SHEETWORKER TRIGGER ?!?!?!?');
-            return;
-        }
         const val = await getAttrsAsync(costAttrs.map(attr => attr_name + attr));
         if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
         const mote = val[attr_name + 'rep-cost-mote'],
@@ -1416,6 +1412,36 @@
         }
     }));
 
+    //backup for companion
+    ['combat-init', 'combat-attack'].forEach(i => on(`change:repeating_${i}:combat-toggle-desc`, setDebugWrapper(fullCompute)));
+    on(`change:repeating_rolls:reprolls-toggle-desc`, setDebugWrapper(fullCompute));
+
+    function fullCompute(e) {
+        const repeatingSectionName = e.sourceAttribute.split('_')[1];
+        computeRepeatingRollCost(e);
+        if (repeatingSectionName !== 'combat-attack') {
+            computeRepeatingRoll(e, initSectionsToBind, defaultInitFinalExpr, repeatingSectionName === 'rolls' ? 'reprolls-' : 'repinit-');
+        } else {
+            computeRepeatingRoll(e, wAtkAttrsToBind, defaultWAttackFinalExpr, 'repcombat-', 'watk-');
+            computeRepeatingRoll(e, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-');
+            computeRepeatingRoll(e, dAtkAttrsToBind, defaultDAttackFinalExpr, 'repcombat-', 'datk-');
+            computeRepeatingRoll(e, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-');
+
+            computeRepeatingRoll(e, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'repcombat-ddmg-', 'init-to-set-');
+        }
+    }
+
+    function computeRepeatingRoll(e, sectionToBind, finalExprCb, attributePrefix = '', finalAttrNameAttrPrefix = '') {
+        const repeatingSectionName = e.sourceAttribute.split('_')[1];
+        const id = e.sourceAttribute.split('_')[2];
+        if (id[0] !== '-') {
+            if (debug === 2) TAS.debug(`computeRepeatingRoll:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
+            return;
+        }
+        if (debug === 2) TAS.debug(`computeRepeatingRoll::computeRepeatingRoll e=${JSON.stringify(e)}`);
+        computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
+    }
+
     function computeIdRepeatingRollAsync(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
         return new Promise((resolve,reject)=>{
             try  { computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced,(values)=>{ resolve(values); }); }
@@ -1425,17 +1451,17 @@
         const attr_name = `repeating_${repeatingSectionName}_${id}_${attributePrefix}`;
 
         const val = await getAttrsAsync([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)]);
-        if (debug === 2) TAS.debug(`computeRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
+        if (debug === 2) TAS.debug(`computeIdRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
         const replaced = replaceRoll20AttrInArray(attr_name, sectionToBind, val);
 
         if (!setIfReplaced || replaced) {
-            if (debug === 2) TAS.debug(`computeRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
+            if (debug === 2) TAS.debug(`computeIdRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
             let finalExpr = finalExprCb(val, attr_name);
             let finalAttrName = attr_name + finalAttrNameAttrPrefix + 'final-macro-replaced';
-            TAS.debug(`computeRepeatingRoll:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
+            TAS.debug(`computeIdRepeatingRoll:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
             await setAttrsAsync({ [finalAttrName]: finalExpr });
         } else {
-            TAS.debug(`computeRepeatingRoll:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
+            TAS.debug(`computeIdRepeatingRoll:: NOT SETTING ! setIfReplaced=${setIfReplaced} replaced=${replaced}`);
         }
         if (cb) cb();
     }
@@ -1774,6 +1800,12 @@
         };
         setAttrs(resetObj);
         finishRoll(results.rollId);
+    }));
+
+    //backup for companion
+    on(`change:repeating_rolls-widget:reprolls-toggle-desc`, setDebugWrapper((e) => {
+        updateRollWidgetForCost(e);
+        computeIdRepeatingRoll('rolls-widget', e.sourceAttribute.split('_')[2], 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }));
 
     /* ****************** */
