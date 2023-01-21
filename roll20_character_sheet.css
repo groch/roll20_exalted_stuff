@@ -2559,6 +2559,10 @@ body.sheet-darkmode {
     padding: 0px 4px 0px;
 }
 
+.sheet-tab-rolls-std-sheet .repcontainer {
+    padding: 4px 4px 0px;
+}
+
 .sheet-tab-spell-sheet .repcontainer .repitem,
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
     border: 4px solid transparent;
@@ -2572,6 +2576,7 @@ body.sheet-darkmode {
     --bs-default-noffsetbig: -3px;
     --bs-default-blur: 5px;
     --bs-default-blurbig: 12px;
+    --bs-rolls-color: gray;
     --bs-spell-color: purple;
     --bs-charm-color: gold;
     --bs-charm-warning-color: red;
@@ -2594,8 +2599,15 @@ body.sheet-darkmode {
     --bs-section-color: var(--bs-charm-color-dark);
 }
 
+.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer .repitem {
+    --bs-section-color: var(--bs-rolls-color);
+    padding: 5px;
+    border-radius: 5px;
+}
+
 .sheet-tab-spell-sheet .repcontainer .repitem,
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem,
+.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer .repitem,
 .charsheet .sheet-tab-combat-sheet .combat-header,
 .charsheet .sheet-tab-combat-sheet .combat-init .repitem,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
@@ -3024,6 +3036,12 @@ body.sheet-darkmode {
     width: calc(100% - 5.78em);
     color: red;
     font-weight: bold;
+}
+
+@media only screen and (max-width: 352px) {
+    .sheet-tab-rolls-std-sheet .sheet-rolls-name {
+        width: 100px;
+    }
 }
 
 .charsheet .sheet-tab-character-sheet .sheet-rolls-div p,
