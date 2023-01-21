@@ -4292,7 +4292,7 @@
                             <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                             <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                            <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                         </div>
                     </div>
                     <div class="flex-col">
@@ -4311,7 +4311,7 @@
                             <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
                             <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                            <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                         </div>
                     </div>
                     <div class="flex-col def-exc">
@@ -4329,7 +4329,7 @@
                             <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                             <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                            <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                         </div>
                     </div>
                     <div class="flex-col">
@@ -4344,7 +4344,7 @@
                             <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                             <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                            <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                         </div>
                     </div>
                 </div>
@@ -18419,7 +18419,7 @@
                                     <input type="hidden" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base">
                                     <input type="hidden" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parry-base-s">
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                                    <input type="number" value="@{parry-base}" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint"><input type="number" value="@{parry-base-s}" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                                 </div>
                             </div>
                             <div class="flex-col">
@@ -18438,7 +18438,7 @@
                                     <input type="hidden" value="@{evasion-base}"  disabled="disabled" name="attr_evasion-final">
                                     <input type="hidden" value="@{evasion-base-s}"  disabled="disabled" name="attr_evasion-final-s">
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                                    <input type="number" value="@{evasion-final}" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint"><input type="number" value="@{evasion-final-s}" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                                 </div>
                             </div>
                             <div class="flex-col def-exc">
@@ -18456,7 +18456,7 @@
                                     <input type="hidden" value="(ceil(@{resolve-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base">
                                     <input type="hidden" value="(ceil(@{resolve-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_resolve-base-s">
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                                    <input type="number" value="@{resolve-base}" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="@{resolve-base-s}" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                                 </div>
                             </div>
                             <div class="flex-col">
@@ -18471,7 +18471,7 @@
                                     <input type="hidden" value="(ceil(@{guile-root} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base">
                                     <input type="hidden" value="(ceil(@{guile-root-s} / 2) - abs(@{wound-penalty}))" disabled="disabled" name="attr_guile-base-s">
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap">
+                                    <input type="number" value="@{guile-base}" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="@{guile-base-s}" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly>
                                 </div>
                             </div>
                         </div>
