@@ -309,6 +309,11 @@ input[type="number"] {
     display: none;
 }
 
+.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .head-line .flex .qc-panel-check[value="1"] ~ .qc-toggle-display-inv.qc-have-exc {
+    display: inline-flex;
+    width: 27px;
+}
+
 .charsheet .sheet-defenses .flex-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv,
 .charsheet .sheet-col.stat-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
     display: flex;
