@@ -2471,7 +2471,7 @@ body.sheet-darkmode {
 
 .sheet-tab-spell-sheet .repcontainer,
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer,
-.sheet-tab-rolls-std-sheet .repcontainer,
+.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer,
 .sheet-tab-combat-sheet .combat-init .repcontainer,
 .sheet-tab-combat-sheet .combat-attacks .repcontainer {
     gap: 1em;
@@ -2480,7 +2480,7 @@ body.sheet-darkmode {
     padding: 0px 4px 0px;
 }
 
-.sheet-tab-rolls-std-sheet .repcontainer {
+.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer {
     padding: 4px 4px 0px;
 }
 
