@@ -102,9 +102,9 @@
     on('change:repeating_health remove:repeating_health', TAS._fn(updateWound));
     on('change:combat-crippling-pen change:combat-disable-pen change:woundpenalty-add', TAS._fn(updateWound));
 
-    async function sortHealthRepeatableSection(idHealthArray) {
-        var attribs = ["_reporder_repeating_health"];
-        for (const id of idHealthArray) attribs.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`);
+    async function sortHealthRepeatableSection(idHealthArray, healthFieldNames) {
+        var attribs = ["_reporder_repeating_health", ...healthFieldNames];
+        if (!healthFieldNames) for (const id of idHealthArray) attribs.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`);
         const v = await getAttrsAsync(attribs);
         var final_array = _(idHealthArray).chain().sortBy(function(id) {
             return v["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(v["repeating_health_" + id + "_hl-penalty"]);
@@ -122,10 +122,10 @@
         TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
 
         const idHealthArray = await getSectionIDsAsync("health");
-        sortHealthRepeatableSection(idHealthArray);
         let finalAttr = {};
         const healthFieldNames = [];
         idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
+        sortHealthRepeatableSection(idHealthArray, healthFieldNames);
 
         const valuesSections = await getAttrsAsync([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup']);
         let sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
