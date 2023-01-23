@@ -1406,6 +1406,7 @@
         if (!mote && !will && !init) {
             TAS.debug(`computeRepeatingRollCost:: NOTHING TO DO => RESET & QUIT`);
             setAttrs({[attr_name+'rep-cost-macro']: ''});
+            if (cb) cb();
             return;
         }
         let finalMacro = '=COST:@{character_id}';
