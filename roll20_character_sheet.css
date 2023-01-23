@@ -80,6 +80,7 @@ input[type="number"] {
 
 .charsheet .sheet-content {
     height: 100%;
+    min-height: 5em;
     display: flex;
     flex-direction: column;
 }
@@ -4417,7 +4418,7 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 .charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:checked + span::before {
     color: #0a0;
     content: "1";
-    height: 15px;
+    height: 16px;
     padding-top: 6px;
     padding-right: 0;
     border-width: 2px;
