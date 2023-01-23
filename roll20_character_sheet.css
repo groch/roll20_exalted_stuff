@@ -566,6 +566,20 @@ input[type="number"] {
     width: 6em;
 }
 
+.charsheet .mote-pool-eq {
+    column-gap: 1em;
+}
+
+.charsheet .mote-pool-eq label {
+    display: flex;
+    width: unset;
+    flex-grow: 1;
+}
+
+.charsheet .mote-pool-eq label input {
+    flex-grow: 1;
+}
+
 .charsheet .sheet-3colrow .sheet-col.stat-col {
 	width: 145px;
     display: flex;
@@ -1532,6 +1546,7 @@ and (min-resolution:.001dpcm) {
 
 .charsheet div.sheet-tab-content.sheet-tab-charm-sheet .charm-tab-list div.sheet-tab-content {
     height: 100%;
+    margin-top: 0;
 }
 
 .charsheet input.show-anima[value="1"] ~ div.anima-box,
@@ -1640,7 +1655,8 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet-old:checked				        ~ div.sheet-tab-charm-sheet-old,
 .charsheet input.sheet-tab-charm-sheet-universal:checked		        ~ div.sheet-tab-charm-sheet-universal
 {                                 
-   display: block;
+   display: flex;
+   flex-direction: column;
 }
 
 .charsheet .sheet-charm-archery[value="0"] 			    ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-archery,
@@ -1861,18 +1877,21 @@ and (min-resolution:.001dpcm) {
     margin: 0;
 }
 
-.charsheet input.sheet-charmeffect + span::before,.charsheet input.sheet-spelleffect + span::before {
+.charsheet input.sheet-charmeffect + span::before,
+.charsheet input.sheet-spelleffect + span::before {
     width: 100%;
     height: calc(100% - 3px);
     content: attr(title);
     text-align: center;
     line-height: 100%;
     font-size: 18px;
+    border-radius: 0 0 8px 8px;
 }
 
 .charsheet input.sheet-charmeffect:checked + span:before,
 .charsheet input.sheet-spelleffect:checked + span:before {
     content: attr(title) !important;
+    border-radius: 0;
 }
 
 .charsheet .sheet-charms-spells-trait{
@@ -1940,8 +1959,11 @@ and (min-resolution:.001dpcm) {
 
 .charsheet .sheet-tab-antisocial-sheet textarea,
 .charsheet .sheet-tab-intimacies-sheet textarea {
-    width: 98.8%;
+    width: calc(100% - 0.8em);
+    min-height: 10em;
     resize: vertical;
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
 /* --- ROLLTEMPLATES --- */
@@ -2458,6 +2480,7 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-spell-sheet .sheet-table-row .sheet-spell-effect > input[name="attr_charm-rollexpr"],
 .charsheet .sheet-tab-charm-sheet .sheet-table-row .sheet-charm-effect > input[name="attr_charm-rollexpr"] {
     width: 100%;
+    border-radius: 0 0 8px 8px;
 }
 
 .roll-section .dice-area-details > div:last-child > div:last-child label,
@@ -2863,13 +2886,13 @@ body.sheet-darkmode {
 /* -- INIT TOGGLER -- */
 
 .charsheet input.sheet-initeffect + span::before {
-    width: 99%;
-    height: 100%;
+    width: calc(100% - 0.15em);
+    height: 20px;
     content: attr(title);
     text-align: center;
     line-height: 100%;
     font-size: 18px;
-    margin-bottom: 1em;
+    margin-bottom: 1.5rem;
 }
 
 .charsheet input.sheet-initeffect:checked + span:before {
@@ -2890,7 +2913,7 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-combat-sheet .combat-init input.sheet-initeffect:checked ~ div.sheet-init-div {
     display: block;
-    margin-bottom: 1em;
+    margin-bottom: 1.5rem;
 }
 
 /* -- INIT -- */
@@ -3446,10 +3469,14 @@ textarea::-webkit-scrollbar-track {
 .charsheet span.rollpenalty {
     text-align: center;
     font-size: 16px;
-    line-height: 24px;
+    line-height: 23px;
     border-bottom: 1px solid black;
     border-radius: 3px;
     cursor: pointer;
+}
+
+.charsheet .sheet-tab-rolls-sheet .sheet-rolls-div span.rollpenalty {
+    padding-top: 1px;
 }
 
 .charsheet .sheet-tab-rolls-sheet .sheet-rolls-div .woundpenalty,
@@ -4371,7 +4398,7 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 .charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox] + span::before {
     color: #a00;
     content: "SPE";
-    height: 23px;
+    height: 24px;
     padding-right: 2px;
     border: 1px solid;
     border-radius: 5px;
