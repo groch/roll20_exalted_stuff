@@ -4518,11 +4518,11 @@ and (min-resolution:.001dpcm) {
     width: 1em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .ressource-line p {
+.charsheet .sheet-tab-rolls-sheet .ressource-line p {
     border: 5px solid transparent;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .ressource-line p.will-color {
+.charsheet .sheet-tab-rolls-sheet .ressource-line p.will-color {
     border: 1px solid;
     padding: 4px;
 }
