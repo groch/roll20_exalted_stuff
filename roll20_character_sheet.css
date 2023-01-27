@@ -3007,6 +3007,7 @@ body.sheet-darkmode {
 
 .charsheet .flex-col {
     flex-flow: column;
+    padding: 0;
 }
 
 .charsheet .flex-wrap {
