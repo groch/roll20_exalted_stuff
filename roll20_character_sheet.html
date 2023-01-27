@@ -251,10 +251,10 @@
     on('change:rollpenalty-input', TAS._fn(updateRollPenalty));
 
     async function updateRollPenalty() {
-        const rollpenalty = await getSingleAttrAsync('rollpenalty-input');
-        TAS.debug(`updateRollPenalty:: ${JSON.stringify(rollpenalty)}`);
-        const rollPenInput = Number(rollpenalty);
-        setAttrs({'roll-penalty': isNaN(rollPenInput) ? 0 : Math.abs(rollPenInput)});
+        const rollPenInput = await getSingleAttrAsync('rollpenalty-input');
+        TAS.debug(`updateRollPenalty:: ${JSON.stringify(rollPenInput)}`);
+        const rollPen = isNaN(Number(rollPenInput)) ? 0 : Math.abs(Number(rollPenInput));
+        setAttrs({'roll-penalty': rollPen, ...await repeatGlobalToRepeatableAttrToValue('roll-penalty', rollPen)});
     }
 
     on('sheet:opened', onCraftChange);
@@ -1903,24 +1903,31 @@
     /* * Inputs to Spans SECTION * */
     /* *************************** */
 
-    const attrToPushOnUpdate = ['roll-penalty'];
+    const attrToPushOnUpdate = [];
     const allRepeatablesToPush = ['rolls-widget'];
 
-    attrToPushOnUpdate.forEach(attrName => on(`change:${attrName}`, setDebugWrapper(async (e) => {
-        // if (debug === 2)
-            TAS.debug(`pushGlobalToRepeatables::pushGlobalToRepeatables e=${JSON.stringify(e)}`);
+    // attrToPushOnUpdate.forEach(attrName => on(`change:${attrName}`, setDebugWrapper(e => {
+    //     repeatGlobalToRepeatableAttr(attrName, e);
+    // })));
+
+    function repeatGlobalToRepeatableAttr(attrName, e) {
+        if (debug === 2) TAS.debug(`repeatGlobalToRepeatableAttr::repeatGlobalToRepeatableAttr e=${JSON.stringify(e)}`);
         if (isNaN(e.newValue) && isNaN(e.previousValue)) return;
         const value = Number(e.newValue) || 0;
+        setAttrs(repeatGlobalToRepeatableAttrToValue(attrName, value));
+    }
+
+    async function repeatGlobalToRepeatableAttrToValue(attrName, value) {
+        if (debug === 2) TAS.debug(`repeatGlobalToRepeatableAttrToValue::repeatGlobalToRepeatableAttrToValue`);
         let finalSetObj = {};
         for (const sectionName of allRepeatablesToPush) {
             const sectionIds = await getSectionIDsAsync(sectionName);
             for (const id of sectionIds)
                 finalSetObj[`repeating_${sectionName}_${id}_${attrName}`] = value;
         }
-        // if (debug === 2)
-            TAS.debug(`pushGlobalToRepeatables:: finalSetObj=${JSON.stringify(finalSetObj)}`);
-        setAttrs(finalSetObj);
-    })));
+        if (debug === 2) TAS.debug(`pushGlobalToRepeatables:: finalSetObj=${JSON.stringify(finalSetObj)}`);
+        return finalSetObj;
+    }
 
     /* ****************** */
     /* * UTILIY SECTION * */
@@ -17829,6 +17836,7 @@
                             <fieldset class="repeating_rolls-widget">
                                 <input type="hidden" name="attr_reprolls-separator-mode" class="rolls-separator-check" value="0">
                                 <input type="hidden" name="attr_reprolls-pool-starting" class="pool-starting-check" value="1">
+                                <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check" value="0">
                                 <div class="sheet-rolls">
                                     <input type="hidden" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit-val" value="0">
                                     <div class="first-line flex-wrap">
