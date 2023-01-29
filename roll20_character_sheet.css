@@ -160,6 +160,118 @@ input[type="number"] {
     background-image: none;
 }
 
+/* Simple */
+.charsheet .cover-bonus-check[value="1"] ~ .flex.main-page .cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color);
+}
+
+.charsheet .cover-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color);
+}
+
+.charsheet .clash-penalty-check[value="2"] ~ .flex.main-page .clash-taint {
+    outline: 2px solid var(--bs-clash-color);
+}
+
+.charsheet .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint {
+    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+}
+
+.charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint {
+    box-shadow: 0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled {
+    box-shadow: 0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+/* Double */
+.charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+}
+
+.charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+}
+
+.charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint {
+    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint {
+    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+/* Triple */
+.charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+}
+
+.charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+}
+
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .wound-taint {
@@ -2343,6 +2455,118 @@ body.sheet-darkmode {
     font-weight: bold;
 }
 
+/* Simple */
+.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .flex.main-page .cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color);
+}
+
+.sheet-darkmode .charsheet .clash-penalty-check[value="2"] ~ .flex.main-page .clash-taint {
+    outline: 2px solid var(--bs-clash-color);
+}
+
+.sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint {
+    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+}
+
+.sheet-darkmode .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint {
+    box-shadow: 0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled {
+    box-shadow: 0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+/* Double */
+.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint {
+    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint {
+    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+/* Triple */
+.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
+.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
+                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
+                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
+}
+
 .sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
 .sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .wound-taint {
@@ -2519,8 +2743,18 @@ body.sheet-darkmode {
     --bs-default-noffset: -1px;
     --bs-default-poffsetbig: 3px;
     --bs-default-noffsetbig: -3px;
+    --bs-default-poffsetbigger: 5px;
+    --bs-default-noffsetbigger: -5px;
+    --bs-default-poffsetbiggest: 7px;
+    --bs-default-noffsetbiggest: -7px;
     --bs-default-blur: 5px;
     --bs-default-blurbig: 12px;
+    --bs-light-cover-color: gray;
+    --bs-heavy-cover-color: gold;
+    --bs-grab-color: red;
+    --bs-prone-color: green;
+    --bs-prone-color-dark: lime;
+    --bs-clash-color: cyan;
     --bs-rolls-color: gray;
     --bs-spell-color: purple;
     --bs-charm-color: gold;
@@ -2733,7 +2967,7 @@ body.sheet-darkmode {
     flex-basis: 133px;
 }
 
-.sheet-defenses .flex-col:nth-child(2) {
+.sheet-defenses .flex-col:nth-of-type(1) {
     flex-basis: 100px;
 }
 
@@ -2742,10 +2976,10 @@ body.sheet-darkmode {
         order: 1;
     }
 
-    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(3),
-    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(4),
-    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(6),
-    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-child(7) {
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-of-type(2),
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-of-type(3),
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-of-type(5),
+    .sheet-tab-combat-sheet .sheet-defenses .flex-col:nth-of-type(6) {
         order: 2;
     }
 }
@@ -2755,10 +2989,10 @@ body.sheet-darkmode {
         order: 1;
     }
 
-    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(3),
-    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(4),
-    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(6),
-    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-child(7) {
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-of-type(2),
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-of-type(3),
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-of-type(5),
+    .sheet-tab-character-sheet .sheet-defenses .flex-col:nth-of-type(6) {
         order: 2;
     }
 }
