@@ -3,12 +3,18 @@
 
 on("ready", function() {
 
-    const theGM = findObjs({
-            type: 'player'
-        })
-        .find(o => playerIsGM(o.id)),
-        defaultColor = '#ffcc00';
+    const defaultColor = '#ffcc00';
+    let theGM = getGMObj();
     let originalColor, intervalId;
+
+    function getGMObj() {
+        return findObjs({type: 'player'}).find(o => playerIsGM(o.id));
+    }
+
+    function getGM() {
+        if (!theGM) theGM = findObjs({type: 'player'}).find(o => playerIsGM(o.id));
+        return theGM;
+    }
         
     // When page loads, ping pull to "Player" Token
     on("change:campaign:playerpageid", function() {
@@ -30,15 +36,15 @@ on("ready", function() {
 
     function getPlayerPageOrDefault(playerId) {
         const pages = Campaign().get("playerspecificpages");
-        if (playerId === theGM.get('_id'))
-            return theGM.get('_lastpage');
+        if (playerId === getGM().get('_id'))
+            return getGM().get('_lastpage');
         return (pages && (playerId in pages)) ? pages[playerId] : Campaign().get("playerpageid");
     }
 
     // !pingplayer - Finds and Ping Pulls player token
     on("chat:message", function(msg) {
         if (msg.type == "api" && msg.content.indexOf("!pingplayer") == 0)
-            pingPlayerToken(getPlayerPageOrDefault(msg.playerid), "Party", (theGM.get('_id') === msg.playerid) ? undefined : msg.playerid);
+            pingPlayerToken(getPlayerPageOrDefault(msg.playerid), "Party", (getGM().get('_id') === msg.playerid) ? undefined : msg.playerid);
     });
 
 
@@ -99,7 +105,7 @@ on("ready", function() {
                     sendChat("Ping Buddy", `/w "${playerName}" Character belonging to ${playerName} can be found on GM Layer, ask GM if its normal.`, null, {noarchive: true});
                     return;
                 }
-                sendPing(myToken.get("left"), myToken.get("top"), myToken.get("pageid"), theGM.id, true, msg.playerid);
+                sendPing(myToken.get("left"), myToken.get("top"), myToken.get("pageid"), getGM().id, true, msg.playerid);
                 log(`PINGED player=${msg.playerid}, page=${myToken.get("pageid")}, tokenName=${myToken.get('name')}`);
             } else {
                 sendChat("Ping Buddy", `/w "${playerName}" No character belonging to ${playerName} can be found on this page.`, null, {noarchive: true});
@@ -112,16 +118,16 @@ on("ready", function() {
     // When "Player" token moves, invisibly ping pull all players to it
     on("change:graphic", function(obj, prev) {
         if (['Party', 'LookHere'].includes(obj.get("name"))) {
-            const localGmCol = theGM.get("color");
+            const localGmCol = getGM().get("color");
             if (!originalColor || localGmCol !== 'transparent')
                 originalColor = localGmCol === 'transparent' ? defaultColor : localGmCol;
-            theGM.set("color", "transparent");
+            getGM().set("color", "transparent");
 
             pingPlayerToken(obj.get("_pageid"), obj.get("name"));
 
             if (intervalId) clearInterval(intervalId);
             intervalId = setTimeout(() => {
-                theGM.set("color", originalColor);
+                getGM().set("color", originalColor);
                 intervalId = undefined;
             }, 2000);
         }
@@ -144,6 +150,6 @@ on("ready", function() {
         var playerStartToken = tokens[tokens.length - 1];
         if (playerStartToken === undefined) return;
 
-        sendPing(playerStartToken.get("left"), playerStartToken.get("top"), playerStartToken.get("pageid"), theGM.id, true, whisperTo);
+        sendPing(playerStartToken.get("left"), playerStartToken.get("top"), playerStartToken.get("pageid"), getGM().id, true, whisperTo);
     }
 });
