@@ -2963,15 +2963,17 @@ body.sheet-darkmode {
 
 /* -- DEFENSE -- */
 
-.sheet-defenses .flex-col.def-exc {
-    flex-basis: 133px;
+.charsheet .sheet-defenses .flex-col {
+    flex-basis: 128px;
+    align-items: end;
 }
 
-.sheet-defenses .flex-col:nth-of-type(1) {
-    flex-basis: 100px;
+.charsheet .sheet-defenses .flex-col.def-exc,
+.charsheet .sheet-defenses .flex-col:nth-of-type(1) {
+    align-items: center;
 }
 
-@media only screen and (max-width: 422px) {
+@media only screen and (max-width: 448px) {
     .sheet-tab-combat-sheet .sheet-defenses .flex-col.def-exc {
         order: 1;
     }
@@ -2984,7 +2986,7 @@ body.sheet-darkmode {
     }
 }
 
-@media only screen and (max-width: 394px) {
+@media only screen and (max-width: 412px) {
     .sheet-tab-character-sheet .sheet-defenses .flex-col.def-exc {
         order: 1;
     }
@@ -3008,62 +3010,36 @@ body.sheet-darkmode {
 .sheet-tab-intimacies-sheet .head-line .sheet-table-cell input[type="number"][disabled],
 .sheet-tab-antisocial-sheet .head-line .sheet-table-cell input[type="number"][disabled],
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled],
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].wound-taint,
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="text"].qc-have-exc {
+.sheet-defenses .flex-col .flex:last-child input[type="number"][disabled].wound-taint,
+.sheet-defenses .flex-col .flex:last-child input[type="text"].qc-have-exc {
     width: 27px;
     flex-grow: 1;
     margin-right:2px;
 }
 
-.sheet-defenses .flex-col:nth-child(4) .flex.grow-normal:nth-child(2) input[type="number"],
-.sheet-defenses .flex-col .flex.grow-normal:first-child input[type="number"] {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-content .sheet-defenses .flex-col .qc-have-exc {
+    display: none;
+}
+
+.sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled].wound-taint,
+.sheet-defenses .flex-col .flex:first-child input[type="number"] {
     width: 56px;
     flex-grow: 1;
 }
 
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="text"].qc-have-exc {
+.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled].wound-taint {
+    width: 27px;
+}
+
+.sheet-defenses .flex-col .flex:last-child input[type="text"].qc-have-exc {
     margin-left: 2px;
 }
 
-.sheet-defenses .flex-col .flex.grow-normal {
-    width: 100%;
-}
-
-.sheet-table-body .sheet-table-row .sheet-table-cell input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled].wound-taint {
-    width: 3.5em;
-}
-
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled].wound-taint:last-child,
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="number"][disabled].last-visible,
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled],
-.sheet-defenses .flex-col .flex.grow-normal:last-child input[type="hidden"].qc-panel-check[value="1"] ~ input[type="text"].qc-have-exc {
+.sheet-defenses .flex-col .flex:last-child input[type="number"][disabled].last-visible,
+.sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled],
+.sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] ~ input[type="text"].qc-have-exc {
     margin-right:0;
-}
-
-.sheet-defenses .flex-col .flex.grow-normal span[title="Dexterity + Dodge"] {
-    margin-left: 2.5em;
-}
-
-.sheet-defenses .flex-col .flex.grow-normal span[title="Wits + Integrity"] {
-    margin-left: 1.35em;
-}
-
-.sheet-defenses .flex-col .flex.grow-normal span[title="Manipulation + Socialize"] {
-    margin-left: 1.40em;
-}
-
-@-moz-document url-prefix() {
-    .sheet-defenses .flex-col .flex.grow-normal span[title="Dexterity + Dodge"] {
-        margin-left: 2.8em;
-    }
-
-    .sheet-defenses .flex-col .flex.grow-normal span[title="Wits + Integrity"] {
-        margin-left: 1.82em;
-    }
-    
-    .sheet-defenses .flex-col .flex.grow-normal span[title="Manipulation + Socialize"] {
-        margin-left: 1.61em;
-    }
 }
 
 /* -- WEAPON -- */
