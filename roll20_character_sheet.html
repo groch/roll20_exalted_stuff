@@ -1488,7 +1488,7 @@
 
         let queryRoll = `!exr ${await getSingleAttrAsync(`${attr_name}repcombat-${subSection}-final-macro-replaced`)}`;
         if (buttonClickedIsGm) queryRoll += ' -gm';
-        if (['watk', 'datk'].includes(subSection)) queryRoll += `${await getSingleAttrAsync(`${attr_name}rep-cost-macro`)}`;
+        if (['watk', 'datk'].includes(subSection)) queryRoll += `${await getSingleAttrAsync(`${attr_name}rep-cost-macro`)} ==atk==`;
         
         if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
@@ -1647,8 +1647,8 @@
         const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
         setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
         let writtenValue;
-        if (val[tested_attr] === '@{archery}')     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-        else if (val[tested_attr] === '@{thrown}') writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+        if (val[tested_attr].indexOf('@{archery}') === 0)     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
+        else if (val[tested_attr].indexOf('@{thrown}') === 0) writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
         else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
         await setCb(written_attr, writtenValue);
         setDefaultsOnDAtkDice(e);
