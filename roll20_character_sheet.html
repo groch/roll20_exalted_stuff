@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.52, debug = 1;
+    const version = 2.53, debug = 1;
     var TAS;
 
     /**
@@ -296,11 +296,52 @@
             objSet['battlegroup-size'] = bgSizeMax;
         }
         objSet["battlegroup-magnitude_max"] = bgSize + bgHL + (bgPM == 1 ? 3 : 0);
-        if (e.sourceAttribute === 'battlegroup' && e.newValue === '1')
+        if (e.sourceAttribute === 'battlegroup' && e.newValue === '1') {
             objSet['battlegroup-magnitude'] = objSet["battlegroup-magnitude_max"];
+            await addBGDmgRestriction(objSet);
+        } else if (e.sourceAttribute === 'battlegroup' && e.newValue === '0')
+            await removeBGDmgRestriction(objSet);
         TAS.debug('perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
+        TAS.debug(`BG:: Setting=`, objSet);
         setAttrs(objSet);
     });
+
+    async function addBGDmgRestriction(objSet) {
+        if (debug === 2) TAS.debug(`addBGDmgRestriction::addBGDmgRestriction`);
+        const idCombatAttacks = await getSectionIDsAsync("combat-attack");
+        const combatFieldNames = [];
+        idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
+        const valuesSections = await getAttrsAsync([...combatFieldNames]);
+        for (const id of idCombatAttacks) {
+            valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
+        }
+        Object.assign(objSet, valuesSections);
+    }
+
+    async function checkBDmgRestriction(objSet) {
+        if (debug === 2) TAS.debug(`checkBDmgRestriction::checkBDmgRestriction`);
+        const idCombatAttacks = await getSectionIDsAsync("combat-attack");
+        const combatFieldNames = [];
+        idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
+        const valuesSections = await getAttrsAsync([...combatFieldNames]);
+        for (const id of idCombatAttacks) {
+            if (valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] && valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`].indexOf('-D') === -1)
+                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
+        }
+        Object.assign(objSet, valuesSections);
+    }
+
+    async function removeBGDmgRestriction(objSet) {
+        if (debug === 2) TAS.debug(`removeBGDmgRestriction::removeBGDmgRestriction`);
+        const idCombatAttacks = await getSectionIDsAsync("combat-attack");
+        const combatFieldNames = [];
+        idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
+        const valuesSections = await getAttrsAsync([...combatFieldNames]);
+        for (const id of idCombatAttacks) {
+            valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] = valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] ? valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`].replace(' -D', '') : '';
+        }
+        Object.assign(objSet, valuesSections);
+    }
 
     function triangularNumberSum(nb) { return (nb * (nb+1) / 2);}
 
@@ -309,7 +350,7 @@
         const healthFieldNames = [];
         idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
 
-        const valuesSections = await getAttrsAsync([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"]);    
+        const valuesSections = await getAttrsAsync([...healthFieldNames, "battlegroup", "battlegroup-size", "battlegroup-size_max", "battlegroup-health-levels", "battlegroup-perfect-morale", "battlegroup-magnitude"]);
         if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
             TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
             var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
@@ -562,6 +603,7 @@
         {version: 2.49, fn: upgradeto250},
         {version: 2.50, fn: upgradeto251},
         {version: 2.51, fn: upgradeto252},
+        {version: 2.52, fn: upgradeto253},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -766,6 +808,16 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto253() {
+        const finalObj = {'version': version};
+        const isBG = await getSingleAttrAsync('battlegroup') === '1';
+        if (isBG) await checkBDmgRestriction(finalObj);
+
+        await setAttrsAsync(finalObj);
+        for (const id of idRollsArray)
+            computeIdRepeatingRoll('rolls', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+    }
 
     async function upgradeto252() {
         const idRollsArray = await getSectionIDsAsync("rolls");
