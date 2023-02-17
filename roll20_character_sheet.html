@@ -313,7 +313,11 @@
         idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
         const valuesSections = await getAttrsAsync([...combatFieldNames]);
         for (const id of idCombatAttacks) {
-            valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
+            const val = valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`];
+            if (val)
+                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
+            else
+                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] = ' -D';
         }
         Object.assign(objSet, valuesSections);
     }
@@ -325,8 +329,11 @@
         idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
         const valuesSections = await getAttrsAsync([...combatFieldNames]);
         for (const id of idCombatAttacks) {
-            if (valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] && valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`].indexOf('-D') === -1)
+            const val = valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`];
+            if (val && val.indexOf('-D') === -1)
                 valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
+            else
+                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] = ' -D';
         }
         Object.assign(objSet, valuesSections);
     }
@@ -811,12 +818,14 @@
 
     async function upgradeto253() {
         const finalObj = {'version': version};
-        const isBG = await getSingleAttrAsync('battlegroup') === '1';
+        const isBG = await getSingleAttrAsync('battlegroup');
+        TAS.debug(`upgradeto253::upgradeto253 isBG=${isBG}`);
         if (isBG) await checkBDmgRestriction(finalObj);
 
         await setAttrsAsync(finalObj);
-        for (const id of idRollsArray)
-            computeIdRepeatingRoll('rolls', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
+        const idCombatAttacks = await getSectionIDsAsync("combat-attack");
+        for (const id of idCombatAttacks)
+            computeIdRepeatingRoll("combat-attack", id, 'repcombat-', wDmgAttrsToBind, defaultWDamageFinalExpr, 'wdmg-');
     }
 
     async function upgradeto252() {
