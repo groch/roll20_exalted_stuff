@@ -1064,7 +1064,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         var index = rawCmd.indexOf(sliceString);
         if (index !== -1) {
             let slice = rawCmd.slice(index + sliceString.length);
-            rawCmd = index - 1 < 0 ? '' : rawCmd.slice(0, index - 1);
+            rawCmd = rawCmd.slice(0, index);
             callback(rawCmd, slice);
         }
         return rawCmd;
