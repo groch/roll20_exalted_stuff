@@ -818,8 +818,7 @@
 
     async function upgradeto253() {
         const finalObj = {'version': version};
-        const isBG = await getSingleAttrAsync('battlegroup');
-        TAS.debug(`upgradeto253::upgradeto253 isBG=${isBG}`);
+        const isBG = await getSingleAttrAsync('battlegroup') === '1';
         if (isBG) await checkBDmgRestriction(finalObj);
 
         await setAttrsAsync(finalObj);
@@ -1523,6 +1522,7 @@
         let queryRoll = !buttonClickedIsGm ?
             `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
             `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
+        if (section !== 'rolls') queryRoll += ' &{tracker}';
         if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
         finishRoll(results.rollId);
