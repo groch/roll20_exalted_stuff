@@ -1559,8 +1559,8 @@
             await computeIdRepeatingRollAsync(section, id, `repcombat-${subSection}-`, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'init-to-set-', false);
             queryRoll = `/${buttonClickedIsGm ? 'g' : ''}r ${await getSingleAttrAsync(`${attr_name}repcombat-ddmg-init-to-set-final-macro-replaced`)} &{tracker}`;
             if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
-            const results = await startRoll(queryRoll);
-            finishRoll(results.rollId);
+            const resultsReset = await startRoll(queryRoll);
+            finishRoll(resultsReset.rollId);
         }
     }));
 
