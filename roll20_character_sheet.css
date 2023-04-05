@@ -2892,6 +2892,10 @@ body.sheet-darkmode {
     display: none;
 }
 
+.charsheet .sheet-battle-group[value="1"] ~ .flex.main-page div.sheet-tab-combat-sheet .attack-section.decisive-section .header-section {
+    display: none;
+}
+
 .sheet-health-track {
     flex-shrink: 1;
     justify-content: center;
@@ -3878,6 +3882,7 @@ textarea::-webkit-scrollbar-track {
     border-radius: 8px;
     display: flex;
     padding: 0 0.2em;
+    justify-content: end;
 }
 
 .charsheet .combat-attacks .attack-section > div {
