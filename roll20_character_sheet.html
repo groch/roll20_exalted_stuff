@@ -1519,10 +1519,10 @@
         await computeRepeatingRollCostAsync(e);
         await computeIdRepeatingRollAsync(section, id, subSection, initSectionsToBind, defaultInitFinalExpr, '', false);
         const values = await getAttrsAsync([`${attr_name}${subSection}final-macro-replaced`, `${attr_name}rep-cost-macro`]);
-        let queryRoll = !buttonClickedIsGm ?
-            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
-            `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
-        if (section !== 'rolls') queryRoll += ' &{tracker}';
+        let queryRoll = `!exr ${values[`${attr_name}${subSection}final-macro-replaced`]}`;
+        if (buttonClickedIsGm) queryRoll += ' -gm';
+        if (section !== 'rolls') queryRoll += ' -turn';
+        queryRoll += ` ${values[`${attr_name}rep-cost-macro`]}`;
         if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
         finishRoll(results.rollId);
