@@ -1823,7 +1823,7 @@
             healthIndexes['repeating_health_' + newId + '_hl-damage'] = 'healthy';
             healthIndexes['repeating_health_' + newId + '_hl-penalty'] = penalty;
         }
-        TAS.debug(`Setting Health levels :`, healthIndexes);
+        TAS.debug(`add-multiple-hl:: Setting Health levels :`, healthIndexes);
         setAttrs(healthIndexes);
         updateWound({sourceType: "player", triggerName: "other"});
     }));
@@ -1836,6 +1836,16 @@
         array_existing.push(ret);
         return ret;
     }
+
+    /* heal HL button */
+    on('clicked:heal-hl', TAS._fn(async function updateMotePool(eventInfo){
+        const idHealthArray = await getSectionIDsAsync("health");
+        const healthIndexes = {};
+        idHealthArray.forEach(id => healthIndexes['repeating_health_' + id + '_hl-damage'] = 'healthy');
+        TAS.debug(`heal-hl:: Setting Health levels :`, healthIndexes);
+        setAttrs(healthIndexes);
+        updateWound({sourceType: "player", triggerName: "other"});
+    }));
 
     on('change:show-charname-in-charms', TAS._fn(async function updateShowCharm(eventInfo){
         TAS.debug(`change:show-charname-in-charms`);
@@ -4526,6 +4536,9 @@
                             </select>
                             <button type="action" name="act_add-multiple-hl" class="btn add-multiple">Add</button>
                         </div>
+                    </div>
+                    <div class="heal-hl-div">
+                        <button type="action" name="act_heal-hl" class="btn heal-hl" style="display: none;">Heal</button>
                     </div>
                 </div>
             </div>

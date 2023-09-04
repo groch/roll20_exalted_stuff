@@ -1066,7 +1066,7 @@ input[type="number"] {
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
-    width: 100%;
+    width: 7rem;
     height: calc(100% - 1px);
     padding-top: 1px;
     content: attr(title);
@@ -1095,7 +1095,7 @@ input[type="number"] {
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle.add-multiple {
-    width: calc(100% + 24px);
+    width: 100%;
     height: calc(100% + 1px);
 }
 
@@ -1527,8 +1527,13 @@ Shinier Gold
     display: none;
 }
 
+.charsheet .heal-hl-div {
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
 .charsheet .add-multiple-div {
-    width: 10rem;
+    width: calc(7rem + 24px);
     position: relative;
 }
 
