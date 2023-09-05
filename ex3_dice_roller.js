@@ -1085,10 +1085,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             }
             if (data[0] === 'will') {
                 let actualVal = Number(willObj.get('current'));
-                if (actualVal - val < 0)
-                    sendGMStandardScriptMessage(`WILLPOWER ERROR WHEN ${makeCharacterLink(characterObj, playerId)} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
-                else
-                    sendGMStandardScriptMessage(`${makeCharacterLink(characterObj, playerId)}:> Removing ${val} <b>WP</b>`);
+                sendWillWhispers(characterObj, playerId, actualVal, val);
                 willObj.set('current', actualVal - val);
             } else if (data[0].indexOf('peri') !== -1) {
                 logger(`setCosts:: calling removeMotesToCharacter, data[0][5]='${data[0][5]}'`);
@@ -1233,6 +1230,21 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     sendStylizedMoteWhisper = (outString, attrName, playerStrName = 'gm') => {
         if (attrName.indexOf('personal') !== -1) sendWhisperStandardScriptMessage(playerStrName, outString, '', `${styles.defaultDivStyle}font-style:italic;`, false, 'background: #333;');// linear-gradient(transparent, gray, transparent)
         else                                     sendWhisperStandardScriptMessage(playerStrName, outString, '', `${styles.defaultDivStyle}color:orange;`, false, 'background: darkred;');// linear-gradient(transparent, darkred)
+    },
+
+    sendWillWhispers = (characterObj, playerId, actualVal, val) => {
+        const charLink = makeCharacterLink(characterObj, playerId);
+        let controlledBy = characterObj.get('controlledby');
+        controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+        controlledBy = controlledBy.map(i => getObj('player', i)).filter(i => i);
+
+        if (actualVal - val < 0) {
+            sendGMStandardScriptMessage(`WILLPOWER ERROR WHEN ${charLink} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
+            for (const playerObj of controlledBy) sendWhisperStandardScriptMessage(playerObj.get('_displayname'), `WILLPOWER ERROR WHEN ${charLink} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
+        } else {
+            sendGMStandardScriptMessage(`${charLink}:> Removing ${val} <b>WP</b>`);
+            for (const playerObj of controlledBy) sendWhisperStandardScriptMessage(playerObj.get('_displayname'), `${charLink}:> Removing ${val} <b>WP</b>`);
+        }
     },
 
     /**
