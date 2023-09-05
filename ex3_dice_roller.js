@@ -1202,26 +1202,12 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         const attrName = attr.get('name');
         const attrNameStylised = attrName.indexOf('personal') !== -1 ? attrName : `<u>${attrName}</u>`;
         const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attrNameStylised}</b>`;
-        let controlledBy = characterObj.get('controlledby');
-        controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+        const controlledByNames = getControlledByNames(characterObj);
         attr.set('current', current - toRemove);
 
-        logger(`removeMotesToCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
-        for (const playerId of controlledBy) {
-            const playerObj = getObj('player', playerId);
-            if (!playerObj) {
-                logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${playerId}`);
-                continue;
-            }
-            sendStylizedMoteWhisper(outString, attrName, playerObj.get('_displayname'));
-        }
-
-        sendStylizedMoteWhisper(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
-            const playerObj = getObj('player', i);
-            if (playerObj) return playerObj.get('_displayname');
-            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
-            return false;
-        }).filter(i => i).join(', ')}])` : ''}`, attrName);
+        logger(`removeMotesToCharacter::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
+        for (const playerName of controlledByNames) sendStylizedMoteWhisper(outString, attrName, playerName);
+        sendStylizedMoteWhisper(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])` : ''}`, attrName);
 
         if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
             sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');
@@ -1232,18 +1218,27 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         else                                     sendWhisperStandardScriptMessage(playerStrName, outString, '', `${styles.defaultDivStyle}color:orange;`, false, 'background: darkred;');// linear-gradient(transparent, darkred)
     },
 
-    sendWillWhispers = (characterObj, playerId, actualVal, val) => {
-        const charLink = makeCharacterLink(characterObj, playerId);
+    getControlledByNames = (characterObj) => {
         let controlledBy = characterObj.get('controlledby');
         controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
-        controlledBy = controlledBy.map(i => getObj('player', i)).filter(i => i);
+        return controlledBy.map(i => {
+            const playerObj = getObj('player', i);
+            if (playerObj) return playerObj.get('_displayname');
+            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
+            return false;
+        }).filter(i => i);
+    },
+
+    sendWillWhispers = (characterObj, playerId, actualVal, val) => {
+        const charLink = makeCharacterLink(characterObj, playerId);
+        const controlledByNames = getControlledByNames(characterObj);
 
         if (actualVal - val < 0) {
             sendGMStandardScriptMessage(`WILLPOWER ERROR WHEN ${charLink} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
-            for (const playerObj of controlledBy) sendWhisperStandardScriptMessage(playerObj.get('_displayname'), `WILLPOWER ERROR WHEN ${charLink} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
+            for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, `WILLPOWER ERROR WHEN ${charLink} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
         } else {
             sendGMStandardScriptMessage(`${charLink}:> Removing ${val} <b>WP</b>`);
-            for (const playerObj of controlledBy) sendWhisperStandardScriptMessage(playerObj.get('_displayname'), `${charLink}:> Removing ${val} <b>WP</b>`);
+            for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, `${charLink}:> Removing ${val} <b>WP</b>`);
         }
     },
 
