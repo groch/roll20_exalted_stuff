@@ -736,8 +736,8 @@ var CombatMaster = CombatMaster || (function() {
             return false;    
         }
         logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON MORTAL FOUND:${characterObj.get('name')}`);
-        let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'}), controlledBy = characterObj.get('controlledby');
-        controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+        let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
+        const controlledByNames = getControlledByNames(characterObj);
 
         let displayedEssenceObj = attrList.filter(i => 'displayed-essence' === i.get('name'))[0];
         if (!displayedEssenceObj) {
@@ -776,24 +776,11 @@ var CombatMaster = CombatMaster || (function() {
                 const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding <b>${toAdd}</b> motes to <b>${attr.get('name')}</b>`;
                 attr.set('current', current + toAdd);
                 if (!state[combatState].config.announcements.announceMoteRegen) {
-                    logger(`addMotesToNonMortalCharacter::controlledBy=${JSON.stringify(controlledBy)}, characterObj=${JSON.stringify(characterObj)}`);
-                    for (const idPlayer of controlledBy) {
-                        const playerObj = getObj('player', idPlayer);
-                        if (!playerObj) {
-                            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${idPlayer} probably imported character`);
-                            continue;
-                        }
-                        sendWhisperStandardScriptMessage(playerObj.get('_displayname'), outString, undefined, undefined, undefined, 'background-color: #b4ffb4;');
-                    }
+                    logger(`addMotesToNonMortalCharacter::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
+                    for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, outString, undefined, undefined, undefined, 'background-color: #b4ffb4;');
                 }
-                if (!state[combatState].config.announcements.announceMoteRegen || controlledBy.length === 0) {
-                    sendGMStandardScriptMessage(`${outString}${controlledBy.length ? ` (whispered to: [${controlledBy.map(i => {
-                        const playerObj = getObj('player', i);
-                        if (playerObj) return playerObj.get('_displayname');
-                        logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i} probably imported character`);
-                        return false;
-                    }).filter(i => i).join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
-                }
+                if (!state[combatState].config.announcements.announceMoteRegen || controlledByNames.length === 0)
+                    sendGMStandardScriptMessage(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
             }
             if (added >= qty) break;
         }
@@ -802,7 +789,18 @@ var CombatMaster = CombatMaster || (function() {
         if (displayedEssenceTest > displayedEssenceObj.get('max')) displayedEssenceTest = displayedEssenceObj.get('max');
         if (displayedEssenceTest === 0 && displayedEssenceObj.get('max') === 0) displayedEssenceTest = '';
         displayedEssenceObj.set('current', displayedEssenceTest);
-        return added && controlledBy.length ? true : false;
+        return added && controlledByNames.length ? true : false;
+    },
+
+    getControlledByNames = (characterObj) => {
+        let controlledBy = characterObj.get('controlledby');
+        controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
+        return controlledBy.map(i => {
+            const playerObj = getObj('player', i);
+            if (playerObj) return playerObj.get('_displayname');
+            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i} probably imported character`);
+            return false;
+        }).filter(i => i);
     },
 
     updateMaxAttr = (characterId, attr) => {
