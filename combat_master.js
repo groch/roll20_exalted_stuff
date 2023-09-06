@@ -703,7 +703,7 @@ var CombatMaster = CombatMaster || (function() {
             sendStandardScriptMessage(`Adding up to ${qty} motes to these Tokens : ${charAddedList.join(', ')}`);
     },
 
-    addMotesToNonMortalCharacters = (turnorder) => {
+    addMotesToNonMortalCharactersFromTurnOrder = (turnorder) => {
         logger(`addMotesToNonMortalCharacters::addMotesToNonMortalCharacters`);
         const playerPageId = Campaign().get("playerpageid");
         var charAddedList = [];
@@ -730,6 +730,53 @@ var CombatMaster = CombatMaster || (function() {
             sendStandardScriptMessage(`Adding up to ${state[combatState].config.turnorder.moteQtyToAdd} motes to these Tokens : ${charAddedList.join(', ')}`);
     },
 
+    createDisplayedEssenceObj = (characterId) => createObj('attribute', {
+        characterid: characterId,
+        name: 'displayed-essence',
+        current: 0, max: 0
+    }),
+
+    filterNSortAttrsPeriBeforePerso = (attrList) => attrList.filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
+        .sort((a, b) => {
+            if (a.get('name') === 'personal-essence' && b.get('name') !== 'personal-essence') return 1;
+            if (a.get('name') !== 'personal-essence' && b.get('name') === 'personal-essence') return -1;
+            return a.get('name').localeCompare(b.get('name'));
+    }),
+
+    whisperPlayerAndGmAddedMotes = (current, toAdd, characterId, characterObj, attr, controlledByNames) => {
+        const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding <b>${toAdd}</b> motes to <b>${attr.get('name')}</b>`;
+        attr.set('current', current + toAdd);
+        if (!state[combatState].config.announcements.announceMoteRegen) {
+            logger(`whisperPlayerAndGmAddedMotes::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
+            for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, outString, undefined, undefined, undefined, 'background-color: #b4ffb4;');
+        }
+        if (!state[combatState].config.announcements.announceMoteRegen || controlledByNames.length === 0)
+            sendGMStandardScriptMessage(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
+    },
+
+    addMotesToAttrsAndWhisper = (attrList, characterId, characterObj, qty, controlledByNames) => {
+        logger(`addMotesToAttrsAndWhisper::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
+        attrList = filterNSortAttrsPeriBeforePerso(attrList);
+
+        logger(`addMotesToAttrsAndWhisper::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
+        var added = 0;
+        for (const attr of attrList) {
+            if (!attr) continue;
+            let current = parseInt(attr.get('current')), max = parseInt(attr.get('max'));
+            if (isNaN(current))  current = 0;
+            if (isNaN(max))      max = updateMaxAttr(characterId, attr);
+            if (current === max) continue;
+            logger(`addMotesToAttrsAndWhisper::qty=${qty}, added=${added}, current=${current}, max=${max}`);
+            let toAdd = qty - added < max - current ? qty - added : max - current;
+            added += toAdd;
+            logger(LOGLEVEL.INFO, `addMotesToAttrsAndWhisper::adding ${toAdd} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
+            let total = (current + toAdd);
+            if (!isNaN(total)) whisperPlayerAndGmAddedMotes(current, toAdd, characterId, characterObj, attr, controlledByNames);
+            if (added >= qty) break;
+        }
+        return added;
+    },
+
     addMotesToNonMortalCharacter = (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd) => {
         if (!characterObj) {
             logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON CONTROLLED TOKEN: QUIT${characterObj}`);
@@ -741,50 +788,12 @@ var CombatMaster = CombatMaster || (function() {
 
         let displayedEssenceObj = attrList.filter(i => 'displayed-essence' === i.get('name'))[0];
         if (!displayedEssenceObj) {
-            logger(LOGLEVEL.NOTICE, `removeMotesToCharacter::NO displayedEssenceObj !! Creating it`);
-            displayedEssenceObj = createObj('attribute', {
-                characterid: characterId,
-                name: 'displayed-essence',
-                current: 0, max: 0
-            });
+            logger(LOGLEVEL.NOTICE, `addMotesToNonMortalCharacter::NO displayedEssenceObj !! Creating it`);
+            displayedEssenceObj = createDisplayedEssenceObj(characterId);
         }
-        logger(`removeMotesToCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
+        logger(`addMotesToNonMortalCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
 
-        logger(`addMotesToNonMortalCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
-        attrList = attrList
-            .filter(i => ['personal-essence', 'peripheral-essence'].includes(i.get('name')))
-            .sort((a, b) => {
-                if (a.get('name') === 'personal-essence' && b.get('name') !== 'personal-essence') return 1;
-                if (a.get('name') !== 'personal-essence' && b.get('name') === 'personal-essence') return -1;
-                return a.get('name').localeCompare(b.get('name'));
-            });
-
-        logger(`addMotesToNonMortalCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
-        var added = 0;
-        for (const attr of attrList) {
-            if (!attr) continue;
-            let current = parseInt(attr.get('current')), max = parseInt(attr.get('max'));
-            if (isNaN(current))  current = 0;
-            if (isNaN(max))      max = updateMaxAttr(characterId, attr);
-            if (current === max) continue;
-            logger(`addMotesToNonMortalCharacter::qty=${qty}, added=${added}, current=${current}, max=${max}`);
-            let toAdd = qty - added < max - current ? qty - added : max - current;
-            added += toAdd;
-            logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::adding ${toAdd} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
-            let total = (current + toAdd);
-            if (!isNaN(total)) {
-                const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding <b>${toAdd}</b> motes to <b>${attr.get('name')}</b>`;
-                attr.set('current', current + toAdd);
-                if (!state[combatState].config.announcements.announceMoteRegen) {
-                    logger(`addMotesToNonMortalCharacter::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
-                    for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, outString, undefined, undefined, undefined, 'background-color: #b4ffb4;');
-                }
-                if (!state[combatState].config.announcements.announceMoteRegen || controlledByNames.length === 0)
-                    sendGMStandardScriptMessage(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
-            }
-            if (added >= qty) break;
-        }
-
+        const added = addMotesToAttrsAndWhisper(attrList, characterId, characterObj, qty, controlledByNames);
         let displayedEssenceTest = Number(displayedEssenceObj.get('current')) + added;
         if (displayedEssenceTest > displayedEssenceObj.get('max')) displayedEssenceTest = displayedEssenceObj.get('max');
         if (displayedEssenceTest === 0 && displayedEssenceObj.get('max') === 0) displayedEssenceTest = '';
@@ -2507,7 +2516,7 @@ var CombatMaster = CombatMaster || (function() {
             if (state[combatState].config.turnorder.sortTurnOrder)
                 sortTurnorder();
             if (state[combatState].config.turnorder.addMotesEachTurnToNonMortal)
-                addMotesToNonMortalCharacters(turnorder);
+                addMotesToNonMortalCharactersFromTurnOrder(turnorder);
             changeToNextTurn();
         }
     },
