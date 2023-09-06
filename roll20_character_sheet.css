@@ -1066,7 +1066,7 @@ input[type="number"] {
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
-    width: 7rem;
+    width: 100%;
     height: calc(100% - 1px);
     padding-top: 1px;
     content: attr(title);
@@ -1076,6 +1076,10 @@ input[type="number"] {
     overflow: hidden;
     z-index: 4;
     border-radius: 4px;
+}
+
+.charsheet .add-multiple-div input[type=checkbox].sheet-unnamed-toggle + span::before {
+    width: 7rem;
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle.add-multiple + span::before {
