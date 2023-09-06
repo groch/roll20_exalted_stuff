@@ -230,7 +230,7 @@ var CombatMaster = CombatMaster || (function() {
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -681,20 +681,21 @@ var CombatMaster = CombatMaster || (function() {
         logger(LOGLEVEL.INFO, `addMotesCommand::addMotesCommand cmdDetails=${JSON.stringify(cmdDetails)}, selected=${JSON.stringify(selected)}`);
 
         let qty = cmdDetails.details['qty'] ? parseInt(cmdDetails.details['qty']) : state[combatState].config.turnorder.moteQtyToAdd,
+            persoFirst = cmdDetails.details['perso'] ? Boolean(parseInt(cmdDetails.details['perso'])) : false,
             charAddedList = [];
 
         if (!selected) {
             let charList = findObjs({_type: 'character'}).filter(i => getAttrByName(i.get('id'), 'caste') !== 'Mortal');
             logger(`addMotesCommand::NO SELECTED, ADDING TO ALL CHAR: ${charList.map(i => i.get('name'))}`);
             for (const obj of charList)
-                if (addMotesToNonMortalCharacter(obj, qty)) charAddedList.push(makeCharacterLink(obj));
+                if (addMotesToNonMortalCharacter(obj, qty, persoFirst)) charAddedList.push(makeCharacterLink(obj));
         } else {
             _.chain(selected)
             .map(o => getObj('graphic',o._id))
             .compact()
             .each(function(t){
                 var characterId = t.get('represents'), finalcharacterObj = getObj('character',characterId);
-                if (addMotesToNonMortalCharacter(finalcharacterObj, qty))
+                if (addMotesToNonMortalCharacter(finalcharacterObj, qty, persoFirst))
                     charAddedList.push(makeCharacterLink(finalcharacterObj, characterId));
             });
         }
@@ -754,9 +755,10 @@ var CombatMaster = CombatMaster || (function() {
             sendGMStandardScriptMessage(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
     },
 
-    addMotesToAttrsAndWhisper = (attrList, characterId, characterObj, qty, controlledByNames) => {
+    addMotesToAttrsAndWhisper = (persoFirst, attrList, characterId, characterObj, qty, controlledByNames) => {
         logger(`addMotesToAttrsAndWhisper::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
         attrList = filterNSortAttrsPeriBeforePerso(attrList);
+        if (persoFirst) attrList = attrList.reverse();
 
         logger(`addMotesToAttrsAndWhisper::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
         var added = 0;
@@ -777,7 +779,7 @@ var CombatMaster = CombatMaster || (function() {
         return added;
     },
 
-    addMotesToNonMortalCharacter = (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd) => {
+    addMotesToNonMortalCharacter = (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd, persoFirst = false) => {
         if (!characterObj) {
             logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON CONTROLLED TOKEN: QUIT${characterObj}`);
             return false;    
@@ -793,7 +795,7 @@ var CombatMaster = CombatMaster || (function() {
         }
         logger(`addMotesToNonMortalCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
 
-        const added = addMotesToAttrsAndWhisper(attrList, characterId, characterObj, qty, controlledByNames);
+        const added = addMotesToAttrsAndWhisper(persoFirst, attrList, characterId, characterObj, qty, controlledByNames);
         let displayedEssenceTest = Number(displayedEssenceObj.get('current')) + added;
         if (displayedEssenceTest > displayedEssenceObj.get('max')) displayedEssenceTest = displayedEssenceObj.get('max');
         if (displayedEssenceTest === 0 && displayedEssenceObj.get('max') === 0) displayedEssenceTest = '';
