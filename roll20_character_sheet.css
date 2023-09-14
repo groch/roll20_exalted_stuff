@@ -2807,7 +2807,7 @@ body.sheet-darkmode {
 
 /* --- ANTI SOCIAL TAB --- */
 
-.charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .flex.main-page .sheet-tab-antisocial {
+.charsheet .sheet-content .sheet-show-antisocial-tab[value="0"] ~ .sheet-tab-antisocial {
     display: none;
 }
 
@@ -2853,7 +2853,7 @@ body.sheet-darkmode {
 
 /* --- COMBAT TAB --- */
 
-.charsheet .sheet-content .sheet-show-combat-tab[value="0"] ~ .flex.main-page .sheet-tab-combat {
+.charsheet .sheet-content .sheet-show-combat-tab[value="0"] ~ .sheet-tab-combat {
     display: none;
 }
 
