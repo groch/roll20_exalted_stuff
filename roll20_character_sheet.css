@@ -4393,6 +4393,54 @@ textarea::-webkit-scrollbar-track {
     display: block;
 }
 
+.charsheet .flex.main-page .sheet-charm-reminder > div > select {
+    font-size: large;
+}
+
+.charsheet .flex.main-page .reminder-charm-div .repcontainer {
+    display: flex;
+    flex-flow: column;
+}
+
+.charsheet .flex.main-page .reminder-charms-main-div .db-aspect-quickshow {
+    display: none;
+    font-size: 0;
+}
+
+.charsheet .flex.main-page .reminder-charms-main-div .db-aspect-quickshow img {
+    height: 2.5rem;
+}
+
+.charsheet .flex.main-page .reminder-charms-main-div .db-aspect-quickshow img:nth-child(2) {
+    margin-left: auto;
+}
+
+.charsheet .exalt-type-check[value="DB"]         ~ .flex.main-page .reminder-charms-main-div .db-aspect-quickshow {
+    display: inline-flex;
+    width: 5.5rem;
+    height: 2.5rem;
+}
+
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="water"] ~ .db-aspect-quickshow > img:first-child {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/290329797/Xy9MXwjo9o9brGuChOFbpQ/max.png?1655517794');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="earth"] ~ .db-aspect-quickshow > img:first-child {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/290329796/D3dl9vUlnpW6-62YBxOlYA/max.png?1655517794');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="air"] ~ .db-aspect-quickshow > img:first-child {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/290329795/wYZAcE0p3HGpld-My69TLw/max.png?1655517794');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="wood"] ~ .db-aspect-quickshow > img:first-child {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/290329794/2UyfCRr3dIkh5kZNObDbqw/max.png?1655517794');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="fire"] ~ .db-aspect-quickshow > img:first-child {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/290329793/hlr3nMlOBHTIb-v2-2kjtQ/max.png?1655517794');
+}
+
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-balanced"][value="0"] ~ .db-aspect-quickshow > img:nth-child(2) {
+    visibility: hidden;
+}
+
 .charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .sheet-qcattr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
     width: 300px;
     left: -192px;
