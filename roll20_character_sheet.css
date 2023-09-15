@@ -1950,16 +1950,38 @@ and (min-resolution:.001dpcm) {
    outline:none;
 }
 
-.charsheet input.sheet-tab:hover::before {
+.charsheet input.sheet-tab:hover::before,
+.charsheet input.sheet-tab:checked::before,
+.charsheet input.sheet-tab:checked:hover::before {
    background:#840000;
    color: #FFDF00;
 }
 
 .charsheet input.sheet-tab:checked::before,
 .charsheet input.sheet-tab:checked:hover::before {
-   background:#840000;
-   color: #FFDF00;
    font-weight:bold;
+}
+
+.charsheet input.sheet-tab[title="Rolls"]::before {
+    color: blue;
+    border-color: blue;
+}
+.charsheet input.sheet-tab[title="Social"]::before,
+.charsheet input.sheet-tab[title="Tu perds ton Sang froid !"]::before {
+    color: cyan;
+    border-color: cyan;
+}
+.charsheet input.sheet-tab[title="Charms"]::before {
+    color: gold;
+    border-color: gold;
+}
+.charsheet input.sheet-tab[title="Sorceries"]::before {
+    color: mediumpurple;
+    border-color: mediumpurple;
+}
+.charsheet input.sheet-tab[title="Combat"]::before {
+    color: red;
+    border-color: red;
 }
 
 .charsheet .sheet-tab-charm-sheet .sheet-body.flex.flex-col .sheet-table-row {
@@ -2448,9 +2470,33 @@ body.sheet-darkmode {
     background: gray;
 }
 
-.sheet-darkmode .charsheet input.sheet-tab:checked::before, .sheet-darkmode .charsheet input.sheet-tab:checked:hover::before {
+.sheet-darkmode .charsheet input.sheet-tab:hover::before,
+.sheet-darkmode .charsheet input.sheet-tab:checked::before,
+.sheet-darkmode .charsheet input.sheet-tab:checked:hover::before {
 	color: #FFDF00;
 	background: #840000;
+}
+
+.sheet-darkmode .charsheet input.sheet-tab[title="Rolls"]::before {
+    color: blue;
+    border-color: blue;
+}
+.sheet-darkmode .charsheet input.sheet-tab[title="Social"]::before,
+.sheet-darkmode .charsheet input.sheet-tab[title="Tu perds ton Sang froid !"]::before {
+    color: cyan;
+    border-color: cyan;
+}
+.sheet-darkmode .charsheet input.sheet-tab[title="Charms"]::before {
+    color: gold;
+    border-color: gold;
+}
+.sheet-darkmode .charsheet input.sheet-tab[title="Sorceries"]::before {
+    color: mediumpurple;
+    border-color: mediumpurple;
+}
+.sheet-darkmode .charsheet input.sheet-tab[title="Combat"]::before {
+    color: red;
+    border-color: red;
 }
 
 .sheet-darkmode .charsheet div.sheet-dots-full, .sheet-darkmode .charsheet div.sheet-damage-box, .sheet-darkmode .charsheet div.sheet-dots {
@@ -5625,11 +5671,6 @@ test removing :after which i assume prevent roll20 clicks
     .charsheet input.sheet-tab::before {
         color: #E6E6E6;
         background: gray;
-    }
-    
-    .charsheet input.sheet-tab:checked::before, .charsheet input.sheet-tab:checked:hover::before {
-        color: #FFDF00;
-        background: #840000;
     }
     
     .charsheet div.sheet-dots-full, .charsheet div.sheet-damage-box, .charsheet div.sheet-dots {
