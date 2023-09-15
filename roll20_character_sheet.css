@@ -371,12 +371,12 @@ input[type="number"] {
     font-weight: normal;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .inverted-color .rollpenalty.not-inverted,
-.charsheet .sheet-tab-rolls-widgets-sheet .inverted-color .woundpenalty.not-inverted {
+.charsheet .sheet-rolls-div-widget .inverted-color .rollpenalty.not-inverted,
+.charsheet .sheet-rolls-div-widget .inverted-color .woundpenalty.not-inverted {
     color: white;
 }
 
-.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .inverted-color .rollpenalty.not-inverted {
+.sheet-darkmode .charsheet .sheet-rolls-div-widget .inverted-color .rollpenalty.not-inverted {
     border-color: black;
 }
 
@@ -2728,7 +2728,7 @@ body.sheet-darkmode {
 
 .sheet-tab-spell-sheet .repcontainer,
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer,
-.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer,
+.sheet-tab-rolls-sheet .sheet-rolls-div-custom .repcontainer,
 .sheet-tab-combat-sheet .combat-init .repcontainer,
 .sheet-tab-combat-sheet .combat-attacks .repcontainer {
     gap: 1em;
@@ -2737,7 +2737,7 @@ body.sheet-darkmode {
     padding: 0px 4px 0px;
 }
 
-.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer {
+.sheet-tab-rolls-sheet .sheet-rolls-div-custom .repcontainer {
     padding: 4px 4px 0px;
 }
 
@@ -2787,7 +2787,7 @@ body.sheet-darkmode {
     --bs-section-color: var(--bs-charm-color-dark);
 }
 
-.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer .repitem {
+.sheet-tab-rolls-sheet .sheet-rolls-div-custom .repcontainer .repitem {
     --bs-section-color: var(--bs-rolls-color);
     padding: 5px;
     border-radius: 5px;
@@ -2795,7 +2795,7 @@ body.sheet-darkmode {
 
 .sheet-tab-spell-sheet .repcontainer .repitem,
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem,
-.sheet-tab-rolls-std-sheet .sheet-rolls-div .repcontainer .repitem,
+.sheet-tab-rolls-sheet .sheet-rolls-div-custom .repcontainer .repitem,
 .charsheet .sheet-tab-combat-sheet .combat-header,
 .charsheet .sheet-tab-combat-sheet .combat-init .repitem,
 .charsheet .sheet-tab-combat-sheet .combat-attacks .repitem {
@@ -3207,7 +3207,7 @@ body.sheet-darkmode {
 }
 
 @media only screen and (max-width: 352px) {
-    .sheet-tab-rolls-std-sheet .sheet-rolls-name {
+    .sheet-rolls-div-custom .sheet-rolls-name {
         width: 100px;
     }
 }
@@ -3659,7 +3659,7 @@ textarea::-webkit-scrollbar-track {
     background: #CFD8DC;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .rolls-textarea {
+.charsheet .sheet-tab-rolls-sheet .rolls-textarea {
     min-width: 3em;
     width: 7em;
     height: 95%;
@@ -3869,7 +3869,7 @@ textarea::-webkit-scrollbar-track {
 }
 
 @media only screen and (max-width: 402px) {
-    .charsheet .sheet-tab-rolls-std-sheet .rolls-area .sheet-rolls-div .inner-section > div.flex.grow-normal,
+    .charsheet .sheet-tab-rolls-sheet .rolls-area .sheet-rolls-div-custom .sheet-rolls-div .inner-section > div.flex.grow-normal,
     .charsheet .combat-attacks .atk-section.flex-wrap > div.flex.grow-normal,
     .charsheet .combat-attacks .dmg-section.flex-wrap > div.flex.grow-normal {
         flex-wrap: wrap;
@@ -3939,7 +3939,7 @@ textarea::-webkit-scrollbar-track {
     border-radius: 13px;
 }
 
-.charsheet .sheet-tab-rolls-std-sheet .roll-section select,
+.charsheet .sheet-rolls-div-custom .roll-section select,
 .charsheet .combat-attacks .attack-section select {
     width: 7.1em;
 }
@@ -4005,8 +4005,8 @@ textarea::-webkit-scrollbar-track {
     background: linear-gradient(rgb(128, 128, 128), rgb(128, 0, 0)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box
 }
 
-.charsheet .sheet-tab-rolls-std-sheet .roll-section .inner-section > .flex-wrap > .flex.grow-normal,
-.charsheet .sheet-tab-rolls-std-sheet .roll-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
+.charsheet .sheet-rolls-div-custom .roll-section .inner-section > .flex-wrap > .flex.grow-normal,
+.charsheet .sheet-rolls-div-custom .roll-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex.grow-normal,
 .charsheet .combat-attacks .attack-section .inner-section > .flex-wrap > .flex-wrap.grow-normal,
 .charsheet .combat-init .sheet-combat-init.flex-wrap > .flex:nth-child(2),
@@ -4476,15 +4476,15 @@ textarea::-webkit-scrollbar-track {
     flex-flow: column;
 }
 
-.charsheet .sheet-tab-rolls-std-sheet .roll-section .inner-section {
+.charsheet .sheet-rolls-div-custom .roll-section .inner-section {
     width: calc(100% - 2em);
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .roll-section {
+.charsheet .sheet-rolls-div-widget .roll-section {
     flex-direction: row-reverse;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
+.charsheet .sheet-rolls-div-widget .roll-section .inner-section {
     width: calc(100% - 2.6rem - 1px);
 }
 
@@ -4497,8 +4497,7 @@ textarea::-webkit-scrollbar-track {
     justify-content: space-between;
 }
 
-.charsheet input.sheet-tab-rolls-std-sheet:checked ~ .flex.main-page div.sheet-tab-rolls-std-sheet,
-.charsheet input.sheet-tab-rolls-widget-sheet:checked ~ .flex.main-page div.sheet-tab-rolls-widgets-sheet {
+.charsheet input.sheet-tab-rolls-sheet:checked ~ .flex.main-page div.sheet-tab-rolls-sheet {
     display: flex;
 }
 
@@ -4514,7 +4513,7 @@ textarea::-webkit-scrollbar-track {
     overflow: hidden;
 }
 
-.sheet-tab-rolls-widgets-sheet .rolls-area {
+.sheet-rolls-div-widget .rolls-area {
     height: calc(100% - 7.3em);
 }
 
@@ -4555,7 +4554,7 @@ textarea::-webkit-scrollbar-track {
     width: 69%;
 }
 
-.charsheet .left-column-rolls .sheet-rolls-macro-options {
+.charsheet .sheet-rolls-div-custom .sheet-rolls-macro-options {
     border-top: 1px solid rgb(255, 204, 0);
     border-left: 1px solid rgb(255, 204, 0);
     background-color: rgba(255,204,0,0.25);
@@ -4563,7 +4562,7 @@ textarea::-webkit-scrollbar-track {
     margin-left: 2px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .left-column-rolls .sheet-rolls-macro-options {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-macro-options {
     border-top: 1px solid rgb(140, 0, 255);
     border-left: 1px solid rgb(140, 0, 255);
     background-color: rgba(140, 0, 255,0.25);
@@ -4595,39 +4594,64 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 
 /* Roll Widget Area */
 
-.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] {
+.charsheet .sheet-rolls-div-custom,
+.charsheet .rolls-area .left-column-rolls .roll-type-check[value="1"] ~ .sheet-rolls-div-widget {
+    display: none;
+}
+
+.charsheet .rolls-area .left-column-rolls .roll-type-check[value="1"] ~ .sheet-rolls-div-custom {
+    display: block;
+}
+
+.charsheet .roll-type-toggler {
+    position: absolute;
+    top: 0.7rem;
+    left: 1rem;
+}
+
+.charsheet .roll-type-toggler input[type=checkbox] {
+    width: 7.5em;   
+}
+
+.charsheet .roll-type-toggler input[type=checkbox] + span::before {
+    content: "Toggle Rolls Type";
+    width: 8em;
+    border-radius: 10px;
+}
+
+.charsheet .sheet-rolls-div-widget .repcontainer[data-groupname="repeating_rolls-widget"] {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 0.5em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem {
+.charsheet .sheet-rolls-div-widget .repcontainer[data-groupname="repeating_rolls-widget"] .repitem {
     display: flex;
     border: 1px solid;
     border-radius: 5px;
     overflow: hidden;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls {
+.charsheet .sheet-rolls-div-widget .sheet-rolls {
     width: 22.5em;
     resize: horizontal;
     overflow: hidden;
     min-width: 281px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-name {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-name {
     width: 2em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .cost-section .mote-total {
+.charsheet .sheet-rolls-div-widget .cost-section .mote-total {
     color: rgb(var(--mote-color));
     align-items: center;
     font-size: large;
     font-weight: bolder;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total {
+.charsheet .sheet-rolls-div-widget .cost-section .sheet-cost-mote-total {
     border: 3px outset rgb(var(--mote-color));
     border-radius: 10px;
     color: rgb(var(--mote-color));
@@ -4637,12 +4661,12 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     padding-top: 6px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
+.charsheet .sheet-rolls-div-widget .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
     color: black;
     background-color: red;
 }
 
-.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
+.sheet-darkmode .charsheet .sheet-rolls-div-widget .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
     background-color: rgb(255 129 0 / 86%);
 }
 
@@ -4660,16 +4684,16 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     flex-basis: 30%;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box {
+.charsheet .sheet-rolls-div-widget .specialty-box {
     width: 1em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box > input[type="checkbox"].sheet-rolls-specialty {
+.charsheet .sheet-rolls-div-widget .specialty-box > input[type="checkbox"].sheet-rolls-specialty {
     margin-top: 0;
     height: 27px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox] + span::before {
+.charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox] + span::before {
     color: #a00;
     content: "SPE";
     height: 24px;
@@ -4683,12 +4707,12 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     background: transparent;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:hover + span::before,
-.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:focus + span::before {
+.charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:hover + span::before,
+.charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:focus + span::before {
     background-color: white;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .specialty-box input[type=checkbox]:checked + span::before {
+.charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:checked + span::before {
     color: #0a0;
     content: "1";
     height: 16px;
@@ -4700,58 +4724,58 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     transform: none;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-stunt-dices {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-stunt-dices {
     background-color: rgba(var(--stunt-color), 0.65);
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-wp-toggle {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-wp-toggle {
     background-color: rgba(var(--willpower-color), 0.1);
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .dice-area,
-.charsheet .sheet-tab-rolls-widgets-sheet .dice-total,
-.charsheet .sheet-tab-rolls-widgets-sheet .success-area,
-.charsheet .sheet-tab-rolls-widgets-sheet .success-total {
+.charsheet .sheet-rolls-div-widget .dice-area,
+.charsheet .sheet-rolls-div-widget .dice-total,
+.charsheet .sheet-rolls-div-widget .success-area,
+.charsheet .sheet-rolls-div-widget .success-total {
     border-radius: 8px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .dice-area {
+.charsheet .sheet-rolls-div-widget .dice-area {
     background-color: rgba(var(--dice-color), 0.35);
 }
 
-.sheet-darkmode .charsheet .sheet-tab-rolls-widgets-sheet .dice-area {
+.sheet-darkmode .charsheet .sheet-rolls-div-widget .dice-area {
     background-color: rgba(var(--dark-dice-color), 0.80);
 }
 
-/* .charsheet .sheet-tab-rolls-widgets-sheet .success-area {
+/* .charsheet .sheet-rolls-div-widget .success-area {
     background-color: rgba(var(--success-color), 0.00);
 } */
 
-.charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting {
+.charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting {
     width: 5.8em;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0)
 and (min-resolution:.001dpcm) {
-    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-stunt-dices:has(option[value="2"]:checked),
-    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-wp-toggle:has(option[value="1"]:checked),
-    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
+    .charsheet .sheet-rolls-div-widget select.sheet-rolls-stunt-dices:has(option[value="2"]:checked),
+    .charsheet .sheet-rolls-div-widget select.sheet-rolls-wp-toggle:has(option[value="1"]:checked),
+    .charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
         outline: 3px solid;
     }
 
-    .charsheet .sheet-tab-rolls-widgets-sheet select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
+    .charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
         outline-color: rgb(var(--mote-color));
     }
 }
 
 @-moz-document url-prefix() {
-    .charsheet .sheet-tab-rolls-widgets-sheet .stunt-dices-check[value="2"] ~ select.sheet-rolls-stunt-dices,
-    .charsheet .sheet-tab-rolls-widgets-sheet .willpower-toggle-check[value="1"] ~ select.sheet-rolls-wp-toggle,
-    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
+    .charsheet .sheet-rolls-div-widget .stunt-dices-check[value="2"] ~ select.sheet-rolls-stunt-dices,
+    .charsheet .sheet-rolls-div-widget .willpower-toggle-check[value="1"] ~ select.sheet-rolls-wp-toggle,
+    .charsheet .sheet-rolls-div-widget .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
         outline: 3px solid;
     }
 
-    .charsheet .sheet-tab-rolls-widgets-sheet .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
+    .charsheet .sheet-rolls-div-widget .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
         outline-color: rgb(var(--mote-color));
     }
 }
@@ -4782,12 +4806,12 @@ and (min-resolution:.001dpcm) {
     flex-shrink: 1;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet input[type="number"] {
+.charsheet .sheet-tab-rolls-sheet input[type="number"] {
     width: 2em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-ycharm-dices input[type="number"],
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-ncharm-dices input[type="number"] {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-ycharm-dices input[type="number"],
+.charsheet .sheet-rolls-div-widget .sheet-rolls-ncharm-dices input[type="number"] {
     width: 1em;
 }
 
@@ -4800,17 +4824,17 @@ and (min-resolution:.001dpcm) {
     padding: 4px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet:has(span[name="attr_roll-penalty"]:hover) .ressource-line .rollpen-box p {
+.charsheet .sheet-tab-rolls-sheet:has(span[name="attr_roll-penalty"]:hover) .ressource-line .rollpen-box p {
     border: 2px solid;
     padding: 3px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet:has(.sheet-rolls-wp-toggle:hover) .ressource-line input[name="attr_willpower"] {
+.charsheet .sheet-tab-rolls-sheet:has(.sheet-rolls-wp-toggle:hover) .ressource-line input[name="attr_willpower"] {
     outline: 5px solid;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet:has(.pool-starting-check[value="0"] ~ .sheet-rolls .mote-hint:hover) .ressource-line input[name="attr_personal-essence"],
-.charsheet .sheet-tab-rolls-widgets-sheet:has(.pool-starting-check[value="1"] ~ .sheet-rolls .mote-hint:hover) .ressource-line input[name="attr_peripheral-essence"],
+.charsheet .sheet-tab-rolls-sheet:has(.pool-starting-check[value="0"] ~ .sheet-rolls .mote-hint:hover) .ressource-line input[name="attr_personal-essence"],
+.charsheet .sheet-tab-rolls-sheet:has(.pool-starting-check[value="1"] ~ .sheet-rolls .mote-hint:hover) .ressource-line input[name="attr_peripheral-essence"],
 .roll-section:has(.exc-sum:hover) .inner-section .excellency-box,
 .roll-section:has(.solar-type-excellency .exc-total:hover) .inner-section .solar-hint,
 .sheet-rolls:has(.lunar-type-excellency .exc-total:hover) .roll-section .lunar-hint,
@@ -4823,44 +4847,44 @@ and (min-resolution:.001dpcm) {
                 var(--bs-default-noffsetbig) var(--bs-default-noffsetbig) var(--bs-default-blurbig) var(--bs-charm-color);
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .dice-area-total .separator-box-mode {
+.charsheet .sheet-rolls-div-widget .dice-area-total .separator-box-mode {
     position: absolute;
     top: -1.4em;
     right: 0.1em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-separator {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-separator {
     display: none;
     background-color: darkred;
     justify-content: center;
     width: 420em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .sheet-rolls-separator .sheet-rolls-name {
+.charsheet .sheet-rolls-div-widget .sheet-rolls-separator .sheet-rolls-name {
     border: none;
     text-align: center;
     flex-grow: 1;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls {
+.charsheet .sheet-rolls-div-widget .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls {
     display: none;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls-separator {
+.charsheet .sheet-rolls-div-widget .repcontainer[data-groupname="repeating_rolls-widget"] .repitem .rolls-separator-check[value="1"] ~ .sheet-rolls-separator {
     display: flex;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .roll-section .dice-area .dice-area-total input[type="number"]:not(.rollpenalty,.woundpenalty),
-.charsheet .sheet-tab-rolls-widgets-sheet .roll-section .success-area .success-area-total input[type="number"]:not(.rollpenalty,.woundpenalty) {
+.charsheet .sheet-rolls-div-widget .roll-section .dice-area .dice-area-total input[type="number"]:not(.rollpenalty,.woundpenalty),
+.charsheet .sheet-rolls-div-widget .roll-section .success-area .success-area-total input[type="number"]:not(.rollpenalty,.woundpenalty) {
     width: 1.5em;
     font-weight: bold;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .roll-section .inner-section input[type="number"]:not(.rollpenalty,.woundpenalty) {
+.charsheet .sheet-rolls-div-widget .roll-section .inner-section input[type="number"]:not(.rollpenalty,.woundpenalty) {
     width: 1.2em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section {
     display: flex;
     flex-flow: column;
     border-right: 1px solid;
@@ -4870,78 +4894,78 @@ and (min-resolution:.001dpcm) {
 }
 
 /* Show corresponding Cap section */
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div {
     display: none;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Zenith"]           ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Dawn"]             ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Twilight"]         ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Night"]            ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Eclipse"]          ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Daybreak"]         ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Day"]              ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Dusk"]             ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Midnight"]         ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Moonshadow"]       ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Defiler"]          ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Fiend"]            ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Malefactor"]       ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Scourge"]          ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Slayer"]           ~ div.solar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Casteless"]        ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Changing Moon"]    ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Full Moon"]        ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="No Moon"]          ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Adamant"]          ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Jade"]             ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Moonsilver"]       ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Orichalcum"]       ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Soulsteel"]        ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Starmetal"]        ~ div.lunar-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Fire"]             ~ div.db-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Water"]            ~ div.db-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Earth"]            ~ div.db-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Air"]              ~ div.db-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Wood"]             ~ div.db-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Blood"]            ~ div.liminal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Breath"]           ~ div.liminal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Flesh"]            ~ div.liminal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Marrow"]           ~ div.liminal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Soil"]             ~ div.liminal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Endings"]          ~ div.sidereal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Battles"]          ~ div.sidereal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Secrets"]          ~ div.sidereal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Serenity"]         ~ div.sidereal-type-excellency,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.sheet-rolls-caste-val[value="Journeys"]         ~ div.sidereal-type-excellency {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Zenith"]           ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Dawn"]             ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Twilight"]         ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Night"]            ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Eclipse"]          ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Daybreak"]         ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Day"]              ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Dusk"]             ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Midnight"]         ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Moonshadow"]       ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Defiler"]          ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Fiend"]            ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Malefactor"]       ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Scourge"]          ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Slayer"]           ~ div.solar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Casteless"]        ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Changing Moon"]    ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Full Moon"]        ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="No Moon"]          ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Adamant"]          ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Jade"]             ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Moonsilver"]       ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Orichalcum"]       ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Soulsteel"]        ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Starmetal"]        ~ div.lunar-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Fire"]             ~ div.db-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Water"]            ~ div.db-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Earth"]            ~ div.db-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Air"]              ~ div.db-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Wood"]             ~ div.db-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Blood"]            ~ div.liminal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Breath"]           ~ div.liminal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Flesh"]            ~ div.liminal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Marrow"]           ~ div.liminal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Soil"]             ~ div.liminal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Endings"]          ~ div.sidereal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Battles"]          ~ div.sidereal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Secrets"]          ~ div.sidereal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Serenity"]         ~ div.sidereal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.sheet-rolls-caste-val[value="Journeys"]         ~ div.sidereal-type-excellency {
     display: block;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section input.exc-total {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.exc-total {
     font-weight: bold;
 }
 
 /* Warn over cap */
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-20"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-19"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-18"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-17"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-16"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-15"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-14"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-13"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-12"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-11"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-10"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-9"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-8"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-7"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-6"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-5"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-4"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-3"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-2"] ~ input.exc-sum,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input[name="attr_sign"][value="-1"] ~ input.exc-sum {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-20"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-19"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-18"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-17"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-16"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-15"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-14"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-13"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-12"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-11"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-10"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-9"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-8"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-7"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-6"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-5"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-4"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-3"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-2"] ~ input.exc-sum,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value="-1"] ~ input.exc-sum {
     background-color: var(--bs-charm-warning-color-dark);
 }
 
@@ -5390,34 +5414,34 @@ test removing :after which i assume prevent roll20 clicks
     cursor: not-allowed;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input.exc-sum {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input.exc-sum {
     background-color: transparent;
     border-radius: 14px 14px 0 0;
     border-top: 1px solid;
     border-bottom: 0;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input.exc-total {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input.exc-total {
     background-color: rgba(128, 128, 128, 0.5);
     border-radius: 0 0 14px 14px;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div select {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div select {
     width: 2.6rem;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div.liminal-type-excellency input,
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div.lunar-type-excellency input {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency input,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.lunar-type-excellency input {
     height: 1.3em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div.liminal-type-excellency > .anima-flare-box-mode > input[type="checkbox"] {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency > .anima-flare-box-mode > input[type="checkbox"] {
     margin: 0;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"] + span::before {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"] + span::before {
     color: #a00;
     background: transparent;
     content: "Dim";
@@ -5429,17 +5453,17 @@ test removing :after which i assume prevent roll20 clicks
     width: 100%;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"]:checked + span::before {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"]:checked + span::before {
     color: #aa0;
     content: "Flare";
     font-size: small;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div input {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input {
     height: 2em;
 }
 
-.charsheet .sheet-tab-rolls-widgets-sheet .excellency-cap-section > div select {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div select {
     -webkit-appearance: none;
     -moz-appearance: none;
     text-indent: 0.01px;
@@ -5456,24 +5480,24 @@ test removing :after which i assume prevent roll20 clicks
 }
 
 /* Hide Excellencies & Cap */
-.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .first-line > .flex-wrap.grow-normal,
-.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .first-line > .flex-wrap.grow-normal,
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
     display: none;
 }
 
-.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
-.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:first-child,
+.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:last-child {
     flex-basis: 50%;
 }
 
-.charsheet .caste-check[value="Exigent"]      ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section, /* will change */
-.charsheet .caste-check[value="Getimian"]     ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="God"]          ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="God-Blooded"]  ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Elemental"]    ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Demon"]        ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Undead"]       ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section,
-.charsheet .caste-check[value="Mortal"]       ~ .flex.main-page .sheet-tab-rolls-widgets-sheet .roll-section .inner-section {
+.charsheet .caste-check[value="Exigent"]      ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section, /* will change */
+.charsheet .caste-check[value="Getimian"]     ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section,
+.charsheet .caste-check[value="God"]          ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section,
+.charsheet .caste-check[value="God-Blooded"]  ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section,
+.charsheet .caste-check[value="Elemental"]    ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section,
+.charsheet .caste-check[value="Demon"]        ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section,
+.charsheet .caste-check[value="Undead"]       ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section,
+.charsheet .caste-check[value="Mortal"]       ~ .flex.main-page .sheet-rolls-div-widget .roll-section .inner-section {
     width: 100%;
 }
 
