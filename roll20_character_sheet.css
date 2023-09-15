@@ -4487,6 +4487,28 @@ textarea::-webkit-scrollbar-track {
     visibility: hidden;
 }
 
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem img.charm-icon-type {
+    width: 2.5rem;
+    height: 2.5rem;
+    content: url('https://s3.amazonaws.com/files.d20.io/images/359012802/7ef8SWFGP-TYoswJoUFUIQ/max.png?1694746149');
+}
+
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Simple"] ~ img.charm-icon-type {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/359011059/a4fo8e44XvIevADyteUKhg/max.png?1694745120');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Supplemental"] ~ img.charm-icon-type {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/359011060/98hIHQxYC88jYNbDbL5mZQ/max.png?1694745120');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Reflexive"] ~ img.charm-icon-type {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/359011063/D7CF4yHatd4YL_Wmw5Iqbw/max.png?1694745120');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Double"] ~ img.charm-icon-type {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/359011062/YrCkeJaY8nTRIVj9l6eYvQ/max.png?1694745120');
+}
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Permanent"] ~ img.charm-icon-type {
+    content: url('https://s3.amazonaws.com/files.d20.io/images/359011061/H3Wgg-mSkPCYfo4W9M28Vw/max.png?1694745120');
+}
+
 .charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .sheet-qcattr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
     width: 300px;
     left: -192px;
