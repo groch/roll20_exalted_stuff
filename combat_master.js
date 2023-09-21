@@ -278,6 +278,11 @@ var CombatMaster = CombatMaster || (function() {
 
     IsSenderGmOrTokenOwner = (who, playerID) => {
         logger('IsSenderGmOrTokenOwner::IN who='+who+', playerId='+playerID);
+
+        let turnorder = getTurnorder();
+        logger(`IsSenderGmOrTokenOwner::turnorder=${(turnorder.length == 0) ? false : true}`);
+        if (turnorder.length == 0) return;
+
         let currentTurnTokenObj = findObjs({_id:getCurrentTurnObject().id, _pageid:Campaign().get("playerpageid"), _type: 'graphic'})[0],
             tokenControlledBy = (getObj('character', currentTurnTokenObj.get('represents')) || currentTurnTokenObj).get('controlledby').split(',');
         if (!Array.isArray(tokenControlledBy)) tokenControlledBy = [tokenControlledBy];
