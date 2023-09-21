@@ -3826,7 +3826,7 @@ textarea::-webkit-scrollbar-track {
     background: #CFD8DC;
 }
 
-.charsheet .sheet-tab-rolls-sheet .rolls-textarea {
+.charsheet .sheet-tab-rolls-sheet .sheet-rolls-div-widget .rolls-textarea {
     min-width: 3em;
     width: 7em;
     height: 95%;
