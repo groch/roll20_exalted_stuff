@@ -5132,6 +5132,14 @@ and (min-resolution:.001dpcm) {
     font-weight: bold;
 }
 
+/* hide kirby on reminder opened */
+
+.charsheet .sheet-tab-rolls-sheet .rolls-area:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-toggle-desc,
+.charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-combat-toggle-desc,
+.charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-attacks input.sheet-combat-toggle-desc {
+    display: none;
+}
+
 /* Show corresponding Cap section */
 .charsheet .sheet-rolls-div-widget .excellency-cap-section > div {
     display: none;
