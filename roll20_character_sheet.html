@@ -10906,8 +10906,10 @@
                 <h1><span>Sorceries</span></h1>
                 <fieldset class="repeating_spells" style="display: none;">
                     <div class="flex flex-col sheet-body">
+                        <input type="hidden" name="attr_charm-shaping-ritual" class="shaping-ritual-check">
                         <div class="flex flex-wrap">
                             <input type="text" name="attr_repspell-name" style="width: 32% ; color: #9f0b10 ; font-weight: bold ; margin-right: 2px;" placeholder="Cirrus Skiff" class="grow-normal"><span> </span>
+                            <input type="checkbox" name="attr_charm-shaping-ritual" class="sheet-charms-spells-trait sheet-charms-spells-trait-shaping-ritual" title="is a Shaping Ritual" value="1">
                             <select name="attr_repspell-circle" style="width: 109px">
                                 <option value=""></option>
                                 <option value="Terrestrial">Terrestrial</option>
@@ -10917,21 +10919,21 @@
                             <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                             <div class="charm-buttons charm-buttons-show-default sheet-grouped-buttons">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n!exr @{rep-cost-macro}">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n!exr @{rep-cost-macro}">to GM</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{is-shaping-ritual=@{charm-shaping-ritual}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n!exr @{rep-cost-macro}">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{is-shaping-ritual=@{charm-shaping-ritual}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n!exr @{rep-cost-macro}">to GM</button>
                             </div>
                             <div class="charm-buttons charm-buttons-show-extended sheet-grouped-buttons">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} @{rep-cost-macro}">Cast</button>
-                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} -gm @{rep-cost-macro}">to GM</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_charmcast" value="&amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{is-shaping-ritual=@{charm-shaping-ritual}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} @{rep-cost-macro}">Cast</button>
+                                <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="act_charmcast" value="/w gm &amp;{template:exalted3e_cast} {{spell-name=@{repspell-name}}} {{is-shaping-ritual=@{charm-shaping-ritual}}} {{show-character-name=@{show_character_name}}} {{character-name=@{character_name}}} {{aspect=@{charm-aspect}}} {{balanced=@{charm-balanced}}} {{skill=Sorcery}} {{keywords=@{spell-keywords}}} {{circle=@{repspell-circle}}} {{cost=@{repspell-cost}}} {{duration=@{repspell-dur}}} {{description=@{spell-description}}} {{effect=@{repspell-effect}}}\n@{charm-rollexpr} -gm @{rep-cost-macro}">to GM</button>
                             </div>
                             <input type="text" name="attr_charm-short-desc" class="sheet-charms-spells-trait sheet-charms-spells-trait-short-desc" placeholder="short desc">
                         </div>
                         <div class="flex flex-wrap sheet-charms-spells-trait">
                             <label><span>Book: </span><input type="text" name="attr_spell-book" style="width: 5em" class="sheet-charms-spells-trait grow-normal" placeholder="Core"><span> </span></label>
                             <label><span>Page #: </span><input type="number" name="attr_spell-page" class="sheet-charms-spells-trait" placeholder="471" style="width: 5em;"><span> </span></label>
-                            <label><span>Duration: </span><input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span></label>
-                            <div class="flex"><label><span>Cost: </span><input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp"></label></div>
-                            <div class="flex"><label><span>Control: </span><div class="flex"><input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span></div></label></div>
+                            <label class="duration"><span>Duration: </span><input type="text" name="attr_repspell-dur" class="sheet-charms-spells-trait" placeholder="Until ended"><span> </span></label>
+                            <div class="flex cost"><label><span>Cost: </span><input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp"></label></div>
+                            <div class="flex control"><label><span>Control: </span><div class="flex"><input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span></div></label></div>
                             <div class="cost-section grow-normal">
                                 <p class="will-color-down rounded-box grow-normal flex">
                                     <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -21203,7 +21205,7 @@
         {{/charm-name}}
         {{#spell-name}}
         <div class="flex-row title-line">
-            <div class="flex-cell spell-name">
+            <div class="flex-cell spell-name" title={{is-shaping-ritual}}>
                 {{spell-name}}
             </div>
         </div>
@@ -21222,12 +21224,13 @@
         <div class="flex-row skill-type-line">
             {{#type}}
             <div class="flex-cell subheader">
-                <span class="type" title={{mute}}><img title={{type}} /></span>
+                <span title={{mute}}><img title={{type}} /></span>
             </div>
             {{/type}}
             {{#skill}}
             <div class="flex-cell subheader">
                 {{skill}}
+                <span class="skill shaping-ritual" title={{is-shaping-ritual}}>:&nbsp;</span><span class="skill shaping-ritual" title={{is-shaping-ritual}}>Shaping Ritual</span>
             </div>
             {{/skill}}
         </div>
@@ -21238,16 +21241,16 @@
             </div>
         </div>
         {{/keywords}}
-        <div class="flex-row final-line">
+        <div class="flex-row final-line hide-on-sr" title={{is-shaping-ritual}}>
             {{#circle}}
             <div class="flex-cell info"><div>
                 <span>Circle : </span>{{circle}}
             </div></div>
             {{/circle}}
-            <div class="flex-cell info"><div>
+            <div class="flex-cell info hide-on-sr"><div>
                 <span>Cost : </span>{{cost}}
             </div></div>
-            <div class="flex-cell info"><div>
+            <div class="flex-cell info hide-on-sr"><div>
                 <span>Duration : </span>{{duration}}
             </div></div>
         </div>
