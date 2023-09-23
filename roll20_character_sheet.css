@@ -2176,10 +2176,11 @@ and (min-resolution:.001dpcm) {
 }
 
 .sheet-rolltemplate-exalted3e_cast > div.sheet-flex:has(.sheet-spell-name) {
-    --bs-section-color: purple;
+    --bs-section-color: #dfb6ff;
     background-color: #dfb6ff;
 }
 .sheet-rolltemplate-exalted3e_cast > div.sheet-flex:has(.sheet-title-line[title="1"] .sheet-spell-name) {
+    --bs-section-color: #ae67ff;
     background-color: #ae67ff;
 }
 
@@ -2220,6 +2221,10 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_combatcast table tbody tr:first-child td,
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row:first-child div.sheet-flex-cell {
     padding-top: 5px;
+    text-shadow: var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-blur) #ffd70080,
+                 var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-blur) #ffd70080,
+                 var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-blur) #ffd70080,
+                 var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-blur) #ffd70080;
 }
 
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row.sheet-title-line {
