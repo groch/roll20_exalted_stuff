@@ -4718,6 +4718,10 @@ textarea::-webkit-scrollbar-track {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359063715/tP6EKHI1_qbLyoVoAdHqwQ/max.png?1694793441');
 }
 
+.charsheet input[name="attr_hide-not-learnt-charms-in-reminders"][value="1"] ~ div.flex.main-page .reminder-charms-main-div .reminder-charm-div .repitem:has(input.charm-learnt-check[value="0"]) {
+    display: none;
+}
+
 .charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-tab-content .sheet-qcattr-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
     width: 300px;
     left: -192px;
