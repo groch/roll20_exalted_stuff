@@ -4891,12 +4891,12 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 }
 
 .charsheet .roll-type-toggler input[type=checkbox] {
-    width: 7.5em;
+    width: 8.5em;
 }
 
 .charsheet .roll-type-toggler input[type=checkbox] + span::before {
     content: "Toggle Rolls Type";
-    width: 8em;
+    width: 9em;
     border-radius: 10px;
 }
 
