@@ -2049,6 +2049,17 @@ and (min-resolution:.001dpcm) {
     width: 5em;
 }
 
+.charsheet .sheet-tab-spell-sheet .sheet-charms-spells-trait .shaping-ritual {
+    display: none;
+}
+.charsheet .sheet-tab-spell-sheet .shaping-ritual-check[value="1"] ~ div.sheet-charms-spells-trait .shaping-ritual {
+    display: block;
+}
+
+.charsheet .sheet-tab-spell-sheet .shaping-ritual-check[value="1"] ~ div.sheet-charms-spells-trait .not-shaping-ritual {
+    display: none;
+}
+
 .charsheet input.sheet-charms-spells-trait-name{
     width: 12em;
     height: 28px;
@@ -2168,7 +2179,7 @@ and (min-resolution:.001dpcm) {
     --bs-section-color: purple;
     background-color: #dfb6ff;
 }
-.sheet-rolltemplate-exalted3e_cast > div.sheet-flex:has(.sheet-spell-name[title="1"]) {
+.sheet-rolltemplate-exalted3e_cast > div.sheet-flex:has(.sheet-title-line[title="1"] .sheet-spell-name) {
     background-color: #ae67ff;
 }
 
@@ -2286,8 +2297,13 @@ and (min-resolution:.001dpcm) {
     background-color: mediumpurple;
 }
 
+.sheet-rolltemplate-exalted3e_cast > div.sheet-flex .sheet-keyword-line[title="1"] .sheet-hide-on-sr,
+.sheet-rolltemplate-exalted3e_cast > div.sheet-flex .sheet-keyword-line .sheet-show-on-sr,
 .sheet-rolltemplate-exalted3e_cast > div.sheet-flex .sheet-final-line.sheet-hide-on-sr[title="1"] {
     display: none;
+}
+.sheet-rolltemplate-exalted3e_cast > div.sheet-flex .sheet-keyword-line[title="1"] .sheet-show-on-sr {
+    display: block;
 }
 
 .sheet-rolltemplate-exalted3e_cast .sheet-subheader {

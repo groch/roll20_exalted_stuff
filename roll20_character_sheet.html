@@ -10944,7 +10944,7 @@
                             <input type="hidden" name="attr_charm-balanced" value="0">
                         </div>
                         <div class="flex flex-wrap sheet-charms-spells-trait">
-                            <label><span>Keywords: </span><input type="text" name="attr_spell-keywords" class="sheet-charms-spells-trait grow-normal" placeholder="None"></label>
+                            <label><span class="not-shaping-ritual">Keywords: </span><span class="shaping-ritual">Origin: </span><input type="text" name="attr_spell-keywords" class="sheet-charms-spells-trait grow-normal" placeholder="None"></label>
                         </div>
                         <div class="sheet-table-row" style="width: 100%">
                             <input type="checkbox" name="attr_spell-effect-display" class="sheet-spelleffect" value="1"><span class="sheet-spelleffect" title="Show Description &amp; Effect"></span>
@@ -21203,14 +21203,14 @@
     <div class="flex">
         {{#charm-name}}
         <div class="flex-row title-line">
-            <div class="flex-cell charm-name">
+            <div class="flex-cell charm-name" title="Charm Name">
                 {{charm-name}}
             </div>
         </div>
         {{/charm-name}}
         {{#spell-name}}
-        <div class="flex-row title-line">
-            <div class="flex-cell spell-name" title={{is-shaping-ritual}}>
+        <div class="flex-row title-line" title={{is-shaping-ritual}}>
+            <div class="flex-cell spell-name" title="Spell Name">
                 {{spell-name}}
             </div>
         </div>
@@ -21240,9 +21240,12 @@
             {{/skill}}
         </div>
         {{#keywords}}
-        <div class="flex-row keyword-line">
-            <div class="flex-cell subheader flex" style="padding-top: 0px;" title={{keywords}}>
+        <div class="flex-row keyword-line" title={{is-shaping-ritual}}>
+            <div class="flex-cell subheader flex hide-on-sr" style="padding-top: 0px;" title={{keywords}}>
                 Keywords (Hover)
+            </div>
+            <div class="flex-cell subheader flex show-on-sr" style="padding-top: 0px;" title="Origin">
+                {{keywords}}
             </div>
         </div>
         {{/keywords}}
