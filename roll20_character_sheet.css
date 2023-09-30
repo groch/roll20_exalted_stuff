@@ -2188,7 +2188,7 @@ and (min-resolution:.001dpcm) {
     display: flex;
 }
 
-.sheet-rolltemplate-exalted3e_cast > div.sheet-flex div.sheet-flex-row div.sheet-flex-cell {
+.sheet-rolltemplate-exalted3e_cast div.sheet-flex-row div.sheet-flex-cell {
     display: flex;
     justify-content: center;
 }
