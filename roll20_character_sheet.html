@@ -1260,7 +1260,7 @@
 
     on('change:qc-soak', TAS._fn(async function quickSoakChange(e) {
         const val = Number(await getSingleAttrAsync('qc-soak'));
-        setAttrs({'naturalsoak': val > 1 ? val : 0});
+        setAttrs({'naturalsoak': val > 0 ? val - 1 : 0});
     }));
 
     on('change:repeating_qcattacks remove:repeating_qcattacks', setDebugWrapper(async function qcAttacksChange() {
