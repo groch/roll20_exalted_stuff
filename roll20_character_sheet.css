@@ -4704,6 +4704,10 @@ textarea::-webkit-scrollbar-track {
     visibility: hidden;
 }
 
+.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-can-cycle-aspects"][value="0"] ~ button {
+    display: none;
+}
+
 .charsheet .reminder-charms-main-div .reminder-charm-div .repitem img.charm-icon-type {
     width: 2.5rem;
     height: 2.5rem;
