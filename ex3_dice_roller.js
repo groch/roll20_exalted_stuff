@@ -56,10 +56,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             explodedColor = 'rgba(255, 235, 0, 1)',
             conditionalColor = 'cyan',
             initialRollColor = '#f06292',
-            formulaStyleBase = "font-size:inherit;background:white;border-radius:3px;",
-            totalStyle = formulaStyleBase + 'padding:4px;display:inline;border:1px solid #d1d1d1;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;',
-            formulaStyle = formulaStyleBase + 'padding-left:4px;border:1px solid #d1d1d1;font-size:1.1em;line-height:2.0em;word-wrap:break-word;',
-            formattedFormulaStyle = "display:block;float:left;",
+            formulaStyleBase = "font-size:inherit;background:white;border:1px solid #d1d1d1;",
+            formulaStyle = formulaStyleBase +   'border-radius:12px;padding:4px;font-size:1.0em;line-height:1.0em;word-wrap:break-word;',
+            diceStyle = formulaStyleBase +      'border-radius:3px;padding-left:4px;font-size:1.1em;line-height:2.0em;word-wrap:break-word;',
+            totalStyle = formulaStyleBase +     'border-radius:3px;padding:4px;display:inline;cursor:move;font-size:1.4em;font-weight:bold;color:black;line-height:2.0em;',
             uidraggableStyle = "cursor:move",
             diceBackgroundStyle = "position: absolute; top: 1px; left: 0%;",
             planeWalkerFont = "font-family: 'Planewalker';", // use font from character sheet css
@@ -2047,10 +2047,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
         var html = "";
         html += "<div style=\"" + outerStyle + "\"><div style=\"" + innerStyle + "\">";
-        html +=     "<div class=\"formula\" style=\"display:inline;" + formulaStyle + "\">" + player.get('displayname') + " roll " + origRoll + " </div>";
+        html +=     "<div class=\"formula\" style=\"" + formulaStyle + "\">" + player.get('displayname') + " roll <code style=\"font-size:0.8em;\">" + origRoll + "</code> </div>";
         html +=     "<div style=\"clear: both;\"></div>";
         if (!result.rollSetup.onlyResult) {
-            html += "<div class=\"formula formattedformula\" style=\"" + formulaStyle + ";" + formattedFormulaStyle + "\">";
+            html += "<div class=\"formula formattedformula\" style=\"" + diceStyle + "\">";
             html +=     "<div class=\"dicegrouping ui-sortable\" data-groupindex=\"0\">";
             html = displayRolls(vals, result, html);
             if (result.addedSuccessesLabel) html += result.addedSuccessesLabel;
@@ -2063,7 +2063,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             html += "<div style=\"clear: both;\"></div>";
         }
         html +=     "<strong> = </strong>";
-        html +=     "<div class=\"rolled ui-draggable\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
+        html +=     "<div class=\"rolled\" style=\"" + totalStyle + ";" + uidraggableStyle + "\">" + succTxt + " Success" + ((succ != 1) ? "es" : "") + "</div>";
         if (!result.rollSetup.noBotch && !succ && result.rollSetup.hasAtLeastOneFaceOne)
             html += "<p style='" + maxRecursionStyle + "'>YOU'VE BEEN BOTCHED</p>";
         html += "</div></div>";
