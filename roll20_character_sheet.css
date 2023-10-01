@@ -2147,14 +2147,98 @@ and (min-resolution:.001dpcm) {
 
 /* --- ROLLTEMPLATES --- */
 
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden {
+    display: none;
+}
+
 .sheet-rolltemplate-exalted3e_combatcast table,
 .sheet-rolltemplate-exalted3e_cast > div.sheet-flex {
     text-align:center;
-    background-color: #FFFFFF;
+    background-color: var(--bs-section-color);
     width:100%;
     font-size:12px;
     border-collapse:separate;
 }
+
+/* Solar box-shadow */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="zenith"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dawn"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="twilight"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="night"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="eclipse"] ~ div.sheet-flex {          --bs-section-color: #fff9d6; }
+/* Specific background for solars */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="zenith"] ~ div.sheet-flex {           background: linear-gradient(0deg, white, var(--bs-section-color), white); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dawn"] ~ div.sheet-flex {             background: linear-gradient(0deg, var(--bs-section-color), #fdf294); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="twilight"] ~ div.sheet-flex {         background: linear-gradient(0deg, #fdf294, var(--bs-section-color)); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="night"] ~ div.sheet-flex {            background: radial-gradient(var(--bs-section-color) 40%, #7a6700 55%, var(--bs-section-color) 70%); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="eclipse"] ~ div.sheet-flex {          background: radial-gradient(#fff1a4 25%, var(--bs-section-color) 42%, #fff1a4 55%, var(--bs-section-color) 70%); }
+/* Lunar box-shadow */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="casteless"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="changing moon"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="full moon"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="no moon"] ~ div.sheet-flex {          --bs-section-color: #c5c5c5; }
+/* Specific background for lunars */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="casteless"] ~ div.sheet-flex {        background: radial-gradient(white 25%, var(--bs-section-color) 42%, white 55%, var(--bs-section-color) 70%); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="changing moon"] ~ div.sheet-flex {    background: linear-gradient(150deg, white 30%, var(--bs-section-color), var(--bs-section-color), white 70%); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="full moon"] ~ div.sheet-flex {        background: radial-gradient(white 40%, var(--bs-section-color) 65%); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="no moon"] ~ div.sheet-flex {          background: radial-gradient(var(--bs-section-color) 40%, white 55%, var(--bs-section-color) 70%); }
+/* DB box-shadow */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="air"] ~ div.sheet-flex {              --bs-section-color: #c8ffff; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="earth"] ~ div.sheet-flex {            --bs-section-color: #d1af8c; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fire"] ~ div.sheet-flex {             --bs-section-color: #ffc8c8; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="water"] ~ div.sheet-flex {            --bs-section-color: #312d68; color: white; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="wood"] ~ div.sheet-flex {             --bs-section-color: #a8ffa8; }
+/* Sidereal star pattern */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="endings"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="battles"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex {
+    background:
+        linear-gradient(324deg, white 4%,   transparent 4%) -35px 21px,
+        linear-gradient( 36deg, white 4%,   transparent 4%) 15px 21px,
+        linear-gradient( 72deg, var(--bs-aspect-color) 8.5%, transparent 8.5%) 15px 21px,
+        linear-gradient(288deg, var(--bs-aspect-color) 8.5%, transparent 8.5%) -35px 21px,
+        linear-gradient(216deg, var(--bs-aspect-color) 7.5%, transparent 7.5%) -35px 11px,
+        linear-gradient(144deg, var(--bs-aspect-color) 7.5%, transparent 7.5%) 15px 11px,
+        linear-gradient(324deg, white 4%,   transparent 4%) -10px 46px,
+        linear-gradient( 36deg, white 4%,   transparent 4%) 40px 46px,
+        linear-gradient( 72deg, var(--bs-aspect-color) 8.5%, transparent 8.5%) 40px 46px,
+        linear-gradient(288deg, var(--bs-aspect-color) 8.5%, transparent 8.5%) -10px 46px,
+        linear-gradient(216deg, var(--bs-aspect-color) 7.5%, transparent 7.5%) -10px 36px,
+        linear-gradient(144deg, var(--bs-aspect-color) 7.5%, transparent 7.5%) 40px 36px;
+    background-color: white;
+    background-size: 50px 50px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="endings"] ~ div.sheet-flex {          --bs-aspect-color: #8000800a; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="battles"] ~ div.sheet-flex {          --bs-aspect-color: #ff00000f; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex {          --bs-aspect-color: #0080000f; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex {         --bs-aspect-color: #0000ff0a; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex {         --bs-aspect-color: #ffff0033; }
+/* Infernal box-shadow */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="defiler"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fiend"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="malefactor"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="scourge"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex {           --bs-section-color: #71ad71; }
+/* Abyssal box-shadow + text color */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="daybreak"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="day"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dusk"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="midnight"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="moonshadow"] ~ div.sheet-flex {       --bs-section-color: black; color: white; }
+/* Specific background for Abyssals */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="midnight"] ~ div.sheet-flex {         background: linear-gradient(0deg, var(--bs-section-color), #7a0000, var(--bs-section-color)); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="daybreak"] ~ div.sheet-flex {         background: linear-gradient(0deg, var(--bs-section-color), #7a0000); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dusk"] ~ div.sheet-flex {             background: linear-gradient(0deg, #7a0000, var(--bs-section-color)); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="day"] ~ div.sheet-flex {              background: radial-gradient(#383838 40%, #ad7171 55%, var(--bs-section-color) 70%); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="moonshadow"] ~ div.sheet-flex {       background: radial-gradient(#7a0000 25%, var(--bs-section-color) 42%, #7a0000 55%, var(--bs-section-color) 70%); }
+/* Liminal box-shadow + text color */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="blood"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="breath"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="flesh"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="marrow"] ~ div.sheet-flex,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soil"] ~ div.sheet-flex {             --bs-section-color: #4c4c4c; color: white; }
 
 .sheet-rolltemplate-exalted3e_combatcast table {
     border-radius: 10px 10px 0 0;
@@ -2217,16 +2301,58 @@ and (min-resolution:.001dpcm) {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
-
+/* spell/charm title text shadow */
 .sheet-rolltemplate-exalted3e_combatcast table tbody tr:first-child td,
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row:first-child div.sheet-flex-cell {
     padding-top: 5px;
-    text-shadow: var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-blur) #ffd70080,
-                 var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-blur) #ffd70080,
-                 var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-blur) #ffd70080,
-                 var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-blur) #ffd70080;
+    --bs-section-color: #ffd70080;
+    text-shadow: var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-blur) var(--bs-section-color),
+                 var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-blur) var(--bs-section-color),
+                 var(--bs-rolltemplate-poffset) var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-blur) var(--bs-section-color),
+                 var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-noffset) var(--bs-rolltemplate-blur) var(--bs-section-color);
 }
-
+/* Solar specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="zenith"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="twilight"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {      --bs-section-color: #ffcc0060; color: gold; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dawn"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="eclipse"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {       --bs-section-color: white; color: gold; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="night"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell{          --bs-section-color: black; color: gold; }
+/* Lunar specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="casteless"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="changing moon"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="full moon"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="no moon"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {       --bs-section-color: rgba(128, 128, 128, 0.5); color: gray; }
+/* DB specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="air"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {           --bs-section-color: cyan; color: blue; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="earth"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {         --bs-section-color: #6a3c01; color: white; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fire"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {          --bs-section-color: orangered; color: red; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="water"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {         --bs-section-color: black; color: blue; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="wood"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {          --bs-section-color: lime; color: #6a3c01; }
+/* Sidereals specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="endings"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {       --bs-section-color: purple; color: purple; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="battles"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {       --bs-section-color: orangered; color: red; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {       --bs-section-color: green; color: green; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {      --bs-section-color: blue; color: pink; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {      --bs-section-color: orange; color: yellow; }
+/* Infernals specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="defiler"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fiend"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="malefactor"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="scourge"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {        --bs-section-color: green; color: lime; }
+/* Abyssals specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="daybreak"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="day"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dusk"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="midnight"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="moonshadow"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {    --bs-section-color: darkred; color: red; }
+/* Liminals specific */
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="blood"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="breath"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="flesh"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="marrow"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soil"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {          --bs-section-color: black; color: white; }
+/* default title */
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row.sheet-title-line {
     color:#0095c6;
     font-size:20px;
@@ -2410,6 +2536,106 @@ and (min-resolution:.001dpcm) {
 
 .sheet-rolltemplate-exalted3e_cast .sheet-aspect-name-line span[title="0"]{
     display: none;
+}
+
+.sheet-rolltemplate-exalted3e_cast .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast .sheet-skill-type-line span > img {
+    outline: 1px black solid;
+    background-color: #00000060;
+}
+/* Aspect outline area specifics */
+.sheet-rolltemplate-exalted3e_cast .sheet-aspect-name-line span:last-child > img {
+    border-radius: 15px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="defiler"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fiend"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="malefactor"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="scourge"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="battles"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="endings"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-radius: unset;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="battles"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="endings"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    background-color: #00000040;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="battles"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-top-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 11px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="endings"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 15px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 15px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-radius: 12px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="defiler"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fiend"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="malefactor"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="scourge"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    background-color: #00ff0040;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="defiler"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="malefactor"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-radius: 10px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fiend"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="scourge"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-radius: 15px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="daybreak"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="day"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="dusk"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="midnight"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="moonshadow"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    background-color: #ff000040;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="adamant"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="jade"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="moonsilver"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="orichalcum"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soulsteel"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img,
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="starmetal"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    background-color: #00000020;
+}
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="sorceries"] ~ div.sheet-flex .sheet-aspect-name-line span:last-child > img {
+    outline: unset;
+    background-color: unset;
+    border-radius: unset;
+}
+
+.sheet-rolltemplate-exalted3e_cast .sheet-skill-type-line span > img {
+    border-radius: 5px;
 }
 
 .sheet-rolltemplate-exalted3e_cast span > img{
