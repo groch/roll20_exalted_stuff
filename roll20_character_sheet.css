@@ -2215,12 +2215,40 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="secrets"] ~ div.sheet-flex {          --bs-aspect-color: #0080000f; }
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="serenity"] ~ div.sheet-flex {         --bs-aspect-color: #0000ff0a; }
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="journeys"] ~ div.sheet-flex {         --bs-aspect-color: #ffff0033; }
-/* Infernal box-shadow */
+/* Infernal box-shadow + Circle pattern */
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="defiler"] ~ div.sheet-flex,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="fiend"] ~ div.sheet-flex,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="malefactor"] ~ div.sheet-flex,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="scourge"] ~ div.sheet-flex,
-.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex {           --bs-section-color: #71ad71; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="slayer"] ~ div.sheet-flex {
+    --bs-section-color: #667D39;
+    --other-green: #C6C77730;
+    --back-green: var(--bs-section-color);
+    background:
+	repeating-radial-gradient(
+		circle at 50% 25%,
+		var(--other-green),
+		var(--other-green) .25em,
+		transparent 1em,
+		transparent 2em
+	),
+	repeating-radial-gradient(
+		circle at 25% 50%,
+		var(--other-green),
+		var(--other-green) .25em,
+		transparent 1em,
+		transparent 2em
+	),
+	repeating-radial-gradient(
+		circle at 75% 50%,
+		var(--other-green),
+		var(--other-green) .25em,
+		transparent 1em,
+		transparent 2em
+	), var(--back-green);
+
+    background-blend-mode: overlay;
+}
 /* Abyssal box-shadow + text color */
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="daybreak"] ~ div.sheet-flex,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="day"] ~ div.sheet-flex,
@@ -2521,6 +2549,7 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast div.sheet-desc{
     height: 38px;
     font-style: italic;
+    background-color: #ffffff20;
 }
 
 .sheet-rolltemplate-exalted3e_cast div.sheet-effect{
