@@ -4157,16 +4157,16 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div><!-- 1.3.3.3 WILLPOWER & LIMIT AREA; OR QC RIGHT COLUMN -->
+                        <div><!-- 1.3.3.3 WILLPOWER & ESSENCE & LIMIT AREA; OR QC RIGHT COLUMN -->
                             <input type="hidden" name="attr_showlimit_final" class="show-limit" value="(@{showlimit}+@{qc})" disabled="disabled" data-formula="(@{showlimit}+@{qc})">
                             <div class="sheet-2colrow sheet-resize-to-mortal">
                                 <div class="sheet-col"><!-- 1.3.3.3.1 WILLPOWER & ESSENCE -->
                                     <h1><span>Willpower</span></h1>
                                     <div style="padding: 0 6px 6px 6px;">
-                                        <input type="number" name="attr_willpower" value="5" min="0" max="15" style="width: 100%;">
+                                        <input type="number" name="attr_willpower" value="5" min="0" max="15" style="width: 100%;" title="Actual Willpower">
                                     </div>
                                     <div style="padding-left: 6px">
-                                        <div class="sheet-dots-full">
+                                        <div class="sheet-dots-full" title="Max Willpower">
                                             <input type="radio" class="sheet-dots0" name="attr_willpower_max" value="0"><span></span>
                                             <input type="radio" class="sheet-dots1" name="attr_willpower_max" value="1"><span></span>
                                             <input type="radio" class="sheet-dots2" name="attr_willpower_max" value="2"><span></span>
