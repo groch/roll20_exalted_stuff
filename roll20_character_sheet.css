@@ -2266,7 +2266,15 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="breath"] ~ div.sheet-flex,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="flesh"] ~ div.sheet-flex,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="marrow"] ~ div.sheet-flex,
-.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soil"] ~ div.sheet-flex {             --bs-section-color: #4c4c4c; color: white; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soil"] ~ div.sheet-flex {
+    --bs-section-color: #323131;
+    --bs-section-color2: #afa8a8;
+    color: white;
+    background:
+    linear-gradient(0deg, var(--bs-section-color), var(--bs-section-color2), var(--bs-section-color)),
+    linear-gradient(90deg, var(--bs-section-color), var(--bs-section-color2), var(--bs-section-color));
+    background-blend-mode: darken;
+}
 
 .sheet-rolltemplate-exalted3e_combatcast table {
     border-radius: 10px 10px 0 0;
@@ -2379,7 +2387,7 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="breath"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="flesh"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="marrow"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell,
-.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soil"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {          --bs-section-color: black; color: white; }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="soil"] ~ div.sheet-flex div.sheet-flex-row:first-child div.sheet-flex-cell {          --bs-section-color: white; color: black; }
 /* default title */
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row.sheet-title-line {
     color:#0095c6;
