@@ -2179,9 +2179,38 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="no moon"] ~ div.sheet-flex {          --bs-section-color: #c5c5c5; }
 /* Specific background for lunars */
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="casteless"] ~ div.sheet-flex {        background: radial-gradient(white 25%, var(--bs-section-color) 42%, white 55%, var(--bs-section-color) 70%); }
-.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="changing moon"] ~ div.sheet-flex {    background: linear-gradient(150deg, white 30%, var(--bs-section-color), var(--bs-section-color), white 70%); }
+.sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="changing moon"] ~ div.sheet-flex {
+    background-size: 100% 500%;
+    background-image: linear-gradient(150deg, var(--bs-section-color) 30%, white, white, var(--bs-section-color) 70%);
+    -webkit-animation: AnimateBG 10s ease infinite;
+    animation: AnimateBG 10s ease infinite;
+}
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="full moon"] ~ div.sheet-flex {        background: radial-gradient(white 40%, var(--bs-section-color) 65%); }
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="no moon"] ~ div.sheet-flex {          background: radial-gradient(var(--bs-section-color) 40%, white 55%, var(--bs-section-color) 70%); }
+
+@-webkit-keyframes AnimateBG {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 50% 50%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+  
+@keyframes AnimateBG {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 50% 50%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
 /* DB box-shadow */
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="air"] ~ div.sheet-flex {              --bs-section-color: #c8ffff; }
 .sheet-rolltemplate-exalted3e_cast > span.sheet-hidden[title="earth"] ~ div.sheet-flex {            --bs-section-color: #d1af8c; }
