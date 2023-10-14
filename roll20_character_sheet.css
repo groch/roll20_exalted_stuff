@@ -3615,7 +3615,7 @@ body.sheet-darkmode {
 .charsheet .sheet-tab-rolls-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .personal-mote-val[value="0"] ~ div.personal-mote-toggle,
 .charsheet .sheet-tab-combat-sheet .peripheral-mote-val[value="0"] ~ div.peripheral-mote-toggle,
-.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-content .caste-have-exc-toggle {
+.charsheet .roll-can-spend-motes[value="0"] ~ .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-tab-content .caste-have-exc-toggle {
     display: none;
 }
 
@@ -6088,7 +6088,7 @@ test removing :after which i assume prevent roll20 clicks
 }
 
 /* Hide Excellencies & Cap */
-.charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .first-line > .flex-wrap.grow-normal,
+.charsheet .roll-can-spend-motes[value="0"] ~ .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .first-line > .flex-wrap.grow-normal,
 .charsheet .caste-have-exc-check[value="0"] ~ .flex.main-page .sheet-rolls-div-widget .roll-section .flex.grow-normal > .flex.grow-normal div.inline-flex.grow-normal:nth-child(2) {
     display: none;
 }
