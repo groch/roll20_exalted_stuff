@@ -174,7 +174,10 @@ Duplicate Token:
 
 AddMotes:
 !cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;|Full, qty:420}
+!cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;?{Perso ?&#124;No&#44;&#124;Yes&#44;&amp;#44;perso:1&#125;|Full, qty:420}
 
+?{Perso ?|No,|Yes,&#44;perso:1}
+?{Perso ?&#124;No&#44;&#124;Yes&#44;&amp;#44;perso:1&#125;
 
 Replace Simple Img:
 !token-mod --set imgsrc|@{target|token_id} --ids @{selected|token_id}
@@ -226,6 +229,10 @@ Hiroo:
 	Jorg-85%,scale&#124;[[0.014285714285&#42;0.85]]un currentside&#124;14}
 
 
+Asad:
+!token-mod --set ?{Glow ?|
+	No,emits_low&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; --off playersedit_aura1 aura1_square|
+	Yes,emits_low&#124;1 low_distance&#124;3 showplayers_aura1&#124;1 aura1_radius&#124;0.1 --off playersedit_aura1 aura1_square}
 
 
 /* OLD */
