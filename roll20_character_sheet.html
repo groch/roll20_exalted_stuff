@@ -1984,10 +1984,16 @@
         on(`clicked:repeating_${section}:learn-charm`, TAS._fn(async function clickGMCharmCast(e) {
             if (debug === 2) TAS.debug(`CLICKED "LEARN!", e=`, e);
             const id = e.sourceAttribute.split('_')[2];
+            setAttrs({[`repeating_${section}_${id}_charm-learnt`] : 1});
+        }));
+
+        on(`change:repeating_${section}:charm-learnt`, TAS._fn(async function changedCharmLearnt(e) {
+            if (debug === 2) TAS.debug(`CHANGED "LEARN!", e=`, e);
+            if (e.newValue === '0') return;
+            const id = e.sourceAttribute.split('_')[2];
             const values = await getAttrsAsync(["character_name", `repeating_${section}_${id}_charm-name`]);
             const results = await startRoll(`/w gm **${values['character_name']}** is Learning a NEW CHARM called *"${values[`repeating_${section}_${id}_charm-name`]}"* for section *"${section}"* !`);
             finishRoll(results.rollId);
-            setAttrs({[`repeating_${section}_${id}_charm-learnt`] : 1});
         }));
     });
 
