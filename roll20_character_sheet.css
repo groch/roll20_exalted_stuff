@@ -2435,6 +2435,7 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row.sheet-aspect-name-line .sheet-subheader,
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row.sheet-skill-type-line .sheet-subheader {
     font-size:16px;
+    text-transform: capitalize;
 }
 .sheet-rolltemplate-exalted3e_cast div.sheet-flex-row.sheet-aspect-name-line div:nth-child(2) {
     align-items: center;
