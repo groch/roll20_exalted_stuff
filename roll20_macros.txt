@@ -157,7 +157,7 @@ Fire Token+Light Scale:
 Roll:
 !exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter &#125;}
 noDbl
-!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,?{Commande a Ajouter &#125;}
+!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,-D ?{Commande a Ajouter &#125;}
 
 
 GM-Roll:
