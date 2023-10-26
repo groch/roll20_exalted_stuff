@@ -155,9 +155,9 @@ Fire Token+Light Scale:
 !token-mod --set scale|[[?{Size ?(1 = 100%)|1}*0.014285714285]]un low_distance|[[?{Size ?(1 = 100%)|1}*3]] bright_distance|[[?{Size ?(1 = 100%)|1}]]
 
 Roll:
-!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter :&#125;}
+!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter &#125;}
 noDbl
-!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,?{Commande a Ajouter :&#125;}
+!exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,?{Commande a Ajouter &#125;}
 
 
 GM-Roll:
