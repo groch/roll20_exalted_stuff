@@ -230,7 +230,7 @@ var CombatMaster = CombatMaster || (function() {
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -687,9 +687,31 @@ var CombatMaster = CombatMaster || (function() {
 
         let qty = cmdDetails.details['qty'] ? parseInt(cmdDetails.details['qty']) : state[combatState].config.turnorder.moteQtyToAdd,
             persoFirst = cmdDetails.details['perso'] ? Boolean(parseInt(cmdDetails.details['perso'])) : false,
+            setTo = cmdDetails.details['setTo'],
             charAddedList = [];
 
-        if (!selected) {
+        const G1List = [
+            '-MnWDFEerQ9z34NUCPCz', //Ull
+            '-MoJPqIQJAYwhVuvR0p7', //Fen
+            '-Mn2_Su4Hr6qJQ6SxuRL', //Fergus
+            '-MnbSkuM1FDOPEnDQ9eo', //Selenok
+            '-NctPBAcddhxluRlgzM7'  //Lexie
+        ], G2List =  [
+            '-N3lNrKpryeqDytVY-VQ', //Hakim
+            '-Mvffl_dITbDYnQGtNcQ', //Sky
+            '-MwU6YUZLIU6CClylmYY', //Toki
+            '-N37bRsnrayFJ1P1GLG9'  //Hajime
+        ];
+
+        if (setTo) {
+            logger(`addMotesCommand::SET-TO=${setTo}`);
+            let charList;
+            if (setTo === 'G1') charList = findObjs({_type: 'character'}).filter(i => G1List.includes(i.get('id')));
+            else if (setTo === 'G2') charList = findObjs({_type: 'character'}).filter(i => G2List.includes(i.get('id')));
+            else charList = [getObj('character',setTo)];
+            for (const obj of charList)
+                if (addMotesToNonMortalCharacter(obj, qty, persoFirst)) charAddedList.push(makeCharacterLink(obj));
+        } else if (!selected) {
             let charList = findObjs({_type: 'character'}).filter(i => getAttrByName(i.get('id'), 'caste') !== 'Mortal');
             logger(`addMotesCommand::NO SELECTED, ADDING TO ALL CHAR: ${charList.map(i => i.get('name'))}`);
             for (const obj of charList)

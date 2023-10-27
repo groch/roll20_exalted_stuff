@@ -175,6 +175,7 @@ Duplicate Token:
 AddMotes:
 !cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;|Full, qty:420}
 !cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;?{Perso ?&#124;No&#44; &#124;Yes&#44;&amp;#44;perso:1&#125;|Full, qty:420}
+!cmaster --moteAdd?{Qty ?|Default, |Custom,&#44;qty:?{How many ?&#124;5&#125;?{Perso ?&#124;No&#44; &#124;Yes&#44;&amp;#44;perso:1&#125;|Full, qty:420}?{Set To ?|Default, |Groupe 1,&#44;setTo:G1|Groupe 2,&#44;setTo:G2}
 
 ?{Perso ?|No,|Yes,&#44;perso:1}
 ?{Perso ?&#124;No&#44;&#124;Yes&#44;&amp;#44;perso:1&#125;
