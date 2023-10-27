@@ -397,25 +397,25 @@ var CombatMaster = CombatMaster || (function() {
         if (cmdDetails.action == 'help')        showHelp(cmdDetails);
 
         const simpleCastList = [
-                {key:'announceCrashAndSendInitGainButton',  fxName:'announceCrashAndSendInitGainButton',  fx: announceCrashAndSendInitGainButton},
-                {key:'announceCrashOff',                    fxName:'announceCrashOff',                    fx: announceCrashOff},
-                {key:'applyGrabDefPen',                     fxName:'applyGrabDefPen',                     fx: applyGrabDefPen},
-                {key:'remGrabDefPen',                       fxName:'remGrabDefPen',                       fx: remGrabDefPen},
-                {key:'applyProneDefPen',                    fxName:'applyProneDefPen',                    fx: applyProneDefPen},
-                {key:'remProneDefPen',                      fxName:'remProneDefPen',                      fx: remProneDefPen},
-                {key:'applyLightCoverDefBonus',             fxName:'applyLightCoverDefBonus',             fx: applyLightCoverDefBonus},
-                {key:'applyHeavyCoverDefBonus',             fxName:'applyHeavyCoverDefBonus',             fx: applyHeavyCoverDefBonus},
-                {key:'remCoverDefBonus',                    fxName:'remCoverDefBonus',                    fx: remCoverDefBonus},
-                {key:'applyClashDefPen',                    fxName:'applyClashDefPen',                    fx: applyClashDefPen},
-                {key:'remClashDefPen',                      fxName:'remClashDefPen',                      fx: remClashDefPen},
-                {key:'getHandoutMenu',                      fxName:'getHandoutMenu',                      fx: getHandoutMenu},
+                {key:'announceCrashAndSendInitGainButton', fx: announceCrashAndSendInitGainButton},
+                {key:'announceCrashOff',                   fx: announceCrashOff},
+                {key:'applyGrabDefPen',                    fx: applyGrabDefPen},
+                {key:'remGrabDefPen',                      fx: remGrabDefPen},
+                {key:'applyProneDefPen',                   fx: applyProneDefPen},
+                {key:'remProneDefPen',                     fx: remProneDefPen},
+                {key:'applyLightCoverDefBonus',            fx: applyLightCoverDefBonus},
+                {key:'applyHeavyCoverDefBonus',            fx: applyHeavyCoverDefBonus},
+                {key:'remCoverDefBonus',                   fx: remCoverDefBonus},
+                {key:'applyClashDefPen',                   fx: applyClashDefPen},
+                {key:'remClashDefPen',                     fx: remClashDefPen},
+                {key:'getHandoutMenu',                     fx: getHandoutMenu},
             ],
             checkedCastList = [
-                {key:'onslaught',                           fxName:'addOnslaughtToPlayer',                fx: addOnslaughtToPlayer},
-                {key:'moteAdd',                             fxName:'addMotesCommand',                     fx: addMotesCommand},
-                {key:'togglePageSize',                      fxName:'togglePageSize',                      fx: togglePageSize},
-                {key:'applyInitBonusToCrasherSelected',     fxName:'applyInitBonusToCrasherSelected',     fx: applyInitBonusToCrasherSelected},
-                {key:'rstInitToSelected',                   fxName:'rstInitToSelected',                   fx: rstInitToSelected}
+                {key:'onslaught',                          fx: addOnslaughtToPlayer},
+                {key:'moteAdd',                            fx: addMotesCommand},
+                {key:'togglePageSize',                     fx: togglePageSize},
+                {key:'applyInitBonusToCrasherSelected',    fx: applyInitBonusToCrasherSelected},
+                {key:'rstInitToSelected',                  fx: rstInitToSelected}
             ];
 
         for (const fxObj of checkedCastList) {
@@ -424,14 +424,14 @@ var CombatMaster = CombatMaster || (function() {
                     logger(LOGLEVEL.NOTICE, `commandHandler::${fxObj.key} received but user is not GM`);
                     return;
                 }
-                logger(`commandHandler::before ${fxObj.fxName}`);
+                logger(`commandHandler::before ${fxObj.fx.name}`);
                 fxObj.fx(cmdDetails, msg.selected);
             }    
         }
 
         for (const fxObj of simpleCastList) {
             if (cmdDetails.action == fxObj.key) {
-                logger(`commandHandler::before ${fxObj.fxName}`);
+                logger(`commandHandler::before ${fxObj.fx.name}`);
                 fxObj.fx(cmdDetails, msg.selected);
             }    
         }
