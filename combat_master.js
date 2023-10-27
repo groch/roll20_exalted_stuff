@@ -791,7 +791,7 @@ var CombatMaster = CombatMaster || (function() {
         }
         logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON MORTAL FOUND:${characterObj.get('name')}`);
         let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
-        const controlledByNames = getControlledByNames(characterObj);
+        const controlledByNames = getControlledByNamesWithoutGM(characterObj);
 
         let displayedEssenceObj = attrList.filter(i => 'displayed-essence' === i.get('name'))[0];
         if (!displayedEssenceObj) {
@@ -808,13 +808,13 @@ var CombatMaster = CombatMaster || (function() {
         return added && controlledByNames.length ? true : false;
     },
 
-    getControlledByNames = (characterObj) => {
+    getControlledByNamesWithoutGM = (characterObj) => {
         let controlledBy = characterObj.get('controlledby');
         controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
-        return controlledBy.map(i => {
-            const playerObj = getObj('player', i);
-            if (playerObj) return playerObj.get('_displayname');
-            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i} probably imported character`);
+        return controlledBy.map(id => {
+            const playerObj = getObj('player', id);
+            if (playerObj && !playerIsGM(id)) return playerObj.get('_displayname');
+            if (!playerObj) logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${id} probably imported character`);
             return false;
         }).filter(i => i);
     },
