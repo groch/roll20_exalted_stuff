@@ -1451,7 +1451,7 @@
 
     function computeRepeatingRollCostAsync(e) {
         return new Promise((resolve,reject)=>{
-            try  { computeRepeatingRollCost(e,(values)=>{ resolve(values); });}
+            try  { computeRepeatingRollCost(e,()=>{ resolve(); });}
             catch{ reject(); }});
     }
     async function computeRepeatingRollCost(e, cb) {
@@ -1601,7 +1601,7 @@
 
     function computeIdRepeatingRollAsync(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
         return new Promise((resolve,reject)=>{
-            try  { computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced,(values)=>{ resolve(values); }); }
+            try  { computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced,()=>{ resolve(); }); }
             catch{ reject(); }});
     }
     async function computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false, cb) {
@@ -1883,7 +1883,7 @@
 
     function updateRollWidgetForCostAsync(e) {
         return new Promise((resolve,reject)=>{
-            try  { updateRollWidgetForCost(e,(values)=>{ resolve(values); });}
+            try  { updateRollWidgetForCost(e,()=>{ resolve(); });}
             catch{ reject(); }});
     }
     async function updateRollWidgetForCost(e, cb) {
