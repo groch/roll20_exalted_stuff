@@ -1202,7 +1202,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         const attrName = attr.get('name');
         const attrNameStylised = attrName.indexOf('personal') !== -1 ? attrName : `<u>${attrName}</u>`;
         const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attrNameStylised}</b>`;
-        const controlledByNames = getControlledByNames(characterObj);
+        const controlledByNames = getControlledByNamesWithoutGM(characterObj);
         attr.set('current', current - toRemove);
 
         logger(`removeMotesToCharacter::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
@@ -1218,20 +1218,20 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         else                                     sendWhisperStandardScriptMessage(playerStrName, outString, '', `${styles.defaultDivStyle}color:orange;`, false, 'background: darkred;');// linear-gradient(transparent, darkred)
     },
 
-    getControlledByNames = (characterObj) => {
+    getControlledByNamesWithoutGM = (characterObj) => {
         let controlledBy = characterObj.get('controlledby');
         controlledBy = (controlledBy !== '') ? controlledBy.split(',') : [];
-        return controlledBy.map(i => {
-            const playerObj = getObj('player', i);
-            if (playerObj) return playerObj.get('_displayname');
-            logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${i}`);
+        return controlledBy.map(id => {
+            const playerObj = getObj('player', id);
+            if (playerObj && !playerIsGM(id)) return playerObj.get('_displayname');
+            if (!playerObj) logger(LOGLEVEL.ERROR, `ERROR NO PLAYEROBJ FOR THIS ID:${id}`);
             return false;
         }).filter(i => i);
     },
 
     sendWillWhispers = (characterObj, playerId, actualVal, val) => {
         const charLink = makeCharacterLink(characterObj, playerId);
-        const controlledByNames = getControlledByNames(characterObj);
+        const controlledByNames = getControlledByNamesWithoutGM(characterObj);
 
         if (actualVal - val < 0) {
             sendGMStandardScriptMessage(`WILLPOWER ERROR WHEN ${charLink} CASTED<br /><b>ACTUAL=</b>${actualVal} <b>COST=</b>${val} !!!`, undefined, undefined, undefined, 'background-color: red;');
