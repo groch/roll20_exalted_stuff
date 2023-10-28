@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.53, debug = 1;
+    const version = 2.54, debug = 1;
     var TAS;
 
     /**
@@ -614,6 +614,7 @@
         {version: 2.50, fn: upgradeto251},
         {version: 2.51, fn: upgradeto252},
         {version: 2.52, fn: upgradeto253},
+        {version: 2.53, fn: upgradeto254},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -632,7 +633,7 @@
 
             const upgradeRemaining = updateList.filter(i => i.version >= v).sort((a,b) => a.version - b.version);
             for (const u of upgradeRemaining) {
-                TAS.debug(`Upgrade to do = v=${u.version}`);
+                TAS.debug(`Upgrade to do = v=${u.version} fx=${u.fn.name}`);
                 TAS._fn(u.fn());
             }
         }
@@ -820,6 +821,17 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto254() {
+        const finalObj = {'version': version};
+        const idOtherCharms = await getSectionIDsAsync("charms");
+        for (const id of idOtherCharms) {
+            const valuesSections = await getAttrsAsync([`repeating_charms_${id}_charm-name`, `repeating_charms_${id}_charm-skill`]);
+            if (!valuesSections[`repeating_charms_${id}_charm-skill`] && ['Generic Excellency', 'Generic Defense Excellency'].includes(valuesSections[`repeating_charms_${id}_charm-name`]))
+                finalObj[`repeating_charms_${id}_charm-skill`] = 'Exalted Power';
+        }
+        await setAttrsAsync(finalObj);
+    }
 
     async function upgradeto253() {
         const finalObj = {'version': version};
