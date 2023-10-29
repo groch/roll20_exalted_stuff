@@ -1880,6 +1880,78 @@
         setAttrs(obj);
     }));
 
+    /* Add Spirit Charms button */
+    on('clicked:add-spirit-charms-btn', TAS._fn(async function addSpiritCharms(eventInfo){
+        const caste = await getSingleAttrAsync(`caste`);
+        const idsCharms = await getSectionIDsAsync("charms");
+        const charmObj = {};
+        const idCharm1 = generateNewRowId(idsCharms);
+        charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Hurry Home';
+        charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '10m, 1wp';
+        charmObj[`repeating_charms_${idCharm1}_rep-cost-mote`] = '10';
+        charmObj[`repeating_charms_${idCharm1}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms_${idCharm1}_rep-cost-will`] = '1';
+        charmObj[`repeating_charms_${idCharm1}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;10:will;1';
+        charmObj[`repeating_charms_${idCharm1}_charm-short-desc`] = 'Back to Sanctuary';
+        charmObj[`repeating_charms_${idCharm1}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms_${idCharm1}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms_${idCharm1}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The spirit fades away and vanishes on its next turn, drawn instantly back to its sanctum.';
+
+        const idCharm2 = generateNewRowId(idsCharms);
+        charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Materialize';
+        charmObj[`repeating_charms_${idCharm2}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms_${idCharm2}_charm-cost`] = '[[ceil((@{personal-essence_max}) / 2)]]m, 1wp';
+        charmObj[`repeating_charms_${idCharm2}_rep-cost-mote`] = '[[ceil((@{personal-essence_max}) / 2)]]';
+        charmObj[`repeating_charms_${idCharm2}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms_${idCharm2}_rep-cost-will`] = '1';
+        charmObj[`repeating_charms_${idCharm2}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;[[ceil((@{personal-essence_max}) / 2)]]:will;1';
+        charmObj[`repeating_charms_${idCharm2}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms_${idCharm2}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms_${idCharm2}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms_${idCharm2}_charm-effect`] = 'Allows the spirit to take on flesh and appear in front of everyone present.';
+
+        const idCharm3 = generateNewRowId(idsCharms);
+        charmObj[`repeating_charms_${idCharm3}_charm-name`] = 'Measure the Wind';
+        charmObj[`repeating_charms_${idCharm3}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms_${idCharm3}_charm-cost`] = '5m';
+        charmObj[`repeating_charms_${idCharm3}_rep-cost-mote`] = '5';
+        charmObj[`repeating_charms_${idCharm3}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms_${idCharm3}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;5';
+        charmObj[`repeating_charms_${idCharm3}_charm-short-desc`] = 'Sense the Nature of Someone';
+        charmObj[`repeating_charms_${idCharm3}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms_${idCharm3}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms_${idCharm3}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms_${idCharm3}_charm-effect`] = 'Allows the spirit to sense the nature of an individual depending on the scope of his own attribution.';
+
+        const idCharm4 = generateNewRowId(idsCharms);
+        charmObj[`repeating_charms_${idCharm4}_charm-name`] = 'Apparition';
+        charmObj[`repeating_charms_${idCharm4}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms_${idCharm4}_charm-cost`] = '1m';
+        charmObj[`repeating_charms_${idCharm4}_rep-cost-mote`] = '1';
+        charmObj[`repeating_charms_${idCharm4}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms_${idCharm4}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;1';
+        charmObj[`repeating_charms_${idCharm4}_charm-short-desc`] = 'Appear for a scene';
+        charmObj[`repeating_charms_${idCharm4}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms_${idCharm4}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms_${idCharm4}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms_${idCharm4}_charm-effect`] = 'Allows the spirit to take on flesh and appear in front of everyone present for the duration of the scene.';
+
+        setAttrs(charmObj);
+    }));
+
+    /* Set Spirit Charms Name button */
+    on('clicked:set-spirit-charms-skill-btn', TAS._fn(async function setSpiritCharmsName(eventInfo){
+        const charName = await getSingleAttrAsync(`character_name`);
+        const idsCharms = await getSectionIDsAsync("charms");
+        const charmObj = {};
+        for (const id of idsCharms)
+            charmObj[`repeating_charms_${id}_charm-skill`] = `${charName} Charm`;
+
+        setAttrs(charmObj);
+    }));
+
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
@@ -11125,6 +11197,12 @@
                         </label>
                         <label style="display: none;">
                             <button type="action" name="act_init-sheet-btn" title="Initializing a new Sheet">Initializing a new Sheet</button>
+                        </label>
+                        <label style="display: none;">
+                            <button type="action" name="act_add-spirit-charms-btn" title="Add Generic Spirit Charms">Add Generic Spirit Charms</button>
+                        </label>
+                        <label style="display: none;">
+                            <button type="action" name="act_set-spirit-charms-skill-btn" title="Set Spirit Charms Name">Set Spirit Charms Name</button>
                         </label>
                     </div>
                     <div class="sheet-checklist sheet-col sheet-special">
