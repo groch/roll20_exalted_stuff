@@ -853,6 +853,42 @@ input[type="number"] {
     justify-self: end;
 }
 
+.charsheet .merits-div-checkbox:has(input:focus) {
+    --merit-button-border-color: gold;
+}
+
+.flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
+.charsheet input.sheet-tab:focus::before,
+.sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
+.health-line .crippling-box input[type=checkbox]:focus + span::before,
+.charsheet input.sheet-initeffect:focus + span::before,
+.charsheet input.sheet-charmeffect:focus + span::before,
+.charsheet input.sheet-spelleffect:focus + span::before,
+.sheet-tab-antisocial-sheet input[type=checkbox]:focus + span::before,
+.sheet-tab-intimacies-sheet input[type=checkbox]:focus + span::before,
+input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
+.sheet-dots:has(> input[type="radio"]:focus),
+.sheet-dots-full:has(> input[type="radio"]:focus),
+.sheet-trait label input:focus + span:before,
+.sheet-damage-box:has(input:focus) {
+    outline: 2px gold solid;
+}
+.flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
+.sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
+.charsheet input.sheet-initeffect:focus + span::before,
+.sheet-tab-antisocial-sheet input[type=checkbox]:focus + span::before,
+.sheet-tab-intimacies-sheet input[type=checkbox]:focus + span::before,
+input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
+.sheet-trait label input:focus + span:before {
+    outline-offset: -2px;
+    border-radius: 3px;
+}
+
+.sheet-tab-settings-sheet label:has(input:focus),
+.sheet-trait label:has(input:focus) {
+    text-shadow: 0px 0px 0 gold;
+}
+
 .charsheet .sheet-trait > span:last-child,
 .charsheet .sheet-trait > input:last-child {
     display: flex;
@@ -876,15 +912,21 @@ input[type="number"] {
 }
 
 .charsheet .sheet-6rows {
-    height: calc(6em + 30px);
+    height: calc(4em + 30px);
 }
 
 .charsheet .sheet-motes,
 .charsheet .sheet-battle-group-row {
-    margin-top: 10px;
     clear: right;
     position: relative;
     padding-left: 30px;
+}
+.charsheet .sheet-motes:first-child,
+.charsheet .sheet-battle-group-row {
+    margin-top: 10px;
+}
+.charsheet .sheet-motes {
+    line-height: 25px;
 }
 
 .charsheet .main-page [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"].sheet-qc-attack-pool {
@@ -967,6 +1009,9 @@ input[type="number"] {
     position: absolute;
     right: 40px;
     font-size: 20px;
+}
+.charsheet .sheet-motes span:last-child {
+    top: -2px;
 }
 
 .charsheet .sheet-battle-group-row select:last-child {
@@ -1101,6 +1146,16 @@ input[type="number"] {
 .charsheet input[type=checkbox].sheet-unnamed-toggle.add-multiple {
     width: 100%;
     height: calc(100% + 1px);
+}
+
+.charsheet .roll-type-toggler input[type=checkbox]:focus + span::before,
+.charsheet input[type=checkbox].sheet-unnamed-toggle:focus + span::before {
+    outline: thin dotted #333;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+.charsheet input[type=checkbox].sheet-unnamed-toggle.add-multiple:focus + span::before {
+    background: linear-gradient(rgb(163, 163, 163), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle.add-multiple:checked + span + div {
@@ -1255,10 +1310,11 @@ input[type="number"] {
 }
 
 .charsheet .merits-div-checkbox {
+    --merit-button-border-color: #D0D0D0;
     margin-left: 4px;
     background-color:#EFEFEF;
     border-radius:4px;
-    border:1px solid #D0D0D0;
+    border:1px solid var(--merit-button-border-color);
 }
 
 .charsheet .merits-div-checkbox input + strong:before {
@@ -2958,9 +3014,17 @@ body.sheet-darkmode {
     border-color: red;
 }
 
-.sheet-darkmode .charsheet div.sheet-dots-full, .sheet-darkmode .charsheet div.sheet-damage-box, .sheet-darkmode .charsheet div.sheet-dots {
+.sheet-darkmode .charsheet div.sheet-dots-full,
+.sheet-darkmode .charsheet div.sheet-damage-box,
+.sheet-darkmode .charsheet div.sheet-dots {
     background-color: dimgray;
+}
+.sheet-darkmode .charsheet div.sheet-dots-full,
+.sheet-darkmode .charsheet div.sheet-dots {
     border-radius: 10px;
+}
+.sheet-darkmode .charsheet div.sheet-damage-box {
+    border-radius: 2px;
 }
 
 .sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
@@ -3830,11 +3894,18 @@ body.sheet-darkmode {
     flex-shrink: 0;
 }
 
-.charsheet div button[type="action"]:focus,
-.charsheet div button[type="roll"]:focus,
-.charsheet div .sheet-grouped-buttons button[type="action"]:focus,
+.charsheet div button[type="action"]:not(.stealth-btn, .cost-trigger):focus,
+.charsheet div button[type="roll"]:not(.stealth-btn):focus,
+.charsheet div .sheet-grouped-buttons button[type="action"]:not(.cost-trigger):focus,
 .charsheet div .sheet-grouped-buttons button[type="roll"]:focus {
     background: linear-gradient(rgb(163, 163, 163), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+}
+
+.charsheet div button.cost-trigger[type="action"]:focus,
+.charsheet div .sheet-grouped-buttons button.cost-trigger[type="action"]:focus {
+    outline: 3px solid white;
+    outline-offset: -3px;
+    border-radius: 6px;
 }
 
 .charsheet div .sheet-grouped-buttons button[type="action"],
@@ -4475,6 +4546,13 @@ textarea::-webkit-scrollbar-track {
     display: inline-block;
 }
 
+.charsheet .edit-toggle:has(> input:focus),
+.charsheet .roll-section .stealth-btn:focus ~ .sheet-rolls-bonus-dices,
+.charsheet .roll-section .stealth-btn:focus ~ .sheet-rolls-bonus-successes,
+.charsheet .init-section .stealth-btn:focus ~ .sheet-init-bonus-dices,
+.charsheet .init-section .stealth-btn:focus ~ .sheet-init-bonus-successes,
+.charsheet .attack-section .stealth-btn:focus ~ .sheet-watk-bonus-dices,
+.charsheet .attack-section .stealth-btn:focus ~ .sheet-watk-bonus-successes,
 .charsheet .edit-toggle:hover,
 .charsheet .roll-section .stealth-btn:hover ~ .sheet-rolls-bonus-dices,
 .charsheet .roll-section .stealth-btn:hover ~ .sheet-rolls-bonus-successes,
@@ -5204,7 +5282,7 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 
 .charsheet .roll-type-toggler {
     position: absolute;
-    top: 0.7rem;
+    top: 0.8rem;
     left: 1rem;
 }
 
@@ -5215,6 +5293,8 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 .charsheet .roll-type-toggler input[type=checkbox] + span::before {
     content: "Toggle Rolls Type";
     width: 9em;
+    height: 13px;
+    line-height: 13px;
     border-radius: 10px;
 }
 
