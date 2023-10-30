@@ -857,6 +857,8 @@ input[type="number"] {
     --merit-button-border-color: gold;
 }
 
+.sheet-rolls-div .repitem:has(textarea:hover) .sheet-rolls .desc-toggle input + span:before,
+.sheet-rolls-div .repitem:has(textarea:focus) .sheet-rolls .desc-toggle input + span:before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
 .charsheet input.sheet-tab:focus::before,
 .sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
