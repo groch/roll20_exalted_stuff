@@ -860,6 +860,10 @@ input[type="number"] {
 .qc-appearance-trait .onslaught-checkbox:focus + span::before {
     outline: 2px red solid;
 }
+.sheet-combat-attack:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
+.sheet-combat-attack:has(textarea.combat-textarea:focus) .desc-toggle input + span:before,
+.sheet-combat-init:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
+.sheet-combat-init:has(textarea.combat-textarea:focus) .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:hover) .sheet-rolls .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:focus) .sheet-rolls .desc-toggle input + span:before,
 input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before,
