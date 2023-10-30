@@ -857,8 +857,12 @@ input[type="number"] {
     --merit-button-border-color: gold;
 }
 
+.qc-appearance-trait .onslaught-checkbox:focus + span::before {
+    outline: 2px red solid;
+}
 .sheet-rolls-div .repitem:has(textarea:hover) .sheet-rolls .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:focus) .sheet-rolls .desc-toggle input + span:before,
+input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
 .charsheet input.sheet-tab:focus::before,
 .sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
@@ -875,6 +879,8 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .sheet-damage-box:has(input:focus) {
     outline: 2px gold solid;
 }
+input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before,
+.qc-appearance-trait .onslaught-checkbox:focus + span::before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
 .sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
 .charsheet input.sheet-initeffect:focus + span::before,
