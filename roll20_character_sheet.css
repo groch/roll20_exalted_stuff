@@ -6160,6 +6160,10 @@ test removing :after which i assume prevent roll20 clicks
     height: 1.3em;
 }
 
+div.anima-flare-box-mode.liminal-hint {
+    transform: scale(1);
+}
+
 .charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency > .anima-flare-box-mode > input[type="checkbox"] {
     margin: 0;
 }
