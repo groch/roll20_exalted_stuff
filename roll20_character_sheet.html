@@ -1952,6 +1952,29 @@
         setAttrs(charmObj);
     }));
 
+    /* Add Usefull Intimacies button */
+    on('clicked:add-default-intimacy-categories', TAS._fn(async function addSpiritCharms(eventInfo){
+        const idsIntimacies = await getSectionIDsAsync("intimacies");
+        const intiObj = {};
+        const idInti1 = generateNewRowId(idsIntimacies);
+        intiObj[`repeating_intimacies_${idInti1}_intimacyrepeatingname`] = '---=== PRINCIPLES ===---';
+        intiObj[`repeating_intimacies_${idInti1}_intimacyrepeatingtype`] = 'none';
+
+        const idInti2 = generateNewRowId(idsIntimacies);
+        intiObj[`repeating_intimacies_${idInti2}_intimacyrepeatingname`] = '---=== TIES ===---';
+        intiObj[`repeating_intimacies_${idInti2}_intimacyrepeatingtype`] = 'none';
+
+        const idInti3 = generateNewRowId(idsIntimacies);
+        intiObj[`repeating_intimacies_${idInti3}_intimacyrepeatingname`] = ' --- CERCLE --- ';
+        intiObj[`repeating_intimacies_${idInti3}_intimacyrepeatingtype`] = 'none';
+
+        const idInti4 = generateNewRowId(idsIntimacies);
+        intiObj[`repeating_intimacies_${idInti4}_intimacyrepeatingname`] = '---- INSPIRE ---- :';
+        intiObj[`repeating_intimacies_${idInti4}_intimacyrepeatingtype`] = 'Major';
+
+        setAttrs(intiObj);
+    }));
+
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
@@ -16449,6 +16472,9 @@
                     </div>
                     <div class="sheet-3col inti-col">
                         <h1><span>Intimacies</span></h1>
+                        <div class="intimacy-qol-button">
+                            <button type="action" name="act_add-default-intimacy-categories" class="btn" title="Add a line for Principles, Ties, Inspire and one sub category for example">Add Usefull Lines</button>
+                        </div>
                         <input type="hidden" value="0" name="attr_init-intimacies">
                         <div class="sheet-table" style="table-layout: fixed;">
                             <div class="sheet-table-header">

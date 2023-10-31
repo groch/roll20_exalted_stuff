@@ -630,6 +630,21 @@ input[type="number"] {
     grid-template-columns: min-content calc(100% - 1em);
 }
 
+.charsheet .sheet-content .sheet-tab-antisocial-sheet .sheet-3colrow .sheet-3col.inti-col,
+.charsheet .sheet-content .sheet-tab-intimacies-sheet .sheet-3colrow .sheet-3col.inti-col {
+    transform: scale(1);
+}
+
+.charsheet .intimacy-qol-button {
+    position: absolute;
+    top: 0.8rem;
+    left: 5rem;
+}
+.charsheet .intimacy-qol-button button {
+    font-size: 14px;
+    padding: 0 4px;
+}
+
 .charsheet .sheet-tab-settings-sheet .sheet-2colrow.sheet-checklist {
     white-space: nowrap;
     width: fit-content;
