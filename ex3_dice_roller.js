@@ -1337,14 +1337,15 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     sendMoteWhispers = (characterObj, characterId, attr, current, toRemove, commitName) => {
         const useCommitSystem = Number(getAttrByName(characterId, 'usecommitsystem'));
         const attrName = attr.get('name');
-        const attrNameStylised = attrName.indexOf('personal') !== -1 ? attrName : `<u>${attrName}</u>`;
-        const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attrNameStylised}</b>`;
+        const attrNameStylised = attrName.indexOf('personal') !== -1 ? 'personal' : `<u>peripheral</u>`;
+        const outString = `${makeCharacterLink(characterObj, characterId)}:> <b>-${toRemove}</b> motes to <b>${attrNameStylised}</b>`;
         const controlledByNames = getControlledByNamesWithoutGM(characterObj);
         attr.set('current', current - toRemove);
 
         logger(`removeMotesToCharacter::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
         for (const playerName of controlledByNames) sendStylizedMoteWhisper(outString, attrName, playerName);
-        sendStylizedMoteWhisper(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])` : ''}${useCommitSystem && commitName ? '<div style="text-align: center; font-weight: bold; text-decoration: underline;">COMMITED</div>' : ''}`, attrName);
+        // sendStylizedMoteWhisper(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])` : ''}${useCommitSystem && commitName ? '<div style="text-align: center; font-weight: bold; text-decoration: underline;">COMMITED</div>' : ''}`, attrName);
+        sendStylizedMoteWhisper(`${outString}${useCommitSystem && commitName ? '<div style="text-align: center; font-weight: bold; text-decoration: underline;">COMMITED</div>' : ''}`, attrName);
 
         if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
             sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');

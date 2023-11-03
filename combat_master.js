@@ -772,14 +772,16 @@ var CombatMaster = CombatMaster || (function() {
     }),
 
     whisperPlayerAndGmAddedMotes = (current, toAdd, characterId, characterObj, attr, controlledByNames) => {
-        const outString = `${makeCharacterLink(characterObj, characterId)}:> Adding <b>${toAdd}</b> motes to <b>${attr.get('name')}</b>`;
+        const pool = attr.get('name').replace('-essence', '');
+        const outString = `${makeCharacterLink(characterObj, characterId)}:> <b>${toAdd < 0 ? toAdd : `+${toAdd}`}</b> motes to <b>${pool === 'peripheral' ? `<u>${pool}</u>` : pool}</b>`;
         attr.set('current', current + toAdd);
         if (!state[combatState].config.announcements.announceMoteRegen) {
             logger(`whisperPlayerAndGmAddedMotes::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
-            for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, outString, undefined, undefined, undefined, 'background-color: #b4ffb4;');
+            for (const playerName of controlledByNames) sendWhisperStandardScriptMessage(playerName, outString, undefined, undefined, undefined, pool.indexOf('peri') !== -1 ? 'background-color: #b4ffb4;' : 'background-color: #333;');
         }
         if (!state[combatState].config.announcements.announceMoteRegen || controlledByNames.length === 0)
-            sendGMStandardScriptMessage(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
+            sendGMStandardScriptMessage(outString, undefined, undefined, undefined, pool.indexOf('peri') !== -1 ? 'background-color: #004400;' : 'background-color: #333;');
+            // sendGMStandardScriptMessage(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])`:''}`, undefined, undefined, undefined, 'background-color: #b4ffb4;');
     },
 
     addMotesToAttrsAndWhisper = (persoFirst, attrList, characterId, characterObj, qty, controlledByNames) => {
