@@ -883,6 +883,7 @@ input[type="number"] {
 
 .charsheet .merits-div-checkbox:has(input:focus) {
     --merit-button-border-color: gold;
+    outline: 1px solid gold;
 }
 
 .qc-appearance-trait .onslaught-checkbox:focus + span::before {
