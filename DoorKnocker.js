@@ -8,7 +8,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
       markdown = false,//enables/disables logging of markdown version of the help text. Used for easy updating of the script.json file
       defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/89593533/NjVfN1rZhwh0lbuuYTuQWA/max.png?1566172197',
       transparentTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/4277467/iQYjFOsYC5JsuOPUCI9RGA/thumb.png?1401938659';
-  
+
     /*
     Door Knocker script:
     Author: Scott C.h
@@ -23,7 +23,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         hiddenColor:#000000
         windowColor:#000000,
     }
-    
+
     Script Scope:
     Primary goal(s)
     - Handling of door dl lines that requires the bare minimum of setup, preferably no more than simply creating dl lines.
@@ -53,7 +53,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
       },
       templates = {},
       debug = 0,
-  
+
       //Functions called from other functions
       //Cleans the image link for use within Roll20 Objects
       cleanImgSrc = function (img) {
@@ -68,7 +68,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         var escapeForRegexp = /(\\|\/|\[|\]|\(|\)|\{|\}|\?|\+|\*|\||\.|\^|\$)/g;
         return s.replace(escapeForRegexp, "\\$1");
       },
-  
+
       HE = (function () {
         var entities = {
           //' ' : '&'+'nbsp'+';',
@@ -108,7 +108,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           + '</div>'
           + '</div>');
       },
-  
+
       checkInstall = function () {
         try {
           log(`-=> DoorKnocker v${version} <=-  [${(new Date(lastUpdate * 1000))}]`);
@@ -130,7 +130,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           sendError(err);
         }
       },
-  
+
       //Begin update functions
       updateScript = function () {
         if (state.DoorKnocker.help && state.DoorKnocker.version < 1.01) {
@@ -152,11 +152,11 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           updateTo1x30();
         }
       },
-  
+
       updateTo1x30 = () => {
         const paths = findObjs({type:'path',layer:'walls'});
         paths.forEach(path => {
-          
+
           if(/,\["M"/i.test(path.get('_path'))){
             let template = templatePath(path);
             template._path = toOpaquePath(template._path);
@@ -167,12 +167,12 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           }
         })
       },
-  
+
       updateTo1x20 = function () {
         state.DoorKnocker.windowColor = '#00ffff';
         log(`  > Door Knocker: Updated to v1.20 <`);
       },
-  
+
       updateTo1x17 = function () {
         state.DoorKnocker.searchTime = 2;
         _.each(state.DoorKnocker.pairs, (id) => {
@@ -187,7 +187,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         })
         log(`  > Door Knocker: Updated to v1.17 <`);
       },
-  
+
       updateTo1x14 = function () {
         state.DoorKnocker.hiddenColor = state.DoorKnocker.hiddenColor || '#000000';
         _.each(state.DoorKnocker.pairs, (id) => {
@@ -197,7 +197,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         });
         log(`  > Door Knocker: Updated to v1.14 <`);
       },
-  
+
       updateTo1x03 = function () {
         Object.assign(state.DoorKnocker, {
           unlockedColor: '#00ff00',
@@ -207,7 +207,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         });
         log(`  > Door Knocker: Updated to v1.03 <`);
       },
-  
+
       updateTo1x01 = function () {
         let character = getObj('character', state.DoorKnocker.help);
         if (character) {
@@ -215,7 +215,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         }
         log(`  > Door Knocker: Updated to v1.01 <`);
       },
-  
+
       initialInstall = function () {
         state.DoorKnocker = state.DoorKnocker || {
           wallColor: '#0000ff',
@@ -229,13 +229,13 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         log(`  > Door Knocker: v${version} initial install complete <`);
       },
       //End Update functions
-  
+
       /*Builds templates for use in all other functions*/
       buildTemplates = function () {
         templates.cssProperty = _.template(
           '<%=name %>: <%=value %>;'
         );
-  
+
         templates.style = _.template(
         'style="<%=' +
         '_.map(css,function(v,k) {' +
@@ -248,7 +248,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         '}).join("")' +
         ' %>"'
         );
-  
+
         templates.button = _.template(
         '<a title="<%=title %>"<%= templates.style({' +
             'defaults: defaults,' +
@@ -257,7 +257,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         '}) %> href="<%= command %>"><%= label||"Button" %></a>'
         );
       },
-  
+
       /*Makes the API buttons used throughout the script*/
       makeButton = function (command, label, backgroundColor, color, title, font) {
         let obj = {
@@ -302,7 +302,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
       },
       // calc to work out if it will match on black or white better
       setContrast = rgb => (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 125 ? 'black' : 'white',
-  
+
       updateHelpCharacterProperties = function () {
         helpCharacter = findObjs({ type: 'character', name: 'DoorKnocker' })[0];
         if (!state.DoorKnocker.help || !getObj('character', state.DoorKnocker.help)) {
@@ -363,7 +363,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           }
         });
       },
-  
+
       //Finds doors that are within range of a token. Only finds hidden doors if the token is not controlled by a player or if it is the door knocker token.
       //Also takes custom segmentedPaths to check
       findDoorsInDynamicRange = function (token, segmentedPaths, range) {
@@ -378,7 +378,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           segmentedPaths: segmentedPaths,
           range: range
         };
-  
+
         log(`page`);
         log(page);
         range = ((range || scale) / scale) * increment * 70 + token.get('width') / 2;
@@ -411,7 +411,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           return memo;
         }, {});
       },
-  
+
       getSegmentedPaths = function (token, findHidden) {
         if (!token) return;
         let page = getObj('page', token.get('pageid'));
@@ -437,7 +437,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           return memo;
         }, {});
       },
-  
+
       updateDoorColors = function (playerid, selection, type, enteredColor) {
         let color;
         if (state.DoorKnocker[`${type}Color`]) {
@@ -485,7 +485,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           }
         }
       },
-  
+
       updateSearchTime = function (playerid, selection, time) {
         if (time * 1) {
           state.DoorKnocker.searchTime = time;
@@ -494,7 +494,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           }
         }
       },
-  
+
       //functions called from HandleInput
       //Updates the help UI to reflect changes in settings and new menu templates
       updateHelp = function (playerid, selection, cmd) {
@@ -511,13 +511,13 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           helpText = {
             home: `
                       <p>
-                          Welcome to Door Knocker. This script helps quickly open and close doors by controlling the dynamic lighting lines. If you 
+                          Welcome to Door Knocker. This script helps quickly open and close doors by controlling the dynamic lighting lines. If you
                           have any questions, comments, or find a bug; please drop by the <a href="https://app.roll20.net/forum/post/7698809/script-door-knocker">Door Knocker forum thread</a>.
                       </p>
                       <h3>Using Door Knocker</h3>
                       <p>
-                          The script will move dynamic lighting lines used as doors to the map layer and make them transparent, opening the door. It determines 
-                          what is a door and a wall based on the stroke color of the polygon and will only open doors within 1 square of the door knocker 
+                          The script will move dynamic lighting lines used as doors to the map layer and make them transparent, opening the door. It determines
+                          what is a door and a wall based on the stroke color of the polygon and will only open doors within 1 square of the door knocker
                           token. If the grid is not activated on the page, then the script uses 70 pixels as the equivalent of 1 square.
                       </p>
                       <h3>Basic Command Syntax</h3>
@@ -530,8 +530,8 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
                       </p>
                       <h3>Opening and Closing Doors</h3>
                       <p>
-                          Open and close using the <b>key</b> or <b>push</b> keyword followed by an option to tell the script whether to open doors, close doors, or toggle doors. 
-                          You can also pass an optional second option to tell the script to open/close/toggle all doors within range of the knocker token, on the page, or in the campaign. These commands 
+                          Open and close using the <b>key</b> or <b>push</b> keyword followed by an option to tell the script whether to open doors, close doors, or toggle doors.
+                          You can also pass an optional second option to tell the script to open/close/toggle all doors within range of the knocker token, on the page, or in the campaign. These commands
                           look like:
                       </p>
                       <p>
@@ -555,25 +555,25 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
                           <b>!knock --key|anyopen/anyclose/anytoggle|all/page/campaign/range</b>
                       </p>
                       <ul>
-                          <li><b>key/push:</b> This is the keyword that tells the script to manipulate door dynamic lighting lines. The <b>key</b> keyword operates on both locked 
+                          <li><b>key/push:</b> This is the keyword that tells the script to manipulate door dynamic lighting lines. The <b>key</b> keyword operates on both locked
                           and unlocked doors and is GM only. The <b>push</b> keyword only operates on unlocked doors.</li>
-                          <li><b>open/close/toggle</b> This option tells the script to open, close, or toggle (open closed doors and close open doors) the 
+                          <li><b>open/close/toggle</b> This option tells the script to open, close, or toggle (open closed doors and close open doors) the
                           closest door (or all doors if also using the all option described below).</li>
-                          <li><b>reveal/hide/togglehide</b> This option tells the script to open, close, or toggle the 
+                          <li><b>reveal/hide/togglehide</b> This option tells the script to open, close, or toggle the
                           closest hidden door (or all doors if also using the all option described below).</li>
-                          <li><b>anydooropen/anydoorclose/anydoortoggle</b> This option tells the script to open, close, or toggle the 
+                          <li><b>anydooropen/anydoorclose/anydoortoggle</b> This option tells the script to open, close, or toggle the
                           closest obvious or hidden door (or all doors if also using the all option described below).</li>
-                          <li><b>openwindow/closewindow/togglewindow</b> This option tells the script to open, close, or toggle the 
+                          <li><b>openwindow/closewindow/togglewindow</b> This option tells the script to open, close, or toggle the
                           closest window (or all windows if also using the all option described below).</li>
-                          <li><b>anyopen/anyclose/anytoggle</b> This option tells the script to open, close, or toggle the 
+                          <li><b>anyopen/anyclose/anytoggle</b> This option tells the script to open, close, or toggle the
                           closest obvious door, hidden door, or window (or everything in range if also using the all option described below).</li>
-                          <li><b>all/page/campaign:</b> <i>Optional argument</i> This option tells the script to operate on all doors within range, all doors on a page, or all doors 
+                          <li><b>all/page/campaign:</b> <i>Optional argument</i> This option tells the script to operate on all doors within range, all doors on a page, or all doors
                           in the campaign. The <b>page</b> and <b>campaign</b> keywords are GM only and do not work with the <b>push</b> keyword. Range and the all/page/campaign keywords can be entered in any order relative to each other.</li>
                           <li><b>range:</b> <i>Optional argument</i> This option tells the script to operate at a custom range, entered in the units of the map (e.g. ft, meters, kilometers). Range and the all/page/campaign keywords can be entered in any order relative to each other.</li>
                       </ul>
                       <h3>Setting up the Door Knocker</h3>
                       <p>
-                          Set the wall, door, and locked door stroke colors in the settings menu using hex color codes (e.g. #000000). You can also set these values 
+                          Set the wall, door, and locked door stroke colors in the settings menu using hex color codes (e.g. #000000). You can also set these values
                           by selecting an already created DL line. This functionality is only accessible to the GM. The command syntax for using a selected DL line looks like:
                       </p>
                       <p>
@@ -593,7 +593,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
                           <b>!knock --adapt|door/wall/unlocked/hidden/window|campaign</b>
                       </p>
                       <ul>
-                          <li><b>adapt:</b> This is the keyword that tells the script to update all polygons on the dynamic lighting layer with the same stroke color 
+                          <li><b>adapt:</b> This is the keyword that tells the script to update all polygons on the dynamic lighting layer with the same stroke color
                           as the selected polygon(s) to have the script's door/wall stroke color</li>
                           <li><b>wall/door/unlocked:</b> This option tells the script to update the stroke color to that of walls, doors, or unlocked doors</li>
                           <li><b>campaign:</b> <i>Optional argument</i> adding this optional argument tells the script to update polygons on all pages, not just the current page.</li>
@@ -620,7 +620,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
                       </p>
                       <h4>Script created abilities</h4>
                       <p>
-                          The script also creates six abilities on this character as token actions. These can be disabled as token actions, but should not be deleted as 
+                          The script also creates six abilities on this character as token actions. These can be disabled as token actions, but should not be deleted as
                           the script will simply remake them. You can also add whatever other macros you want to this character.
                       </p>
                       <h3>Attributions</h3>
@@ -658,7 +658,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           navigation =
             `${makeButton(`!knock --menu|home`, 'Instructions', ...coloring[`${/home/i.test(cmd)}`], 'Learn how to use the script')}` +
             `${makeButton(`!knock --menu|settings`, 'Settings', ...coloring[`${!/home/i.test(cmd)}`], 'Configure the script')}`;
-  
+
         //set handout control
         let newBio = `<h1>Door Knocker v${version}</h1>${navigation}<hr>${helpText[cmd].replace(/>\n\s+/g, '>')}`;
         state.DoorKnocker.cmd = cmd;
@@ -679,14 +679,14 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           log(`Final markdown:${markdownHelp}`);
         }
       },
-  
+
       toTransparentPath = (data) => JSON.stringify((typeof data === 'string' ? JSON.parse(data) : data).map(p => ['M', p[1], p[2]])),
-  
+
       toOpaquePath = function (data) {
         data = typeof data === 'string' ? JSON.parse(data) : data;
         return JSON.stringify([data[0], ...(data.slice(1).map(p => ['L', p[1], p[2]]))]);
       },
-  
+
       adaptPolygons = function (playerid, selection, type, all) {
         if (!selection || !type) {
           return;
@@ -725,7 +725,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
             createObj('path', newPath);
           });
       },
-  
+
       pushDoor = function (playerid, selection, cmd, arg1, arg2) {
         let page,
           allow = false,
@@ -775,7 +775,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           manipulateDoors(token, doors, cmd, all, range);
         });
       },
-  
+
       keyTurn = function (playerid, selection, cmd, arg1, arg2) {
         if (!playerIsGM(playerid)) {
           return;
@@ -930,7 +930,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           manipulateDoors(token, doors, cmd, all, range);
         });
       },
-  
+
       manipulateDoors = function (token, doors, cmd, all, range) {
         let validDoors;
         let argObj = {
@@ -989,7 +989,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           path.set(setObj);
         });
       },
-  
+
       setPresets = function (playerid, selection, type, color) {
         if ((!selection && !color) || !playerIsGM(playerid)) {
           return;
@@ -1002,7 +1002,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           updateSearchTime(playerid, selection, color);
         }
       },
-  
+
       searchForDoors = function (playerid, selection, radius) {
         const graphics = [];
         if (_.every(selection, (sel) => {
@@ -1019,7 +1019,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         }
         activeSearch(playerid, graphics, radius);
       },
-  
+
       activeSearch = function (playerid, graphics, radius) {
         let findHidden = playerIsGM(playerid),
           segmentedPaths = getSegmentedPaths(graphics[0], findHidden),
@@ -1027,7 +1027,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           scale = page ? page.get('scale_number') : 5,
           interArr = [];
         radius = (radius || scale) * 1;
-  
+
         _.each(graphics, (token) => {
           let range = radius,
             doorSegs = findDoorsInDynamicRange(token, segmentedPaths, range);
@@ -1051,7 +1051,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           });
         }, state.DoorKnocker.searchTime * 1000, tempPaths);
       },
-  
+
       templatePath = function (path) {
         let template = JSON.parse(JSON.stringify(path));
         _.each(['_id', '_type'], (prop) => {
@@ -1059,7 +1059,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         });
         return template;
       },
-  
+
       //Handles chat input
       //Command Syntax: !DoorKnocker --action,[options]|tracks/lists to affect|tracks/lists to affect|... --action2,[options|tracks/lists to affect|tracks/lists to affect|...
       HandleInput = function (msg_orig) {
@@ -1079,7 +1079,7 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
               preset: setPresets,
               search: searchForDoors
             };
-  
+
           if (msg.type !== 'api' || !/^!knock/.test(msg.content)) {
             return;
           }
@@ -1104,13 +1104,13 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
           sendError(err);
         }
       },
-  
+
       cmdExtract = function (cmd) {
         var cmdSep = {
           details: {}
         },
           vars, details;
-  
+
         cmdSep.things = cmd.split('|');
         details = cmdSep.things.shift();
         cmdSep.things = _.map(cmdSep.things, (t) => {
@@ -1128,22 +1128,22 @@ var DoorKnocker = DoorKnocker || (function () {let scriptStart = new Error;//Gen
         });
         return cmdSep;
       },
-  
+
       RegisterEventHandlers = function () {
         on('chat:message', HandleInput);
       };
-  
+
     return {
       CheckInstall: checkInstall,
       RegisterEventHandlers: RegisterEventHandlers
     };
-  
+
   }());
-  
-  
+
+
   on("ready", function () {
     'use strict';
-  
+
     DoorKnocker.CheckInstall();
     DoorKnocker.RegisterEventHandlers();
   });

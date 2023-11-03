@@ -27,7 +27,7 @@ var CombatMaster = CombatMaster || (function() {
         static NOTICE       = new LOGLEVEL(6);
         static INFO         = new LOGLEVEL(7);
         static DEBUG        = new LOGLEVEL(8);
-    
+
         constructor(value) {
             this.value = value;
         }
@@ -92,7 +92,7 @@ var CombatMaster = CombatMaster || (function() {
             logged.unshift(level);
             level = LOGLEVEL.DEBUG;
         }
-    
+
         if (level <= LogLvl)
             log(...logged);
     },
@@ -426,14 +426,14 @@ var CombatMaster = CombatMaster || (function() {
                 }
                 logger(`commandHandler::before ${fxObj.fx.name}`);
                 fxObj.fx(cmdDetails, msg.selected);
-            }    
+            }
         }
 
         for (const fxObj of simpleCastList) {
             if (cmdDetails.action == fxObj.key) {
                 logger(`commandHandler::before ${fxObj.fx.name}`);
                 fxObj.fx(cmdDetails, msg.selected);
-            }    
+            }
         }
 	},
 
@@ -809,7 +809,7 @@ var CombatMaster = CombatMaster || (function() {
     addMotesToNonMortalCharacter = (characterObj, qty = state[combatState].config.turnorder.moteQtyToAdd, persoFirst = false) => {
         if (!characterObj) {
             logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON CONTROLLED TOKEN: QUIT${characterObj}`);
-            return false;    
+            return false;
         }
         logger(LOGLEVEL.INFO, `addMotesToNonMortalCharacter::addMotesToNonMortalCharacter NON MORTAL FOUND:${characterObj.get('name')}`);
         let characterId = characterObj.get('id'), attrList = findObjs({_characterid:characterId, _type: 'attribute'});
@@ -1953,7 +1953,7 @@ var CombatMaster = CombatMaster || (function() {
                         if (typeof advantageAttrib != 'undefined') { // roll advantage for initiative
                             initiativeAdv1     = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
                             initiativeAdv2     = (initiative.initiativeDie) ? randomInteger(initiative.initiativeDie) : 0;
-                            
+
                             if (advantageAttrib == '{@{d20},@{d20}}kh1') { // this is the value if in OGL if rolling advantage
                                 initiativeRoll = (initiativeAdv1 >= initiativeAdv2) ? initiativeAdv1 : initiativeAdv2;
                                 //pass in both values and modifier for display
@@ -2264,7 +2264,7 @@ var CombatMaster = CombatMaster || (function() {
                 var newstatusmarkers  = obj.get('statusmarkers').split(",");
                 logger(`handleStatusMarkerChange:: prev=${JSON.stringify(prevstatusmarkers)}`);
                 logger(`handleStatusMarkerChange:: new=${JSON.stringify(newstatusmarkers)}`);
-                
+
                 if (prevstatusmarkers.length > 0) {
                     prevstatusmarkers.forEach((marker) => {
                         let condition = getConditionByMarker(marker);
@@ -2292,7 +2292,7 @@ var CombatMaster = CombatMaster || (function() {
             startMarkerAnimation(marker);
         } else {
             stopMarkerAnimation(marker);
-        } 
+        }
     },
 
     startMarkerAnimation = (marker) => {
@@ -2805,7 +2805,7 @@ var CombatMaster = CombatMaster || (function() {
             list += '<li style="'+styles.overflow+'">'+item+'</li>';
         });
 		list += '</ul>';
-        
+
 		if (extraButton) list += extraButton;
 		if (backButton) list += '<hr>'+backButton;
         return list;
@@ -3019,7 +3019,7 @@ var CombatMaster = CombatMaster || (function() {
         if (substitutions) {
             substitutions.forEach((substitution) => {
                 replaceString = new RegExp(substitution.action, "g");
-                if      (substitution.type == 'CharName') 
+                if      (substitution.type == 'CharName')
                     action = action.replace(replaceString, characterObj.get('name'), 'g');
                 else if (substitution.type == 'CharID')
                     action = action.replace(replaceString, characterObj.get('_id'), 'g');
@@ -3268,7 +3268,7 @@ var CombatMaster = CombatMaster || (function() {
         let helpHandout = findObjs({type:'handout', name:`HLP: Combat CheatSheet2`, inplayerjournals: 'all'})[0];
         if (helpHandout) makeAndSendMenu(`<b><a href="http://journal.roll20.net/handout/${helpHandout.id}">Combat CheatSheet2</a></b>`,'Usefull Link');
     },
-    
+
     sendStandardScriptMessage = (innerHtml, image = '', divStyle = 'display:inline-block;width:100%;vertical-align:middle;', noarchive = false) => {
         sendChat(script_name, '<div style="'+styles.menu+'"><div style="display:inherit;">'+(image!='' ? '<div style="text-align:center;">'+image+'</div>' : '')+'<div style="'+divStyle+'">'+innerHtml+'</div></div></div>', null, {noarchive:noarchive});
     },

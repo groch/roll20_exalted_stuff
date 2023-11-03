@@ -1331,7 +1331,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             return c;
         };
     })(),
-    
+
     generateRowID = () => generateUUID().replace(/_/g, "Z"),
 
     sendMoteWhispers = (characterObj, characterId, attr, current, toRemove, commitName) => {
@@ -1494,7 +1494,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
     /**
      * Set Initiative value of selected tokens to result of roll
-     * 
+     *
      * @param Array     selected    Array of the seleted tokens
      * @param integer   successes   Value to set
      */
