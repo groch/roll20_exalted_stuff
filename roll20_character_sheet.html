@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.54, debug = 1;
+    const version = 2.57, debug = 1;
     var TAS;
 
     /**
@@ -615,6 +615,9 @@
         {version: 2.51, fn: upgradeto252},
         {version: 2.52, fn: upgradeto253},
         {version: 2.53, fn: upgradeto254},
+        {version: 2.54, fn: upgradeto255},
+        {version: 2.55, fn: upgradeto256},
+        {version: 2.56, fn: upgradeto257},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -821,6 +824,53 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto257() {
+        const finalObj = {'version': version};
+        const usecommitsystem = await getSingleAttrAsync('usecommitsystem');
+        if (!Number(usecommitsystem)) finalObj['usecommitsystem'] = '1';
+        TAS.debug(`upgradeto257:: finalObj=`,finalObj);
+        await setAttrsAsync(finalObj);
+    }
+
+    async function upgradeto256() {
+        const finalObj = {'version': version};
+        const idCommitList = await getSectionIDsAsync('commited-list');
+
+        const arrayAttr = [];
+        for (const id of idCommitList)
+            arrayAttr.push(`repeating_commited-list_${id}_commited-pool-type`, `repeating_commited-list_${id}_commited-cost`);
+        const val = await getAttrsAsync(arrayAttr);
+        for (const id of idCommitList) {
+            if (val[`repeating_commited-list_${id}_commited-pool-type`] === '1') {
+                finalObj[`repeating_commited-list_${id}_commited-cost-peri`] = val[`repeating_commited-list_${id}_commited-pool-cost`] || '0';
+                finalObj[`repeating_commited-list_${id}_commited-cost-perso`] = '0';
+            } else {
+                finalObj[`repeating_commited-list_${id}_commited-cost-perso`] = val[`repeating_commited-list_${id}_commited-pool-cost`] || '0';
+                finalObj[`repeating_commited-list_${id}_commited-cost-peri`] = '0';
+            }
+        }
+        TAS.debug(`upgradeto256:: finalObj=`,finalObj);
+        await setAttrsAsync(finalObj);
+    }
+
+    async function upgradeto255() {
+        const finalObj = {'version': version};
+        const arrayDuration = [];
+        for (const section of charmRepeatableSectionArray)
+            for (const id of await getSectionIDsAsync(section))
+                arrayDuration.push(`repeating_${section}_${id}_charm-duration`);
+        const val = await getAttrsAsync(arrayDuration);
+        for (const [key, value] of Object.entries(val)) {
+            const keyParts = key.split('_');
+            if (value?.trim() && !['instant','permanent'].includes(value.toLowerCase()))
+                finalObj[`repeating_${keyParts[1]}_${keyParts[2]}_rep-cost-mote-commit`] = '1';
+            else
+                finalObj[`repeating_${keyParts[1]}_${keyParts[2]}_rep-cost-mote-commit`] = '0';
+        }
+        TAS.debug(`upgradeto255:: finalObj=`,finalObj);
+        await setAttrsAsync(finalObj);
+    }
 
     async function upgradeto254() {
         const finalObj = {'version': version};
@@ -1439,6 +1489,20 @@
         }));
     });
 
+    charmRepeatableSectionArray.forEach(section => {
+        on(`change:repeating_${section}:charm-duration`, setDebugWrapper(async function autosetCommitFromDuration(e) {
+            if (debug === 2) TAS.debug(`autosetCommitFromDuration::autosetCommitFromDuration e=`, e);
+            if (e.sourceType !== "player") return;
+            const id = e.sourceAttribute.split('_')[2];
+            const duration = await getSingleAttrAsync(`repeating_${section}_${id}_charm-duration`);
+            if (debug === 2) TAS.debug(`autosetCommitFromDuration:: duration=`, duration);
+            if (duration?.trim() && !['instant','permanent'].includes(duration.toLowerCase()))
+                setAttrs({[`repeating_${section}_${id}_rep-cost-mote-commit`]: '1'});
+            else
+                setAttrs({[`repeating_${section}_${id}_rep-cost-mote-commit`]: '0'});
+        }));
+    });
+
     async function setCasteToAllCharms(casteStr) {
         if (debug === 2) TAS.debug(`setCasteToAllCharms::setCasteToAllCharms casteStr=${casteStr}`);
         var objSet = {};
@@ -1456,6 +1520,7 @@
     const costAttrs = [
         'rep-cost-mote',
         'rep-cost-mote-pool',
+        'rep-cost-mote-commit',
         'rep-cost-will',
         'rep-cost-init'
     ];
@@ -1474,20 +1539,22 @@
         const attr_name = `repeating_${repSectionName}_${id}_`;
 
         if (debug === 2) TAS.debug(`computeRepeatingRollCost:: attr_name=${attr_name}`);
-        const val = await getAttrsAsync(costAttrs.map(attr => attr_name + attr));
+        const val = await getAttrsAsync([...costAttrs.map(attr => attr_name + attr), attr_name + 'charm-name']);
         if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
         const mote = val[attr_name + 'rep-cost-mote'],
-              motePool = val[attr_name + 'rep-cost-mote-pool'] || '?{Spend Peripheral First ?|Yes,1|No,0}',
-              will = val[attr_name + 'rep-cost-will'],
-              init = val[attr_name + 'rep-cost-init'];
+            motePool = val[attr_name + 'rep-cost-mote-pool'] || '?{Spend Peripheral First ?|Yes,1|No,0}',
+            moteCommit = Number(val[attr_name + 'rep-cost-mote-commit']),
+            charmName = val[attr_name + 'charm-name'],
+            will = val[attr_name + 'rep-cost-will'],
+            init = val[attr_name + 'rep-cost-init'];
         if (!mote && !will && !init) {
             TAS.debug(`computeRepeatingRollCost:: NOTHING TO DO => RESET & QUIT`);
-            setAttrs({[attr_name+'rep-cost-macro']: ''});
+            await setAttrsAsync({[attr_name+'rep-cost-macro']: ''});
             if (cb) cb();
             return;
         }
         let finalMacro = '=COST:@{character_id}';
-        if (mote && String(mote).trim()) finalMacro += `:peri=${motePool};${mote}`;
+        if (mote && String(mote).trim()) finalMacro += `:peri=${motePool};${mote}${moteCommit ? `;${charmName};end` : ''}`;
         if (will && String(will).trim()) finalMacro += `:will;${will}`;
         if (init) finalMacro += `:init;${init}`;
         TAS.debug(`computeRepeatingRollCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
@@ -1567,7 +1634,7 @@
         let queryRoll = `!exr ${await getSingleAttrAsync(`${attr_name}repcombat-${subSection}-final-macro-replaced`)}`;
         if (buttonClickedIsGm) queryRoll += ' -gm';
         if (['watk', 'datk'].includes(subSection)) queryRoll += ` ${await getSingleAttrAsync(`${attr_name}rep-cost-macro`)} ==atk==`;
-        
+
         if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
         finishRoll(results.rollId);
@@ -1974,6 +2041,46 @@
 
         setAttrs(intiObj);
     }));
+
+    /* Commit List feature (auto set commited motes) */
+    on('change:usecommitsystem remove:repeating_commited-list change:repeating_commited-list:commited-state change:repeating_commited-list:commited-cost-peri change:repeating_commited-list:commited-cost-perso', TAS._fn(async function handleCommitListChange(e){
+        const idsCommited = await getSectionIDsAsync("commited-list");
+        const val = await getAttrsAsync([...idsCommited.map(id => [
+            `repeating_commited-list_${id}_commited-state`,
+            `repeating_commited-list_${id}_commited-cost-peri`,
+            `repeating_commited-list_${id}_commited-cost-perso`]).flat()]);
+        TAS.debug(`change:usecommitsystem val=`, val);
+        const intiObj = {};
+        let comPerso = 0, comPeri = 0;
+        for (const id of idsCommited) {
+            const costPeri = cleanAndEval(val[`repeating_commited-list_${id}_commited-cost-peri`], intiObj, `repeating_commited-list_${id}_commited-cost-peri`)
+            const costPerso = cleanAndEval(val[`repeating_commited-list_${id}_commited-cost-perso`], intiObj, `repeating_commited-list_${id}_commited-cost-perso`)
+            if (Number(val[`repeating_commited-list_${id}_commited-state`]) && (costPeri || costPerso)) {
+                if (costPeri && costPerso)  intiObj[`repeating_commited-list_${id}_commited-pool-type`] = 'mixed';
+                else if (costPeri)          intiObj[`repeating_commited-list_${id}_commited-pool-type`] = '1';
+                else if (costPerso)         intiObj[`repeating_commited-list_${id}_commited-pool-type`] = '0';
+                comPeri += costPeri;
+                comPerso += costPerso;
+            }
+        }
+        intiObj[`committedessperso`] = comPerso;
+        intiObj[`committedesstotal`] = comPeri;
+        if (e.sourceAttribute === 'usecommitsystem' && e.newValue === '0') intiObj[`commit-list-shown`] = 0;
+        TAS.debug(`handleCommitListChange:: BEFORE SET val=`, intiObj);
+
+        setAttrs(intiObj);
+    }));
+
+    function cleanAndEval(val, setObj, keyName) {
+        const cleanerReg = /[^\d\+]+/g;
+        if (debug === 2) TAS.debug(`cleanAndEval:: val="${val}" key=${keyName}`);
+        let str = String(val).replaceAll(cleanerReg, '');
+        if (debug === 2) TAS.debug(`cleanAndEval:: str="${str}"`);
+        if (str !== val) setObj[keyName] = str;
+        let final = Number(eval(str));
+        if (debug === 2) TAS.debug(`cleanAndEval:: final=${final}`);
+        return final;
+    }
 
     /* ***************** */
     /* * Rolls Widgets * */
@@ -2396,6 +2503,8 @@
         <input class="roll-can-spend-motes" name="attr_canspendmote" type="hidden" value="0">
         <input class="caste-have-exc-check" name="attr_caste-have-exc" type="hidden" value="0">
         <input class="exalt-type-check" name="attr_exalt-type" type="hidden" value="None">
+        <input type="hidden" name="attr_usecommitsystem" class="use-commit-system" value="1">
+        <input type="hidden" name="attr_commit-list-shown" value="0">
         <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
         <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
         <input type="hidden" name="attr_cover-def-bonus" class="cover-bonus-check">
@@ -4319,7 +4428,7 @@
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
                                                 <input type="number" name="attr_personal-essence" readonly tabindex="-1"> /
                                                 <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}"> C:
-                                                <input type="number" name="attr_committedessperso" title="Personal Commited">
+                                                <input type="number" name="attr_committedessperso" title="Personal Commited" class="free-commit"><input type="number" name="attr_committedessperso" title="Personal Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
                                         </div>
                                         <div class="sheet-motes">
@@ -4327,7 +4436,7 @@
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
                                                 <input type="number" name="attr_peripheral-essence" readonly tabindex="-1"> /
                                                 <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}"> C:
-                                                <input type="number" name="attr_committedesstotal" title="Peripheral Commited">
+                                                <input type="number" name="attr_committedesstotal" title="Peripheral Commited" class="free-commit"><input type="number" name="attr_committedesstotal" title="Peripheral Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
                                         </div>
                                     </div>
@@ -4837,6 +4946,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -4911,6 +5022,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -4985,6 +5098,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5059,6 +5174,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5133,6 +5250,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5207,6 +5326,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5281,6 +5402,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5355,6 +5478,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5429,6 +5554,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5503,6 +5630,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5577,6 +5706,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5651,6 +5782,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5725,6 +5858,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5799,6 +5934,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5873,6 +6010,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -5947,6 +6086,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6021,6 +6162,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6095,6 +6238,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6169,6 +6314,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6243,6 +6390,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6317,6 +6466,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6391,6 +6542,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6465,6 +6618,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6539,6 +6694,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6613,6 +6770,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6688,6 +6847,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6762,6 +6923,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6836,6 +6999,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6910,6 +7075,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -6984,6 +7151,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7058,6 +7227,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7132,6 +7303,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7206,6 +7379,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7280,6 +7455,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7354,6 +7531,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7428,6 +7607,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7502,6 +7683,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7576,6 +7759,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7650,6 +7835,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7724,6 +7911,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7798,6 +7987,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7872,6 +8063,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -7946,6 +8139,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8020,6 +8215,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8094,6 +8291,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8168,6 +8367,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8242,6 +8443,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8316,6 +8519,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8390,6 +8595,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8464,6 +8671,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8538,6 +8747,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8612,6 +8823,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8686,6 +8899,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8760,6 +8975,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8834,6 +9051,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8908,6 +9127,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -8982,6 +9203,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9056,6 +9279,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9130,6 +9355,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9205,6 +9432,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9279,6 +9508,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9353,6 +9584,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9427,6 +9660,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9501,6 +9736,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9575,6 +9812,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9649,6 +9888,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9723,6 +9964,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9797,6 +10040,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9871,6 +10116,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -9944,6 +10191,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10018,6 +10267,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10092,6 +10343,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10166,6 +10419,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10240,6 +10495,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10316,6 +10573,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10392,6 +10651,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10468,6 +10729,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10544,6 +10807,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10620,6 +10885,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10694,6 +10961,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10768,6 +11037,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10842,6 +11113,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10916,6 +11189,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -10991,6 +11266,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -11066,6 +11343,8 @@
                                                     <option value="1">Peripheral</option>
                                                     <option value="0">Personal</option>
                                                 </select>
+                                                <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
+                                                <label title="Commit on Cast ?"><span>C: </span><div class="flex"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
                                             <p class="will-color-down rounded-box grow-normal flex">
                                                 <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
@@ -11196,7 +11475,11 @@
                         </label>
                         <label>
                             <input type="checkbox" name="attr_canspendmote" value="1"><span></span>
-                            <span>Can spen Motes</span>
+                            <span>Can spend Motes</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="attr_usecommitsystem" value="1" checked><span></span>
+                            <span>Use Commited List System</span>
                         </label>
                         <label>
                             <input type="checkbox" name="attr_show-charname-in-charms" value="1"><span></span>
@@ -11398,7 +11681,7 @@
                             Personal:<input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
                         </p>
                         <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-                            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal"></label>
+                            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1"></label>
                         </p>
                     </div>
                     <div class="flex grow-max peripheral-mote-toggle">
@@ -11406,7 +11689,7 @@
                             Peripheral:<input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
                         </p>
                         <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-                            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal"></label>
+                            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1"></label>
                         </p>
                     </div>
                     <div class="flex grow-normal rollpen-box">
@@ -11554,7 +11837,7 @@
                                         <input type="hidden" name="attr_charm-ma-other" class="check-charm-ma-other">
                                         <input type="hidden" name="attr_charm-evocation" class="check-charm-evocations">
                                         <input type="hidden" name="attr_charm-old" class="check-charm">
-                                        <select name="attr_reminder-charm-selected" style="width: 100%;">
+                                        <select name="attr_reminder-charm-selected" style="flex-grow: 42000;">
                                             <option>--- SELECT ONE ---</option>
                                             <option class="reminder-charm opt-charm-archery" value="archery">Archery</option>
                                             <option class="reminder-charm opt-charm-athletics" value="athletics">Athletics</option>
@@ -11642,6 +11925,9 @@
                                             <option class="reminder-charm opt-charm-evocations" value="evocations">Evocation</option>
                                             <option class="reminder-charm opt-charm" value="charm">Other</option>
                                         </select>
+                                        <div class="toggle-commit-list">
+                                            <input type="checkbox" class="sheet-unnamed-toggle" name="attr_commit-list-shown" value="1"><span title="Show Commits" class="sheet-layer6"></span>
+                                        </div>
                                         <hr />
                                         <div class="reminder-charms-main-div">
                                             <input type="hidden" name="attr_reminder-charm-selected" class="reminder-charm-selector-input" />
@@ -15046,6 +15332,18 @@
                                                 </fieldset>
                                             </div>
                                         </div>
+                                        <div class="reminder-charms-commited-div">
+                                            <fieldset class="repeating_commited-list" style="display: none;">
+                                                <input type="hidden" name="attr_commited-state" value="0">
+                                                <input type="hidden" name="attr_commited-pool-type" value="1">
+                                                <div class="inner-div">
+                                                    <input type="text" name="attr_commited-name" placeholder="Excellent Solar Larceny">
+                                                    <label>Personal<input type="text" name="attr_commited-cost-perso" value="0"></label>
+                                                    <label>Peripheral<input type="text" name="attr_commited-cost-peri" value="0"></label>
+                                                    <label>Commited<input type="checkbox" name="attr_commited-state" value="1"></label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -16958,7 +17256,7 @@
                                 <input type="hidden" name="attr_charm-ma-other" class="check-charm-ma-other">
                                 <input type="hidden" name="attr_charm-evocation" class="check-charm-evocations">
                                 <input type="hidden" name="attr_charm-old" class="check-charm">
-                                <select name="attr_reminder-charm-selected" style="width: 100%;">
+                                <select name="attr_reminder-charm-selected" style="flex-grow: 42000;">
                                     <option>--- SELECT ONE ---</option>
                                     <option class="reminder-charm opt-charm-archery" value="archery">Archery</option>
                                     <option class="reminder-charm opt-charm-athletics" value="athletics">Athletics</option>
@@ -17046,6 +17344,9 @@
                                     <option class="reminder-charm opt-charm-evocations" value="evocations">Evocation</option>
                                     <option class="reminder-charm opt-charm" value="charm">Other</option>
                                 </select>
+                                <div class="toggle-commit-list">
+                                    <input type="checkbox" class="sheet-unnamed-toggle" name="attr_commit-list-shown" value="1"><span title="Show Commits" class="sheet-layer6"></span>
+                                </div>
                                 <hr />
                                 <div class="reminder-charms-main-div">
                                     <input type="hidden" name="attr_reminder-charm-selected" class="reminder-charm-selector-input" />
@@ -20450,6 +20751,18 @@
                                         </fieldset>
                                     </div>
                                 </div>
+                                <div class="reminder-charms-commited-div">
+                                    <fieldset class="repeating_commited-list" style="display: none;">
+                                        <input type="hidden" name="attr_commited-state" value="0">
+                                        <input type="hidden" name="attr_commited-pool-type" value="1">
+                                        <div class="inner-div">
+                                            <input type="text" name="attr_commited-name" placeholder="Excellent Solar Larceny">
+                                            <label>Personal<input type="text" name="attr_commited-cost-perso" value="0"></label>
+                                            <label>Peripheral<input type="text" name="attr_commited-cost-peri" value="0"></label>
+                                            <label>Commited<input type="checkbox" name="attr_commited-state" value="1"></label>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
                         </div>
                         <div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
@@ -20783,7 +21096,7 @@
                                 Personal:<input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
                             </p>
                             <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-                                <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal"></label>
+                                <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1"></label>
                             </p>
                         </div>
                         <div class="flex grow-normal peripheral-mote-toggle">
@@ -20791,7 +21104,7 @@
                                 Peripheral:<input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
                             </p>
                             <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-                                <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal"></label>
+                                <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1"></label>
                             </p>
                         </div>
                     </div>

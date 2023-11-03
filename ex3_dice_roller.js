@@ -1089,7 +1089,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 willObj.set('current', actualVal - val);
             } else if (data[0].indexOf('peri') !== -1) {
                 logger(`setCosts:: calling removeMotesToCharacter, data[0][5]='${data[0][5]}'`);
-                removeMotesToCharacter(characterObj, val, data[0][5] === '1');
+                if (data.length > 2)
+                    removeMotesToCharacter(characterObj, val, data[0][5] === '1', data[2]);
+                else
+                    removeMotesToCharacter(characterObj, val, data[0][5] === '1');
             } else if (data[0] === 'init') {
                 reduceInitForId(playerId, val);
             }
@@ -1133,7 +1136,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         makeAndSendMenu('',title, 'gm', false);*/
     },
 
-    removeMotesToCharacter = (characterObj, qty, periFirst = true) => {
+    removeMotesToCharacter = (characterObj, qty, periFirst, commitName) => {
         logger(LOGLEVEL.INFO, `removeMotesToCharacter::removeMotesToCharacter qty=${qty}, periFirst=${periFirst}`);
         let characterId = characterObj.get('id'), attrList = findObjs({ _characterid: characterId, _type: 'attribute' });
 
@@ -1141,11 +1144,12 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         logger(`removeMotesToCharacter::displayedEssenceObj=${JSON.stringify(displayedEssenceObj.get('current'))}`);
 
         logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList.map(i => i.get('name')).sort())}`);
-        attrList = sortMoteAttr(attrList, periFirst);
+        const moteAttrList = sortMoteAttr(attrList, periFirst);
 
         logger(`removeMotesToCharacter::found ${attrList.length} objects, ${JSON.stringify(attrList)}`);
+        const removedTo = {'personal-essence': 0, 'peripheral-essence': 0};
         var removed = 0;
-        for (const attr of attrList) {
+        for (const attr of moteAttrList) {
             if (!attr) continue;
             let current = Number(attr.get('current')), max = Number(attr.get('max'));
             if (isNaN(current))  current = 0;
@@ -1153,17 +1157,30 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             if (current === 0) continue;
             logger(`removeMotesToCharacter::qty=${qty}, added=${removed}, current=${current}, max=${max}`);
             let toRemove = qty - removed < current ? qty - removed : current;
+            removedTo[attr.get('name')] = toRemove;
             removed += toRemove;
             logger(`removeMotesToCharacter::removing ${toRemove} to ${characterObj.get('name')}, current=${current}, max=${JSON.stringify(max)}`);
             let total = (current - toRemove);
             if (!isNaN(total))
-                sendMoteWhispers(characterObj, characterId, attr, current, toRemove);
+                sendMoteWhispers(characterObj, characterId, attr, current, toRemove, commitName);
             if (removed >= qty) break;
+        }
+        const useCommitSystem = Number(getAttrByName(characterId, 'usecommitsystem'));
+        logger(`removeMotesToCharacter:: useCommitSystem=${useCommitSystem} commitName=${commitName}`);
+        if (useCommitSystem && commitName) {
+            let commitedList = attrList.filter(i => i.get('name').indexOf('repeating_commited-list_') !== -1);
+            logger(`removeMotesToCharacter::COMMITED ${commitedList.length} objects found`);
+            updateOrCreateCommitedListId(characterId, commitedList, commitName, removedTo);
+            logger(`removeMotesToCharacter::AFTER LOCAL UPDATE: COMMITED ${commitedList.length} objects`);
+            updateMaxCommitedEssTotal(characterId, attrList, commitedList);
         }
         if (removed < qty)
             sendGMStandardScriptMessage(`MOTE ERROR WHEN ${makeCharacterLink(characterObj, characterId)} CASTED<br /><b>ASKED=</b>${qty} <b>REMOVED=</b>${removed} !!! NO MORE MOTE TO SPEND`, undefined, undefined, undefined, 'background-color: red;');
         let displayedEssenceTest = displayedEssenceObj.get('current') - removed;
         if (displayedEssenceTest < 0) displayedEssenceTest = 0;
+        let displayedEssenceTestMax = displayedEssenceObj.get('max') - removed;
+        if (displayedEssenceTestMax < 0) displayedEssenceTestMax = 0;
+        if (useCommitSystem && commitName) displayedEssenceObj.set('max', displayedEssenceTestMax);
         if (displayedEssenceTest === 0 && displayedEssenceObj.get('max') === 0) displayedEssenceTest = '';
         displayedEssenceObj.set('current', displayedEssenceTest);
     },
@@ -1178,27 +1195,147 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             });
     },
 
+    updateOrCreateCommitedListId = (characterId, commitedList, commitName, removedTo) => {
+        let commitedCorrespondingId = commitedList.filter(i => i.get('current') === commitName).map(i => i.get('name').split('_')[2])[0];
+        let poolType;
+        if (!commitedCorrespondingId) {
+            commitedCorrespondingId = generateRowID();
+            logger(LOGLEVEL.INFO, `updateCommitedListId:: !! CREATING COMMITED id=${commitedCorrespondingId} !!`);
+            const name = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-name`, current: commitName, characterid: characterId});
+            const commitedCorrespondingState = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-state`, current: '1', characterid: characterId});
+            const commitedCorrespondingPeri  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-peri`, current: `${removedTo['peripheral-essence']}`, characterid: characterId});
+            const commitedCorrespondingPerso = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-perso`, current: `${removedTo['personal-essence']}`, characterid: characterId});
+            if (removedTo['peripheral-essence'] && removedTo['personal-essence'])   poolType = 'mixed';
+            else if (removedTo['peripheral-essence'])                               poolType = '1';
+            else if (removedTo['personal-essence'])                                 poolType = '0';
+            const commitedCorrespondingPool  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-pool-type`, current: poolType, characterid: characterId});
+            commitedList.push(name, commitedCorrespondingState, commitedCorrespondingPool, commitedCorrespondingPeri, commitedCorrespondingPerso);
+            return;
+        }
+        logger(LOGLEVEL.INFO, `updateCommitedListId::COMMITED CORRESPONDING id=${commitedCorrespondingId}`);
+        const commitedCorrespondingState = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-state`)[0];
+        const commitedCorrespondingPeri  = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-cost-peri`)[0];
+        const commitedCorrespondingPerso = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-cost-perso`)[0];
+        const commitedCorrespondingPool  = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-pool-type`)[0];
+        logger(`updateCommitedListId:: calc newPeri & newPerso`);
+        const newPeri = (Number(commitedCorrespondingState.get('current'))) ? `${commitedCorrespondingPeri.get('current')}+${removedTo['peripheral-essence']}` : `${removedTo['peripheral-essence']}`;
+        const newPeriVal = cleanAndEval(newPeri);
+        const newPerso = (Number(commitedCorrespondingState.get('current'))) ? `${commitedCorrespondingPerso.get('current')}+${removedTo['personal-essence']}` : `${removedTo['personal-essence']}`;
+        const newPersoVal = cleanAndEval(newPerso);
+        if (commitedCorrespondingState.get('current') === '0')
+            commitedCorrespondingState.set('current', '1');
+        logger(`updateCommitedListId:: newPeri=${newPeri}, newPerso=${newPerso}`);
+        if (newPeriVal && newPersoVal) poolType = 'mixed';
+        else if (newPeriVal)           poolType = '1';
+        else if (newPersoVal)          poolType = '0';
+        if (commitedCorrespondingPool.get('current') !== poolType)
+            commitedCorrespondingPool.set('current', poolType);
+        commitedCorrespondingPeri.set('current', newPeri);
+        commitedCorrespondingPerso.set('current', newPerso);
+    },
+
+    updateMaxCommitedEssTotal = (characterId, attrList, commitedList) => {
+        logger(`updateMaxCommitedEssTotal::updateMaxCommitedEssTotal commitedList=${JSON.stringify(commitedList)}`);
+        const commitedListIdsTmp = commitedList.map(i => i.get('name').split('_')[2]);
+        logger(`updateMaxCommitedEssTotal:: commitedListIdsTmp=${JSON.stringify(commitedListIdsTmp)}`);
+        const commitedListIds = [...new Set(commitedListIdsTmp)];
+        logger(`updateMaxCommitedEssTotal:: ids=${JSON.stringify(commitedListIds.sort())}`);
+
+        let periSum = 0, persoSum = 0;
+        for (const commitedListId of commitedListIds) {
+            const commitedCorrespondingState = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedListId}_commited-state`)[0];
+            if (!Number(commitedCorrespondingState.get('current'))) continue;
+            const commitedCorrespondingPerso = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedListId}_commited-cost-perso`)[0];
+            persoSum += cleanAndEval(commitedCorrespondingPerso.get('current'));
+            const commitedCorrespondingPeri = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedListId}_commited-cost-peri`)[0];
+            periSum += cleanAndEval(commitedCorrespondingPeri.get('current'));
+        }
+        // set committedesstotal & committedessperso
+        logger(`updateMaxCommitedEssTotal:: persoSum=${persoSum}, periSum=${periSum}`);
+        const commitedPerso = attrList.filter(i => i.get('name') === 'committedessperso')[0];
+        commitedPerso.set('current', persoSum);
+        const commitedPeri = attrList.filter(i => i.get('name') === 'committedesstotal')[0];
+        commitedPeri.set('current', periSum);
+
+        // set real essence obj
+        const perso = attrList.filter(i => i.get('name') === 'personal-essence')[0];
+        const peri = attrList.filter(i => i.get('name') === 'peripheral-essence')[0];
+        logger(`updateMaxCommitedEssTotal:: final perso/peri set, perso=${JSON.stringify(perso)}, peri=${JSON.stringify(peri)}`);
+        perso.set('max', cleanEqEvalMaxReturn(characterId, 'personal-equation'));
+        peri.set('max', cleanEqEvalMaxReturn(characterId, 'peripheral-equation'));
+    },
+
+    cleanAndEval = (val) => {
+        // logger(LOGLEVEL.INFO, `cleanAndEval:: val="${val}"`);
+        const cleanerReg = /[^\d\+]+/g;
+        let str = String(val).replaceAll(cleanerReg, '');
+        let final = Number(eval(str));
+        logger(LOGLEVEL.INFO, `cleanAndEval:: val="${val}" str="${str}" final=${final}`);
+        return final;
+    },
+
     updateMaxAttr = (characterId, attr) => {
-        let test = (attr.get('name') === 'personal-essence' ? 'personal-equation' : 'peripheral-equation'),
-            equationStr         = getAttrByName(characterId, test),
-            committedesstotal   = Number(getAttrByName(characterId, 'committedesstotal')),
-            essence             = Number(getAttrByName(characterId, 'essence'));
-        logger(`updateMaxAttr::updateMaxAttr essence=${essence}`);
-        equationStr = equationStr.replace('@{essence}', isNaN(essence) ? 1 : essence);
-        equationStr = equationStr.replace('@{committedesstotal}', isNaN(committedesstotal) ? 0 : committedesstotal);
+        let test = (attr.get('name') === 'personal-essence' ? 'personal-equation' : 'peripheral-equation');
+        let ret = cleanEqEvalMaxReturn(characterId, test);
+        attr.set('max', ret);
+        return ret;
+    },
+
+    cleanEqEvalMaxReturn = (characterId, equationName) => {
+        let equationStrVal   = getAttrByName(characterId, equationName);
+        const committedPersototal = Number(getAttrByName(characterId, 'committedessperso')),
+              committedPeritotal  = Number(getAttrByName(characterId, 'committedesstotal')),
+              essence             = Number(getAttrByName(characterId, 'essence'));
+        logger(`cleanEvalReturn::cleanEvalReturn essence=${essence}`);
+        equationStrVal = equationStrVal.replace('@{essence}', isNaN(essence) ? 1 : essence);
+        equationStrVal = equationStrVal.replace('@{committedesstotal}', isNaN(committedPeritotal) ? 0 : committedPeritotal);
+        equationStrVal = equationStrVal.replace('@{committedessperso}', isNaN(committedPersototal) ? 0 : committedPersototal);
         let pattern = /[^0-9\(\)\+\-\*\/\.]/g;
-        equationStr = equationStr.replace(pattern, '');
-        let calculatedMax = eval(equationStr);
-        logger(`updateMaxAttr::equationStr=${equationStr}, essence=${essence}, calculatedMax=${calculatedMax}`);
+        equationStrVal = equationStrVal.replace(pattern, '');
+        let calculatedMax = eval(equationStrVal);
+        logger(`cleanEvalReturn::equationStr=${equationStrVal}, essence=${essence}, calculatedMax=${calculatedMax}`);
         if (isNaN(calculatedMax)) {
-            logger('updateMaxAttr::ERROR IN FORMULA => setting to 0');
+            logger('cleanEvalReturn::ERROR IN FORMULA => setting to 0');
             calculatedMax = 0;
         }
-        attr.set('max', calculatedMax);
         return calculatedMax;
     },
 
-    sendMoteWhispers = (characterObj, characterId, attr, current, toRemove) => {
+    generateUUID = (() => {
+        let a = 0;
+        let b = [];
+        return () => {
+            let c = (new Date()).getTime() + 0;
+            let f = 7;
+            let e = new Array(8);
+            let d = c === a;
+            a = c;
+            for (; 0 <= f; f--) {
+                e[f] = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".charAt(c % 64);
+                c = Math.floor(c / 64);
+            }
+            c = e.join("");
+            if (d) {
+                for (f = 11; 0 <= f && 63 === b[f]; f--) {
+                    b[f] = 0;
+                }
+                b[f]++;
+            } else {
+                for (f = 0; 12 > f; f++) {
+                    b[f] = Math.floor(64 * Math.random());
+                }
+            }
+            for (f = 0; 12 > f; f++) {
+                c += "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".charAt(b[f]);
+            }
+            return c;
+        };
+    })(),
+    
+    generateRowID = () => generateUUID().replace(/_/g, "Z"),
+
+    sendMoteWhispers = (characterObj, characterId, attr, current, toRemove, commitName) => {
+        const useCommitSystem = Number(getAttrByName(characterId, 'usecommitsystem'));
         const attrName = attr.get('name');
         const attrNameStylised = attrName.indexOf('personal') !== -1 ? attrName : `<u>${attrName}</u>`;
         const outString = `${makeCharacterLink(characterObj, characterId)}:> Removing <b>${toRemove}</b> motes to <b>${attrNameStylised}</b>`;
@@ -1207,7 +1344,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
         logger(`removeMotesToCharacter::controlledByNames=${JSON.stringify(controlledByNames)}, characterObj=${JSON.stringify(characterObj)}`);
         for (const playerName of controlledByNames) sendStylizedMoteWhisper(outString, attrName, playerName);
-        sendStylizedMoteWhisper(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])` : ''}`, attrName);
+        sendStylizedMoteWhisper(`${outString}${controlledByNames.length ? ` (whispered to: [${controlledByNames.join(', ')}])` : ''}${useCommitSystem && commitName ? '<div style="text-align: center; font-weight: bold; text-decoration: underline;">COMMITED</div>' : ''}`, attrName);
 
         if (attr.get('name') === 'peripheral-essence' && toRemove >= 5)
             sendGMStandardScriptMessage('<b>>>> ANIMA UP ! CHECK IF MUTE</b>', undefined, 'color: white;', false, 'background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);');

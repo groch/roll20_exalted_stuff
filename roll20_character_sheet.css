@@ -1144,9 +1144,10 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
+    --padding-top-size: 1px;
     width: 100%;
-    height: calc(100% - 1px);
-    padding-top: 1px;
+    height: calc(100% - var(--padding-top-size));
+    padding-top: var(--padding-top-size);
     content: attr(title);
     text-align: center;
     line-height: 100%;
@@ -4756,6 +4757,7 @@ textarea::-webkit-scrollbar-track {
     display: inline-flex;
 }
 
+.charsheet .sheet-charm-reminder .reminder-charms-commited-div,
 .charsheet .sheet-charm-reminder .reminder-charms-main-div,
 .charsheet .sheet-charm-reminder .repcontainer,
 .charsheet .sheet-charm-reminder .repcontainer .repitem {
@@ -4806,6 +4808,90 @@ textarea::-webkit-scrollbar-track {
 .charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-short-desc"][readonly] {
     width: 2em;
     flex-grow: 10;
+}
+
+.charsheet .sheet-box-reminder .reminder-charms-commited-div .repcontrol {
+    display: block;
+    width: 100%;
+}
+
+.charsheet input.use-commit-system[value="0"] ~ div.main-page .toggle-commit-list,
+.charsheet input.use-commit-system[value="1"] ~ div.main-page .free-commit,
+.charsheet input.use-commit-system[value="0"] ~ div.main-page .commit-system {
+    display: none;
+}
+
+.charsheet .sheet-charm-reminder .sheet-layer4:has(.toggle-commit-list input:checked) select,
+.charsheet .sheet-charm-reminder .sheet-layer4:has(.toggle-commit-list input:checked) .reminder-charms-main-div,
+.charsheet .sheet-charm-reminder .sheet-layer4 .reminder-charms-commited-div {
+    display: none;
+}
+.charsheet .sheet-charm-reminder .sheet-layer4:has(.toggle-commit-list input:checked) .reminder-charms-commited-div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.charsheet .sheet-charm-reminder .sheet-layer4 .toggle-commit-list {
+    transform: scale(1);
+    flex-grow: 1;
+    width: 9em;
+    height: 28px;
+}
+
+.charsheet .sheet-charm-reminder .sheet-layer4 input[type="checkbox"].sheet-unnamed-toggle {
+    height: 100%;
+}
+.charsheet .sheet-charm-reminder .sheet-layer4 input[type="checkbox"].sheet-unnamed-toggle,
+.charsheet .sheet-charm-reminder .sheet-layer4 input[type="checkbox"].sheet-unnamed-toggle + span::before {
+    width: 100%;
+    --padding-top-size: 5px;
+}
+
+.charsheet .reminder-charms-commited-div .repcontainer[data-groupname="repeating_commited-list"],
+.charsheet .reminder-charms-commited-div .repcontainer[data-groupname="repeating_commited-list"] .repitem,
+.charsheet .reminder-charms-commited-div .repcontainer[data-groupname="repeating_commited-list"] .repitem .inner-div {
+    width: 100%;
+    align-items: baseline;
+}
+.charsheet .reminder-charms-commited-div .inner-div {
+    display: flex;
+    border-radius: 5px;
+}
+
+.charsheet .reminder-charms-commited-div .repitem input[name="attr_commited-state"][value="1"] ~ input[name="attr_commited-pool-type"][value="0"] ~ .inner-div {
+    background: #80808040;
+}
+.charsheet .reminder-charms-commited-div .repitem input[name="attr_commited-state"][value="1"] ~ input[name="attr_commited-pool-type"][value="mixed"] ~ .inner-div {
+    background: #ffa50040;
+}
+.charsheet .reminder-charms-commited-div .repitem input[name="attr_commited-state"][value="1"] ~ input[name="attr_commited-pool-type"][value="1"] ~ .inner-div {
+    background: #ffd70040;
+}
+
+.charsheet .reminder-charms-commited-div input[type="checkbox"] {
+    position: unset;
+    opacity: 1;
+    margin: 0;
+}
+
+.charsheet .reminder-charms-commited-div input[name="attr_commited-name"] {
+    color: #0095c6;
+    font-weight: bold;
+}
+
+.charsheet .reminder-charms-commited-div input[type="text"] {
+    flex-grow: 1;
+    text-shadow: 0 0 5px black;
+}
+
+.charsheet .reminder-charms-commited-div label input[type="text"] {
+    flex-basis: 3em;
+    width: 1em;
+}
+
+.charsheet .reminder-charms-commited-div label {
+    display: contents;
+    text-shadow: 0 0 5px black;
 }
 
 .charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell {
@@ -5609,6 +5695,7 @@ and (min-resolution:.001dpcm) {
 
 /* hide kirby on reminder opened */
 
+.charsheet .sheet-tab-rolls-sheet .rolls-area:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-separator-hidden-checkbox,
 .charsheet .sheet-tab-rolls-sheet .rolls-area:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-toggle-desc,
 .charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-initeffect,
 .charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-combat-toggle-desc,
