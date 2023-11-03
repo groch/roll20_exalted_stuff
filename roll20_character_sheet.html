@@ -2095,6 +2095,10 @@
         'reprolls-pool-starting'
     ];
 
+    for (const attr of widgetCostAttrs) {
+        on(`change:repeating_rolls-widget:${attr}`, updateRollWidgetForCostAsync);
+    };
+
     function updateRollWidgetForCostAsync(e) {
         return new Promise((resolve,reject)=>{
             try  { updateRollWidgetForCost(e,()=>{ resolve(); });}
