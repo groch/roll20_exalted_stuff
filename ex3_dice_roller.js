@@ -1270,7 +1270,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         const cleanerReg = /[^\d\+]+/g;
         let str = String(val).replaceAll(cleanerReg, '');
         let final = Number(eval(str));
-        logger(LOGLEVEL.INFO, `cleanAndEval:: val="${val}" str="${str}" final=${final}`);
+        logger(`cleanAndEval:: val="${val}" str="${str}" final=${final}`);
         return final;
     },
 
