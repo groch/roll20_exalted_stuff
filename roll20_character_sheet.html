@@ -3,15 +3,15 @@
     var TAS;
 
     /**
-     * 
+     *
      *  FROM https://github.com/onyxring/Roll20Async
-     * 
+     *
      */
     function setActiveCharacterId(charId){
         var oldAcid=getActiveCharacterId();
         var ev = new CustomEvent("message");
         ev.data={"id":"0", "type":"setActiveCharacter", "data":charId};
-        self.dispatchEvent(ev); 
+        self.dispatchEvent(ev);
         return oldAcid;
     }
     var _sIn=setInterval;
@@ -37,12 +37,12 @@
         ,timeout);
     }
     function getAttrsAsync(props){
-        var acid=getActiveCharacterId(); //save the current activeCharacterID in case it has changed when the promise runs 
+        var acid=getActiveCharacterId(); //save the current activeCharacterID in case it has changed when the promise runs
         var prevAcid=null;               //local variable defined here, because it needs to be shared across the promise callbacks defined below
         return new Promise((resolve,reject)=>{
                 prevAcid=setActiveCharacterId(acid);  //in case the activeCharacterId has changed, restore it to what we were expecting and save the current value to restore later
                 try{
-                    getAttrs(props,(values)=>{  resolve(values); }); 
+                    getAttrs(props,(values)=>{  resolve(values); });
                 }
                 catch{ reject(); }
         }).finally(()=>{
@@ -51,43 +51,43 @@
     }
     //use the same pattern for each of the following...
     function setAttrsAsync(propObj, options){
-        var acid=getActiveCharacterId(); 
-        var prevAcid=null;               
+        var acid=getActiveCharacterId();
+        var prevAcid=null;
         return new Promise((resolve,reject)=>{
-                prevAcid=setActiveCharacterId(acid);  
+                prevAcid=setActiveCharacterId(acid);
                 try{
                     setAttrs(propObj,options,(values)=>{ resolve(values); });
                 }
                 catch{ reject(); }
         }).finally(()=>{
-            setActiveCharacterId(prevAcid); 
+            setActiveCharacterId(prevAcid);
         });
     }
 
     function getSectionIDsAsync(sectionName){
-        var acid=getActiveCharacterId(); 
-        var prevAcid=null;               
+        var acid=getActiveCharacterId();
+        var prevAcid=null;
         return new Promise((resolve,reject)=>{
-                prevAcid=setActiveCharacterId(acid);  
+                prevAcid=setActiveCharacterId(acid);
                 try{
                     getSectionIDs(sectionName,(values)=>{ resolve(values); });
                 }
                 catch{ reject(); }
         }).finally(()=>{
-            setActiveCharacterId(prevAcid); 
+            setActiveCharacterId(prevAcid);
         });
     }
-    function getSingleAttrAsync(prop){ 
-        var acid=getActiveCharacterId(); 
-        var prevAcid=null;               
+    function getSingleAttrAsync(prop){
+        var acid=getActiveCharacterId();
+        var prevAcid=null;
         return new Promise((resolve,reject)=>{
-                prevAcid=setActiveCharacterId(acid);  
+                prevAcid=setActiveCharacterId(acid);
                 try{
-                    getAttrs([prop],(values)=>{  resolve(values[prop]); }); 
+                    getAttrs([prop],(values)=>{  resolve(values[prop]); });
                 }
                 catch{ reject(); }
         }).finally(()=>{
-            setActiveCharacterId(prevAcid); 
+            setActiveCharacterId(prevAcid);
         });
     }
     /////////////////////////
@@ -761,7 +761,7 @@
         '20': '20[RAW]',
         '?{Custom Attribute}': '?{Custom Attribute}[Custom]'
     };
-    const complexConvMap = {        
+    const complexConvMap = {
         '?{Craft|': '?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&#124;0&#125;[Other-Craft]}',
         '?{Martial Arts|': '?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&#124;0&#125;[Other-MA]}',
         '?{Ability|': `?{Ability|
@@ -4233,7 +4233,7 @@
                             <span>Combat Movement</span>
                             <span>
                                 <input type="number" name="attr_qc-move" title="Dice Pool">
-                                <input type="text" name="attr_qc-move-exc" class="qc-have-exc" title="Excellency cap">    
+                                <input type="text" name="attr_qc-move-exc" class="qc-have-exc" title="Excellency cap">
                             </span>
                         </div>
                         <div class="sheet-trait four-cell">
@@ -16681,7 +16681,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- 6 SOCIAL PAGE -->
 
             <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">

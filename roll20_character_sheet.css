@@ -1,3 +1,16 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .ui-dialog,
 .nav > li > a,
 input[type="radio"].sheet-tab,
@@ -535,16 +548,16 @@ input[type="number"] {
 .charsheet [data-groupname=repeating_armor].editmode .sheet-table-cell { position: relative; }
 .charsheet [data-groupname=repeating_weapon].editmode .sheet-table-cell { left: -41px; }
 .charsheet [data-groupname=repeating_armor].editmode .sheet-table-cell { left: -30px; }
- 
+
 .charsheet .sheet-flexbox-h > label > label,
 .charsheet .sheet-flexbox-h > label,
 .charsheet .sheet-flexbox0 {
     line-height: 28px;
     margin-bottom: 0;
-    
+
     display: -webkit-flex;
     display:         flex;
-    
+
     -webkit-flex-direction: row;
             flex-direction: row;
 
@@ -567,7 +580,7 @@ input[type="number"] {
     white-space: nowrap;
     font-size: 89%;
 }
- 
+
 .charsheet .sheet-flexbox-h input[type=text],
 .charsheet .sheet-flexbox-h input[type=number],
 .charsheet .sheet-flexbox-h select {
@@ -575,12 +588,12 @@ input[type="number"] {
             flex: 1 1 40%;
     margin-left: 5px;
 }
- 
+
 .charsheet .sheet-2col {
     display: inline-block;
     vertical-align: top;
 }
- 
+
 .charsheet .sheet-3colrow .sheet-2col:last-child { margin-right: 0; }
 
 .charsheet .sheet-3colrow .sheet-2col:last-child,
@@ -612,7 +625,7 @@ input[type="number"] {
     width: 100%;
     margin-right: auto;
 }
- 
+
 .charsheet .sheet-tab-content .sheet-3colrow.sheet-centerblock {
     grid-template-areas: "a b b";
 }
@@ -1100,25 +1113,25 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     text-align: center;
     display: inline-block;
     vertical-align: middle;
-    
+
        -moz-box-shadow: 0 0 0 #000;
     -webkit-box-shadow: 0 0 0 #000;
             box-shadow: 0 0 0 #000;
-    
+
     background:         #000000;
     background:    -moz-radial-gradient(#f6f6f6, #dfdfdf);
     background: -webkit-radial-gradient(#f6f6f6, #dfdfdf);
     background:     -ms-radial-gradient(#f6f6f6, #dfdfdf);
     background:      -o-radial-gradient(#f6f6f6, #dfdfdf);
     background:         radial-gradient(#f6f6f6, #dfdfdf);
-    
+
     position: relative;
     content: "";
     opacity: 1.0;
     width: 10px;
     height: 10px;
     font-size: 12px;
-    
+
        -moz-border-radius: 1px;
     -webkit-border-radius: 1px;
             border-radius: 1px;
@@ -1129,7 +1142,7 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     content: "✓";
     color: #a00;
     font-weight: bold;
-    
+
        -moz-box-shadow: 0 0 2px transparent;
     -webkit-box-shadow: 0 0 2px transparent;
             box-shadow: 0 0 2px transparent;
@@ -1684,8 +1697,9 @@ and (min-resolution:.001dpcm) {
 
 .charsheet .sheet-health-level select {
     width: 23px;
-    --webkit-appearance: none;
-    --moz-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     text-overflow: '';
     cursor: pointer;
     font-weight: bolder;
@@ -1774,7 +1788,7 @@ and (min-resolution:.001dpcm) {
 }
 
 
-.charsheet input.sheet-tab-character-sheet:checked				        ~ .flex.main-page div.sheet-tab-character-sheet, 
+.charsheet input.sheet-tab-character-sheet:checked				        ~ .flex.main-page div.sheet-tab-character-sheet,
 .charsheet input.sheet-tab-spell-sheet:checked					        ~ .flex.main-page div.sheet-tab-spell-sheet,
 .charsheet input.sheet-tab-charm-sheet:checked					        ~ .flex.main-page div.sheet-tab-charm-sheet,
 .charsheet input.sheet-tab-settings-sheet:checked				        ~ .flex.main-page div.sheet-tab-settings-sheet,
@@ -1866,7 +1880,7 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet-evocation:checked		        ~ div.sheet-tab-charm-sheet-evocation,
 .charsheet input.sheet-tab-charm-sheet-old:checked				        ~ div.sheet-tab-charm-sheet-old,
 .charsheet input.sheet-tab-charm-sheet-universal:checked		        ~ div.sheet-tab-charm-sheet-universal
-{                                 
+{
    display: flex;
    flex-direction: column;
 }
@@ -1996,7 +2010,7 @@ and (min-resolution:.001dpcm) {
     flex-wrap: wrap;
 }
 
-.charsheet input.sheet-tab { 
+.charsheet input.sheet-tab {
    height: 30px;
    -webkit-appearance:none;
    -moz-appearance:none;
@@ -2289,7 +2303,7 @@ and (min-resolution:.001dpcm) {
     background-position: 100% 100%;
   }
 }
-  
+
 @keyframes AnimateBG {
   0% {
     background-position: 0% 100%;
@@ -2398,6 +2412,7 @@ and (min-resolution:.001dpcm) {
 .sheet-rolltemplate-exalted3e_combatcast table {
     border-radius: 10px 10px 0 0;
     border:1px solid black;
+    --bs-section-color: white;
 }
 
 .sheet-rolltemplate-exalted3e_cast > div.sheet-flex {
@@ -3447,7 +3462,7 @@ body.sheet-darkmode {
     border: 3px solid red;
     border-radius: 5px;
 }
- 
+
 .charsheet .sheet-intimacyrepeating option[value="none"] {color: darkorange}
 .charsheet .sheet-intimacyrepeating option[value="Defining"]{background: rgba(0, 88, 255, 0.5)}
 .charsheet .sheet-intimacyrepeating option[value="Major"]{background: rgba(0, 243, 255, 0.34)}
@@ -3464,7 +3479,7 @@ body.sheet-darkmode {
 .inti-col .intimacy-val-check[value="Defining"] ~ div.sheet-table-cell {
     background: linear-gradient(180deg, transparent, rgba(0, 88, 255, 0.5), transparent);
 }
-    
+
 .charsheet .sheet-3col.inti-col input[name="attr_intimacyrepeatingxpspent"] {
     width: 2em;
     border-bottom: none;
@@ -6278,8 +6293,9 @@ div.anima-flare-box-mode.liminal-hint {
 }
 
 .charsheet .sheet-rolls-div-widget .excellency-cap-section > div select {
-    --webkit-appearance: none;
-    --moz-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     text-indent: 0.01px;
     text-overflow: '';
     padding: 0px;
@@ -6414,20 +6430,20 @@ div.anima-flare-box-mode.liminal-hint {
     body {
         color: #B3B3B3;
     }
-    
+
     input, textarea, select, .uneditable-input {
         color: #E6E6E6;
     }
-    
+
     .charsheet input[type=text], .charsheet input[type=number], .charsheet select {
         border-bottom: 1px solid #E6E6E6;
     }
-    
+
     .charsheet select:focus, .charsheet h1 span {
         background: #1f1f1f;
         color: #E6E6E6;
     }
-    
+
     h1, h2, h3, h4, h5, h6 {
         color: #E6E6E6;
     }
@@ -6435,21 +6451,21 @@ div.anima-flare-box-mode.liminal-hint {
     .ressource-line p label {
         color: white;
     }
-    
+
     .charsheet input.sheet-tab::before {
         color: #E6E6E6;
         background: gray;
     }
-    
+
     .charsheet div.sheet-dots-full, .charsheet div.sheet-damage-box, .charsheet div.sheet-dots {
         background-color: dimgray;
         border-radius: 10px;
     }
-    
+
     .charsheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
         background-color: darkred;
     }
-    
+
     .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="1"] ~ input[type=number][disabled].wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="1"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="1"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
@@ -6457,7 +6473,7 @@ div.anima-flare-box-mode.liminal-hint {
         background-color: #d5d500;
         color: #B3B3B3;
     }
-    
+
     .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="2"] ~ input[type=number][disabled].wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="2"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="2"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
@@ -6465,7 +6481,7 @@ div.anima-flare-box-mode.liminal-hint {
         background-color: #ab6f00;
         font-weight: bold;
     }
-    
+
     .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="3"] ~ input[type=number][disabled].wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="3"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="3"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
@@ -6473,7 +6489,7 @@ div.anima-flare-box-mode.liminal-hint {
         background-color: #9f2c01;
         font-weight: bold;
     }
-    
+
     .charsheet .sheet-defenses .sheet-table-body .wound-penalty-check[value="4"] ~ input[type=number][disabled].wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="4"] ~ input[type=number][disabled].onslaught-taint.wound-taint,
     .charsheet .sheet-defenses .sheet-table-body .flex-col .wound-penalty-check[value="4"] ~ input[type=number][readonly].onslaught-taint.wound-taint,
@@ -6481,7 +6497,7 @@ div.anima-flare-box-mode.liminal-hint {
         background-color: darkred;
         font-weight: bold;
     }
-    
+
     .charsheet input[type=number][disabled].woundpenalty-input {
         background-color: darkred;
     }
@@ -6492,27 +6508,27 @@ div.anima-flare-box-mode.liminal-hint {
         padding: 2px 10px;
         transition: color .2s;
     }
-    
+
     .btn:hover {
         color: white;
     }
-    
+
     /* input[type=checkbox].sheet-unnamed-toggle + span::before, */
     .merits-div-checkbox input + strong:before{
         background: dimgray;
         color: #e6e6e6;
     }
-    
+
     input[type=checkbox].sheet-unnamed-toggle:checked + span + div {
         background: linear-gradient(#1F1F1F, #1F1F1F) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
         border: 3px solid transparent;
         border-radius: 13px;
     }
-    
+
     .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
         background: #420000;
     }
-    
+
     .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
     .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
         background: dimgray;
@@ -6576,7 +6592,7 @@ div.anima-flare-box-mode.liminal-hint {
     .sheet-editPane {
          width: 80%;
      }
-    
+
     input[name="attr_Portrait"][value="PC0"]  {
         border: 1px solid #cccc00;
         text-align: center;
@@ -6608,12 +6624,12 @@ div.anima-flare-box-mode.liminal-hint {
         border-top: 6px solid #ffcb2b;
         padding: 5px;
     }
-    
+
     input[name="attr_Portrait"]:not([value="PC0"]) + .sheet-action {
         display: block;
         visibility: visible;
     }
-    
+
     .charsheet button[type="action"].sheet-blank-roll-button + span,
     .charsheet button[type="roll"].sheet-blank-roll-button + span {
         display: none !important;
