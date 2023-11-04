@@ -188,6 +188,16 @@ input[type="number"] {
     outline: 2px solid var(--bs-clash-color);
 }
 
+.charsheet .full-def-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
+    --ts-offset: 2px;
+    --ts-blur: 1px;
+    --ts-color: #0070ff;
+    text-shadow: var(--ts-offset)            var(--ts-offset)            var(--ts-blur) var(--ts-color),
+                 calc(-1 * var(--ts-offset)) var(--ts-offset)            var(--ts-blur) var(--ts-color),
+                 var(--ts-offset)            calc(-1 * var(--ts-offset)) var(--ts-blur) var(--ts-color),
+                 calc(-1 * var(--ts-offset)) calc(-1 * var(--ts-offset)) var(--ts-blur) var(--ts-color);
+}
+
 .charsheet .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint {
     box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
                 var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
@@ -3096,6 +3106,16 @@ body.sheet-darkmode {
 
 .sheet-darkmode .charsheet .clash-penalty-check[value="2"] ~ .flex.main-page .clash-taint {
     outline: 2px solid var(--bs-clash-color);
+}
+
+.sheet-darkmode .charsheet .full-def-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
+    --ts-offset: 2px;
+    --ts-blur: 1px;
+    --ts-color: #0070ff;
+    text-shadow: var(--ts-offset)            var(--ts-offset)            var(--ts-blur) var(--ts-color),
+                 calc(-1 * var(--ts-offset)) var(--ts-offset)            var(--ts-blur) var(--ts-color),
+                 var(--ts-offset)            calc(-1 * var(--ts-offset)) var(--ts-blur) var(--ts-color),
+                 calc(-1 * var(--ts-offset)) calc(-1 * var(--ts-offset)) var(--ts-blur) var(--ts-color);
 }
 
 .sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint {

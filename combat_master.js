@@ -139,7 +139,7 @@ var CombatMaster = CombatMaster || (function() {
     markerType = {ROUND:'round', MAIN: 'main', NEXT: 'next', RANGE: 'range'},
     invisibleImage = 'https://s3.amazonaws.com/files.d20.io/images/255367527/BLuBSgz14Tx_IGSPAPM6vw/max.png?1636797848',
     icon_image_positions = {red:"#C91010",blue:"#1076C9",green:"#2FC910",brown:"#C97310",purple:"#9510C9",pink:"#EB75E1",yellow:"#E5EB75",dead:"X",skull:0,sleepy:34,"half-heart":68,"half-haze":102,interdiction:136,snail:170,"lightning-helix":204,spanner:238,"chained-heart":272,"chemical-bolt":306,"death-zone":340,"drink-me":374,"edge-crack":408,"ninja-mask":442,stopwatch:476,"fishing-net":510,overdrive:544,strong:578,fist:612,padlock:646,"three-leaves":680,"fluffy-wing":714,pummeled:748,tread:782,arrowed:816,aura:850,"back-pain":884,"black-flag":918,"bleeding-eye":952,"bolt-shield":986,"broken-heart":1020,cobweb:1054,"broken-shield":1088,"flying-flag":1122,radioactive:1156,trophy:1190,"broken-skull":1224,"frozen-orb":1258,"rolling-bomb":1292,"white-tower":1326,grab:1360,screaming:1394,grenade:1428,"sentry-gun":1462,"all-for-one":1496,"angel-outfit":1530,"archery-target":1564},
-    icon_custom_token = {"clashlost::5271616": 'https://s3.amazonaws.com/files.d20.io/images/5271616/Kl55cKKOq-v4AoBUsAynrQ/max.png?1656706679'},
+    icon_custom_token = {"clashlost::5271616": 'https://s3.amazonaws.com/files.d20.io/images/5271616/Kl55cKKOq-v4AoBUsAynrQ/max.png?1656706679', "full-def::6398340": 'https://s3.amazonaws.com/files.d20.io/images/6398340/AcUvXnSAzxmfO7ofFU3Tcg/max.png?1699027124'},
     ctMarkers = ['blue', 'brown', 'green', 'pink', 'purple', 'red', 'yellow', '-', 'all-for-one', 'angel-outfit', 'archery-target', 'arrowed', 'aura', 'back-pain', 'black-flag', 'bleeding-eye', 'bolt-shield', 'broken-heart', 'broken-shield', 'broken-skull', 'chained-heart', 'chemical-bolt', 'cobweb', 'dead', 'death-zone', 'drink-me', 'edge-crack', 'fishing-net', 'fist', 'fluffy-wing', 'flying-flag', 'frozen-orb', 'grab', 'grenade', 'half-haze', 'half-heart', 'interdiction', 'lightning-helix', 'ninja-mask', 'overdrive', 'padlock', 'pummeled', 'radioactive', 'rolling-bomb', 'screaming', 'sentry-gun', 'skull', 'sleepy', 'snail', 'spanner',   'stopwatch','strong', 'three-leaves', 'tread', 'trophy', 'white-tower'],
     // shaped_conditions = ['blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'],
     script_name = 'CombatMaster',
@@ -224,7 +224,7 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -397,6 +397,8 @@ var CombatMaster = CombatMaster || (function() {
         if (cmdDetails.action == 'help')        showHelp(cmdDetails);
 
         const simpleCastList = [
+                {key:'applyFullDef',                       fx: applyFullDef},
+                {key:'remFullDef',                         fx: remFullDef},
                 {key:'announceCrashAndSendInitGainButton', fx: announceCrashAndSendInitGainButton},
                 {key:'announceCrashOff',                   fx: announceCrashOff},
                 {key:'applyGrabDefPen',                    fx: applyGrabDefPen},
@@ -538,9 +540,40 @@ var CombatMaster = CombatMaster || (function() {
         contents   += `<div style="${styles.announcePlayer}max-width: 67%;">${name} ${confObj.contentString}</div>`;
 
         if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,confObj.title,'gm', false, `background-color:${confObj.bgColor};${styles.specialTitle}`);
+            makeAndSendMenu(contents,confObj.title,'gm', false, `background-color:${confObj.bgColor}`);
         else
-            makeAndSendMenu(contents,confObj.title,'', false, `background-color:${confObj.bgColor};${styles.specialTitle}`);
+            makeAndSendMenu(contents,confObj.title,'', false, `background-color:${confObj.bgColor}`);
+    },
+
+    remFullDef = (cmdDetails) => {
+        announceAndExec(cmdDetails, {
+            name: 'remFullDef',                         debugMessage: 'removed Full Defense Bonus',       charAttrToSet: {'full-def-bonus':0},
+            contentString: 'is out of Full Defense',    title: 'Out of Full Defense',                     bgColor: 'black'
+        });
+    },
+
+    applyFullDef = (cmdDetails) => {
+        logger('applyFullDef::applyFullDef');
+        const turnorder   = getTurnorder();
+        const tokenObj    = getObj('graphic', cmdDetails.details['tok']);
+        const indexTurn = turnorder.findIndex(turn => turn['id'] === cmdDetails.details['tok']);
+        if (indexTurn === -1 || Number(turnorder[indexTurn].pr) <= 0) { // CANNOT FULL DEF
+            let name        = tokenObj.get('name');
+            setTimeout(() => removeConditionFromToken(tokenObj, 'fulldef', false), 500);
+            const imgurl    = tokenObj.get('imgsrc');
+            const image     = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px"  />` : '';
+            name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+            const contents  = `<div style="${styles.announcePlayer}">${image}</div><div style="${styles.announcePlayer}max-width: 67%;">${name} cannot set Full Defense at the moment.</div>`;
+            makeAndSendMenu(contents,'Error Applying Full-Defense','', false, `background-color:darkred`);
+            return;
+        }
+        turnorder[indexTurn].pr -= 1;
+        setTurnorder(turnorder);
+
+        announceAndExec(cmdDetails, {
+            name: 'applyFullDef',                       debugMessage: 'applied Full Defense Bonus',     charAttrToSet: {'full-def-bonus':2},
+            contentString: 'is in Full Defense mode',   title: 'Full Defense Bonus',                    bgColor: 'darkgreen'
+        });
     },
 
     remClashDefPen = (cmdDetails) => {
@@ -2664,10 +2697,12 @@ var CombatMaster = CombatMaster || (function() {
         let title         = 'Conditions';
         let doneButton    = makeImageButton('!cmaster --turn,next',doneImage,'Done with Round','transparent',18,'white');
         let delayButton   = makeImageButton('!cmaster --turn,delay',delayImage,'Delay your Turn','transparent',18, 'white');
+        let fullDefButton = makeImageButton(`!token-mod --set statusmarkers&#124;=full-def;;6398340 --ids ${tokenObj.get('_id')}`,getDefaultIcon('Combat Master','full-def::6398340','display:inline-block', 18, 18, 18),'Full Defense','transparent',18, 'white');
 
         if (!show) {
             title   += '<div style="'+styles.buttonRight+'">'+doneButton+'</div>';
             title   += '<div style="'+styles.buttonRight+'">'+delayButton+'</div>';
+            title   += '<div style="'+styles.buttonRight+'">'+fullDefButton+'</div>';
         }
 
         let contents     = '<div style="'+styles.announcePlayer+'">'+image+'</div>',
@@ -2799,6 +2834,11 @@ var CombatMaster = CombatMaster || (function() {
         return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'"><span style="color:'+color+';padding:0px;font-size:'+size+'px;font-family: \'Pictos\'">'+image+'</span></a></div>';
     },
 
+    makeImageFromStatusButton = (command, image, toolTip, backgroundColor,size,color) => {
+        if (!color) color = 'black';
+        return '<div style="display:inline-block;margin-right:3px;padding:1px;vertical-align:middle;"><a href="'+command+'" title= "'+toolTip+'" style="margin:0px;padding:0px;border:0px solid;background-color:'+backgroundColor+'">'+image+'</a></div>';
+    },
+
     makeList = (items, backButton, extraButton) => {
         let list;
 
@@ -2824,7 +2864,7 @@ var CombatMaster = CombatMaster || (function() {
     //ICONS
     //*************************************************************************************************************
 
-    getDefaultIcon = (iconType, icon, style='', height, width) => {
+    getDefaultIcon = (iconType, icon, style='', height, width, bgSize) => {
         if (iconType == 'None') return 'None';
         let installed = verifyInstalls(iconType);
 
@@ -2837,7 +2877,7 @@ var CombatMaster = CombatMaster || (function() {
 
             iconStyle += (width) ? 'width: '+width+'px;height: '+height+'px;' : 'width: 24px; height: 24px;';
             if (typeof icon_custom_token[icon] !== 'undefined') {
-                iconStyle += `background-image: url(${icon_custom_token[icon]}); background-size: 24px;`;
+                iconStyle += `background-image: url(${icon_custom_token[icon]}); background-size: ${bgSize !== undefined ? bgSize : '24'}px;`;
                 iconStyle += style;
                 return '<div style="vertical-align:middle;'+iconStyle+'">'+X+'</div>';
             }
@@ -3803,6 +3843,32 @@ var CombatMaster = CombatMaster || (function() {
 						addMacro:           'None',
 						addPersistentMacro: false,
 						remAPI:             '!cmaster --remClashDefPen,id=CharID,tok=TokenID',
+						remRoll20AM:        'None',
+						remFX:              'None',
+						remMacro:           'None',
+                        clearOnStop:        true
+					},
+                    fulldef: {
+						name:               'Full Defense',
+						key:                'fulldef',
+						type:               'Condition',
+						description:        '<p>Full Defense status cost 1 initiative but give 2points bonus to defenses until next turn.</p>',
+						icon:               'full-def::6398340',
+						iconType:           'Combat Master',
+						duration:           1,
+						direction:          -1,
+						override:           true,
+						favorite:           false,
+						message:            'None',
+						targeted:           false,
+						targetedAPI:        'casterTargets',
+						concentration:      false,
+						addAPI:             '!cmaster --applyFullDef,id=CharID,tok=TokenID',// TODO
+						addRoll20AM:        'None',
+						addFX:              'None',
+						addMacro:           'None',
+						addPersistentMacro: false,
+						remAPI:             '!cmaster --remFullDef,id=CharID,tok=TokenID',// TODO
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
