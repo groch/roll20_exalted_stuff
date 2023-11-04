@@ -3863,12 +3863,12 @@ var CombatMaster = CombatMaster || (function() {
 						targeted:           false,
 						targetedAPI:        'casterTargets',
 						concentration:      false,
-						addAPI:             '!cmaster --applyFullDef,id=CharID,tok=TokenID',// TODO
+						addAPI:             '!cmaster --applyFullDef,id=CharID,tok=TokenID',
 						addRoll20AM:        'None',
 						addFX:              'None',
 						addMacro:           'None',
 						addPersistentMacro: false,
-						remAPI:             '!cmaster --remFullDef,id=CharID,tok=TokenID',// TODO
+						remAPI:             '!cmaster --remFullDef,id=CharID,tok=TokenID',
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
