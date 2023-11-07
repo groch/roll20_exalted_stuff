@@ -141,7 +141,17 @@ var CombatMaster = CombatMaster || (function() {
     icon_image_positions = {red:"#C91010",blue:"#1076C9",green:"#2FC910",brown:"#C97310",purple:"#9510C9",pink:"#EB75E1",yellow:"#E5EB75",dead:"X",skull:0,sleepy:34,"half-heart":68,"half-haze":102,interdiction:136,snail:170,"lightning-helix":204,spanner:238,"chained-heart":272,"chemical-bolt":306,"death-zone":340,"drink-me":374,"edge-crack":408,"ninja-mask":442,stopwatch:476,"fishing-net":510,overdrive:544,strong:578,fist:612,padlock:646,"three-leaves":680,"fluffy-wing":714,pummeled:748,tread:782,arrowed:816,aura:850,"back-pain":884,"black-flag":918,"bleeding-eye":952,"bolt-shield":986,"broken-heart":1020,cobweb:1054,"broken-shield":1088,"flying-flag":1122,radioactive:1156,trophy:1190,"broken-skull":1224,"frozen-orb":1258,"rolling-bomb":1292,"white-tower":1326,grab:1360,screaming:1394,grenade:1428,"sentry-gun":1462,"all-for-one":1496,"angel-outfit":1530,"archery-target":1564},
     icon_custom_token = {"clashlost::5271616": 'https://s3.amazonaws.com/files.d20.io/images/5271616/Kl55cKKOq-v4AoBUsAynrQ/max.png?1656706679', "full-def::6398340": 'https://s3.amazonaws.com/files.d20.io/images/6398340/AcUvXnSAzxmfO7ofFU3Tcg/max.png?1699027124'},
     ctMarkers = ['blue', 'brown', 'green', 'pink', 'purple', 'red', 'yellow', '-', 'all-for-one', 'angel-outfit', 'archery-target', 'arrowed', 'aura', 'back-pain', 'black-flag', 'bleeding-eye', 'bolt-shield', 'broken-heart', 'broken-shield', 'broken-skull', 'chained-heart', 'chemical-bolt', 'cobweb', 'dead', 'death-zone', 'drink-me', 'edge-crack', 'fishing-net', 'fist', 'fluffy-wing', 'flying-flag', 'frozen-orb', 'grab', 'grenade', 'half-haze', 'half-heart', 'interdiction', 'lightning-helix', 'ninja-mask', 'overdrive', 'padlock', 'pummeled', 'radioactive', 'rolling-bomb', 'screaming', 'sentry-gun', 'skull', 'sleepy', 'snail', 'spanner',   'stopwatch','strong', 'three-leaves', 'tread', 'trophy', 'white-tower'],
-    // shaped_conditions = ['blinded', 'charmed', 'deafened', 'frightened', 'grappled', 'incapacitated', 'invisible', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained', 'stunned', 'unconscious'],
+    anima_colors = {
+        'WaterAspect::5256080': '#0000ff', 'FireAspect::5256079': '#ff0000',  'EarthAspect::5256078': '#ffe599',    'AirAspect::5256077': '#00ffff',   'WoodAspect::5256081': '#00ff00',    //DB
+        'Dawn::5256150': '#ffff00' ,       'Zenith::5256154': '#ffff00',      'Eclipse::5256151': '#ffff00',        'Twilight::5256153': '#ffff00',    'Night::5256152': '#ffff00',         //SOLAR
+        'Casteless::5256148': '#bbbbbb',   'FullMoon::5256147': '#bbbbbb',    'ChangingMoon::5256146': '#bbbbbb',   'NoMoon::5256149': '#bbbbbb',                                           //LUNAR
+        'Mars::5256162': '#bb0000',        'Mercury::5256163': '#ffff88',     'Jupiter::5256161': '#274e13',        'Venus::5256165': '#0088ff',       'Saturn::5256164': '#9900ff',        //SIDEREAL
+    },
+    lightAnima = {
+        low :       {0: '0', 1: '0.8', 2: '8',      3: '35'},
+        bright :    {0: '0', 1: '0.3', 2: '3',      3: '10.5'},
+        aura :      {0: '',  1: '0.2', 2: '2.8',    3: '10'},
+    },
     script_name = 'CombatMaster',
     combatState = 'COMBATMASTER',
 
@@ -943,6 +953,51 @@ var CombatMaster = CombatMaster || (function() {
         if (characterObj) setAttrs(characterObj.get('id'), {'onslaught':0});
     },
 
+    enableAnimas = (tokenObj, marker) => {
+        logger(`enableAnimas::enableAnimas marker=${marker}`);
+        if (!marker) {
+            logger(`enableAnimas:: marker=EMPTY RETURN CMD AS IS`);
+            return;
+        }
+
+        const markerSplit = marker.split('@');
+        const animaColor = anima_colors[markerSplit[0]];
+        const level = Number(markerSplit[1]);
+        if (!animaColor) logger(LOGLEVEL.ERROR, `enableAnimas:: ERROR, NO ANIMA COLOR !!!`);
+        else logger(`enableAnimas:: level=${level}`);
+
+        const finalObj = {
+            'aura1_color':animaColor || '#ffffff',
+            'aura1_radius':lightAnima.aura[level],
+            'lightColor':animaColor || '#ffffff',
+            'low_light_distance':lightAnima.low[level],
+            'bright_light_distance':lightAnima.bright[level],
+            'emits_bright_light':1,
+            'emits_low_light':1,
+            'showplayers_aura1':1,
+            'playersedit_aura1':false,
+            'aura1_square':false,
+        };
+        logger(`enableAnimas:: finalObj=${JSON.stringify(finalObj)}`);
+        tokenObj.set(finalObj);
+    },
+
+    disableAnimas = (tokenObj) => {
+        logger(`disableAnimas::disableAnimas`);
+        const finalObj = {
+            'aura1_radius':lightAnima.aura[0],
+            'low_light_distance':lightAnima.low[0],
+            'bright_light_distance':lightAnima.bright[0],
+            'emits_bright_light':0,
+            'emits_low_light':0,
+            'showplayers_aura1':0,
+            'playersedit_aura1':false,
+            'aura1_square':false,
+        };
+        logger(`disableAnimas:: finalObj=${JSON.stringify(finalObj)}`);
+        tokenObj.set(finalObj);
+    },
+
     //*************************************************************************************************************
     //MENUS
     //*************************************************************************************************************
@@ -989,6 +1044,7 @@ var CombatMaster = CombatMaster || (function() {
 
             let installed = verifyInstalls(condition.iconType);
             if (!installed) return;
+            if (key === 'showAnima') continue;
             conditionButton = makeImageButton('!cmaster --show,condition='+key,backImage,'Edit Condition','transparent',12);
             removeButton    = makeImageButton('!cmaster --remove,condition='+key,deleteImage,'Remove Condition','transparent',12);
 
@@ -1299,6 +1355,7 @@ var CombatMaster = CombatMaster || (function() {
         for (key in state[combatState].config.conditions) {
             condition       = getConditionByKey(key);
             if (!verifyInstalls(condition.iconType)) return;
+            if (key === 'showAnima') continue;
 
 			conditionButton = makeImageButton('!cmaster --show,condition=' + key,backImage,'Edit Condition','transparent',12);
 
@@ -1581,9 +1638,12 @@ var CombatMaster = CombatMaster || (function() {
         logger('getConditionByMarker::getConditionByMarker');
 
         let key;
-        for (key in state[combatState].config.conditions)
-            if (marker.includes(state[combatState].config.conditions[key].icon))
+        for (key in state[combatState].config.conditions) {
+            if (typeof state[combatState].config.conditions[key].icon === 'object' && Object.keys(state[combatState].config.conditions[key].icon).findIndex(i => marker.includes(i)) > -1)
                 return state[combatState].config.conditions[key];
+            else if (marker.includes(state[combatState].config.conditions[key].icon))
+                return state[combatState].config.conditions[key];
+        }
         return false;
     },
 
@@ -1646,7 +1706,7 @@ var CombatMaster = CombatMaster || (function() {
             });
     },
 
-    addConditionToToken = (tokenObj,key,duration,direction,message) => {
+    addConditionToToken = (tokenObj,key,duration,direction,message,marker) => {
         let	defaultCondition = getConditionByKey(key);
         let newCondition = {};
 
@@ -1663,7 +1723,7 @@ var CombatMaster = CombatMaster || (function() {
 
             if (defaultCondition) {
                 newCondition.name               = defaultCondition.name;
-                newCondition.icon               = defaultCondition.icon;
+                newCondition.icon               = key === 'showAnima' ? marker.split('@')[0] : defaultCondition.icon;
                 newCondition.iconType           = defaultCondition.iconType;
                 newCondition.addMacro           = defaultCondition.addMacro;
                 newCondition.addPersistentMacro = defaultCondition.addPersistentMacro;
@@ -1714,9 +1774,13 @@ var CombatMaster = CombatMaster || (function() {
             }
 
             newCondition.duration  = parseInt((!duration  && defaultCondition) ? defaultCondition.duration  : duration);
+            if (key === 'showAnima' && newCondition.duration < 0) newCondition.duration = 0;
+            if (key === 'showAnima' && newCondition.duration > 3) newCondition.duration = 3;
+            if (key === 'showAnima') newCondition.icon += '@'+newCondition.duration;
             newCondition.direction = parseInt((!direction && defaultCondition) ? defaultCondition.direction : direction);
             newCondition.message   =          (!message   && defaultCondition) ? defaultCondition.message   : message;
 
+            logger(`addConditionToToken:: newCondition=${JSON.stringify(newCondition)}`);
             setTimeout(() => state[combatState].conditions.push(newCondition), 500);
 
             addMarker(tokenObj, newCondition.iconType, newCondition.icon, newCondition.duration, newCondition.direction, newCondition.key);
@@ -1727,15 +1791,15 @@ var CombatMaster = CombatMaster || (function() {
                     	addMarker(getObj('graphic', targets),newCondition.iconType,newCondition.icon,newCondition.duration, newCondition.direction, newCondition.key);
                 });
 
-            if (!remove.removed) {
-                if (state[combatState].config.status.sendConditions && defaultCondition)
+            if (!remove.removed || key === 'showAnima') {
+                if (state[combatState].config.status.sendConditions && defaultCondition && key !== 'showAnima')
                 	sendConditionToChat(newCondition.key);
                 if (newCondition.targeted)
                 	targetedCondition(newCondition.id, key);
                 if (newCondition.concentration == true && newCondition.override == true)
                 	targetedCaster('concentration',newCondition.duration,newCondition.direction,'Concentrating on ' + newCondition.name);
                 if (!newCondition.targeted || (newCondition.targeted && newCondition.targetedAPI == 'casterTargets'))
-                	doAddConditionCalls(tokenObj,key);
+                	doAddConditionCalls(tokenObj,key,newCondition.icon);
             }
         }
     },
@@ -2062,7 +2126,7 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
 
     addMarker = (tokenObj, markerType, marker, duration, direction, key) => {
-        logger(`addMarker::addMarker marker='${marker}'`);
+        logger(`addMarker::addMarker marker='${marker}' key='${key}'`);
 
         if (!verifyInstalls(markerType)) {
              makeAndSendMenu('You are missing an API required by an Icon Type you are using.  Install libTokenMarker or TokenConditions.');
@@ -2076,10 +2140,11 @@ var CombatMaster = CombatMaster || (function() {
         setTimeout(() => {
             let statusMarkers = returnStatusMarkers(tokenObj), statusMarker;
             statusMarker = icon;
-            if (!(key == 'dead' || duration <= 0 || duration >= 10 || (duration == 1 && direction == 0)))
+            if ((key === 'showAnima' || !(key == 'dead' || duration <= 0 || duration >= 10 || (duration == 1 && direction == 0))) && statusMarker.indexOf('@') === -1)
                 statusMarker += '@'+duration;
 
             statusMarkers.push(statusMarker);
+            logger(`addMarker:: setting statusMarkers=${statusMarkers.join()}`);
             tokenObj.set('statusmarkers', statusMarkers.join());
         }, 500);
     },
@@ -2096,9 +2161,12 @@ var CombatMaster = CombatMaster || (function() {
         let iconTag = getIconTag(markerType, marker);
         if (!iconTag) return;
         let statusMarkers = returnStatusMarkers(tokenObj);
+        logger(`removeMarker:: before statusMarkers=${statusMarkers.join()}`);
         statusMarkers.forEach((a, i) => {
-            if (a.indexOf(iconTag) > -1) statusMarkers.splice(i,1);
+            if (typeof iconTag === 'object' && Object.keys(iconTag).findIndex(i => a.indexOf(i) > -1) > -1) statusMarkers.splice(i,1);
+            else if (typeof iconTag !== 'object' && a.indexOf(iconTag) > -1) statusMarkers.splice(i,1);
         });
+        logger(`removeMarker:: after statusMarkers=${statusMarkers.join()}`);
         tokenObj.set('statusmarkers', statusMarkers.join());
     },
 
@@ -2285,6 +2353,20 @@ var CombatMaster = CombatMaster || (function() {
         }
     },
 
+    casteAllowThisAspect = (caste, marker) => {
+        logger(`casteAllowThisAspect:: caste=${caste} marker=${marker}`);
+        if (['Water','Fire','Earth','Air','Wood'].includes(caste) && ['WaterAspect::5256080','FireAspect::5256079','EarthAspect::5256078','AirAspect::5256077','WoodAspect::5256081'].includes(marker))
+            return true;
+        if (['Dawn','Zenith','Eclipse','Twilight','Night'].includes(caste) && marker.split(':')[0] === caste)
+            return true;
+        if (['Casteless','Full Moon','Changing Moon','No Moon'].includes(caste) && marker.split(':')[0] === caste.replace(' ',''))
+            return true;
+        if ((caste === 'Battles' && marker === 'Mars::5256162') || (caste === 'Journeys' && marker === 'Mercury::5256163') || (caste === 'Secrets' && marker === 'Jupiter::5256161') || (caste === 'Serenity' && marker === 'Venus::5256165') || (caste === 'Endings' && marker === 'Saturn::5256164'))
+            return true;
+        logger(`casteAllowThisAspect:: return FALSE`);
+        return false;
+    },
+
     handleStatusMarkerChange = (obj, prev) => {
         logger(LOGLEVEL.INFO, '-------------Handle Status Marker Change-------------');
         logger('handleStatusMarkerChange::handleStatusMarkerChange');
@@ -2312,10 +2394,16 @@ var CombatMaster = CombatMaster || (function() {
                 if (newstatusmarkers.length > 0 ) {
                     newstatusmarkers.forEach(function(marker){
                         let condition = getConditionByMarker(marker);
-                        const duration = marker.indexOf('@') > 0 ? marker.split('@')[1] : condition.duration;
+                        const markerSplit = marker.split('@');
+                        const duration = marker.indexOf('@') > 0 ? markerSplit[1] : condition.duration;
                         if (!condition) return;
+                        const characterObj = getObj('character',obj.get('represents'));
+                        if (!characterObj || !casteAllowThisAspect(getAttrByName(characterObj.id, 'caste', 'current'),markerSplit[0])) {
+                            removeMarker(obj, 'Combat Master', markerSplit[0]);
+                            return;
+                        }
                         if (marker !== "" && !prevstatusmarkers.includes(marker))
-                            addConditionToToken(obj,condition.key,duration,condition.direction,condition.message);
+                            addConditionToToken(obj,condition.key,duration,condition.direction,condition.message, marker);
                     });
                 }
             }
@@ -2789,7 +2877,7 @@ var CombatMaster = CombatMaster || (function() {
                         }
                         if (condition.hasOwnProperty('message') && condition.message != 'None' && condition.message.length > 0)
                             output += '<div style="display:inline-block;"><strong>Message: </strong>'+condition.message + '</div>';
-                    } else if (condition.direction == 0) {
+                    } else if (condition.direction == 0 && condition.key !== 'showAnima') {
                         output += '<div style="display:inline-block;"><strong>'+descriptionButton+'</strong> '+condition.duration+' Permanent</div>';
                         if (condition.hasOwnProperty('message') && condition.message != 'None' && condition.message.length > 0)
                             output += '<div style="display:inline-block;"<strong>Message: </strong> '+condition.message+ '</div>';
@@ -2919,8 +3007,11 @@ var CombatMaster = CombatMaster || (function() {
         let iconTag = null;
         if      (iconType == 'Token Marker')
             iconTag = libTokenMarkers.getStatus(iconName).getTag();
-        else if (iconType == 'Combat Master')
+        else if (iconType == 'Combat Master') {
             iconTag = iconName;
+            if (iconTag.indexOf('@') > -1)
+                iconTag = iconTag.split('@')[0];
+        }
 
         return iconTag;
     },
@@ -3014,7 +3105,7 @@ var CombatMaster = CombatMaster || (function() {
         }
     },
 
-    doAddConditionCalls = (tokenObj,key) => {
+    doAddConditionCalls = (tokenObj,key,marker) => {
         logger("doAddConditionCalls::doAddConditionCalls");
 
         let condition = getConditionByKey(key);
@@ -3030,6 +3121,7 @@ var CombatMaster = CombatMaster || (function() {
             if (!['None',''].includes(condition.addAPI))      sendCalltoChat(tokenObj,characterObj,condition.addAPI);
             if (!['None',''].includes(condition.addRoll20AM)) sendCalltoChat(tokenObj,characterObj,condition.addRoll20AM);
             if (!['None',''].includes(condition.addFX))       doFX(tokenObj,condition.addFX);
+            if (key === 'showAnima') enableAnimas(tokenObj, marker);
         }
     },
 
@@ -3049,6 +3141,7 @@ var CombatMaster = CombatMaster || (function() {
             if (!['None',''].includes(condition.remAPI))      sendCalltoChat(tokenObj,characterObj,condition.remAPI);
             if (!['None',''].includes(condition.remRoll20AM)) sendCalltoChat(tokenObj,characterObj,condition.remRoll20AM);
             if (!['None',''].includes(condition.remFX))       doFX(tokenObj,condition.remFX);
+            if (key === 'showAnima') disableAnimas(tokenObj);
         }
     },
 
@@ -3869,6 +3962,32 @@ var CombatMaster = CombatMaster || (function() {
 						addMacro:           'None',
 						addPersistentMacro: false,
 						remAPI:             '!cmaster --remFullDef,id=CharID,tok=TokenID',
+						remRoll20AM:        'None',
+						remFX:              'None',
+						remMacro:           'None',
+                        clearOnStop:        true
+					},
+                    showAnima: { // special condition used to show anima directly
+						name:               false,
+						key:                'showAnima',
+						type:               'Condition',
+						description:        false,
+						icon:               anima_colors,
+						iconType:           'Combat Master',
+						duration:           1,
+						direction:          0,
+						override:           true,
+						favorite:           false,
+						message:            'None',
+						targeted:           false,
+						targetedAPI:        'casterTargets',
+						concentration:      false,
+						addAPI:             'None',
+						addRoll20AM:        'None',
+						addFX:              'None',
+						addMacro:           'None',
+						addPersistentMacro: false,
+						remAPI:             'None',
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
