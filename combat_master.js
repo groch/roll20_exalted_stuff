@@ -2339,6 +2339,8 @@ var CombatMaster = CombatMaster || (function() {
                 let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : isBattleGroup && markerType.RANGE !== type ? 'gmlayer' : 'map' };
                 logger(`updateMarker::Moving marker type=${type}, isBattleGroup=${isBattleGroup}, pos=${JSON.stringify(position)}, setting to=${JSON.stringify(typeMarkerNewAttributes)}`);
                 typeMarker.set(typeMarkerNewAttributes);
+                if (isBattleGroup && markerType.RANGE !== type && markerType.ROUND !== type)
+                    toBack(typeMarker);
             }
         }, 50);
 
