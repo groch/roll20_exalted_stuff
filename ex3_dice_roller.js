@@ -1243,12 +1243,12 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
         let periSum = 0, persoSum = 0;
         for (const commitedListId of commitedListIds) {
-            const commitedCorrespondingState = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedListId}_commited-state`)[0];
-            if (!Number(commitedCorrespondingState.get('current'))) continue;
-            const commitedCorrespondingPerso = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedListId}_commited-cost-perso`)[0];
-            persoSum += cleanAndEval(commitedCorrespondingPerso.get('current'));
-            const commitedCorrespondingPeri = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedListId}_commited-cost-peri`)[0];
-            periSum += cleanAndEval(commitedCorrespondingPeri.get('current'));
+            const commitedCorrespondingState = getAttrByName(characterId, `repeating_commited-list_${commitedListId}_commited-state`, 'current');
+            if (!Number(commitedCorrespondingState)) continue;
+            const commitedCorrespondingPerso = getAttrByName(characterId, `repeating_commited-list_${commitedListId}_commited-cost-perso`, 'current');
+            persoSum += cleanAndEval(commitedCorrespondingPerso);
+            const commitedCorrespondingPeri = getAttrByName(characterId, `repeating_commited-list_${commitedListId}_commited-cost-peri`, 'current');
+            periSum += cleanAndEval(commitedCorrespondingPeri);
         }
         // set committedesstotal & committedessperso
         logger(`updateMaxCommitedEssTotal:: persoSum=${persoSum}, periSum=${periSum}`);
