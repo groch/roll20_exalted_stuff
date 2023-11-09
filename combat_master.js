@@ -2852,6 +2852,7 @@ var CombatMaster = CombatMaster || (function() {
         if (state[combatState].conditions) {
             [... state[combatState].conditions].forEach(condition => {
                 if (condition.id == tokenObj.get("_id") || condition.target.includes(tokenObj.get("_id"))) {
+                    if (condition.key === 'showAnima') return;
                     if (condition.target.includes(tokenObj.get("_id"))) target = true;
                     descriptionButton = makeButton(condition.name, '!cmaster --show,description,key='+condition.key);
                     if (!target) {
@@ -2878,7 +2879,7 @@ var CombatMaster = CombatMaster || (function() {
                         }
                         if (condition.hasOwnProperty('message') && condition.message != 'None' && condition.message.length > 0)
                             output += '<div style="display:inline-block;"><strong>Message: </strong>'+condition.message + '</div>';
-                    } else if (condition.direction == 0 && condition.key !== 'showAnima') {
+                    } else if (condition.direction == 0) {
                         output += '<div style="display:inline-block;"><strong>'+descriptionButton+'</strong> '+condition.duration+' Permanent</div>';
                         if (condition.hasOwnProperty('message') && condition.message != 'None' && condition.message.length > 0)
                             output += '<div style="display:inline-block;"<strong>Message: </strong> '+condition.message+ '</div>';
