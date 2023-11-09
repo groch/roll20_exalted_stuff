@@ -153,9 +153,11 @@ var CombatMaster = CombatMaster || (function() {
         aura :      {0: '',  1: '0.2', 2: '2.8',    3: '10'},
     },
     script_name = 'CombatMaster',
-    combatState = 'COMBATMASTER',
+    combatState = 'COMBATMASTER';
 
-    inputHandler = (msg_orig) => {
+    round = state[combatState].round || 1;
+
+    const inputHandler = (msg_orig) => {
         logger('inputHandler::inputHandler turnorder=' + JSON.stringify(Campaign().get('turnorder')));
 
         let status = state[combatState].config.status;
@@ -1995,6 +1997,7 @@ var CombatMaster = CombatMaster || (function() {
         stopMarkerAnimation();
         Campaign().set({turnorder:''});
         round = 1;
+        state[combatState].round = 1;
 
         setTimeout(() => state[combatState].conditions = [], 2000);
     },
@@ -2490,6 +2493,7 @@ var CombatMaster = CombatMaster || (function() {
             logger(LOGLEVEL.INFO, 'changeToNextTurn::TURN MARKER => Change TURN');
             if (prev)   handlePreviousRound();
             else        handleNextRound();
+            state[combatState].round = round;
             return;
         }
 
@@ -3627,6 +3631,7 @@ var CombatMaster = CombatMaster || (function() {
         logger('setDefaults::setDefaults');
 
         const combatDefaults = {
+            round: 1,
             conditions: [],
             ignores:    [],
             spells:     [],
@@ -4106,6 +4111,7 @@ var CombatMaster = CombatMaster || (function() {
                 ], state, combatDefaults);
         }
 
+        if (!state[combatState].hasOwnProperty('round'))                     state[combatState].round = 1;
         if (!state[combatState].hasOwnProperty('conditions'))                state[combatState].conditions = [];
         if (!state[combatState].hasOwnProperty('ignores'))                   state[combatState].ignores = [];
         if (!state[combatState].hasOwnProperty('spells'))                    state[combatState].spells = [];
