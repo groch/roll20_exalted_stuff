@@ -2355,6 +2355,7 @@ var CombatMaster = CombatMaster || (function() {
 
     casteAllowThisAspect = (caste, marker) => {
         logger(`casteAllowThisAspect:: caste=${caste} marker=${marker}`);
+        if (!Object.keys(anima_colors).includes(marker)) return true;
         if (['Water','Fire','Earth','Air','Wood'].includes(caste) && ['WaterAspect::5256080','FireAspect::5256079','EarthAspect::5256078','AirAspect::5256077','WoodAspect::5256081'].includes(marker))
             return true;
         if (['Dawn','Zenith','Eclipse','Twilight','Night'].includes(caste) && marker.split(':')[0] === caste)
@@ -2398,7 +2399,7 @@ var CombatMaster = CombatMaster || (function() {
                         const duration = marker.indexOf('@') > 0 ? markerSplit[1] : condition.duration;
                         if (!condition) return;
                         const characterObj = getObj('character',obj.get('represents'));
-                        if (!characterObj || !casteAllowThisAspect(getAttrByName(characterObj.id, 'caste', 'current'),markerSplit[0])) {
+                        if (characterObj && !casteAllowThisAspect(getAttrByName(characterObj.id, 'caste', 'current'),markerSplit[0])) {
                             removeMarker(obj, 'Combat Master', markerSplit[0]);
                             return;
                         }
