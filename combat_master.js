@@ -474,7 +474,7 @@ var CombatMaster = CombatMaster || (function() {
             case 'combat':
             case 'craft':
             case 'misc':
-                const capitalizedHandType = handType.charAt(0).toUpperCase() + handType.slice(1);
+                const capitalizedHandType = ucFirst(handType);
                 handoutList = handoutList.filter(i => i.get('name').match(RegExp(`^HLP-${capitalizedHandType}:`)));
                 prefixToRemove = RegExp(`^HLP-${capitalizedHandType}:\s?`);
                 title += capitalizedHandType;
@@ -2337,7 +2337,7 @@ var CombatMaster = CombatMaster || (function() {
             if (state[combatState].config.turnorder.useMarker || (state[combatState].config.turnorder.useRangeMarker !== 'None' && markerType.RANGE === type)) {
                 let isBattleGroup = token.get('represents') && getAttrByName(token.get('represents'), 'battlegroup', 'current') === '1' ? true : false;
                 let typeMarkerNewAttributes = { ...position, layer: markerType.ROUND === type ? 'objects' : isBattleGroup && markerType.RANGE !== type ? 'gmlayer' : 'map' };
-                logger(LOGLEVEL.INFO, `updateMarker::Moving marker type=${type}, isBattleGroup=${isBattleGroup}, pos=${JSON.stringify(position)}, setting to=${JSON.stringify(typeMarkerNewAttributes)}`);
+                logger(`updateMarker::Moving marker type=${type}, isBattleGroup=${isBattleGroup}, pos=${JSON.stringify(position)}, setting to=${JSON.stringify(typeMarkerNewAttributes)}`);
                 typeMarker.set(typeMarkerNewAttributes);
             }
         }, 50);
@@ -3527,12 +3527,12 @@ var CombatMaster = CombatMaster || (function() {
         if (obj.get('layer') != 'gmlayer' && obj.hasOwnProperty("id") && turnorder.length > 0) {
             const nextTurnObject = getNextTurnObject();
             if (getCurrentTurnObjectOrLastVisibleIfHidden().id === obj.get('id')){
-                logger(LOGLEVEL.INFO, 'handleGraphicMovement::Actual Player Moved !');
+                logger('handleGraphicMovement::Actual Player Moved !');
                 updateMarker(obj);
                 //updateMarker(obj, markerType.RANGE);
                 updateMarker(obj, markerType.MAIN);
             } else if (nextTurnObject && nextTurnObject.id === obj.get('id')) {
-                logger(LOGLEVEL.INFO, 'handleGraphicMovement::Next Player Moved !');
+                logger('handleGraphicMovement::Next Player Moved !');
                 updateMarker(obj, markerType.NEXT);
                 toFront(getOrCreateMarker(markerType.MAIN));
             }
