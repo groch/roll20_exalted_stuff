@@ -2549,11 +2549,16 @@ var CombatMaster = CombatMaster || (function() {
 
         if (obj.get('turnorder') === prev.turnorder) return;
 
-        let turnorder         = (obj.get('turnorder') === "") ? [] : JSON.parse(obj.get('turnorder')),
-            prevTurnorder     = (prev.turnorder === "")       ? [] : JSON.parse(prev.turnorder),
-            theoricalNewOrder = [...prevTurnorder],
-            currentTurn       = theoricalNewOrder.shift();
-        theoricalNewOrder.push(currentTurn);
+        let turnorder          = (obj.get('turnorder') === "") ? [] : JSON.parse(obj.get('turnorder')),
+            prevTurnorder      = (prev.turnorder === "")       ? [] : JSON.parse(prev.turnorder),
+            theoricalNewOrder  = [...prevTurnorder],
+            theoricalPrevOrder = [...prevTurnorder];
+
+        let tmpTurn = theoricalNewOrder.shift();
+        theoricalNewOrder.push(tmpTurn);
+        
+        tmpTurn = theoricalPrevOrder.pop();
+        theoricalPrevOrder.unshift(tmpTurn);
 
 
         if (obj.get('turnorder') == [] || (prevTurnorder.length && turnorder.filter(turn => turn.pr != -420).length <= 1)){
@@ -2564,6 +2569,9 @@ var CombatMaster = CombatMaster || (function() {
         let test= JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder);
         logger('handleTurnorderChange::JSON.stringify(turnorder)==JSON.stringify(theoricalNewOrder)='+test);
 
+        let testPrev= JSON.stringify(turnorder)==JSON.stringify(theoricalPrevOrder);
+        logger('handleTurnorderChange::JSON.stringify(turnorder)==JSON.stringify(theoricalPrevOrder)='+testPrev);
+
         let callFirstTurn = (prevTurnorder.length === 1 && turnorder.length === 2);
         logger(`handleTurnorderChange::prevTurnorder.length=${prevTurnorder.length}, turnorder.length=${turnorder.length}`);
         logger(`handleTurnorderChange::callFirstTurn=${callFirstTurn}`);
@@ -2573,7 +2581,7 @@ var CombatMaster = CombatMaster || (function() {
             makeAndSendMenu('<span style="font-size: 12pt; font-weight: bold;">Round 1 - Start of combat !</span>', ' ', undefined, false);
         }
         if (turnorder.length && prevTurnorder.length)//  && turnorder[0].id !== prevTurnorder[0].id
-            changeToNextTurn(false, false, test, callFirstTurn ? false : turnorder[0].id === prevTurnorder[0].id);
+            changeToNextTurn(testPrev, false, test, callFirstTurn ? false : turnorder[0].id === prevTurnorder[0].id);
     },
 
     sortTurnorder = (order='DESC') => {
