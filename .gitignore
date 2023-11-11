@@ -4,3 +4,4 @@ sheet_worker.js
 dup_token.js
 node_modules
 package-lock.json
+*.patch
