@@ -97,35 +97,36 @@ var CombatMaster = CombatMaster || (function() {
             log(...logged);
     },
     styles = {
-        reset:           'padding: 0; margin: 0;',
-        menu:            'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
-        title:           'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
-        baseTitle:       'font-size:14px;font-weight:bold;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
-        titleText:       'color:white',
-        titleSpacer:     'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
-        version:         'font-size:10px;',
-        header:          'margin-top:10px;margin-bottom:5px;font-weight:bold;font-style:italic;display:inline-block;',
-        button:          'background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center;width:100%',
-        textButton:      'background-color:#fff; color: #000; text-align: center; float: right;',
-        conditionButton: 'background-color:#fff; color: #000;margin-left:1px;',
-        linkButton:      'background-color:#fff; color: #000; text-align: center;vertical-align:middle',
-        textLabel:       'background-color:#fff;float:left;text-align:center;margin-top:8px',
-        bigButton:       'width:80%;border-radius:5px;text-align:center;margin-left:15px',
-        bigButtonLink:   'background-color:#000000; border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:100%',
-        wrapBox:         ' border: 1px solid #292929; border-radius: 3px;margin-top:3px;margin-bottom:3px',
-        body:            'background-color:#fff',
-        list:            'list-style: none;padding:2px',
+        reset:            'padding: 0; margin: 0;',
+        menu:             'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
+        title:            'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+        baseTitle:        'font-size:14px;font-weight:bold;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+        titleText:        'color:white',
+        titleSpacer:      'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
+        version:          'font-size:10px;',
+        header:           'margin-top:10px;margin-bottom:5px;font-weight:bold;font-style:italic;display:inline-block;',
+        button:           'background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center;width:100%',
+        textButton:       'background-color:#fff; color: #000; text-align: center; float: right;',
+        conditionButton:  'background-color:#fff; color: #000;margin-left:1px;',
+        linkButton:       'background-color:#fff; color: #000; text-align: center;vertical-align:middle',
+        textLabel:        'background-color:#fff;float:left;text-align:center;margin-top:8px',
+        bigButton:        'width:80%;border-radius:5px;text-align:center;margin-left:15px',
+        bigButtonLink:    'border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:100%',
+        twoBigButtonLink: 'border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:44%',
+        wrapBox:          ' border: 1px solid #292929; border-radius: 3px;margin-top:3px;margin-bottom:3px',
+        body:             'background-color:#fff',
+        list:             'list-style: none;padding:2px',
         float: {
             right: 'float: right;',
             left:  'float: left;'
         },
-        overflow:        'overflow: hidden;',
-        fullWidth:       'width: 100%;',
-        underline:       'text-decoration: underline;',
-        strikethrough:   'text-decoration: strikethrough',
-        background:      'background-color:lightgrey',
-        buttonRight:     'display:inline-block;float:right;vertical-aligh:middle',
-        announcePlayer:  'display:inline-block;vertical-align:middle;',
+        overflow:         'overflow: hidden;',
+        fullWidth:        'width: 100%;',
+        underline:        'text-decoration: underline;',
+        strikethrough:    'text-decoration: strikethrough',
+        background:       'background-color:lightgrey',
+        buttonRight:      'display:inline-block;float:right;vertical-aligh:middle',
+        announcePlayer:   'display:inline-block;vertical-align:middle;',
     },
     // Styling for the chat responses.
     // style = "overflow: hidden; background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
@@ -236,13 +237,13 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -367,6 +368,7 @@ var CombatMaster = CombatMaster || (function() {
             }
             if (cmdDetails.details.assigned)    showConditions(msg.selected);
             if (cmdDetails.details.description) sendConditionToChat(cmdDetails.details.key);
+            if (cmdDetails.details.saveStates)  sendSaveStateMenu();
         }
 
         if (cmdDetails.action == 'add') {
@@ -393,6 +395,8 @@ var CombatMaster = CombatMaster || (function() {
             if (cmdDetails.details.confirm)     addSpell(cmdDetails.details.key);
             else                                ignoreSpell(cmdDetails.details.key);
         }
+        if (cmdDetails.action == 'saveState')      saveCombatState(cmdDetails.details.saveSlot);
+        if (cmdDetails.action == 'loadState')      loadCombatState(cmdDetails.details.saveSlot);
         if (cmdDetails.action == 'reset') {
 			state[combatState] = {};
 			setDefaults(true);
@@ -1127,6 +1131,7 @@ var CombatMaster = CombatMaster || (function() {
 		let	configConditionButton       = makeBigButton('Conditions',           '!cmaster --show,conditions');
 		let	exportButton                = makeBigButton('Export',               '!cmaster --show,export');
 		let	importButton                = makeBigButton('Import',               '!cmaster --import,config=?{Config}');
+		let	saveStatesButton            = makeBigButton('Save States',          '!cmaster --show,saveStates');
 		let	resetButton                 = makeBigButton('Reset',                '!cmaster --reset');
 		let	ignoreButton                = makeBigButton('Remove Ignores',       '!cmaster --ignore');
 		let	clearButton                 = makeBigButton('Clear Token Statuses', '!cmaster --clear');
@@ -1135,6 +1140,7 @@ var CombatMaster = CombatMaster || (function() {
 		let	titleText                   = 'Setup'+'<span style='+styles.buttonRight+'>'+helpButton+'</span>';
 		let	combatHeaderText            = '<div style="'+styles.header+'">Combat Setup</div>';
 		let	statusHeadersText           = '<div style="'+styles.header+'">Status Setup</div>';
+		let	saveHeaderText              = '<div style="'+styles.header+'">Save States</div>';
 		let	resetHeaderText             = '<div style="'+styles.header+'">Reset CombatMaster</div>';
 		let	backToTrackerText           = '<div style="'+styles.header+'">Return</div>';
 		let contents;
@@ -1151,6 +1157,8 @@ var CombatMaster = CombatMaster || (function() {
 		contents += configConcentrationButton;
 		contents += exportButton;
 		contents += importButton;
+		contents += saveHeaderText;
+		contents += saveStatesButton;
 		contents += resetHeaderText;
 		contents += resetButton;
 		contents += ignoreButton;
@@ -1463,6 +1471,23 @@ var CombatMaster = CombatMaster || (function() {
 		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
     },
 
+	sendSaveStateMenu = () => {
+        const banner = makeBanner('saveStates','Save States','setup');
+        const saveState = state[combatState].config.saveState;
+        const saveStots = saveState?.saveNumbers || 2;
+
+        const listItems = [];
+
+        for (let i = 0; i < saveStots; i++) {
+            if (saveState?.saveStates[i] && saveState.saveStates[i].turnorder.length !== 0)
+                listItems.push(makeTwoBigButton('Load State '+i, '!cmaster --loadState,saveSlot='+i,'Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates'));
+            else
+                listItems.push(makeBigButton('Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates', 'darkgreen'));
+        }
+
+		makeAndSendMenu(makeList(listItems,banner.backButton),banner.titleText,'gm');
+	},
+
     buildMarkerDropdown = (iconType) => {
         let markerDropdown = '?{Marker';
         if (iconType == 'Combat Master')
@@ -1542,6 +1567,96 @@ var CombatMaster = CombatMaster || (function() {
         title           += '<div style="display:inline-block;float:right;vertical-aligh:middle">'+addButton+'</div>';
         let contents     = 'Select the caster to assign concentration and hit the button above when ready';
         makeAndSendMenu(contents,title,'gm');
+    },
+
+    saveCombatState = (saveSlot) => {
+        const intSaveSlot = Number(saveSlot);
+        logger(LOGLEVEL.INFO,`saveCombatState::saveCombatState saveSlot=${intSaveSlot}`);
+
+        let jsonTurnOrder = Campaign().get('turnorder');
+        logger(`saveCombatState:: jsonTurnOrder=${jsonTurnOrder}`);
+        let jsonConditions = JSON.stringify(state[combatState].conditions);
+        logger(`saveCombatState:: jsonConditions=${jsonConditions}`);
+
+        if (!state[combatState].config.saveState) {
+            logger(LOGLEVEL.ERROR,`saveCombatState:: config.saveState hasn't been initialized ! ABORT ACTION`);
+            return;
+        }
+
+        state[combatState].config.saveState.saveStates[intSaveSlot] = {
+            initiativepage: Campaign().get('initiativepage'),
+            turnorder: jsonTurnOrder,
+            conditions: jsonConditions,
+            round: state[combatState].round
+        };
+        logger(`saveCombatState:: SAVE DONE, round was =${state[combatState].round}`);
+
+        makeAndSendMenu(`Saved State to slot <b>n=${intSaveSlot}</b>.${makeBigButton('Back', '!cmaster --back,setup')}`, 'Save States Setup','gm');
+    },
+
+    loadCombatState = (saveSlot) => {
+        const intSaveSlot = Number(saveSlot);
+        logger(LOGLEVEL.INFO,`loadCombatState::loadCombatState saveSlot=${intSaveSlot}`);
+
+        if (!state[combatState].config.saveState) {
+            logger(LOGLEVEL.ERROR,`loadCombatState:: config.saveState hasn't been initialized ! ABORT ACTION`);
+            return;
+        }
+        const loadedState = state[combatState].config.saveState.saveStates[intSaveSlot];
+
+        removeConditions();
+        loadConditions(JSON.parse(loadedState.conditions));
+        
+        logger(`loadCombatState:: setting round to :${loadedState.round}`);
+        state[combatState].round = loadedState.round;
+        round = loadedState.round;
+
+        if (loadedState.initiativepage)
+            Campaign().set('initiativepage', loadedState.initiativepage);
+        const adaptedTo = adaptTurnOrderMarkerToNewOne(loadedState.turnorder);
+        logger(`loadCombatState:: setting turnorder to :${adaptedTo}`);
+        Campaign().set('turnorder', adaptedTo);
+
+        setTimeout(function() {
+            makeAndSendMenu(`Loaded State slot n=<b>${intSaveSlot}</b> successfully.${makeBigButton('Back', '!cmaster --back,setup')}`, 'Save States Setup','gm');
+            announceRoundIfConfig(getOrCreateMarker());
+            changeToNextTurn();
+        },420);
+    },
+
+    removeConditions = () => {
+        logger(`loadCombatState:: removing all (${state[combatState].conditions.length}) previous conditions`);
+        [...state[combatState].conditions].forEach((condition) => {
+            if (condition.id != getOrCreateMarker().get('id'))
+                removeConditionFromToken(getObj('graphic',condition.id), condition.key, true);
+        });
+    },
+
+    loadConditions = (loadedConditions) => {
+        logger(`loadCombatState:: add all (${loadedConditions.length}) saved conditions`);
+        loadedConditions.forEach((condition) => {
+            if (condition.id != getOrCreateMarker().get('id'))
+                addConditionToToken(getObj('graphic',condition.id), condition.key, condition.duration, condition.direction, condition.message, condition.icon);
+        });
+    },
+
+    adaptTurnOrderMarkerToNewOne = (loadedturnorder) => {
+        logger(`loadCombatState:: turnorder was :${Campaign().get('turnorder')}, adapting turnorder`);
+        let adaptedTo = JSON.parse(loadedturnorder);
+        const markerIndex = adaptedTo.findIndex(i => i.pr === -420);
+        const mainMarker = getOrCreateMarker();
+        if (markerIndex > -1 && adaptedTo[markerIndex].id !== mainMarker.get('id')) {
+            adaptedTo[markerIndex].id = mainMarker.get('id');
+            mainMarker.set({name: 'Round ' + round});
+        }
+        return (JSON.stringify(adaptedTo));
+    },
+
+    announceRoundIfConfig = (marker) => {
+        if (state[combatState].config.announcements.announceRound) {
+            let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
+            makeAndSendMenu(text, '', undefined, false);
+        }
     },
 
     //*************************************************************************************************************
@@ -2662,10 +2777,7 @@ var CombatMaster = CombatMaster || (function() {
         round++;
         marker.set({name: 'Round ' + round});
 
-        if (state[combatState].config.announcements.announceRound){
-            let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
-            makeAndSendMenu(text, ' ', undefined, false);
-        }
+        announceRoundIfConfig(marker);
 
         if (initiative.rollEachRound){
             let turnorder = getTurnorder();
@@ -2720,10 +2832,7 @@ var CombatMaster = CombatMaster || (function() {
         round--;
         marker.set({name: 'Round ' + round});
 
-        if (state[combatState].config.announcements.announceRound){
-            let text = '<span style="font-size: 12pt; font-weight: bold;">'+marker.get('name')+'</span>';
-            makeAndSendMenu(text, '', undefined, false);
-        }
+        announceRoundIfConfig(marker);
 
         changeTurnOrderToPrevious();
     },
@@ -2958,7 +3067,8 @@ var CombatMaster = CombatMaster || (function() {
     },
 
     makeTitle           = (title, titleStyle)                                  => `<div style="${titleStyle}"><span style=${styles.titleText}>${title}</span></div>`,
-    makeBigButton       = (title, href)                                        => `<div style="${styles.bigButton}"><a style="${styles.bigButtonLink}" href="${href}">${title}</a></div>`,
+    makeBigButton       = (title, href, bgColor = '#000000')                   => `<div style="${styles.bigButton}"><a style="background-color:${bgColor}; ${styles.bigButtonLink}" href="${href}">${title}</a></div>`,
+    makeTwoBigButton    = (title1, href1, title2, href2)                       => `<div style="${styles.bigButton}"><a style="background-color: darkred; ${styles.twoBigButtonLink}" href="${href1}">${title1}</a><a style="background-color: darkgreen; ${styles.twoBigButtonLink}" href="${href2}">${title2}</a></div>`,
     makeButton          = (title, href)                                        => `<a style="${styles.conditionButton}" href="${href}">${title}</a>`,
     makeTextButton      = (label, value, href, fixed = false)                  => `<span style="${styles.textLabel}">${label}</span><a style="${styles.textButton}${fixed ? 'width: 2em; height: 1.25em;' : ''}" href="${href}">${value}</a>`,
     makeCharacterLink   = (characterObj, characterId = characterObj.get('id')) => `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>`,
@@ -3655,6 +3765,15 @@ var CombatMaster = CombatMaster || (function() {
                     conditions: [],
                     round:      1
 				},
+				saveState: {
+                    saveNumbers: 2,
+                    saveStates: [{
+                        initiativepage:  '',
+                        turnorder:  [],
+                        conditions: [],
+                        round:      1
+                    }]
+				},
 				initiative: {
                     rollInitiative:         'None',
                     initiativeDie:          20,
@@ -4030,6 +4149,13 @@ var CombatMaster = CombatMaster || (function() {
                     'round'
                 ], state, combatDefaults);
 
+            if (!state[combatState].config.hasOwnProperty('saveState'))      state[combatState].config.saveState = combatDefaults.config.saveState;
+            else
+                testAndSetDefaults('saveState', [
+                    'saveNumbers',
+                    'saveStates'
+                ], state, combatDefaults);
+
             if (!state[combatState].config.hasOwnProperty('initiative'))     state[combatState].config.initiative = combatDefaults.config.initiative;
             else
                 testAndSetDefaults('initiative', [
@@ -4174,8 +4300,9 @@ var CombatMaster = CombatMaster || (function() {
         else if (cmdDetails.details.addAPI)         title = 'Add API Menu';
         else if (cmdDetails.details.remAPI)         title = 'Remove API Menu';
         else if (cmdDetails.details.export)         title = 'Export Menu';
-        handout = findHandout(title);
-        makeAndSendMenu(`<a href="http://journal.roll20.net/handout/${handout[0].id}">View Help</a>`,title,'gm');
+        handout = findHandout(title)[0];
+        if (handout)
+            makeAndSendMenu(`<a href="http://journal.roll20.net/handout/${handout.id}">View Help</a>`,title,'gm');
     },
 
     buildHelp = () => {
