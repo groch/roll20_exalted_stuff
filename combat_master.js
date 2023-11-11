@@ -2556,7 +2556,7 @@ var CombatMaster = CombatMaster || (function() {
 
         let tmpTurn = theoricalNewOrder.shift();
         theoricalNewOrder.push(tmpTurn);
-        
+
         tmpTurn = theoricalPrevOrder.pop();
         theoricalPrevOrder.unshift(tmpTurn);
 
@@ -4008,7 +4008,7 @@ var CombatMaster = CombatMaster || (function() {
 						remRoll20AM:        'None',
 						remFX:              'None',
 						remMacro:           'None',
-                        clearOnStop:        true
+                        clearOnStop:        false
 					}
 				}
             },
