@@ -713,8 +713,9 @@ input[type="number"] {
     text-align: end;
 }
 
+.charsheet .sheet-2colrow.sheet-checklist .sheet-checklist.sheet-special > label > input[type="number"],
 .charsheet .sheet-2colrow.sheet-checklist .sheet-checklist.sheet-special > label > select {
-    width: 6em;
+    width: 9rem;
 }
 
 .charsheet .mote-pool-eq {

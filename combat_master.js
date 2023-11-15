@@ -154,7 +154,8 @@ var CombatMaster = CombatMaster || (function() {
         aura :      {0: '',  1: '0.2', 2: '2.8',    3: '10'},
     },
     script_name = 'CombatMaster',
-    combatState = 'COMBATMASTER';
+    combatState = 'COMBATMASTER',
+    unitSizeRoll20 = 70;
 
     round = state[combatState].round || 1;
 
@@ -3664,6 +3665,31 @@ var CombatMaster = CombatMaster || (function() {
         }
     },
 
+    handleGraphicAdd = async (obj) => {
+        logger(LOGLEVEL.INFO, "handleGraphicAdd::-------------Handle Graphic Add-------------");
+        logger('handleGraphicAdd:: obj='+JSON.stringify(obj));
+
+        const pageObj = getObj('page', obj.get('_pageid'));
+        const characterId = obj.get('represents');
+        const tokenSizeVal = getAttrByName(characterId, 'token-size');
+        const finalScale = tokenSizeVal || 1;
+        logger(`handleGraphicAdd:: characterId=${characterId}, tokenSizeVal=${tokenSizeVal}, finalScale=${finalScale}, PAGE snapping_increment=${pageObj.get('snapping_increment')} scale_number=${pageObj.get('scale_number')}`);
+        if (pageObj.get('snapping_increment') === 1/70 && (obj.get('width') > 42 && obj.get('height') > 42)) {
+            logger(LOGLEVEL.INFO, 'handleGraphicAdd:: obj might be already scaled, ABORT');
+            return ;
+        }
+        const pageScale = pageScaleGraphic(pageObj);
+        logger(`handleGraphicAdd:: SCALE TOKEN x${pageScale}`);
+        obj.set('width', obj.get('width') * finalScale * pageScale);
+        obj.set('height', obj.get('height') * finalScale * pageScale);
+    },
+
+    pageScaleGraphic = (page) => {
+        const output = ((1/70)/(parseFloat(page.get('scale_number'))||1))*unitSizeRoll20;
+        logger(`pageScaleGraphic:: out=${output}`);
+        return output;
+    },
+
     //return an array of objects according to key, value, or key and value matching
     // getObjects = (obj, key, val) => {
     //     var objects = [];
@@ -4740,6 +4766,7 @@ var CombatMaster = CombatMaster || (function() {
         for (const handler of ['change:graphic:top','change:graphic:left','change:graphic:layer'])
             on(handler, handleGraphicMovement);
         on('destroy:graphic', handleGraphicDelete);
+        on('add:graphic', handleGraphicAdd);
         on('change:graphic:'+state[combatState].config.concentration.woundBar+'_value', handleConstitutionSave);
 
         // WTF can't factorize more this shit ???

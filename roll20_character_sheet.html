@@ -2267,6 +2267,14 @@
     /* * UTILIY SECTION * */
     /* ****************** */
 
+    on('change:token-size-percent', function changeTokenSizePercent(e) {
+        if (debug === 2) TAS.debug(`changeTokenSizePercent::changeTokenSizePercent e=`, e);
+        if (isNaN(e.newValue)) setAttrs({'token-size-percent':100})
+        const value = Number(e.newValue) || 100;
+        const finalObj = {'token-size': value / 100};
+        setAttrs(finalObj);
+    });
+
     /**
      * 2 functions used for '+' hidden buttons
      */
@@ -2391,6 +2399,7 @@
 
 <div class="sheet-content">
     <div>
+        <input type="hidden" name="attr_token-size" value="1">
         <input type="hidden" name="attr_pain-tolerance" value="0">
         <input class="roll-diceex-check" name="attr_diceex" type="hidden" value="0">
         <input class="roll-succex-check" name="attr_succex" type="hidden" value="0">
@@ -11547,6 +11556,10 @@
                                 <option value="0" selected>None</option>
                                 <option value="1">Proned</option>
                             </select>
+                        </label>
+                        <label>
+                            <span>Token Size (%)</span>
+                            <input type="number" name="attr_token-size-percent" value="100" min="1">
                         </label>
                     </div>
                 </div>
