@@ -97,36 +97,36 @@ var CombatMaster = CombatMaster || (function() {
             log(...logged);
     },
     styles = {
-        reset:            'padding: 0; margin: 0;',
-        menu:             'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
-        title:            'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
-        baseTitle:        'font-size:14px;font-weight:bold;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
-        titleText:        'color:white',
-        titleSpacer:      'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
-        version:          'font-size:10px;',
-        header:           'margin-top:10px;margin-bottom:5px;font-weight:bold;font-style:italic;display:inline-block;',
-        button:           'background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center;width:100%',
-        textButton:       'background-color:#fff; color: #000; text-align: center; float: right;',
-        conditionButton:  'background-color:#fff; color: #000;margin-left:1px;',
-        linkButton:       'background-color:#fff; color: #000; text-align: center;vertical-align:middle',
-        textLabel:        'background-color:#fff;float:left;text-align:center;margin-top:8px',
-        bigButton:        'width:80%;border-radius:5px;text-align:center;margin-left:15px',
-        bigButtonLink:    'border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:100%',
-        twoBigButtonLink: 'border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:44%',
-        wrapBox:          ' border: 1px solid #292929; border-radius: 3px;margin-top:3px;margin-bottom:3px',
-        body:             'background-color:#fff',
-        list:             'list-style: none;padding:2px',
+        reset:              'padding: 0; margin: 0;',
+        menu:               'background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;',
+        title:              'font-size:14px;font-weight:bold;background-color:black;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+        baseTitle:          'font-size:14px;font-weight:bold;padding:3px;border-top-left-radius:3px;border-top-right-radius:3px',
+        titleText:          'color:white',
+        titleSpacer:        'font-weight: bold; border-bottom: 1px solid black;font-size: 100%;style="float:left;',
+        version:            'font-size:10px;',
+        header:             'margin-top:10px;margin-bottom:5px;font-weight:bold;font-style:italic;display:inline-block;',
+        button:             'background-color: #000; border: 1px solid #292929; border-radius: 3px; padding: 5px; color: #fff; text-align: center;width:100%',
+        textButton:         'background-color:#fff; color: #000; text-align: center; float: right;',
+        conditionButton:    'background-color:#fff; color: #000;margin-left:1px;',
+        linkButton:         'background-color:#fff; color: #000; text-align: center;vertical-align:middle',
+        textLabel:          'background-color:#fff;float:left;text-align:center;margin-top:8px',
+        bigButton:          'width:80%;border-radius:5px;text-align:center;margin-left:15px',
+        bigButtonLink:      'border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:100%',
+        threeBigButtonLink: 'border-radius: 5px; padding: 5px; color: #fff; text-align: center;width:27%',
+        wrapBox:            ' border: 1px solid #292929; border-radius: 3px;margin-top:3px;margin-bottom:3px',
+        body:               'background-color:#fff',
+        list:               'list-style: none;padding:2px',
         float: {
             right: 'float: right;',
             left:  'float: left;'
         },
-        overflow:         'overflow: hidden;',
-        fullWidth:        'width: 100%;',
-        underline:        'text-decoration: underline;',
-        strikethrough:    'text-decoration: strikethrough',
-        background:       'background-color:lightgrey',
-        buttonRight:      'display:inline-block;float:right;vertical-aligh:middle',
-        announcePlayer:   'display:inline-block;vertical-align:middle;',
+        overflow:           'overflow: hidden;',
+        fullWidth:          'width: 100%;',
+        underline:          'text-decoration: underline;',
+        strikethrough:      'text-decoration: strikethrough',
+        background:         'background-color:lightgrey',
+        buttonRight:        'display:inline-block;float:right;vertical-aligh:middle',
+        announcePlayer:     'display:inline-block;vertical-align:middle;',
     },
     // Styling for the chat responses.
     // style = "overflow: hidden; background-color: #fff; border: 1px solid #000; padding: 5px; border-radius: 5px;",
@@ -238,7 +238,7 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState|clrState/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -396,8 +396,9 @@ var CombatMaster = CombatMaster || (function() {
             if (cmdDetails.details.confirm)     addSpell(cmdDetails.details.key);
             else                                ignoreSpell(cmdDetails.details.key);
         }
-        if (cmdDetails.action == 'saveState')      saveCombatState(cmdDetails.details.saveSlot);
-        if (cmdDetails.action == 'loadState')      loadCombatState(cmdDetails.details.saveSlot);
+        if (cmdDetails.action == 'saveState')   saveCombatState(cmdDetails.details.saveSlot);
+        if (cmdDetails.action == 'loadState')   loadCombatState(cmdDetails.details.saveSlot);
+        if (cmdDetails.action == 'clrState')    clearCombatState(cmdDetails.details.saveSlot);
         if (cmdDetails.action == 'reset') {
             let saveStateHolder;
             if (cmdDetails.details?.resetSaves === 'no') saveStateHolder = state[combatState].config.saveState;
@@ -1482,9 +1483,13 @@ var CombatMaster = CombatMaster || (function() {
 
         const listItems = [];
 
+        listItems.push(makeTextButton('Number of Save States', saveStots, '!cmaster --config,saveStates,key=saveNumbers,value=?{How Many ? (Minimum 1)|1} --show,saveStates'));
+
         for (let i = 0; i < saveStots; i++) {
+            const saveName = saveState?.saveStates[i]?.name || `Default Save Name ${i}`;
+            listItems.push(makeTextButton('Save Name', saveName, `!cmaster --config,saveStates=${i},key=saveName,value=?{Name ?|${saveName}} --show,saveStates`));
             if (saveState?.saveStates[i] && saveState.saveStates[i].turnorder.length !== 0)
-                listItems.push(makeTwoBigButton('Load State '+i, '!cmaster --loadState,saveSlot='+i,'Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates'));
+                listItems.push(makeThreeBigButton('Load State '+i, '!cmaster --loadState,saveSlot='+i,'Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates','Clear State '+i, '!cmaster --clrState,saveSlot='+i+' --show,saveStates'));
             else
                 listItems.push(makeBigButton('Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates', 'darkgreen'));
         }
@@ -1587,12 +1592,20 @@ var CombatMaster = CombatMaster || (function() {
             return;
         }
 
-        state[combatState].config.saveState.saveStates[intSaveSlot] = {
-            initiativepage: Campaign().get('initiativepage'),
-            turnorder: jsonTurnOrder,
-            conditions: jsonConditions,
-            round: state[combatState].round
-        };
+        if (!state[combatState].config.saveState.saveStates[intSaveSlot]) {
+            state[combatState].config.saveState.saveStates[intSaveSlot] = {
+                name:       `${name}` || `Default Save Name ${intSaveSlot}`,
+                initiativepage: Campaign().get('initiativepage'),
+                turnorder: jsonTurnOrder,
+                conditions: jsonConditions,
+                round: state[combatState].round
+            }
+        } else {
+            state[combatState].config.saveState.saveStates[intSaveSlot].initiativepage = Campaign().get('initiativepage');
+            state[combatState].config.saveState.saveStates[intSaveSlot].turnorder = jsonTurnOrder;
+            state[combatState].config.saveState.saveStates[intSaveSlot].conditions = jsonConditions;
+            state[combatState].config.saveState.saveStates[intSaveSlot].round = state[combatState].round;
+        }
         logger(`saveCombatState:: SAVE DONE, round was =${state[combatState].round}`);
 
         makeAndSendMenu(`Saved State to slot <b>n=${intSaveSlot}</b>.${makeBigButton('Back', '!cmaster --back,setup')}`, 'Save States Setup','gm');
@@ -1626,6 +1639,27 @@ var CombatMaster = CombatMaster || (function() {
             announceRoundIfConfig(getOrCreateMarker());
             changeToNextTurn();
         },420);
+    },
+
+    clearCombatState = (saveSlot) => {
+        const intSaveSlot = Number(saveSlot);
+        logger(LOGLEVEL.INFO,`clearCombatState::clearCombatState saveSlot=${intSaveSlot}`);
+
+        if (!state[combatState].config.saveState) {
+            logger(LOGLEVEL.ERROR,`clearCombatState:: config.saveState hasn't been initialized ! ABORT ACTION`);
+            return;
+        }
+
+        state[combatState].config.saveState.saveStates[intSaveSlot] = {
+            name: `Default Save Name ${intSaveSlot}`,
+            initiativepage: '',
+            turnorder: [],
+            conditions: [],
+            round: 1
+        };
+        logger(`clearCombatState:: SAVE STATE CLEARED`);
+
+        makeAndSendMenu(`Cleared Saved State on slot <b>n=${intSaveSlot}</b>.${makeBigButton('Back', '!cmaster --back,setup')}`, 'Save States Setup','gm');
     },
 
     removeConditions = () => {
@@ -1681,7 +1715,18 @@ var CombatMaster = CombatMaster || (function() {
 			state[combatState].config.status[cmdDetails.details.key]        = cmdDetails.details.value;
 		else if   (cmdDetails.details.concentration)
 			state[combatState].config.concentration[cmdDetails.details.key] = cmdDetails.details.value;
-		else {
+		else if   (cmdDetails.details.saveStates) {
+            if (cmdDetails.details.key === 'saveNumbers') {
+                logger(LOGLEVEL.INFO, `editCombatState:: key = saveNumbers, value=${parseInt(cmdDetails.details.value)}`);
+                cmdDetails.details.value = parseInt(cmdDetails.details.value);
+                if (cmdDetails.details.value < 1)
+                    cmdDetails.details.value = 1;
+			    state[combatState].config.saveState[cmdDetails.details.key] = cmdDetails.details.value;
+            } else if (cmdDetails.details.key === 'saveName') {
+                logger(LOGLEVEL.INFO, `editCombatState:: key = saveName, saveState=${parseInt(cmdDetails.details.saveStates)}`);
+                setSaveStateName(parseInt(cmdDetails.details.saveStates), cmdDetails.details.value);
+            }
+        } else {
             if (cmdDetails.details.key === 'name' && cmdDetails.details.value.replace(/\s/g, '').toLowerCase() !== state[combatState].config.conditions[cmdDetails.details.condition]) {
                 state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()] = state[combatState].config.conditions[cmdDetails.details.condition];
                 state[combatState].config.conditions[cmdDetails.details.value.toLowerCase()].key = cmdDetails.details.value.toLowerCase();
@@ -1695,6 +1740,20 @@ var CombatMaster = CombatMaster || (function() {
                 state[combatState].config.conditions[cmdDetails.details.condition][cmdDetails.details.key] = cmdDetails.details.value;
             }
 		}
+	},
+
+	setSaveStateName = (slot, name) => {
+        if (!state[combatState].config.saveState.saveStates[slot]) {
+            state[combatState].config.saveState.saveStates[slot] = {
+                name:       `${name}` || `Default Save Name ${slot}`,
+                initiativepage:  '',
+                turnorder:  [],
+                conditions: [],
+                round:      1
+            }
+        } else {
+		    state[combatState].config.saveState.saveStates[slot].name = name;
+        }
 	},
 
 	editShowState = (value) => {
@@ -3072,7 +3131,7 @@ var CombatMaster = CombatMaster || (function() {
 
     makeTitle           = (title, titleStyle)                                  => `<div style="${titleStyle}"><span style=${styles.titleText}>${title}</span></div>`,
     makeBigButton       = (title, href, bgColor = '#000000')                   => `<div style="${styles.bigButton}"><a style="background-color:${bgColor}; ${styles.bigButtonLink}" href="${href}">${title}</a></div>`,
-    makeTwoBigButton    = (title1, href1, title2, href2)                       => `<div style="${styles.bigButton}"><a style="background-color: darkred; ${styles.twoBigButtonLink}" href="${href1}">${title1}</a><a style="background-color: darkgreen; ${styles.twoBigButtonLink}" href="${href2}">${title2}</a></div>`,
+    makeThreeBigButton  = (title1, href1, title2, href2, title3, href3)        => `<div style="${styles.bigButton}"><a style="background-color: darkred; ${styles.threeBigButtonLink}" href="${href1}">${title1}</a><a style="background-color: darkgreen; ${styles.threeBigButtonLink}" href="${href2}">${title2}</a><a style="background-color: black; ${styles.threeBigButtonLink}" href="${href3}">${title3}</a></div>`,
     makeButton          = (title, href)                                        => `<a style="${styles.conditionButton}" href="${href}">${title}</a>`,
     makeTextButton      = (label, value, href, fixed = false)                  => `<span style="${styles.textLabel}">${label}</span><a style="${styles.textButton}${fixed ? 'width: 2em; height: 1.25em;' : ''}" href="${href}">${value}</a>`,
     makeCharacterLink   = (characterObj, characterId = characterObj.get('id')) => `<b><a href="http://journal.roll20.net/character/${characterId}">${characterObj.get('name')}</a></b>`,
@@ -3795,8 +3854,9 @@ var CombatMaster = CombatMaster || (function() {
                     round:      1
 				},
 				saveState: {
-                    saveNumbers: 2,
+                    saveNumbers: 1,
                     saveStates: [{
+                        name:       'Default Save Name 0',
                         initiativepage:  '',
                         turnorder:  [],
                         conditions: [],
