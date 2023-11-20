@@ -4500,6 +4500,11 @@ textarea::-webkit-scrollbar-track {
     min-width: 0.5em;
 }
 
+.charsheet div.sheet-tab-combat-sheet div.dmg-section .sheet-bg-show > input[type="number"][disabled] {
+    border-radius: 0 13px 13px 0;
+    padding-right: 2px;
+}
+
 .combat-attacks .attack-section.decisive-section .dmg-section > div.flex.grow-normal:first-child {
     min-width: 30.8em;
 }
