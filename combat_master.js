@@ -846,7 +846,7 @@ var CombatMaster = CombatMaster || (function() {
             let current = parseInt(attr.get('current')), max = parseInt(attr.get('max'));
             if (isNaN(current))  current = 0;
             if (isNaN(max))      max = updateMaxAttr(characterId, attr);
-            if (current === max) continue;
+            if (current === max && qty > 0) continue;
             logger(`addMotesToAttrsAndWhisper::qty=${qty}, added=${added}, current=${current}, max=${max}`);
             let toAdd = qty - added < max - current ? qty - added : max - current;
             added += toAdd;

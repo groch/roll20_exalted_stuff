@@ -986,6 +986,13 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .charsheet .sheet-motes {
     line-height: 25px;
 }
+.charsheet .sheet-motes span button.gm-only:before {
+    vertical-align: middle;
+}
+
+.charsheet button.gm-only {
+    display: none;
+}
 
 .charsheet .main-page [data-groupname=repeating_qcattacks] .sheet-trait span input[type="text"].sheet-qc-attack-pool {
     font-size: 14px;

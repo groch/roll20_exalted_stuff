@@ -4438,7 +4438,7 @@
                                         </div>
                                     </div>
                                     <div class="sheet-hide-to-mortal"><div class="sheet-motes">
-                                            <span>Personal</span>
+                                            <span>Personal<button type="roll" class="btn gm-only" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button></span>
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
                                                 <input type="number" name="attr_personal-essence" readonly tabindex="-1"> /
                                                 <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}"> C:
@@ -4446,7 +4446,7 @@
                                             </span>
                                         </div>
                                         <div class="sheet-motes">
-                                            <span>Peripheral</span>
+                                            <span>Peripheral<button type="roll" class="btn gm-only" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button></span>
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
                                                 <input type="number" name="attr_peripheral-essence" readonly tabindex="-1"> /
                                                 <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}"> C:
