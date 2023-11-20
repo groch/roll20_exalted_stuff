@@ -208,7 +208,9 @@ Selenok:
 	Bat-20%,scale&#124;[[0.014285714285&#42;0.2]]un currentside&#124;5|
 	Cock-30%,scale&#124;[[0.014285714285&#42;0.3]]un currentside&#124;9|
 	Cerf-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;7|
-	Silvor-110%,scale&#124;[[0.014285714285&#42;1.1]]un currentside&#124;11}
+	Silvor-110%,scale&#124;[[0.014285714285&#42;1.1]]un currentside&#124;11|
+	Yuri-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;13|
+	Marita-100%,scale&#124;[[0.014285714285&#42;1.1]]un currentside&#124;15}
 
 Hakim:
 !token-mod --set ?{Form ?|
@@ -216,7 +218,9 @@ Hakim:
 	JetPoKa-250%,scale&#124;[[0.014285714285&#42;2.5]]un currentside&#124;6|
 	Aigle-66%,scale&#124;[[0.014285714285&#42;0.666]]un currentside&#124;10|
 	Sanglier-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;8|
-	Giant Constrictor-500%,scale&#124;[[0.014285714285&#42;5]]un currentside&#124;12}
+	Giant Constrictor-500%,scale&#124;[[0.014285714285&#42;5]]un currentside&#124;12|
+	Chaton-40%,scale&#124;[[0.014285714285&#42;0.4]]un currentside&#124;14|
+	Hakim2-90%,scale&#124;[[0.014285714285&#42;0.6]]un currentside&#124;16}
 
 Hiroo:
 !token-mod --set ?{Form ?|
