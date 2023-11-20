@@ -244,7 +244,7 @@ var CombatMaster = CombatMaster || (function() {
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot|resetSaves)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -399,8 +399,11 @@ var CombatMaster = CombatMaster || (function() {
         if (cmdDetails.action == 'saveState')      saveCombatState(cmdDetails.details.saveSlot);
         if (cmdDetails.action == 'loadState')      loadCombatState(cmdDetails.details.saveSlot);
         if (cmdDetails.action == 'reset') {
+            let saveStateHolder;
+            if (cmdDetails.details?.resetSaves === 'no') saveStateHolder = state[combatState].config.saveState;
 			state[combatState] = {};
 			setDefaults(true);
+            if (cmdDetails.details?.resetSaves === 'no') state[combatState].config.saveState = saveStateHolder;
 			sendMainMenu(who);
         }
         if (cmdDetails.action == 'ignore') {
@@ -1133,7 +1136,7 @@ var CombatMaster = CombatMaster || (function() {
 		let	exportButton                = makeBigButton('Export',               '!cmaster --show,export');
 		let	importButton                = makeBigButton('Import',               '!cmaster --import,config=?{Config}');
 		let	saveStatesButton            = makeBigButton('Save States',          '!cmaster --show,saveStates');
-		let	resetButton                 = makeBigButton('Reset',                '!cmaster --reset');
+		let	resetButton                 = makeBigButton('Reset',                '!cmaster --reset,resetSaves=?{Reset Saves ?|No,no|Yes,yes}');
 		let	ignoreButton                = makeBigButton('Remove Ignores',       '!cmaster --ignore');
 		let	clearButton                 = makeBigButton('Clear Token Statuses', '!cmaster --clear');
 		let	backToTrackerButton         = makeBigButton('Back',                 '!cmaster --back,tracker');
