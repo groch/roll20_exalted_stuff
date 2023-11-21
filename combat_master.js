@@ -244,7 +244,7 @@ var CombatMaster = CombatMaster || (function() {
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot|resetSaves)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot|resetSaves|resetName)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -398,7 +398,7 @@ var CombatMaster = CombatMaster || (function() {
         }
         if (cmdDetails.action == 'saveState')   saveCombatState(cmdDetails.details.saveSlot);
         if (cmdDetails.action == 'loadState')   loadCombatState(cmdDetails.details.saveSlot);
-        if (cmdDetails.action == 'clrState')    clearCombatState(cmdDetails.details.saveSlot);
+        if (cmdDetails.action == 'clrState')    clearCombatState(cmdDetails.details.saveSlot, Number(cmdDetails.details.resetName));
         if (cmdDetails.action == 'reset') {
             let saveStateHolder;
             if (cmdDetails.details?.resetSaves === 'no') saveStateHolder = state[combatState].config.saveState;
@@ -1489,7 +1489,7 @@ var CombatMaster = CombatMaster || (function() {
             const saveName = saveState?.saveStates[i]?.name || `Default Save Name ${i}`;
             listItems.push(makeTextButton('Save Name', saveName, `!cmaster --config,saveStates=${i},key=saveName,value=?{Name ?|${saveName}} --show,saveStates`));
             if (saveState?.saveStates[i] && saveState.saveStates[i].turnorder.length !== 0)
-                listItems.push(makeThreeBigButton('Load State '+i, '!cmaster --loadState,saveSlot='+i,'Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates','Clear State '+i, '!cmaster --clrState,saveSlot='+i+' --show,saveStates'));
+                listItems.push(makeThreeBigButton('Load State '+i, '!cmaster --loadState,saveSlot='+i,'Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates','Clear State '+i, `!cmaster --clrState,saveSlot=${i},resetName=?{Reset Name ?|No,0|Yes,1} --show,saveStates`));
             else
                 listItems.push(makeBigButton('Save State '+i, '!cmaster --saveState,saveSlot='+i+' --show,saveStates', 'darkgreen'));
         }
@@ -1641,7 +1641,7 @@ var CombatMaster = CombatMaster || (function() {
         },420);
     },
 
-    clearCombatState = (saveSlot) => {
+    clearCombatState = (saveSlot, resetName) => {
         const intSaveSlot = Number(saveSlot);
         logger(LOGLEVEL.INFO,`clearCombatState::clearCombatState saveSlot=${intSaveSlot}`);
 
@@ -1650,13 +1650,20 @@ var CombatMaster = CombatMaster || (function() {
             return;
         }
 
-        state[combatState].config.saveState.saveStates[intSaveSlot] = {
-            name: `Default Save Name ${intSaveSlot}`,
-            initiativepage: '',
-            turnorder: [],
-            conditions: [],
-            round: 1
-        };
+        if (resetName || !state[combatState].config.saveState.saveStates[intSaveSlot]) {
+            state[combatState].config.saveState.saveStates[intSaveSlot] = {
+                name: `Default Save Name ${intSaveSlot}`,
+                initiativepage: '',
+                turnorder: [],
+                conditions: [],
+                round: 1
+            };
+        } else {
+            state[combatState].config.saveState.saveStates[intSaveSlot].initiativepage = '';
+            state[combatState].config.saveState.saveStates[intSaveSlot].turnorder = [];
+            state[combatState].config.saveState.saveStates[intSaveSlot].conditions = [];
+            state[combatState].config.saveState.saveStates[intSaveSlot].round = 1;
+        }
         logger(`clearCombatState:: SAVE STATE CLEARED`);
 
         makeAndSendMenu(`Cleared Saved State on slot <b>n=${intSaveSlot}</b>.${makeBigButton('Back', '!cmaster --back,setup')}`, 'Save States Setup','gm');
