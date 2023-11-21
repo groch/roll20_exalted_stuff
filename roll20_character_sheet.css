@@ -986,7 +986,7 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .charsheet .sheet-motes {
     line-height: 25px;
 }
-.charsheet .sheet-motes span button.gm-only:before {
+.charsheet button.gm-only.add-mote:before {
     vertical-align: middle;
 }
 
