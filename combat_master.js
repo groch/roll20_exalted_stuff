@@ -239,7 +239,7 @@ var CombatMaster = CombatMaster || (function() {
         logger('cmdExtract::Tokens:' + tokens);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState|clrState/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState|clrState|createAbilities/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -439,7 +439,8 @@ var CombatMaster = CombatMaster || (function() {
                 {key:'moteAdd',                            fx: addMotesCommand},
                 {key:'togglePageSize',                     fx: togglePageSize},
                 {key:'applyInitBonusToCrasherSelected',    fx: applyInitBonusToCrasherSelected},
-                {key:'rstInitToSelected',                  fx: rstInitToSelected}
+                {key:'rstInitToSelected',                  fx: rstInitToSelected},
+                {key:'createAbilities',                    fx: createTokenAbilities},
             ];
 
         for (const fxObj of checkedCastList) {
@@ -476,6 +477,42 @@ var CombatMaster = CombatMaster || (function() {
     //NEW ACTIONS
     //*************************************************************************************************************
 
+    createTokenAbilities = function(cmdDetails, selected) {
+        logger('createTokenAbilities:: cmdDetails=' + JSON.stringify(cmdDetails));
+
+        _.chain(selected).map(function(o){
+            return getObj('graphic',o._id);
+        }).compact()
+        .each(function(t){
+            const finalcharacterObj = getObj('character',t.get('represents'));
+            const finalcharacterId = finalcharacterObj.get('id');
+            const abilities = findObjs({type:'ability',characterid:finalcharacterId});
+            const expectedAbilities = {
+                    flip:false
+            };
+            const abilityTemplates = {
+                    flip:{
+                        name:'Flip',
+                        description:'Exalted HLP Abilities:flip',
+                        characterid:finalcharacterId,
+                        action:`!token-mod --flip fliph`,
+                        istokenaction:true
+                    }
+                };
+            _.each(abilities,(abi)=>{
+                abi.get('description').replace(/^Exalted HLP Abilities:(.+)/,(match,keyword)=>{
+                    expectedAbilities[keyword]=true;
+                });
+            });
+            _.each(_.keys(expectedAbilities),(key)=>{
+                if(!expectedAbilities[key]){
+                    logger('createTokenAbilities:: Creating Ability:"'+abilityTemplates[key].name+'" for token named "'+t.get('name')+'"');
+                    createObj('ability',abilityTemplates[key]);
+                }
+            });
+        });
+    },
+    
     getHandoutMenu = (cmdDetails) => {
         let handoutList = findObjs({_type: 'handout'}); // inplayerjournals: 'all'
         logger(LOGLEVEL.EMERGENCY, `getHandoutMenu::getHandoutMenu cmdDetails=${JSON.stringify(cmdDetails)}, handoutList.length=${handoutList.length}`);
