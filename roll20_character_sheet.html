@@ -2082,6 +2082,22 @@
         return final;
     }
 
+    /* Sage Beast Virtue toggle */
+    on('change:sbv-activated', TAS._fn(async function changeSBVActivation(eventInfo){
+        TAS.debug(`changeSBVActivation:: eventInfo=`, eventInfo);
+        const attrs = ['strength', 'dexterity', 'stamina', 'charisma', 'manipulation', 'appearance', 'perception', 'intelligence', 'wits'];
+        const valAttrs = await getAttrsAsync(attrs);
+        const attrObj = {};
+        let added = 1;
+        if (eventInfo.newValue === '0') added = -1;
+
+        for (const attr of attrs)
+            attrObj[attr] = Number(valAttrs[attr]) + added;
+
+        TAS.debug(`changeSBVActivation:: attrObj=`, attrObj);
+        setAttrs(attrObj);
+    }));
+
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
@@ -11506,6 +11522,10 @@
                         <label>
                             <input type="checkbox" name="attr_pain-tolerance" value="1"><span></span>
                             <span>MERIT: Pain Tolerance</span>
+                        </label>
+                        <label class="show-to-mortals-mostly">
+                            <input type="checkbox" name="attr_sbv-activated" value="1"><span></span>
+                            <span>CHARM ENABLED: Saga Beast Virtue</span>
                         </label>
                         <label style="display: none;">
                             <button type="action" name="act_init-charm-img" title="Set Caste Image to Charms">Set Caste Image to Charms</button>

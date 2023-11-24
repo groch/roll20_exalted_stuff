@@ -479,6 +479,14 @@ input[type="number"] {
     width: 5.5em;
 }
 
+.charsheet .flex.main-page .show-to-mortals-mostly
+{
+    display: none;
+}
+.charsheet .caste-check[value="Mortal"]  ~ .flex.main-page .show-to-mortals-mostly,
+.charsheet .caste-check[value="Custom"]  ~ .flex.main-page .show-to-mortals-mostly {
+    display: block;
+}
 
 .charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .default-whisper,
 .charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .gm-whisper,
