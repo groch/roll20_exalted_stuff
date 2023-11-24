@@ -148,6 +148,7 @@ var CombatMaster = CombatMaster || (function() {
         'Casteless::5256148': '#bbbbbb',   'FullMoon::5256147': '#bbbbbb',    'ChangingMoon::5256146': '#bbbbbb',   'NoMoon::5256149': '#bbbbbb',                                           //LUNAR
         'Mars::5256162': '#bb0000',        'Mercury::5256163': '#ffff88',     'Jupiter::5256161': '#274e13',        'Venus::5256165': '#0088ff',       'Saturn::5256164': '#9900ff',        //SIDEREAL
     },
+    auraTransparencyPercent = 50,
     lightAnima = {
         low :       {0: '0', 1: '0.8', 2: '8',      3: '35'},
         bright :    {0: '0', 1: '0.3', 2: '3',      3: '10.5'},
@@ -244,7 +245,7 @@ var CombatMaster = CombatMaster || (function() {
 
         //split additional command actions
         _.each(String(tokens).replace(cmdSep.action+',','').split(','),(d) => {
-            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot|resetSaves|resetName)(?::|=)([^,]+)/) || null;
+            vars=d.match(/(who|next|main|previous|delay|start|stop|hold|timer|pause|show|all|favorites|setup|conditions|condition|sort|combat|turnorder|accouncements|timer|macro|status|list|export|import|type|key|value|setup|tracker|confirm|direction|duration|message|initiative|config|assigned|type|action|description|target|id|started|stopped|held|addAPI|remAPI|concentration|view|qty|revert|tok|handoutType|perso|setTo|saveStates|saveSlot|resetSaves|resetName|auraTrans)(?::|=)([^,]+)/) || null;
             if (vars) {
                 if (vars[2].includes('INDEX')) {
                     let key, result;
@@ -978,7 +979,7 @@ var CombatMaster = CombatMaster || (function() {
         else logger(`enableAnimas:: level=${level}`);
 
         const finalObj = {
-            'aura1_color':animaColor || '#ffffff',
+            'aura1_color':`${animaColor}${getAuraTransparencyHex()}` || '#ffffff',
             'aura1_radius':lightAnima.aura[level],
             'lightColor':animaColor || '#ffffff',
             'low_light_distance':lightAnima.low[level],
@@ -991,6 +992,15 @@ var CombatMaster = CombatMaster || (function() {
         };
         logger(`enableAnimas:: finalObj=${JSON.stringify(finalObj)}`);
         tokenObj.set(finalObj);
+    },
+
+    getAuraTransparencyHex = () => {
+        const trans = state[combatState].auraTransparencyPercent || auraTransparencyPercent;
+        if (trans >= 100) return '';
+        if (trans <= 0) return '00';
+        let ret = Math.ceil(trans / 100 * 255).toString(16);
+        logger(`getAuraTransparencyHex:: ret=${ret}`);
+        return ret;
     },
 
     disableAnimas = (tokenObj) => {
@@ -1395,7 +1405,8 @@ var CombatMaster = CombatMaster || (function() {
             }
         }
 
-        message = (message) ? '<p style="color: red">'+message+'</p>' : '';
+        const auraTransButton = `<div style="width: 100%; height: 2.5em;">${makeTextButton('Aura Transparency', state[combatState].auraTransparencyPercent, '!cmaster --config,auraTrans,key=auraTrans,value=?{Transparency Percent ? (enter a number between 0 and 100)|50}  --show,conditions')}</div>`;
+        message = message ? `<p style="color: red">${message}</p>${auraTransButton}` : `${auraTransButton}`;
         let contents = message + makeList(listItems, backButton, addButton);
 
         state[combatState].config.previousPage = 'conditions';
@@ -1722,6 +1733,8 @@ var CombatMaster = CombatMaster || (function() {
 			state[combatState].config.status[cmdDetails.details.key]        = cmdDetails.details.value;
 		else if   (cmdDetails.details.concentration)
 			state[combatState].config.concentration[cmdDetails.details.key] = cmdDetails.details.value;
+        else if   (cmdDetails.details.auraTrans)
+            state[combatState].auraTransparencyPercent = parseInt(cmdDetails.details.value) || auraTransparencyPercent;
 		else if   (cmdDetails.details.saveStates) {
             if (cmdDetails.details.key === 'saveNumbers') {
                 logger(LOGLEVEL.INFO, `editCombatState:: key = saveNumbers, value=${parseInt(cmdDetails.details.value)}`);
@@ -3848,6 +3861,7 @@ var CombatMaster = CombatMaster || (function() {
             conditions: [],
             ignores:    [],
             spells:     [],
+            auraTransparencyPercent: auraTransparencyPercent,
 			config: {
                 command:        'cmaster',
 				duration:       false,
@@ -4345,6 +4359,7 @@ var CombatMaster = CombatMaster || (function() {
         if (!state[combatState].hasOwnProperty('conditions'))                state[combatState].conditions = [];
         if (!state[combatState].hasOwnProperty('ignores'))                   state[combatState].ignores = [];
         if (!state[combatState].hasOwnProperty('spells'))                    state[combatState].spells = [];
+        if (!state[combatState].hasOwnProperty('auraTransparencyPercent'))   state[combatState].auraTransparencyPercent = auraTransparencyPercent;
 
         if (state[combatState].config.hasOwnProperty('conditions') && !reset){
             for (key in state[combatState].config.conditions) {
