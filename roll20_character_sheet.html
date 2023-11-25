@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.57, debug = 1;
+    const version = 2.58, debug = 1;
     var TAS;
 
     /**
@@ -90,6 +90,38 @@
             setActiveCharacterId(prevAcid);
         });
     }
+    /////////////////////////
+    // a version of getSectionIDs that returns the IDs in the order that they are displayed. 
+	// getSectionIDs returns in the order the repeating section lines were created. The user has the ability to reorder the lines. 
+	// getAttrs( [ "_reporder_repeating_" + section_name] , ... ) returns an empty object if the lines were not reordered, 
+	// and may return an incomplete list or a list with items that were since deleted.
+	// This returns a complete and accurate list in the order that they are displayed. 
+    //// original version by Chris D.(https://app.roll20.net/users/633707) and Jakob(https://app.roll20.net/users/726129)
+    // I personally added the Async version so i could use the await keyword and fixed the _reporder_ to _reporder_repeating_
+    function getSectionIDsOrderedAsync(sectionName) {
+        var acid=getActiveCharacterId();
+        var prevAcid=null;
+        return new Promise((resolve,reject)=>{
+            prevAcid=setActiveCharacterId(acid);
+            try  { getSectionIDsOrdered(sectionName,(values)=>{ resolve(values); });}
+            catch{ reject(); }
+        }).finally(()=>{
+            setActiveCharacterId(prevAcid);
+        });
+    }
+    function getSectionIDsOrdered(sectionName, callback) {
+        'use strict';
+        getAttrs([`_reporder_repeating_${sectionName}`], function (values) {
+            let reporder = values[`_reporder_repeating_${sectionName}`];
+            if (!reporder) // There is no ordering, so just call the standard getSectionIDs and tell it to run the callback passed to us.
+                getSectionIDs(sectionName, callback);
+            else
+                getSectionIDs(sectionName, function (idArray) {
+                    callback([...new Set(reporder.toLowerCase().split(",").filter(x => idArray.includes(x)).concat(idArray))]);
+                });
+        });
+    };
+
     /////////////////////////
 
     function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
@@ -618,6 +650,7 @@
         {version: 2.54, fn: upgradeto255},
         {version: 2.55, fn: upgradeto256},
         {version: 2.56, fn: upgradeto257},
+        {version: 2.57, fn: upgradeto258},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -825,6 +858,61 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto258() {
+        const finalObj = {'version': version};
+        const charmAttrs = [
+            'charm-learnt',
+            'charm-name',
+            'charm-type',
+            'charm-cost',
+            'charm-buttons-isextended',
+            'rep-cost-macro',
+            'charm-short-desc',
+            'charm-effect-display',
+            'charm-book',
+            'charm-page',
+            'charm-duration',
+            'charm-skill',
+            'charm-keywords',
+            'charm-mute',
+            'charm-aspect',
+            'charm-balanced',
+            'charm-can-cycle-aspects',
+            'rep-cost-mote',
+            'rep-cost-mote-pool',
+            'rep-cost-mote-commit',
+            'rep-cost-will',
+            'rep-cost-init',
+            'charm-description',
+            'charm-effect',
+            'charm-buttons-isextended',
+            'charm-rollexpr',
+        ];
+        TAS.debug(`upgradeto258::upgradeto258`);
+        const arrayAttrName = [], memorySectionIds = {};
+        for (const section of charmRepeatableSectionArray) {
+            let orderedSectionIds = await getSectionIDsOrderedAsync(section);
+            memorySectionIds[section] = orderedSectionIds;
+            for (const id of orderedSectionIds)
+                arrayAttrName.push(...charmAttrs.map(i => `repeating_${section}_${id}_${i}`));
+        }
+        const repeatingAttrs = await getAttrsAsync(arrayAttrName);
+        const arrayIdOrdered = [], arrayNewIds = [];
+        for (const section of charmRepeatableSectionArray) {
+            for (const id of memorySectionIds[section]) {
+                const newId = generateNewRowId(arrayNewIds);
+                arrayIdOrdered.push(newId);
+                for (const attr of charmAttrs)
+                    finalObj[`repeating_charms-all_${newId}_${attr}`] = repeatingAttrs[`repeating_${section}_${id}_${attr}`];
+                removeRepeatingRow(`repeating_${section}_${id}`);
+            }
+        }
+        TAS.debug(`upgradeto258:: finalObj=`,finalObj);
+        await setAttrsAsync(finalObj);
+        TAS.debug(`upgradeto258:: new arrayIdOrdered=`,arrayIdOrdered);
+        setSectionOrder('charms-all', arrayIdOrdered);
+    }
 
     async function upgradeto257() {
         const finalObj = {'version': version};
