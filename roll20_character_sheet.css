@@ -1916,7 +1916,6 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet-ma-other:checked				    ~ div.sheet-tab-charm-sheet-ma-other,
 .charsheet input.sheet-tab-charm-sheet-evocation:checked		        ~ div.sheet-tab-charm-sheet-evocation,
 .charsheet input.sheet-tab-charm-sheet-old:checked				        ~ div.sheet-tab-charm-sheet-old,
-.charsheet input.sheet-tab-charm-sheet-all:checked				        ~ div.sheet-tab-charm-sheet-all,
 .charsheet input.sheet-tab-charm-sheet-universal:checked		        ~ div.sheet-tab-charm-sheet-universal
 {
    display: flex;
