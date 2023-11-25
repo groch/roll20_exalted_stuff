@@ -155,13 +155,13 @@ input[type="number"] {
 .charsheet .sheet-text-center { text-align: center; }
 
 .charsheet button[type=roll]::before { content: "" !important; }
-.charsheet .reminder-charm-div button[type=action].btn,
+.charsheet .reminder-charms-main-div button[type=action].btn,
 .charsheet button[type=roll].btn {
     font-size: 13px;
     line-height: 13px;
 }
 
-.charsheet .reminder-charm-div button[type=action].btn {
+.charsheet .reminder-charms-main-div button[type=action].btn {
     line-height: 22px;
 }
 
@@ -2083,7 +2083,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Intelligence - Warfare"]                      ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Warfare"]),
 .charsheet .sheet-tab-charms-check[value="Intelligence - Sorcery"]                      ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Sorcery"]),
 .charsheet .sheet-tab-charms-check[value="Wits - Resolve"]                              ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Resolve"]),
-.charsheet .sheet-tab-charms-check[value="Wits- Animal Ken"]                            ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits- Animal Ken"]),
+.charsheet .sheet-tab-charms-check[value="Wits - Animal Ken"]                           ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Animal Ken"]),
 .charsheet .sheet-tab-charms-check[value="Wits - Navigation"]                           ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
 .charsheet .sheet-tab-charms-check[value="Wits - Cache"]                                ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
 .charsheet .sheet-tab-charms-check[value="Wits - Territory"]                            ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
@@ -2170,7 +2170,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Warfare"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Sorcery"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Resolve"]),
-.charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits- Animal Ken"]),
+.charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Animal Ken"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
@@ -2199,6 +2199,184 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="White Veil Style"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="MA - Other"]),
 .charsheet .sheet-tab-charms-check[value="other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Evocation"]) {
+	display: none;
+}
+
+.charsheet .reminder-charm-selector-input:not([value="charm"]) ~ .repcontainer .repitem {
+    display: none;
+}
+
+.charsheet .reminder-charm-selector-input[value="archery"]            ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Archery"]),
+.charsheet .reminder-charm-selector-input[value="athletics"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Athletics"]),
+.charsheet .reminder-charm-selector-input[value="awareness"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Awareness"]),
+.charsheet .reminder-charm-selector-input[value="brawl"]              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Brawl"]),
+.charsheet .reminder-charm-selector-input[value="bureaucracy"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Bureaucracy"]),
+.charsheet .reminder-charm-selector-input[value="craft"]              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Craft"]),
+.charsheet .reminder-charm-selector-input[value="dodge"]              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dodge"]),
+.charsheet .reminder-charm-selector-input[value="integrity"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Integrity"]),
+.charsheet .reminder-charm-selector-input[value="investigation"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Investigation"]),
+.charsheet .reminder-charm-selector-input[value="larceny"]            ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Larceny"]),
+.charsheet .reminder-charm-selector-input[value="linguistics"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Linguistics"]),
+.charsheet .reminder-charm-selector-input[value="lore"]               ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Lore"]),
+.charsheet .reminder-charm-selector-input[value="medicine"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Medicine"]),
+.charsheet .reminder-charm-selector-input[value="melee"]              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Melee"]),
+.charsheet .reminder-charm-selector-input[value="occult"]             ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Occult"]),
+.charsheet .reminder-charm-selector-input[value="performance"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Performance"]),
+.charsheet .reminder-charm-selector-input[value="presence"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Presence"]),
+.charsheet .reminder-charm-selector-input[value="resistance"]         ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Resistance"]),
+.charsheet .reminder-charm-selector-input[value="ride"]               ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Ride"]),
+.charsheet .reminder-charm-selector-input[value="sail"]               ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Sail"]),
+.charsheet .reminder-charm-selector-input[value="socialize"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Socialize"]),
+.charsheet .reminder-charm-selector-input[value="stealth"]            ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stealth"]),
+.charsheet .reminder-charm-selector-input[value="survival"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Survival"]),
+.charsheet .reminder-charm-selector-input[value="thrown"]             ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Thrown"]),
+.charsheet .reminder-charm-selector-input[value="war"]                ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="War"]),
+.charsheet .reminder-charm-selector-input[value="universal"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Universal"]),
+.charsheet .reminder-charm-selector-input[value="str-offense"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Offense"]),
+.charsheet .reminder-charm-selector-input[value="str-mobility"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Mobility"]),
+.charsheet .reminder-charm-selector-input[value="str-fos"]            ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Feats of Strength"]),
+.charsheet .reminder-charm-selector-input[value="dex-offensive"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offensive"]),
+.charsheet .reminder-charm-selector-input[value="dex-defense"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Defense"]),
+.charsheet .reminder-charm-selector-input[value="dex-subterfuge"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Subterfuge"]),
+.charsheet .reminder-charm-selector-input[value="dex-mobility"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Mobility"]),
+.charsheet .reminder-charm-selector-input[value="dex-swarm"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Swarm"]),
+.charsheet .reminder-charm-selector-input[value="sta-defense"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stamina - Defense"]),
+.charsheet .reminder-charm-selector-input[value="sta-endurance"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stamina - Endurance"]),
+.charsheet .reminder-charm-selector-input[value="sta-berserker"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stamina - Berserker"]),
+.charsheet .reminder-charm-selector-input[value="cha-influence"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Charisma - Influence"]),
+.charsheet .reminder-charm-selector-input[value="cha-territory"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Charisma - Territory"]),
+.charsheet .reminder-charm-selector-input[value="cha-warfare"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Charisma - Warfare"]),
+.charsheet .reminder-charm-selector-input[value="man-influence"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Manipulation - Influence"]),
+.charsheet .reminder-charm-selector-input[value="man-subterfugr"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Manipulation - Subterfuge"]),
+.charsheet .reminder-charm-selector-input[value="man-guile"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Manipulation - Guile"]),
+.charsheet .reminder-charm-selector-input[value="app-influence"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Appearance - Influence"]),
+.charsheet .reminder-charm-selector-input[value="app-subterfuge"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Appearance - Subterfuge"]),
+.charsheet .reminder-charm-selector-input[value="app-warfare"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Appearance - Warfare"]),
+.charsheet .reminder-charm-selector-input[value="per-senses"]         ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Perception - Senses"]),
+.charsheet .reminder-charm-selector-input[value="per-scrutiny"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Perception - Scrutiny"]),
+.charsheet .reminder-charm-selector-input[value="per-mysticism"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Perception - Mysticism"]),
+.charsheet .reminder-charm-selector-input[value="int-knowledge"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Knowledge"]),
+.charsheet .reminder-charm-selector-input[value="int-mysticism"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Mysticism"]),
+.charsheet .reminder-charm-selector-input[value="int-crafting"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Crafting"]),
+.charsheet .reminder-charm-selector-input[value="int-warfare"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Warfare"]),
+.charsheet .reminder-charm-selector-input[value="int-sorcery"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Sorcery"]),
+.charsheet .reminder-charm-selector-input[value="wit-resolve"]        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Resolve"]),
+.charsheet .reminder-charm-selector-input[value="wit-animalken"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Animal Ken"]),
+.charsheet .reminder-charm-selector-input[value="wit-navigation"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
+.charsheet .reminder-charm-selector-input[value="wit-cache"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
+.charsheet .reminder-charm-selector-input[value="wit-territory"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
+.charsheet .reminder-charm-selector-input[value="ma-snake"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Snake Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-tiger"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Tiger Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-spsitv"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Single Point Shining Into The Void Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-whitereaper"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="White Reaper Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-ebonshadow"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Ebon Shadow Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-crane"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Crane Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-silvervoice"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Silver-Voiced Nightingale Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-righteousdevil"]  ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Righteous Devil Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-blackclaw"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Black Claw Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-dreamingpearl"]   ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dreaming Pearl Courtesan Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-steeldevil"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Steel Devil Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-centipede"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Centipede Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-falcon"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Falcon Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-laughingmonster"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Laughing Monster Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-swayinggrass"]    ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Swaying Grass Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-airdragon"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Air Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-earthdragon"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Earth Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-firedragon"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Fire Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-waterdragon"]     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Water Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-wooddragon"]      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wood Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-goldenjanissary"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Golden Janissary Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-mantis"]          ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Mantis Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-whiteveil"]       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="White Veil Style"]),
+.charsheet .reminder-charm-selector-input[value="ma-other"]           ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="MA - Other"]),
+.charsheet .reminder-charm-selector-input[value="evocations"]         ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Evocation"]) {
+	display: flex;
+}
+
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Archery"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Athletics"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Awareness"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Brawl"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Bureaucracy"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Craft"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dodge"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Integrity"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Investigation"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Larceny"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Linguistics"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Lore"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Medicine"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Melee"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Occult"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Performance"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Presence"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Resistance"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Ride"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Sail"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Socialize"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stealth"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Survival"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Thrown"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="War"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Universal"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Offense"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Mobility"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Feats of Strength"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offensive"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Defense"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Subterfuge"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Mobility"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Swarm"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stamina - Defense"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stamina - Endurance"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Stamina - Berserker"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Charisma - Influence"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Charisma - Territory"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Charisma - Warfare"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Manipulation - Influence"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Manipulation - Subterfuge"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Manipulation - Guile"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Appearance - Influence"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Appearance - Subterfuge"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Appearance - Warfare"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Perception - Senses"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Perception - Scrutiny"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Perception - Mysticism"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Knowledge"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Mysticism"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Crafting"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Warfare"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Intelligence - Sorcery"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Resolve"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Animal Ken"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Snake Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Tiger Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Single Point Shining Into The Void Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="White Reaper Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Ebon Shadow Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Crane Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Silver-Voiced Nightingale Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Righteous Devil Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Black Claw Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dreaming Pearl Courtesan Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Steel Devil Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Centipede Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Falcon Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Laughing Monster Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Swaying Grass Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Air Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Earth Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Fire Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Water Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wood Dragon Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Golden Janissary Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Mantis Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="White Veil Style"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="MA - Other"]),
+.charsheet .reminder-charm-selector-input[value="charm"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Evocation"]) {
 	display: none;
 }
 
@@ -5022,12 +5200,12 @@ textarea::-webkit-scrollbar-track {
 }
 
 .charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell > input[type="text"][readonly],
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem > input[type="text"][readonly] {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem > input[type="text"][readonly] {
     border-bottom: none;
     margin: 0;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem > .charm-buttons > button.sheet-roll {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem > .charm-buttons > button.sheet-roll {
     height: 2rem;
 }
 
@@ -5042,35 +5220,35 @@ textarea::-webkit-scrollbar-track {
     width: 100%;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-name"][readonly] {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem input[name="attr_charm-name"][readonly] {
     width: 8em;
     color: #0095c6;
     font-weight: bold;
     flex-grow: 2;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ input[name="attr_charm-name"][readonly] {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ input[name="attr_charm-name"][readonly] {
     color: #aeaeae;
     font-weight: normal;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-cost"][readonly] {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem input[name="attr_charm-cost"][readonly] {
     width: 3em;
     flex-grow: 1;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-buttons {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem .charm-buttons {
     flex-shrink: 0;
     align-items: center;
     height: 2rem;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-button-learn,
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ .sheet-grouped-buttons .default-whisper,
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ .sheet-grouped-buttons .gm-whisper {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem .charm-button-learn,
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ .sheet-grouped-buttons .default-whisper,
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ .sheet-grouped-buttons .gm-whisper {
     display: none;
 }
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ .charm-button-learn {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem .charm-learnt-check[value="0"] ~ .charm-button-learn {
     display: flex;
 }
 
@@ -5083,7 +5261,7 @@ textarea::-webkit-scrollbar-track {
     cursor: pointer;
 }
 
-.charsheet .sheet-charm-reminder .reminder-charms-main-div .reminder-charm-div .repcontainer .repitem input[name="attr_charm-short-desc"][readonly] {
+.charsheet .sheet-charm-reminder .reminder-charms-main-div .repcontainer .repitem input[name="attr_charm-short-desc"][readonly] {
     width: 2em;
     flex-grow: 10;
 }
@@ -5316,12 +5494,8 @@ textarea::-webkit-scrollbar-track {
     display: revert;
 }
 
-.charsheet .reminder-charm-div {
-    display: none;
+.charsheet .reminder-charms-main-div .repcontainer {
     width: 100%;
-}
-
-.charsheet .reminder-charm-div > .repcontainer {
     margin-bottom: 0;
 }
 
@@ -5417,7 +5591,7 @@ textarea::-webkit-scrollbar-track {
     font-size: large;
 }
 
-.charsheet .flex.main-page .reminder-charm-div .repcontainer {
+.charsheet .flex.main-page .reminder-charms-main-div .repcontainer {
     display: flex;
     flex-flow: column;
 }
@@ -5452,66 +5626,66 @@ textarea::-webkit-scrollbar-track {
     height: 2.5rem;
 }
 
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="water"] ~ .db-aspect-quickshow > img.aspect {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-aspect"][value="water"] ~ .db-aspect-quickshow > img.aspect {
     content: url('https://s3.amazonaws.com/files.d20.io/images/290329797/Xy9MXwjo9o9brGuChOFbpQ/max.png?1655517794');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="earth"] ~ .db-aspect-quickshow > img.aspect {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-aspect"][value="earth"] ~ .db-aspect-quickshow > img.aspect {
     content: url('https://s3.amazonaws.com/files.d20.io/images/290329796/D3dl9vUlnpW6-62YBxOlYA/max.png?1655517794');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="air"] ~ .db-aspect-quickshow > img.aspect {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-aspect"][value="air"] ~ .db-aspect-quickshow > img.aspect {
     content: url('https://s3.amazonaws.com/files.d20.io/images/290329795/wYZAcE0p3HGpld-My69TLw/max.png?1655517794');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="wood"] ~ .db-aspect-quickshow > img.aspect {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-aspect"][value="wood"] ~ .db-aspect-quickshow > img.aspect {
     content: url('https://s3.amazonaws.com/files.d20.io/images/290329794/2UyfCRr3dIkh5kZNObDbqw/max.png?1655517794');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-aspect"][value="fire"] ~ .db-aspect-quickshow > img.aspect {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-aspect"][value="fire"] ~ .db-aspect-quickshow > img.aspect {
     content: url('https://s3.amazonaws.com/files.d20.io/images/290329793/hlr3nMlOBHTIb-v2-2kjtQ/max.png?1655517794');
 }
 
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-balanced"][value="0"] ~ .db-aspect-quickshow > img.balanced {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-balanced"][value="0"] ~ .db-aspect-quickshow > img.balanced {
     visibility: hidden;
 }
 
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-can-cycle-aspects"][value="0"] ~ button {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-can-cycle-aspects"][value="0"] ~ button {
     display: none;
 }
 
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem img.charm-icon-type {
     width: 2.5rem;
     height: 2.5rem;
     content: url('https://s3.amazonaws.com/files.d20.io/images/359012802/7ef8SWFGP-TYoswJoUFUIQ/max.png?1694746149');
 }
 
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Simple"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-type"][value="Simple"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359011059/a4fo8e44XvIevADyteUKhg/max.png?1694745120');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Supplemental"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-type"][value="Supplemental"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359011060/98hIHQxYC88jYNbDbL5mZQ/max.png?1694745120');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Reflexive"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-type"][value="Reflexive"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359011063/D7CF4yHatd4YL_Wmw5Iqbw/max.png?1694745120');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Double"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-type"][value="Double"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359011062/YrCkeJaY8nTRIVj9l6eYvQ/max.png?1694745120');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-type"][value="Permanent"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-type"][value="Permanent"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359011061/H3Wgg-mSkPCYfo4W9M28Vw/max.png?1694745120');
 }
 
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Simple"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Simple"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359063713/xkxlqiUcYByBTBOVCHBNNQ/max.png?1694793441');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Supplemental"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Supplemental"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359063716/z5dwUJoYiHzpKH6ineZ-4w/max.png?1694793441');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Reflexive"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Reflexive"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359063714/Olizcv_E_oC4rkTyDFDQUQ/max.png?1694793441');
 }
-.charsheet .reminder-charms-main-div .reminder-charm-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Double"] ~ img.charm-icon-type {
+.charsheet .reminder-charms-main-div .repitem input[name="attr_charm-mute"][value="1"] ~ input[name="attr_charm-type"][value="Double"] ~ img.charm-icon-type {
     content: url('https://s3.amazonaws.com/files.d20.io/images/359063715/tP6EKHI1_qbLyoVoAdHqwQ/max.png?1694793441');
 }
 
-.charsheet input[name="attr_hide-not-learnt-charms-in-reminders"][value="1"] ~ div.flex.main-page .reminder-charms-main-div .reminder-charm-div .repitem:has(input.charm-learnt-check[value="0"]) {
+.charsheet input[name="attr_hide-not-learnt-charms-in-reminders"][value="1"] ~ div.flex.main-page .reminder-charms-main-div .repitem:has(input.charm-learnt-check[value="0"]) {
     display: none;
 }
 
