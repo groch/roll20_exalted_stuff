@@ -3490,13 +3490,13 @@ body.sheet-darkmode {
 
 .charsheet .sheet-tab-intimacies-sheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: rgb(255 134 134 / 15%);
-    border: 3px solid red;
+    outline: 3px solid red;
     border-radius: 5px;
 }
 
 .sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: darkred;
-    border: 3px solid red;
+    outline: 3px solid red;
     border-radius: 5px;
 }
 
