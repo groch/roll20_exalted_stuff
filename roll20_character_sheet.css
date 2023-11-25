@@ -2202,6 +2202,25 @@ and (min-resolution:.001dpcm) {
 	display: none;
 }
 
+.charsheet .charm-sheet-all .repcontrol {
+    width: 5em;
+    left: calc(100% - 5em);
+    position: absolute;
+    bottom: 0;
+}
+.charsheet .charm-sheet-all .repcontrol .repcontrol_add {
+    display: none !important;
+}
+
+.charsheet .charm-sheet-all .charm-special-add-div {
+    width: fit-content;
+    position: absolute;
+    bottom: 0;
+}
+.charsheet .charm-sheet-all .charm-sheet-all-footer {
+    height: 2em;
+}
+
 .charsheet .sheet-quick-character[value="0"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-qc-pools,
 .charsheet .sheet-quick-character[value="0"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-qc-defenses {
     display: none;

@@ -2190,6 +2190,25 @@
         setAttrs(attrObj);
     }));
 
+    /* Add a new charm to charms-all */
+    on('clicked:add-charm-to-all', TAS._fn(async function addGenericCharm(eventInfo){
+        const idsCharms = await getSectionIDsAsync("charms-all");
+        const actualSection = await getSingleAttrAsync("charm_sheet");
+        const charmObj = {};
+        const idNewCharm = generateNewRowId(idsCharms);
+        if (actualSection === 'Evocation') {
+            charmObj[`repeating_charms-all_${idNewCharm}_isEvoc`] = 'Evocation';
+        } else if (actualSection === 'other') {
+            const casteStr = await getSingleAttrAsync(`caste`);
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = `${casteStr} Power`;
+        } else {
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = actualSection;
+        }
+
+        TAS.debug(`addGenericCharm:: charmObj=`, charmObj);
+        setAttrs(charmObj);
+    }));
+
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
@@ -5358,6 +5377,10 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <div class="charm-special-add-div">
+                            <button type="action" name="act_add-charm-to-all" class="btn repcontrol_add">+Add</button>
+                        </div>
+                        <div class="charm-sheet-all-footer"></div>
                     </div>
 
                 </div>
