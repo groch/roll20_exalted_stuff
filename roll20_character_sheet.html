@@ -905,6 +905,7 @@
                 arrayIdOrdered.push(newId);
                 for (const attr of charmAttrs)
                     finalObj[`repeating_charms-all_${newId}_${attr}`] = repeatingAttrs[`repeating_${section}_${id}_${attr}`];
+                finalObj[`repeating_charms-all_${newId}_isEvoc`] = (section === 'charms-evocations') ? 'Evocation' : '';
                 removeRepeatingRow(`repeating_${section}_${id}`);
             }
         }
