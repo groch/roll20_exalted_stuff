@@ -96,8 +96,8 @@
 	// getAttrs( [ "_reporder_repeating_" + section_name] , ... ) returns an empty object if the lines were not reordered, 
 	// and may return an incomplete list or a list with items that were since deleted.
 	// This returns a complete and accurate list in the order that they are displayed. 
-    //// original version by Chris D.(https://app.roll20.net/users/633707) and Jakob(https://app.roll20.net/users/726129)
-    // I personally added the Async version so i could use the await keyword and fixed the _reporder_ to _reporder_repeating_
+    ///
+    // I personally added the Async version so i could use the await keyword
     function getSectionIDsOrderedAsync(sectionName) {
         var acid=getActiveCharacterId();
         var prevAcid=null;
@@ -2306,7 +2306,7 @@
         computeIdRepeatingRoll('rolls-widget', e.sourceAttribute.split('_')[2], 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }));
 
-    [...charmRepeatableSectionArray].forEach(section => {
+    charmRepeatableSectionArray.forEach(section => {
         on(`clicked:repeating_${section}:learn-charm`, TAS._fn(async function clickGMCharmCast(e) {
             if (debug === 2) TAS.debug(`CLICKED "LEARN!", e=`, e);
             const id = e.sourceAttribute.split('_')[2];
@@ -2323,7 +2323,7 @@
         }));
     });
 
-    [...charmRepeatableSectionArray].forEach(section => {
+    charmRepeatableSectionArray.forEach(section => {
         on(`clicked:repeating_${section}:change-aspect`, TAS._fn(async function clickGMCharmCast(e) {
             if (debug === 2) TAS.debug(`CLICKED ChangeAspect !, e=`, e);
             const id = e.sourceAttribute.split('_')[2];
