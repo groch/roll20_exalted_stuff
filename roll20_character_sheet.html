@@ -873,7 +873,6 @@
             'charm-book',
             'charm-page',
             'charm-duration',
-            'charm-skill',
             'charm-keywords',
             'charm-mute',
             'charm-aspect',
@@ -895,7 +894,7 @@
             let orderedSectionIds = await getSectionIDsOrderedAsync(section);
             memorySectionIds[section] = orderedSectionIds;
             for (const id of orderedSectionIds)
-                arrayAttrName.push(...charmAttrs.map(i => `repeating_${section}_${id}_${i}`));
+                arrayAttrName.push(...['charm-skill', ...charmAttrs].map(i => `repeating_${section}_${id}_${i}`));
         }
         const repeatingAttrs = await getAttrsAsync(arrayAttrName);
         const arrayIdOrdered = [], arrayNewIds = [];
@@ -903,8 +902,14 @@
             for (const id of memorySectionIds[section]) {
                 const newId = generateNewRowId(arrayNewIds);
                 arrayIdOrdered.push(newId);
-                for (const attr of charmAttrs)
-                    finalObj[`repeating_charms-all_${newId}_${attr}`] = repeatingAttrs[`repeating_${section}_${id}_${attr}`];
+                for (const attr of charmAttrs) {
+                    if (repeatingAttrs[`repeating_${section}_${id}_${attr}`])
+                        finalObj[`repeating_charms-all_${newId}_${attr}`] = repeatingAttrs[`repeating_${section}_${id}_${attr}`];
+                }
+                if (section !== 'charms-evocations' && section !== 'charms')
+                    finalObj[`repeating_charms-all_${newId}_charm-skill`] = correspondingCharmSectionValue[section];
+                else if (section === 'charms')
+                    finalObj[`repeating_charms-all_${newId}_charm-skill`] = repeatingAttrs[`repeating_${section}_${id}_charm-skill`] || '';
                 finalObj[`repeating_charms-all_${newId}_isEvoc`] = (section === 'charms-evocations') ? 'Evocation' : '';
                 removeRepeatingRow(`repeating_${section}_${id}`);
             }
@@ -1460,6 +1465,91 @@
     /* *** CHARMS *** */
     /* ************** */
 
+    const correspondingCharmSectionValue = {
+        'charms-archery': 'Archery',
+        'charms-athletics': 'Athletics',
+        'charms-awareness': 'Awareness',
+        'charms-brawl': 'Brawl',
+        'charms-bureaucracy': 'Bureaucracy',
+        'charms-craft': 'Craft',
+        'charms-dodge': 'Dodge',
+        'charms-integrity': 'Integrity',
+        'charms-investigation': 'Investigation',
+        'charms-larceny': 'Larceny',
+        'charms-linguistics': 'Linguistics',
+        'charms-lore': 'Lore',
+        'charms-medicine': 'Medicine',
+        'charms-melee': 'Melee',
+        'charms-occult': 'Occult',
+        'charms-performance': 'Performance',
+        'charms-presence': 'Presence',
+        'charms-resistance': 'Resistance',
+        'charms-ride': 'Ride',
+        'charms-sail': 'Sail',
+        'charms-socialize': 'Socialize',
+        'charms-stealth': 'Stealth',
+        'charms-survival': 'Survival',
+        'charms-thrown': 'Thrown',
+        'charms-war': 'War',
+        'charms-universal': 'Universal',
+        'charms-str-offense': 'Strength - Offense',
+        'charms-str-mobility': 'Strength - Mobility',
+        'charms-str-fos': 'Feats of Strength',
+        'charms-dex-offensive': 'Dexterity - Offensive',
+        'charms-dex-defense': 'Dexterity - Defense',
+        'charms-dex-subterfuge': 'Dexterity - Subterfuge',
+        'charms-dex-mobility': 'Dexterity - Mobility',
+        'charms-dex-swarm': 'Dexterity - Swarm',
+        'charms-sta-defense': 'Stamina - Defense',
+        'charms-sta-endurance': 'Stamina - Endurance',
+        'charms-sta-berserker': 'Stamina - Berserker',
+        'charms-cha-influence': 'Charisma - Influence',
+        'charms-cha-territory': 'Charisma - Territory',
+        'charms-cha-warfare': 'Charisma - Warfare',
+        'charms-man-influence': 'Manipulation - Influence',
+        'charms-man-subterfugr': 'Manipulation - Subterfuge',
+        'charms-man-guile': 'Manipulation - Guile',
+        'charms-app-influence': 'Appearance - Influence',
+        'charms-app-subterfuge': 'Appearance - Subterfuge',
+        'charms-app-warfare': 'Appearance - Warfare',
+        'charms-per-senses': 'Perception - Senses',
+        'charms-per-scrutiny': 'Perception - Scrutiny',
+        'charms-per-mysticism': 'Perception - Mysticism',
+        'charms-int-knowledge': 'Intelligence - Knowledge',
+        'charms-int-mysticism': 'Intelligence - Mysticism',
+        'charms-int-crafting': 'Intelligence - Crafting',
+        'charms-int-warfare': 'Intelligence - Warfare',
+        'charms-int-sorcery': 'Intelligence - Sorcery',
+        'charms-wit-resolve': 'Wits - Resolve',
+        'charms-wit-animalken': 'Wits - Animal Ken',
+        'charms-wit-navigation': 'Wits - Navigation',
+        'charms-wit-cache': 'Wits - Cache',
+        'charms-wit-territory': 'Wits - Territory',
+        'charms-ma-snake': 'Snake Style',
+        'charms-ma-tiger': 'Tiger Style',
+        'charms-ma-spsitv': 'Single Point Shining Into The Void Style',
+        'charms-ma-whitereaper': 'White Reaper Style',
+        'charms-ma-ebonshadow': 'Ebon Shadow Style',
+        'charms-ma-crane': 'Crane Style',
+        'charms-ma-silvervoice': 'Silver-Voiced Nightingale Style',
+        'charms-ma-righteousdevil': 'Righteous Devil Style',
+        'charms-ma-blackclaw': 'Black Claw Style',
+        'charms-ma-dreamingpearl': 'Dreaming Pearl Courtesan Style',
+        'charms-ma-steeldevil': 'Steel Devil Style',
+        'charms-ma-centipede': 'Centipede Style',
+        'charms-ma-falcon': 'Falcon Style',
+        'charms-ma-laughingmonster': 'Laughing Monster Style',
+        'charms-ma-swayinggrass': 'Swaying Grass Style',
+        'charms-ma-airdragon': 'Air Dragon Style',
+        'charms-ma-earthdragon': 'Earth Dragon Style',
+        'charms-ma-firedragon': 'Fire Dragon Style',
+        'charms-ma-waterdragon': 'Water Dragon Style',
+        'charms-ma-wooddragon': 'Wood Dragon Style',
+        'charms-ma-goldenjanissary': 'Golden Janissary Style',
+        'charms-ma-mantis': 'Mantis Style',
+        'charms-ma-whiteveil': 'White Veil Style',
+        'charms-ma-other': 'MA - Other'
+    };
     const charmRepeatableSectionArrayOld = [
         'charms-archery',
         'charms-athletics',
