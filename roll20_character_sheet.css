@@ -2379,6 +2379,11 @@ and (min-resolution:.001dpcm) {
 	display: none;
 }
 
+.charsheet .charm-sheet-all .repcontainer[data-groupname="repeating_charms-all"] .repitem:has(.sheet-tab-charms-name-check[value="FORCE_REFRESH"]),
+.charsheet .reminder-charms-main-div .repcontainer[data-groupname="repeating_charms-all"] .repitem:has(.sheet-tab-charms-name-check[value="FORCE_REFRESH"]) {
+	display: none;
+}
+
 .charsheet .charm-sheet-all .repcontrol {
     width: 5em;
     left: calc(100% - 5em);

@@ -2281,7 +2281,7 @@
     }));
 
     /* Add a new charm to charms-all */
-    on('clicked:add-charm-to-all', TAS._fn(async function addGenericCharm(eventInfo){
+    async function addGenericCharm(name){
         const idsCharms = await getSectionIDsAsync("charms-all");
         const actualSection = await getSingleAttrAsync("charm_sheet");
         const charmObj = {};
@@ -2295,8 +2295,35 @@
             charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = actualSection;
         }
 
-        TAS.debug(`addGenericCharm:: charmObj=`, charmObj);
+        if (name)
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-name`] = name;
+
+        if (debug === 2) TAS.debug(`addGenericCharm:: charmObj=`, charmObj);
         setAttrs(charmObj);
+    }
+    on('clicked:add-charm-to-all', () => setDebugWrapper(addGenericCharm)());
+
+    on('change:_reporder:charms-all', setDebugWrapper(async function forceTriggerRefresh(e){
+        if (debug === 2) TAS.debug(`forceTriggerRefresh:: e.sourceType=${e.sourceType}`);
+        if (e.sourceType !== "player") {
+            if (debug === 2) TAS.debug(`clicked:add-charm-to-all:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
+        if (debug === 2) TAS.debug(`forceTriggerRefresh:: FORCE_REFRESH`);
+        await addGenericCharm('FORCE_REFRESH');
+    }));
+
+    on('change:repeating_charms-all:charm-name', setDebugWrapper(function detectTriggerRefresh(eventInfo){
+        if (debug === 2) TAS.debug(`detectTriggerRefresh::detectTriggerRefresh`);
+        if (eventInfo.sourceType === "player") {
+            if (debug === 2) TAS.debug(`detectTriggerRefresh:: TRIGGER FROM PLAYER => CANCEL`);
+            return;
+        }
+        if (eventInfo.newValue === 'FORCE_REFRESH') {
+            const id = eventInfo.sourceAttribute.split('_')[2];
+            if (debug === 2) TAS.debug(`detectTriggerRefresh:: FORCE_REFRESH => DELETE ROW id=${id}`);
+            removeRepeatingRow(`repeating_charms-all_${id}`);
+        }
     }));
 
     /* ***************** */
@@ -5393,6 +5420,7 @@
                         <fieldset class="repeating_charms-all" style="display: none;">
                             <input type="hidden" name="attr_isEvoc" class="sheet-tab-charms-inside-check" value="">
                             <input type="hidden" name="attr_charm-skill" class="sheet-tab-charms-inside-check" value="">
+                            <input type="hidden" name="attr_charm-name" class="sheet-tab-charms-name-check" value="">
                             <div class="flex flex-col sheet-body">
                                 <div class="flex flex-wrap">
                                     <input type="hidden" name="attr_charm-learnt" class="charm-learnt-check" value="1">
@@ -6051,6 +6079,7 @@
                                             <input type="hidden" name="attr_reminder-charm-selected" class="reminder-charm-selector-input" />
                                             <fieldset class="repeating_charms-all" style="display: none;">
                                                 <input type="hidden" name="attr_isEvoc" class="sheet-tab-charms-inside-check">
+                                                <input type="hidden" name="attr_charm-name" class="sheet-tab-charms-name-check">
                                                 <input type="hidden" name="attr_charm-aspect">
                                                 <input type="hidden" name="attr_charm-balanced">
                                                 <div class="db-aspect-quickshow">
@@ -8109,7 +8138,7 @@
                                     <input type="hidden" name="attr_reminder-charm-selected" class="reminder-charm-selector-input" />
                                     <fieldset class="repeating_charms-all" style="display: none;">
                                         <input type="hidden" name="attr_isEvoc" class="sheet-tab-charms-inside-check">
-                                        <input type="hidden" name="attr_charm-skill" class="sheet-tab-charms-inside-check">
+                                        <input type="hidden" name="attr_charm-name" class="sheet-tab-charms-name-check">
                                         <input type="hidden" name="attr_charm-aspect">
                                         <input type="hidden" name="attr_charm-balanced">
                                         <div class="db-aspect-quickshow">
