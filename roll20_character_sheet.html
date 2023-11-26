@@ -911,6 +911,8 @@
                 else if (section === 'charms')
                     finalObj[`repeating_charms-all_${newId}_charm-skill`] = repeatingAttrs[`repeating_${section}_${id}_charm-skill`] || '';
                 finalObj[`repeating_charms-all_${newId}_isEvoc`] = (section === 'charms-evocations') ? 'Evocation' : '';
+                if (['charms-ma-airdragon', 'charms-ma-earthdragon', 'charms-ma-firedragon', 'charms-ma-waterdragon', 'charms-ma-wooddragon'].includes(section))
+                    finalObj[`repeating_charms-all_${newId}_charm-aspect`] = section.replace('charms-ma-','').replace('dragon','');
                 removeRepeatingRow(`repeating_${section}_${id}`);
             }
         }
@@ -1550,6 +1552,35 @@
         'charms-ma-whiteveil': 'White Veil Style',
         'charms-ma-other': 'MA - Other'
     };
+    const charmDBMaRepeatableSectionArray = [
+        'charms-ma-airdragon',
+        'charms-ma-earthdragon',
+        'charms-ma-firedragon',
+        'charms-ma-waterdragon',
+        'charms-ma-wooddragon'
+    ];
+    const charmMaRepeatableSectionArray = [
+        'charms-ma-snake',
+        'charms-ma-tiger',
+        'charms-ma-spsitv',
+        'charms-ma-whitereaper',
+        'charms-ma-ebonshadow',
+        'charms-ma-crane',
+        'charms-ma-silvervoice',
+        'charms-ma-righteousdevil',
+        'charms-ma-blackclaw',
+        'charms-ma-dreamingpearl',
+        'charms-ma-steeldevil',
+        'charms-ma-centipede',
+        'charms-ma-falcon',
+        'charms-ma-laughingmonster',
+        'charms-ma-swayinggrass',
+        ...charmDBMaRepeatableSectionArray,
+        'charms-ma-goldenjanissary',
+        'charms-ma-mantis',
+        'charms-ma-whiteveil',
+        'charms-ma-other'
+    ];
     const charmRepeatableSectionArrayOld = [
         'charms-archery',
         'charms-athletics',
@@ -1610,30 +1641,7 @@
         'charms-wit-navigation',
         'charms-wit-cache',
         'charms-wit-territory',
-        'charms-ma-snake',
-        'charms-ma-tiger',
-        'charms-ma-spsitv',
-        'charms-ma-whitereaper',
-        'charms-ma-ebonshadow',
-        'charms-ma-crane',
-        'charms-ma-silvervoice',
-        'charms-ma-righteousdevil',
-        'charms-ma-blackclaw',
-        'charms-ma-dreamingpearl',
-        'charms-ma-steeldevil',
-        'charms-ma-centipede',
-        'charms-ma-falcon',
-        'charms-ma-laughingmonster',
-        'charms-ma-swayinggrass',
-        'charms-ma-airdragon',
-        'charms-ma-earthdragon',
-        'charms-ma-firedragon',
-        'charms-ma-waterdragon',
-        'charms-ma-wooddragon',
-        'charms-ma-goldenjanissary',
-        'charms-ma-mantis',
-        'charms-ma-whiteveil',
-        'charms-ma-other',
+        ...charmMaRepeatableSectionArray,
         'charms-evocations',
         'charms'
     ];
@@ -2283,17 +2291,23 @@
     /* Add a new charm to charms-all */
     async function addGenericCharm(name){
         const idsCharms = await getSectionIDsAsync("charms-all");
+        const caste = await getSingleAttrAsync("caste");
         const actualSection = await getSingleAttrAsync("charm_sheet");
         const charmObj = {};
         const idNewCharm = generateNewRowId(idsCharms);
-        if (actualSection === 'Evocation') {
+        if (actualSection === 'Evocation')
             charmObj[`repeating_charms-all_${idNewCharm}_isEvoc`] = 'Evocation';
-        } else if (actualSection === 'other') {
-            const casteStr = await getSingleAttrAsync(`caste`);
-            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = `${casteStr} Power`;
-        } else {
+        else if (actualSection === 'other')
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = `${await getSingleAttrAsync(`caste`)} Power`;
+        else
             charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = actualSection;
-        }
+
+        if (actualSection.indexOf(' Dragon Style') > 0)
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-aspect`] = actualSection.split(' ')[0].toLowerCase();
+        else if (['Air', 'Earth', 'Fire', 'Water', 'Wood'].includes(caste))
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-aspect`] = 'none';
+        else
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-aspect`] = caste.toLowerCase();
 
         if (name)
             charmObj[`repeating_charms-all_${idNewCharm}_charm-name`] = name;
