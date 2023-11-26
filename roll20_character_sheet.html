@@ -676,33 +676,34 @@
         }
     });
 
-    function addGenericCharmsToObj(caste, charmObj) {
+    function addGenericCharmsToObj(caste, charmObj, old = false) {
         const idHealthArray = [];
         const idCharm1 = generateNewRowId(idHealthArray);
-        charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Generic Excellency';
-        charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Supplemental';
-        charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '[[?{Dice Added ?|1}]]';
-        charmObj[`repeating_charms_${idCharm1}_rep-cost-mote`] = '?{Dice Added ?|1}';
-        charmObj[`repeating_charms_${idCharm1}_rep-cost-macro`] = '=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dice Added ?|1}';
-        charmObj[`repeating_charms_${idCharm1}_charm-short-desc`] = 'add Dices';
-        charmObj[`repeating_charms_${idCharm1}_charm-skill`] = 'Exalted Power';
-        charmObj[`repeating_charms_${idCharm1}_charm-duration`] = 'Instant';
-        charmObj[`repeating_charms_${idCharm1}_charm-aspect`] = caste.toLowerCase();
-        charmObj[`repeating_charms_${idCharm1}_charm-description`] = 'The Exalt infuse her essence inside the action to magnify it.';
-        charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The Exalt add [[?{Dice Added ?|1}]] dices to the action.';
+        const section = old ? 'charms' : 'charms-all';
+        charmObj[`repeating_${section}_${idCharm1}_charm-name`] = 'Generic Excellency';
+        charmObj[`repeating_${section}_${idCharm1}_charm-type`] = 'Supplemental';
+        charmObj[`repeating_${section}_${idCharm1}_charm-cost`] = '[[?{Dice Added ?|1}]]';
+        charmObj[`repeating_${section}_${idCharm1}_rep-cost-mote`] = '?{Dice Added ?|1}';
+        charmObj[`repeating_${section}_${idCharm1}_rep-cost-macro`] = '=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dice Added ?|1}';
+        charmObj[`repeating_${section}_${idCharm1}_charm-short-desc`] = 'add Dices';
+        charmObj[`repeating_${section}_${idCharm1}_charm-skill`] = 'Exalted Power';
+        charmObj[`repeating_${section}_${idCharm1}_charm-duration`] = 'Instant';
+        charmObj[`repeating_${section}_${idCharm1}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_${section}_${idCharm1}_charm-description`] = 'The Exalt infuse her essence inside the action to magnify it.';
+        charmObj[`repeating_${section}_${idCharm1}_charm-effect`] = 'The Exalt add [[?{Dice Added ?|1}]] dices to the action.';
 
         const idCharm2 = generateNewRowId(idHealthArray);
-        charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Generic Defense Excellency';
-        charmObj[`repeating_charms_${idCharm2}_charm-type`] = 'Supplemental';
-        charmObj[`repeating_charms_${idCharm2}_charm-cost`] = '[[?{Defense Added ?|1} * 2]]';
-        charmObj[`repeating_charms_${idCharm2}_rep-cost-mote`] = '[[?{Defense Added ?|1} * 2]]';
-        charmObj[`repeating_charms_${idCharm2}_rep-cost-macro`] = '=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]';
-        charmObj[`repeating_charms_${idCharm2}_charm-short-desc`] = 'bonus to defensive static values';
-        charmObj[`repeating_charms_${idCharm1}_charm-skill`] = 'Exalted Power';
-        charmObj[`repeating_charms_${idCharm2}_charm-duration`] = 'Instant';
-        charmObj[`repeating_charms_${idCharm2}_charm-aspect`] = caste.toLowerCase();
-        charmObj[`repeating_charms_${idCharm2}_charm-description`] = 'The Exalt infuse her essence inside her defenses to appear impenetrable.';
-        charmObj[`repeating_charms_${idCharm2}_charm-effect`] = 'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.';
+        charmObj[`repeating_${section}_${idCharm2}_charm-name`] = 'Generic Defense Excellency';
+        charmObj[`repeating_${section}_${idCharm2}_charm-type`] = 'Supplemental';
+        charmObj[`repeating_${section}_${idCharm2}_charm-cost`] = '[[?{Defense Added ?|1} * 2]]';
+        charmObj[`repeating_${section}_${idCharm2}_rep-cost-mote`] = '[[?{Defense Added ?|1} * 2]]';
+        charmObj[`repeating_${section}_${idCharm2}_rep-cost-macro`] = '=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]';
+        charmObj[`repeating_${section}_${idCharm2}_charm-short-desc`] = 'bonus to defensive static values';
+        charmObj[`repeating_${section}_${idCharm1}_charm-skill`] = 'Exalted Power';
+        charmObj[`repeating_${section}_${idCharm2}_charm-duration`] = 'Instant';
+        charmObj[`repeating_${section}_${idCharm2}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_${section}_${idCharm2}_charm-description`] = 'The Exalt infuse her essence inside her defenses to appear impenetrable.';
+        charmObj[`repeating_${section}_${idCharm2}_charm-effect`] = 'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.';
     }
 
     function hasCasteImg(caste) {
@@ -1173,7 +1174,7 @@
         const caste = await getSingleAttrAsync("personal-equation") || 'Unknown',
               charmObj = {};
 
-        addGenericCharmsToObj(caste, charmObj);
+        addGenericCharmsToObj(caste, charmObj, true);
         if (values['caste'] !== 'Mortal') {
             charmObj['charm-old'] = 1;
             charmObj['_charm_sheet'] = 28;
@@ -2143,57 +2144,57 @@
         const idsCharms = await getSectionIDsAsync("charms");
         const charmObj = {};
         const idCharm1 = generateNewRowId(idsCharms);
-        charmObj[`repeating_charms_${idCharm1}_charm-name`] = 'Hurry Home';
-        charmObj[`repeating_charms_${idCharm1}_charm-type`] = 'Simple';
-        charmObj[`repeating_charms_${idCharm1}_charm-cost`] = '10m, 1wp';
-        charmObj[`repeating_charms_${idCharm1}_rep-cost-mote`] = '10';
-        charmObj[`repeating_charms_${idCharm1}_rep-cost-mote-pool`] = '0';
-        charmObj[`repeating_charms_${idCharm1}_rep-cost-will`] = '1';
-        charmObj[`repeating_charms_${idCharm1}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;10:will;1';
-        charmObj[`repeating_charms_${idCharm1}_charm-short-desc`] = 'Back to Sanctuary';
-        charmObj[`repeating_charms_${idCharm1}_charm-skill`] = 'Spirit Charm';
-        charmObj[`repeating_charms_${idCharm1}_charm-duration`] = 'Instant';
-        charmObj[`repeating_charms_${idCharm1}_charm-aspect`] = caste.toLowerCase();
-        charmObj[`repeating_charms_${idCharm1}_charm-effect`] = 'The spirit fades away and vanishes on its next turn, drawn instantly back to its sanctum.';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-name`] = 'Hurry Home';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-cost`] = '10m, 1wp';
+        charmObj[`repeating_charms-all_${idCharm1}_rep-cost-mote`] = '10';
+        charmObj[`repeating_charms-all_${idCharm1}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms-all_${idCharm1}_rep-cost-will`] = '1';
+        charmObj[`repeating_charms-all_${idCharm1}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;10:will;1';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-short-desc`] = 'Back to Sanctuary';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms-all_${idCharm1}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms-all_${idCharm1}_charm-effect`] = 'The spirit fades away and vanishes on its next turn, drawn instantly back to its sanctum.';
 
         const idCharm2 = generateNewRowId(idsCharms);
-        charmObj[`repeating_charms_${idCharm2}_charm-name`] = 'Materialize';
-        charmObj[`repeating_charms_${idCharm2}_charm-type`] = 'Simple';
-        charmObj[`repeating_charms_${idCharm2}_charm-cost`] = '[[ceil((@{personal-essence_max}) / 2)]]m, 1wp';
-        charmObj[`repeating_charms_${idCharm2}_rep-cost-mote`] = '[[ceil((@{personal-essence_max}) / 2)]]';
-        charmObj[`repeating_charms_${idCharm2}_rep-cost-mote-pool`] = '0';
-        charmObj[`repeating_charms_${idCharm2}_rep-cost-will`] = '1';
-        charmObj[`repeating_charms_${idCharm2}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;[[ceil((@{personal-essence_max}) / 2)]]:will;1';
-        charmObj[`repeating_charms_${idCharm2}_charm-skill`] = 'Spirit Charm';
-        charmObj[`repeating_charms_${idCharm2}_charm-duration`] = 'Instant';
-        charmObj[`repeating_charms_${idCharm2}_charm-aspect`] = caste.toLowerCase();
-        charmObj[`repeating_charms_${idCharm2}_charm-effect`] = 'Allows the spirit to take on flesh and appear in front of everyone present.';
+        charmObj[`repeating_charms-all_${idCharm2}_charm-name`] = 'Materialize';
+        charmObj[`repeating_charms-all_${idCharm2}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms-all_${idCharm2}_charm-cost`] = '[[ceil((@{personal-essence_max}) / 2)]]m, 1wp';
+        charmObj[`repeating_charms-all_${idCharm2}_rep-cost-mote`] = '[[ceil((@{personal-essence_max}) / 2)]]';
+        charmObj[`repeating_charms-all_${idCharm2}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms-all_${idCharm2}_rep-cost-will`] = '1';
+        charmObj[`repeating_charms-all_${idCharm2}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;[[ceil((@{personal-essence_max}) / 2)]]:will;1';
+        charmObj[`repeating_charms-all_${idCharm2}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms-all_${idCharm2}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms-all_${idCharm2}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms-all_${idCharm2}_charm-effect`] = 'Allows the spirit to take on flesh and appear in front of everyone present.';
 
         const idCharm3 = generateNewRowId(idsCharms);
-        charmObj[`repeating_charms_${idCharm3}_charm-name`] = 'Measure the Wind';
-        charmObj[`repeating_charms_${idCharm3}_charm-type`] = 'Simple';
-        charmObj[`repeating_charms_${idCharm3}_charm-cost`] = '5m';
-        charmObj[`repeating_charms_${idCharm3}_rep-cost-mote`] = '5';
-        charmObj[`repeating_charms_${idCharm3}_rep-cost-mote-pool`] = '0';
-        charmObj[`repeating_charms_${idCharm3}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;5';
-        charmObj[`repeating_charms_${idCharm3}_charm-short-desc`] = 'Sense the Nature of Someone';
-        charmObj[`repeating_charms_${idCharm3}_charm-skill`] = 'Spirit Charm';
-        charmObj[`repeating_charms_${idCharm3}_charm-duration`] = 'Instant';
-        charmObj[`repeating_charms_${idCharm3}_charm-aspect`] = caste.toLowerCase();
-        charmObj[`repeating_charms_${idCharm3}_charm-effect`] = 'Allows the spirit to sense the nature of an individual depending on the scope of his own attribution.';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-name`] = 'Measure the Wind';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-cost`] = '5m';
+        charmObj[`repeating_charms-all_${idCharm3}_rep-cost-mote`] = '5';
+        charmObj[`repeating_charms-all_${idCharm3}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms-all_${idCharm3}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;5';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-short-desc`] = 'Sense the Nature of Someone';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms-all_${idCharm3}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms-all_${idCharm3}_charm-effect`] = 'Allows the spirit to sense the nature of an individual depending on the scope of his own attribution.';
 
         const idCharm4 = generateNewRowId(idsCharms);
-        charmObj[`repeating_charms_${idCharm4}_charm-name`] = 'Apparition';
-        charmObj[`repeating_charms_${idCharm4}_charm-type`] = 'Simple';
-        charmObj[`repeating_charms_${idCharm4}_charm-cost`] = '1m';
-        charmObj[`repeating_charms_${idCharm4}_rep-cost-mote`] = '1';
-        charmObj[`repeating_charms_${idCharm4}_rep-cost-mote-pool`] = '0';
-        charmObj[`repeating_charms_${idCharm4}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;1';
-        charmObj[`repeating_charms_${idCharm4}_charm-short-desc`] = 'Appear for a scene';
-        charmObj[`repeating_charms_${idCharm4}_charm-skill`] = 'Spirit Charm';
-        charmObj[`repeating_charms_${idCharm4}_charm-duration`] = 'Instant';
-        charmObj[`repeating_charms_${idCharm4}_charm-aspect`] = caste.toLowerCase();
-        charmObj[`repeating_charms_${idCharm4}_charm-effect`] = 'Allows the spirit to take on flesh and appear in front of everyone present for the duration of the scene.';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-name`] = 'Apparition';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-type`] = 'Simple';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-cost`] = '1m';
+        charmObj[`repeating_charms-all_${idCharm4}_rep-cost-mote`] = '1';
+        charmObj[`repeating_charms-all_${idCharm4}_rep-cost-mote-pool`] = '0';
+        charmObj[`repeating_charms-all_${idCharm4}_rep-cost-macro`] = '=COST:@{character_id}:peri=0;1';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-short-desc`] = 'Appear for a scene';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-skill`] = 'Spirit Charm';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-duration`] = 'Instant';
+        charmObj[`repeating_charms-all_${idCharm4}_charm-aspect`] = caste.toLowerCase();
+        charmObj[`repeating_charms-all_${idCharm4}_charm-effect`] = 'Allows the spirit to take on flesh and appear in front of everyone present for the duration of the scene.';
 
         setAttrs(charmObj);
     }));
@@ -2204,7 +2205,7 @@
         const idsCharms = await getSectionIDsAsync("charms");
         const charmObj = {};
         for (const id of idsCharms)
-            charmObj[`repeating_charms_${id}_charm-skill`] = `${charName} Charm`;
+            charmObj[`repeating_charms-all_${id}_charm-skill`] = `${charName} Charm`;
 
         setAttrs(charmObj);
     }));
@@ -2298,7 +2299,7 @@
         if (actualSection === 'Evocation')
             charmObj[`repeating_charms-all_${idNewCharm}_isEvoc`] = 'Evocation';
         else if (actualSection === 'other')
-            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = `${await getSingleAttrAsync(`caste`)} Power`;
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = `${caste} Power`;
         else
             charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = actualSection;
 
