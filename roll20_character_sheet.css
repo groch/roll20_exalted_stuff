@@ -2384,6 +2384,33 @@ and (min-resolution:.001dpcm) {
 	display: none;
 }
 
+.charsheet .sheet-tab-charms-check[value="Snake Style"]                                 ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Tiger Style"]                                 ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Single Point Shining Into The Void Style"]    ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="White Reaper Style"]                          ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Ebon Shadow Style"]                           ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Crane Style"]                                 ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Silver-Voiced Nightingale Style"]             ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Righteous Devil Style"]                       ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Black Claw Style"]                            ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Dreaming Pearl Courtesan Style"]              ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Steel Devil Style"]                           ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Centipede Style"]                             ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Falcon Style"]                                ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Laughing Monster Style"]                      ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Swaying Grass Style"]                         ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Air Dragon Style"]                            ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Earth Dragon Style"]                          ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Fire Dragon Style"]                           ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Water Dragon Style"]                          ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Wood Dragon Style"]                           ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Golden Janissary Style"]                      ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="Mantis Style"]                                ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="White Veil Style"]                            ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only,
+.charsheet .sheet-tab-charms-check[value="MA - Other"]                                  ~ .charm-sheet-all .repcontainer .repitem .sheet-charm-effect .show-to-db-only {
+    display: none;
+}
+
 .charsheet .charm-sheet-all .repcontrol {
     width: 5em;
     left: calc(100% - 5em);
