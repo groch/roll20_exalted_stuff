@@ -1197,22 +1197,50 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
     updateOrCreateCommitedListId = (characterId, commitedList, commitName, removedTo) => {
         let commitedCorrespondingId = commitedList.filter(i => i.get('current') === commitName).map(i => i.get('name').split('_')[2])[0];
-        let poolType;
         if (!commitedCorrespondingId) {
-            commitedCorrespondingId = generateRowID();
-            logger(LOGLEVEL.INFO, `updateOrCreateCommitedListId:: !! CREATING COMMITED id=${commitedCorrespondingId} !!`);
-            const name = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-name`, current: commitName, characterid: characterId});
-            const commitedCorrespondingState = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-state`, current: '1', characterid: characterId});
-            const commitedCorrespondingPeri  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-peri`, current: `${removedTo['peripheral-essence']}`, characterid: characterId});
-            const commitedCorrespondingPerso = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-perso`, current: `${removedTo['personal-essence']}`, characterid: characterId});
-            if (removedTo['peripheral-essence'] && removedTo['personal-essence'])   poolType = 'mixed';
-            else if (removedTo['peripheral-essence'])                               poolType = '1';
-            else if (removedTo['personal-essence'])                                 poolType = '0';
-            const commitedCorrespondingPool  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-pool-type`, current: poolType, characterid: characterId});
-            commitedList.push(name, commitedCorrespondingState, commitedCorrespondingPool, commitedCorrespondingPeri, commitedCorrespondingPerso);
-            return;
+            createCommitedListId(characterId, commitedList, commitName, removedTo);
+        } else {
+            logger(LOGLEVEL.INFO, `updateOrCreateCommitedListId::COMMITED CORRESPONDING id=${commitedCorrespondingId}`);
+            try {
+                updateCommitedListId(commitedList, removedTo, commitedCorrespondingId)
+            } catch {
+                logger(LOGLEVEL.ERROR, `updateOrCreateCommitedListId:: !! ERROR ON COMMITED id=${commitedCorrespondingId} !! DELETE & RECREATE !!!`);
+                deleteRepeatingSectionRow('commited-list', commitedCorrespondingId);
+                createCommitedListId(characterId, commitedList, commitName, removedTo);
+            }
         }
-        logger(LOGLEVEL.INFO, `updateOrCreateCommitedListId::COMMITED CORRESPONDING id=${commitedCorrespondingId}`);
+    },
+
+    deleteRepeatingSectionRow = (section, rowid, characterid) => {
+        logger(LOGLEVEL.INFO, `deleteRepeatingSectionRow:: !! DELETING SECTION "${section}" ROW id=${rowid} !!`);
+        const regex = new RegExp(`^repeating_${section}_${rowid}_.*?$`);
+        try {
+            const attrsInRow = findObjs({ _characterid: characterid, _type: 'attribute' }).filter((obj) => regex.test(obj.get('name')));
+            for (const attribute of attrsInRow)
+                attribute.remove();
+        } catch {
+            logger(LOGLEVEL.ERROR, `updateOrCreateCommitedListId:: !! ERROR ON DELETING SECTION "${section}" ROW id=${rowid} !!`);
+        }
+    },
+
+    createCommitedListId = async (characterId, commitedList, commitName, removedTo) => {
+        const uniqCommitedListIds = [...new Set(commitedList.map(i => i.get('name').split('_')[2]))];
+        const commitedCorrespondingId = generateNewRowID(uniqCommitedListIds);
+        let poolType;
+        logger(LOGLEVEL.INFO, `createCommitedListId:: !! CREATING COMMITED id=${commitedCorrespondingId} !!`);
+        const name = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-name`, current: commitName, characterid: characterId});
+        const commitedCorrespondingState = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-state`, current: '1', characterid: characterId});
+        const commitedCorrespondingPeri  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-peri`, current: `${removedTo['peripheral-essence']}`, characterid: characterId});
+        const commitedCorrespondingPerso = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-perso`, current: `${removedTo['personal-essence']}`, characterid: characterId});
+        if (removedTo['peripheral-essence'] && removedTo['personal-essence'])   poolType = 'mixed';
+        else if (removedTo['peripheral-essence'])                               poolType = '1';
+        else if (removedTo['personal-essence'])                                 poolType = '0';
+        const commitedCorrespondingPool  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-pool-type`, current: poolType, characterid: characterId});
+        commitedList.push(name, commitedCorrespondingState, commitedCorrespondingPool, commitedCorrespondingPeri, commitedCorrespondingPerso);
+    },
+
+    updateCommitedListId = (commitedList, removedTo, commitedCorrespondingId) => {
+        let poolType;
         const commitedCorrespondingState = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-state`)[0];
         const commitedCorrespondingPeri  = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-cost-peri`)[0];
         const commitedCorrespondingPerso = commitedList.filter(i => i.get('name') === `repeating_commited-list_${commitedCorrespondingId}_commited-cost-perso`)[0];
@@ -1328,6 +1356,15 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     })(),
 
     generateRowID = () => generateUUID().replace(/_/g, "Z"),
+
+    generateNewRowID = (array_existing) => {
+        let ret;
+        do {
+            ret = generateRowID();
+        } while (array_existing.includes(ret))
+        array_existing.push(ret);
+        return ret;
+    },
 
     sendMoteWhispers = (characterObj, characterId, attr, current, toRemove, commitName) => {
         const useCommitSystem = Number(getAttrByName(characterId, 'usecommitsystem'));
