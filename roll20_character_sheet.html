@@ -668,11 +668,13 @@
                 initIntimacies()
 
             const upgradeRemaining = updateList.filter(i => i.version >= v).sort((a,b) => a.version - b.version);
-            for (const u of upgradeRemaining) {
-                TAS.debug(`versionCheck:: Upgrade to do = v=${u.version} fx=${u.fn.name}`);
-                await u.fn();
+            if (upgradeRemaining.length) {
+                for (const u of upgradeRemaining) {
+                    TAS.debug(`versionCheck:: Upgrade to do = v=${u.version} fx=${u.fn.name}`);
+                    await u.fn();
+                }
+                TAS.debug(`versionCheck:: All Upgrade done !`);
             }
-            TAS.debug(`versionCheck:: All Upgrade done !`);
         }
     });
 
