@@ -685,15 +685,13 @@
 
     function addGenericCharmsToObj(caste, charmObj, old = false) {
         const aspectStr = isDB(caste) ? 'none' : caste.toLowerCase();
-        const idHealthArray = [];
-        const idCharm1 = generateNewRowId(idHealthArray);
-        addNewCharmToFinalObj(charmObj, idCharm1, {name:'Generic Excellency', type:'Supplemental',
+        const idNewCharms = [];
+        addNewCharmToFinalObj(charmObj, generateNewRowId(idNewCharms), {name:'Generic Excellency', type:'Supplemental',
             cost:'[[?{Dice Added ?|1}]]', cost_mote:'?{Dice Added ?|1}', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dice Added ?|1}',
             short_d: 'add Dices', skill:'Exalted Power', duration:'Instant', aspect:aspectStr,
             description: 'The Exalt infuse her essence inside the action to magnify it.', effect:'The Exalt add [[?{Dice Added ?|1}]] dices to the action.'}, old);
             
-        const idCharm2 = generateNewRowId(idHealthArray);
-        addNewCharmToFinalObj(charmObj, idCharm2, {name:'Generic Defense Excellency', type:'Supplemental',
+        addNewCharmToFinalObj(charmObj, generateNewRowId(idNewCharms), {name:'Generic Defense Excellency', type:'Supplemental',
             cost:'[[?{Defense Added ?|1} * 2]]', cost_mote:'[[?{Defense Added ?|1} * 2]]', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]',
             short_d: 'bonus to defensive static values', skill:'Exalted Power', duration:'Instant', aspect:aspectStr,
             description: 'The Exalt infuse her essence inside her defenses to appear impenetrable.', effect:'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.'}, old);
@@ -2134,25 +2132,21 @@
         const idsCharms = await getSectionIDsAsync("charms");
         const aspectStr = isDB(caste) ? 'none' : caste.toLowerCase();
         const charmObj = {};
-        const idCharm1 = generateNewRowId(idsCharms);
-        addNewCharmToFinalObj(charmObj, idCharm1, {name:'Hurry Home', type:'Simple',
+        addNewCharmToFinalObj(charmObj, generateNewRowId(idsCharms), {name:'Hurry Home', type:'Simple',
             cost:'10m, 1wp', cost_mote:'10', cost_pool:'0', cost_will: '1', cost_macro:'=COST:@{character_id}:peri=0;10:will;1',
             short_d: 'Back to Sanctuary', skill:'Spirit Charm', duration:'Instant', aspect:aspectStr,
             effect:'The spirit fades away and vanishes on its next turn, drawn instantly back to its sanctum.'});
 
-        const idCharm2 = generateNewRowId(idsCharms);
-        addNewCharmToFinalObj(charmObj, idCharm2, {name:'Materialize', type:'Simple',
+        addNewCharmToFinalObj(charmObj, generateNewRowId(idsCharms), {name:'Materialize', type:'Simple',
             cost:'[[ceil((@{personal-essence_max}) / 2)]]m, 1wp', cost_mote:'[[ceil((@{personal-essence_max}) / 2)]]', cost_pool:'0', cost_will: '1', cost_macro:'=COST:@{character_id}:peri=0;[[ceil((@{personal-essence_max}) / 2)]]:will;1',
             skill:'Spirit Charm', duration:'Instant', aspect:aspectStr,
             effect:'Allows the spirit to take on flesh and appear in front of everyone present.'});
 
-        const idCharm3 = generateNewRowId(idsCharms);
-        addNewCharmToFinalObj(charmObj, idCharm3, {name:'Measure the Wind', type:'Simple', cost:'5m', cost_mote:'5', cost_pool:'0', cost_macro:'=COST:@{character_id}:peri=0;5',
+        addNewCharmToFinalObj(charmObj, generateNewRowId(idsCharms), {name:'Measure the Wind', type:'Simple', cost:'5m', cost_mote:'5', cost_pool:'0', cost_macro:'=COST:@{character_id}:peri=0;5',
             short_d:'Sense the Nature of Someone', skill:'Spirit Charm', duration:'Instant', aspect:aspectStr,
             effect:'Allows the spirit to sense the nature of an individual depending on the scope of his own attribution.'});
 
-        const idCharm4 = generateNewRowId(idsCharms);
-        addNewCharmToFinalObj(charmObj, idCharm4, {name:'Apparition', type:'Simple', cost:'1m', cost_mote:'1', cost_pool:'0', cost_macro:'=COST:@{character_id}:peri=0;1',
+        addNewCharmToFinalObj(charmObj, generateNewRowId(idsCharms), {name:'Apparition', type:'Simple', cost:'1m', cost_mote:'1', cost_pool:'0', cost_macro:'=COST:@{character_id}:peri=0;1',
             short_d:'Appear for a scene', skill:'Spirit Charm', duration:'Instant', aspect:aspectStr,
             effect:'Allows the spirit to take on flesh and appear in front of everyone present for the duration of the scene.'});
 
