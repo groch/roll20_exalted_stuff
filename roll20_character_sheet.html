@@ -693,7 +693,7 @@
             description: 'The Exalt infuse her essence inside the action to magnify it.', effect:'The Exalt add [[?{Dice Added ?|1}]] dices to the action.'}, old);
             
         const idCharm2 = generateNewRowId(idHealthArray);
-        addNewCharmToFinalObj(charmObj, idCharm1, {name:'Generic Defense Excellency', type:'Supplemental',
+        addNewCharmToFinalObj(charmObj, idCharm2, {name:'Generic Defense Excellency', type:'Supplemental',
             cost:'[[?{Defense Added ?|1} * 2]]', cost_mote:'[[?{Defense Added ?|1} * 2]]', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]',
             short_d: 'bonus to defensive static values', skill:'Exalted Power', duration:'Instant', aspect:aspectStr,
             description: 'The Exalt infuse her essence inside her defenses to appear impenetrable.', effect:'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.'}, old);
