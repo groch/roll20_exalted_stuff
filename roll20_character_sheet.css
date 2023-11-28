@@ -1263,7 +1263,7 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .charsheet .sheet-layer4,.charsheet .sheet-layer4::before { z-index: 4; }
 .charsheet .sheet-layer3,.charsheet .sheet-layer3::before { z-index: 3; }
 
-.charsheet input[type=checkbox].sheet-unnamed-toggle:checked + span::before {
+.charsheet input[type=checkbox].sheet-unnamed-toggle:checked + span:not([title="Show Commits"])::before {
     border-bottom: 0;
 }
 
@@ -1520,6 +1520,14 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .charsheet div.sheet-damage-box {
     margin: auto;
     position: relative;
+}
+
+.charsheet div.sheet-dots-full,
+.charsheet div.sheet-dots {
+    border-radius: 10px;
+}
+.charsheet div.sheet-damage-box {
+    border-radius: 2px;
 }
 
 .charsheet input[class^=sheet-dots] + span {
@@ -3453,12 +3461,18 @@ body.sheet-darkmode {
 .inverted-color .uneditable-input:not(.not-inverted) {
     color: white;
 }
+.inverted-color select:not(.not-inverted) option {
+    color: black;
+}
 
 .sheet-darkmode .inverted-color input:not(.not-inverted),
 .sheet-darkmode .inverted-color textarea:not(.not-inverted),
 .sheet-darkmode .inverted-color select:not(.not-inverted),
 .sheet-darkmode .inverted-color .uneditable-input:not(.not-inverted) {
     color: unset;
+}
+.sheet-darkmode .inverted-color select:not(.not-inverted) option {
+    color: white;
 }
 
 .sheet-darkmode .inverted-color {
@@ -3524,13 +3538,6 @@ body.sheet-darkmode {
 .sheet-darkmode .charsheet div.sheet-damage-box,
 .sheet-darkmode .charsheet div.sheet-dots {
     background-color: dimgray;
-}
-.sheet-darkmode .charsheet div.sheet-dots-full,
-.sheet-darkmode .charsheet div.sheet-dots {
-    border-radius: 10px;
-}
-.sheet-darkmode .charsheet div.sheet-damage-box {
-    border-radius: 2px;
 }
 
 .sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
@@ -3820,6 +3827,19 @@ body.sheet-darkmode {
     display: flex;
     flex-flow: column;
     padding: 0px 4px 0px;
+}
+
+.sheet-tab-combat-sheet .combat-init .repcontainer input,
+.sheet-tab-combat-sheet .combat-init .repcontainer select,
+.sheet-tab-combat-sheet .combat-attacks .repcontainer input,
+.sheet-tab-combat-sheet .combat-attacks .repcontainer select {
+    color: black;
+}
+.sheet-darkmode .sheet-tab-combat-sheet .combat-init .repcontainer input,
+.sheet-darkmode .sheet-tab-combat-sheet .combat-init .repcontainer select,
+.sheet-darkmode .sheet-tab-combat-sheet .combat-attacks .repcontainer input,
+.sheet-darkmode .sheet-tab-combat-sheet .combat-attacks .repcontainer select {
+    color: var(--dark-primarytext);
 }
 
 .sheet-tab-rolls-sheet .sheet-rolls-div-custom .repcontainer {
@@ -4476,8 +4496,24 @@ body.sheet-darkmode {
 .dark-init-color {
     background: rgb(var(--dark-init-color));
 }
+.dark-init-color label {
+    color: white;
+}
+.sheet-darkmode .dark-init-color label {
+    color: var(--dark-secondarytext);
+}
 .charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-atk-decisive-init-to-reset-val[value=""] ~ p.dark-init-color {
     background: transparent;
+}
+.charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-atk-decisive-init-to-reset-val[value=""] ~ p.dark-init-color label {
+    color: #333;
+}
+.sheet-darkmode .charsheet .sheet-tab-combat-sheet .combat-attacks .sheet-atk-decisive-init-to-reset-val[value=""] ~ p.dark-init-color label {
+    color: unset;
+}
+
+.charsheet .sheet-tab-combat-sheet .combat-attacks .hide-on-edit .sheet-atk-decisive-init-to-reset-val[value=""] ~ p.dark-init-color label {
+    text-decoration: underline;
 }
 
 .init-color-up {
@@ -5368,6 +5404,9 @@ textarea::-webkit-scrollbar-track {
 
 .charsheet .reminder-charms-commited-div input[type="text"] {
     flex-grow: 1;
+    text-shadow: 0 0 5px white;
+}
+.sheet-darkmode .charsheet .reminder-charms-commited-div input[type="text"] {
     text-shadow: 0 0 5px black;
 }
 
@@ -5378,6 +5417,9 @@ textarea::-webkit-scrollbar-track {
 
 .charsheet .reminder-charms-commited-div label {
     display: contents;
+    text-shadow: 0 0 5px white;
+}
+.sheet-darkmode .charsheet .reminder-charms-commited-div label {
     text-shadow: 0 0 5px black;
 }
 
@@ -6054,6 +6096,7 @@ and (min-resolution:.001dpcm) {
 }
 
 .charsheet .sheet-rolls-div-widget .sheet-rolls-separator .sheet-rolls-name {
+    color: white;
     border: none;
     text-align: center;
     font-weight: bolder;
@@ -6807,7 +6850,7 @@ div.anima-flare-box-mode.liminal-hint {
 
     /* NIGHT MODE FOR MOBILE */
 
-    body {
+    /* body {
         color: #B3B3B3;
     }
 
@@ -6893,7 +6936,7 @@ div.anima-flare-box-mode.liminal-hint {
         color: white;
     }
 
-    /* input[type=checkbox].sheet-unnamed-toggle + span::before, */
+    // input[type=checkbox].sheet-unnamed-toggle + span::before,
     .merits-div-checkbox input + strong:before{
         background: dimgray;
         color: #e6e6e6;
@@ -6912,7 +6955,7 @@ div.anima-flare-box-mode.liminal-hint {
     .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
     .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
         background: dimgray;
-    }
+    } */
 }
 
 /* --- MOBILE SHEET PORTRAIT --- */
