@@ -90,14 +90,14 @@
             setActiveCharacterId(prevAcid);
         });
     }
-    /////////////////////////
+    ///////////////////////// from Chris D.(https://app.roll20.net/users/633707) and Jakob (https://app.roll20.net/users/726129)
     // a version of getSectionIDs that returns the IDs in the order that they are displayed.
 	// getSectionIDs returns in the order the repeating section lines were created. The user has the ability to reorder the lines.
 	// getAttrs( [ "_reporder_repeating_" + section_name] , ... ) returns an empty object if the lines were not reordered,
 	// and may return an incomplete list or a list with items that were since deleted.
 	// This returns a complete and accurate list in the order that they are displayed.
     ///
-    // I personally added the Async version so i could use the await keyword
+    // I personally added the Async version so i could use the await keyword, and tweaked for my use
     function getSectionIDsOrderedAsync(sectionName) {
         var acid=getActiveCharacterId();
         var prevAcid=null;
@@ -1423,13 +1423,14 @@
 
     on('change:repeating_qcattacks remove:repeating_qcattacks', setDebugWrapper(async function qcAttacksChange() {
         const idSections = await getSectionIDsAsync('qcattacks');
-        const idWeaponSections = await getSectionIDsAsync('weapon');
+        let idWeaponSections = await getSectionIDsAsync('weapon');
         const qcFieldNames = [];
         idSections.forEach(id => qcFieldNames.push(`caste-have-exc`, `repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
 
         const valuesSections = await getAttrsAsync(qcFieldNames);
         // remove weapons
         idWeaponSections.forEach(id => removeRepeatingRow(`repeating_weapon_${id}`));
+        idWeaponSections = [];
 
         const weaponFieldToSet = {};
         for (const id of idSections) {
@@ -1645,11 +1646,8 @@
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function clickGMCharmCast(e) {
             if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=`, e);
             const attr_name = `repeating_${section}_${e.sourceAttribute.split('_')[2]}_charm-buttons-isextended`;
-            // TAS.debug(`attr_name=${attr_name}`);
             let test = e.newValue ? e.newValue.match(charmRollExprRegexp) : false;
-            // console.log(`test=${test}`);
             const obj = {[attr_name] : test ? 1 : 0};
-            // TAS.debug(obj);
             setAttrs(obj);
         }));
     });
@@ -1660,7 +1658,6 @@
             if (e.sourceType !== "player") return;
             const id = e.sourceAttribute.split('_')[2];
             const val = await getAttrsAsync([`caste`,`repeating_${section}_${id}_charm-aspect`,`repeating_${section}_${id}_charm-balanced`]);
-            // TAS.debug(`CHANGING charm, e=`, val);
             let objSet = {};
             if (!val[`repeating_${section}_${id}_charm-aspect`] ||
                 !isDB(val['caste']) && val['caste'].toLowerCase() !== val[`repeating_${section}_${id}_charm-aspect`] ||
