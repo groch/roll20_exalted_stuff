@@ -330,7 +330,7 @@
         objSet["battlegroup-magnitude_max"] = bgSize + bgHL + (bgPM == 1 ? 3 : 0);
         if (e.sourceAttribute === 'battlegroup' && e.newValue === '1') {
             objSet['battlegroup-magnitude'] = objSet["battlegroup-magnitude_max"];
-            await addBGDmgRestriction(objSet);
+            await addBGDmgRestrictionIfNeeded(objSet);
         } else if (e.sourceAttribute === 'battlegroup' && e.newValue === '0')
             await removeBGDmgRestriction(objSet);
         if (debug === 2) TAS.debug('BG:: perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
@@ -338,7 +338,7 @@
         setAttrs(objSet);
     });
 
-    async function addBGDmgRestriction(objSet) {
+    async function addBGDmgRestrictionIfNeeded(objSet) {
         if (debug === 2) TAS.debug(`addBGDmgRestriction::addBGDmgRestriction`);
         const idCombatAttacks = await getSectionIDsAsync("combat-attack");
         const combatFieldNames = [];
@@ -346,25 +346,9 @@
         const valuesSections = await getAttrsAsync([...combatFieldNames]);
         for (const id of idCombatAttacks) {
             const val = valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`];
-            if (val)
-                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
-            else
-                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] = ' -D';
-        }
-        Object.assign(objSet, valuesSections);
-    }
-
-    async function checkBDmgRestriction(objSet) {
-        if (debug === 2) TAS.debug(`checkBDmgRestriction::checkBDmgRestriction`);
-        const idCombatAttacks = await getSectionIDsAsync("combat-attack");
-        const combatFieldNames = [];
-        idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
-        const valuesSections = await getAttrsAsync([...combatFieldNames]);
-        for (const id of idCombatAttacks) {
-            const val = valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`];
-            if (val && val.indexOf('-D') === -1)
-                valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
-            else
+            if (val) {
+                if (val.indexOf('-D') === -1) valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] += ' -D';
+            } else
                 valuesSections[`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`] = ' -D';
         }
         Object.assign(objSet, valuesSections);
@@ -548,50 +532,53 @@
     function isSolarBasedExalt(caste)     { return (caste && typeof caste === 'string' && [...casteTree.Solar, ...casteTree.Abyssal, ...casteTree.Infernal].includes(caste)); }
     function isAttributeBasedExalt(caste) { return (caste && typeof caste === 'string' && [...casteTree.Lunar, ...casteTree.Alchemical].includes(caste)); }
 
-    on('change:caste', TAS._fn(async function updateMotePool(eventInfo){
-        const caste = await getSingleAttrAsync("caste");
-        let periEquation = "0",   persEquation = "0", showAnima = 1,
-            showSupernal = 0,     showLimit = 0,
-            casteLow = 'unknown', exaltType = 'None',
-            succEx = 0,           diceEx = 1,
-            canSpendMotes = 0;
+    on('change:caste', TAS._fn(function updateMotePool(e){
+        if (!e.newValue) {
+            TAS.debug(`updateMotePool:: No settings found, stay as is !`);
+            return;
+        }
+        const caste = e.newValue;
+        const finalObj = {
+            "personal-equation": "0", "peripheral-equation": "0",
+            "showanimadiv": 1, "showsupdiv": 0, "showlimit": 0,
+            "caste-low": 'unknown',
+            "diceex": 0, "succex": 1, "canspendmote": 0
+        };
         if (isSolarBasedExalt(caste)) {
-            persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
-            periEquation = "@{essence} * 7 + 26 - @{committedesstotal}";
-            showSupernal = 1;
-            showLimit = 1;
+            finalObj["personal-equation"]   = "@{essence} * 3 + 10 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 7 + 26 - @{committedesstotal}";
+            finalObj["showsupdiv"] = 1;
+            finalObj["showlimit"] = 1;
         } else if (isDB(caste)){
-            persEquation = "@{essence} * 1 + 11 - @{committedessperso}";
-            periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
+            finalObj["personal-equation"]   = "@{essence} * 1 + 11 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 4 + 23 - @{committedesstotal}";
         } else if (isAttributeBasedExalt(caste)){
-            persEquation = "@{essence} * 1 + 15 - @{committedessperso}";
-            periEquation = "@{essence} * 4 + 34 - @{committedesstotal}";
-            showLimit = 1;
-            succEx = 1;
+            finalObj["personal-equation"]   = "@{essence} * 1 + 15 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 4 + 34 - @{committedesstotal}";
+            finalObj["showlimit"] = 1;
+            finalObj["succex"] = 1;
         } else if (isSidereal(caste)){
-            persEquation = "@{essence} * 2 + 9 - @{committedessperso}";
-            periEquation = "@{essence} * 6 + 25 - @{committedesstotal}";
-            showLimit = 1;
+            finalObj["personal-equation"]   = "@{essence} * 2 + 9 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 6 + 25 - @{committedesstotal}";
+            finalObj["showlimit"] = 1;
         } else if (isLiminal(caste)){
-            persEquation = "@{essence} * 3 + 10 - @{committedessperso}";
-            periEquation = "@{essence} * 4 + 23 - @{committedesstotal}";
-            succEx = 1;
+            finalObj["personal-equation"]   = "@{essence} * 3 + 10 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 4 + 23 - @{committedesstotal}";
+            finalObj["succex"] = 1;
         } else if (isSpirit(caste)){
-            persEquation = "@{essence} * 10 + 50 - @{committedessperso}";
-            periEquation = "@{essence} * 0 - @{committedesstotal}";
-            showAnima = 0;
-            diceEx = 0;
-            canSpendMotes = 1;
+            finalObj["personal-equation"]   = "@{essence} * 10 + 50 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 0 - @{committedesstotal}";
+            finalObj["showanimadiv"] = 0;
+            finalObj["diceex"] = 0;
+            finalObj["canspendmote"] = 1;
         } else if (caste === "God-Blooded"){
-            persEquation = "@{essence} * 0 - @{committedessperso}";
-            periEquation = "@{essence} * 10 - @{committedesstotal}";
-            showAnima = 0;
-            diceEx = 0;
+            finalObj["personal-equation"]   = "@{essence} * 0 - @{committedessperso}";
+            finalObj["peripheral-equation"] = "@{essence} * 10 - @{committedesstotal}";
+            finalObj["showanimadiv"] = 0;
+            finalObj["diceex"] = 0;
         } else if (caste === "Mortal"){
-            persEquation = "0";
-            periEquation = "0";
-            showAnima = 0;
-            diceEx = 0;
+            finalObj["showanimadiv"] = 0;
+            finalObj["diceex"] = 0;
         } else {
             TAS.debug(`updateMotePool:: No settings found, stay as is !`);
             return;
@@ -599,27 +586,15 @@
 
         for (const exaltTypeName of Object.keys(casteTree)) {
             if (casteTree[exaltTypeName].includes(caste)) {
-                exaltType = exaltTypeName;
+                finalObj["exalt-type"] = exaltTypeName;
                 break;
             }
         }
 
         if (hasCasteImg(caste))
-            casteLow = caste.toLowerCase();
+            finalObj["caste-low"] = caste.toLowerCase();
+        finalObj["caste-have-exc"] = finalObj["succex"] || finalObj["diceex"];
 
-        const finalObj = {
-            "personal-equation": persEquation,
-            "peripheral-equation": periEquation,
-            "showanimadiv": showAnima,
-            "showsupdiv": showSupernal,
-            "showlimit": showLimit,
-            "caste-low": casteLow,
-            "caste-have-exc": succEx || diceEx,
-            "diceex": diceEx,
-            "succex": succEx,
-            "canspendmote": canSpendMotes,
-            "exalt-type": exaltType
-        };
         TAS.debug(`updateMotePool:: Setting=`, finalObj);
         setAttrs(finalObj);
     }));
@@ -698,14 +673,14 @@
     }
 
     function hasCasteImg(caste) {
-        if (["Dawn",      "Zenith",        "Twilight",   "Night",      "Eclipse",
-             "Dusk",      "Midnight",      "Daybreak",   "Day",        "Moonshadow",
-             "Defiler",   "Fiend",         "Malefactor", "Scourge",    "Slayer",
-             "Adamant",   "Jade",          "Moonsilver", "Orichalcum", "Soulsteel", "Starmetal",
-             "Full Moon", "Changing Moon", "No Moon",    "Casteless",
-             "Air",       "Earth",         "Fire",       "Water",      "Wood",
-             "Journeys",  "Serenity",      "Battles",    "Secrets",    "Endings",
-             "Blood",     "Breath",        "Flesh",      "Marrow",     "Soil"].includes(caste))
+        if ([...casteTree.Solar,
+             ...casteTree.Abyssal,
+             ...casteTree.Infernal,
+             ...casteTree.Alchemical,
+             ...casteTree.Lunar,
+             ...casteTree.DB,
+             ...casteTree.Sidereal,
+             ...casteTree.Liminal].includes(caste))
             return true;
         return false;
     }
@@ -852,7 +827,7 @@
     };
 
     async function upgradeto258() {
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.58};
         const charmAttrs = [
             'charm-learnt',
             'charm-name',
@@ -915,7 +890,7 @@
     }
 
     async function upgradeto257() {
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.57};
         const usecommitsystem = await getSingleAttrAsync('usecommitsystem');
         if (!Number(usecommitsystem)) finalObj['usecommitsystem'] = '1';
         TAS.debug(`upgradeto257:: finalObj=`,finalObj);
@@ -923,7 +898,7 @@
     }
 
     async function upgradeto256() {
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.56};
         const idCommitList = await getSectionIDsAsync('commited-list');
 
         const arrayAttr = [];
@@ -944,7 +919,7 @@
     }
 
     async function upgradeto255() {
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.55};
         const arrayDuration = [];
         for (const section of charmRepeatableSectionArrayOld)
             for (const id of await getSectionIDsAsync(section))
@@ -962,7 +937,7 @@
     }
 
     async function upgradeto254() {
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.54};
         const idOtherCharms = await getSectionIDsAsync("charms");
         for (const id of idOtherCharms) {
             const valuesSections = await getAttrsAsync([`repeating_charms_${id}_charm-name`, `repeating_charms_${id}_charm-skill`]);
@@ -973,9 +948,9 @@
     }
 
     async function upgradeto253() {
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.53};
         const isBG = await getSingleAttrAsync('battlegroup') === '1';
-        if (isBG) await checkBDmgRestriction(finalObj);
+        if (isBG) await addBGDmgRestrictionIfNeeded(finalObj);
 
         await setAttrsAsync(finalObj);
         const idCombatAttacks = await getSectionIDsAsync("combat-attack");
@@ -989,7 +964,7 @@
         idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls_${id}_${i}`)));
 
         const valuesSections = await getAttrsAsync([...rollFieldNames]);
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.52};
         const allowedValued = attrNAbi.map(i => '@{'+i+'}');
         const convMapKeys = Object.keys(convMap);
         for (let i = 0; i <= 20; i++) allowedValued.push(i);
@@ -1017,19 +992,19 @@
                 break;
             }
         }
-        setAttrs({"exalt-type": exaltType, 'version': version});
+        setAttrs({"exalt-type": exaltType, 'version': 2.51});
     }
 
     async function upgradeto250() {
         setAttrs({
             "caste-have-exc": !["God", "Elemental", "Demon", "Undead", "God-Blooded", "Mortal"].includes(await getSingleAttrAsync("caste")) ? 1 : 0,
-            'version': version
+            'version': 2.50
         });
     }
 
     async function upgradeto249() {
         const idRollsArray = await getSectionIDsAsync("rolls-widget");
-        setAttrs({'version': version});
+        setAttrs({'version': 2.49});
         for (const id of idRollsArray)
             computeIdRepeatingRoll('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }
@@ -1040,7 +1015,7 @@
         idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls-widget_${id}_${i}`)));
 
         const valuesSections = await getAttrsAsync([...rollFieldNames]);
-        const finalObj = {'version': version};
+        const finalObj = {'version': 2.48};
         const allowedValued = attrNAbi.map(i => '@{'+i+'}');
         const convMapKeys = Object.keys(convMap);
         for (let i = 0; i <= 20; i++) allowedValued.push(i);
@@ -1062,7 +1037,7 @@
         idRollsArray.forEach(id => rollFieldNames.push(...rollAttrs.map(i => `repeating_rolls_${id}_${i}`)));
 
         const valuesSections = await getAttrsAsync([...rollFieldNames]);
-        const finalObj = {'version': version}, arrayNewRollsWidget = [];
+        const finalObj = {'version': 2.47}, arrayNewRollsWidget = [];
         const allowedValued = attrNAbi.map(i => '@{'+i+'}');
         for (let i = 0; i <= 20; i++) allowedValued.push(i);
         idRollsArray.forEach(id => {
@@ -1079,7 +1054,7 @@
     }
 
     function upgradeto242() {
-        setAttrs({'version': version});
+        setAttrs({'version': 2.42});
         computeAllRolls({sourceType: 'player'}, false);
     }
 
@@ -1087,13 +1062,13 @@
         const bg = await getSingleAttrAsync("battlegroup");
         if (bg && Number(bg))
             computeAllRolls({sourceType: 'player'}, false);
-        setAttrs({'version': version});
+        setAttrs({'version': 2.40});
     }
 
     async function upgradeto239() {
         setAttrs({
             'wound-penalty': Math.abs(await getSingleAttrAsync("wound-penalty")),
-            'version': version
+            'version': 2.39
         });
         computeAllRolls({sourceType: 'player'}, false);
     }
@@ -1102,7 +1077,7 @@
         setAttrs({
             'roll-penalty': 0,
             'rollpenalty-input': 0,
-            'version': version
+            'version': 2.38
         });
         computeAllRolls({sourceType: 'player'}, false);
     }
@@ -1128,7 +1103,7 @@
         const finalAttr = {
             'displayed-essence': displayedMotes,
             'displayed-essence_max': maxDisplayed,
-            'version': version
+            'version': 2.37
         };
         setAttrs(finalAttr);
     }
@@ -1141,7 +1116,7 @@
         if (personalEq.slice(personalEq.length - stringToCheck.length) !== stringToCheck && personalEq !== '0' && personalEq !== '')
             attrObj['personal-equation'] = personalEq + stringToCheck;
         attrObj['committedessperso'] = 0;
-        attrObj['version'] = version;
+        attrObj['version'] = 2.36;
 
         TAS.debug(`upgradeto236:: Setting=`, attrObj);
         setAttrs(attrObj);
@@ -1155,7 +1130,7 @@
             charmObj['caste-low'] = caste.toLowerCase();
         else
             charmObj['caste-low'] = 'unknown';
-        charmObj['version'] = version;
+        charmObj['version'] = 2.35;
 
         TAS.debug(`upgradeto235:: Setting=`, charmObj);
         setAttrs(charmObj);
@@ -1170,7 +1145,7 @@
             charmObj['charm-old'] = 1;
             charmObj['_charm_sheet'] = 28;
         }
-        charmObj['version'] = version;
+        charmObj['version'] = 2.33;
 
         TAS.debug(`upgradeto233:: Setting=`, charmObj);
         setAttrs(charmObj);
@@ -1214,7 +1189,7 @@
             'health-displayed_max': maxHealth,
             'displayed-essence': displayedMotes,
             'displayed-essence_max': maxDisplayed,
-            'version': version
+            'version': 2.32
         };
         setAttrs(finalAttr);
     }
@@ -1222,7 +1197,7 @@
     function upgradeto231() {
         setAttrs({
             'clash-def-penalty': 0,
-            'version': version
+            'version': 2.31
         });
     }
 
@@ -1231,7 +1206,7 @@
             'grab-def-penalty': 0,
             'prone-def-penalty': 0,
             'cover-def-bonus': 0,
-            'version': version
+            'version': 2.30
         });
     }
 
@@ -1240,17 +1215,15 @@
             'battlegroup-def-boost': 0,
             'battlegroup-acc-boost': 0,
             'battlegroup-dmg-boost': 0,
-            'version': version
+            'version': 2.28
         });
     }
 
     async function upgradeHealthBars() {
         TAS.debug('Upgrade Health Bars v1 => 2.25');
         var healthList = [];
-        for (var i = 1; i <= 32; i++) {
-            healthList.push('hl' + i + '-damage');
-            healthList.push('hl' + i + '-penalty');
-        }
+        for (var i = 1; i <= 32; i++)
+            healthList.push(`hl${i}-damage`, `hl${i}-penalty`);
         const values = await getAttrsAsync(healthList);
         var attrs = {}, healthValues = [];
         for (var i = 1; i <= 32; i++) {
@@ -1266,7 +1239,7 @@
             attrs['repeating_health_' + id + '_hl-penalty'] = healthValues[k].penalty;
         });
 
-        attrs.version = version;
+        attrs.version = 2.25;
         attrs = cleanAttrs(attrs);
         TAS.debug('Saving attributes!', attrs);
         setAttrs(cleanAttrs(attrs));
@@ -1284,11 +1257,7 @@
         var attrs = {}, indexesIntimacies = _.times(4, () => generateNewRowId(idIntimaciesArray));
         TAS.debug('Creating new intimacies', indexesIntimacies);
         _.each(indexesIntimacies, function(id, k) {
-            var v;
-            if (k === 0) v = 'Defining';
-            else if (k === 1) v = 'Major';
-            else v = 'Minor';
-            attrs['repeating_intimacies_' + id + '_intimacyrepeatingtype'] = v;
+            attrs[`repeating_intimacies_${id}_intimacyrepeatingtype`] = (k === 0) ? 'Defining' : (k === 1) ? 'Major' : 'Minor';
         });
         attrs['init-intimacies'] = 1;
         setAttrs(attrs);
@@ -1354,15 +1323,15 @@
         setAttrs(healthAttrs);
 
         let defaultWeapon = {}, indexeWeapon = generateRowID();
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponname'] = 'Unarmed';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponacc'] = '4';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondam'] = '7';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapondef'] = '0';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparry'] = '0';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponparryspe'] = '0';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponov'] = '1';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweaponatt'] = '0';
-        defaultWeapon['repeating_weapon_' + indexeWeapon + '_repweapontags'] = 'Bashing, Brawl, Grappling, Natural';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponname`] = 'Unarmed';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponacc`] = '4';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweapondam`] = '7';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweapondef`] = '0';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponparry`] = '0';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponparryspe`] = '0';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponov`] = '1';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponatt`] = '0';
+        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweapontags`] = 'Bashing, Brawl, Grappling, Natural';
         setAttrs(defaultWeapon);
 
         const charmObj = {};
@@ -1882,16 +1851,17 @@
     }
 
     function replaceRoll20AttrInArray(repeatable_name_base, repeatable_name_end_array, array) {
+        let ret = false;
         for (const end of repeatable_name_end_array) {
             for (const attr_tested of attrNAbi) {
                 const testedAttr = `@{${attr_tested}}`;
                 if (array[`${repeatable_name_base}${end}`] && array[`${repeatable_name_base}${end}`].includes(testedAttr)) {
                     array[`${repeatable_name_base}${end}`] = array[`${repeatable_name_base}${end}`].replaceAll(testedAttr, array[attr_tested]);
-                    return true;
+                    ret = true;
                 }
             }
         }
-        return false;
+        return ret;
     }
 
     function replaceRoll20AttrsAsync(string) {
@@ -1970,10 +1940,9 @@
         const val = await getAttrsAsync([tested_attr, 'diceex', 'succex']);
         const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
         setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
-        let writtenValue;
-        if (val[tested_attr].indexOf('@{archery}') === 0)     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-        else if (val[tested_attr].indexOf('@{thrown}') === 0) writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '')}`;
-        else                                       writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
+        let writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
+        if (val[tested_attr].indexOf('@{archery}') === 0)     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${writtenValue}`;
+        else if (val[tested_attr].indexOf('@{thrown}') === 0) writtenValue = `?{Range ?|Close,4|Short,3|Medium,2|Long,-1|Extreme,-2}[Thrown Range]+${writtenValue}`;
         await setCb(written_attr, writtenValue);
         setDefaultsOnDAtkDice(e);
     }));
