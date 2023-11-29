@@ -3358,7 +3358,7 @@
                                 <input type="radio" class="sheet-dots10" name="attr_integrity" value="10"><span></span>
                             </div>
                         </div>
-                        <div class="sheet-trait" title="@{investigation">
+                        <div class="sheet-trait" title="@{investigation}">
                             <label>
                                 <input type="checkbox" name="attr_investigationfav" value="1"><span></span>
                                 <span>Investigation</span>
@@ -3377,7 +3377,7 @@
                                 <input type="radio" class="sheet-dots10" name="attr_investigation" value="10"><span></span>
                             </div>
                         </div>
-                        <div class="sheet-trait" title="@{larceny">
+                        <div class="sheet-trait" title="@{larceny}">
                             <label>
                                 <input type="checkbox" name="attr_larcenyfav" value="1"><span></span>
                                 <span>Larceny</span>
@@ -4522,7 +4522,7 @@
                             <h1 class="sheet-battle-group-header"><span>Battle Group</span></h1>
                             <div class="sheet-battle-group-body sheet-2colrow">
                                 <div class="sheet-col">
-                                    <div class="sheet-battle-group-row">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-drill}&#013;&#010;Represent how much training the BG have.&#013;&#010;Give bonus to Defenses">
                                         <span>Drill</span>:
                                         <select name="attr_battlegroup-drill">
                                             <option value="Poor" selected="selected">Poor</option>
@@ -4530,7 +4530,7 @@
                                             <option value="Elite">Elite</option>
                                         </select>
                                     </div>
-                                    <div class="sheet-battle-group-row">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-might}&#013;&#010;Represent how much supernatural features the BG is composed of.&#013;&#010;Give bonus to Defenses and Attacks&Damage">
                                         <span>Might</span>:
                                         <select name="attr_battlegroup-might">
                                             <option value="0" selected="selected">0</option>
@@ -4539,7 +4539,7 @@
                                             <option value="3">3</option>
                                         </select>
                                     </div>
-                                    <div class="sheet-battle-group-row">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-perfect-morale}&#013;&#010;Represent a BG trained to never surrender.&#013;&#010;Give bonus Magnitude & Prevent Rout">
                                         <label>
                                             <input type="checkbox" name="attr_battlegroup-perfect-morale" value="1"><span></span>
                                             <span>Perfect Morale</span>
@@ -4548,21 +4548,21 @@
                                     </div>
                                 </div>
                                 <div class="sheet-col">
-                                    <div class="sheet-battle-group-row">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-magnitude} & @{battlegroup-magnitude_max}&#013;&#010;Represent a BG 'health'.">
                                         <span>Magnitude</span>:
                                         <span>
                                             <input type="number" name="attr_battlegroup-magnitude" value="8"> |
                                             <input type="number" name="attr_battlegroup-magnitude_max" readonly="readonly">
                                         </span>
                                     </div>
-                                    <div class="sheet-battle-group-row">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-size} & @{battlegroup-size_max}">
                                         <span>Size</span>:
                                         <span>
                                             <input type="number" name="attr_battlegroup-size" value="0"> |
                                             <input type="number" name="attr_battlegroup-size_max" value="1">
                                         </span>
                                     </div>
-                                    <div class="sheet-battle-group-row">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-health-levels}&#013;&#010;Represent the health levels of a single unit before transforming into a BG.">
                                         <span>Health Levels</span>:
                                         <span>
                                             <input type="number" name="attr_battlegroup-health-levels" value="7">
@@ -4617,11 +4617,11 @@
                             <div class="sheet-2colrow sheet-resize-to-mortal">
                                 <div class="sheet-col"><!-- 1.3.3.3.1 WILLPOWER & ESSENCE -->
                                     <h1><span>Willpower</span></h1>
-                                    <div style="padding: 0 6px 6px 6px;">
-                                        <input type="number" name="attr_willpower" value="5" min="0" max="15" style="width: 100%;" title="Actual Willpower">
+                                    <div style="padding: 0 6px 6px 6px;" title="@{willpower}&#013;&#010;Actual Willpower">
+                                        <input type="number" name="attr_willpower" value="5" min="0" max="15" style="width: 100%;">
                                     </div>
-                                    <div style="padding-left: 6px">
-                                        <div class="sheet-dots-full" title="Max Willpower">
+                                    <div style="padding-left: 6px" title="@{willpower_max}&#013;&#010;Max Willpower">
+                                        <div class="sheet-dots-full">
                                             <input type="radio" class="sheet-dots0" name="attr_willpower_max" value="0"><span></span>
                                             <input type="radio" class="sheet-dots1" name="attr_willpower_max" value="1"><span></span>
                                             <input type="radio" class="sheet-dots2" name="attr_willpower_max" value="2"><span></span>
@@ -4636,7 +4636,7 @@
                                         </div>
                                     </div>
                                     <h1><span>Essence</span></h1>
-                                    <div style="padding-left: 6px">
+                                    <div style="padding-left: 6px" title="@{essence}">
                                         <div class="sheet-dots-full">
                                             <input type="radio" class="sheet-dots0" name="attr_essence" value="0"><span></span>
                                             <input type="radio" class="sheet-dots1" name="attr_essence" value="1" checked="checked"><span></span>
@@ -4651,20 +4651,21 @@
                                             <input type="radio" class="sheet-dots10" name="attr_essence" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-hide-to-mortal"><div class="sheet-motes">
+                                    <div class="sheet-hide-to-mortal">
+                                        <div class="sheet-motes">
                                             <span>Personal<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button></span>
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
-                                                <input type="number" name="attr_personal-essence" readonly tabindex="-1"> /
-                                                <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}"> C:
-                                                <input type="number" name="attr_committedessperso" title="Personal Commited" class="free-commit"><input type="number" name="attr_committedessperso" title="Personal Commited" class="commit-system" readonly tabindex="-1">
+                                                <input type="number" name="attr_personal-essence" readonly tabindex="-1" title="@{personal-essence}"> /
+                                                <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}"> C:
+                                                <input type="number" name="attr_committedessperso" title="@{committedessperso}&#013;&#010;Personal Commited" class="free-commit"><input type="number" name="attr_committedessperso" title="@{committedessperso}&#013;&#010;Personal Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
                                         </div>
                                         <div class="sheet-motes">
                                             <span>Peripheral<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button></span>
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
-                                                <input type="number" name="attr_peripheral-essence" readonly tabindex="-1"> /
-                                                <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}"> C:
-                                                <input type="number" name="attr_committedesstotal" title="Peripheral Commited" class="free-commit"><input type="number" name="attr_committedesstotal" title="Peripheral Commited" class="commit-system" readonly tabindex="-1">
+                                                <input type="number" name="attr_peripheral-essence" readonly tabindex="-1" title="@{peripheral-essence}"> /
+                                                <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}"> C:
+                                                <input type="number" name="attr_committedesstotal" title="@{committedesstotal}&#013;&#010;Peripheral Commited" class="free-commit"><input type="number" name="attr_committedesstotal" title="@{committedesstotal}&#013;&#010;Peripheral Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
                                         </div>
                                     </div>
@@ -4674,7 +4675,7 @@
                                     <!-- 1.3.3.3.2.1 LIMIT BREAK & TRIGGER -->
                                     <div class="limit-box">
                                         <h1 class="sheet-limit"><span>Limit Break</span></h1>
-                                        <div class="sheet-limit" style="padding-left: 6px ; margin: 9px 0 9px 0">
+                                        <div class="sheet-limit" style="padding-left: 6px ; margin: 9px 0 9px 0" title="@{limit}">
                                             <div class="sheet-dots-full">
                                                 <input type="radio" class="sheet-dots0" name="attr_limit" value="0" checked="checked"><span></span>
                                                 <input type="radio" class="sheet-dots1" name="attr_limit" value="1"><span></span>
@@ -4931,7 +4932,7 @@
                             <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
                             <input type="hidden" name="attr_onslaught" class="onslaught-check">
                             <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
+                            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}&#013;&#010;Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
                         </div>
                     </div>
                     <div class="flex-col">
@@ -4944,7 +4945,7 @@
                             <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                             <input type="hidden" class="onslaught-check" name="attr_onslaught">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}&#013;&#010;Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}&#013;&#010;Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="flex-col">
@@ -4957,7 +4958,7 @@
                             <span title="Dexterity + Dodge">Evasion</span>:
                             <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}&#013;&#010;Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}&#013;&#010;Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="flex-col def-exc">
@@ -4966,23 +4967,23 @@
                     <div class="flex-col">
                         <div class="flex">
                             <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-                            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}">
+                            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}&#013;&#010;Represent the capacity to reduce withering damage.">
                         </div>
                         <div class="flex">
                             <span title="Wits + Integrity">Resolve</span>:
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="flex-col">
                         <div class="flex">
                             <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
-                            <input type="number" readonly tabindex="-1" name="attr_hardness" title="Come from your armor">
+                            <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}&#013;&#010;Come from your armor">
                         </div>
                         <div class="flex">
                             <span title="Manipulation + Socialize">Guile</span>:
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                 </div>
@@ -5786,7 +5787,7 @@
             <div class="sheet-body sheet-tab-content sheet-tab-rolls-sheet">
                 <h1><span>Rolls</span></h1>
                 <div class="ressource-line flex-wrap">
-                    <p class="will-color rounded-box grow-max flex">
+                    <p class="will-color rounded-box grow-max flex" title="@{willpower} & @{willpower_max}">
                         Willpower:
                         <input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal">/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
                     </p>
@@ -5794,24 +5795,24 @@
                     <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
                     <div class="flex grow-max personal-mote-toggle">
                         <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
-                            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
+                            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
                         </p>
                         <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-                            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1"></label>
+                            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
                         </p>
                     </div>
                     <div class="flex grow-max peripheral-mote-toggle">
                         <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
-                            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
+                            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
                         </p>
                         <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-                            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1"></label>
+                            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
                         </p>
                     </div>
                     <div class="flex grow-normal rollpen-box">
                         <p class="flex grow-normal rounded-box">
                             RollPen:
-                            <input id="rollpen-input-widget" type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
+                            <input id="rollpen-input-widget" type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
                         </p>
                     </div>
                 </div>
@@ -5829,39 +5830,39 @@
                                     <div class="sheet-layer5">
                                         <div class="reminder-cell" title="Strength">
                                             <span>Str</span>
-                                            <input type="number" class="reminder-val" name="attr_strength" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_strength" readonly tabindex="-1" title="@{strength}">
                                         </div>
                                         <div class="reminder-cell" title="Dexterity">
                                             <span>Dex</span>
-                                            <input type="number" class="reminder-val" name="attr_dexterity" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_dexterity" readonly tabindex="-1" title="@{dexterity}">
                                         </div>
                                         <div class="reminder-cell" title="Stamina">
                                             <span>Sta</span>
-                                            <input type="number" class="reminder-val" name="attr_stamina" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_stamina" readonly tabindex="-1" title="@{stamina}">
                                         </div>
                                         <div class="reminder-cell" title="Charisma">
                                             <span>Cha</span>
-                                            <input type="number" class="reminder-val" name="attr_charisma" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_charisma" readonly tabindex="-1" title="@{charisma}">
                                         </div>
                                         <div class="reminder-cell" title="Manipulation">
                                             <span>Man</span>
-                                            <input type="number" class="reminder-val" name="attr_manipulation" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_manipulation" readonly tabindex="-1" title="@{manipulation}">
                                         </div>
                                         <div class="reminder-cell" title="Appearance">
                                             <span>App</span>
-                                            <input type="number" class="reminder-val" name="attr_appearance" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_appearance" readonly tabindex="-1" title="@{appearance}">
                                         </div>
                                         <div class="reminder-cell" title="Perception">
                                             <span>Per</span>
-                                            <input type="number" class="reminder-val" name="attr_perception" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_perception" readonly tabindex="-1" title="@{perception}">
                                         </div>
                                         <div class="reminder-cell" title="Intelligence">
                                             <span>Int</span>
-                                            <input type="number" class="reminder-val" name="attr_intelligence" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_intelligence" readonly tabindex="-1" title="@{intelligence}">
                                         </div>
                                         <div class="reminder-cell" title="Wits">
                                             <span>Wit</span>
-                                            <input type="number" class="reminder-val" name="attr_wits" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_wits" readonly tabindex="-1" title="@{wits}">
                                         </div>
                                     </div>
                                 </div>
@@ -6580,99 +6581,99 @@
                                         <div class="main-abi">
                                             <div class="reminder-cell" title="Archery">
                                                 <span>Arc</span>
-                                                <input type="number" class="reminder-val" name="attr_archery" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_archery" readonly tabindex="-1" title="@{archery}">
                                             </div>
                                             <div class="reminder-cell" title="Athletics">
                                                 <span>Ath</span>
-                                                <input type="number" class="reminder-val" name="attr_athletics" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_athletics" readonly tabindex="-1" title="@{athletics}">
                                             </div>
                                             <div class="reminder-cell" title="Awareness">
                                                 <span>Awa</span>
-                                                <input type="number" class="reminder-val" name="attr_awareness" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_awareness" readonly tabindex="-1" title="@{awareness}">
                                             </div>
                                             <div class="reminder-cell" title="Brawl">
                                                 <span>Bra</span>
-                                                <input type="number" class="reminder-val" name="attr_brawl" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_brawl" readonly tabindex="-1" title="@{brawl}">
                                             </div>
                                             <div class="reminder-cell" title="Bureaucracy">
                                                 <span>Bur</span>
-                                                <input type="number" class="reminder-val" name="attr_bureaucracy" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_bureaucracy" readonly tabindex="-1" title="@{bureaucracy}">
                                             </div>
                                             <div class="reminder-cell" title="Dodge">
                                                 <span>Dod</span>
-                                                <input type="number" class="reminder-val" name="attr_dodge" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_dodge" readonly tabindex="-1" title="@{dodge}">
                                             </div>
                                             <div class="reminder-cell" title="Integrity">
                                                 <span>Int</span>
-                                                <input type="number" class="reminder-val" name="attr_integrity" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_integrity" readonly tabindex="-1" title="@{integrity}">
                                             </div>
                                             <div class="reminder-cell" title="Investigation">
                                                 <span>Inv</span>
-                                                <input type="number" class="reminder-val" name="attr_investigation" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_investigation" readonly tabindex="-1" title="@{investigation}">
                                             </div>
                                             <div class="reminder-cell" title="Larceny">
                                                 <span>Lar</span>
-                                                <input type="number" class="reminder-val" name="attr_larceny" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_larceny" readonly tabindex="-1" title="@{larceny}">
                                             </div>
                                             <div class="reminder-cell" title="Linguistics">
                                                 <span>Lin</span>
-                                                <input type="number" class="reminder-val" name="attr_linguistics" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_linguistics" readonly tabindex="-1" title="@{linguistics}">
                                             </div>
                                             <div class="reminder-cell" title="Lore">
                                                 <span>Lor</span>
-                                                <input type="number" class="reminder-val" name="attr_lore" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_lore" readonly tabindex="-1" title="@{lore}">
                                             </div>
                                             <div class="reminder-cell" title="Medicine">
                                                 <span>Med</span>
-                                                <input type="number" class="reminder-val" name="attr_medicine" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_medicine" readonly tabindex="-1" title="@{medicine}">
                                             </div>
                                             <div class="reminder-cell" title="Melee">
                                                 <span>Mel</span>
-                                                <input type="number" class="reminder-val" name="attr_melee" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_melee" readonly tabindex="-1" title="@{melee}">
                                             </div>
                                             <div class="reminder-cell" title="Occult">
                                                 <span>Occ</span>
-                                                <input type="number" class="reminder-val" name="attr_occult" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_occult" readonly tabindex="-1" title="@{occult}">
                                             </div>
                                             <div class="reminder-cell" title="Performance">
                                                 <span>Per</span>
-                                                <input type="number" class="reminder-val" name="attr_performance" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_performance" readonly tabindex="-1" title="@{performance}">
                                             </div>
                                             <div class="reminder-cell" title="Presence">
                                                 <span>Pre</span>
-                                                <input type="number" class="reminder-val" name="attr_presence" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_presence" readonly tabindex="-1" title="@{presence}">
                                             </div>
                                             <div class="reminder-cell" title="Resistance">
                                                 <span>Res</span>
-                                                <input type="number" class="reminder-val" name="attr_resistance" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_resistance" readonly tabindex="-1" title="@{resistance}">
                                             </div>
                                             <div class="reminder-cell" title="Ride">
                                                 <span>Rid</span>
-                                                <input type="number" class="reminder-val" name="attr_ride" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_ride" readonly tabindex="-1" title="@{ride}">
                                             </div>
                                             <div class="reminder-cell" title="Sail">
                                                 <span>Sai</span>
-                                                <input type="number" class="reminder-val" name="attr_sail" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_sail" readonly tabindex="-1" title="@{sail}">
                                             </div>
                                             <div class="reminder-cell" title="Socialize">
                                                 <span>Soc</span>
-                                                <input type="number" class="reminder-val" name="attr_socialize" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_socialize" readonly tabindex="-1" title="@{socialize}">
                                             </div>
                                             <div class="reminder-cell" title="Stealth">
                                                 <span>Ste</span>
-                                                <input type="number" class="reminder-val" name="attr_stealth" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_stealth" readonly tabindex="-1" title="@{stealth}">
                                             </div>
                                             <div class="reminder-cell" title="Survival">
                                                 <span>Sur</span>
-                                                <input type="number" class="reminder-val" name="attr_survival" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_survival" readonly tabindex="-1" title="@{survival}">
                                             </div>
                                             <div class="reminder-cell" title="Thrown">
                                                 <span>Thr</span>
-                                                <input type="number" class="reminder-val" name="attr_thrown" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_thrown" readonly tabindex="-1" title="@{thrown}">
                                             </div>
                                             <div class="reminder-cell" title="War">
                                                 <span>War</span>
-                                                <input type="number" class="reminder-val" name="attr_war" readonly tabindex="-1">
+                                                <input type="number" class="reminder-val" name="attr_war" readonly tabindex="-1" title="@{war}">
                                             </div>
                                         </div>
                                         <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
@@ -6699,39 +6700,39 @@
                                     <div class="sheet-layer5">
                                         <div class="reminder-cell" title="Armoring">
                                             <span>Arm</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-armoring" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-armoring" readonly tabindex="-1" title="@{craft-armoring}">
                                         </div>
                                         <div class="reminder-cell" title="Artifact">
                                             <span>Art</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1" title="@{craft-artifact}">
                                         </div>
                                         <div class="reminder-cell" title="Cooking">
                                             <span>Coo</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1" title="@{craft-cooking}">
                                         </div>
                                         <div class="reminder-cell" title="First Age Artifice">
                                             <span>FAA</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-artifice" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-artifice" readonly tabindex="-1" title="@{craft-artifice}">
                                         </div>
                                         <div class="reminder-cell" title="Gemcutting">
                                             <span>Gem</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-gemcutting" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-gemcutting" readonly tabindex="-1" title="@{craft-gemcutting}">
                                         </div>
                                         <div class="reminder-cell" title="Geomancy">
                                             <span>Geo</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-geomancy" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-geomancy" readonly tabindex="-1" title="@{craft-geomancy}">
                                         </div>
                                         <div class="reminder-cell" title="Jewelry">
                                             <span>Jew</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-jewelry" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-jewelry" readonly tabindex="-1" title="@{craft-jewelry}">
                                         </div>
                                         <div class="reminder-cell" title="Tailoring">
                                             <span>Tai</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-tailoring" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-tailoring" readonly tabindex="-1" title="@{craft-tailoring}">
                                         </div>
                                         <div class="reminder-cell" title="Weapon Forging">
                                             <span>Wea</span>
-                                            <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1" title="@{craft-forging}">
                                         </div>
                                         <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
                                         <div class="rep-toggle">
@@ -6750,47 +6751,47 @@
                                     <div class="sheet-layer4">
                                         <div class="reminder-cell" title="Snake Style">
                                             <span>Sna</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-snake" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-snake" readonly tabindex="-1" title="@{ma-snake}">
                                         </div>
                                         <div class="reminder-cell" title="Tiger Style">
                                             <span>Tig</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1" title="@{ma-tiger}">
                                         </div>
                                         <div class="reminder-cell" title="Single Point Shining Into the Void Style">
                                             <span>SPS</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1" title="@{ma-void}">
                                         </div>
                                         <div class="reminder-cell" title="White Reaper Style">
                                             <span>WR</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1" title="@{ma-reaper}">
                                         </div>
                                         <div class="reminder-cell" title="Ebon Shadow Style">
                                             <span>ES</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1" title="@{ma-ebon}">
                                         </div>
                                         <div class="reminder-cell" title="Crane Style">
                                             <span>Cra</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-crane" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-crane" readonly tabindex="-1" title="@{ma-crane}">
                                         </div>
                                         <div class="reminder-cell" title="Silver-Voiced Nightingale Style">
                                             <span>SVN</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1" title="@{ma-nightingale}">
                                         </div>
                                         <div class="reminder-cell" title="Righteous Devil Style">
                                             <span>RD</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1" title="@{ma-devil}">
                                         </div>
                                         <div class="reminder-cell" title="Black Claw Style">
                                             <span>BC</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1" title="@{ma-claw}">
                                         </div>
                                         <div class="reminder-cell" title="Dreaming Pearl Courtesan Style">
                                             <span>DPC</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1" title="@{ma-pearl}">
                                         </div>
                                         <div class="reminder-cell" title="Steel Devil Style">
                                             <span>SDS</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1">
+                                            <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1" title="@{ma-steel}">
                                         </div>
                                         <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
                                         <div class="rep-toggle">
@@ -7447,14 +7448,14 @@
                         <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="flex">
                         <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="sheet-table-cell def-exc">
@@ -7464,14 +7465,14 @@
                         <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
+                            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
                         </div>
                     </div>
                     <div class="flex will-color-down rounded-box">
                         <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
                         <div class="sheet-table-cell">
-                            <input type="number" name="attr_willpower" value="5" min="0" max="15">
-                            <input type="number" name="attr_willpower_max" readonly tabindex="-1">
+                            <input type="number" name="attr_willpower" value="5" min="0" max="15" title="@{willpower}">
+                            <input type="number" name="attr_willpower_max" readonly tabindex="-1" title="@{willpower_max}">
                         </div>
                     </div>
                 </div>
@@ -7482,13 +7483,13 @@
                         <div class="sheet-table">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_perception" style="width: 27px ; margin-right: 3px" title="Perception" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_perception" style="width: 27px ; margin-right: 3px" title="@{perception}&#013;&#010;Perception" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_charisma" style="width: 27px ; margin-right: 3px" title="Charisma" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_charisma" style="width: 27px ; margin-right: 3px" title="@{charisma}&#013;&#010;Charisma" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_manipulation" style="width: 27px ; margin-right: 3px" title="Manipulation" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_manipulation" style="width: 27px ; margin-right: 3px" title="@{manipulation}&#013;&#010;Manipulation" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display-inv">
                                 <div class="sheet-table-cell flex" style="flex-grow: 1;">
@@ -7499,28 +7500,28 @@
                                 </div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_appearance" style="width: 27px ; margin-right: 3px" title="Appearance" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_appearance" style="width: 27px ; margin-right: 3px" title="@{appearance}&#013;&#010;Appearance" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Wits</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_wits" style="width: 27px ; margin-right: 3px" title="Wits" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Wits</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_wits" style="width: 27px ; margin-right: 3px" title="@{wits}&#013;&#010;Wits" readonly tabindex="-1"></div>
                             </div>
                         </div>
                         <h1 class="qc-toggle-display"><span>Abilities</span></h1>
                         <div class="sheet-table qc-toggle-display">
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_socialize" style="width: 27px ; margin-right: 3px" title="Socialize" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_socialize" style="width: 27px ; margin-right: 3px" title="@{socialize}&#013;&#010;Socialize" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_survival" style="width: 27px ; margin-right: 3px" title="Survival" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_survival" style="width: 27px ; margin-right: 3px" title="@{survival}&#013;&#010;Survival" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_presence" style="width: 27px ; margin-right: 3px" title="Presence" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_presence" style="width: 27px ; margin-right: 3px" title="@{presence}&#013;&#010;Presence" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_performance" style="width: 27px ; margin-right: 3px" title="Performance" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_performance" style="width: 27px ; margin-right: 3px" title="@{performance}&#013;&#010;Performance" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_integrity" style="width: 27px ; margin-right: 3px" title="Integrity" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_integrity" style="width: 27px ; margin-right: 3px" title="@{integrity}&#013;&#010;Integrity" readonly tabindex="-1"></div>
                             </div>
                         </div>
                     </div>
@@ -7575,21 +7576,21 @@
                         <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="flex">
                         <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                         </div>
                     </div>
                     <div class="flex">
                         <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
                         <div class="sheet-table-cell">
                             <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="Wound panalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
+                            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
                         </div>
                     </div>
                 </div>
@@ -7600,13 +7601,13 @@
                         <div class="sheet-table">
                             <input type="hidden" class="qc-panel-check" name="attr_qc">
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_perception" style="width: 27px ; margin-right: 3px" title="Perception" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_perception" style="width: 27px ; margin-right: 3px" title="@{perception}&#013;&#010;Perception" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_charisma" style="width: 27px ; margin-right: 3px" title="Charisma" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_charisma" style="width: 27px ; margin-right: 3px" title="@{charisma}&#013;&#010;Charisma" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_manipulation" style="width: 27px ; margin-right: 3px" title="Manipulation" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_manipulation" style="width: 27px ; margin-right: 3px" title="@{manipulation}&#013;&#010;Manipulation" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display-inv">
                                 <div class="sheet-table-cell flex" style="flex-grow: 1;">
@@ -7617,28 +7618,28 @@
                                 </div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_appearance" style="width: 27px ; margin-right: 3px" title="Appearance" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_appearance" style="width: 27px ; margin-right: 3px" title="@{appearance}&#013;&#010;Appearance" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Wits</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_wits" style="width: 27px ; margin-right: 3px" title="Wits" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Wits</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_wits" style="width: 27px ; margin-right: 3px" title="@{wits}&#013;&#010;Wits" readonly tabindex="-1"></div>
                             </div>
                         </div>
                         <h1 class="qc-toggle-display"><span>Abilities</span></h1>
                         <div class="sheet-table qc-toggle-display">
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_socialize" style="width: 27px ; margin-right: 3px" title="Socialize" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_socialize" style="width: 27px ; margin-right: 3px" title="@{socialize}&#013;&#010;Socialize" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_survival" style="width: 27px ; margin-right: 3px" title="Survival" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_survival" style="width: 27px ; margin-right: 3px" title="@{survival}&#013;&#010;Survival" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_presence" style="width: 27px ; margin-right: 3px" title="Presence" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_presence" style="width: 27px ; margin-right: 3px" title="@{presence}&#013;&#010;Presence" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_performance" style="width: 27px ; margin-right: 3px" title="Performance" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_performance" style="width: 27px ; margin-right: 3px" title="@{performance}&#013;&#010;Performance" readonly tabindex="-1"></div>
                             </div>
                             <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_integrity" style="width: 27px ; margin-right: 3px" title="Integrity" readonly tabindex="-1"></div>
+                                <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_integrity" style="width: 27px ; margin-right: 3px" title="@{integrity}&#013;&#010;Integrity" readonly tabindex="-1"></div>
                             </div>
                         </div>
                     </div>
@@ -7757,7 +7758,7 @@
                                     <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
                                     <input type="hidden" name="attr_onslaught" class="onslaught-check">
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
+                                    <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}&#013;&#010;Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
                                 </div>
                             </div>
                             <div class="flex-col">
@@ -7770,7 +7771,7 @@
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" class="onslaught-check" name="attr_onslaught">
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                                    <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}&#013;&#010;Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}&#013;&#010;Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                                 </div>
                             </div>
                             <div class="flex-col">
@@ -7783,7 +7784,7 @@
                                     <span title="Dexterity + Dodge">Evasion</span>:
                                     <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                                    <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}&#013;&#010;Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}&#013;&#010;Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                                 </div>
                             </div>
                             <div class="flex-col def-exc">
@@ -7792,23 +7793,23 @@
                             <div class="flex-col">
                                 <div class="flex">
                                     <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-                                    <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}">
+                                    <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}&#013;&#010;Represent the capacity to reduce withering damage.">
                                 </div>
                                 <div class="flex">
                                     <span title="Wits + Integrity">Resolve</span>:
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                                    <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                                 </div>
                             </div>
                             <div class="flex-col">
                                 <div class="flex">
                                     <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
-                                    <input type="number" readonly tabindex="-1" name="attr_hardness" title="Come from your armor">
+                                    <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}&#013;&#010;Come from your armor">
                                 </div>
                                 <div class="flex">
                                     <span title="Manipulation + Socialize">Guile</span>:
                                     <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+                                    <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
                                 </div>
                             </div>
                         </div>
@@ -7847,19 +7848,19 @@
                             </div>
                             <div class="wound-pen"><!-- WOUND PEN -->
                                 <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="@{wound-penalty}&#013;&#010;Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
                                 <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
-                                <input type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
+                                <input type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
                             </div>
                         </div>
                     </div>
                     <div class="health-line flex sheet-bg-show"><!-- HEALTH BG -->
                         <div class="sheet-health-track grow-normal">
-                            <p class="flex grow-normal">Magnitude:
+                            <p class="flex grow-normal" title="@{battlegroup-magnitude} & @{battlegroup-magnitude_max}&#013;&#010;Represent a BG 'health'.">Magnitude:
                                 <input type="number" name="attr_battlegroup-magnitude" value="8" class="grow-normal">/
                                 <input type="number" name="attr_battlegroup-magnitude_max" readonly="readonly">
                             </p>
-                            <p class="flex grow-normal">Size:
+                            <p class="flex grow-normal" title="@{battlegroup-size} & @{battlegroup-size_max}">Size:
                                 <input type="number" name="attr_battlegroup-size" value="0" class="grow-normal">/
                                 <input type="number" name="attr_battlegroup-size_max" value="1">
                             </p>
@@ -7888,39 +7889,39 @@
                             <div class="sheet-layer5">
                                 <div class="reminder-cell" title="Strength">
                                     <span>Str</span>
-                                    <input type="number" class="reminder-val" name="attr_strength" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_strength" readonly tabindex="-1" title="@{strength}">
                                 </div>
                                 <div class="reminder-cell" title="Dexterity">
                                     <span>Dex</span>
-                                    <input type="number" class="reminder-val" name="attr_dexterity" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_dexterity" readonly tabindex="-1" title="@{dexterity}">
                                 </div>
                                 <div class="reminder-cell" title="Stamina">
                                     <span>Sta</span>
-                                    <input type="number" class="reminder-val" name="attr_stamina" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_stamina" readonly tabindex="-1" title="@{stamina}">
                                 </div>
                                 <div class="reminder-cell" title="Charisma">
                                     <span>Cha</span>
-                                    <input type="number" class="reminder-val" name="attr_charisma" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_charisma" readonly tabindex="-1" title="@{charisma}">
                                 </div>
                                 <div class="reminder-cell" title="Manipulation">
                                     <span>Man</span>
-                                    <input type="number" class="reminder-val" name="attr_manipulation" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_manipulation" readonly tabindex="-1" title="@{manipulation}">
                                 </div>
                                 <div class="reminder-cell" title="Appearance">
                                     <span>App</span>
-                                    <input type="number" class="reminder-val" name="attr_appearance" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_appearance" readonly tabindex="-1" title="@{appearance}">
                                 </div>
                                 <div class="reminder-cell" title="Perception">
                                     <span>Per</span>
-                                    <input type="number" class="reminder-val" name="attr_perception" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_perception" readonly tabindex="-1" title="@{perception}">
                                 </div>
                                 <div class="reminder-cell" title="Intelligence">
                                     <span>Int</span>
-                                    <input type="number" class="reminder-val" name="attr_intelligence" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_intelligence" readonly tabindex="-1" title="@{intelligence}">
                                 </div>
                                 <div class="reminder-cell" title="Wits">
                                     <span>Wit</span>
-                                    <input type="number" class="reminder-val" name="attr_wits" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_wits" readonly tabindex="-1" title="@{wits}">
                                 </div>
                             </div>
                         </div>
@@ -8167,99 +8168,99 @@
                                 <div class="main-abi">
                                     <div class="reminder-cell" title="Archery">
                                         <span>Arc</span>
-                                        <input type="number" class="reminder-val" name="attr_archery" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_archery" readonly tabindex="-1" title="@{archery}">
                                     </div>
                                     <div class="reminder-cell" title="Athletics">
                                         <span>Ath</span>
-                                        <input type="number" class="reminder-val" name="attr_athletics" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_athletics" readonly tabindex="-1" title="@{athletics}">
                                     </div>
                                     <div class="reminder-cell" title="Awareness">
                                         <span>Awa</span>
-                                        <input type="number" class="reminder-val" name="attr_awareness" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_awareness" readonly tabindex="-1" title="@{awareness}">
                                     </div>
                                     <div class="reminder-cell" title="Brawl">
                                         <span>Bra</span>
-                                        <input type="number" class="reminder-val" name="attr_brawl" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_brawl" readonly tabindex="-1" title="@{brawl}">
                                     </div>
                                     <div class="reminder-cell" title="Bureaucracy">
                                         <span>Bur</span>
-                                        <input type="number" class="reminder-val" name="attr_bureaucracy" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_bureaucracy" readonly tabindex="-1" title="@{bureaucracy}">
                                     </div>
                                     <div class="reminder-cell" title="Dodge">
                                         <span>Dod</span>
-                                        <input type="number" class="reminder-val" name="attr_dodge" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_dodge" readonly tabindex="-1" title="@{dodge}">
                                     </div>
                                     <div class="reminder-cell" title="Integrity">
                                         <span>Int</span>
-                                        <input type="number" class="reminder-val" name="attr_integrity" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_integrity" readonly tabindex="-1" title="@{integrity}">
                                     </div>
                                     <div class="reminder-cell" title="Investigation">
                                         <span>Inv</span>
-                                        <input type="number" class="reminder-val" name="attr_investigation" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_investigation" readonly tabindex="-1" title="@{investigation}">
                                     </div>
                                     <div class="reminder-cell" title="Larceny">
                                         <span>Lar</span>
-                                        <input type="number" class="reminder-val" name="attr_larceny" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_larceny" readonly tabindex="-1" title="@{larceny}">
                                     </div>
                                     <div class="reminder-cell" title="Linguistics">
                                         <span>Lin</span>
-                                        <input type="number" class="reminder-val" name="attr_linguistics" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_linguistics" readonly tabindex="-1" title="@{linguistics}">
                                     </div>
                                     <div class="reminder-cell" title="Lore">
                                         <span>Lor</span>
-                                        <input type="number" class="reminder-val" name="attr_lore" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_lore" readonly tabindex="-1" title="@{lore}">
                                     </div>
                                     <div class="reminder-cell" title="Medicine">
                                         <span>Med</span>
-                                        <input type="number" class="reminder-val" name="attr_medicine" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_medicine" readonly tabindex="-1" title="@{medicine}">
                                     </div>
                                     <div class="reminder-cell" title="Melee">
                                         <span>Mel</span>
-                                        <input type="number" class="reminder-val" name="attr_melee" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_melee" readonly tabindex="-1" title="@{melee}">
                                     </div>
                                     <div class="reminder-cell" title="Occult">
                                         <span>Occ</span>
-                                        <input type="number" class="reminder-val" name="attr_occult" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_occult" readonly tabindex="-1" title="@{occult}">
                                     </div>
                                     <div class="reminder-cell" title="Performance">
                                         <span>Per</span>
-                                        <input type="number" class="reminder-val" name="attr_performance" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_performance" readonly tabindex="-1" title="@{performance}">
                                     </div>
                                     <div class="reminder-cell" title="Presence">
                                         <span>Pre</span>
-                                        <input type="number" class="reminder-val" name="attr_presence" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_presence" readonly tabindex="-1" title="@{presence}">
                                     </div>
                                     <div class="reminder-cell" title="Resistance">
                                         <span>Res</span>
-                                        <input type="number" class="reminder-val" name="attr_resistance" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_resistance" readonly tabindex="-1" title="@{resistance}">
                                     </div>
                                     <div class="reminder-cell" title="Ride">
                                         <span>Rid</span>
-                                        <input type="number" class="reminder-val" name="attr_ride" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_ride" readonly tabindex="-1" title="@{ride}">
                                     </div>
                                     <div class="reminder-cell" title="Sail">
                                         <span>Sai</span>
-                                        <input type="number" class="reminder-val" name="attr_sail" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_sail" readonly tabindex="-1" title="@{sail}">
                                     </div>
                                     <div class="reminder-cell" title="Socialize">
                                         <span>Soc</span>
-                                        <input type="number" class="reminder-val" name="attr_socialize" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_socialize" readonly tabindex="-1" title="@{socialize}">
                                     </div>
                                     <div class="reminder-cell" title="Stealth">
                                         <span>Ste</span>
-                                        <input type="number" class="reminder-val" name="attr_stealth" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_stealth" readonly tabindex="-1" title="@{stealth}">
                                     </div>
                                     <div class="reminder-cell" title="Survival">
                                         <span>Sur</span>
-                                        <input type="number" class="reminder-val" name="attr_survival" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_survival" readonly tabindex="-1" title="@{survival}">
                                     </div>
                                     <div class="reminder-cell" title="Thrown">
                                         <span>Thr</span>
-                                        <input type="number" class="reminder-val" name="attr_thrown" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_thrown" readonly tabindex="-1" title="@{thrown}">
                                     </div>
                                     <div class="reminder-cell" title="War">
                                         <span>War</span>
-                                        <input type="number" class="reminder-val" name="attr_war" readonly tabindex="-1">
+                                        <input type="number" class="reminder-val" name="attr_war" readonly tabindex="-1" title="@{war}">
                                     </div>
                                 </div>
                                 <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
@@ -8286,39 +8287,39 @@
                             <div class="sheet-layer5">
                                 <div class="reminder-cell" title="Armoring">
                                     <span>Arm</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-armoring" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-armoring" readonly tabindex="-1" title="@{craft-armoring}">
                                 </div>
                                 <div class="reminder-cell" title="Artifact">
                                     <span>Art</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1" title="@{craft-artifact}">
                                 </div>
                                 <div class="reminder-cell" title="Cooking">
                                     <span>Coo</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1" title="@{craft-cooking}">
                                 </div>
                                 <div class="reminder-cell" title="First Age Artifice">
                                     <span>FAA</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-artifice" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-artifice" readonly tabindex="-1" title="@{craft-artifice}">
                                 </div>
                                 <div class="reminder-cell" title="Gemcutting">
                                     <span>Gem</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-gemcutting" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-gemcutting" readonly tabindex="-1" title="@{craft-gemcutting}">
                                 </div>
                                 <div class="reminder-cell" title="Geomancy">
                                     <span>Geo</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-geomancy" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-geomancy" readonly tabindex="-1" title="@{craft-geomancy}">
                                 </div>
                                 <div class="reminder-cell" title="Jewelry">
                                     <span>Jew</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-jewelry" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-jewelry" readonly tabindex="-1" title="@{craft-jewelry}">
                                 </div>
                                 <div class="reminder-cell" title="Tailoring">
                                     <span>Tai</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-tailoring" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-tailoring" readonly tabindex="-1" title="@{craft-tailoring}">
                                 </div>
                                 <div class="reminder-cell" title="Weapon Forging">
                                     <span>Wea</span>
-                                    <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1" title="@{craft-forging}">
                                 </div>
                                 <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
                                 <div class="rep-toggle">
@@ -8337,47 +8338,47 @@
                             <div class="sheet-layer4">
                                 <div class="reminder-cell" title="Snake Style">
                                     <span>Sna</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-snake" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-snake" readonly tabindex="-1" title="@{ma-snake}">
                                 </div>
                                 <div class="reminder-cell" title="Tiger Style">
                                     <span>Tig</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1" title="@{ma-tiger}">
                                 </div>
                                 <div class="reminder-cell" title="Single Point Shining Into the Void Style">
                                     <span>SPS</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1" title="@{ma-void}">
                                 </div>
                                 <div class="reminder-cell" title="White Reaper Style">
                                     <span>WR</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1" title="@{ma-reaper}">
                                 </div>
                                 <div class="reminder-cell" title="Ebon Shadow Style">
                                     <span>ES</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1" title="@{ma-ebon}">
                                 </div>
                                 <div class="reminder-cell" title="Crane Style">
                                     <span>Cra</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-crane" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-crane" readonly tabindex="-1" title="@{ma-crane}">
                                 </div>
                                 <div class="reminder-cell" title="Silver-Voiced Nightingale Style">
                                     <span>SVN</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1" title="@{ma-nightingale}">
                                 </div>
                                 <div class="reminder-cell" title="Righteous Devil Style">
                                     <span>RD</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1" title="@{ma-devil}">
                                 </div>
                                 <div class="reminder-cell" title="Black Claw Style">
                                     <span>BC</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1" title="@{ma-claw}">
                                 </div>
                                 <div class="reminder-cell" title="Dreaming Pearl Courtesan Style">
                                     <span>DPC</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1" title="@{ma-pearl}">
                                 </div>
                                 <div class="reminder-cell" title="Steel Devil Style">
                                     <span>SDS</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1">
+                                    <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1" title="@{ma-steel}">
                                 </div>
                                 <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
                                 <div class="rep-toggle">
@@ -8482,25 +8483,25 @@
                         </div>
                     </div>
                     <div class="ressource-line flex-wrap">
-                        <p class="will-color rounded-box grow-normal flex">
+                        <p class="will-color rounded-box grow-normal flex" title="@{willpower} & @{willpower_max}">
                             <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly tabindex="-1">
                         </p>
                         <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
                         <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
                         <div class="flex grow-normal personal-mote-toggle">
                             <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly in the next line to have manual mote edition -->
-                                Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}">
+                                Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
                             </p>
                             <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-                                <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1"></label>
+                                <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
                             </p>
                         </div>
                         <div class="flex grow-normal peripheral-mote-toggle">
                             <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly in the next line to have manual mote edition -->
-                                Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}">
+                                Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
                             </p>
                             <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-                                <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1"></label>
+                                <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
                             </p>
                         </div>
                     </div>
@@ -9153,7 +9154,7 @@
                                             <div class="flex grow-normal">
                                                 <input type="hidden" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset-val" value="">
                                                 <p class="dark-init-color rounded-box flex grow-normal">
-                                                    <label>RESET INIT TO:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value="" title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
+                                                    <label title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">RESET INIT TO:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
                                                 </p>
                                                 <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                                 <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
@@ -9243,7 +9244,7 @@
                                             <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset-val" value="">
                                             <p class="dark-init-color rounded-box flex grow-normal">
-                                                <label>R.INIT:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value="" title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
+                                                <label title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">R.INIT:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
                                             </p>
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
