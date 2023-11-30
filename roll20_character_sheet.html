@@ -2424,8 +2424,8 @@
             if (debug === 2) TAS.debug(`CHANGED "LEARN!", e=`, e);
             if (e.newValue === '0') return;
             const id = e.sourceAttribute.split('_')[2];
-            const values = await getAttrsAsync(["character_name", `repeating_${section}_${id}_charm-name`]);
-            const results = await startRoll(`/w gm **${values['character_name']}** is Learning a NEW CHARM called *"${values[`repeating_${section}_${id}_charm-name`]}"* for section *"${section}"* !`);
+            const values = await getAttrsAsync(["character_name", `repeating_${section}_${id}_charm-name`, `repeating_${section}_${id}_charm-skill`]);
+            const results = await startRoll(`/w gm **${values['character_name']}** is Learning a NEW CHARM called *"${values[`repeating_${section}_${id}_charm-name`]}"* for section *"${values[`repeating_${section}_${id}_charm-skill`]}"* !`);
             finishRoll(results.rollId);
         }));
     });
