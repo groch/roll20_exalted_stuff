@@ -112,7 +112,7 @@
         try {
             return await new Promise((resolve, reject) => {
                 prevAcid = setActiveCharacterId(acid);
-                try   { getSectionIDsOrdered(sectionName, (values) => { resolve(values); }); }
+                try { getSectionIDsOrdered(sectionName, (values) => { resolve(values); }); }
                 catch { reject(); }
             });
         } finally {
@@ -149,7 +149,7 @@
         if (!healthFieldNames) for (const id of idHealthArray) attribs.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`);
         const v = await getAttrsAsync(attribs);
         var final_array = _(idHealthArray).chain().sortBy(function(id) {
-            return v["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(v["repeating_health_" + id + "_hl-penalty"]);
+            return v[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(v[`repeating_health_${id}_hl-penalty`]);
         }).value();
         if(final_array && final_array.length > 0) {
             setSectionOrder("health", final_array);
@@ -171,7 +171,7 @@
 
         const valuesSections = await getAttrsAsync([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup']);
         let sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-            return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+            return valuesSections[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(valuesSections[`repeating_health_${id}_hl-penalty`]);
         }).value();
 
         const oldPen = Number(valuesSections['wound-penalty']) || 0,
@@ -187,7 +187,6 @@
                 else             pen = 0;
                 if (pen === 'I') pen = -4;
                 if (pen === '')  pen = 0;
-                found = true;
                 break;
             } else
                 actualHealth++;
@@ -387,7 +386,7 @@
         if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
             TAS.debug(`updateBattleGroupHealthDisplayed:: setting Health to NORMAL Char Display`);
             var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-                return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+                return valuesSections[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(valuesSections[`repeating_health_${id}_hl-penalty`]);
             }).value();
 
             let actualHealth = 0;
@@ -1168,7 +1167,7 @@
 
         const valuesSections = await getAttrsAsync([...healthFieldNames, 'personal-essence', 'personal-essence_max', 'peripheral-essence', 'peripheral-essence_max']);
         var sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-            return valuesSections["repeating_health_" + id + "_hl-penalty"] === 'I' ? 5 : -1 * Number(valuesSections["repeating_health_" + id + "_hl-penalty"]);
+            return valuesSections[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(valuesSections[`repeating_health_${id}_hl-penalty`]);
         }).value();
 
         let actualHealth = 0;
