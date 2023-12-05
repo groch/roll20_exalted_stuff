@@ -158,7 +158,7 @@ var CombatMaster = CombatMaster || (function() {
     combatState = 'COMBATMASTER',
     unitSizeRoll20 = 70;
 
-    round = state[combatState].round || 1;
+    round = state[combatState]?.round || 1;
 
     const inputHandler = (msg_orig) => {
         logger('inputHandler::inputHandler turnorder=' + JSON.stringify(Campaign().get('turnorder')));
