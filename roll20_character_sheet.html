@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.58, debug = 1;
+    const version = 2.59, debug = 1;
     var TAS;
 
     /**
@@ -640,6 +640,7 @@
         {version: 2.55, fn: upgradeto256},
         {version: 2.56, fn: upgradeto257},
         {version: 2.57, fn: upgradeto258},
+        {version: 2.58, fn: upgradeto259},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -834,6 +835,11 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    function upgradeto259() {
+        setAttrs({'version': 2.59});
+        computeAllRolls({sourceType: 'player'});
+    }
 
     async function upgradeto258() {
         const finalObj = {'version': 2.58};
@@ -1913,9 +1919,9 @@
 
     function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']} ${checkValReturnValidString(val[attr_name+'bonus-dices'], ' ')}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
     function defaultWAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'watk-attr']} +${val[attr_name+'watk-abi']}${checkValReturnValidString(val[attr_name+'weap-atk'], '', ' +')}[Accuracy] ${checkValReturnValidString(val[attr_name+'watk-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] +@{battlegroup-acc-boost}[BG Acc] ':''}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'watk-bonus-successes'])} ${val[attr_name+'watk-final-macro-options']}`; }
-    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']}`; }
+    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']} -NB`; }
     function defaultDAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'datk-attr']} +${val[attr_name+'datk-abi']} ${checkValReturnValidString(val[attr_name+'datk-bonus-dices'], ' ', '+')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'datk-bonus-successes'])} ${val[attr_name+'datk-final-macro-options']}`; }
-    function defaultDDamageFinalExpr(val, attr_name)     { return `(${val[attr_name+'ddmg-dices']})#${checkValReturnValidString(val[attr_name+'ddmg-bonus-successes'])} ${val[attr_name+'ddmg-final-macro-options']}`; }
+    function defaultDDamageFinalExpr(val, attr_name)     { return `(${val[attr_name+'ddmg-dices']})#${checkValReturnValidString(val[attr_name+'ddmg-bonus-successes'])} ${val[attr_name+'ddmg-final-macro-options']} -NB`; }
     function defaultInitToResetFinalExpr(val, attr_name) { return `${checkValReturnValidString(val[attr_name+'init-to-set'], ')', '(')}`; }
 
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
