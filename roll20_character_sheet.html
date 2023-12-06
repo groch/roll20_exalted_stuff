@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.59, debug = 1;
+    const version = 2.60, debug = 1;
     var TAS;
 
     /**
@@ -640,7 +640,7 @@
         {version: 2.55, fn: upgradeto256},
         {version: 2.56, fn: upgradeto257},
         {version: 2.57, fn: upgradeto258},
-        {version: 2.58, fn: upgradeto259},
+        {version: 2.59, fn: upgradeto260},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -836,9 +836,9 @@
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
 
-    function upgradeto259() {
-        setAttrs({'version': 2.59});
-        computeAllRolls({sourceType: 'player'});
+    function upgradeto260() {
+        setAttrs({'version': 2.60});
+        computeAllRolls({sourceType: 'player'}, false);
     }
 
     async function upgradeto258() {
