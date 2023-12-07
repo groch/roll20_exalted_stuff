@@ -1049,23 +1049,41 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         }
     },
 
-    sliceSpecials = (rawCmd) => {
-        rawCmd = checkAndSlice(rawCmd, '==atk==', () => {
-            sendChat(script_name, `/w gm <a style="${styles.buttonStyle}" href="!cmaster --onslaught"> &gt; Set Onslaught to Selected &lt; </a>`);
-        });
-        rawCmd = checkAndSlice(rawCmd, '=COST:', (rawCmd, costSlice) => {
-            logger(LOGLEVEL.INFO, `onChatMessage:: costSlice=${costSlice} rawCmd='${rawCmd}'`);
-            setCosts(costSlice);
-        });
-        return rawCmd;
+    sendOnslaughtWhisperToGm = () => {
+        sendChat(script_name, `/w gm <a style="${styles.buttonStyle}" href="!cmaster --onslaught"> &gt; Set Onslaught to Selected &lt; </a>`);
     },
 
-    checkAndSlice = (rawCmd, sliceString, callback) => {
-        var index = rawCmd.indexOf(sliceString);
-        if (index !== -1) {
-            let slice = rawCmd.slice(index + sliceString.length);
-            rawCmd = rawCmd.slice(0, index);
-            callback(rawCmd, slice);
+    setCostCallback = (rawCmd, costSlice) => {
+        logger(LOGLEVEL.INFO, `setCostCallback:: costSlice=${costSlice} rawCmd='${rawCmd}'`);
+        setCosts(costSlice);
+    },
+
+    arraySliceSpecials = [
+        {slice:'==atk==', callback:sendOnslaughtWhisperToGm},
+        {slice:'=COST:', callback:setCostCallback},
+    ],
+
+    sliceSpecials = (rawCmd) => {
+        logger(`sliceSpecials:: rawCmd='${rawCmd}'`);
+        let lastIndex, sliceSelected;
+
+        while (arraySliceSpecials.map(i => i.slice).some(slice => rawCmd.includes(slice))) {
+            lastIndex = -1;
+            sliceSelected = undefined;
+            for (const sliceObj of arraySliceSpecials) {
+                let testIndex = rawCmd.indexOf(sliceObj.slice);
+                if (testIndex > lastIndex) {
+                    logger(`sliceSpecials:: FOUND SLICE sliceObj.slice='${sliceObj.slice}'`);
+                    lastIndex = testIndex;
+                    sliceSelected = sliceObj;
+                }
+            }
+            if (sliceSelected) {
+                logger(`sliceSpecials:: CUTTING&CALLING SLICE sliceObj.slice='${sliceSelected.slice}'`);
+                let slice = rawCmd.slice(lastIndex + sliceSelected.slice.length);
+                rawCmd = rawCmd.slice(0, lastIndex);
+                sliceSelected.callback(rawCmd, slice);
+            }
         }
         return rawCmd;
     },
