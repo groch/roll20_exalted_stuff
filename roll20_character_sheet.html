@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.60, debug = 1;
+    const version = 2.61, debug = 1;
     var TAS;
 
     /**
@@ -640,7 +640,7 @@
         {version: 2.55, fn: upgradeto256},
         {version: 2.56, fn: upgradeto257},
         {version: 2.57, fn: upgradeto258},
-        {version: 2.59, fn: upgradeto260},
+        {version: 2.60, fn: upgradeto261},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -836,9 +836,9 @@
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
 
-    function upgradeto260() {
-        setAttrs({'version': 2.60});
-        computeAllRolls({sourceType: 'player'}, false);
+    function upgradeto261() {
+        setAttrs({'version': 2.61});
+        computeAllDamageRolls();
     }
 
     async function upgradeto258() {
@@ -1070,13 +1070,13 @@
 
     function upgradeto242() {
         setAttrs({'version': 2.42});
-        computeAllRolls({sourceType: 'player'}, false);
+        verifyAllCharmsRollExpr({sourceType: 'player'}, false);
     }
 
     async function upgradeto240() {
         const bg = await getSingleAttrAsync("battlegroup");
         if (bg && Number(bg))
-            computeAllRolls({sourceType: 'player'}, false);
+            verifyAllCharmsRollExpr({sourceType: 'player'}, false);
         setAttrs({'version': 2.40});
     }
 
@@ -1085,7 +1085,7 @@
             'wound-penalty': Math.abs(await getSingleAttrAsync("wound-penalty")),
             'version': 2.39
         });
-        computeAllRolls({sourceType: 'player'}, false);
+        verifyAllCharmsRollExpr({sourceType: 'player'}, false);
     }
 
     function upgradeto238() {
@@ -1094,7 +1094,7 @@
             'rollpenalty-input': 0,
             'version': 2.38
         });
-        computeAllRolls({sourceType: 'player'}, false);
+        verifyAllCharmsRollExpr({sourceType: 'player'}, false);
     }
 
     async function upgradeto237() {
@@ -1894,10 +1894,22 @@
         if (cb) cb(string);
     }
 
-    /* ALL Binds to update charms */
-    attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(computeAllRolls)));
+    async function computeAllDamageRolls() {
+       TAS.debug('computeAllDamageRolls::computeAllDamageRolls');
 
-    async function computeAllRolls(e, setIfReplaced = true) {
+        if (debug === 2) TAS.debug('computeAllDamageRolls:: UPDATING DAMAGE ROLLS');
+        const arrayIdCharmSection = await getSectionIDsAsync('combat-attack');
+        for (const id of arrayIdCharmSection) {
+            const fakeEvent = {sourceAttribute:`repeating_combat-attack_${id}_fake-attr`};
+            computeRepeatingRoll(fakeEvent, wDmgAttrsToBind, defaultWDamageFinalExpr, 'repcombat-', 'wdmg-');
+            computeRepeatingRoll(fakeEvent, dDmgAttrsToBind, defaultDDamageFinalExpr, 'repcombat-', 'ddmg-');
+        }
+    }
+
+    /* ALL Binds to update charms */
+    attrNAbi.forEach(section => on(`change:${section}`, setDebugWrapper(verifyAllCharmsRollExpr)));
+
+    async function verifyAllCharmsRollExpr(e, setIfReplaced = true) {
         if (e.sourceType !== "player") {
             TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
             return;
