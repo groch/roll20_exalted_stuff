@@ -1623,7 +1623,7 @@
         'charms'
     ];
     const charmRepeatableSectionArray = ['charms-all'];
-    const charmRollExprRegexp = /^!exr (?:\d+|\(.+\))#/;
+    const charmRollExprRegexp = /^!exr (?:(?:\d+|\(.+\))#|-set)/;
     [...charmRepeatableSectionArray, 'spells'].forEach(section => {
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function clickGMCharmCast(e) {
             if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=`, e);
@@ -5482,7 +5482,7 @@
                                     </div>
                                     <div class="sheet-charm-effect">
                                         <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
-                                        <input type="text" name="attr_charm-rollexpr" placeholder="EX: '!exr 15# -d 8,9 -r 6 -v', '!exr (10+?{Motes?|5})#+?{Succes ?|0}', ..."/>
+                                        <input type="text" name="attr_charm-rollexpr" placeholder="EX: '!exr -setOnce -d 9 -CRStarter @{essence}', '!exr 15# -d 8,9 -r 6 -v', '!exr (10+?{Motes?|5})#+?{Succes ?|0}', ..."/>
                                     </div>
                                 </div>
                             </div>
