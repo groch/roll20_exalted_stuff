@@ -63,7 +63,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     };
 
     // CONSTANTS for HTML
-    const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px; color: black",
+    const   outerStyleNoBack = "margin: 0 0 -7px -45px; color: black",
+            outerStyle = `background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; ${outerStyleNoBack}`,
             innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
             baseColor = 'black',
             successColor = '#23b04f',
@@ -950,6 +951,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 ],
             },
             {
+                arrayfirstCol: ['-listAllStored'],
+                arraySecondCol: ["<b>This command is used to list the stored commands for later rolls.</b>"],
+            },
+            {
                 arrayfirstCol: [...Object.keys(ConditionalList).map(i => `-${i}`)],
                 arraySecondCol: [
                     "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
@@ -967,7 +972,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             }
         ],
         defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-        helpVersion = 1.20;
+        helpVersion = 1.22;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -1048,7 +1053,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         if (['api', 'general'].includes(msg.type) && msg.content.indexOf(apiWake) === 0) {
             var slc = msg.content.slice(msg.content.indexOf(apiWake) + apiWake.length);
             var rawCmd = slc.trim();
-            rawCmd = sliceSpecials(rawCmd);
+            rawCmd = sliceSpecials(rawCmd, msg);
 
             logger(`onChatMessage:: after sliceSpecials rawCmd='${rawCmd}'`);
 
@@ -1120,6 +1125,18 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         checkStateOrDefault();
         logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: stored once cmds='${JSON.stringify(state[ex3DiceState].commandStoredOnce)}'`);
         logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: stored lingering cmds='${JSON.stringify(state[ex3DiceState].commandStored)}'`);
+        var html = "";
+        html += "<div style=\"" + outerStyleNoBack + "\"><div style=\"" + innerStyle + "\">";
+        html +=     "<div class=\"formula\" style=\"" + formulaStyle + "\">";
+        if (state[ex3DiceState].commandStored.length)
+            html +=     "stored cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].commandStored.map(i => i.origCmd).join(' ') + "</code><br>";
+        if (state[ex3DiceState].commandStoredOnce.length)
+            html +=     "storedOnce cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].commandStoredOnce.map(i => i.origCmd).join(' ') + "</code>";
+        if (!state[ex3DiceState].commandStored.length && !state[ex3DiceState].commandStoredOnce.length)
+            html +=     "No command has been stored yet.";
+        html +=     "</div>";
+        html += "</div>";
+        return html;
     },
 
     arraySliceSpecials = [
@@ -1132,7 +1149,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         {slice:'-listAllStored', callback:listAllStoredCommandCallback},
     ],
 
-    sliceSpecials = (rawCmd) => {
+    sliceSpecials = (rawCmd, msg) => {
         logger(`sliceSpecials:: rawCmd='${rawCmd}'`);
         let lastIndex, sliceSelected;
 
@@ -1151,7 +1168,11 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 logger(`sliceSpecials:: CUTTING&CALLING SLICE sliceObj.slice='${sliceSelected.slice}'`);
                 let slice = rawCmd.slice(lastIndex + sliceSelected.slice.length);
                 rawCmd = rawCmd.slice(0, lastIndex);
-                sliceSelected.callback(rawCmd, slice);
+                let ret = sliceSelected.callback(rawCmd, slice);
+                if (ret) {
+                    const player = msg.playerid === 'API' ? { get: () => 'API' } : getObj("player", msg.playerid);
+                    sendChat(msg.who, `/w ${player.get('displayname')} ${ret}`);
+                }
             }
         }
         return rawCmd;
