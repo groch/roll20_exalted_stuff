@@ -46,6 +46,22 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             log(...logged);
     };
 
+    const objExistInArray = (obj, array) => {
+        for (const item of array)
+            if (_.isEqual(item, obj)) return true;
+        return false;
+    };
+
+    const ex3DiceState = "EX3DICECUSTOM";
+    const checkStateOrDefault = () => {
+        state[ex3DiceState] || (state[ex3DiceState] = {commandStoredOnce:[], commandStored:[]});
+    };
+    const commandExistInStored = (obj, once = false) => {
+        const commandAttribute = once ? 'commandStoredOnce' : 'commandStored';
+        checkStateOrDefault();
+        return objExistInArray(obj, state[ex3DiceState][commandAttribute]);
+    };
+
     // CONSTANTS for HTML
     const   outerStyle = "background: url('https://app.roll20.net/images/quantumrollsm.png') no-repeat bottom left; margin: 0 0 -7px -45px; color: black",
             innerStyle = "margin: 0 0 7px 45px; padding-bottom: 7px;",
@@ -915,6 +931,25 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 arraySecondCol: ["<b>This command is used to hide the botch message.</b>"],
             },
             {
+                arrayfirstCol: ['-setOnce COMMANDS', '-set COMMANDS'],
+                arraySecondCol: [
+                    "<b>These commands are used to store the following commands for next roll(s).</b>",
+                    "<code style=\"white-space: nowrap\">-set</code> store the commands until a <code style=\"white-space: nowrap\">-clearStored</code> or <code style=\"white-space: nowrap\">-clearAllStored</code> is used.",
+                    "Example :<code style=\"white-space: nowrap\">!exr -setOnce -d 9 -CRStarter @{essence}</code>.",
+                    "<hr>",
+                    "<b><u>Beware</u></b>",
+                    "The commands are recomposed sequentially, starting from <b>stored</b>, then <b>storedOnce</b>, then the <b>provided ones</b>.",
+                    "Then commands are processed sequentially, if same commands are stored and sent in the roll, stored will be executed before what you had prepared in the roll."
+                ],
+            },
+            {
+                arrayfirstCol: ['-clearStored', '-clearAllStored'],
+                arraySecondCol: [
+                    "<b>These commands are used to clear the stored commands.</b>",
+                    "<code style=\"white-space: nowrap\">-clearAllStored</code> clear also what has been set with <code style=\"white-space: nowrap\">-setOnce</code>.",
+                ],
+            },
+            {
                 arrayfirstCol: [...Object.keys(ConditionalList).map(i => `-${i}`)],
                 arraySecondCol: [
                     "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
@@ -932,7 +967,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             }
         ],
         defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-        helpVersion = 1.17;
+        helpVersion = 1.20;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -1058,9 +1093,43 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         setCosts(costSlice);
     },
 
+    setCommandsToNextRollOnceCallback = (rawCmd, commandSlice) => {
+        logger(LOGLEVEL.INFO, `setCommandsToNextRollOnceCallback:: commandSlice='${commandSlice}' rawCmd='${rawCmd}'`);
+        setCommandsToNextRoll(commandSlice);
+    },
+
+    setCommandsToNextRollCallback = (rawCmd, commandSlice) => {
+        logger(LOGLEVEL.INFO, `setCommandsToNextRollCallback:: commandSlice='${commandSlice}' rawCmd='${rawCmd}'`);
+        setCommandsToNextRoll(commandSlice, true);
+    },
+
+    clearStoredCommandCallback = () => {
+        logger(LOGLEVEL.INFO, `clearAllStoredCommandCallback:: CLEARING STORED CMDS`);
+        checkStateOrDefault();
+        state[ex3DiceState].commandStored = [];
+    },
+
+    clearAllStoredCommandCallback = () => {
+        logger(LOGLEVEL.INFO, `clearAllStoredCommandCallback:: CLEARING ALL STORED CMDS`);
+        checkStateOrDefault();
+        state[ex3DiceState].commandStored = [];
+        state[ex3DiceState].commandStoredOnce = [];
+    },
+
+    listAllStoredCommandCallback = () => {
+        checkStateOrDefault();
+        logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: stored once cmds='${JSON.stringify(state[ex3DiceState].commandStoredOnce)}'`);
+        logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: stored lingering cmds='${JSON.stringify(state[ex3DiceState].commandStored)}'`);
+    },
+
     arraySliceSpecials = [
         {slice:'==atk==', callback:sendOnslaughtWhisperToGm},
         {slice:'=COST:', callback:setCostCallback},
+        {slice:'-setOnce ', callback:setCommandsToNextRollOnceCallback},
+        {slice:'-set ', callback:setCommandsToNextRollCallback},
+        {slice:'-clearStored', callback:clearStoredCommandCallback},
+        {slice:'-clearAllStored', callback:clearAllStoredCommandCallback},
+        {slice:'-listAllStored', callback:listAllStoredCommandCallback},
     ],
 
     sliceSpecials = (rawCmd) => {
@@ -1086,6 +1155,57 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             }
         }
         return rawCmd;
+    },
+
+    /**
+     * COMMANDS STORED SECTION
+     */
+
+    setCommandsToNextRoll = (commandSlice, linger = false) => {
+        logger(LOGLEVEL.INFO, `setCommandsToNextRoll:: commandSlice='${commandSlice}'`);
+        var strSplit = commandSlice.split('-');
+        var cmds = [];
+        for (const i of strSplit) parseCmds(i, cmds);
+        logger(LOGLEVEL.INFO, `setCommandsToNextRoll:: parsed cmds='${JSON.stringify(cmds)}'`);
+        checkStateOrDefault();
+        const commandAttribute = linger ? 'commandStored' : 'commandStoredOnce';
+        for (const cmd of cmds) {
+            if (!commandExistInStored(cmd, !linger))
+                state[ex3DiceState][commandAttribute].push(cmd);
+        }
+        logger(LOGLEVEL.INFO, `setCommandsToNextRoll:: ${commandAttribute}='${JSON.stringify(state[ex3DiceState][commandAttribute])}'`);
+    },
+
+    applyStoredCommands = (cmds) => {
+        const backup = cmds, objStr = {storedStr:[], storedOnce:[]};
+        cmds = [];
+        checkStateOrDefault();
+
+        if (state[ex3DiceState].commandStored.length) {
+            logger(LOGLEVEL.INFO, `applyStoredCommands:: stored cmds='${JSON.stringify(state[ex3DiceState].commandStored)}'`);
+            for (const cmd of state[ex3DiceState].commandStored) {
+                cmds.push(cmd);
+                objStr.storedStr.push(cmd.origCmd);
+            }
+            cmds.push(...state[ex3DiceState].commandStored);
+        }
+
+        if (state[ex3DiceState].commandStoredOnce.length) {
+            logger(LOGLEVEL.INFO, `applyStoredCommands:: stored once cmds='${JSON.stringify(state[ex3DiceState].commandStoredOnce)}'`);
+            for (const cmd of state[ex3DiceState].commandStoredOnce) {
+                if (!objExistInArray(cmd, cmds)) {
+                    cmds.push(cmd);
+                    objStr.storedOnce.push(cmd.origCmd);
+                }
+            }
+            state[ex3DiceState].commandStoredOnce = [];
+        }
+
+        for (const cmd of backup) {
+            if (!objExistInArray(cmd, cmds))
+                cmds.push(cmd);
+        }
+        return [cmds, objStr];
     },
 
     /**
@@ -1507,13 +1627,16 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 logger(`performRoll:: RealRoll=${JSON.stringify(realOrigRoll)}`);
                 ops[0].origRoll = realOrigRoll;
                 var strSplit = ops[0].origRoll.split('-');
-                var cmds = [];
+                var cmds = [], storedCommandsStrObj;
                 for (const i of strSplit) parseCmds(i, cmds);
 
                 logger(LOGLEVEL.NOTICE, 'performRoll::parseCmds DONE !');
                 logger('performRoll::ops=' + JSON.stringify(ops));
                 logger('performRoll::result=' + ops[0].content);
-                logger('performRoll::cmds=' + JSON.stringify(cmds));
+                logger(LOGLEVEL.INFO, 'performRoll::cmds=' + JSON.stringify(cmds));
+
+                [cmds, storedCommandsStrObj] = applyStoredCommands(cmds);
+                logger(LOGLEVEL.INFO, 'performRoll:: after including stored cmds=' + JSON.stringify(cmds));
 
                 parseAddedSuccesses(result, msg.content);
 
@@ -1522,7 +1645,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 finalizeRoll(result);
 
                 const player = msg.playerid === 'API' ? { get: () => 'API' } : getObj("player", msg.playerid);
-                var outHTML = buildHTML(result, ops[0].origRoll, player);
+                var outHTML = buildHTML(result, ops[0].origRoll, storedCommandsStrObj, player);
                 if (!outHTML) {
                     logger(LOGLEVEL.EMERGENCY, 'performRoll:: !!!!!!!!! outHTML IS NULL OR EMPTY !!!!!!!!!!');
                     return;
@@ -1616,6 +1739,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 logger(LOGLEVEL.NOTICE, `parseCmds::MATCH${i + 1} = ${ParserConfig[i].categoryName}`);
                 logger('parseCmds::ret=' + JSON.stringify(ret));
                 objRet = ParserConfig[i].getCmdObj(ret);
+                objRet.origCmd = `-${trim}`;
                 break;
             }
         }
@@ -1627,7 +1751,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                     match = true;
                     logger(LOGLEVEL.NOTICE, `parseCmds::MATCH - Conditional Item = ${condItem}`);
                     logger('parseCmds::ret=' + JSON.stringify(ret));
-                    objRet = { cmd: condItem, condiFullParsed: ret };
+                    objRet = { cmd: condItem, condiFullParsed: ret, origCmd: `-${trim}`};
                 }
             }
         }
@@ -2220,7 +2344,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     *
     * @return string						html		The completed, raw HTML, to be sent in a direct message to the chat window.
     */
-    buildHTML = (result, origRoll, player) => {
+    buildHTML = (result, origRoll, storedCommandsStrObj, player) => {
         if (!result.rolls[0].results) {
             logger(LOGLEVEL.EMERGENCY, 'buildHTML:: !!!!!! result.rolls[0].results IS EMPTY !?!?!?!??!?!?! !!!!!!!!!');
             return;
@@ -2235,7 +2359,13 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
         var html = "";
         html += "<div style=\"" + outerStyle + "\"><div style=\"" + innerStyle + "\">";
-        html +=     "<div class=\"formula\" style=\"" + formulaStyle + "\">" + player.get('displayname') + " roll <code style=\"font-size:0.8em;\">" + origRoll + "</code> </div>";
+        html +=     "<div class=\"formula\" style=\"" + formulaStyle + "\">";
+        html +=         player.get('displayname') + " roll <code style=\"font-size:0.8em;\">" + origRoll + "</code>";
+        if (storedCommandsStrObj.storedStr.length)
+            html +=     " stored cmd: <code style=\"font-size:0.8em;\">" + storedCommandsStrObj.storedStr.join(' ') + "</code>";
+        if (storedCommandsStrObj.storedOnce.length)
+            html +=     " storedOnce cmd: <code style=\"font-size:0.8em;\">" + storedCommandsStrObj.storedOnce.join(' ') + "</code>";
+        html +=     " </div>";
         html +=     "<div style=\"clear: both;\"></div>";
         if (!result.rollSetup.onlyResult) {
             html += "<div class=\"formula formattedformula\" style=\"" + diceStyle + "\">";
