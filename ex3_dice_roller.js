@@ -795,8 +795,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             charId:     '-' + matchReturn[1]
         })
     }, {
-        categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle',
-        pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|NB|NoBotch)$/,
+        categoryName: 'GM, D, Turn, Verbosity, color, onlyResult, reverseTitle, NoBotch, PreventStoredCommands',
+        pattern: /^(g|gm|D|target|turn|v|V|c|o|onlyResult|rev|reverseTitle|NB|NoBotch|PSC|PreventStoredCommands)$/,
         getCmdObj: (matchReturn) => ({
             cmd: matchReturn[1]
         })
@@ -955,6 +955,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 arraySecondCol: ["<b>This command is used to list the stored commands for later rolls.</b>"],
             },
             {
+                arrayfirstCol: ['-PSC', '-PreventStoredCommands'],
+                arraySecondCol: ["<b>These commands are used to specify that the stored commands should not be included.</b>"],
+            },
+            {
                 arrayfirstCol: [...Object.keys(ConditionalList).map(i => `-${i}`)],
                 arraySecondCol: [
                     "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
@@ -972,7 +976,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             }
         ],
         defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-        helpVersion = 1.22;
+        helpVersion = 1.23;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -1197,8 +1201,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         logger(LOGLEVEL.INFO, `setCommandsToNextRoll:: ${commandAttribute}='${JSON.stringify(state[ex3DiceState][commandAttribute])}'`);
     },
 
-    applyStoredCommands = (cmds) => {
-        const backup = cmds, objStr = {storedStr:[], storedOnce:[]};
+    applyStoredCommands = (cmds, objStr) => {
+        const backup = cmds;
         cmds = [];
         checkStateOrDefault();
 
@@ -1225,7 +1229,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             if (!objExistInArray(cmd, cmds))
                 cmds.push(cmd);
         }
-        return [cmds, objStr];
+        return cmds;
     },
 
     /**
@@ -1637,17 +1641,18 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         sendChat(msg.who, cmd, function (ops) {
             logger(`performRoll:: RETURN FROM ROLL20 ops=${JSON.stringify(ops)}`);
             if (ops[0].type == 'rollresult') {
-                var result = JSON.parse(ops[0].content);
+                let result = JSON.parse(ops[0].content);
                 result.toGm = false;
                 result.setTurn = false;
+                result.preventStoredCommands = false;
 
                 setupRollStructure(result);
 
                 logger(`performRoll:: origRoll=${JSON.stringify(ops[0].origRoll)}`);
                 logger(`performRoll:: RealRoll=${JSON.stringify(realOrigRoll)}`);
                 ops[0].origRoll = realOrigRoll;
-                var strSplit = ops[0].origRoll.split('-');
-                var cmds = [], storedCommandsStrObj;
+                let cmds = [];
+                const strSplit = ops[0].origRoll.split('-'), storedCommandsStrObj = {storedStr:[], storedOnce:[]};
                 for (const i of strSplit) parseCmds(i, cmds);
 
                 logger(LOGLEVEL.NOTICE, 'performRoll::parseCmds DONE !');
@@ -1655,7 +1660,9 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 logger('performRoll::result=' + ops[0].content);
                 logger(LOGLEVEL.INFO, 'performRoll::cmds=' + JSON.stringify(cmds));
 
-                [cmds, storedCommandsStrObj] = applyStoredCommands(cmds);
+                if (cmds && cmds.length) preProcessCmds(cmds, result);
+                if (!result.preventStoredCommands)
+                    cmds = applyStoredCommands(cmds, storedCommandsStrObj);
                 logger(LOGLEVEL.INFO, 'performRoll:: after including stored cmds=' + JSON.stringify(cmds));
 
                 parseAddedSuccesses(result, msg.content);
@@ -1665,7 +1672,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 finalizeRoll(result);
 
                 const player = msg.playerid === 'API' ? { get: () => 'API' } : getObj("player", msg.playerid);
-                var outHTML = buildHTML(result, ops[0].origRoll, storedCommandsStrObj, player);
+                let outHTML = buildHTML(result, ops[0].origRoll, storedCommandsStrObj, player);
                 if (!outHTML) {
                     logger(LOGLEVEL.EMERGENCY, 'performRoll:: !!!!!!!!! outHTML IS NULL OR EMPTY !!!!!!!!!!');
                     return;
@@ -1674,9 +1681,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 if (result.toGm) {
                     if (!playerIsGM(msg.playerid)) sendChat(msg.who, `/w ${player.get('displayname')} ${outHTML}`);
                     sendChat(msg.who, '/w gm ' + outHTML);
-                } else {
+                } else
                     sendChat(msg.who, '/direct ' + outHTML);
-                }
 
                 if (result.setTurn)
                     setSelectedTurnOrder(msg.selected, result.total);
@@ -1910,6 +1916,22 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         }
 
         logger(`processCmds::processCmds END`);
+    },
+
+    preProcessCmds = (cmds, result) => {
+        logger(LOGLEVEL.INFO, `preProcessCmds::preProcessCmds cmds=${JSON.stringify(cmds)}, result=${JSON.stringify(result)}`);
+        for (const item of cmds) {
+            switch (String(item.cmd)) {
+                case 'PSC':
+                case 'PreventStoredCommands':
+                    result.preventStoredCommands = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        logger(`preProcessCmds::preProcessCmds END`);
     },
 
     recountSuccesses = (result) => {
