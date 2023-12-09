@@ -1191,7 +1191,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         checkStateOrDefault();
         const commandAttribute = linger ? 'commandStored' : 'commandStoredOnce';
         for (const cmd of cmds) {
-            if (!commandExistInStored(cmd, !linger))
+            if (!commandExistInStored(cmd, !linger) && !['g','gm'].includes(cmd.cmd))
                 state[ex3DiceState][commandAttribute].push(cmd);
         }
         logger(LOGLEVEL.INFO, `setCommandsToNextRoll:: ${commandAttribute}='${JSON.stringify(state[ex3DiceState][commandAttribute])}'`);
