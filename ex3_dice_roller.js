@@ -1208,7 +1208,6 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 cmds.push(cmd);
                 objStr.storedStr.push(cmd.origCmd);
             }
-            cmds.push(...state[ex3DiceState].commandStored);
         }
 
         if (state[ex3DiceState].commandStoredOnce.length) {
