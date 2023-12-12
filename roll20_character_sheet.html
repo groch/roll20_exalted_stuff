@@ -551,7 +551,7 @@
             "personal-equation": "0", "peripheral-equation": "0",
             "showanimadiv": 1, "showsupdiv": 0, "showlimit": 0,
             "caste-low": 'unknown',
-            "diceex": 0, "succex": 1, "canspendmote": 0
+            "diceex": 1, "succex": 0, "canspendmote": 0
         };
         if (isSolarBasedExalt(caste)) {
             finalObj["personal-equation"]   = "@{essence} * 3 + 10 - @{committedessperso}";
@@ -561,6 +561,7 @@
         } else if (isDB(caste)){
             finalObj["personal-equation"]   = "@{essence} * 1 + 11 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 4 + 23 - @{committedesstotal}";
+            finalObj["succex"] = 1;
         } else if (isAttributeBasedExalt(caste)){
             finalObj["personal-equation"]   = "@{essence} * 1 + 15 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 4 + 34 - @{committedesstotal}";
@@ -1306,6 +1307,7 @@
             'charmwhispergm': 0,
             'charmwhisperboth': 0,
             'caste': 'Mortal',
+            'caste-low': 'unknown',
             'personal-equation': '0',
             'peripheral-equation': '0',
             'showanimadiv': 0,
@@ -1317,6 +1319,7 @@
             'battlegroup-dmg-boost': 0,
             'grab-def-penalty': 0,
             'prone-def-penalty': 0,
+            'full-def-bonus': 0,
             'cover-def-bonus': 0,
             'clash-def-penalty': 0,
             'roll-penalty': 0
