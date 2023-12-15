@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.61, debug = 1;
+    const version = 2.62, debug = 1;
     var TAS;
 
     /**
@@ -642,6 +642,7 @@
         {version: 2.56, fn: upgradeto257},
         {version: 2.57, fn: upgradeto258},
         {version: 2.60, fn: upgradeto261},
+        {version: 2.61, fn: upgradeto262},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -836,6 +837,15 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto262() {
+        const finalObj = {
+            'appearancefav': await getSingleAttrAsync('apperancefav'),
+            'version': 2.62
+        };
+        TAS.debug(`upgradeto262:: finalObj=`, finalObj);
+        setAttrs(finalObj);
+    }
 
     function upgradeto261() {
         setAttrs({'version': 2.61});
@@ -2791,7 +2801,7 @@
                                 <option value="Day">Day</option>
                                 <option value="Moonshadow">Moonshadow</option>
 
-                                <option value="db" disabled>--- DRAGON BLOODED ---</option>
+                                <option value="dragon blooded" disabled>--- DRAGON BLOODED ---</option>
                                 <option value="Air">Air</option>
                                 <option value="Earth">Earth</option>
                                 <option value="Fire">Fire</option>
@@ -2819,19 +2829,19 @@
                                 <option value="Soil">Soil</option>
 
                                 <option value="infernals" disabled>--- INFERNALS ---</option>
-                                <option value="Slayer">Slayer</option>
-                                <option value="Malefactor">Malefactor</option>
                                 <option value="Defiler">Defiler</option>
-                                <option value="Scourge">Scourge</option>
                                 <option value="Fiend">Fiend</option>
+                                <option value="Malefactor">Malefactor</option>
+                                <option value="Scourge">Scourge</option>
+                                <option value="Slayer">Slayer</option>
 
-                                <option value="alchemical" disabled>--- ALCHEMICALS ---</option>
+                                <option value="alchemicals" disabled>--- ALCHEMICALS ---</option>
                                 <option value="Adamant">Adamant</option>
+                                <option value="Jade">Jade</option>
+                                <option value="Moonsilver">Moonsilver</option>
                                 <option value="Orichalcum">Orichalcum</option>
                                 <option value="Soulsteel">Soulsteel</option>
-                                <option value="Moonsilver">Moonsilver</option>
                                 <option value="Starmetal">Starmetal</option>
-                                <option value="Jade">Jade</option>
 
                                 <option value="other" disabled>--- OTHER ---</option>
                                 <option value="Exigent">Exigent</option>
@@ -2991,7 +3001,7 @@
                     </div>
                     <div class="sheet-trait" title="@{appearance}">
                         <label>
-                            <input type="checkbox" name="attr_apperancefav" value="1"><span></span>
+                            <input type="checkbox" name="attr_appearancefav" value="1"><span></span>
                             <span>Appearance</span>
                         </label>
                         <div class="sheet-dots">

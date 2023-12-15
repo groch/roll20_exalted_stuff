@@ -1,4 +1,4 @@
-    const version = 2.61, debug = 1;
+    const version = 2.62, debug = 1;
     var TAS;
 
     /**
@@ -641,6 +641,7 @@
         {version: 2.56, fn: upgradeto257},
         {version: 2.57, fn: upgradeto258},
         {version: 2.60, fn: upgradeto261},
+        {version: 2.61, fn: upgradeto262},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -835,6 +836,15 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto262() {
+        const finalObj = {
+            'appearancefav': await getSingleAttrAsync('apperancefav'),
+            'version': 2.62
+        };
+        TAS.debug(`upgradeto262:: finalObj=`, finalObj);
+        setAttrs(finalObj);
+    }
 
     function upgradeto261() {
         setAttrs({'version': 2.61});

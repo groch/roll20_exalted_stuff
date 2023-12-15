@@ -8,9 +8,90 @@ eval(sheetWorkerStr+/*javascript*/`
     };
 
     function on(triggerTxt, ...args) {}
+
+    // Special variable used in node sheet assembler to produce the full sheet
+    var sheetCasteTree = {
+        SOLARS: casteTree.Solar,
+        ABYSSALS: casteTree.Abyssal,
+        'DRAGON BLOODED': casteTree.DB,
+        LUNARS: casteTree.Lunar,
+        SIDEREALS: casteTree.Sidereal,
+        LIMINALS: casteTree.Liminal,
+        INFERNALS: casteTree.Infernal,
+        ALCHEMICALS: casteTree.Alchemical,
+        OTHER: ['Exigent','Getimian','God','God-Blooded','Elemental','Demon','Undead','Mortal','Custom'],
+    };
+
+    var attributes = [
+        'Strength',
+        'Dexterity',
+        'Stamina',
+        'Charisma',
+        'Manipulation',
+        'Appearance',
+        'Perception',
+        'Intelligence',
+        'Wits'
+    ];
+    var abilities = [
+        'Archery',
+        'Athletics',
+        'Awareness',
+        'Brawl',
+        'Bureaucracy',
+        {
+            name:'Craft',
+            subSections: {
+                'Armoring': 'craft-armoring',
+                'Artifact': 'craft-artifact',
+                'Cooking': 'craft-cooking',
+                'First Age Artifice': 'craft-artifice',
+                'Gemcutting': 'craft-gemcutting',
+                'Geomancy': 'craft-geomancy',
+                'Jewelry': 'craft-jewelry',
+                'Tailoring': 'craft-tailoring',
+                'Weapon Forging': 'craft-forging',
+            }
+        },
+        'Dodge',
+        'Integrity',
+        'Investigation',
+        'Larceny',
+        'Linguistics',
+        'Lore',
+        {
+            name:'Martial Arts',
+            subSections: {
+                'Snake Style': 'ma-snake',
+                'Tiger Style': 'ma-tiger',
+                'Single Point Shining Into The Void Style': 'ma-void',
+                'White Reaper Style': 'ma-reaper',
+                'Ebon Shadow Style': 'ma-ebon',
+                'Crane Style': 'ma-crane',
+                'Silver-voiced Nightingale Style': 'ma-nightingale',
+                'Righteous Devil Style': 'ma-devil',
+                'Black Claw Style': 'ma-claw',
+                'Dreaming Pearl Courtesan Style': 'ma-pearl',
+                'Steel Devil Style': 'ma-steel',
+            }
+        },
+        'Medicine',
+        'Melee',
+        'Occult',
+        'Performance',
+        'Presence',
+        'Resistance',
+        'Ride',
+        'Sail',
+        'Socialize',
+        'Stealth',
+        'Survival',
+        'Thrown',
+        'War',
+    ];
 `);
 
-console.log(/*html*/
+let outHtml = /*html*/
 `<script type="text/worker">
 ${sheetWorkerStr}
 </script>
@@ -160,74 +241,16 @@ ${sheetWorkerStr}
                             <label>Caste/Aspect:
                             <select class="player-caste" name="attr_caste">
                                 <option value=""></option>
+`;
+for (const sectionHeader of Object.keys(sheetCasteTree)) {
+    outHtml += `\n${" ".repeat(32)}<option value="${sectionHeader.toLowerCase()}" disabled>--- ${sectionHeader} ---</option>\n`;
+    for (const line of sheetCasteTree[sectionHeader]) {
+        outHtml += `${" ".repeat(32)}<option value="${line}"${line === 'Mortal' ? ' selected="selected"' : ''}>${line}</option>\n`;
+    }
+}
 
-                                <option value="solars" disabled>--- SOLARS ---</option>
-                                <option value="Dawn">Dawn</option>
-                                <option value="Zenith">Zenith</option>
-                                <option value="Twilight">Twilight</option>
-                                <option value="Night">Night</option>
-                                <option value="Eclipse">Eclipse</option>
-
-                                <option value="abyssals" disabled>--- ABYSSALS ---</option>
-                                <option value="Dusk">Dusk</option>
-                                <option value="Midnight">Midnight</option>
-                                <option value="Daybreak">Daybreak</option>
-                                <option value="Day">Day</option>
-                                <option value="Moonshadow">Moonshadow</option>
-
-                                <option value="db" disabled>--- DRAGON BLOODED ---</option>
-                                <option value="Air">Air</option>
-                                <option value="Earth">Earth</option>
-                                <option value="Fire">Fire</option>
-                                <option value="Water">Water</option>
-                                <option value="Wood">Wood</option>
-
-                                <option value="lunars" disabled>--- LUNARS ---</option>
-                                <option value="Full Moon">Full Moon</option>
-                                <option value="Changing Moon">Changing Moon</option>
-                                <option value="No Moon">No Moon</option>
-                                <option value="Casteless">Casteless</option>
-
-                                <option value="sidereals" disabled>--- SIDEREALS ---</option>
-                                <option value="Journeys">Journeys</option>
-                                <option value="Serenity">Serenity</option>
-                                <option value="Battles">Battles</option>
-                                <option value="Secrets">Secrets</option>
-                                <option value="Endings">Endings</option>
-
-                                <option value="liminals" disabled>--- LIMINALS ---</option>
-                                <option value="Blood">Blood</option>
-                                <option value="Breath">Breath</option>
-                                <option value="Flesh">Flesh</option>
-                                <option value="Marrow">Marrow</option>
-                                <option value="Soil">Soil</option>
-
-                                <option value="infernals" disabled>--- INFERNALS ---</option>
-                                <option value="Slayer">Slayer</option>
-                                <option value="Malefactor">Malefactor</option>
-                                <option value="Defiler">Defiler</option>
-                                <option value="Scourge">Scourge</option>
-                                <option value="Fiend">Fiend</option>
-
-                                <option value="alchemical" disabled>--- ALCHEMICALS ---</option>
-                                <option value="Adamant">Adamant</option>
-                                <option value="Orichalcum">Orichalcum</option>
-                                <option value="Soulsteel">Soulsteel</option>
-                                <option value="Moonsilver">Moonsilver</option>
-                                <option value="Starmetal">Starmetal</option>
-                                <option value="Jade">Jade</option>
-
-                                <option value="other" disabled>--- OTHER ---</option>
-                                <option value="Exigent">Exigent</option>
-                                <option value="Getimian">Getimian</option>
-                                <option value="God">God</option>
-                                <option value="God-Blooded">God-Blooded</option>
-                                <option value="Elemental">Elemental</option>
-                                <option value="Demon">Demon</option>
-                                <option value="Undead">Undead</option>
-                                <option value="Mortal" selected="selected">Mortal</option>
-                                <option value="Custom">Custom</option>
-                            </select></label>
+outHtml += /*html*/
+`                            </select></label>
                         </div>
                     </div>
                     <div class="sheet-col"><!-- 1.1.2 2nd column (Concept, Anima, SELECT Supernal) -->
@@ -240,33 +263,13 @@ ${sheetWorkerStr}
                             <select name="attr_supattr">
                                 <option value="" selected="selected"></option>
 
-                                <option value="Archery">Archery</option>
-                                <option value="Athletics">Athletics</option>
-                                <option value="Awareness">Awareness</option>
-                                <option value="Brawl">Brawl</option>
-                                <option value="Bureaucracy">Bureaucracy</option>
-                                <option value="Craft">Craft</option>
-                                <option value="Dodge">Dodge</option>
-                                <option value="Integrity">Integrity</option>
-                                <option value="Investigation">Investigation</option>
-                                <option value="Larceny">Larceny</option>
-                                <option value="Linguistics">Linguistics</option>
-                                <option value="Lore">Lore</option>
-                                <option value="Martial Arts">Martial Arts</option>
-                                <option value="Medicine">Medicine</option>
-                                <option value="Melee">Melee</option>
-                                <option value="Occult">Occult</option>
-                                <option value="Performance">Performance</option>
-                                <option value="Presence">Presence</option>
-                                <option value="Resistance">Resistance</option>
-                                <option value="Ride">Ride</option>
-                                <option value="Sail">Sail</option>
-                                <option value="Socialize">Socialize</option>
-                                <option value="Stealth">Stealth</option>
-                                <option value="Survival">Survival</option>
-                                <option value="Thrown">Thrown</option>
-                                <option value="War">War</option>
+`;
+for (const ability of abilities) {
+    let abiStr = typeof ability !== 'string' ? ability.name : ability;
+    outHtml += `${" ".repeat(32)}<option value="${abiStr}">${abiStr}</option>\n`;
+}
 
+outHtml += /*html*/`
                                 <option disabled>-------OTHER------</option>
                                 <option value="Custom">Custom</option>
                             </select></label>
@@ -278,178 +281,30 @@ ${sheetWorkerStr}
 
                 <h1 class="sheet-attributes"><span>Attributes</span></h1>
                 <div class="sheet-attributes sheet-3colrow"><!-- Attributes -->
-                    <div class="sheet-trait" title="@{strength}">
+`;
+for (const attribute of attributes) {
+    outHtml += /*html*/`${" ".repeat(20)}<div class="sheet-trait" title="@{${attribute.toLowerCase()}}">
                         <label>
-                            <input type="checkbox" name="attr_strengthfav" value="1"><span></span>
-                            <span>Strength</span>
+                            <input type="checkbox" name="attr_${attribute.toLowerCase()}fav" value="1"><span></span>
+                            <span>${attribute}</span>
                         </label>
                         <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_strength" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_strength" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_strength" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_strength" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_strength" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_strength" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_strength" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_strength" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_strength" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_strength" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_strength" value="10"><span></span>
+                            <input type="radio" class="sheet-dots0" name="attr_${attribute.toLowerCase()}" value="0"><span></span>
+                            <input type="radio" class="sheet-dots1" name="attr_${attribute.toLowerCase()}" value="1" checked="checked"><span></span>
+                            <input type="radio" class="sheet-dots2" name="attr_${attribute.toLowerCase()}" value="2"><span></span>
+                            <input type="radio" class="sheet-dots3" name="attr_${attribute.toLowerCase()}" value="3"><span></span>
+                            <input type="radio" class="sheet-dots4" name="attr_${attribute.toLowerCase()}" value="4"><span></span>
+                            <input type="radio" class="sheet-dots5" name="attr_${attribute.toLowerCase()}" value="5"><span></span>
+                            <input type="radio" class="sheet-dots6" name="attr_${attribute.toLowerCase()}" value="6"><span></span>
+                            <input type="radio" class="sheet-dots7" name="attr_${attribute.toLowerCase()}" value="7"><span></span>
+                            <input type="radio" class="sheet-dots8" name="attr_${attribute.toLowerCase()}" value="8"><span></span>
+                            <input type="radio" class="sheet-dots9" name="attr_${attribute.toLowerCase()}" value="9"><span></span>
+                            <input type="radio" class="sheet-dots10" name="attr_${attribute.toLowerCase()}" value="10"><span></span>
                         </div>
-                    </div>
-                    <div class="sheet-trait" title="@{dexterity}">
-                        <label>
-                            <input type="checkbox" name="attr_dexterityfav" value="1"><span></span>
-                            <span>Dexterity</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_dexterity" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_dexterity" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_dexterity" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_dexterity" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_dexterity" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_dexterity" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_dexterity" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_dexterity" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_dexterity" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_dexterity" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_dexterity" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{stamina}">
-                        <label>
-                            <input type="checkbox" name="attr_staminafav" value="1"><span></span>
-                            <span>Stamina</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_stamina" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_stamina" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_stamina" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_stamina" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_stamina" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_stamina" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_stamina" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_stamina" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_stamina" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_stamina" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_stamina" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{charisma}">
-                        <label>
-                            <input type="checkbox" name="attr_charismafav" value="1"><span></span>
-                            <span>Charisma</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_charisma" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_charisma" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_charisma" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_charisma" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_charisma" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_charisma" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_charisma" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_charisma" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_charisma" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_charisma" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_charisma" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{manipulation}">
-                        <label>
-                            <input type="checkbox" name="attr_manipulationfav" value="1"><span></span>
-                            <span>Manipulation</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_manipulation" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_manipulation" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_manipulation" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_manipulation" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_manipulation" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_manipulation" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_manipulation" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_manipulation" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_manipulation" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_manipulation" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_manipulation" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{appearance}">
-                        <label>
-                            <input type="checkbox" name="attr_apperancefav" value="1"><span></span>
-                            <span>Appearance</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_appearance" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_appearance" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_appearance" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_appearance" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_appearance" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_appearance" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_appearance" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_appearance" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_appearance" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_appearance" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_appearance" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{perception}">
-                        <label>
-                            <input type="checkbox" name="attr_perceptionfav" value="1"><span></span>
-                            <span>Perception</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_perception" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_perception" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_perception" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_perception" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_perception" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_perception" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_perception" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_perception" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_perception" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_perception" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_perception" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{intelligence}">
-                        <label>
-                            <input type="checkbox" name="attr_intelligencefav" value="1"><span></span>
-                            <span>Intelligence</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_intelligence" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_intelligence" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_intelligence" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_intelligence" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_intelligence" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_intelligence" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_intelligence" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_intelligence" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_intelligence" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_intelligence" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_intelligence" value="10"><span></span>
-                        </div>
-                    </div>
-                    <div class="sheet-trait" title="@{wits}">
-                        <label>
-                            <input type="checkbox" name="attr_witsfav" value="1"><span></span>
-                            <span>Wits</span>
-                        </label>
-                        <div class="sheet-dots">
-                            <input type="radio" class="sheet-dots0" name="attr_wits" value="0"><span></span>
-                            <input type="radio" class="sheet-dots1" name="attr_wits" value="1" checked="checked"><span></span>
-                            <input type="radio" class="sheet-dots2" name="attr_wits" value="2"><span></span>
-                            <input type="radio" class="sheet-dots3" name="attr_wits" value="3"><span></span>
-                            <input type="radio" class="sheet-dots4" name="attr_wits" value="4"><span></span>
-                            <input type="radio" class="sheet-dots5" name="attr_wits" value="5"><span></span>
-                            <input type="radio" class="sheet-dots6" name="attr_wits" value="6"><span></span>
-                            <input type="radio" class="sheet-dots7" name="attr_wits" value="7"><span></span>
-                            <input type="radio" class="sheet-dots8" name="attr_wits" value="8"><span></span>
-                            <input type="radio" class="sheet-dots9" name="attr_wits" value="9"><span></span>
-                            <input type="radio" class="sheet-dots10" name="attr_wits" value="10"><span></span>
-                        </div>
-                    </div>
-                </div>
+                    </div>\n`;
+}
+
+outHtml += /*html*/`                </div>
 
                 <!-- 1.3 SPLIT -->
 
@@ -6866,4 +6721,5 @@ ${sheetWorkerStr}
         </div>
         {{/test}}
     </div>
-</rolltemplate>`);
+</rolltemplate>`;
+console.log(outHtml);
