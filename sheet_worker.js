@@ -1498,7 +1498,7 @@
         'charms-cha-territory': 'Charisma - Territory',
         'charms-cha-warfare': 'Charisma - Warfare',
         'charms-man-influence': 'Manipulation - Influence',
-        'charms-man-subterfugr': 'Manipulation - Subterfuge',
+        'charms-man-subterfuge': 'Manipulation - Subterfuge',
         'charms-man-guile': 'Manipulation - Guile',
         'charms-app-influence': 'Appearance - Influence',
         'charms-app-subterfuge': 'Appearance - Subterfuge',
@@ -1570,7 +1570,7 @@
         'charms-ma-whiteveil',
         'charms-ma-other'
     ];
-    const charmRepeatableSectionArrayOld = [
+    const charmSolarRepeatableSectionArray = [
         'charms-archery',
         'charms-athletics',
         'charms-awareness',
@@ -1595,7 +1595,9 @@
         'charms-stealth',
         'charms-survival',
         'charms-thrown',
-        'charms-war',
+        'charms-war'
+    ];
+    const charmLunarRepeatableSectionArray = [
         'charms-universal',
         'charms-str-offense',
         'charms-str-mobility',
@@ -1612,7 +1614,7 @@
         'charms-cha-territory',
         'charms-cha-warfare',
         'charms-man-influence',
-        'charms-man-subterfugr',
+        'charms-man-subterfuge',
         'charms-man-guile',
         'charms-app-influence',
         'charms-app-subterfuge',
@@ -1629,7 +1631,11 @@
         'charms-wit-animalken',
         'charms-wit-navigation',
         'charms-wit-cache',
-        'charms-wit-territory',
+        'charms-wit-territory'
+    ];
+    const charmRepeatableSectionArrayOld = [
+        ...charmSolarRepeatableSectionArray,
+        ...charmLunarRepeatableSectionArray,
         ...charmMaRepeatableSectionArray,
         'charms-evocations',
         'charms'

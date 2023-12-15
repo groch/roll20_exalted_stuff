@@ -1499,7 +1499,7 @@
         'charms-cha-territory': 'Charisma - Territory',
         'charms-cha-warfare': 'Charisma - Warfare',
         'charms-man-influence': 'Manipulation - Influence',
-        'charms-man-subterfugr': 'Manipulation - Subterfuge',
+        'charms-man-subterfuge': 'Manipulation - Subterfuge',
         'charms-man-guile': 'Manipulation - Guile',
         'charms-app-influence': 'Appearance - Influence',
         'charms-app-subterfuge': 'Appearance - Subterfuge',
@@ -1571,7 +1571,7 @@
         'charms-ma-whiteveil',
         'charms-ma-other'
     ];
-    const charmRepeatableSectionArrayOld = [
+    const charmSolarRepeatableSectionArray = [
         'charms-archery',
         'charms-athletics',
         'charms-awareness',
@@ -1596,7 +1596,9 @@
         'charms-stealth',
         'charms-survival',
         'charms-thrown',
-        'charms-war',
+        'charms-war'
+    ];
+    const charmLunarRepeatableSectionArray = [
         'charms-universal',
         'charms-str-offense',
         'charms-str-mobility',
@@ -1613,7 +1615,7 @@
         'charms-cha-territory',
         'charms-cha-warfare',
         'charms-man-influence',
-        'charms-man-subterfugr',
+        'charms-man-subterfuge',
         'charms-man-guile',
         'charms-app-influence',
         'charms-app-subterfuge',
@@ -1630,7 +1632,11 @@
         'charms-wit-animalken',
         'charms-wit-navigation',
         'charms-wit-cache',
-        'charms-wit-territory',
+        'charms-wit-territory'
+    ];
+    const charmRepeatableSectionArrayOld = [
+        ...charmSolarRepeatableSectionArray,
+        ...charmLunarRepeatableSectionArray,
         ...charmMaRepeatableSectionArray,
         'charms-evocations',
         'charms'
@@ -2743,7 +2749,7 @@
         <input class="sheet-charm-ma-firedragon" name="attr_charm-ma-firedragon" type="hidden" value="0">
         <input class="sheet-charm-ma-waterdragon" name="attr_charm-ma-waterdragon" type="hidden" value="0">
         <input class="sheet-charm-ma-wooddragon" name="attr_charm-ma-wooddragon" type="hidden" value="0">
-        <input class="sheet-charm-ma-goldenjanissar" name="attr_charm-ma-goldenjanissar" type="hidden" value="0">
+        <input class="sheet-charm-ma-goldenjanissary" name="attr_charm-ma-goldenjanissary" type="hidden" value="0">
         <input class="sheet-charm-ma-mantis" name="attr_charm-ma-mantis" type="hidden" value="0">
         <input class="sheet-charm-ma-whiteveil" name="attr_charm-ma-whiteveil" type="hidden" value="0">
         <input class="sheet-charm-ma-other" name="attr_charm-ma-other" type="hidden" value="0">
@@ -3507,7 +3513,7 @@
                                         </div>
                                     </div>
                                     <div class="sheet-trait" title="@{ma-void}">
-                                        <label>Single Point Shining Into the Void Style</label>
+                                        <label>Single Point Shining Into The Void Style</label>
                                         <div class="sheet-dots">
                                             <input type="radio" class="sheet-dots0" name="attr_ma-void" value="0" checked="checked"><span></span>
                                             <input type="radio" class="sheet-dots1" name="attr_ma-void" value="1"><span></span>
@@ -5152,7 +5158,7 @@
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-firedragon sheet-tab-charm-ma-firedragon" name="attr_charm_sheet" title="MA - Fire Dragon" type="radio" value="Fire Dragon Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-waterdragon sheet-tab-charm-ma-waterdragon" name="attr_charm_sheet" title="MA - Water Dragon" type="radio" value="Water Dragon Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-wooddragon sheet-tab-charm-ma-wooddragon" name="attr_charm_sheet" title="MA - Wood Dragon" type="radio" value="Wood Dragon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-goldenjanissar sheet-tab-charm-ma-goldenjanissar" name="attr_charm_sheet" title="MA - Golden J." type="radio" value="Golden Janissary Style">
+                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-goldenjanissary sheet-tab-charm-ma-goldenjanissary" name="attr_charm_sheet" title="MA - Golden J." type="radio" value="Golden Janissary Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-mantis sheet-tab-charm-ma-mantis" name="attr_charm_sheet" title="MA - Mantis" type="radio" value="Mantis Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-whiteveil sheet-tab-charm-ma-whiteveil" name="attr_charm_sheet" title="MA - White Veil" type="radio" value="White Veil Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-other sheet-tab-charm-ma-other" name="attr_charm_sheet" title="MA - other" type="radio" value="MA - Other">
@@ -5399,7 +5405,7 @@
                     <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-wooddragon">
                         <h1><span>Wood Dragon Style</span></h1>
                     </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-goldenjanissar">
+                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-goldenjanissary">
                         <h1><span>Golden Janissary Style</span></h1>
                     </div>
                     <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-mantis">
