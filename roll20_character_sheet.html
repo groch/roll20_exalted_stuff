@@ -1958,14 +1958,16 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
-    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
-    const diceExAddedPrompt = '+?{Dices from Motes (Excellency)|0}[Dices from Motes]';
-    const baseInit = '3[Base Init]+';
-    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
-    const succExAddedPrompt = '+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes]';
+    var defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
+    var baseInit = '3[Base Init]+';
+    var wpPrompt = `?{Willpower ?|No,0|Yes,1}`;
+    var defaultRoll20AddedSuccPrompt = `?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+${wpPrompt}[WP]`;
     const moteCostDiceDefault = '?{Dices from Motes (Excellency)|0}';
-    const moteCostSuccDefault = '?{Success from Motes (Excellency), COST 2 PER POINTS|0}';
-    const moteCostBothDefault = '[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]';
+    const moteCostSuccBase = '?{Success from Motes (Excellency), COST 2 PER POINTS|0}';
+    const moteCostSuccDefault = `[[ ${moteCostSuccBase} * 2 ]]`;
+    const moteCostBothDefault = `[[ ${moteCostDiceDefault} + ${moteCostSuccBase} * 2 ]]`;
+    var diceExAddedPrompt = `+${moteCostDiceDefault}[Dices from Motes]`;
+    var succExAddedPrompt = `+${moteCostSuccBase}[Success from Motes]`;
 
     function getMoteCostToSet(diceExTest, succExTest) {
         if (diceExTest || succExTest) {
@@ -4003,7 +4005,7 @@
                             <div class="sheet-exroll exroll-vanilla">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4033,7 +4035,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4052,10 +4054,9 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4085,7 +4086,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4104,15 +4105,14 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-diceex">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-diceex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-diceex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4142,7 +4142,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4161,10 +4161,9 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4194,7 +4193,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4213,15 +4212,14 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-succex">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-succex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-succex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4251,7 +4249,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4270,10 +4268,9 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4303,7 +4300,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4322,15 +4319,14 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-full">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-fullex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-fullex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4360,7 +4356,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4379,10 +4375,9 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                         Archery (@{archery}),@{archery}[Archery]|
                                         Athletics (@{athletics}),@{athletics}[Athletics]|
                                         Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -4412,7 +4407,7 @@
                                             White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                             Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                             Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                             Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                             Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
@@ -4431,9 +4426,8 @@
                                         Survival (@{survival}),@{survival}[Survival]|
                                         Thrown (@{thrown}),@{thrown}[Thrown]|
                                         War (@{war}),@{war}[War]|
-                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                    } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
+                                    } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                         </div>
@@ -4529,29 +4523,29 @@
                             <div class="sheet-exroll exroll-vanilla">
                                 <div class="header-section" title="Generic Roll with prompts for Pool+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-diceex">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-succex">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                             <div class="sheet-exroll exroll-full">
                                 <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                 <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                 </div>
                             </div>
                         </div>
@@ -6150,7 +6144,7 @@
                                 <div class="sheet-exroll exroll-vanilla">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6166,7 +6160,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6180,12 +6174,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6199,10 +6193,9 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6218,7 +6211,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6232,12 +6225,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6251,15 +6244,14 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                                 <div class="sheet-exroll exroll-diceex">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-diceex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-diceex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6275,7 +6267,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6289,12 +6281,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6308,10 +6300,9 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6327,7 +6318,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6341,12 +6332,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6360,15 +6351,14 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                                 <div class="sheet-exroll exroll-succex">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-succex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-succex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6384,7 +6374,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6398,12 +6388,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6417,10 +6407,9 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6436,7 +6425,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6450,12 +6439,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6469,15 +6458,14 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                                 <div class="sheet-exroll exroll-full">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-fullex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-fullex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6493,7 +6481,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6507,12 +6495,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6526,10 +6514,9 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (?{Attribute|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (?{Attribute|Strength (@{strength}), @{strength}[Strength]|Dexterity (@{dexterity}), @{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]} +?{Ability|
                                             Archery (@{archery}),@{archery}[Archery]|
                                             Athletics (@{athletics}),@{athletics}[Athletics]|
                                             Awareness (@{awareness}),@{awareness}[Awareness]|
@@ -6545,7 +6532,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
+                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
                                             Investigation (@{investigation}),@{investigation}[Investigation]|
@@ -6559,12 +6546,12 @@
                                                 White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
                                                 Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
                                                 Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
                                                 Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
                                                 Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
                                                 Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
+                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
                                             Occult (@{occult}),@{occult}[Occult]|
@@ -6578,9 +6565,8 @@
                                             Survival (@{survival}),@{survival}[Survival]|
                                             Thrown (@{thrown}),@{thrown}[Thrown]|
                                             War (@{war}),@{war}[War]|
-                                            Thrown (@{thrown}),@{thrown}[Thrown]|
                                             Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                        } +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        } +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                             </div>
@@ -6588,29 +6574,29 @@
                                 <div class="sheet-exroll exroll-vanilla">
                                     <div class="header-section" title="Generic Roll with prompts for Pool+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                                 <div class="sheet-exroll exroll-diceex">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dices from Motes (Excellency)|0}:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                                 <div class="sheet-exroll exroll-succex">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                                 <div class="sheet-exroll exroll-full">
                                     <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
                                     <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Added Dices (Stunt/Situation/...) ?|0} +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Additional Successes|0}[Auto Successes]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Commande to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| }\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">Cast</button>
+                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...] +?{Dices from Motes (Excellency)|0}[Dices from Motes] -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#+?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes] ?{Command to Add :| } -gm\n!exr =COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]:will;?{Willpower ?|No,0|Yes,1}">to GM</button>
                                     </div>
                                 </div>
                             </div>

@@ -1957,14 +1957,16 @@
     function checkValReturnValidString(str, suffix = '', prefix = '+') { return str ? prefix+str+suffix : ''; }
     function checkNumberReturnValidString(str, suffix = '', prefix = '+') { return str && Number(str) ? prefix+str+suffix : ''; }
 
-    const defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
-    const diceExAddedPrompt = '+?{Dices from Motes (Excellency)|0}[Dices from Motes]';
-    const baseInit = '3[Base Init]+';
-    const defaultRoll20AddedSuccPrompt = '?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+?{Willpower ?|No,0|Yes,1}[WP]';
-    const succExAddedPrompt = '+?{Success from Motes (Excellency), COST 2 PER POINTS|0}[Success from Motes]';
+    var defaultRoll20AddedDicePrompt = '?{Bonus Dices ? (Stunt, Situational, ...)|0}[Stunt,Spe,...]';
+    var baseInit = '3[Base Init]+';
+    var wpPrompt = `?{Willpower ?|No,0|Yes,1}`;
+    var defaultRoll20AddedSuccPrompt = `?{Bonus Success ? (Stunt 2, ...)|0}[Stunt/...]+${wpPrompt}[WP]`;
     const moteCostDiceDefault = '?{Dices from Motes (Excellency)|0}';
-    const moteCostSuccDefault = '?{Success from Motes (Excellency), COST 2 PER POINTS|0}';
-    const moteCostBothDefault = '[[ ?{Dices from Motes (Excellency)|0} + ?{Success from Motes (Excellency), COST 2 PER POINTS|0} * 2 ]]';
+    const moteCostSuccBase = '?{Success from Motes (Excellency), COST 2 PER POINTS|0}';
+    const moteCostSuccDefault = `[[ ${moteCostSuccBase} * 2 ]]`;
+    const moteCostBothDefault = `[[ ${moteCostDiceDefault} + ${moteCostSuccBase} * 2 ]]`;
+    var diceExAddedPrompt = `+${moteCostDiceDefault}[Dices from Motes]`;
+    var succExAddedPrompt = `+${moteCostSuccBase}[Success from Motes]`;
 
     function getMoteCostToSet(diceExTest, succExTest) {
         if (diceExTest || succExTest) {
