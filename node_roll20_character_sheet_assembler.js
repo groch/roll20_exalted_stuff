@@ -106,10 +106,7 @@ eval(sheetWorkerStr+/*javascript*/`
 `);
 
 let outHtml = /*html*/
-`<script type="text/worker">
-${sheetWorkerStr}
-</script>
-
+`<script type="text/worker">\n${sheetWorkerStr}\n</script>\n
 <div class="sheet-content">
     <div>
         <input type="hidden" name="attr_token-size" value="1">
@@ -129,9 +126,8 @@ ${sheetWorkerStr}
         <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet" name="sheet" title="Charms" type="radio" value="2">
         <input class="sheet-tab sheet-tab-spells sheet-tab-spell-sheet" name="sheet" title="Sorceries" type="radio" value="3">
         <input class="sheet-tab sheet-tab-combat sheet-tab-combat-sheet" name="sheet" title="Combat" type="radio" value="6">
-        <input class="sheet-tab sheet-tab-settings sheet-tab-settings-sheet" name="sheet" title="y" type="radio" value="4">
+        <input class="sheet-tab sheet-tab-settings sheet-tab-settings-sheet" name="sheet" title="y" type="radio" value="4">\n\n`;
 
-`;
 for (const charmSection of solarCharmArray) {
     const outStr = charmSection.replace('charms-','charm-').toLowerCase();
     outHtml += `${" ".repeat(8)}<input class="sheet-${outStr}" name="attr_${outStr}" type="hidden" value="0">\n`;
@@ -149,8 +145,7 @@ for (const charmSection of maCharmArray) {
     outHtml += `${" ".repeat(8)}<input class="sheet-${outStr}" name="attr_${outStr}" type="hidden" value="0">\n`;
 }
 
-outHtml += /*html*/
-`
+outHtml += /*html*/`
         <input class="sheet-charm-evocation" name="attr_charm-evocation" type="hidden" value="0">
         <input class="sheet-charm-old" name="attr_charm-old" type="hidden" value="0">
 
@@ -188,8 +183,8 @@ outHtml += /*html*/
                         <div class="sheet-flexbox-h">
                             <label>Caste/Aspect:
                             <select class="player-caste" name="attr_caste">
-                                <option value=""></option>
-`;
+                                <option value=""></option>\n`;
+
 for (const sectionHeader of Object.keys(sheetCasteTree)) {
     outHtml += `\n${" ".repeat(32)}<option value="${sectionHeader.toLowerCase()}" disabled>--- ${sectionHeader} ---</option>\n`;
     for (const line of sheetCasteTree[sectionHeader]) {
@@ -209,9 +204,8 @@ outHtml += /*html*/
                         <div class="sheet-flexbox-h supernal-box">
                             <label>Supernal Trait:
                             <select name="attr_supattr">
-                                <option value="" selected="selected"></option>
+                                <option value="" selected="selected"></option>\n\n`;
 
-`;
 for (const ability of abilities) {
     let abiStr = typeof ability !== 'string' ? ability.name : ability;
     outHtml += `${" ".repeat(32)}<option value="${abiStr}">${abiStr}</option>\n`;
@@ -228,8 +222,8 @@ outHtml += /*html*/`
                 <!-- 1.2 1st BLOCK = ATTRIBUTES -->
 
                 <h1 class="sheet-attributes"><span>Attributes</span></h1>
-                <div class="sheet-attributes sheet-3colrow"><!-- Attributes -->
-`;
+                <div class="sheet-attributes sheet-3colrow"><!-- Attributes -->\n`;
+
 function returnDotsRadio(padding, name, checked = 0, count = 10) {
     const getRadio = (name, val, checked) => `<input type="radio" class="sheet-dots${val}" name="${name}" value="${val}"${checked ? ' checked="checked"' : ''}><span></span>`;
     let retStr = '';
@@ -258,8 +252,8 @@ outHtml += /*html*/`                </div>
 
                 <div class="sheet-3colrow sheet-centerblock">
                     <div class="sheet-abilities sheet-col"><!-- 1.3.1 LEFT COLUMN -->
-                        <h1><span>Abilities</span></h1>
-`;
+                        <h1><span>Abilities</span></h1>\n`;
+
 for (const ability of abilities) {
     if (typeof ability === 'string') {
         outHtml += /*html*/`${" ".repeat(24)}<div class="sheet-trait" title="@{${ability.toLowerCase()}}">
@@ -289,7 +283,6 @@ for (const ability of abilities) {
                                             ${returnDotsRadio(44, `attr_${v}`)}
                                         </div>
                                     </div>\n`;
-                        
         }
         let repeatingSectionName = ability.name.replace(' ','').toLowerCase();
         if (repeatingSectionName.charAt(repeatingSectionName.length - 1) !== 's') repeatingSectionName += 's';
@@ -307,7 +300,7 @@ for (const ability of abilities) {
     }
 }
 
-outHtml += /*html*/`                        <fieldset class="repeating_abilities" style="display: none;">
+outHtml += /*html*/`${" ".repeat(24)}<fieldset class="repeating_abilities" style="display: none;">
                             <div class="sheet-trait">
                                 <label>
                                     <input type="checkbox" name="attr_repabilityfav" value="1"><span></span>
@@ -324,9 +317,8 @@ outHtml += /*html*/`                        <fieldset class="repeating_abilities
                             <div class="sheet-flexbox-h sheet-flexbox0">
                                 <input type="text" name="attr_repspecialty" style="margin-top: 3px" placeholder="Pirate Tactics">
                                 <select name="attr_repspecialtyability">
-                                    <option value=""></option>
+                                    <option value=""></option>\n\n`;
 
-`;
 for (const ability of abilities) {
     let abiStr = typeof ability !== 'string' ? ability.name : ability;
     outHtml += `${" ".repeat(40)}<option value="${abiStr}">${abiStr}</option>\n`;
@@ -336,8 +328,8 @@ outHtml += /*html*/`
                                         <option disabled>-------OTHER------</option>
                                         <option value="Custom">Custom</option>
 
-                                        <option disabled>----ATTRIBUTES---</option>
-`;
+                                        <option disabled>----ATTRIBUTES---</option>\n`;
+
 for (const attribute of attributes) {
     outHtml += /*html*/`${" ".repeat(40)}<option value="${attribute}">${attribute}</option>\n`;
 }
