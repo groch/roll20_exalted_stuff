@@ -347,63 +347,79 @@ outHtml += /*html*/`
                             </div>
                         </fieldset>\n`;
 
-const bigExRollPromptDiceBASE = `?{Attribute|${attributes.map(i => `${i} (@{${i.toLowerCase()}}), @{${i.toLowerCase()}}[${i}]`).join('|')}} +?{Ability|\n`;
-let bigExRollPromptDiceBase;
-function buildBigExRollPromptDiceBase(padding = 36) {
-    bigExRollPromptDiceBase = `${bigExRollPromptDiceBASE}`;
+const attributePrompt = `?{Attribute|${attributes.map(i => `${i} (@{${i.toLowerCase()}}), @{${i.toLowerCase()}}[${i}]`).join('|')}}`;
+const abilityPromptBASE = `?{Ability|\n`;
+function buildAbilityPrompt(padding = 36) {
+    let retStr = `${abilityPromptBASE}`;
     for (const ability of abilities) {
         if (typeof ability === 'string') {
-            bigExRollPromptDiceBase += `${" ".repeat(padding+4)}${ability} (@{${ability.toLowerCase()}}),@{${ability.toLowerCase()}}[${ability}]|\n`;
+            retStr += `${" ".repeat(padding+4)}${ability} (@{${ability.toLowerCase()}}),@{${ability.toLowerCase()}}[${ability}]|\n`;
         } else {
-            bigExRollPromptDiceBase += `${" ".repeat(padding+4)}${ability.name} (...),?{${ability.name}&amp;#124;\n`;
+            retStr += `${" ".repeat(padding+4)}${ability.name} (...),?{${ability.name}&amp;#124;\n`;
             for (const [k, v] of Object.entries(ability.subSections)) {
-                bigExRollPromptDiceBase += `${" ".repeat(padding+8)}${k} (@{${v}})&amp;#44;@{${v}}[${k}]&amp;#124;\n`;
+                retStr += `${" ".repeat(padding+8)}${k} (@{${v}})&amp;#44;@{${v}}[${k}]&amp;#124;\n`;
             }
             const roll20CommentName = ability.shortName.length === 2 ? ability.shortName.toUpperCase() : ability.shortName.charAt(0).toUpperCase() + ability.shortName.slice(1);
-            bigExRollPromptDiceBase += `${" ".repeat(padding+8)}Other&amp;#44;?{${ability.customPrompt}&amp;amp;#124;0&amp;amp;#125;[Other-${roll20CommentName}]&amp;#125;|\n`;
+            retStr += `${" ".repeat(padding+8)}Other&amp;#44;?{${ability.customPrompt}&amp;amp;#124;0&amp;amp;#125;[Other-${roll20CommentName}]&amp;#125;|\n`;
         }
     }
-    bigExRollPromptDiceBase += `${" ".repeat(padding+4)}Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]\n`;
-    bigExRollPromptDiceBase += `${" ".repeat(padding)}} +${defaultRoll20AddedDicePrompt}`;
+    retStr += `${" ".repeat(padding+4)}Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]\n`;
+    retStr += `${" ".repeat(padding)}}`;
+    return retStr;
 }
-buildBigExRollPromptDiceBase();
+function buildBigExRollPromptDiceBase(padding = 36) {
+    return `${attributePrompt} +${buildAbilityPrompt(padding)} +${defaultRoll20AddedDicePrompt}`;
+}
 const bigExRollPromptDiceEnd = ` -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen]`;
 const bigExRollPromptSuccBase = `+${defaultRoll20AddedSuccPrompt}`;
 const bigExRollPromptSuccEnd = ` ?{Command to Add :| }`;
-const moteCostBase = `=COST:@{character_id}:`;
-const moteCostPromptBase = `peri=?{Spend Peripheral First ?|Yes,1|No,0};`;
+const moteCostBase = `=COST:@{character_id}`;
+const moteCostPromptBase = `:peri=?{Spend Peripheral First ?|Yes,1|No,0};`;
+const fullWpPrompt = `:will;${wpPrompt}`;
+
+function getAllMoteCost(diceEx, succEx) {
+    return `${(diceEx || succEx) ? moteCostPromptBase : ''}${getMoteCostToSet(diceEx, succEx)}`;
+}
+
+function getExRoll(diceEx, succEx, gm = false, padding = 36) {
+    let retStr = `!exr (${buildBigExRollPromptDiceBase(padding)}${diceEx ? ` ${diceExAddedPrompt}` : ''}${bigExRollPromptDiceEnd})#`;
+    retStr += `${bigExRollPromptSuccBase}${succEx ? succExAddedPrompt : ''}${bigExRollPromptSuccEnd}${gm ? ' -gm' : ''}`;
+    retStr += `\\n!exr ${moteCostBase}${getAllMoteCost(diceEx, succEx)}${fullWpPrompt}`;
+    return retStr;
+}
+
+function getQCRoll(diceEx, succEx, gm = false) {
+    let retStr = `!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${diceEx ? ` ${diceExAddedPrompt}` : ''}${bigExRollPromptDiceEnd})#`;
+    retStr += `${bigExRollPromptSuccBase}${succEx ? succExAddedPrompt : ''}${bigExRollPromptSuccEnd}${gm ? ' -gm' : ''}`;
+    retStr += `\\n!exr ${moteCostBase}${getAllMoteCost(diceEx, succEx)}${fullWpPrompt}`;
+    return retStr;
+}
+
+function getExRolls(qc = false, padding = 28) {
+    const bonusDiceStr = '+DiceExcellency', bonusSuccStr = '+SuccessExcellency';
+    const getTitle = (diceEx, succEx) => `Generic Roll with prompts for ${qc ? 'Pool' : 'Attribute+Ability'}+BonusDices${diceEx ? bonusDiceStr : ''} and BonusSucces${succEx ? bonusSuccStr : ''}, and finally an optionnal Custom Macro`;
+    const classArray = ['vanilla','diceex','succex','full'], nameArray = ['','-diceex','-succex','-fullex'];
+    const finalName = (i, gm) => `roll_${qc ? 'QCRoll' : 'ExRoll'}${gm ? '-GM' : ''}${nameArray[i]}`;
+    const fx = qc ? getQCRoll : getExRoll;
+    let retStr = '';
+    for (let i = 0; i < 4; i++) {
+        const diceEx = i % 2, succEx = Math.floor(i / 2);
+        retStr += `<div class="sheet-exroll exroll-${classArray[i]}">\n`;
+        retStr += `${" ".repeat(padding+4)}<div class="header-section" title="${getTitle(diceEx, succEx)}">ExRoll</div>\n`;
+        retStr += `${" ".repeat(padding+4)}<div class="sheet-grouped-buttons end" title="Cast Generic Roll">\n`;
+        retStr += `${" ".repeat(padding+8)}<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="${finalName(i)}" value="${fx(diceEx, succEx, false, padding+8)}">Cast</button>\n`;
+        retStr += `${" ".repeat(padding+8)}<button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="${finalName(i, true)}" value="${fx(diceEx, succEx, true, padding+8)}">to GM</button>\n`;
+        retStr += `${" ".repeat(padding+4)}</div>\n`;
+        retStr += `${" ".repeat(padding)}</div>`;
+        if (i < 3) retStr += `\n${" ".repeat(padding)}`;
+    }
+    return retStr;
+}
 
 outHtml += /*html*/`
                         <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
                             <h1><span>Quick Roll</span></h1>
-                            <div class="sheet-exroll exroll-vanilla">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
-                            <div class="sheet-exroll exroll-diceex">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-diceex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
-                            <div class="sheet-exroll exroll-succex">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-succex" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
-                            <div class="sheet-exroll exroll-full">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-fullex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
+                            ${getExRolls()}
                         </div>
                     </div>
                     <div class="sheet-qc-pools sheet-col"><!-- 1.3.2 QUICK CHAR LEFT COLUMN -->
@@ -494,34 +510,7 @@ outHtml += /*html*/`
 
                         <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
                             <h1><span>QC Rolls</span></h1>
-                            <div class="sheet-exroll exroll-vanilla">
-                                <div class="header-section" title="Generic Roll with prompts for Pool+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
-                            <div class="sheet-exroll exroll-diceex">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
-                            <div class="sheet-exroll exroll-succex">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
-                            <div class="sheet-exroll exroll-full">
-                                <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">Cast</button>
-                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">to GM</button>
-                                </div>
-                            </div>
+                            ${getExRolls(true)}
                         </div>
                     </div>
                     <div class="sheet-2col"><!-- 1.3.3 RIGHT COLUMNS -->
@@ -2072,68 +2061,13 @@ outHtml += /*html*/`
                                         </div>
                                     </div>
                                 </div>
-                            </div>\n`;
-buildBigExRollPromptDiceBase(40);
-outHtml += /*html*/`${" ".repeat(28)}<input type="hidden" class="qc-panel-check" name="attr_qc">
+                            </div>
+                            <input type="hidden" class="qc-panel-check" name="attr_qc">
                             <div class="sheet-exroll-container qc-toggle-display">
-                                <div class="sheet-exroll exroll-vanilla">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
-                                <div class="sheet-exroll exroll-diceex">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-diceex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-diceex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
-                                <div class="sheet-exroll exroll-succex">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-succex" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-succex" value="!exr (${bigExRollPromptDiceBase}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
-                                <div class="sheet-exroll exroll-full">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_ExRoll-fullex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_ExRoll-GM-fullex" value="!exr (${bigExRollPromptDiceBase} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
+                                ${getExRolls(false, 32)}
                             </div>
                             <div class="sheet-exroll-container qc-toggle-display-inv">
-                                <div class="sheet-exroll exroll-vanilla">
-                                    <div class="header-section" title="Generic Roll with prompts for Pool+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
-                                <div class="sheet-exroll exroll-diceex">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-diceex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-diceex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 0)}:will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
-                                <div class="sheet-exroll exroll-succex">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-succex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-succex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(0, 1)}:will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
-                                <div class="sheet-exroll exroll-full">
-                                    <div class="header-section" title="Generic Roll with prompts for Attribute+Ability+BonusDices and BonusSucces, and finally an optionnal Custom Macro">ExRoll</div>
-                                    <div class="sheet-grouped-buttons end" title="Cast Generic Roll">
-                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="roll_QCRoll-fullex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd}\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">Cast</button>
-                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="roll_QCRoll-GM-fullex" value="!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt} ${diceExAddedPrompt}${bigExRollPromptDiceEnd})#${bigExRollPromptSuccBase}${succExAddedPrompt}${bigExRollPromptSuccEnd} -gm\\n!exr ${moteCostBase}${moteCostPromptBase}${getMoteCostToSet(1, 1)}:will;${wpPrompt}">to GM</button>
-                                    </div>
-                                </div>
+                                ${getExRolls(true, 32)}
                             </div>
                             <div class="sheet-reminders">
                                 <input type="hidden" class="qc-panel-check" name="attr_qc">
@@ -2859,57 +2793,7 @@ outHtml += /*html*/`${" ".repeat(28)}<input type="hidden" class="qc-panel-check"
                                                         <option disabled>-------ABILITIES PROMPTS------</option>
                                                         <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                                         <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
-                                                        <option value="?{Ability|
-                                                            Archery (@{archery}),@{archery}[Archery]|
-                                                            Athletics (@{athletics}),@{athletics}[Athletics]|
-                                                            Awareness (@{awareness}),@{awareness}[Awareness]|
-                                                            Brawl (@{brawl}),@{brawl}[Brawl]|
-                                                            Bureaucracy (@{bureaucracy}),@{bureaucracy}[Bureaucracy]|
-                                                            Craft (...),?{Craft&amp;#124;
-                                                                Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
-                                                                Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
-                                                                Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
-                                                                First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
-                                                                Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
-                                                                Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}[Geomancy]&amp;#124;
-                                                                Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
-                                                                Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
-                                                                Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                                Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
-                                                            Dodge (@{dodge}),@{dodge}[Dodge]|
-                                                            Integrity (@{integrity}),@{integrity}[Integrity]|
-                                                            Investigation (@{investigation}),@{investigation}[Investigation]|
-                                                            Larceny (@{larceny}),@{larceny}[Larceny]|
-                                                            Linguistics (@{linguistics}),@{linguistics}[Linguistics]|
-                                                            Lore (@{lore}),@{lore}[Lore]|
-                                                            Martial Arts (...),?{Martial Arts&amp;#124;
-                                                                Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
-                                                                Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
-                                                                Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                                Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
-                                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                                Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
-                                                            Medicine (@{medicine}),@{medicine}[Medicine]|
-                                                            Melee (@{melee}),@{melee}[Melee]|
-                                                            Occult (@{occult}),@{occult}[Occult]|
-                                                            Performance (@{performance}),@{performance}[Performance]|
-                                                            Presence (@{presence}),@{presence}[Presence]|
-                                                            Resistance (@{resistance}),@{resistance}[Resistance]|
-                                                            Ride (@{ride}),@{ride}[Ride]|
-                                                            Sail (@{sail}),@{sail}[Sail]|
-                                                            Socialize (@{socialize}),@{socialize}[Socialize]|
-                                                            Stealth (@{stealth}),@{stealth}[Stealth]|
-                                                            Survival (@{survival}),@{survival}[Survival]|
-                                                            Thrown (@{thrown}),@{thrown}[Thrown]|
-                                                            War (@{war}),@{war}[War]|
-                                                            Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                                        }">Full Ability Prompt</option>
+                                                        <option value="${buildAbilityPrompt(56)}">Full Ability Prompt</option>
                                                         <option value="?{Custom Ability}">Simple Prompt</option>
                                                         <option disabled>----ATTRIBUTES---</option>
                                                         <option value="@{strength}[Strength]">Strength</option>
@@ -4160,57 +4044,7 @@ outHtml += /*html*/`${" ".repeat(28)}<input type="hidden" class="qc-panel-check"
                                             <option disabled>-------ABILITIES PROMPTS------</option>
                                             <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                             <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
-                                            <option value="?{Ability|
-                                                Archery (@{archery}),@{archery}[Archery]|
-                                                Athletics (@{athletics}),@{athletics}[Athletics]|
-                                                Awareness (@{awareness}),@{awareness}[Awareness]|
-                                                Brawl (@{brawl}),@{brawl}[Brawl]|
-                                                Bureaucracy (@{bureaucracy}),@{bureaucracy}[Bureaucracy]|
-                                                Craft (...),?{Craft&amp;#124;
-                                                    Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
-                                                    Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
-                                                    Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
-                                                    First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
-                                                    Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
-                                                    Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}[Geomancy]&amp;#124;
-                                                    Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
-                                                    Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
-                                                    Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                    Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
-                                                Dodge (@{dodge}),@{dodge}[Dodge]|
-                                                Integrity (@{integrity}),@{integrity}[Integrity]|
-                                                Investigation (@{investigation}),@{investigation}[Investigation]|
-                                                Larceny (@{larceny}),@{larceny}[Larceny]|
-                                                Linguistics (@{linguistics}),@{linguistics}[Linguistics]|
-                                                Lore (@{lore}),@{lore}[Lore]|
-                                                Martial Arts (...),?{Martial Arts&amp;#124;
-                                                    Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
-                                                    Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
-                                                    Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                    Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
-                                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                    Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
-                                                Medicine (@{medicine}),@{medicine}[Medicine]|
-                                                Melee (@{melee}),@{melee}[Melee]|
-                                                Occult (@{occult}),@{occult}[Occult]|
-                                                Performance (@{performance}),@{performance}[Performance]|
-                                                Presence (@{presence}),@{presence}[Presence]|
-                                                Resistance (@{resistance}),@{resistance}[Resistance]|
-                                                Ride (@{ride}),@{ride}[Ride]|
-                                                Sail (@{sail}),@{sail}[Sail]|
-                                                Socialize (@{socialize}),@{socialize}[Socialize]|
-                                                Stealth (@{stealth}),@{stealth}[Stealth]|
-                                                Survival (@{survival}),@{survival}[Survival]|
-                                                Thrown (@{thrown}),@{thrown}[Thrown]|
-                                                War (@{war}),@{war}[War]|
-                                                Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                            }">Full Ability Prompt</option>
+                                            <option value="${buildAbilityPrompt(44)}">Full Ability Prompt</option>
                                             <option value="?{Custom Ability}">Simple Prompt</option>
                                             <option disabled>----ATTRIBUTES---</option>
                                             <option value="@{strength}[Strength]">Strength</option>
@@ -4253,7 +4087,7 @@ outHtml += /*html*/`${" ".repeat(28)}<input type="hidden" class="qc-panel-check"
                                         <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                         <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="${baseInit}${defaultRoll20AddedSuccPrompt}" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                                         <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="${moteCostBase}will;${wpPrompt}">
+                                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="${moteCostBase}${fullWpPrompt}">
                                         <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                     </div>
                                     <div class="sheet-grouped-buttons" title="Cast INIT Rolls (Remember to select you token to set INIT correctly)">
@@ -4382,58 +4216,7 @@ outHtml += /*html*/`${" ".repeat(28)}<input type="hidden" class="qc-panel-check"
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
                                                     <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                                     <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
-                                                    <option value="?{Ability|
-                                                        Archery (@{archery}),@{archery}[Archery]|
-                                                        Athletics (@{athletics}),@{athletics}[Athletics]|
-                                                        Awareness (@{awareness}),@{awareness}[Awareness]|
-                                                        Brawl (@{brawl}),@{brawl}[Brawl]|
-                                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}[Bureaucracy]|
-                                                        Craft (...),?{Craft&amp;#124;
-                                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
-                                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
-                                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
-                                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
-                                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
-                                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}[Geomancy]&amp;#124;
-                                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
-                                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
-                                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
-                                                        Dodge (@{dodge}),@{dodge}[Dodge]|
-                                                        Integrity (@{integrity}),@{integrity}[Integrity]|
-                                                        Investigation (@{investigation}),@{investigation}[Investigation]|
-                                                        Larceny (@{larceny}),@{larceny}[Larceny]|
-                                                        Linguistics (@{linguistics}),@{linguistics}[Linguistics]|
-                                                        Lore (@{lore}),@{lore}[Lore]|
-                                                        Martial Arts (...),?{Martial Arts&amp;#124;
-                                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
-                                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
-                                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
-                                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
-                                                        Medicine (@{medicine}),@{medicine}[Medicine]|
-                                                        Melee (@{melee}),@{melee}[Melee]|
-                                                        Occult (@{occult}),@{occult}[Occult]|
-                                                        Performance (@{performance}),@{performance}[Performance]|
-                                                        Presence (@{presence}),@{presence}[Presence]|
-                                                        Resistance (@{resistance}),@{resistance}[Resistance]|
-                                                        Ride (@{ride}),@{ride}[Ride]|
-                                                        Sail (@{sail}),@{sail}[Sail]|
-                                                        Socialize (@{socialize}),@{socialize}[Socialize]|
-                                                        Stealth (@{stealth}),@{stealth}[Stealth]|
-                                                        Survival (@{survival}),@{survival}[Survival]|
-                                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                                        War (@{war}),@{war}[War]|
-                                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;
-                                                    }">Full Ability Prompt</option>
+                                                    <option value="${buildAbilityPrompt(52)}">Full Ability Prompt</option>
                                                     <option value="?{Custom Ability}">Simple Prompt</option>
                                                     <option disabled>----ATTRIBUTES---</option>
                                                     <option value="@{strength}[Strength]">Strength</option>
@@ -4620,58 +4403,7 @@ outHtml += /*html*/`${" ".repeat(28)}<input type="hidden" class="qc-panel-check"
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
                                                     <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other]}">Craft Prompt</option>
                                                     <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other]}">Martial Arts Prompt</option>
-                                                    <option value="?{Ability|
-                                                        Archery (@{archery}),@{archery}[Archery]|
-                                                        Athletics (@{athletics}),@{athletics}[Athletics]|
-                                                        Awareness (@{awareness}),@{awareness}[Awareness]|
-                                                        Brawl (@{brawl}),@{brawl}[Brawl]|
-                                                        Bureaucracy (@{bureaucracy}),@{bureaucracy}[Bureaucracy]|
-                                                        Craft (...),?{Craft&amp;#124;
-                                                            Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
-                                                            Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
-                                                            Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
-                                                            First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
-                                                            Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
-                                                            Geomancy (@{craft-geomancy})&amp;#44;@{craft-geomancy}[Geomancy]&amp;#124;
-                                                            Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
-                                                            Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
-                                                            Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
-                                                            Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-Craft]|
-                                                        Dodge (@{dodge}),@{dodge}[Dodge]|
-                                                        Integrity (@{integrity}),@{integrity}[Integrity]|
-                                                        Investigation (@{investigation}),@{investigation}[Investigation]|
-                                                        Larceny (@{larceny}),@{larceny}[Larceny]|
-                                                        Linguistics (@{linguistics}),@{linguistics}[Linguistics]|
-                                                        Lore (@{lore}),@{lore}[Lore]|
-                                                        Martial Arts (...),?{Martial Arts&amp;#124;
-                                                            Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
-                                                            Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
-                                                            Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                            Silver-voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-voiced Nightingale Style]&amp;#124;
-                                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
-                                                            Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;&amp;#125;[Other-MA]|
-                                                        Medicine (@{medicine}),@{medicine}[Medicine]|
-                                                        Melee (@{melee}),@{melee}[Melee]|
-                                                        Occult (@{occult}),@{occult}[Occult]|
-                                                        Performance (@{performance}),@{performance}[Performance]|
-                                                        Presence (@{presence}),@{presence}[Presence]|
-                                                        Resistance (@{resistance}),@{resistance}[Resistance]|
-                                                        Ride (@{ride}),@{ride}[Ride]|
-                                                        Sail (@{sail}),@{sail}[Sail]|
-                                                        Socialize (@{socialize}),@{socialize}[Socialize]|
-                                                        Stealth (@{stealth}),@{stealth}[Stealth]|
-                                                        Survival (@{survival}),@{survival}[Survival]|
-                                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                                        War (@{war}),@{war}[War]|
-                                                        Thrown (@{thrown}),@{thrown}[Thrown]|
-                                                        Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]
-                                                    }">Full Ability Prompt</option>
+                                                    <option value="${buildAbilityPrompt(52)}">Full Ability Prompt</option>
                                                     <option value="?{Custom Ability}">Simple Prompt</option>
                                                     <option disabled>----ATTRIBUTES---</option>
                                                     <option value="@{strength}[Strength]">Strength</option>
