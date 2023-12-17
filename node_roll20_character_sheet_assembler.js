@@ -770,64 +770,71 @@ outHtml += /*html*/`
                                     </fieldset>
                                 </div>
                             </div>
-                        </div>
-                        <div><!-- 1.3.3.5 WEAPONS & GEAR -->
+                        </div>\n`;
+
+function getWeaponsLine(padding = 0) {
+    return /*html*/`<div class="sheet-gear sheet-table">
+${" ".repeat(padding)}    <input type="hidden" name="attr_wound-penalty" value="-4">
+${" ".repeat(padding)}    <div class="sheet-table-header">
+${" ".repeat(padding)}        <div class="sheet-table-row">
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 25%;">Weapon Name</div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 2em;" title="Accuracy"><span class="sheet-dotted">Acc</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 2em;" title="Damage"><span class="sheet-dotted">Dmg</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 2em;" title="Defense"><span class="sheet-dotted">Def</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 4em;" title="Ability"><span class="sheet-dotted">Ability</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 3em;" title="Parry including Defense"><span class="sheet-dotted">Par</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 3em;" title="Parry with specialty including Defense"><span class="sheet-dotted">ParS</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 2em;" title="Overwhelming"><span class="sheet-dotted">Over.</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell">Tags</div>
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="number" name="attr_repweapondef" value="0"></div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <select name="attr_repweaponabi" class="select-abi">
+${" ".repeat(padding)}                <option value="brawl" selected>Brawl</option>
+${" ".repeat(padding)}                <option value="melee">Melee</option>
+${" ".repeat(padding)}                <option value="snake">Snake Style</option>
+${" ".repeat(padding)}                <option value="tiger">Tiger Style</option>
+${" ".repeat(padding)}                <option value="void">Single Point Shining Into the Void Style</option>
+${" ".repeat(padding)}                <option value="reaper">White Reaper Style</option>
+${" ".repeat(padding)}                <option value="ebon">Ebon Shadow Style</option>
+${" ".repeat(padding)}                <option value="crane">Crane Style</option>
+${" ".repeat(padding)}                <option value="nightingale">Silver-Voiced Nightingale Style</option>
+${" ".repeat(padding)}                <option value="devil">Righteous Devil Style</option>
+${" ".repeat(padding)}                <option value="claw">Black Claw Style</option>
+${" ".repeat(padding)}                <option value="pearl">Dreaming Pearl Courtesan Style</option>
+${" ".repeat(padding)}                <option disabled>-------RAW------</option>
+${" ".repeat(padding)}                ${returnOptions(padding+16, [...Array(11).keys()].map(i => ({val: i, label: i})), -1)}
+${" ".repeat(padding)}                <option disabled>-------SPECIAL------</option>
+${" ".repeat(padding)}                <option value="noParry">Can't Parry with this weapon</option>
+${" ".repeat(padding)}            </select>
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+${" ".repeat(padding)}            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
+${" ".repeat(padding)}            <input type="number" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+${" ".repeat(padding)}            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
+${" ".repeat(padding)}            <input type="number" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
+${" ".repeat(padding)}        <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
+${" ".repeat(padding)}    </fieldset>
+${" ".repeat(padding)}</div>`;
+}
+
+outHtml += /*html*/
+`                        <div><!-- 1.3.3.5 WEAPONS & GEAR -->
                             <h1><span class="sheet-gear">Weapons &amp; Gear</span></h1>
-                            <div class="sheet-gear sheet-table">
-                                <div class="sheet-table-header">
-                                    <div class="sheet-table-row">
-                                        <div class="sheet-table-cell" style="width: 25%;">Weapon Name</div>
-                                        <div class="sheet-table-cell" style="width: 2em;" title="Accuracy"><span class="sheet-dotted">Acc</span></div>
-                                        <div class="sheet-table-cell" style="width: 2em;" title="Damage"><span class="sheet-dotted">Dmg</span></div>
-                                        <div class="sheet-table-cell" style="width: 2em;" title="Defense"><span class="sheet-dotted">Def</span></div>
-                                        <div class="sheet-table-cell" style="width: 4em;" title="Ability"><span class="sheet-dotted">Ability</span></div>
-                                        <div class="sheet-table-cell" style="width: 3em;" title="Parry including Defense"><span class="sheet-dotted">Par</span></div>
-                                        <div class="sheet-table-cell" style="width: 3em;" title="Parry with specialty including Defense"><span class="sheet-dotted">ParS</span></div>
-                                        <div class="sheet-table-cell" style="width: 2em;" title="Overwhelming"><span class="sheet-dotted">Over.</span></div>
-                                        <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
-                                        <div class="sheet-table-cell">Tags</div>
-                                    </div>
-                                </div>
-                                <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
-                                    <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
-                                    <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
-                                    <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
-                                    <div class="sheet-table-cell"><input type="number" name="attr_repweapondef" value="0"></div>
-                                    <div class="sheet-table-cell">
-                                        <select name="attr_repweaponabi" class="select-abi">
-                                            <option value="brawl" selected>Brawl</option>
-                                            <option value="melee">Melee</option>
-                                            <option value="snake">Snake Style</option>
-                                            <option value="tiger">Tiger Style</option>
-                                            <option value="void">Single Point Shining Into the Void Style</option>
-                                            <option value="reaper">White Reaper Style</option>
-                                            <option value="ebon">Ebon Shadow Style</option>
-                                            <option value="crane">Crane Style</option>
-                                            <option value="nightingale">Silver-Voiced Nightingale Style</option>
-                                            <option value="devil">Righteous Devil Style</option>
-                                            <option value="claw">Black Claw Style</option>
-                                            <option value="pearl">Dreaming Pearl Courtesan Style</option>
-                                            <option disabled>-------RAW------</option>
-                                            ${returnOptions(44, [...Array(11).keys()].map(i => ({val: i, label: i})), -1)}
-                                            <option disabled>-------SPECIAL------</option>
-                                            <option value="noParry">Can't Parry with this weapon</option>
-                                        </select>
-                                    </div>
-                                    <div class="sheet-table-cell">
-                                        <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                        <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                        <input type="number" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
-                                    </div>
-                                    <div class="sheet-table-cell">
-                                        <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                        <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                        <input type="number" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
-                                    </div>
-                                    <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
-                                    <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
-                                    <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
-                                </fieldset>
-                            </div>
+                            ${getWeaponsLine(28)}
                         </div>
                         <div><!-- 1.3.3.5.1 MISC ITEMS -->
                             <div class="sheet-gear">
@@ -2958,62 +2965,7 @@ outHtml += /*html*/
                 <h1><span>Combat</span></h1>
                 <div class="combat-header">
                     <div class="weapon-line"><!-- WEAPONS -->
-                        <div class="sheet-table sheet-gear">
-                            <input type="hidden" name="attr_wound-penalty" value="-4">
-                            <div class="sheet-table-header">
-                                <div class="sheet-table-row">
-                                    <div class="sheet-table-cell" style="width: 25%;">Weapon Name</div>
-                                    <div class="sheet-table-cell" style="width: 2em;" title="Accuracy"><span class="sheet-dotted">Acc</span></div>
-                                    <div class="sheet-table-cell" style="width: 2em;" title="Damage"><span class="sheet-dotted">Dmg</span></div>
-                                    <div class="sheet-table-cell" style="width: 2em;" title="Defense"><span class="sheet-dotted">Def</span></div>
-                                    <div class="sheet-table-cell" style="width: 4em;" title="Ability"><span class="sheet-dotted">Ability</span></div>
-                                    <div class="sheet-table-cell" style="width: 3em;" title="Parry including Defense"><span class="sheet-dotted">Par</span></div>
-                                    <div class="sheet-table-cell" style="width: 3em;" title="Parry with specialty including Defense"><span class="sheet-dotted">ParS</span></div>
-                                    <div class="sheet-table-cell" style="width: 2em;" title="Overwhelming"><span class="sheet-dotted">Over.</span></div>
-                                    <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
-                                    <div class="sheet-table-cell">Tags</div>
-                                </div>
-                            </div>
-                            <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
-                                <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
-                                <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
-                                <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
-                                <div class="sheet-table-cell"><input type="number" name="attr_repweapondef" value="0"></div>
-                                <div class="sheet-table-cell">
-                                    <select name="attr_repweaponabi" class="select-abi">
-                                        <option value="brawl" selected>Brawl</option>
-                                        <option value="melee">Melee</option>
-                                        <option value="snake">Snake Style</option>
-                                        <option value="tiger">Tiger Style</option>
-                                        <option value="void">Single Point Shining Into the Void Style</option>
-                                        <option value="reaper">White Reaper Style</option>
-                                        <option value="ebon">Ebon Shadow Style</option>
-                                        <option value="crane">Crane Style</option>
-                                        <option value="nightingale">Silver-Voiced Nightingale Style</option>
-                                        <option value="devil">Righteous Devil Style</option>
-                                        <option value="claw">Black Claw Style</option>
-                                        <option value="pearl">Dreaming Pearl Courtesan Style</option>
-                                        <option disabled>-------RAW------</option>
-                                        ${returnOptions(40, [...Array(11).keys()].map(i => ({val: i, label: i})), -1)}
-                                        <option disabled>-------SPECIAL------</option>
-                                        <option value="noParry">Can't Parry with this weapon</option>
-                                    </select>
-                                </div>
-                                <div class="sheet-table-cell">
-                                    <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                    <input type="number" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
-                                </div>
-                                <div class="sheet-table-cell">
-                                    <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-                                    <input type="number" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
-                                </div>
-                                <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
-                                <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
-                                <div class="sheet-table-cell"><input type="text" name="attr_repweapontags" placeholder="Bashing, Brawl, Grappling, Natural"></div>
-                            </fieldset>
-                        </div>
+                        ${getWeaponsLine(24)}
                     </div>
                     <div class="defense-line"><!-- DEFENSES -->
                         ${getDefenseLine(24)}
