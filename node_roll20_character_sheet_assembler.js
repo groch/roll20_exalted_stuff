@@ -868,72 +868,78 @@ outHtml += /*html*/
                 </div>
 
                 <!-- 1.4 JOINED AGAIN = HEALTH & DEFENSE -->
+\n`;
 
-                <h1 class="sheet-health-defenses"><span>Health &amp; Defense</span></h1><!-- Healt & Defense -->
-                <div class="sheet-defenses flex-wrap">
-                    <div class="flex-col">
-                        <div class="flex grow-normal" style="margin-left: 1em;">
-                            <span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:
-                        </div>
-                        <div class="flex grow-normal">
-                            <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
-                            <input type="hidden" name="attr_onslaught" class="onslaught-check">
-                            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}&#013;&#010;Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
-                        </div>
-                    </div>
-                    <div class="flex-col">
-                        <div class="flex">
-                            <span title="Natural Soak (Stamina + manual Modifier)">Nat. Soak</span>:
-                            <span name="attr_stamina" style="margin-left: 7px; margin-right: 3px; width: 1.55em; text-align: center;" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px" title="Natural Soak Additional">
-                        </div>
-                        <div class="flex">
-                            <span title="Unarmed Parry= (Dex + Brawl)/2">UnA. Parry</span>:
-                            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                            <input type="hidden" class="onslaught-check" name="attr_onslaught">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}&#013;&#010;Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}&#013;&#010;Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="flex-col">
-                        <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <div class="flex qc-toggle-visibility">
-                            <span title="Armored Soak, come from your armor">Ar. Soak</span>:
-                            <input type="number" readonly tabindex="-1" name="attr_armorsoak" title="Come from your armor">
-                        </div>
-                        <div class="flex">
-                            <span title="Dexterity + Dodge">Evasion</span>:
-                            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}&#013;&#010;Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}&#013;&#010;Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="flex-col def-exc">
-                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
-                    </div>
-                    <div class="flex-col">
-                        <div class="flex">
-                            <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-                            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}&#013;&#010;Represent the capacity to reduce withering damage.">
-                        </div>
-                        <div class="flex">
-                            <span title="Wits + Integrity">Resolve</span>:
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="flex-col">
-                        <div class="flex">
-                            <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
-                            <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}&#013;&#010;Come from your armor">
-                        </div>
-                        <div class="flex">
-                            <span title="Manipulation + Socialize">Guile</span>:
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                </div>
+function getDefenseLine(padding = 0) {
+    return /*html*/`<div class="sheet-defenses flex-wrap">
+${" ".repeat(padding)}    <div class="flex-col">
+${" ".repeat(padding)}        <div class="flex grow-normal" style="margin-left: 1em;">
+${" ".repeat(padding)}            <span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="flex grow-normal">
+${" ".repeat(padding)}            <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
+${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught" class="onslaught-check">
+${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+${" ".repeat(padding)}            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}&#013;&#010;Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex-col">
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <span title="Natural Soak (Stamina + manual Modifier)">Nat. Soak</span>:
+${" ".repeat(padding)}            <span name="attr_stamina" style="margin-left: 7px; margin-right: 3px; width: 1.55em; text-align: center;" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px" title="Natural Soak Additional">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <span title="Unarmed Parry= (Dex + Brawl)/2">UnA. Parry</span>:
+${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+${" ".repeat(padding)}            <input type="hidden" class="onslaught-check" name="attr_onslaught">
+${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}&#013;&#010;Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}&#013;&#010;Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex-col">
+${" ".repeat(padding)}        <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}        <div class="flex qc-toggle-visibility">
+${" ".repeat(padding)}            <span title="Armored Soak, come from your armor">Ar. Soak</span>:
+${" ".repeat(padding)}            <input type="number" readonly tabindex="-1" name="attr_armorsoak" title="Come from your armor">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <span title="Dexterity + Dodge">Evasion</span>:
+${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
+${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}&#013;&#010;Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}&#013;&#010;Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex-col def-exc">
+${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex-col">
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
+${" ".repeat(padding)}            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}&#013;&#010;Represent the capacity to reduce withering damage.">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <span title="Wits + Integrity">Resolve</span>:
+${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex-col">
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
+${" ".repeat(padding)}            <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}&#013;&#010;Come from your armor">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <div class="flex">
+${" ".repeat(padding)}            <span title="Manipulation + Socialize">Guile</span>:
+${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}</div>`;
+}
+
+outHtml += /*html*/
+`                <h1 class="sheet-health-defenses"><span>Health &amp; Defense</span></h1><!-- Healt & Defense -->
+                ${getDefenseLine(16)}
                 <div class="sheet-health-header sheet-text-center sheet-txt-lg" style="margin-top: 8px"><strong>Health Levels</strong></div>
                 <div class="sheet-health-track"><!-- Health Levels -->
                     <input type="hidden" name="attr_wound-penalty" value="-4">
@@ -3008,70 +3014,7 @@ outHtml += /*html*/
                         </div>
                     </div>
                     <div class="defense-line"><!-- DEFENSES -->
-                        <div class="sheet-defenses flex-wrap">
-                            <div class="flex-col">
-                                <div class="flex grow-normal" style="margin-left: 1em;">
-                                    <span title="Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">Onslaught</span>:
-                                </div>
-                                <div class="flex grow-normal">
-                                    <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
-                                    <input type="hidden" name="attr_onslaught" class="onslaught-check">
-                                    <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}&#013;&#010;Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
-                                </div>
-                            </div>
-                            <div class="flex-col">
-                                <div class="flex">
-                                    <span title="Natural Soak (Stamina + manual Modifier)">Nat. Soak</span>:
-                                    <span name="attr_stamina" style="margin-left: 7px; margin-right: 3px; width: 1.55em; text-align: center;" title="Stamina">3</span>+<input type="number" value="0" name="attr_naturalsoak" style="width: 28px" title="Natural Soak Additional">
-                                </div>
-                                <div class="flex">
-                                    <span title="Unarmed Parry= (Dex + Brawl)/2">UnA. Parry</span>:
-                                    <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="hidden" class="onslaught-check" name="attr_onslaught">
-                                    <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}&#013;&#010;Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}&#013;&#010;Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                                </div>
-                            </div>
-                            <div class="flex-col">
-                                <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                <div class="flex qc-toggle-visibility">
-                                    <span title="Armored Soak, come from your armor">Ar. Soak</span>:
-                                    <input type="number" readonly tabindex="-1" name="attr_armorsoak" title="Come from your armor">
-                                </div>
-                                <div class="flex">
-                                    <span title="Dexterity + Dodge">Evasion</span>:
-                                    <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-                                    <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}&#013;&#010;Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}&#013;&#010;Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                                </div>
-                            </div>
-                            <div class="flex-col def-exc">
-                                <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
-                            </div>
-                            <div class="flex-col">
-                                <div class="flex">
-                                    <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-                                    <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}&#013;&#010;Represent the capacity to reduce withering damage.">
-                                </div>
-                                <div class="flex">
-                                    <span title="Wits + Integrity">Resolve</span>:
-                                    <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                                </div>
-                            </div>
-                            <div class="flex-col">
-                                <div class="flex">
-                                    <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
-                                    <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}&#013;&#010;Come from your armor">
-                                </div>
-                                <div class="flex">
-                                    <span title="Manipulation + Socialize">Guile</span>:
-                                    <input type="hidden" class="qc-panel-check" name="attr_qc">
-                                    <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                                </div>
-                            </div>
-                        </div>
+                        ${getDefenseLine(24)}
                     </div>
                     <div class="health-line flex sheet-bg-hide"><!-- HEALTH -->
                         <div class="sheet-health-header sheet-text-center sheet-txt-lg"><strong>HL</strong></div>
