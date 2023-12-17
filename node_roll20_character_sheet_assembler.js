@@ -410,6 +410,17 @@ function getExRolls(qc = false, padding = 28) {
     return retStr;
 }
 
+function returnOptions(padding, array, checked = 0) {
+    const getOption = (item, selected) => `<option value="${item.val}"${selected ? ' selected' : ''}>${item.label}</option>`;
+    let retStr = '';
+    let i = 0;
+    for (const item of array) {
+        retStr += getOption(item, i === checked);
+        if (i++ <= array.length - 2) retStr += `\n${" ".repeat(padding)}`;
+    }
+    return retStr;
+}
+
 outHtml += /*html*/`
                         <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
                             <h1><span>Quick Roll</span></h1>
@@ -776,21 +787,8 @@ outHtml += /*html*/`
                                         <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
                                         <div class="sheet-table-cell">Tags</div>
                                     </div>
-                                </div>\n`;
-
-function returnOptions(padding, array, checked = 0) {
-    const getOption = (item, selected) => `<option value="${item.val}"${selected ? ' selected' : ''}>${item.label}</option>`;
-    let retStr = '';
-    let i = 0;
-    for (const item of array) {
-        retStr += getOption(item, i === checked);
-        if (i++ <= array.length - 2) retStr += `\n${" ".repeat(padding)}`;
-    }
-    return retStr;
-}
-
-outHtml += /*html*/
-`                                <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
+                                </div>
+                                <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
                                     <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
                                     <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
                                     <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
@@ -937,25 +935,29 @@ ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
 }
 
+function getHealthLine(padding = 0) {
+    return /*html*/`<input type="hidden" name="attr_wound-penalty" value="-4">
+${" ".repeat(padding)}<fieldset class="repeating_health">
+${" ".repeat(padding)}    <div class="sheet-health-level">
+${" ".repeat(padding)}        <div class="sheet-damage-box">
+${" ".repeat(padding)}            <input type="radio" name="attr_hl-damage" value="healthy" class="sheet-dots0" checked="checked"><span>&nbsp;</span>
+${" ".repeat(padding)}            <input type="radio" name="attr_hl-damage" value="bashing" class="sheet-dots1"><span>&nbsp;</span>
+${" ".repeat(padding)}            <input type="radio" name="attr_hl-damage" value="lethal" class="sheet-dots2"><span>&nbsp;</span>
+${" ".repeat(padding)}            <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        <select class="sheet-wound-penalty" name="attr_hl-penalty">
+${" ".repeat(padding)}            ${returnOptions(padding+12, [{val: '', label: ''}, ...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
+${" ".repeat(padding)}        </select>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}</fieldset>`;
+}
+
 outHtml += /*html*/
 `                <h1 class="sheet-health-defenses"><span>Health &amp; Defense</span></h1><!-- Healt & Defense -->
                 ${getDefenseLine(16)}
                 <div class="sheet-health-header sheet-text-center sheet-txt-lg" style="margin-top: 8px"><strong>Health Levels</strong></div>
                 <div class="sheet-health-track"><!-- Health Levels -->
-                    <input type="hidden" name="attr_wound-penalty" value="-4">
-                    <fieldset class="repeating_health">
-                        <div class="sheet-health-level">
-                            <div class="sheet-damage-box">
-                                <input type="radio" name="attr_hl-damage" value="healthy" class="sheet-dots0" checked="checked"><span>&nbsp;</span>
-                                <input type="radio" name="attr_hl-damage" value="bashing" class="sheet-dots1"><span>&nbsp;</span>
-                                <input type="radio" name="attr_hl-damage" value="lethal" class="sheet-dots2"><span>&nbsp;</span>
-                                <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
-                            </div>
-                            <select class="sheet-wound-penalty" name="attr_hl-penalty">
-                                ${returnOptions(32, [{val: '', label: ''}, ...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
-                            </select>
-                        </div>
-                    </fieldset>
+                    ${getHealthLine(20)}
                     <div class="add-multiple-div">
                         <input type="checkbox" class="sheet-unnamed-toggle add-multiple btn"><span title="Add Multiple" class="sheet-layer6"></span>
                         <div class="sheet-layer5">
@@ -3019,20 +3021,7 @@ outHtml += /*html*/
                     <div class="health-line flex sheet-bg-hide"><!-- HEALTH -->
                         <div class="sheet-health-header sheet-text-center sheet-txt-lg"><strong>HL</strong></div>
                         <div class="sheet-health-track grow-normal"><!-- Health Levels -->
-                            <input type="hidden" name="attr_wound-penalty" value="-4">
-                            <fieldset class="repeating_health">
-                                <div class="sheet-health-level">
-                                    <div class="sheet-damage-box">
-                                        <input type="radio" name="attr_hl-damage" value="healthy" class="sheet-dots0" checked="checked"><span>&nbsp;</span>
-                                        <input type="radio" name="attr_hl-damage" value="bashing" class="sheet-dots1"><span>&nbsp;</span>
-                                        <input type="radio" name="attr_hl-damage" value="lethal" class="sheet-dots2"><span>&nbsp;</span>
-                                        <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
-                                    </div>
-                                    <select class="sheet-wound-penalty" name="attr_hl-penalty">
-                                        ${returnOptions(40, [{val: '', label: ''}, ...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
-                                    </select>
-                                </div>
-                            </fieldset>
+                            ${getHealthLine(28)}
                         </div>
                         <div class="flex flex-wrap flex-col">
                             <div class="crippling-box"><!-- DISABLE BOX -->
