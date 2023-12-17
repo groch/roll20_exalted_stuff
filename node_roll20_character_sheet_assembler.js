@@ -513,18 +513,13 @@ outHtml += /*html*/`
                                     <div class="sheet-battle-group-row" title="@{battlegroup-drill}&#013;&#010;Represent how much training the BG have.&#013;&#010;Give bonus to Defenses">
                                         <span>Drill</span>:
                                         <select name="attr_battlegroup-drill">
-                                            <option value="Poor" selected="selected">Poor</option>
-                                            <option value="Average">Average</option>
-                                            <option value="Elite">Elite</option>
+                                            ${returnOptions(44, ['Poor', 'Average', 'Elite'].map(i => ({val: i, label: i})), 0)}
                                         </select>
                                     </div>
                                     <div class="sheet-battle-group-row" title="@{battlegroup-might}&#013;&#010;Represent how much supernatural features the BG is composed of.&#013;&#010;Give bonus to Defenses and Attacks&Damage">
                                         <span>Might</span>:
                                         <select name="attr_battlegroup-might">
-                                            <option value="0" selected="selected">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
+                                            ${returnOptions(44, [...Array(4).keys()].map(i => ({val: i, label: i})), 0)}
                                         </select>
                                     </div>
                                     <div class="sheet-battle-group-row" title="@{battlegroup-perfect-morale}&#013;&#010;Represent a BG trained to never surrender.&#013;&#010;Give bonus Magnitude & Prevent Rout">
@@ -756,10 +751,7 @@ outHtml += /*html*/`
                                         <div class="sheet-flexbox-h sheet-flexbox0">
                                             <input type="text" name="attr_project-name" placeholder="Longsword">
                                             <select name="attr_project-type">
-                                                <option value=""></option>
-                                                <option value="Major">Major</option>
-                                                <option value="Superior">Superior</option>
-                                                <option value="Legendary">Legendary</option>
+                                                ${returnOptions(48, ['','Major','Superior','Legendary'].map(i => ({val: i, label: i})), -1)}
                                             </select>
                                         </div>
                                     </fieldset>
@@ -782,8 +774,21 @@ outHtml += /*html*/`
                                         <div class="sheet-table-cell" style="width: 2em;" title="Attune"><span class="sheet-dotted">Att.</span></div>
                                         <div class="sheet-table-cell">Tags</div>
                                     </div>
-                                </div>
-                                <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
+                                </div>\n`;
+
+function returnOptions(padding, array, checked = 0) {
+    const getOption = (item, selected) => `<option value="${item.val}"${selected ? ' selected' : ''}>${item.label}</option>`;
+    let retStr = '';
+    let i = 0;
+    for (const item of array) {
+        retStr += getOption(item, i === checked);
+        if (i++ <= array.length - 2) retStr += `\n${" ".repeat(padding)}`;
+    }
+    return retStr;
+}
+
+outHtml += /*html*/
+`                                <fieldset class="repeating_weapon sheet-table-body" style="display: none;">
                                     <div class="sheet-table-cell"><input type="text" name="attr_repweaponname" placeholder="Unarmed"></div>
                                     <div class="sheet-table-cell"><input type="number" name="attr_repweaponacc" value="4"></div>
                                     <div class="sheet-table-cell"><input type="number" name="attr_repweapondam" value="7"></div>
@@ -803,17 +808,7 @@ outHtml += /*html*/`
                                             <option value="claw">Black Claw Style</option>
                                             <option value="pearl">Dreaming Pearl Courtesan Style</option>
                                             <option disabled>-------RAW------</option>
-                                            <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
+                                            ${returnOptions(44, [...Array(11).keys()].map(i => ({val: i, label: i})), -1)}
                                             <option disabled>-------SPECIAL------</option>
                                             <option value="noParry">Can't Parry with this weapon</option>
                                         </select>
@@ -949,12 +944,7 @@ outHtml += /*html*/`
                                 <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
                             </div>
                             <select class="sheet-wound-penalty" name="attr_hl-penalty">
-                                <option value="" selected="selected"></option>
-                                <option value="0">-0</option>
-                                <option value="-1">-1</option>
-                                <option value="-2">-2</option>
-                                <option value="-4">-4</option>
-                                <option value="I">Incapacitated</option>
+                                ${returnOptions(32, [{val: '', label: ''}, ...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
                             </select>
                         </div>
                     </fieldset>
@@ -963,11 +953,7 @@ outHtml += /*html*/`
                         <div class="sheet-layer5">
                             <input type="number" class="add-multiple-qty" name="attr_add-multiple-qty" min="1" value="1">
                             <select class="sheet-wound-penalty" name="attr_add-multiple-penalty">
-                                <option value="0" selected="selected">-0</option>
-                                <option value="-1">-1</option>
-                                <option value="-2">-2</option>
-                                <option value="-4">-4</option>
-                                <option value="I">Incapacitated</option>
+                                ${returnOptions(32, [...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
                             </select>
                             <button type="action" name="act_add-multiple-hl" class="btn add-multiple">Add</button>
                         </div>
@@ -3163,17 +3149,7 @@ outHtml += /*html*/`
                                         <option value="claw">Black Claw Style</option>
                                         <option value="pearl">Dreaming Pearl Courtesan Style</option>
                                         <option disabled>-------RAW------</option>
-                                        <option value="0">0</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
+                                        ${returnOptions(40, [...Array(11).keys()].map(i => ({val: i, label: i})), -1)}
                                         <option disabled>-------SPECIAL------</option>
                                         <option value="noParry">Can't Parry with this weapon</option>
                                     </select>
@@ -3273,12 +3249,7 @@ outHtml += /*html*/`
                                         <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
                                     </div>
                                     <select class="sheet-wound-penalty" name="attr_hl-penalty">
-                                        <option value="" selected="selected"></option>
-                                        <option value="0">-0</option>
-                                        <option value="-1">-1</option>
-                                        <option value="-2">-2</option>
-                                        <option value="-4">-4</option>
-                                        <option value="I">Incapacitated</option>
+                                        ${returnOptions(40, [{val: '', label: ''}, ...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
                                     </select>
                                 </div>
                             </fieldset>
@@ -3980,15 +3951,7 @@ outHtml += /*html*/`
                                 <div class="init-section second-line grow-normal flex">
                                     <div class="flex grow-normal">
                                         (<select name="attr_repinit-attr" title="Attribute for the Roll" class="grow-normal">
-                                            <option value="@{strength}[Strength]">Strength</option>
-                                            <option value="@{dexterity}[Dexterity]">Dexterity</option>
-                                            <option value="@{stamina}[Stamina]">Stamina</option>
-                                            <option value="@{charisma}[Charisma]">Charisma</option>
-                                            <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                            <option value="@{appearance}[Appearance]">Appearance</option>
-                                            <option value="@{perception}[Perception]">Perception</option>
-                                            <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                            <option value="@{wits}[Wits]" selected="selected">Wits</option>
+                                            ${returnOptions(44, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 8)}
                                             <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                             <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                             <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
@@ -3996,75 +3959,24 @@ outHtml += /*html*/`
                                             <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
                                             <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
                                             <option disabled>-------RAW------</option>
-                                            <option value="0[RAW]">0</option>
-                                            <option value="1[RAW]">1</option>
-                                            <option value="2[RAW]">2</option>
-                                            <option value="3[RAW]">3</option>
-                                            <option value="4[RAW]">4</option>
-                                            <option value="5[RAW]">5</option>
-                                            <option value="6[RAW]">6</option>
-                                            <option value="7[RAW]">7</option>
-                                            <option value="8[RAW]">8</option>
-                                            <option value="9[RAW]">9</option>
-                                            <option value="10[RAW]">10</option>
+                                            ${returnOptions(44, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                         </select>+
                                         <select name="attr_repinit-abi" title="Ability for the Roll" class="grow-normal">
-                                            <option value="@{archery}[Archery]">Archery</option>
-                                            <option value="@{athletics}[Athletics]">Athletics</option>
-                                            <option value="@{awareness}[Awareness]" selected="selected">Awareness</option>
-                                            <option value="@{brawl}[Brawl]">Brawl</option>
-                                            <option value="@{bureaucracy}[Bureaucracy]">Bureaucracy</option>
-                                            <option value="@{dodge}[Dodge]">Dodge</option>
-                                            <option value="@{integrity}[Integrity]">Integrity</option>
-                                            <option value="@{investigation}[Investigation]">Investigation</option>
-                                            <option value="@{larceny}[Larceny]">Larceny</option>
-                                            <option value="@{linguistics}[Linguistics]">Linguistics</option>
-                                            <option value="@{lore}[Lore]">Lore</option>
-                                            <option value="@{medicine}[Medicine]">Medicine</option>
-                                            <option value="@{melee}[Melee]">Melee</option>
-                                            <option value="@{occult}[Occult]">Occult</option>
-                                            <option value="@{performance}[Performance]">Performance</option>
-                                            <option value="@{presence}[Presence]">Presence</option>
-                                            <option value="@{resistance}[Resistance]">Resistance</option>
-                                            <option value="@{ride}[Ride]">Ride</option>
-                                            <option value="@{sail}[Sail]">Sail</option>
-                                            <option value="@{socialize}[Socialize]">Socialize</option>
-                                            <option value="@{stealth}[Stealth]">Stealth</option>
-                                            <option value="@{survival}[Survival]">Survival</option>
-                                            <option value="@{thrown}[Thrown]">Thrown</option>
-                                            <option value="@{war}[War]">War</option>
+                                            ${returnOptions(44, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 2)}
                                             <option disabled>-------ABILITIES PROMPTS------</option>
                                             <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                             <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                             <option value="${buildAbilityPrompt(44)}">Full Ability Prompt</option>
                                             <option value="?{Custom Ability}">Simple Prompt</option>
                                             <option disabled>----ATTRIBUTES---</option>
-                                            <option value="@{strength}[Strength]">Strength</option>
-                                            <option value="@{dexterity}[Dexterity]">Dexterity</option>
-                                            <option value="@{stamina}[Stamina]">Stamina</option>
-                                            <option value="@{charisma}[Charisma]">Charisma</option>
-                                            <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                            <option value="@{appearance}[Appearance]">Appearance</option>
-                                            <option value="@{perception}[Perception]">Perception</option>
-                                            <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                            <option value="@{wits}[Wits]">Wits</option>
+                                            ${returnOptions(44, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
                                             <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                             <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                             <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
                                             <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
                                             <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
                                             <option disabled>-------RAW------</option>
-                                            <option value="0[RAW]">0</option>
-                                            <option value="1[RAW]">1</option>
-                                            <option value="2[RAW]">2</option>
-                                            <option value="3[RAW]">3</option>
-                                            <option value="4[RAW]">4</option>
-                                            <option value="5[RAW]">5</option>
-                                            <option value="6[RAW]">6</option>
-                                            <option value="7[RAW]">7</option>
-                                            <option value="8[RAW]">8</option>
-                                            <option value="9[RAW]">9</option>
-                                            <option value="10[RAW]">10</option>
+                                            ${returnOptions(44, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                         </select>
                                     </div>
                                     <div class="flex grow-max">
@@ -4152,15 +4064,7 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <p class="head" title="Trying to Hit an opponent with mostly narrative damage but build momentum (Initiative)">ATK</p>
                                                 (<select name="attr_repcombat-watk-attr" title="Attribute for the Roll" class="grow-normal">
-                                                    <option value="@{strength}[Strength]">Strength</option>
-                                                    <option value="@{dexterity}[Dexterity]" selected="selected">Dexterity</option>
-                                                    <option value="@{stamina}[Stamina]">Stamina</option>
-                                                    <option value="@{charisma}[Charisma]">Charisma</option>
-                                                    <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                                    <option value="@{appearance}[Appearance]">Appearance</option>
-                                                    <option value="@{perception}[Perception]">Perception</option>
-                                                    <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                                    <option value="@{wits}[Wits]">Wits</option>
+                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 1)}
                                                     <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                                     <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                                     <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
@@ -4168,75 +4072,24 @@ outHtml += /*html*/`
                                                     <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
                                                     <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
                                                     <option disabled>-------RAW------</option>
-                                                    <option value="0[RAW]">0</option>
-                                                    <option value="1[RAW]">1</option>
-                                                    <option value="2[RAW]">2</option>
-                                                    <option value="3[RAW]">3</option>
-                                                    <option value="4[RAW]">4</option>
-                                                    <option value="5[RAW]">5</option>
-                                                    <option value="6[RAW]">6</option>
-                                                    <option value="7[RAW]">7</option>
-                                                    <option value="8[RAW]">8</option>
-                                                    <option value="9[RAW]">9</option>
-                                                    <option value="10[RAW]">10</option>
+                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                                 </select>+
                                                 <select name="attr_repcombat-watk-abi" title="Ability for the Roll" class="grow-normal">
-                                                    <option value="@{archery}[Archery]">Archery</option>
-                                                    <option value="@{athletics}[Athletics]">Athletics</option>
-                                                    <option value="@{awareness}[Awareness]">Awareness</option>
-                                                    <option value="@{brawl}[Brawl]" selected="selected">Brawl</option>
-                                                    <option value="@{bureaucracy}[Bureaucracy]">Bureaucracy</option>
-                                                    <option value="@{dodge}[Dodge]">Dodge</option>
-                                                    <option value="@{integrity}[Integrity]">Integrity</option>
-                                                    <option value="@{investigation}[Investigation]">Investigation</option>
-                                                    <option value="@{larceny}[Larceny]">Larceny</option>
-                                                    <option value="@{linguistics}[Linguistics]">Linguistics</option>
-                                                    <option value="@{lore}[Lore]">Lore</option>
-                                                    <option value="@{medicine}[Medicine]">Medicine</option>
-                                                    <option value="@{melee}[Melee]">Melee</option>
-                                                    <option value="@{occult}[Occult]">Occult</option>
-                                                    <option value="@{performance}[Performance]">Performance</option>
-                                                    <option value="@{presence}[Presence]">Presence</option>
-                                                    <option value="@{resistance}[Resistance]">Resistance</option>
-                                                    <option value="@{ride}[Ride]">Ride</option>
-                                                    <option value="@{sail}[Sail]">Sail</option>
-                                                    <option value="@{socialize}[Socialize]">Socialize</option>
-                                                    <option value="@{stealth}[Stealth]">Stealth</option>
-                                                    <option value="@{survival}[Survival]">Survival</option>
-                                                    <option value="@{thrown}[Thrown]">Thrown</option>
-                                                    <option value="@{war}[War]">War</option>
+                                                    ${returnOptions(52, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 3)}
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
                                                     <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                                     <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                     <option value="${buildAbilityPrompt(52)}">Full Ability Prompt</option>
                                                     <option value="?{Custom Ability}">Simple Prompt</option>
                                                     <option disabled>----ATTRIBUTES---</option>
-                                                    <option value="@{strength}[Strength]">Strength</option>
-                                                    <option value="@{dexterity}[Dexterity]">Dexterity</option>
-                                                    <option value="@{stamina}[Stamina]">Stamina</option>
-                                                    <option value="@{charisma}[Charisma]">Charisma</option>
-                                                    <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                                    <option value="@{appearance}[Appearance]">Appearance</option>
-                                                    <option value="@{perception}[Perception]">Perception</option>
-                                                    <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                                    <option value="@{wits}[Wits]">Wits</option>
+                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
                                                     <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                                     <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                                     <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
                                                     <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
                                                     <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
                                                     <option disabled>-------RAW------</option>
-                                                    <option value="0[RAW]">0</option>
-                                                    <option value="1[RAW]">1</option>
-                                                    <option value="2[RAW]">2</option>
-                                                    <option value="3[RAW]">3</option>
-                                                    <option value="4[RAW]">4</option>
-                                                    <option value="5[RAW]">5</option>
-                                                    <option value="6[RAW]">6</option>
-                                                    <option value="7[RAW]">7</option>
-                                                    <option value="8[RAW]">8</option>
-                                                    <option value="9[RAW]">9</option>
-                                                    <option value="10[RAW]">10</option>
+                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                                 </select>+
                                                 <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
                                             </div>
@@ -4271,15 +4124,7 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
                                                 (<select name="attr_repcombat-wdmg-attr" title="Attribute for the Roll" class="grow-normal">
-                                                    <option value="@{strength}[Strength]" selected="selected">Strength</option>
-                                                    <option value="@{dexterity}[Dexterity]">Dexterity</option>
-                                                    <option value="@{stamina}[Stamina]">Stamina</option>
-                                                    <option value="@{charisma}[Charisma]">Charisma</option>
-                                                    <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                                    <option value="@{appearance}[Appearance]">Appearance</option>
-                                                    <option value="@{perception}[Perception]">Perception</option>
-                                                    <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                                    <option value="@{wits}[Wits]">Wits</option>
+                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})))}
                                                     <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                                     <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                                     <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
@@ -4287,17 +4132,7 @@ outHtml += /*html*/`
                                                     <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
                                                     <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
                                                     <option disabled>-------RAW------</option>
-                                                    <option value="0[RAW]">0</option>
-                                                    <option value="1[RAW]">1</option>
-                                                    <option value="2[RAW]">2</option>
-                                                    <option value="3[RAW]">3</option>
-                                                    <option value="4[RAW]">4</option>
-                                                    <option value="5[RAW]">5</option>
-                                                    <option value="6[RAW]">6</option>
-                                                    <option value="7[RAW]">7</option>
-                                                    <option value="8[RAW]">8</option>
-                                                    <option value="9[RAW]">9</option>
-                                                    <option value="10[RAW]">10</option>
+                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                                 </select>+
                                                 <input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg dark-dmg-color" readonly="readonly" title="Damage of the Weapon used&#013;&#010;Auto Filled, edit the field above">+
                                             </div>
@@ -4339,15 +4174,7 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <p class="head" title="Trying to Hit an opponent with real damage based on built momentum (Initiative)">ATK</p>
                                                 (<select name="attr_repcombat-datk-attr" title="Attribute for the Roll" class="grow-normal">
-                                                    <option value="@{strength}[Strength]">Strength</option>
-                                                    <option value="@{dexterity}[Dexterity]" selected="selected">Dexterity</option>
-                                                    <option value="@{stamina}[Stamina]">Stamina</option>
-                                                    <option value="@{charisma}[Charisma]">Charisma</option>
-                                                    <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                                    <option value="@{appearance}[Appearance]">Appearance</option>
-                                                    <option value="@{perception}[Perception]">Perception</option>
-                                                    <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                                    <option value="@{wits}[Wits]">Wits</option>
+                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 1)}
                                                     <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                                     <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                                     <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
@@ -4355,75 +4182,24 @@ outHtml += /*html*/`
                                                     <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
                                                     <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
                                                     <option disabled>-------RAW------</option>
-                                                    <option value="0[RAW]">0</option>
-                                                    <option value="1[RAW]">1</option>
-                                                    <option value="2[RAW]">2</option>
-                                                    <option value="3[RAW]">3</option>
-                                                    <option value="4[RAW]">4</option>
-                                                    <option value="5[RAW]">5</option>
-                                                    <option value="6[RAW]">6</option>
-                                                    <option value="7[RAW]">7</option>
-                                                    <option value="8[RAW]">8</option>
-                                                    <option value="9[RAW]">9</option>
-                                                    <option value="10[RAW]">10</option>
+                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                                 </select>+
                                                 <select name="attr_repcombat-datk-abi" title="Ability for the Roll" class="grow-normal">
-                                                    <option value="@{archery}[Archery]">Archery</option>
-                                                    <option value="@{athletics}[Athletics]">Athletics</option>
-                                                    <option value="@{awareness}[Awareness]">Awareness</option>
-                                                    <option value="@{brawl}[Brawl]" selected="selected">Brawl</option>
-                                                    <option value="@{bureaucracy}[Bureaucracy]">Bureaucracy</option>
-                                                    <option value="@{dodge}[Dodge]">Dodge</option>
-                                                    <option value="@{integrity}[Integrity]">Integrity</option>
-                                                    <option value="@{investigation}[Investigation]">Investigation</option>
-                                                    <option value="@{larceny}[Larceny]">Larceny</option>
-                                                    <option value="@{linguistics}[Linguistics]">Linguistics</option>
-                                                    <option value="@{lore}[Lore]">Lore</option>
-                                                    <option value="@{medicine}[Medicine]">Medicine</option>
-                                                    <option value="@{melee}[Melee]">Melee</option>
-                                                    <option value="@{occult}[Occult]">Occult</option>
-                                                    <option value="@{performance}[Performance]">Performance</option>
-                                                    <option value="@{presence}[Presence]">Presence</option>
-                                                    <option value="@{resistance}[Resistance]">Resistance</option>
-                                                    <option value="@{ride}[Ride]">Ride</option>
-                                                    <option value="@{sail}[Sail]">Sail</option>
-                                                    <option value="@{socialize}[Socialize]">Socialize</option>
-                                                    <option value="@{stealth}[Stealth]">Stealth</option>
-                                                    <option value="@{survival}[Survival]">Survival</option>
-                                                    <option value="@{thrown}[Thrown]">Thrown</option>
-                                                    <option value="@{war}[War]">War</option>
+                                                    ${returnOptions(52, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 3)}
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
                                                     <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other]}">Craft Prompt</option>
                                                     <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other]}">Martial Arts Prompt</option>
                                                     <option value="${buildAbilityPrompt(52)}">Full Ability Prompt</option>
                                                     <option value="?{Custom Ability}">Simple Prompt</option>
                                                     <option disabled>----ATTRIBUTES---</option>
-                                                    <option value="@{strength}[Strength]">Strength</option>
-                                                    <option value="@{dexterity}[Dexterity]">Dexterity</option>
-                                                    <option value="@{stamina}[Stamina]">Stamina</option>
-                                                    <option value="@{charisma}[Charisma]">Charisma</option>
-                                                    <option value="@{manipulation}[Manipulation]">Manipulation</option>
-                                                    <option value="@{appearance}[Appearance]">Appearance</option>
-                                                    <option value="@{perception}[Perception]">Perception</option>
-                                                    <option value="@{intelligence}[Intelligence]">Intelligence</option>
-                                                    <option value="@{wits}[Wits]">Wits</option>
+                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
                                                     <option disabled>-------ATTRIBUTES PROMPTS------</option>
                                                     <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
                                                     <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
                                                     <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
                                                     <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
                                                     <option disabled>-------RAW------</option>
-                                                    <option value="0[RAW]">0</option>
-                                                    <option value="1[RAW]">1</option>
-                                                    <option value="2[RAW]">2</option>
-                                                    <option value="3[RAW]">3</option>
-                                                    <option value="4[RAW]">4</option>
-                                                    <option value="5[RAW]">5</option>
-                                                    <option value="6[RAW]">6</option>
-                                                    <option value="7[RAW]">7</option>
-                                                    <option value="8[RAW]">8</option>
-                                                    <option value="9[RAW]">9</option>
-                                                    <option value="10[RAW]">10</option>
+                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
                                                 </select>
                                             </div>
                                             <div class="flex grow-max">
