@@ -2701,92 +2701,93 @@ outHtml += /*html*/
                 </div>
             </div>
 
-            <!-- 6 SOCIAL PAGE -->
+            <!-- 6 SOCIAL PAGE -->\n`;
 
+function getSocialHeadline(padding = 0, includeExc = false) {
+    let ret = /*html*/`<div class="head-line flex flex-wrap">
+${" ".repeat(padding)}    <div class="flex">
+${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex">
+${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>`;
+    if (includeExc) {
+        ret += /*html*/`
+${" ".repeat(padding)}    <div class="sheet-table-cell def-exc">
+${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
+${" ".repeat(padding)}    </div>`;
+    }
+    ret += /*html*/`
+${" ".repeat(padding)}    <div class="flex">
+${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
+${" ".repeat(padding)}            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>`;
+if (includeExc) {
+    ret += /*html*/`
+${" ".repeat(padding)}    <div class="flex will-color-down rounded-box">
+${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
+${" ".repeat(padding)}        <div class="sheet-table-cell">
+${" ".repeat(padding)}            <input type="number" name="attr_willpower" value="5" min="0" max="15" title="@{willpower}">
+${" ".repeat(padding)}            <input type="number" name="attr_willpower_max" readonly tabindex="-1" title="@{willpower_max}">
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}    </div>`;
+}
+ret += /*html*/`
+${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
+function getSocialStatCol(padding = 0) {
+    const getStatBlock = (attr, qcToggle = true) => /*html*/`<div class="sheet-table-row${qcToggle ?' qc-toggle-display' : ''}">
+${" ".repeat(padding)}            <div class="sheet-table-cell"><span>${attr}</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_${attr.toLowerCase()}" style="width: 27px ; margin-right: 3px" title="@{${attr.toLowerCase()}}&#013;&#010;${attr}" readonly tabindex="-1"></div>
+${" ".repeat(padding)}        </div>`;
+    return /*html*/`<div class="sheet-col stat-col">
+${" ".repeat(padding)}    <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}    <h1><span>Attributes</span></h1>
+${" ".repeat(padding)}    <div class="sheet-table">
+${" ".repeat(padding)}        <input type="hidden" class="qc-panel-check" name="attr_qc">
+${" ".repeat(padding)}        ${getStatBlock('Perception')}
+${" ".repeat(padding)}        ${getStatBlock('Charisma')}
+${" ".repeat(padding)}        ${getStatBlock('Manipulation')}
+${" ".repeat(padding)}        <div class="sheet-table-row qc-toggle-display-inv">
+${" ".repeat(padding)}            <div class="sheet-table-cell flex" style="flex-grow: 1;">
+${" ".repeat(padding)}                <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-soc-influence-type-display grow-normal" readonly tabindex="-1">
+${" ".repeat(padding)}            </div>
+${" ".repeat(padding)}            <div class="sheet-table-cell">
+${" ".repeat(padding)}                <input type="number" name="attr_qc-social-influence" style="width: 27px ; margin-right: 3px" title="QC Social Influence" readonly tabindex="-1">
+${" ".repeat(padding)}            </div>
+${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        ${getStatBlock('Appearance',false)}
+${" ".repeat(padding)}        ${getStatBlock('Wits')}
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <h1 class="qc-toggle-display"><span>Abilities</span></h1>
+${" ".repeat(padding)}    <div class="sheet-table qc-toggle-display">
+${" ".repeat(padding)}        ${getStatBlock('Socialize',false)}
+${" ".repeat(padding)}        ${getStatBlock('Survival',false)}
+${" ".repeat(padding)}        ${getStatBlock('Presence',false)}
+${" ".repeat(padding)}        ${getStatBlock('Performance',false)}
+${" ".repeat(padding)}        ${getStatBlock('Integrity',false)}
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}</div>`;
+}
+
+outHtml += /*html*/`
             <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">
                 <h1><span>Social attributes and abilities</span></h1>
-                <div class="head-line flex flex-wrap">
-                    <div class="flex">
-                        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="sheet-table-cell def-exc">
-                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
-                    </div>
-                    <div class="flex">
-                        <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
-                        </div>
-                    </div>
-                    <div class="flex will-color-down rounded-box">
-                        <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="number" name="attr_willpower" value="5" min="0" max="15" title="@{willpower}">
-                            <input type="number" name="attr_willpower_max" readonly tabindex="-1" title="@{willpower_max}">
-                        </div>
-                    </div>
-                </div>
+                ${getSocialHeadline(16, true)}
                 <div class="sheet-3colrow">
-                    <div class="sheet-col stat-col">
-                        <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <h1><span>Attributes</span></h1>
-                        <div class="sheet-table">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_perception" style="width: 27px ; margin-right: 3px" title="@{perception}&#013;&#010;Perception" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_charisma" style="width: 27px ; margin-right: 3px" title="@{charisma}&#013;&#010;Charisma" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_manipulation" style="width: 27px ; margin-right: 3px" title="@{manipulation}&#013;&#010;Manipulation" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display-inv">
-                                <div class="sheet-table-cell flex" style="flex-grow: 1;">
-                                    <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-soc-influence-type-display grow-normal" readonly tabindex="-1">
-                                </div>
-                                <div class="sheet-table-cell">
-                                    <input type="number" name="attr_qc-social-influence" style="width: 27px ; margin-right: 3px" title="QC Social Influence" readonly tabindex="-1">
-                                </div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_appearance" style="width: 27px ; margin-right: 3px" title="@{appearance}&#013;&#010;Appearance" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Wits</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_wits" style="width: 27px ; margin-right: 3px" title="@{wits}&#013;&#010;Wits" readonly tabindex="-1"></div>
-                            </div>
-                        </div>
-                        <h1 class="qc-toggle-display"><span>Abilities</span></h1>
-                        <div class="sheet-table qc-toggle-display">
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_socialize" style="width: 27px ; margin-right: 3px" title="@{socialize}&#013;&#010;Socialize" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_survival" style="width: 27px ; margin-right: 3px" title="@{survival}&#013;&#010;Survival" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_presence" style="width: 27px ; margin-right: 3px" title="@{presence}&#013;&#010;Presence" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_performance" style="width: 27px ; margin-right: 3px" title="@{performance}&#013;&#010;Performance" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_integrity" style="width: 27px ; margin-right: 3px" title="@{integrity}&#013;&#010;Integrity" readonly tabindex="-1"></div>
-                            </div>
-                        </div>
-                    </div>
+                    ${getSocialStatCol(20, true)}
                     <div class="sheet-3col inti-col">
                         <h1><span>Intimacies</span></h1>
                         <div class="intimacy-qol-button">
@@ -2830,78 +2831,9 @@ outHtml += /*html*/
 
             <div class="sheet-body sheet-tab-content sheet-tab-antisocial-sheet">
                 <h1><span>Social attributes and abilities</span></h1>
-                <div class="head-line flex flex-wrap">
-                    <div class="flex">
-                        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
-                        </div>
-                    </div>
-                </div>
+                ${getSocialHeadline(16)}
                 <div class="sheet-3colrow">
-                    <div class="sheet-col stat-col">
-                        <input type="hidden" class="qc-panel-check" name="attr_qc">
-                        <h1><span>Attributes</span></h1>
-                        <div class="sheet-table">
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Perception</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_perception" style="width: 27px ; margin-right: 3px" title="@{perception}&#013;&#010;Perception" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Charisma</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_charisma" style="width: 27px ; margin-right: 3px" title="@{charisma}&#013;&#010;Charisma" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Manipulation</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_manipulation" style="width: 27px ; margin-right: 3px" title="@{manipulation}&#013;&#010;Manipulation" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display-inv">
-                                <div class="sheet-table-cell flex" style="flex-grow: 1;">
-                                    <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-soc-influence-type-display grow-normal" readonly tabindex="-1">
-                                </div>
-                                <div class="sheet-table-cell">
-                                    <input type="number" name="attr_qc-social-influence" style="width: 27px ; margin-right: 3px" title="QC Social Influence" readonly tabindex="-1">
-                                </div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Appearance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_appearance" style="width: 27px ; margin-right: 3px" title="@{appearance}&#013;&#010;Appearance" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row qc-toggle-display">
-                                <div class="sheet-table-cell"><span>Wits</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_wits" style="width: 27px ; margin-right: 3px" title="@{wits}&#013;&#010;Wits" readonly tabindex="-1"></div>
-                            </div>
-                        </div>
-                        <h1 class="qc-toggle-display"><span>Abilities</span></h1>
-                        <div class="sheet-table qc-toggle-display">
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Socialize</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_socialize" style="width: 27px ; margin-right: 3px" title="@{socialize}&#013;&#010;Socialize" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Survival</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_survival" style="width: 27px ; margin-right: 3px" title="@{survival}&#013;&#010;Survival" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Presence</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_presence" style="width: 27px ; margin-right: 3px" title="@{presence}&#013;&#010;Presence" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Performance</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_performance" style="width: 27px ; margin-right: 3px" title="@{performance}&#013;&#010;Performance" readonly tabindex="-1"></div>
-                            </div>
-                            <div class="sheet-table-row">
-                                <div class="sheet-table-cell"><span>Integrity</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_integrity" style="width: 27px ; margin-right: 3px" title="@{integrity}&#013;&#010;Integrity" readonly tabindex="-1"></div>
-                            </div>
-                        </div>
-                    </div>
+                    ${getSocialStatCol(20, true)}
                     <div class="sheet-3col inti-col">
                         <h1><span>Intimacies Read</span></h1>
                         <input type="hidden" value="0" name="attr_init-intimacies">
