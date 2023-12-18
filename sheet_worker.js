@@ -1530,7 +1530,7 @@
         'charms-ma-centipede': 'Centipede Style',
         'charms-ma-falcon': 'Falcon Style',
         'charms-ma-laughingmonster': 'Laughing Monster Style',
-        'charms-ma-swayinggrass': 'Swaying Grass Style',
+        'charms-ma-swayinggrass': 'Swaying Grass Dance Style',
         'charms-ma-airdragon': 'Air Dragon Style',
         'charms-ma-earthdragon': 'Earth Dragon Style',
         'charms-ma-firedragon': 'Fire Dragon Style',

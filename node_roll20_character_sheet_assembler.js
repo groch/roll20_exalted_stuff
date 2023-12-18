@@ -105,6 +105,8 @@ eval(sheetWorkerStr+/*javascript*/`
     var solarCharmArray = charmSolarRepeatableSectionArray;
     var lunarCharmArray = charmLunarRepeatableSectionArray;
     var maCharmArray = charmMaRepeatableSectionArray;
+
+    var hashCharmName = correspondingCharmSectionValue;
 `);
 
 function getHiddenInputs(array, padding = 0) {
@@ -1506,8 +1508,45 @@ outHtml += /*html*/`
                 </fieldset>
             </div>
 
-            <!-- 4 CONFIG PAGE -->
+            <!-- 4 CONFIG PAGE -->\n`;
 
+const getConfigOptionLabel = (name, label = name, spanStyle) => /*html*/`<label><input type="checkbox" name="attr_charm-${name.toLowerCase()}" value="1"><span${spanStyle ? ` style="${spanStyle}"` : ''}> ${label}</span></label>`;
+
+function getAbiConfigOptionList(padding = 0) {
+    const separators = [8,16], abilitiesFiltered = abilities.map(i => typeof i !== 'string' ? i.name : i).filter(i => i !== 'Martial Arts');
+    let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
+    for (const abilitie of abilitiesFiltered) {
+        ret += `${" ".repeat(padding+4)}${getConfigOptionLabel(abilitie)}\n`;
+        if (separators.includes(i++)) ret += /*html*/`${" ".repeat(padding)}</div>\n${" ".repeat(padding)}<div class="sheet-checklist sheet-col">\n`;
+    }
+    ret += /*html*/`${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
+function getAttrConfigOptionList(padding = 0) {
+    const separators = [10,19], lunarFiltered = lunarCharmArray.slice(1).map(i => i.replace('charms-',''));
+    let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
+    for (const abilitie of lunarFiltered) {
+        ret += `${" ".repeat(padding+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`])}\n`;
+        if (separators.includes(i++)) ret += /*html*/`${" ".repeat(padding)}</div>\n${" ".repeat(padding)}<div class="sheet-checklist sheet-col">\n`;
+    }
+    ret += /*html*/`${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
+function getMAConfigOptionList(padding = 0) {
+    const separators = [7,15], maFiltered = maCharmArray.map(i => i.replace('charms-',''));
+    let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
+    for (const abilitie of maFiltered) {
+        ret += `${" ".repeat(padding+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`].replace(' Style', '').replace('MA - ', ''))}\n`;
+        if (separators.includes(i++)) ret += /*html*/`${" ".repeat(padding)}</div>\n${" ".repeat(padding)}<div class="sheet-checklist sheet-col">\n`;
+    }
+    ret += /*html*/`${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
+outHtml += /*html*/
+`
             <div class="sheet-body sheet-tab-content sheet-tab-settings-sheet">
                 <h1><span>Character Type</span></h1>
                 <div class="sheet-checklist sheet-2colrow sheet-main-config">
@@ -1621,121 +1660,24 @@ outHtml += /*html*/`
                 <h1><span>Charms list configuration</span></h1>
                 <h2 style="text-align: center;"><span class="solar-style">Solar</span> & <span class="db-style">DB</span></h2>
                 <div class="sheet-checklist sheet-3colrow">
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-archery" value="1"><span> Archery</span></label>
-                        <label><input type="checkbox" name="attr_charm-athletics" value="1"><span> Athletics</span></label>
-                        <label><input type="checkbox" name="attr_charm-awareness" value="1"><span> Awareness</span></label>
-                        <label><input type="checkbox" name="attr_charm-brawl" value="1"><span> Brawl</span></label>
-                        <label><input type="checkbox" name="attr_charm-bureaucracy" value="1"><span> Bureaucracy</span></label>
-                        <label><input type="checkbox" name="attr_charm-craft" value="1"><span> Craft</span></label>
-                        <label><input type="checkbox" name="attr_charm-dodge" value="1"><span> Dodge</span></label>
-                        <label><input type="checkbox" name="attr_charm-integrity" value="1"><span> Integrity</span></label>
-                        <label><input type="checkbox" name="attr_charm-investigation" value="1"><span> Investigation</span></label>
-                    </div>
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-larceny" value="1"><span> Larceny</span></label>
-                        <label><input type="checkbox" name="attr_charm-linguistics" value="1"><span> Linguistics</span></label>
-                        <label><input type="checkbox" name="attr_charm-lore" value="1"><span> Lore</span></label>
-                        <label><input type="checkbox" name="attr_charm-medicine" value="1"><span> Medicine</span></label>
-                        <label><input type="checkbox" name="attr_charm-melee" value="1"><span> Melee</span></label>
-                        <label><input type="checkbox" name="attr_charm-occult" value="1"><span> Occult</span></label>
-                        <label><input type="checkbox" name="attr_charm-performance" value="1"><span> Performance</span></label>
-                        <label><input type="checkbox" name="attr_charm-presence" value="1"><span> Presence</span></label>
-                    </div>
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-resistance" value="1"><span> Resistance</span></label>
-                        <label><input type="checkbox" name="attr_charm-ride" value="1"><span> Ride</span></label>
-                        <label><input type="checkbox" name="attr_charm-sail" value="1"><span> Sail</span></label>
-                        <label><input type="checkbox" name="attr_charm-socialize" value="1"><span> Socialize</span></label>
-                        <label><input type="checkbox" name="attr_charm-stealth" value="1"><span> Stealth</span></label>
-                        <label><input type="checkbox" name="attr_charm-survival" value="1"><span> Survival</span></label>
-                        <label><input type="checkbox" name="attr_charm-thrown" value="1"><span> Thrown</span></label>
-                        <label><input type="checkbox" name="attr_charm-war" value="1"><span> War</span></label>
-                    </div>
+                    ${getAbiConfigOptionList(20)}
                 </div>
                 <h2 style="text-align: center;"><span class="lunar-style">Lunar</span></h2>
                 <div class="sheet-checklist" style="margin:auto; width: 90px;"><label><input type="checkbox" name="attr_charm-universal" value="1"><span> Universal</span></label></div>
                 <div class="sheet-checklist sheet-3colrow">
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-str-offense" value="1"><span> Strength - Offense</span></label>
-                        <label><input type="checkbox" name="attr_charm-str-mobility" value="1"><span> Strength - Mobility</span></label>
-                        <label><input type="checkbox" name="attr_charm-str-fos" value="1"><span> Strength - Feats of Strength</span></label>
-                        <label><input type="checkbox" name="attr_charm-dex-offensive" value="1"><span> Dexterity - Offensive</span></label>
-                        <label><input type="checkbox" name="attr_charm-dex-defense" value="1"><span> Dexterity - Defense</span></label>
-                        <label><input type="checkbox" name="attr_charm-dex-subterfuge" value="1"><span> Dexterity - Subterfuge</span></label>
-                        <label><input type="checkbox" name="attr_charm-dex-mobility" value="1"><span> Dexterity - Mobility</span></label>
-                        <label><input type="checkbox" name="attr_charm-dex-swarm" value="1"><span> Dexterity - Swarm</span></label>
-                        <label><input type="checkbox" name="attr_charm-sta-defense" value="1"><span> Stamina - Defense</span></label>
-                        <label><input type="checkbox" name="attr_charm-sta-endurance" value="1"><span> Stamina - Endurance</span></label>
-                        <label><input type="checkbox" name="attr_charm-sta-berserker" value="1"><span> Stamina - Berserker</span></label>
-                    </div>
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-cha-influence" value="1"><span> Charisma - Influence</span></label>
-                        <label><input type="checkbox" name="attr_charm-cha-territory" value="1"><span> Charisma - Territory</span></label>
-                        <label><input type="checkbox" name="attr_charm-cha-warfare" value="1"><span> Charisma - Warfare</span></label>
-                        <label><input type="checkbox" name="attr_charm-man-influence" value="1"><span> Manipulation - Influence</span></label>
-                        <label><input type="checkbox" name="attr_charm-man-subterfuge" value="1"><span> Manipulation - Subterfuge</span></label>
-                        <label><input type="checkbox" name="attr_charm-man-guile" value="1"><span> Manipulation - Guile</span></label>
-                        <label><input type="checkbox" name="attr_charm-app-influence" value="1"><span> Appearance - Influence</span></label>
-                        <label><input type="checkbox" name="attr_charm-app-subterfuge" value="1"><span> Appearance - Subterfuge</span></label>
-                        <label><input type="checkbox" name="attr_charm-app-warfare" value="1"><span> Appearance - Warfare</span></label>
-                    </div>
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-per-senses" value="1"><span> Perception - Senses</span></label>
-                        <label><input type="checkbox" name="attr_charm-per-scrutiny" value="1"><span> Perception - Scrutiny</span></label>
-                        <label><input type="checkbox" name="attr_charm-per-mysticism" value="1"><span> Perception - Mysticism</span></label>
-                        <label><input type="checkbox" name="attr_charm-int-knowledge" value="1"><span> Intelligence - Knowledge</span></label>
-                        <label><input type="checkbox" name="attr_charm-int-mysticism" value="1"><span> Intelligence - Mysticism</span></label>
-                        <label><input type="checkbox" name="attr_charm-int-crafting" value="1"><span> Intelligence - Crafting</span></label>
-                        <label><input type="checkbox" name="attr_charm-int-warfare" value="1"><span> Intelligence - Warfare</span></label>
-                        <label><input type="checkbox" name="attr_charm-int-sorcery" value="1"><span> Intelligence - Sorcery</span></label>
-                        <label><input type="checkbox" name="attr_charm-wit-resolve" value="1"><span> Wits - Resolve</span></label>
-                        <label><input type="checkbox" name="attr_charm-wit-animalken" value="1"><span> Wits - Animal Ken</span></label>
-                        <label><input type="checkbox" name="attr_charm-wit-navigation" value="1"><span> Wits - Navigation</span></label>
-                        <label><input type="checkbox" name="attr_charm-wit-cache" value="1"><span> Wits - Cache</span></label>
-                        <label><input type="checkbox" name="attr_charm-wit-territory" value="1"><span> Wits - Territory</span></label>
-                    </div>
+                    ${getAttrConfigOptionList(20)}
                 </div>
                 <h2 style="text-align: center;">Martial Arts</h2>
                 <div class="sheet-checklist sheet-3colrow">
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-ma-snake" value="1"><span> Snake</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-tiger" value="1"><span> Tiger</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-spsitv" value="1"><span> Single Point Shining Into The Void</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-whitereaper" value="1"><span> White Reaper</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-ebonshadow" value="1"><span> Ebon Shadow</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-crane" value="1"><span> Crane</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-silvervoice" value="1"><span> Silver-Voiced Nightningale</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-righteousdevil" value="1"><span> Righteous Devil</span></label>
-                    </div>
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-ma-blackclaw" value="1"><span> Black Claw</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-dreamingpearl" value="1"><span> Dreaming Pearl Courtesan</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-steeldevil" value="1"><span> Steel Devil</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-centipede" value="1"><span> Centipede</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-falcon" value="1"><span> Falcon</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-laughingmonster" value="1"><span> Laughing Monster</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-swayinggrass" value="1"><span> Swaying Grass Dance</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-airdragon" value="1"><span> Air Dragon</span></label>
-                    </div>
-                    <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-ma-earthdragon" value="1"><span> Earth Dragon</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-firedragon" value="1"><span> Fire Dragon</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-waterdragon" value="1"><span> Water Dragon</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-wooddragon" value="1"><span> Wood Dragon</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-goldenjanissary" value="1"><span> Golden Janissary</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-mantis" value="1"><span> Mantis</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-whiteveil" value="1"><span> White Veil</span></label>
-                        <label><input type="checkbox" name="attr_charm-ma-other" value="1"><span> Other</span></label>
-                    </div>
+                    ${getMAConfigOptionList(20)}
                 </div>
                 <h2 style="text-align: center;">Other</h2>
                 <div class="sheet-checklist sheet-2colrow">
                     <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-evocation" value="1"><span style="font-style: italic; color: #00e7ff;"> Evocation</span></label>
+                        ${getConfigOptionLabel('evocation', 'Evocation', "font-style: italic; color: #00e7ff;")}
                     </div>
                     <div class="sheet-checklist sheet-col">
-                        <label><input type="checkbox" name="attr_charm-old" value="1"><span> other</span></label>
+                        ${getConfigOptionLabel('old', 'other')}
                     </div>
                 </div>
                 <h1><span>Mote Pool Equations</span></h1>
