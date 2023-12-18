@@ -2871,7 +2871,6 @@ outHtml += /*html*/`
                                     </div>
                                     <div class="dmg-section flex-wrap">
                                         <div class="flex grow-normal">
-                                            <!-- <p class="head" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)&#013;&#010;By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule">DMG</p> -->
                                             <button type="action" name="act_default-macro-datk-set-name" class="head stealth-btn" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)&#013;&#010;By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule&#013;&#010;CLICK to set default token name as character sheet name">DMG</button>
                                             (<input type="text" name="attr_repcombat-ddmg-dices" class="sheet-ddmg-bonus-dices grow-normal" value="@{tracker|YOUR_TOKEN_NAME_HERE}" title="Number of dice to be rolled&#013;&#010;Already included a macro that target a token initiative value&#013;&#010;You only need to copy paste the exact token name instead of the placeholder&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">d)
                                         </div>
