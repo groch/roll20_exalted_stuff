@@ -434,6 +434,22 @@ function returnOptions(padding, array, checked = 0) {
     return retStr;
 }
 
+function getQCAttr(padding, name, label, doubleTitle = false, includeLabelInTitle = false, includeFoS = false) {
+    const getFoSLine = () => /*html*/`<input type="number" name="attr_strength" title="Strength Cap for FoS">\n${" ".repeat(padding+8)}`;
+    const getSimple = () => /*html*/`<span>${label}</span>`;
+    const getDouble = () => /*html*/`<span class="flex">
+${" ".repeat(padding)}        <span>${label} :</span>
+${" ".repeat(padding)}        <input type="text" name="attr_${name}-type" placeholder="Threaten" class="sheet-${name}-type grow-normal" title="Type of ${doubleTitle}">
+${" ".repeat(padding)}    </span>`;
+    return /*html*/`<div class="sheet-trait">
+${" ".repeat(padding)}    ${doubleTitle ? getDouble() : getSimple()}
+${" ".repeat(padding)}    <span>
+${" ".repeat(padding)}        ${includeFoS ? getFoSLine() : ''}<input type="number" name="attr_${name}" title="${includeLabelInTitle ? `${label} ` : includeFoS ? `FoS ` : ''}Dice Pool">
+${" ".repeat(padding)}        <input type="text" name="attr_${name}-exc" class="qc-have-exc" title="${includeFoS ? `FoS ` : ''}Excellency cap">
+${" ".repeat(padding)}    </span>
+${" ".repeat(padding)}</div>`;
+}
+
 outHtml += /*html*/`
                         <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
                             <h1><span>Quick Roll</span></h1>
@@ -442,45 +458,11 @@ outHtml += /*html*/`
                     </div>
                     <div class="sheet-qc-pools sheet-col"><!-- 1.3.2 QUICK CHAR LEFT COLUMN -->
                         <h1><span>Actions</span></h1>
-                        <div class="sheet-trait">
-                            <span>Read Intentions</span>
-                            <span>
-                                <input type="number" name="attr_qc-read-intentions" title="Dice Pool">
-                                <input type="text" name="attr_qc-read-intentions-exc" class="qc-have-exc" title="Excellency cap">
-                            </span>
-                        </div>
-                        <div class="sheet-trait">
-                            <span class="flex">
-                                <span>S. Infl. :</span>
-                                <input type="text" name="attr_qc-social-influence-type" placeholder="Threaten" class="sheet-qc-soc-influence-type grow-normal" title="Type of Social Influence">
-                            </span>
-                            <span>
-                                <input type="number" name="attr_qc-social-influence" title="Dice Pool">
-                                <input type="text" name="attr_qc-social-influence-exc" class="qc-have-exc" title="Excellency cap">
-                            </span>
-                        </div>
-                        <div class="sheet-trait">
-                            <span>Stealth/Larceny</span>
-                            <span>
-                                <input type="number" name="attr_qc-stealth-larc" title="Dice Pool">
-                                <input type="text" name="attr_qc-stealth-larc-exc" class="qc-have-exc" title="Excellency cap">
-                            </span>
-                        </div>
-                        <div class="sheet-trait">
-                            <span>Senses</span>
-                            <span>
-                                <input type="number" name="attr_qc-senses" title="Dice Pool">
-                                <input type="text" name="attr_qc-senses-exc" class="qc-have-exc" title="Excellency cap">
-                            </span>
-                        </div>
-                        <div class="sheet-trait">
-                            <span>Feats of Strength</span>
-                            <span>
-                                <input type="number" name="attr_strength" title="Strength Cap for FoS">
-                                <input type="number" name="attr_qc-fos-pool" title="FoS Dice Pool">
-                                <input type="text" name="attr_qc-fos-pool-exc" class="qc-have-exc" title="FoS Excellency cap">
-                            </span>
-                        </div>
+                        ${getQCAttr(24, 'qc-read-intentions', 'Read Intentions')}
+                        ${getQCAttr(24, 'qc-social-influence', 'S. Infl.', 'Social Influence')}
+                        ${getQCAttr(24, 'qc-stealth-larc', 'Stealth/Larceny')}
+                        ${getQCAttr(24, 'qc-senses', 'Senses')}
+                        ${getQCAttr(24, 'qc-fos-pool', 'Feats of Strength', false, false, true)}
                         <fieldset class="repeating_qcactions" style="display: none;">
                             <div class="sheet-trait">
                                 <input type="text" name="attr_repqcactionname" placeholder="Senses">
@@ -491,20 +473,8 @@ outHtml += /*html*/`
                             </div>
                         </fieldset>
                         <h1><span>Combat</span></h1>
-                        <div class="sheet-trait">
-                            <span>Join Battle</span>
-                            <span>
-                                <input type="number" name="attr_qc-join-battle" title="Join Battle Dice Pool">
-                                <input type="text" name="attr_qc-join-battle-exc" class="qc-have-exc" title="Excellency cap">
-                            </span>
-                        </div>
-                        <div class="sheet-trait">
-                            <span>Combat Movement</span>
-                            <span>
-                                <input type="number" name="attr_qc-move" title="Dice Pool">
-                                <input type="text" name="attr_qc-move-exc" class="qc-have-exc" title="Excellency cap">
-                            </span>
-                        </div>
+                        ${getQCAttr(24, 'qc-join-battle', 'Join Battle', false, true)}
+                        ${getQCAttr(24, 'qc-move', 'Combat Movement')}
                         <div class="sheet-trait four-cell">
                             <span>Grapple/Control</span>
                             <span>

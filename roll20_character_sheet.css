@@ -469,7 +469,7 @@ input[type="number"] {
     display: table-row;
 }
 
-.charsheet .sheet-qc-pools .sheet-qc-soc-influence-type {
+.charsheet .sheet-qc-pools .sheet-qc-social-influence-type {
     width: 6em;
 }
 
@@ -483,8 +483,8 @@ input[type="number"] {
     background: linear-gradient(180deg, transparent, darkred, transparent);
 }
 
-.charsheet .sheet-tab-intimacies-sheet .sheet-qc-soc-influence-type-display,
-.charsheet .sheet-tab-antisocial-sheet .sheet-qc-soc-influence-type-display {
+.charsheet .sheet-tab-intimacies-sheet .sheet-qc-social-influence-type-display,
+.charsheet .sheet-tab-antisocial-sheet .sheet-qc-social-influence-type-display {
     font-size: small;
     width: 5.5em;
 }
@@ -1026,7 +1026,7 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 }
 
 .charsheet .main-page .sheet-trait input[type="number"],
-.charsheet .main-page .sheet-trait span input[type="text"]:not(.sheet-qc-soc-influence-type, .sheet-qc-attack-pool),
+.charsheet .main-page .sheet-trait span input[type="text"]:not(.sheet-qc-social-influence-type, .sheet-qc-attack-pool),
 .charsheet .main-page .sheet-motes input[type=number],
 .charsheet .main-page .sheet-motes input[type=text],
 .charsheet .main-page .sheet-battle-group-row input[type=number] {
