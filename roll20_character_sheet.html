@@ -1540,7 +1540,9 @@
         'charms-ma-goldenjanissary': 'Golden Janissary Style',
         'charms-ma-mantis': 'Mantis Style',
         'charms-ma-whiteveil': 'White Veil Style',
-        'charms-ma-other': 'MA - Other'
+        'charms-ma-other': 'MA - Other',
+        'charms-evocation': 'Evocation',
+        'charms-old': 'Other'
     };
     const charmDBMaRepeatableSectionArray = [
         'charms-ma-airdragon',
@@ -5096,9 +5098,7 @@
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-survival sheet-tab-charm-survival" name="attr_charm_sheet" title="Survival" type="radio" value="Survival">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-thrown sheet-tab-charm-thrown" name="attr_charm_sheet" title="Thrown" type="radio" value="Thrown">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-war sheet-tab-charm-war" name="attr_charm_sheet" title="War" type="radio" value="War">
-
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-universal sheet-tab-charm-universal" name="attr_charm_sheet" title="Universal" type="radio" value="Universal">
-
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-offense sheet-tab-charm-str-offense" name="attr_charm_sheet" title="STR - Offense" type="radio" value="Strength - Offense">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-mobility sheet-tab-charm-str-mobility" name="attr_charm_sheet" title="STR - Mobility" type="radio" value="Strength - Mobility">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-fos sheet-tab-charm-str-fos" name="attr_charm_sheet" title="STR - FoS" type="radio" value="Strength - Feats of Strength">
@@ -5132,7 +5132,6 @@
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-navigation sheet-tab-charm-wit-navigation" name="attr_charm_sheet" title="WIT - Navigation" type="radio" value="Wits - Navigation">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-cache sheet-tab-charm-wit-cache" name="attr_charm_sheet" title="WIT - Cache" type="radio" value="Wits - Cache">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-territory sheet-tab-charm-wit-territory" name="attr_charm_sheet" title="WIT - Territory" type="radio" value="Wits - Territory">
-
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-snake sheet-tab-charm-ma-snake" name="attr_charm_sheet" title="MA - Snake" type="radio" value="Snake Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-tiger sheet-tab-charm-ma-tiger" name="attr_charm_sheet" title="MA - Tiger" type="radio" value="Tiger Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-spsitv sheet-tab-charm-ma-spsitv" name="attr_charm_sheet" title="MA - Single P." type="radio" value="Single Point Shining Into The Void Style">
@@ -5147,7 +5146,7 @@
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-centipede sheet-tab-charm-ma-centipede" name="attr_charm_sheet" title="MA - Centipede" type="radio" value="Centipede Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-falcon sheet-tab-charm-ma-falcon" name="attr_charm_sheet" title="MA - Falcon" type="radio" value="Falcon Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-laughingmonster sheet-tab-charm-ma-laughingmonster" name="attr_charm_sheet" title="MA - Laughing M." type="radio" value="Laughing Monster Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-swayinggrass sheet-tab-charm-ma-swayinggrass" name="attr_charm_sheet" title="MA - Swaying G." type="radio" value="Swaying Grass Style">
+                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-swayinggrass sheet-tab-charm-ma-swayinggrass" name="attr_charm_sheet" title="MA - Swaying G." type="radio" value="Swaying Grass Dance Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-airdragon sheet-tab-charm-ma-airdragon" name="attr_charm_sheet" title="MA - Air Dragon" type="radio" value="Air Dragon Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-earthdragon sheet-tab-charm-ma-earthdragon" name="attr_charm_sheet" title="MA - Earth Dragon" type="radio" value="Earth Dragon Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-firedragon sheet-tab-charm-ma-firedragon" name="attr_charm_sheet" title="MA - Fire Dragon" type="radio" value="Fire Dragon Style">
@@ -5157,270 +5156,95 @@
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-mantis sheet-tab-charm-ma-mantis" name="attr_charm_sheet" title="MA - Mantis" type="radio" value="Mantis Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-whiteveil sheet-tab-charm-ma-whiteveil" name="attr_charm_sheet" title="MA - White Veil" type="radio" value="White Veil Style">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-other sheet-tab-charm-ma-other" name="attr_charm_sheet" title="MA - other" type="radio" value="MA - Other">
-
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-evocation sheet-tab-charm-evocation" name="attr_charm_sheet" title="Evocation" type="radio" value="Evocation">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-old sheet-tab-charm-old" name="attr_charm_sheet" title="Autre" type="radio" value="other">
+                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-old sheet-tab-charm-old" name="attr_charm_sheet" title="Other" type="radio" value="Other">
 
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-archery">
-                        <h1><span>Archery</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-athletics">
-                        <h1><span>Athletics</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-awareness">
-                        <h1><span>Awareness</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-brawl">
-                        <h1><span>Brawl</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-bureaucracy">
-                        <h1><span>Bureaucracy</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-craft">
-                        <h1><span>Craft</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dodge">
-                        <h1><span>Dodge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-integrity">
-                        <h1><span>Integrity</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-investigation">
-                        <h1><span>Investigation</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-larceny">
-                        <h1><span>Larceny</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-linguistics">
-                        <h1><span>Linguistics</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-lore">
-                        <h1><span>Lore</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-medicine">
-                        <h1><span>Medicine</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-melee">
-                        <h1><span>Melee</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-occult">
-                        <h1><span>Occult</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-performance">
-                        <h1><span>Performance</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-presence">
-                        <h1><span>Presence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-resistance">
-                        <h1><span>Resistance</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ride">
-                        <h1><span>Ride</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sail">
-                        <h1><span>Sail</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-socialize">
-                        <h1><span>Socialize</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-stealth">
-                        <h1><span>Stealth</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-survival">
-                        <h1><span>Survival</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-thrown">
-                        <h1><span>Thrown</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-war">
-                        <h1><span>War</span></h1>
-                    </div>
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-universal">
-                        <h1><span>Universal</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-str-offense">
-                        <h1><span>Strength - Offense</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-str-mobility">
-                        <h1><span>Strength - Mobility</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-str-fos">
-                        <h1><span>Strength - Feats of Strength</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-offensive">
-                        <h1><span>Dexterity - Offensive</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-defense">
-                        <h1><span>Dexterity - Defense</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-subterfuge">
-                        <h1><span>Dexterity - Subterfuge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-mobility">
-                        <h1><span>Dexterity - Mobility</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-swarm">
-                        <h1><span>Dexterity - Swarm</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sta-defense">
-                        <h1><span>Stamina - Defense</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sta-endurance">
-                        <h1><span>Stamina - Endurance</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sta-berserker">
-                        <h1><span>Stamina - Berserker</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-cha-influence">
-                        <h1><span>Charisma - Influence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-cha-territory">
-                        <h1><span>Charisma - Territory</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-cha-warfare">
-                        <h1><span>Charisma - Warfare</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-man-influence">
-                        <h1><span>Manipulation - Influence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-man-subterfuge">
-                        <h1><span>Manipulation - Subterfuge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-man-guile">
-                        <h1><span>Manipulation - Guile</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-app-influence">
-                        <h1><span>Appearance - Influence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-app-subterfuge">
-                        <h1><span>Appearance - Subterfuge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-app-warfare">
-                        <h1><span>Appearance - Warfare</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-per-senses">
-                        <h1><span>Perception - Senses</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-per-scrutiny">
-                        <h1><span>Perception - Scrutiny</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-per-mysticism">
-                        <h1><span>Perception - Mysticism</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-knowledge">
-                        <h1><span>Intelligence - Knowledge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-mysticism">
-                        <h1><span>Intelligence - Mysticism</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-crafting">
-                        <h1><span>Intelligence - Crafting</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-warfare">
-                        <h1><span>Intelligence - Warfare</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-sorcery">
-                        <h1><span>Intelligence - Sorcery</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-resolve">
-                        <h1><span>Wits - Resolve</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-animalken">
-                        <h1><span>Wits - Animal Ken</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-navigation">
-                        <h1><span>Wits - Navigation</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-cache">
-                        <h1><span>Wits - Cache</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-territory">
-                        <h1><span>Wits - Territory</span></h1>
-                    </div>
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-snake">
-                        <h1><span>Snake Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-tiger">
-                        <h1><span>Tiger Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-spsitv">
-                        <h1><span>Single Point Shining Into The Void Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-whitereaper">
-                        <h1><span>White Reaper Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-ebonshadow">
-                        <h1><span>Ebon Shadow Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-crane">
-                        <h1><span>Crane Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-silvervoice">
-                        <h1><span>Silver-Voiced Nightingale Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-righteousdevil">
-                        <h1><span>Righteous Devil Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-blackclaw">
-                        <h1><span>Black Claw Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-dreamingpearl">
-                        <h1><span>Dreaming Pearl Courtesan Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-steeldevil">
-                        <h1><span>Steel Devil Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-centipede">
-                        <h1><span>Centipede Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-falcon">
-                        <h1><span>Falcon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-laughingmonster">
-                        <h1><span>Laughing Monster Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-swayinggrass">
-                        <h1><span>Swaying Grass Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-airdragon">
-                        <h1><span>Air Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-earthdragon">
-                        <h1><span>Earth Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-firedragon">
-                        <h1><span>Fire Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-waterdragon">
-                        <h1><span>Water Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-wooddragon">
-                        <h1><span>Wood Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-goldenjanissary">
-                        <h1><span>Golden Janissary Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-mantis">
-                        <h1><span>Mantis Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-whiteveil">
-                        <h1><span>White Veil Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-other">
-                        <h1><span>MA - Other</span></h1>
-                    </div>
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-evocation">
-                        <h1><span>Evocation</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-old">
-                        <h1><span>Other</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-all">
-                        <h1><span>All</span></h1>
+                    <div class="sheet-body sheet-tab-content">
+                        <h1 class="sheet-tab-charm-sheet-archery"><span>Archery</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-athletics"><span>Athletics</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-awareness"><span>Awareness</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-brawl"><span>Brawl</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-bureaucracy"><span>Bureaucracy</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-craft"><span>Craft</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-dodge"><span>Dodge</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-integrity"><span>Integrity</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-investigation"><span>Investigation</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-larceny"><span>Larceny</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-linguistics"><span>Linguistics</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-lore"><span>Lore</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-medicine"><span>Medicine</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-melee"><span>Melee</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-occult"><span>Occult</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-performance"><span>Performance</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-presence"><span>Presence</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-resistance"><span>Resistance</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ride"><span>Ride</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-sail"><span>Sail</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-socialize"><span>Socialize</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-stealth"><span>Stealth</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-survival"><span>Survival</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-thrown"><span>Thrown</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-war"><span>War</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-universal"><span>Universal</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-str-offense"><span>Strength - Offense</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-str-mobility"><span>Strength - Mobility</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-str-fos"><span>Strength - Feats of Strength</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-dex-offensive"><span>Dexterity - Offensive</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-dex-defense"><span>Dexterity - Defense</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-dex-subterfuge"><span>Dexterity - Subterfuge</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-dex-mobility"><span>Dexterity - Mobility</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-dex-swarm"><span>Dexterity - Swarm</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-sta-defense"><span>Stamina - Defense</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-sta-endurance"><span>Stamina - Endurance</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-sta-berserker"><span>Stamina - Berserker</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-cha-influence"><span>Charisma - Influence</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-cha-territory"><span>Charisma - Territory</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-cha-warfare"><span>Charisma - Warfare</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-man-influence"><span>Manipulation - Influence</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-man-subterfuge"><span>Manipulation - Subterfuge</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-man-guile"><span>Manipulation - Guile</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-app-influence"><span>Appearance - Influence</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-app-subterfuge"><span>Appearance - Subterfuge</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-app-warfare"><span>Appearance - Warfare</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-per-senses"><span>Perception - Senses</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-per-scrutiny"><span>Perception - Scrutiny</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-per-mysticism"><span>Perception - Mysticism</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-int-knowledge"><span>Intelligence - Knowledge</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-int-mysticism"><span>Intelligence - Mysticism</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-int-crafting"><span>Intelligence - Crafting</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-int-warfare"><span>Intelligence - Warfare</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-int-sorcery"><span>Intelligence - Sorcery</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-wit-resolve"><span>Wits - Resolve</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-wit-animalken"><span>Wits - Animal Ken</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-wit-navigation"><span>Wits - Navigation</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-wit-cache"><span>Wits - Cache</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-wit-territory"><span>Wits - Territory</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-snake"><span>Snake Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-tiger"><span>Tiger Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-spsitv"><span>Single Point Shining Into The Void Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-whitereaper"><span>White Reaper Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-ebonshadow"><span>Ebon Shadow Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-crane"><span>Crane Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-silvervoice"><span>Silver-Voiced Nightingale Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-righteousdevil"><span>Righteous Devil Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-blackclaw"><span>Black Claw Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-dreamingpearl"><span>Dreaming Pearl Courtesan Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-steeldevil"><span>Steel Devil Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-centipede"><span>Centipede Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-falcon"><span>Falcon Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-laughingmonster"><span>Laughing Monster Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-swayinggrass"><span>Swaying Grass Dance Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-airdragon"><span>Air Dragon Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-earthdragon"><span>Earth Dragon Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-firedragon"><span>Fire Dragon Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-waterdragon"><span>Water Dragon Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-wooddragon"><span>Wood Dragon Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-goldenjanissary"><span>Golden Janissary Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-mantis"><span>Mantis Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-whiteveil"><span>White Veil Style</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-ma-other"><span>MA - Other</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-evocation"><span>Evocation</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-old"><span>Other</span></h1>
                     </div>
 
                     <div class="sheet-body sheet-tab-content charm-sheet-all">

@@ -1539,7 +1539,9 @@
         'charms-ma-goldenjanissary': 'Golden Janissary Style',
         'charms-ma-mantis': 'Mantis Style',
         'charms-ma-whiteveil': 'White Veil Style',
-        'charms-ma-other': 'MA - Other'
+        'charms-ma-other': 'MA - Other',
+        'charms-evocation': 'Evocation',
+        'charms-old': 'Other'
     };
     const charmDBMaRepeatableSectionArray = [
         'charms-ma-airdragon',

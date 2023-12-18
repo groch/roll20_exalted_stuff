@@ -109,6 +109,102 @@ eval(sheetWorkerStr+/*javascript*/`
     var hashCharmName = correspondingCharmSectionValue;
 `);
 
+const allCharmArray = [
+    ...solarCharmArray,
+    ...lunarCharmArray,
+    ...maCharmArray,
+    'charms-evocation',
+    'old'
+];
+
+const hashCharmTitle = {
+    'charms-archery': 'Archery',
+    'charms-athletics': 'Athletics',
+    'charms-awareness': 'Awareness',
+    'charms-brawl': 'Brawl',
+    'charms-bureaucracy': 'Bureaucracy',
+    'charms-craft': 'Craft',
+    'charms-dodge': 'Dodge',
+    'charms-integrity': 'Integrity',
+    'charms-investigation': 'Investigation',
+    'charms-larceny': 'Larceny',
+    'charms-linguistics': 'Linguistics',
+    'charms-lore': 'Lore',
+    'charms-medicine': 'Medicine',
+    'charms-melee': 'Melee',
+    'charms-occult': 'Occult',
+    'charms-performance': 'Performance',
+    'charms-presence': 'Presence',
+    'charms-resistance': 'Resistance',
+    'charms-ride': 'Ride',
+    'charms-sail': 'Sail',
+    'charms-socialize': 'Socialize',
+    'charms-stealth': 'Stealth',
+    'charms-survival': 'Survival',
+    'charms-thrown': 'Thrown',
+    'charms-war': 'War',
+    'charms-universal': 'Universal',
+    'charms-str-offense': 'STR - Offense',
+    'charms-str-mobility': 'STR - Mobility',
+    'charms-str-fos': 'STR - FoS',
+    'charms-dex-offensive': 'DEX - Offensive',
+    'charms-dex-defense': 'DEX - Defense',
+    'charms-dex-subterfuge': 'DEX - Subterfuge',
+    'charms-dex-mobility': 'DEX - Mobility',
+    'charms-dex-swarm': 'DEX - Swarm',
+    'charms-sta-defense': 'STA - Defense',
+    'charms-sta-endurance': 'STA - Endurance',
+    'charms-sta-berserker': 'STA - Berserker',
+    'charms-cha-influence': 'CHA - Influence',
+    'charms-cha-territory': 'CHA - Territory',
+    'charms-cha-warfare': 'CHA - Warfare',
+    'charms-man-influence': 'MAN - Influence',
+    'charms-man-subterfuge': 'MAN - Subterfuge',
+    'charms-man-guile': 'MAN - Guile',
+    'charms-app-influence': 'APP - Influence',
+    'charms-app-subterfuge': 'APP - Subterfuge',
+    'charms-app-warfare': 'APP - Warfare',
+    'charms-per-senses': 'PER - Senses',
+    'charms-per-scrutiny': 'PER - Scrutiny',
+    'charms-per-mysticism': 'PER - Mysticism',
+    'charms-int-knowledge': 'INT - Knowledge',
+    'charms-int-mysticism': 'INT - Mysticism',
+    'charms-int-crafting': 'INT - Crafting',
+    'charms-int-warfare': 'INT - Warfare',
+    'charms-int-sorcery': 'INT - Sorcery',
+    'charms-wit-resolve': 'WIT - Resolve',
+    'charms-wit-animalken': 'WIT - Animal Ken',
+    'charms-wit-navigation': 'WIT - Navigation',
+    'charms-wit-cache': 'WIT - Cache',
+    'charms-wit-territory': 'WIT - Territory',
+    'charms-ma-snake': 'MA - Snake',
+    'charms-ma-tiger': 'MA - Tiger',
+    'charms-ma-spsitv': 'MA - Single P.',
+    'charms-ma-whitereaper': 'MA - White Reaper',
+    'charms-ma-ebonshadow': 'MA - Ebon Shadow',
+    'charms-ma-crane': 'MA - Crane',
+    'charms-ma-silvervoice': 'MA - Silver V.',
+    'charms-ma-righteousdevil': 'MA - Righteous D.',
+    'charms-ma-blackclaw': 'MA - Black Claw',
+    'charms-ma-dreamingpearl': 'MA - Dreaming P.',
+    'charms-ma-steeldevil': 'MA - Steel Devil',
+    'charms-ma-centipede': 'MA - Centipede',
+    'charms-ma-falcon': 'MA - Falcon',
+    'charms-ma-laughingmonster': 'MA - Laughing M.',
+    'charms-ma-swayinggrass': 'MA - Swaying G.',
+    'charms-ma-airdragon': 'MA - Air Dragon',
+    'charms-ma-earthdragon': 'MA - Earth Dragon',
+    'charms-ma-firedragon': 'MA - Fire Dragon',
+    'charms-ma-waterdragon': 'MA - Water Dragon',
+    'charms-ma-wooddragon': 'MA - Wood Dragon',
+    'charms-ma-goldenjanissary': 'MA - Golden J.',
+    'charms-ma-mantis': 'MA - Mantis',
+    'charms-ma-whiteveil': 'MA - White Veil',
+    'charms-ma-other': 'MA - other',
+    'charms-evocation': 'Evocation',
+    'charms-old': 'Other'
+};
+
 function getHiddenInputs(array, padding = 0) {
     let ret = '', i = 0;
     for (const charmSection of array) {
@@ -142,10 +238,8 @@ let outHtml = /*html*/
         <input class="sheet-tab sheet-tab-combat sheet-tab-combat-sheet" name="sheet" title="Combat" type="radio" value="6">
         <input class="sheet-tab sheet-tab-settings sheet-tab-settings-sheet" name="sheet" title="y" type="radio" value="4">
 
-        ${getHiddenInputs(solarCharmArray, 8)}
-
-        ${getHiddenInputs(lunarCharmArray, 8)}
-
+        ${getHiddenInputs(solarCharmArray, 8)}\n
+        ${getHiddenInputs(lunarCharmArray, 8)}\n
         ${getHiddenInputs(maCharmArray, 8)}
 
         <input class="sheet-charm-evocation" name="attr_charm-evocation" type="hidden" value="0">
@@ -194,8 +288,7 @@ function getSupernalList(padding = 0) {
     return ret;
 }
 
-outHtml += /*html*/
-`
+outHtml += /*html*/`
                     <div class="sheet-col"><!-- 1.1.1 1st column (Name, Player, SELECT Caste) -->
                         <div class="sheet-flexbox-h"><label>Name: <input type="text" name="attr_character_name" placeholder="Karal Fire Orchid"></label></div>
                         <div class="sheet-flexbox-h"><label>Player: <input type="text" name="attr_player-name" placeholder="John Smith"></label></div>
@@ -253,8 +346,7 @@ ${" ".repeat(padding)}</div>`;
     return ret;
 }
 
-outHtml += /*html*/
-`
+outHtml += /*html*/`
                 <h1 class="sheet-attributes"><span>Attributes</span></h1>
                 <div class="sheet-attributes sheet-3colrow"><!-- Attributes -->
                     ${getAttributeBlock(20)}
@@ -321,8 +413,7 @@ ${" ".repeat(padding)}</div>`;
     return ret;
 }
 
-outHtml += /*html*/
-`
+outHtml += /*html*/`
                 <div class="sheet-3colrow sheet-centerblock">
                     <div class="sheet-abilities sheet-col"><!-- 1.3.1 LEFT COLUMN -->
                         <h1><span>Abilities</span></h1>
@@ -434,7 +525,7 @@ function returnOptions(padding, array, checked = 0) {
     return retStr;
 }
 
-function getQCAttr(padding, name, label, doubleTitle = false, includeLabelInTitle = false, includeFoS = false) {
+function getQCAttr(padding, name, label, doubleTitle = false, includeLabelInTitle = false, includeFoS = false, includeNumberTitle = true, secondNotVisible = false) {
     const getFoSLine = () => /*html*/`<input type="number" name="attr_strength" title="Strength Cap for FoS">\n${" ".repeat(padding+8)}`;
     const getSimple = () => /*html*/`<span>${label}</span>`;
     const getDouble = () => /*html*/`<span class="flex">
@@ -444,8 +535,8 @@ ${" ".repeat(padding)}    </span>`;
     return /*html*/`<div class="sheet-trait">
 ${" ".repeat(padding)}    ${doubleTitle ? getDouble() : getSimple()}
 ${" ".repeat(padding)}    <span>
-${" ".repeat(padding)}        ${includeFoS ? getFoSLine() : ''}<input type="number" name="attr_${name}" title="${includeLabelInTitle ? `${label} ` : includeFoS ? `FoS ` : ''}Dice Pool">
-${" ".repeat(padding)}        <input type="text" name="attr_${name}-exc" class="qc-have-exc" title="${includeFoS ? `FoS ` : ''}Excellency cap">
+${" ".repeat(padding)}        ${includeFoS ? getFoSLine() : ''}<input type="number" name="attr_${name}"${includeNumberTitle ? ` title="${includeLabelInTitle ? `${label} ` : includeFoS ? `FoS ` : ''}Dice Pool"` : ''}>
+${" ".repeat(padding)}        <input ${secondNotVisible ? `type="number" class="not-visible qc-have-exc"` : `type="text" name="attr_${name}-exc" class="qc-have-exc" title="${includeFoS ? `FoS ` : ''}Excellency cap"`}>
 ${" ".repeat(padding)}    </span>
 ${" ".repeat(padding)}</div>`;
 }
@@ -645,48 +736,12 @@ outHtml += /*html*/`
                                                 <input type="number" name="attr_appearance">
                                             </span>
                                         </div>
-                                        <div class="sheet-trait">
-                                            <span>Resolve</span>
-                                            <span>
-                                                <input type="number" name="attr_qc-resolve">
-                                                <input type="text" name="attr_qc-resolve-exc" class="qc-have-exc" title="Excellency cap">
-                                            </span>
-                                        </div>
-                                        <div class="sheet-trait">
-                                            <span>Guile</span>
-                                            <span>
-                                                <input type="number" name="attr_qc-guile">
-                                                <input type="text" name="attr_qc-guile-exc" class="qc-have-exc" title="Excellency cap">
-                                            </span>
-                                        </div>
-                                        <div class="sheet-trait">
-                                            <span>Evasion</span>
-                                            <span>
-                                                <input type="number" name="attr_qc-evasion">
-                                                <input type="text" name="attr_qc-evasion-exc" class="qc-have-exc" title="Excellency cap">
-                                            </span>
-                                        </div>
-                                        <div class="sheet-trait">
-                                            <span>Parry</span>
-                                            <span>
-                                                <input type="number" name="attr_qc-parry">
-                                                <input type="text" name="attr_qc-parry-exc" class="qc-have-exc" title="Excellency cap">
-                                            </span>
-                                        </div>
-                                        <div class="sheet-trait">
-                                            <span>Soak</span>
-                                            <span>
-                                                <input type="number" name="attr_qc-soak">
-                                                <input type="number" class="not-visible qc-have-exc">
-                                            </span>
-                                        </div>
-                                        <div class="sheet-trait">
-                                            <span>Hardness</span>
-                                            <span>
-                                                <input type="number" name="attr_hardness">
-                                                <input type="number" class="not-visible qc-have-exc">
-                                            </span>
-                                        </div>
+                                        ${getQCAttr(40, 'qc-resolve', 'Resolve', false, false, false, false)}
+                                        ${getQCAttr(40, 'qc-guile', 'Guile', false, false, false, false)}
+                                        ${getQCAttr(40, 'qc-evasion', 'Evasion', false, false, false, false)}
+                                        ${getQCAttr(40, 'qc-parry', 'Parry', false, false, false, false)}
+                                        ${getQCAttr(40, 'qc-soak', 'Soak', false, false, false, false, true)}
+                                        ${getQCAttr(40, 'hardness', 'Hardness', false, false, false, false, true)}
                                     </div>
                                 </div>
                             </div>
@@ -987,364 +1042,33 @@ ${" ".repeat(padding)}${getIndexCostRows('Will', padding, defaultWill)}`;
     return ret;
 }
 
+function getCharmInputLinesFromArray(padding = 0, array) {
+    const getCharmInputLine = (attrName, val, title = val) => /*html*/`<input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-${attrName} sheet-tab-charm-${attrName}" name="attr_charm_sheet" title="${title}" type="radio" value="${val}">`;
+    let ret = ``, i = 0;
+    for (const item of array) {
+        ret += getCharmInputLine(item, hashCharmName[`charms-${item}`], hashCharmTitle[`charms-${item}`]);
+        if (i++ <= array.length - 2) ret += `\n${" ".repeat(padding)}`;
+    }
+    return ret;
+}
+
+function getCharmTitleLinesFromArray(padding = 0, array) {
+    const getCharmTitleLine = (className, label) => /*html*/`<h1 class="sheet-tab-charm-sheet-${className}"><span>${label}</span></h1>`;
+    let ret = `<div class="sheet-body sheet-tab-content">\n`, i = 0;
+    for (const item of array)
+        ret += `${" ".repeat(padding+4)}${getCharmTitleLine(item, hashCharmName[`charms-${item}`])}\n`;
+    ret += `${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
 outHtml += /*html*/`
             <div class="sheet-tab-content sheet-tab-charm-sheet">
                 <h1><span>Charms &amp; Evocations</span></h1>
 
                 <div class="charm-tab-list">
                     <input class="sheet-tab-charms-check" name="attr_charm_sheet" type="hidden">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-archery sheet-tab-charm-archery" name="attr_charm_sheet" title="Archery" type="radio" value="Archery">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-athletics sheet-tab-charm-athletics" name="attr_charm_sheet" title="Athletics" type="radio" value="Athletics">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-awareness sheet-tab-charm-awareness" name="attr_charm_sheet" title="Awareness" type="radio" value="Awareness">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-brawl sheet-tab-charm-brawl" name="attr_charm_sheet" title="Brawl" type="radio" value="Brawl">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-bureaucracy sheet-tab-charm-bureaucracy" name="attr_charm_sheet" title="Bureaucracy" type="radio" value="Bureaucracy">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-craft sheet-tab-charm-craft" name="attr_charm_sheet" title="Craft" type="radio" value="Craft">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dodge sheet-tab-charm-dodge" name="attr_charm_sheet" title="Dodge" type="radio" value="Dodge">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-integrity sheet-tab-charm-integrity" name="attr_charm_sheet" title="Integrity" type="radio" value="Integrity">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-investigation sheet-tab-charm-investigation" name="attr_charm_sheet" title="Investigation" type="radio" value="Investigation">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-larceny sheet-tab-charm-larceny" name="attr_charm_sheet" title="Larceny" type="radio" value="Larceny">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-linguistics sheet-tab-charm-linguistics" name="attr_charm_sheet" title="Linguistics" type="radio" value="Linguistics">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-lore sheet-tab-charm-lore" name="attr_charm_sheet" title="Lore" type="radio" value="Lore">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-medicine sheet-tab-charm-medicine" name="attr_charm_sheet" title="Medicine" type="radio" value="Medicine">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-melee sheet-tab-charm-melee" name="attr_charm_sheet" title="Melee" type="radio" value="Melee">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-occult sheet-tab-charm-occult" name="attr_charm_sheet" title="Occult" type="radio" value="Occult">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-performance sheet-tab-charm-performance" name="attr_charm_sheet" title="Performance" type="radio" value="Performance">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-presence sheet-tab-charm-presence" name="attr_charm_sheet" title="Presence" type="radio" value="Presence">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-resistance sheet-tab-charm-resistance" name="attr_charm_sheet" title="Resistance" type="radio" value="Resistance">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ride sheet-tab-charm-ride" name="attr_charm_sheet" title="Ride" type="radio" value="Ride">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sail sheet-tab-charm-sail" name="attr_charm_sheet" title="Sail" type="radio" value="Sail">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-socialize sheet-tab-charm-socialize" name="attr_charm_sheet" title="Socialize" type="radio" value="Socialize">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-stealth sheet-tab-charm-stealth" name="attr_charm_sheet" title="Stealth" type="radio" value="Stealth">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-survival sheet-tab-charm-survival" name="attr_charm_sheet" title="Survival" type="radio" value="Survival">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-thrown sheet-tab-charm-thrown" name="attr_charm_sheet" title="Thrown" type="radio" value="Thrown">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-war sheet-tab-charm-war" name="attr_charm_sheet" title="War" type="radio" value="War">
-
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-universal sheet-tab-charm-universal" name="attr_charm_sheet" title="Universal" type="radio" value="Universal">
-
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-offense sheet-tab-charm-str-offense" name="attr_charm_sheet" title="STR - Offense" type="radio" value="Strength - Offense">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-mobility sheet-tab-charm-str-mobility" name="attr_charm_sheet" title="STR - Mobility" type="radio" value="Strength - Mobility">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-fos sheet-tab-charm-str-fos" name="attr_charm_sheet" title="STR - FoS" type="radio" value="Strength - Feats of Strength">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-offensive sheet-tab-charm-dex-offensive" name="attr_charm_sheet" title="DEX - Offensive" type="radio" value="Dexterity - Offensive">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-defense sheet-tab-charm-dex-defense" name="attr_charm_sheet" title="DEX - Defense" type="radio" value="Dexterity - Defense">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-subterfuge sheet-tab-charm-dex-subterfuge" name="attr_charm_sheet" title="DEX - Subterfuge" type="radio" value="Dexterity - Subterfuge">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-mobility sheet-tab-charm-dex-mobility" name="attr_charm_sheet" title="DEX - Mobility" type="radio" value="Dexterity - Mobility">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-dex-swarm sheet-tab-charm-dex-swarm" name="attr_charm_sheet" title="DEX - Swarm" type="radio" value="Dexterity - Swarm">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sta-defense sheet-tab-charm-sta-defense" name="attr_charm_sheet" title="STA - Defense" type="radio" value="Stamina - Defense">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sta-endurance sheet-tab-charm-sta-endurance" name="attr_charm_sheet" title="STA - Endurance" type="radio" value="Stamina - Endurance">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-sta-berserker sheet-tab-charm-sta-berserker" name="attr_charm_sheet" title="STA - Berserker" type="radio" value="Stamina - Berserker">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-cha-influence sheet-tab-charm-cha-influence" name="attr_charm_sheet" title="CHA - Influence" type="radio" value="Charisma - Influence">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-cha-territory sheet-tab-charm-cha-territory" name="attr_charm_sheet" title="CHA - Territory" type="radio" value="Charisma - Territory">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-cha-warfare sheet-tab-charm-cha-warfare" name="attr_charm_sheet" title="CHA - Warfare" type="radio" value="Charisma - Warfare">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-man-influence sheet-tab-charm-man-influence" name="attr_charm_sheet" title="MAN - Influence" type="radio" value="Manipulation - Influence">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-man-subterfuge sheet-tab-charm-man-subterfuge" name="attr_charm_sheet" title="MAN - Subterfuge" type="radio" value="Manipulation - Subterfuge">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-man-guile sheet-tab-charm-man-guile" name="attr_charm_sheet" title="MAN - Guile" type="radio" value="Manipulation - Guile">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-app-influence sheet-tab-charm-app-influence" name="attr_charm_sheet" title="APP - Influence" type="radio" value="Appearance - Influence">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-app-subterfuge sheet-tab-charm-app-subterfuge" name="attr_charm_sheet" title="APP - Subterfuge" type="radio" value="Appearance - Subterfuge">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-app-warfare sheet-tab-charm-app-warfare" name="attr_charm_sheet" title="APP - Warfare" type="radio" value="Appearance - Warfare">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-per-senses sheet-tab-charm-per-senses" name="attr_charm_sheet" title="PER - Senses" type="radio" value="Perception - Senses">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-per-scrutiny sheet-tab-charm-per-scrutiny" name="attr_charm_sheet" title="PER - Scrutiny" type="radio" value="Perception - Scrutiny">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-per-mysticism sheet-tab-charm-per-mysticism" name="attr_charm_sheet" title="PER - Mysticism" type="radio" value="Perception - Mysticism">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-int-knowledge sheet-tab-charm-int-knowledge" name="attr_charm_sheet" title="INT - Knowledge" type="radio" value="Intelligence - Knowledge">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-int-mysticism sheet-tab-charm-int-mysticism" name="attr_charm_sheet" title="INT - Mysticism" type="radio" value="Intelligence - Mysticism">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-int-crafting sheet-tab-charm-int-crafting" name="attr_charm_sheet" title="INT - Crafting" type="radio" value="Intelligence - Crafting">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-int-warfare sheet-tab-charm-int-warfare" name="attr_charm_sheet" title="INT - Warfare" type="radio" value="Intelligence - Warfare">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-int-sorcery sheet-tab-charm-int-sorcery" name="attr_charm_sheet" title="INT - Sorcery" type="radio" value="Intelligence - Sorcery">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-resolve sheet-tab-charm-wit-resolve" name="attr_charm_sheet" title="WIT - Resolve" type="radio" value="Wits - Resolve">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-animalken sheet-tab-charm-wit-animalken" name="attr_charm_sheet" title="WIT - Animal Ken" type="radio" value="Wits - Animal Ken">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-navigation sheet-tab-charm-wit-navigation" name="attr_charm_sheet" title="WIT - Navigation" type="radio" value="Wits - Navigation">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-cache sheet-tab-charm-wit-cache" name="attr_charm_sheet" title="WIT - Cache" type="radio" value="Wits - Cache">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-wit-territory sheet-tab-charm-wit-territory" name="attr_charm_sheet" title="WIT - Territory" type="radio" value="Wits - Territory">
-
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-snake sheet-tab-charm-ma-snake" name="attr_charm_sheet" title="MA - Snake" type="radio" value="Snake Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-tiger sheet-tab-charm-ma-tiger" name="attr_charm_sheet" title="MA - Tiger" type="radio" value="Tiger Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-spsitv sheet-tab-charm-ma-spsitv" name="attr_charm_sheet" title="MA - Single P." type="radio" value="Single Point Shining Into The Void Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-whitereaper sheet-tab-charm-ma-whitereaper" name="attr_charm_sheet" title="MA - White Reaper" type="radio" value="White Reaper Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-ebonshadow sheet-tab-charm-ma-ebonshadow" name="attr_charm_sheet" title="MA - Ebon Shadow" type="radio" value="Ebon Shadow Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-crane sheet-tab-charm-ma-crane" name="attr_charm_sheet" title="MA - Crane" type="radio" value="Crane Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-silvervoice sheet-tab-charm-ma-silvervoice" name="attr_charm_sheet" title="MA - Silver V." type="radio" value="Silver-Voiced Nightingale Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-righteousdevil sheet-tab-charm-ma-righteousdevil" name="attr_charm_sheet" title="MA - Righteous D." type="radio" value="Righteous Devil Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-blackclaw sheet-tab-charm-ma-blackclaw" name="attr_charm_sheet" title="MA - Black Claw" type="radio" value="Black Claw Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-dreamingpearl sheet-tab-charm-ma-dreamingpearl" name="attr_charm_sheet" title="MA - Dreaming P." type="radio" value="Dreaming Pearl Courtesan Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-steeldevil sheet-tab-charm-ma-steeldevil" name="attr_charm_sheet" title="MA - Steel Devil" type="radio" value="Steel Devil Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-centipede sheet-tab-charm-ma-centipede" name="attr_charm_sheet" title="MA - Centipede" type="radio" value="Centipede Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-falcon sheet-tab-charm-ma-falcon" name="attr_charm_sheet" title="MA - Falcon" type="radio" value="Falcon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-laughingmonster sheet-tab-charm-ma-laughingmonster" name="attr_charm_sheet" title="MA - Laughing M." type="radio" value="Laughing Monster Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-swayinggrass sheet-tab-charm-ma-swayinggrass" name="attr_charm_sheet" title="MA - Swaying G." type="radio" value="Swaying Grass Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-airdragon sheet-tab-charm-ma-airdragon" name="attr_charm_sheet" title="MA - Air Dragon" type="radio" value="Air Dragon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-earthdragon sheet-tab-charm-ma-earthdragon" name="attr_charm_sheet" title="MA - Earth Dragon" type="radio" value="Earth Dragon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-firedragon sheet-tab-charm-ma-firedragon" name="attr_charm_sheet" title="MA - Fire Dragon" type="radio" value="Fire Dragon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-waterdragon sheet-tab-charm-ma-waterdragon" name="attr_charm_sheet" title="MA - Water Dragon" type="radio" value="Water Dragon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-wooddragon sheet-tab-charm-ma-wooddragon" name="attr_charm_sheet" title="MA - Wood Dragon" type="radio" value="Wood Dragon Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-goldenjanissary sheet-tab-charm-ma-goldenjanissary" name="attr_charm_sheet" title="MA - Golden J." type="radio" value="Golden Janissary Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-mantis sheet-tab-charm-ma-mantis" name="attr_charm_sheet" title="MA - Mantis" type="radio" value="Mantis Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-whiteveil sheet-tab-charm-ma-whiteveil" name="attr_charm_sheet" title="MA - White Veil" type="radio" value="White Veil Style">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-ma-other sheet-tab-charm-ma-other" name="attr_charm_sheet" title="MA - other" type="radio" value="MA - Other">
-
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-evocation sheet-tab-charm-evocation" name="attr_charm_sheet" title="Evocation" type="radio" value="Evocation">
-                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-old sheet-tab-charm-old" name="attr_charm_sheet" title="Autre" type="radio" value="other">
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-archery">
-                        <h1><span>Archery</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-athletics">
-                        <h1><span>Athletics</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-awareness">
-                        <h1><span>Awareness</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-brawl">
-                        <h1><span>Brawl</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-bureaucracy">
-                        <h1><span>Bureaucracy</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-craft">
-                        <h1><span>Craft</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dodge">
-                        <h1><span>Dodge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-integrity">
-                        <h1><span>Integrity</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-investigation">
-                        <h1><span>Investigation</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-larceny">
-                        <h1><span>Larceny</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-linguistics">
-                        <h1><span>Linguistics</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-lore">
-                        <h1><span>Lore</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-medicine">
-                        <h1><span>Medicine</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-melee">
-                        <h1><span>Melee</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-occult">
-                        <h1><span>Occult</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-performance">
-                        <h1><span>Performance</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-presence">
-                        <h1><span>Presence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-resistance">
-                        <h1><span>Resistance</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ride">
-                        <h1><span>Ride</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sail">
-                        <h1><span>Sail</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-socialize">
-                        <h1><span>Socialize</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-stealth">
-                        <h1><span>Stealth</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-survival">
-                        <h1><span>Survival</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-thrown">
-                        <h1><span>Thrown</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-war">
-                        <h1><span>War</span></h1>
-                    </div>
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-universal">
-                        <h1><span>Universal</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-str-offense">
-                        <h1><span>Strength - Offense</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-str-mobility">
-                        <h1><span>Strength - Mobility</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-str-fos">
-                        <h1><span>Strength - Feats of Strength</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-offensive">
-                        <h1><span>Dexterity - Offensive</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-defense">
-                        <h1><span>Dexterity - Defense</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-subterfuge">
-                        <h1><span>Dexterity - Subterfuge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-mobility">
-                        <h1><span>Dexterity - Mobility</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-dex-swarm">
-                        <h1><span>Dexterity - Swarm</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sta-defense">
-                        <h1><span>Stamina - Defense</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sta-endurance">
-                        <h1><span>Stamina - Endurance</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-sta-berserker">
-                        <h1><span>Stamina - Berserker</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-cha-influence">
-                        <h1><span>Charisma - Influence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-cha-territory">
-                        <h1><span>Charisma - Territory</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-cha-warfare">
-                        <h1><span>Charisma - Warfare</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-man-influence">
-                        <h1><span>Manipulation - Influence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-man-subterfuge">
-                        <h1><span>Manipulation - Subterfuge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-man-guile">
-                        <h1><span>Manipulation - Guile</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-app-influence">
-                        <h1><span>Appearance - Influence</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-app-subterfuge">
-                        <h1><span>Appearance - Subterfuge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-app-warfare">
-                        <h1><span>Appearance - Warfare</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-per-senses">
-                        <h1><span>Perception - Senses</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-per-scrutiny">
-                        <h1><span>Perception - Scrutiny</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-per-mysticism">
-                        <h1><span>Perception - Mysticism</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-knowledge">
-                        <h1><span>Intelligence - Knowledge</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-mysticism">
-                        <h1><span>Intelligence - Mysticism</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-crafting">
-                        <h1><span>Intelligence - Crafting</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-warfare">
-                        <h1><span>Intelligence - Warfare</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-int-sorcery">
-                        <h1><span>Intelligence - Sorcery</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-resolve">
-                        <h1><span>Wits - Resolve</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-animalken">
-                        <h1><span>Wits - Animal Ken</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-navigation">
-                        <h1><span>Wits - Navigation</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-cache">
-                        <h1><span>Wits - Cache</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-wit-territory">
-                        <h1><span>Wits - Territory</span></h1>
-                    </div>
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-snake">
-                        <h1><span>Snake Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-tiger">
-                        <h1><span>Tiger Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-spsitv">
-                        <h1><span>Single Point Shining Into The Void Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-whitereaper">
-                        <h1><span>White Reaper Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-ebonshadow">
-                        <h1><span>Ebon Shadow Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-crane">
-                        <h1><span>Crane Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-silvervoice">
-                        <h1><span>Silver-Voiced Nightingale Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-righteousdevil">
-                        <h1><span>Righteous Devil Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-blackclaw">
-                        <h1><span>Black Claw Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-dreamingpearl">
-                        <h1><span>Dreaming Pearl Courtesan Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-steeldevil">
-                        <h1><span>Steel Devil Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-centipede">
-                        <h1><span>Centipede Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-falcon">
-                        <h1><span>Falcon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-laughingmonster">
-                        <h1><span>Laughing Monster Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-swayinggrass">
-                        <h1><span>Swaying Grass Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-airdragon">
-                        <h1><span>Air Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-earthdragon">
-                        <h1><span>Earth Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-firedragon">
-                        <h1><span>Fire Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-waterdragon">
-                        <h1><span>Water Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-wooddragon">
-                        <h1><span>Wood Dragon Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-goldenjanissary">
-                        <h1><span>Golden Janissary Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-mantis">
-                        <h1><span>Mantis Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-whiteveil">
-                        <h1><span>White Veil Style</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-ma-other">
-                        <h1><span>MA - Other</span></h1>
-                    </div>
-
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-evocation">
-                        <h1><span>Evocation</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-old">
-                        <h1><span>Other</span></h1>
-                    </div>
-                    <div class="sheet-body sheet-tab-content sheet-tab-charm-sheet-all">
-                        <h1><span>All</span></h1>
-                    </div>
-
+                    ${getCharmInputLinesFromArray(20, allCharmArray.map(i => i.replace('charms-', '')))}\n
+                    ${getCharmTitleLinesFromArray(20, allCharmArray.map(i => i.replace('charms-', '')))}\n
                     <div class="sheet-body sheet-tab-content charm-sheet-all">
                         <fieldset class="repeating_charms-all" style="display: none;">
                             <input type="hidden" name="attr_isEvoc" class="sheet-tab-charms-inside-check" value="">
