@@ -1718,40 +1718,47 @@ outHtml += /*html*/
                 </div>
             </div>
 
-            <!-- 5 ROLLS PAGE -->
+            <!-- 5 ROLLS PAGE -->\n`;
 
+function getRessourceLine(padding = 0, rollpenIncluded = true) {
+    let ret = /*html*/`<div class="ressource-line flex-wrap">
+${" ".repeat(padding)}    <p class="will-color rounded-box grow-max flex" title="@{willpower} & @{willpower_max}">
+${" ".repeat(padding)}        <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
+${" ".repeat(padding)}    </p>
+${" ".repeat(padding)}    <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
+${" ".repeat(padding)}    <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
+${" ".repeat(padding)}    <div class="flex grow-max personal-mote-toggle">
+${" ".repeat(padding)}        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
+${" ".repeat(padding)}            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
+${" ".repeat(padding)}        </p>
+${" ".repeat(padding)}        <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
+${" ".repeat(padding)}            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
+${" ".repeat(padding)}        </p>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="flex grow-max peripheral-mote-toggle">
+${" ".repeat(padding)}        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
+${" ".repeat(padding)}            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
+${" ".repeat(padding)}        </p>
+${" ".repeat(padding)}        <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
+${" ".repeat(padding)}            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
+${" ".repeat(padding)}        </p>
+${" ".repeat(padding)}    </div>`;
+    if (rollpenIncluded) ret += /*html*/`
+${" ".repeat(padding)}    <div class="flex grow-normal rollpen-box">
+${" ".repeat(padding)}        <p class="flex grow-normal rounded-box">
+${" ".repeat(padding)}            RollPen:
+${" ".repeat(padding)}            <input id="rollpen-input-widget" type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
+${" ".repeat(padding)}        </p>
+${" ".repeat(padding)}    </div>`;
+    ret += /*html*/`
+${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
+outHtml += /*html*/`
             <div class="sheet-body sheet-tab-content sheet-tab-rolls-sheet">
                 <h1><span>Rolls</span></h1>
-                <div class="ressource-line flex-wrap">
-                    <p class="will-color rounded-box grow-max flex" title="@{willpower} & @{willpower_max}">
-                        Willpower:
-                        <input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal">/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
-                    </p>
-                    <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
-                    <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
-                    <div class="flex grow-max personal-mote-toggle">
-                        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
-                            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
-                        </p>
-                        <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-                            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
-                        </p>
-                    </div>
-                    <div class="flex grow-max peripheral-mote-toggle">
-                        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
-                            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
-                        </p>
-                        <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-                            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
-                        </p>
-                    </div>
-                    <div class="flex grow-normal rollpen-box">
-                        <p class="flex grow-normal rounded-box">
-                            RollPen:
-                            <input id="rollpen-input-widget" type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
-                        </p>
-                    </div>
-                </div>
+                ${getRessourceLine(16, true)}
                 <div class="rolls-area">
                     <div class="left-column-rolls">
                         <input type="hidden" name="attr_roll-type-toggler" class="roll-type-check">
@@ -2732,18 +2739,7 @@ ${" ".repeat(padding)}        <div class="sheet-table-cell">
 ${" ".repeat(padding)}            <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
 ${" ".repeat(padding)}            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
 ${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}    </div>`;
-if (includeExc) {
-    ret += /*html*/`
-${" ".repeat(padding)}    <div class="flex will-color-down rounded-box">
-${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
-${" ".repeat(padding)}        <div class="sheet-table-cell">
-${" ".repeat(padding)}            <input type="number" name="attr_willpower" value="5" min="0" max="15" title="@{willpower}">
-${" ".repeat(padding)}            <input type="number" name="attr_willpower_max" readonly tabindex="-1" title="@{willpower_max}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}    </div>`;
-}
-ret += /*html*/`
+${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
     return ret;
 }
@@ -2785,6 +2781,7 @@ ${" ".repeat(padding)}</div>`;
 outHtml += /*html*/`
             <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">
                 <h1><span>Social attributes and abilities</span></h1>
+                ${getRessourceLine(16, false, true)}
                 ${getSocialHeadline(16, true)}
                 <div class="sheet-3colrow">
                     ${getSocialStatCol(20, true)}
@@ -3516,29 +3513,7 @@ outHtml += /*html*/`
                             </div>
                         </div>
                     </div>
-                    <div class="ressource-line flex-wrap">
-                        <p class="will-color rounded-box grow-normal flex" title="@{willpower} & @{willpower_max}">
-                            <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly tabindex="-1">
-                        </p>
-                        <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
-                        <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
-                        <div class="flex grow-normal personal-mote-toggle">
-                            <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly in the next line to have manual mote edition -->
-                                Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
-                            </p>
-                            <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-                                <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
-                            </p>
-                        </div>
-                        <div class="flex grow-normal peripheral-mote-toggle">
-                            <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly in the next line to have manual mote edition -->
-                                Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
-                            </p>
-                            <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-                                <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
-                            </p>
-                        </div>
-                    </div>
+                    ${getRessourceLine(20, false)}
                 </div>
                 <div class="combat-init">
                     <input type="checkbox" name="attr_combat-init-display" class="sheet-initeffect" value="1"><span class="sheet-spelleffect" title="Show Initiative Rolls"></span>

@@ -363,12 +363,16 @@ input[type="number"] {
 }
 
 .charsheet .sheet-tab-rolls-sheet .rollpen-box p,
-.charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title] {
+.charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title],
+.charsheet .sheet-tab-intimacies-sheet .rollpen-box p,
+.charsheet .sheet-tab-intimacies-sheet .rollpenalty-input[title] {
     background-color: rgb(255, 128, 128);
 }
 
 .sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpen-box p,
-.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title] {
+.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title],
+.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .rollpen-box p,
+.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .rollpenalty-input[title] {
     background-color: darkred;
 }
 
@@ -2703,6 +2707,9 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-intimacies-sheet .head-line {
     width: 100%;
     justify-content: space-around;
+}
+.charsheet .sheet-tab-intimacies-sheet .head-line {
+    margin-top: 1em;
 }
 
 .charsheet .sheet-tab-antisocial-sheet textarea,
@@ -6050,11 +6057,13 @@ and (min-resolution:.001dpcm) {
     width: 1em;
 }
 
-.charsheet .sheet-tab-rolls-sheet .ressource-line p {
+.charsheet .sheet-tab-rolls-sheet .ressource-line p,
+.charsheet .sheet-tab-intimacies-sheet .ressource-line p {
     border: 5px solid transparent;
 }
 
-.charsheet .sheet-tab-rolls-sheet .ressource-line p.will-color {
+.charsheet .sheet-tab-rolls-sheet .ressource-line p.will-color,
+.charsheet .sheet-tab-intimacies-sheet .ressource-line p.will-color {
     border: 1px solid;
     padding: 4px;
 }

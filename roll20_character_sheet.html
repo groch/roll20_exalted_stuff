@@ -5824,8 +5824,7 @@
                 <h1><span>Rolls</span></h1>
                 <div class="ressource-line flex-wrap">
                     <p class="will-color rounded-box grow-max flex" title="@{willpower} & @{willpower_max}">
-                        Willpower:
-                        <input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal">/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
+                        <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
                     </p>
                     <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
                     <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
@@ -7477,6 +7476,29 @@
 
             <div class="sheet-body sheet-tab-content sheet-tab-intimacies-sheet">
                 <h1><span>Social attributes and abilities</span></h1>
+                <div class="ressource-line flex-wrap">
+                    <p class="will-color rounded-box grow-max flex" title="@{willpower} & @{willpower_max}">
+                        <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
+                    </p>
+                    <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
+                    <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
+                    <div class="flex grow-max personal-mote-toggle">
+                        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
+                            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
+                        </p>
+                        <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
+                            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
+                        </p>
+                    </div>
+                    <div class="flex grow-max peripheral-mote-toggle">
+                        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
+                            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
+                        </p>
+                        <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
+                            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
+                        </p>
+                    </div>
+                </div>
                 <div class="head-line flex flex-wrap">
                     <div class="flex">
                         <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
@@ -7500,13 +7522,6 @@
                         <div class="sheet-table-cell">
                             <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
                             <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
-                        </div>
-                    </div>
-                    <div class="flex will-color-down rounded-box">
-                        <div class="sheet-table-cell sheet-text-right"><span>Willpower</span>:</div>
-                        <div class="sheet-table-cell">
-                            <input type="number" name="attr_willpower" value="5" min="0" max="15" title="@{willpower}">
-                            <input type="number" name="attr_willpower_max" readonly tabindex="-1" title="@{willpower_max}">
                         </div>
                     </div>
                 </div>
@@ -8519,21 +8534,21 @@
                         </div>
                     </div>
                     <div class="ressource-line flex-wrap">
-                        <p class="will-color rounded-box grow-normal flex" title="@{willpower} & @{willpower_max}">
-                            <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly tabindex="-1">
+                        <p class="will-color rounded-box grow-max flex" title="@{willpower} & @{willpower_max}">
+                            <label class="grow-normal">Willpower:<input type="number" name="attr_willpower" value="5" min="0" max="15" class="grow-normal"></label>/<input type="number" name="attr_willpower_max" readonly="readonly" tabindex="-1">
                         </p>
                         <input type="hidden" name="attr_personal-equation" class="personal-mote-val">
                         <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
-                        <div class="flex grow-normal personal-mote-toggle">
-                            <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly in the next line to have manual mote edition -->
+                        <div class="flex grow-max personal-mote-toggle">
+                            <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
                                 Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
                             </p>
                             <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
                                 <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
                             </p>
                         </div>
-                        <div class="flex grow-normal peripheral-mote-toggle">
-                            <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly in the next line to have manual mote edition -->
+                        <div class="flex grow-max peripheral-mote-toggle">
+                            <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
                                 Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
                             </p>
                             <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
