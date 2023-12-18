@@ -5478,6 +5478,26 @@ textarea::-webkit-scrollbar-track {
     min-width: 29em;
 }
 
+.charsheet .sheet-tab-intimacies-sheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+    position: absolute;
+    top: 8.4em;
+}
+@media only screen and (max-width: 606px) {
+    .charsheet .sheet-tab-intimacies-sheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+        top: 11.1em;
+    }
+}
+@media only screen and (max-width: 381px) {
+    .charsheet .sheet-tab-intimacies-sheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+        top: 13.7em;
+    }
+}
+@media only screen and (max-width: 365px) {
+    .charsheet .sheet-tab-intimacies-sheet .sheet-charm-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div {
+        top: 16.4em;
+    }
+}
+
 .charsheet .sheet-abi-reminder input[type="checkbox"].sheet-unnamed-toggle:checked + span + div > div.main-abi {
     max-height: 13em;
 }
