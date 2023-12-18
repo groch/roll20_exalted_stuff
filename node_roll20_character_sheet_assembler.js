@@ -2750,7 +2750,10 @@ outHtml += /*html*/`
             <!-- 6 SOCIAL PAGE -->\n`;
 
 function getSocialHeadline(padding = 0, includeExc = false) {
-    let ret = /*html*/`<div class="head-line flex flex-wrap">
+    let ret = /*html*/`<div class="head-line flex flex-wrap">`;
+    if (includeExc) ret += /*html*/`
+${" ".repeat(padding+4)}${getRemindersCharms(padding+4)}`;
+    ret += /*html*/`
 ${" ".repeat(padding)}    <div class="flex">
 ${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
 ${" ".repeat(padding)}        <div class="sheet-table-cell">
