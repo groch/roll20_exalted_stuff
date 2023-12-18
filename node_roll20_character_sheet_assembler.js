@@ -1545,68 +1545,33 @@ function getMAConfigOptionList(padding = 0) {
     return ret;
 }
 
+function getCheckboxLabel(padding, attrName, spanLabel, checked, labelClass) {
+    return  /*html*/ `<label${labelClass ? ` class="${labelClass}"` : ''}>
+${" ".repeat(padding)}    <input type="checkbox" name="attr_${attrName}" value="1"${checked ? ` checked` : ''}><span></span>
+${" ".repeat(padding)}    <span>${spanLabel}</span>
+${" ".repeat(padding)}</label>`;
+}
+
 outHtml += /*html*/
 `
             <div class="sheet-body sheet-tab-content sheet-tab-settings-sheet">
                 <h1><span>Character Type</span></h1>
                 <div class="sheet-checklist sheet-2colrow sheet-main-config">
                     <div class="sheet-checklist sheet-col">
-                        <label>
-                            <input type="checkbox" name="attr_qc" value="1"><span></span>
-                            <span>Quick Character</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_battlegroup" value="1"><span></span>
-                            <span>Battle Group</span>
-                        </label>
-                        <label class="sheet-cast-to-gm">
-                            <input type="checkbox" name="attr_charmwhispergm" value="1"><span></span>
-                            <span>Whisper to GM instead of CAST in charm tab</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_charmwhisperboth" value="1"><span></span>
-                            <span>Show both buttons in Charm Tab</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_antisocialtab" value="1"><span></span>
-                            <span>Show 2nd Social Tab</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_combattab" value="1" checked><span></span>
-                            <span>Show Combat Tab</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_diceex" value="1"><span></span>
-                            <span>Include Dice Excellency</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_succex" value="1"><span></span>
-                            <span>Include Success Excellency</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_canspendmote" value="1"><span></span>
-                            <span>Can spend Motes</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_usecommitsystem" value="1" checked><span></span>
-                            <span>Use Commited List System</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_show-charname-in-charms" value="1"><span></span>
-                            <span>Show Character Name in Charms</span>
-                        </label>
-                        <label title="Only work if browser have CSS selector 'has' enabled (Firefox doesnt by default)">
-                            <input type="checkbox" name="attr_hide-not-learnt-charms-in-reminders" value="1"><span></span>
-                            <span>Hide not Learnt Charms in Reminders</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" name="attr_pain-tolerance" value="1"><span></span>
-                            <span>MERIT: Pain Tolerance</span>
-                        </label>
-                        <label class="show-to-mortals-mostly">
-                            <input type="checkbox" name="attr_sbv-activated" value="1"><span></span>
-                            <span>CHARM ENABLED: Saga Beast Virtue</span>
-                        </label>
+                        ${getCheckboxLabel(24, 'qc', 'Quick Character')}
+                        ${getCheckboxLabel(24, 'battlegroup', 'Battle Group')}
+                        ${getCheckboxLabel(24, 'charmwhispergm', 'Whisper to GM instead of CAST in charm tab', false, 'sheet-cast-to-gm')}
+                        ${getCheckboxLabel(24, 'charmwhisperboth', 'Show both buttons in Charm Tab')}
+                        ${getCheckboxLabel(24, 'antisocialtab', 'Show 2nd Social Tab')}
+                        ${getCheckboxLabel(24, 'combattab', 'Show Combat Tab', true)}
+                        ${getCheckboxLabel(24, 'diceex', 'Include Dice Excellency')}
+                        ${getCheckboxLabel(24, 'succex', 'Include Success Excellency')}
+                        ${getCheckboxLabel(24, 'canspendmote', 'Can spend Motes')}
+                        ${getCheckboxLabel(24, 'usecommitsystem', 'Use Commited List System', true)}
+                        ${getCheckboxLabel(24, 'show-charname-in-charms', 'Show Character Name in Charms')}
+                        ${getCheckboxLabel(24, 'hide-not-learnt-charms-in-reminders', 'Hide not Learnt Charms in Reminders')}
+                        ${getCheckboxLabel(24, 'pain-tolerance', 'MERIT: Pain Tolerance')}
+                        ${getCheckboxLabel(24, 'sbv-activated', 'CHARM ENABLED: Saga Beast Virtue', false, 'show-to-mortals-mostly')}
                         <label style="display: none;">
                             <button type="action" name="act_init-charm-img" title="Set Caste Image to Charms">Set Caste Image to Charms</button>
                         </label>
