@@ -1411,12 +1411,8 @@ outHtml += /*html*/`
                                                 <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
                                                 <label title="Commit on Cast ?"><span>C: </span><div class="flex caste-have-exc-toggle"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
                                             </p>
-                                            <p class="will-color-down rounded-box grow-normal flex">
-                                                <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                            </p>
-                                            <p class="init-color-down rounded-box grow-normal flex">
-                                                <label>Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                            </p>
+                                            ${getIndexCostRows('Will', 44)}
+                                            ${getIndexCostRows('Init', 44)}
                                         </div>
                                     </div>
                                     <div class="sheet-charm-effect">
@@ -1474,9 +1470,7 @@ outHtml += /*html*/`
                             <div class="flex cost"><label><span>Cost: </span><input type="text" name="attr_repspell-cost" class="sheet-charms-spells-trait" placeholder="15m, 1wp"></label></div>
                             <div class="flex control"><label><span>Control: </span><div class="flex"><input type="checkbox" style="margin: 15 ; z-index: 15" name="attr_repspell-control" value="1"><span></span></div></label></div>
                             <div class="cost-section grow-normal">
-                                <p class="will-color-down rounded-box grow-normal flex">
-                                    <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                </p>
+                                ${getIndexCostRows('Will', 32)}
                             </div>
                             <input type="hidden" name="attr_charm-aspect" value="sorceries">
                             <input type="hidden" name="attr_charm-balanced" value="0">
