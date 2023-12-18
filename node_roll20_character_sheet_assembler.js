@@ -981,8 +981,30 @@ outHtml += /*html*/
                 </div>
             </div>
 
-            <!-- 2 CHARMS PAGE -->
+            <!-- 2 CHARMS PAGE -->\n`;
 
+const costArray = {
+    'Mote':{name:'Mote',titleBase:'Atome of Essence'},
+    'Will':{name:'Will',titleBase:'Willpower'},
+    'Init':{name:'Init',titleBase:'Initiative Points'},
+};
+
+const getCostLine = (item, defaultWill, double = false) => /*html*/`<label>${item.name}:<input type="text" name="attr_rep-cost-${item.name.toLowerCase()}" class="sheet-cost-${item.name.toLowerCase()} grow-${double ? 'double' : 'normal'}" title="Cost as ${item.titleBase}&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"${defaultWill ? ' value="?{Willpower ?|No,0|Yes,1}"' : ''}></label>`;
+
+function getIndexCostRows(index, padding = 0, defaultWill = false) {
+    return /*html*/`<p class="${costArray[index].name.toLowerCase()}-color-down rounded-box grow-${index === 'Mote' ? 'double' : 'normal'} flex${index === 'Mote' ? ' caste-have-exc-toggle' : ''}">
+${" ".repeat(padding)}    ${getCostLine(costArray[index], defaultWill, false)}
+${" ".repeat(padding)}</p>`;
+}
+
+function getCostRows(padding = 0, includeInit = true, defaultWill = false) {
+    let ret = `${getIndexCostRows('Mote', padding)}
+${" ".repeat(padding)}${getIndexCostRows('Will', padding, defaultWill)}`;
+    if (includeInit) ret += `\n${" ".repeat(padding)}${getIndexCostRows('Init', padding)}`;
+    return ret;
+}
+
+outHtml += /*html*/`
             <div class="sheet-tab-content sheet-tab-charm-sheet">
                 <h1><span>Charms &amp; Evocations</span></h1>
 
@@ -1382,7 +1404,7 @@ outHtml += /*html*/
                                         <label title="Can Change Aspect"><span class="show-to-db-only">Multi: </span><div class="flex"><input type="checkbox" name="attr_charm-can-cycle-aspects" class="show-to-db-only sheet-charms-spells-trait"></div></label>
                                         <div class="cost-section grow-max flex flex-wrap">
                                             <p class="mote-color-down rounded-box grow-double flex caste-have-exc-toggle">
-                                                <label>Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
+                                                ${getCostLine(costArray['Mote'])}
                                                 <select name="attr_rep-cost-mote-pool">
                                                     ${returnOptions(52, [{val: '?{Spend Peripheral First ?|Yes,1|No,0}', label: 'Prompt'},{val: '1', label: 'Peripheral'},{val: '0', label: 'Personal'}])}
                                                 </select>
@@ -2619,15 +2641,7 @@ outHtml += /*html*/`
                                         </div>
                                         <div class="grow-normal flex-wrap hide-on-edit">
                                             <div class="cost-section grow-normal flex">
-                                                <p class="mote-color-down rounded-box grow-double flex caste-have-exc-toggle">
-                                                    <label>Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                                </p>
-                                                <p class="will-color-down rounded-box grow-normal flex">
-                                                    <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                                </p>
-                                                <p class="init-color-down rounded-box grow-normal flex">
-                                                    <label>Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                                </p>
+                                                ${getCostRows(48)}
                                             </div>
                                         </div>
                                     </div>
@@ -2969,12 +2983,7 @@ outHtml += /*html*/`
                                         <span class="sheet-combatdesc" title="&lt;"></span>
                                     </div>
                                     <div class="cost-section grow-normal flex" style="display: inline-flex; min-width: 16.7em;">
-                                        <p class="mote-color-down rounded-box grow-double flex caste-have-exc-toggle">
-                                            <label>Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                        </p>
-                                        <p class="will-color-down rounded-box grow-normal flex">
-                                            <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="${wpPrompt}"></label>
-                                        </p>
+                                        ${getCostRows(40, false, true)}
                                     </div>
                                 </div>
                                 <input type="hidden" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc-val" value="0">
@@ -3057,15 +3066,7 @@ outHtml += /*html*/`
                                 </div>
                                 <div class="grow-double flex-wrap hide-on-edit">
                                     <div class="cost-section grow-max flex">
-                                        <p class="mote-color-down rounded-box grow-double flex caste-have-exc-toggle">
-                                            <label>Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                        </p>
-                                        <p class="will-color-down rounded-box grow-normal flex">
-                                            <label>Will:<input type="text" name="attr_rep-cost-will" class="sheet-cost-will grow-normal" title="Cost as Willpower&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                        </p>
-                                        <p class="init-color-down rounded-box grow-normal flex">
-                                            <label>Init:<input type="text" name="attr_rep-cost-init" class="sheet-cost-init grow-normal" title="Cost as Initiative Points&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
-                                        </p>
+                                        ${getCostRows(40)}
                                     </div>
                                     <div class="weapon-section grow-normal flex">
                                         <p class="accu-color rounded-box grow-normal flex">
