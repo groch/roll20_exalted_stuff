@@ -2865,8 +2865,28 @@ outHtml += /*html*/`
                 <textarea name="attr_social-notepad"></textarea>
             </div>
 
-            <!-- 7 COMBAT PAGE -->
+            <!-- 7 COMBAT PAGE -->\n`;
 
+function getCombatDisablePenAndCrippling(padding = 0) {
+    return /*html*/`<div class="flex flex-wrap flex-col">
+${" ".repeat(padding)}    <div class="crippling-box"><!-- DISABLE BOX -->
+${" ".repeat(padding)}        <input type="checkbox" name="attr_combat-disable-pen" class="sheet-crippling-pen sheet-disable-pen" value="1">
+${" ".repeat(padding)}        <span class="sheet-spelleffect" title="NoPen:"></span>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="crippling-box"><!-- CRIPPLING BOX -->
+${" ".repeat(padding)}        <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
+${" ".repeat(padding)}        <span class="sheet-spelleffect" title="Crippling:"></span>
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    <div class="wound-pen"><!-- WOUND PEN -->
+${" ".repeat(padding)}        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
+${" ".repeat(padding)}        <input type="number" value="@{wound-penalty}" disabled="disabled" title="@{wound-penalty}&#013;&#010;Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+${" ".repeat(padding)}        <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
+${" ".repeat(padding)}        <input type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
+${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}</div>`;
+}
+
+outHtml += /*html*/`
             <div class="sheet-body sheet-tab-content sheet-tab-combat-sheet">
                 <h1><span>Combat</span></h1>
                 <div class="combat-header">
@@ -2881,22 +2901,7 @@ outHtml += /*html*/`
                         <div class="sheet-health-track grow-normal"><!-- Health Levels -->
                             ${getHealthLine(28)}
                         </div>
-                        <div class="flex flex-wrap flex-col">
-                            <div class="crippling-box"><!-- DISABLE BOX -->
-                                <input type="checkbox" name="attr_combat-disable-pen" class="sheet-crippling-pen sheet-disable-pen" value="1">
-                                <span class="sheet-spelleffect" title="NoPen:"></span>
-                            </div>
-                            <div class="crippling-box"><!-- CRIPPLING BOX -->
-                                <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
-                                <span class="sheet-spelleffect" title="Crippling:"></span>
-                            </div>
-                            <div class="wound-pen"><!-- WOUND PEN -->
-                                <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="@{wound-penalty}&#013;&#010;Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
-                                <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
-                                <input type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
-                            </div>
-                        </div>
+                        ${getCombatDisablePenAndCrippling(24)}
                     </div>
                     <div class="health-line flex sheet-bg-show"><!-- HEALTH BG -->
                         <div class="sheet-health-track grow-normal">
@@ -2909,22 +2914,7 @@ outHtml += /*html*/`
                                 <input type="number" name="attr_battlegroup-size_max" value="1">
                             </p>
                         </div>
-                        <div class="flex flex-wrap flex-col">
-                            <div class="crippling-box"><!-- DISABLE BOX -->
-                                <input type="checkbox" name="attr_combat-disable-pen" class="sheet-crippling-pen sheet-disable-pen" value="1">
-                                <span class="sheet-spelleffect" title="NoPen:"></span>
-                            </div>
-                            <div class="crippling-box"><!-- CRIPPLING BOX -->
-                                <input type="checkbox" name="attr_combat-crippling-pen" class="sheet-crippling-pen" value="1">
-                                <span class="sheet-spelleffect" title="Crippling:"></span>
-                            </div>
-                            <div class="wound-pen"><!-- WOUND PEN -->
-                                <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
-                                <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
-                                <input type="number" value="0" title="Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
-                            </div>
-                        </div>
+                        ${getCombatDisablePenAndCrippling(24)}
                     </div>
                     <div class="reminder-line flex-wrap sheet-reminders">
                         <input type="hidden" class="qc-panel-check" name="attr_qc">
