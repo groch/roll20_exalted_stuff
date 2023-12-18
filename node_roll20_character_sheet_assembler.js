@@ -1350,13 +1350,7 @@ outHtml += /*html*/
                                     <input type="hidden" name="attr_charm-learnt" class="charm-learnt-check" value="1">
                                     <input type="text" name="attr_charm-name" class="sheet-charms-spells-trait-name" placeholder="Excellent Solar Larceny"><span> </span>
                                     <select name="attr_charm-type" style="width: 109px">
-                                        <option value=""></option>
-                                        <option value="Simple">Simple</option>
-                                        <option value="Supplemental">Supplemental</option>
-                                        <option value="Reflexive">Reflexive</option>
-                                        <option value="Double">Suppl. ou Reflex.</option>
-                                        <option value="Permanent">Permanent</option>
-                                        <option value="Enchantment">Enchantment</option>
+                                        ${returnOptions(40, [...['','Simple','Supplemental','Reflexive'].map(i => ({val: i, label: i})), {val: 'Double', label: 'Suppl. ou Reflex.'}, ...['Permanent','Enchantment'].map(i => ({val: i, label: i}))], -1)}
                                     </select>
                                     <div class="flex grow-normal"><label><span>Cost: </span><input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait sheet-charms-spells-trait-cost" placeholder="1m/die"></label></div>
                                     <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
@@ -1390,9 +1384,7 @@ outHtml += /*html*/
                                             <p class="mote-color-down rounded-box grow-double flex caste-have-exc-toggle">
                                                 <label>Mote:<input type="text" name="attr_rep-cost-mote" class="sheet-cost-mote grow-normal" title="Cost as Atome of Essence&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"></label>
                                                 <select name="attr_rep-cost-mote-pool">
-                                                    <option value="?{Spend Peripheral First ?|Yes,1|No,0}" selected>Prompt</option>
-                                                    <option value="1">Peripheral</option>
-                                                    <option value="0">Personal</option>
+                                                    ${returnOptions(52, [{val: '?{Spend Peripheral First ?|Yes,1|No,0}', label: 'Prompt'},{val: '1', label: 'Peripheral'},{val: '0', label: 'Personal'}])}
                                                 </select>
                                                 <input type="hidden" name="attr_rep-cost-mote-commit" value="0">
                                                 <label title="Commit on Cast ?"><span>C: </span><div class="flex caste-have-exc-toggle"><input type="checkbox" name="attr_rep-cost-mote-commit" class="sheet-charms-spells-trait" value="1" title="Commit on Cast ?"></div></label>
@@ -1439,10 +1431,7 @@ outHtml += /*html*/
                             <input type="text" name="attr_repspell-name" style="width: 32% ; color: #9f0b10 ; font-weight: bold ; margin-right: 2px;" placeholder="Cirrus Skiff" class="grow-normal"><span> </span>
                             <input type="checkbox" name="attr_charm-shaping-ritual" class="sheet-charms-spells-trait sheet-charms-spells-trait-shaping-ritual" title="is a Shaping Ritual" value="1">
                             <select name="attr_repspell-circle" style="width: 109px">
-                                <option value=""></option>
-                                <option value="Terrestrial">Terrestrial</option>
-                                <option value="Celestial">Celestial</option>
-                                <option value="Solar">Solar</option>
+                                ${returnOptions(32, ['','Terrestrial','Celestial','Solar'].map(i => ({val: i, label: i})), -1)}
                             </select>
                             <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
@@ -1569,37 +1558,31 @@ outHtml += /*html*/
                         <label>
                             <span>Full Def Bonus</span>
                             <select name="attr_full-def-bonus">
-                                <option value="0" selected>None</option>
-                                <option value="2">Applied</option>
+                                ${returnOptions(32, [{val: 0, label: 'None'},{val: 2, label: 'Applied'}])}
                             </select>
                         </label>
                         <label>
                             <span>Cover Def Bonus</span>
                             <select name="attr_cover-def-bonus">
-                                <option value="0" selected>None</option>
-                                <option value="1">Light</option>
-                                <option value="2">Heavy</option>
+                                ${returnOptions(32, [{val: 0, label: 'None'},{val: 1, label: 'Light'},{val: 2, label: 'Heavy'}])}
                             </select>
                         </label>
                         <label>
                             <span>Grab Def Penalty</span>
                             <select name="attr_grab-def-penalty">
-                                <option value="0" selected>None</option>
-                                <option value="2">Grabbed</option>
+                                ${returnOptions(32, [{val: 0, label: 'None'},{val: 2, label: 'Grabbed'}])}
                             </select>
                         </label>
                         <label>
                             <span>Clash Def Penalty</span>
                             <select name="attr_clash-def-penalty">
-                                <option value="0" selected>None</option>
-                                <option value="2">Clash Lost</option>
+                                ${returnOptions(32, [{val: 0, label: 'None'},{val: 2, label: 'Clash Lost'}])}
                             </select>
                         </label>
                         <label>
                             <span>Prone Def Penalty</span>
                             <select name="attr_prone-def-penalty">
-                                <option value="0" selected>None</option>
-                                <option value="1">Proned</option>
+                                ${returnOptions(32, [{val: 0, label: 'None'},{val: 1, label: 'Proned'}])}
                             </select>
                         </label>
                         <label>
@@ -2450,8 +2433,7 @@ outHtml += /*html*/
                                                         <div class="inline-flex grow-normal">
                                                             <input type="hidden" name="attr_reprolls-stunt-dices" class="stunt-dices-check" value="0">
                                                             <select name="attr_reprolls-stunt-dices" class="sheet-rolls-stunt-dices grow-normal" title="Bonus dices for the Roll awarded by the Stunt">
-                                                                <option value="0" selected>(0) Std Stunt</option>
-                                                                <option value="2">(2) Stunt 1+</option>
+                                                                ${returnOptions(64, [{val: 0, label: '(0) Std Stunt'},{val: 2, label: '(2) Stunt 1+'}])}
                                                             </select>+
                                                             <span class="specialty-box db-hint">
                                                                 <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
@@ -2483,8 +2465,7 @@ outHtml += /*html*/
                                                     <div class="inline-flex grow-normal">
                                                         <input type="hidden" name="attr_reprolls-willpower-toggle" class="willpower-toggle-check" value="0">
                                                         <select name="attr_reprolls-willpower-toggle" class="sheet-rolls-wp-toggle grow-normal" title="Include a Success using 1 Willpower">
-                                                            <option value="0" selected>(0) No</option>
-                                                            <option value="1">(1) Yes</option>
+                                                            ${returnOptions(60, [{val: 0, label: '(0) No'},{val: 1, label: '(1) Yes'}])}
                                                         </select>+
                                                     </div>
                                                     <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
@@ -2501,8 +2482,7 @@ outHtml += /*html*/
                                             </div>
                                             <div class="flex grow-normal">
                                                 <select name="attr_reprolls-pool-starting" class="sheet-rolls-pool-starting" title="Bonus dices for the Roll awarded by the Stunt">
-                                                    <option value="1" selected>Peripheral</option>
-                                                    <option value="0">Personal</option>
+                                                    ${returnOptions(52, [{val: 1, label: 'Peripheral'},{val: 0, label: 'Personal'}])}
                                                 </select>
                                                 <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                                 <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
@@ -2835,10 +2815,7 @@ outHtml += /*html*/
                                 <div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
                                 <div class="sheet-table-cell intimacy-taint">
                                     <select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
-                                        <option value="none">None</option>
-                                        <option value="Minor" selected="selected">Minor</option>
-                                        <option value="Major">Major</option>
-                                        <option value="Defining">Defining</option>
+                                        ${returnOptions(40, [{val: 'none', label: 'None'}, ...['Minor','Major','Defining'].map(i => ({val: i, label: i}))],1)}
                                     </select>
                                 </div>
                             </fieldset>
@@ -2945,10 +2922,7 @@ outHtml += /*html*/
                                 <div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
                                 <div class="sheet-table-cell intimacy-taint">
                                     <select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
-                                        <option value="none" selected="selected">None</option>
-                                        <option value="Minor">Minor</option>
-                                        <option value="Major">Major</option>
-                                        <option value="Defining">Defining</option>
+                                        ${returnOptions(40, [{val: 'none', label: 'None'}, ...['Minor','Major','Defining'].map(i => ({val: i, label: i}))])}
                                     </select>
                                 </div>
                             </fieldset>
