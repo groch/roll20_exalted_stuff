@@ -75,6 +75,48 @@ input[type="number"] {
     }
 }
 
+.charsheet .sheet-warning-header {
+    display: none;
+}
+
+@supports not (selector(:has(+ *))) {
+    .charsheet {
+        height: calc(100% - 10.3em);
+    }
+    .charsheet .sheet-warning-header {
+        display: block;
+    }
+    .charsheet .sheet-warning-header .sheet-message-firefox {
+        display: none;
+    }
+    @-moz-document url-prefix() {
+        .charsheet .sheet-warning-header .sheet-message-generic {
+            display: none;
+        }
+        .charsheet .sheet-warning-header .sheet-message-firefox {
+            display: block;
+        }
+    }
+
+    .charsheet .sheet-warning-header h1,
+    .charsheet .sheet-warning-header h2 {
+        text-decoration: none;
+    }
+    .charsheet .sheet-warning-header h1 a,
+    .charsheet .sheet-warning-header h2 a {
+        text-decoration: underline;
+    }
+    .charsheet .sheet-warning-header h1 {
+        background-image: none;
+        color: red;
+    }
+    .charsheet .sheet-warning-header h2 {
+        text-align: center;
+        color: orange;
+    }
+}
+
+
 .charsheet .solar-style {
     background-color: black;
     color: yellow;
@@ -90,7 +132,7 @@ input[type="number"] {
     color: yellow;
 }
 
-.charsheet .sheet-content > div:first-child {
+.charsheet .sheet-content > div.sheet-main-content {
     flex: 1 1 auto;
     overflow: visible;
     padding-left: 10px;
