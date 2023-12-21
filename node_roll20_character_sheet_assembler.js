@@ -2412,7 +2412,7 @@ ${" ".repeat(padding)}        ${getStatBlock('Charisma')}
 ${" ".repeat(padding)}        ${getStatBlock('Manipulation')}
 ${" ".repeat(padding)}        <div class="sheet-table-row qc-toggle-display-inv">
 ${" ".repeat(padding)}            <div class="sheet-table-cell flex" style="flex-grow: 1;">
-${" ".repeat(padding)}                <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-soc-influence-type-display grow-normal" readonly tabindex="-1">
+${" ".repeat(padding)}                <span>S.Inf.</span>:<input type="text" name="attr_qc-social-influence-type" class="sheet-qc-social-influence-type-display grow-normal" readonly tabindex="-1">
 ${" ".repeat(padding)}            </div>
 ${" ".repeat(padding)}            <div class="sheet-table-cell">
 ${" ".repeat(padding)}                <input type="number" name="attr_qc-social-influence" style="width: 27px ; margin-right: 3px" title="QC Social Influence" readonly tabindex="-1">
