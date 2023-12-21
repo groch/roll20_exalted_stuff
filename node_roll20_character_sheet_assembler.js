@@ -532,18 +532,26 @@ function returnOptions(padding, array, checked = 0) {
     return retStr;
 }
 
-function getQCAttr(padding, name, label, doubleTitle = false, includeLabelInTitle = false, includeFoS = false, includeNumberTitle = true, secondNotVisible = false) {
+function getQCAttr(padding, name, label, opt) {
+    const opts = {
+        ...opt,
+        ...(opt?.labelCustomInputType === undefined && {labelCustomInputType: false}),
+        ...(opt?.includeLabelInTitle === undefined && {includeLabelInTitle: false}),
+        ...(opt?.includeFoS === undefined && {includeFoS: false}),
+        ...(opt?.includeTitle === undefined && {includeTitle: true}),
+        ...(opt?.excNotVisible === undefined && {excNotVisible: false}),
+    };
     const getFoSLine = () => /*html*/`<input type="number" name="attr_strength" title="Strength Cap for FoS">\n${" ".repeat(padding+8)}`;
     const getSimple = () => /*html*/`<span>${label}</span>`;
     const getDouble = () => /*html*/`<span class="flex">
 ${" ".repeat(padding)}        <span>${label} :</span>
-${" ".repeat(padding)}        <input type="text" name="attr_${name}-type" placeholder="Threaten" class="sheet-${name}-type grow-normal" title="Type of ${doubleTitle}">
+${" ".repeat(padding)}        <input type="text" name="attr_${name}-type" placeholder="Threaten" class="sheet-${name}-type grow-normal" title="Type of ${opts.labelCustomInputType}">
 ${" ".repeat(padding)}    </span>`;
     return /*html*/`<div class="sheet-trait">
-${" ".repeat(padding)}    ${doubleTitle ? getDouble() : getSimple()}
+${" ".repeat(padding)}    ${opts.labelCustomInputType ? getDouble() : getSimple()}
 ${" ".repeat(padding)}    <span>
-${" ".repeat(padding)}        ${includeFoS ? getFoSLine() : ''}<input type="number" name="attr_${name}"${includeNumberTitle ? ` title="${includeLabelInTitle ? `${label} ` : includeFoS ? `FoS ` : ''}Dice Pool"` : ''}>
-${" ".repeat(padding)}        <input ${secondNotVisible ? `type="number" class="not-visible qc-have-exc"` : `type="text" name="attr_${name}-exc" class="qc-have-exc" title="${includeFoS ? `FoS ` : ''}Excellency cap"`}>
+${" ".repeat(padding)}        ${opts.includeFoS ? getFoSLine() : ''}<input type="number" name="attr_${name}"${opts.includeTitle ? ` title="${opts.includeLabelInTitle ? `${label} ` : opts.includeFoS ? `FoS ` : ''}Dice Pool"` : ''}>
+${" ".repeat(padding)}        <input ${opts.excNotVisible ? `type="number" class="not-visible qc-have-exc"` : `type="text" name="attr_${name}-exc" class="qc-have-exc" title="${opts.includeFoS ? `FoS ` : ''}Excellency cap"`}>
 ${" ".repeat(padding)}    </span>
 ${" ".repeat(padding)}</div>`;
 }
@@ -557,10 +565,10 @@ outHtml += /*html*/`
                     <div class="sheet-qc-pools sheet-col"><!-- 1.3.2 QUICK CHAR LEFT COLUMN -->
                         <h1><span>Actions</span></h1>
                         ${getQCAttr(24, 'qc-read-intentions', 'Read Intentions')}
-                        ${getQCAttr(24, 'qc-social-influence', 'S. Infl.', 'Social Influence')}
+                        ${getQCAttr(24, 'qc-social-influence', 'S. Infl.', {labelCustomInputType: 'Social Influence'})}
                         ${getQCAttr(24, 'qc-stealth-larc', 'Stealth/Larceny')}
                         ${getQCAttr(24, 'qc-senses', 'Senses')}
-                        ${getQCAttr(24, 'qc-fos-pool', 'Feats of Strength', false, false, true)}
+                        ${getQCAttr(24, 'qc-fos-pool', 'Feats of Strength', {includeFoS: true})}
                         <fieldset class="repeating_qcactions" style="display: none;">
                             <div class="sheet-trait">
                                 <input type="text" name="attr_repqcactionname" placeholder="Senses">
@@ -571,7 +579,7 @@ outHtml += /*html*/`
                             </div>
                         </fieldset>
                         <h1><span>Combat</span></h1>
-                        ${getQCAttr(24, 'qc-join-battle', 'Join Battle', false, true)}
+                        ${getQCAttr(24, 'qc-join-battle', 'Join Battle', {includeLabelInTitle: true})}
                         ${getQCAttr(24, 'qc-move', 'Combat Movement')}
                         <div class="sheet-trait four-cell">
                             <span>Grapple/Control</span>
@@ -743,12 +751,12 @@ outHtml += /*html*/`
                                                 <input type="number" name="attr_appearance">
                                             </span>
                                         </div>
-                                        ${getQCAttr(40, 'qc-resolve', 'Resolve', false, false, false, false)}
-                                        ${getQCAttr(40, 'qc-guile', 'Guile', false, false, false, false)}
-                                        ${getQCAttr(40, 'qc-evasion', 'Evasion', false, false, false, false)}
-                                        ${getQCAttr(40, 'qc-parry', 'Parry', false, false, false, false)}
-                                        ${getQCAttr(40, 'qc-soak', 'Soak', false, false, false, false, true)}
-                                        ${getQCAttr(40, 'hardness', 'Hardness', false, false, false, false, true)}
+                                        ${getQCAttr(40, 'qc-resolve', 'Resolve', {includeTitle: false})}
+                                        ${getQCAttr(40, 'qc-guile', 'Guile', {includeTitle: false})}
+                                        ${getQCAttr(40, 'qc-evasion', 'Evasion', {includeTitle: false})}
+                                        ${getQCAttr(40, 'qc-parry', 'Parry', {includeTitle: false})}
+                                        ${getQCAttr(40, 'qc-soak', 'Soak', {includeTitle: false, excNotVisible: true})}
+                                        ${getQCAttr(40, 'hardness', 'Hardness', {includeTitle: false, excNotVisible: true})}
                                     </div>
                                 </div>
                             </div>
