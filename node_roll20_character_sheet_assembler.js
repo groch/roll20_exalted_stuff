@@ -557,6 +557,8 @@ ${" ".repeat(padding)}    </span>
 ${" ".repeat(padding)}</div>`;
 }
 
+const TITLE_BR = '&#013;&#010;';
+
 outHtml += /*html*/`
                         <div class="sheet-rolls-main"><!-- 1.3.1.1 ROLLS LEFT COLUMN -->
                             <h1><span>Quick Roll</span></h1>
@@ -613,19 +615,19 @@ outHtml += /*html*/`
                             <h1 class="sheet-battle-group-header"><span>Battle Group</span></h1>
                             <div class="sheet-battle-group-body sheet-2colrow">
                                 <div class="sheet-col">
-                                    <div class="sheet-battle-group-row" title="@{battlegroup-drill}&#013;&#010;Represent how much training the BG have.&#013;&#010;Give bonus to Defenses">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-drill}${TITLE_BR}Represent how much training the BG have.${TITLE_BR}Give bonus to Defenses">
                                         <span>Drill</span>:
                                         <select name="attr_battlegroup-drill">
                                             ${returnOptions(44, ['Poor', 'Average', 'Elite'].map(i => ({val: i, label: i})), 0)}
                                         </select>
                                     </div>
-                                    <div class="sheet-battle-group-row" title="@{battlegroup-might}&#013;&#010;Represent how much supernatural features the BG is composed of.&#013;&#010;Give bonus to Defenses and Attacks&Damage">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-might}${TITLE_BR}Represent how much supernatural features the BG is composed of.${TITLE_BR}Give bonus to Defenses and Attacks&Damage">
                                         <span>Might</span>:
                                         <select name="attr_battlegroup-might">
                                             ${returnOptions(44, [...Array(4).keys()].map(i => ({val: i, label: i})), 0)}
                                         </select>
                                     </div>
-                                    <div class="sheet-battle-group-row" title="@{battlegroup-perfect-morale}&#013;&#010;Represent a BG trained to never surrender.&#013;&#010;Give bonus Magnitude & Prevent Rout">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-perfect-morale}${TITLE_BR}Represent a BG trained to never surrender.${TITLE_BR}Give bonus Magnitude & Prevent Rout">
                                         <label>
                                             <input type="checkbox" name="attr_battlegroup-perfect-morale" value="1"><span></span>
                                             <span>Perfect Morale</span>
@@ -634,7 +636,7 @@ outHtml += /*html*/`
                                     </div>
                                 </div>
                                 <div class="sheet-col">
-                                    <div class="sheet-battle-group-row" title="@{battlegroup-magnitude} & @{battlegroup-magnitude_max}&#013;&#010;Represent a BG 'health'.">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-magnitude} & @{battlegroup-magnitude_max}${TITLE_BR}Represent a BG 'health'.">
                                         <span>Magnitude</span>:
                                         <span>
                                             <input type="number" name="attr_battlegroup-magnitude" value="8"> |
@@ -648,7 +650,7 @@ outHtml += /*html*/`
                                             <input type="number" name="attr_battlegroup-size_max" value="1">
                                         </span>
                                     </div>
-                                    <div class="sheet-battle-group-row" title="@{battlegroup-health-levels}&#013;&#010;Represent the health levels of a single unit before transforming into a BG.">
+                                    <div class="sheet-battle-group-row" title="@{battlegroup-health-levels}${TITLE_BR}Represent the health levels of a single unit before transforming into a BG.">
                                         <span>Health Levels</span>:
                                         <span>
                                             <input type="number" name="attr_battlegroup-health-levels" value="7">
@@ -693,10 +695,10 @@ outHtml += /*html*/`
                             <div class="sheet-2colrow sheet-resize-to-mortal">
                                 <div class="sheet-col"><!-- 1.3.3.3.1 WILLPOWER & ESSENCE -->
                                     <h1><span>Willpower</span></h1>
-                                    <div style="padding: 0 6px 6px 6px;" title="@{willpower}&#013;&#010;Actual Willpower">
+                                    <div style="padding: 0 6px 6px 6px;" title="@{willpower}${TITLE_BR}Actual Willpower">
                                         <input type="number" name="attr_willpower" value="5" min="0" max="15" style="width: 100%;">
                                     </div>
-                                    <div style="padding-left: 6px" title="@{willpower_max}&#013;&#010;Max Willpower">
+                                    <div style="padding-left: 6px" title="@{willpower_max}${TITLE_BR}Max Willpower">
                                         <div class="sheet-dots-full">
                                             ${returnDotsRadio(44, `attr_willpower_max`, 5)}
                                         </div>
@@ -713,7 +715,7 @@ outHtml += /*html*/`
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
                                                 <input type="number" name="attr_personal-essence" readonly tabindex="-1" title="@{personal-essence}"> /
                                                 <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}"> C:
-                                                <input type="number" name="attr_committedessperso" title="@{committedessperso}&#013;&#010;Personal Commited" class="free-commit"><input type="number" name="attr_committedessperso" title="@{committedessperso}&#013;&#010;Personal Commited" class="commit-system" readonly tabindex="-1">
+                                                <input type="number" name="attr_committedessperso" title="@{committedessperso}${TITLE_BR}Personal Commited" class="free-commit"><input type="number" name="attr_committedessperso" title="@{committedessperso}${TITLE_BR}Personal Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
                                         </div>
                                         <div class="sheet-motes">
@@ -721,7 +723,7 @@ outHtml += /*html*/`
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
                                                 <input type="number" name="attr_peripheral-essence" readonly tabindex="-1" title="@{peripheral-essence}"> /
                                                 <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}"> C:
-                                                <input type="number" name="attr_committedesstotal" title="@{committedesstotal}&#013;&#010;Peripheral Commited" class="free-commit"><input type="number" name="attr_committedesstotal" title="@{committedesstotal}&#013;&#010;Peripheral Commited" class="commit-system" readonly tabindex="-1">
+                                                <input type="number" name="attr_committedesstotal" title="@{committedesstotal}${TITLE_BR}Peripheral Commited" class="free-commit"><input type="number" name="attr_committedesstotal" title="@{committedesstotal}${TITLE_BR}Peripheral Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
                                         </div>
                                     </div>
@@ -939,7 +941,7 @@ ${" ".repeat(padding)}        <div class="flex grow-normal">
 ${" ".repeat(padding)}            <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
 ${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught" class="onslaught-check">
 ${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-${" ".repeat(padding)}            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}&#013;&#010;Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
+${" ".repeat(padding)}            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}${TITLE_BR}Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col">
@@ -952,7 +954,7 @@ ${" ".repeat(padding)}            <span title="Unarmed Parry= (Dex + Brawl)/2">U
 ${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${" ".repeat(padding)}            <input type="hidden" class="onslaught-check" name="attr_onslaught">
 ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${" ".repeat(padding)}            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}&#013;&#010;Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}&#013;&#010;Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}${TITLE_BR}Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}${TITLE_BR}Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col">
@@ -965,7 +967,7 @@ ${" ".repeat(padding)}        <div class="flex">
 ${" ".repeat(padding)}            <span title="Dexterity + Dodge">Evasion</span>:
 ${" ".repeat(padding)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${" ".repeat(padding)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}&#013;&#010;Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}&#013;&#010;Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col def-exc">
@@ -974,23 +976,23 @@ ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col">
 ${" ".repeat(padding)}        <div class="flex">
 ${" ".repeat(padding)}            <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-${" ".repeat(padding)}            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}&#013;&#010;Represent the capacity to reduce withering damage.">
+${" ".repeat(padding)}            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}${TITLE_BR}Represent the capacity to reduce withering damage.">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}        <div class="flex">
 ${" ".repeat(padding)}            <span title="Wits + Integrity">Resolve</span>:
 ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${" ".repeat(padding)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}${TITLE_BR}Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}${TITLE_BR}Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col">
 ${" ".repeat(padding)}        <div class="flex">
 ${" ".repeat(padding)}            <span title="The minimum damage dice the enemy need to roll to do Decisive Damage to you (not substracted though)">Hardness</span>:
-${" ".repeat(padding)}            <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}&#013;&#010;Come from your armor">
+${" ".repeat(padding)}            <input type="number" readonly tabindex="-1" name="attr_hardness" title="@{hardness}${TITLE_BR}Come from your armor">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}        <div class="flex">
 ${" ".repeat(padding)}            <span title="Manipulation + Socialize">Guile</span>:
 ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}${TITLE_BR}Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}${TITLE_BR}Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
@@ -1043,7 +1045,7 @@ const costArray = {
     'Init':{name:'Init',titleBase:'Initiative Points'},
 };
 
-const getCostLine = (item, defaultWill, double = false) => /*html*/`<label>${item.name}:<input type="text" name="attr_rep-cost-${item.name.toLowerCase()}" class="sheet-cost-${item.name.toLowerCase()} grow-${double ? 'double' : 'normal'}" title="Cost as ${item.titleBase}&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations"${defaultWill ? ' value="?{Willpower ?|No,0|Yes,1}"' : ''}></label>`;
+const getCostLine = (item, defaultWill, double = false) => /*html*/`<label>${item.name}:<input type="text" name="attr_rep-cost-${item.name.toLowerCase()}" class="sheet-cost-${item.name.toLowerCase()} grow-${double ? 'double' : 'normal'}" title="Cost as ${item.titleBase}${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations"${defaultWill ? ' value="?{Willpower ?|No,0|Yes,1}"' : ''}></label>`;
 
 function getIndexCostRows(index, padding = 0, defaultWill = false) {
     return /*html*/`<p class="${costArray[index].name.toLowerCase()}-color-down rounded-box grow-${index === 'Mote' ? 'double' : 'normal'} flex${index === 'Mote' ? ' caste-have-exc-toggle' : ''}">
@@ -1378,7 +1380,7 @@ ${" ".repeat(padding)}        <p class="mote-color rounded-box grow-normal flex"
 ${" ".repeat(padding)}            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
 ${" ".repeat(padding)}        </p>
 ${" ".repeat(padding)}        <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
-${" ".repeat(padding)}            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}&#013;&#010;Personal Commited"></label>
+${" ".repeat(padding)}            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}${TITLE_BR}Personal Commited"></label>
 ${" ".repeat(padding)}        </p>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex grow-max peripheral-mote-toggle">
@@ -1386,14 +1388,14 @@ ${" ".repeat(padding)}        <p class="mote-color rounded-box grow-normal flex"
 ${" ".repeat(padding)}            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
 ${" ".repeat(padding)}        </p>
 ${" ".repeat(padding)}        <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
-${" ".repeat(padding)}            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}&#013;&#010;Peripheral Commited"></label>
+${" ".repeat(padding)}            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}${TITLE_BR}Peripheral Commited"></label>
 ${" ".repeat(padding)}        </p>
 ${" ".repeat(padding)}    </div>`;
     if (rollpenIncluded) ret += /*html*/`
 ${" ".repeat(padding)}    <div class="flex grow-normal rollpen-box">
 ${" ".repeat(padding)}        <p class="flex grow-normal rounded-box">
 ${" ".repeat(padding)}            RollPen:
-${" ".repeat(padding)}            <input id="rollpen-input-widget" type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
+${" ".repeat(padding)}            <input id="rollpen-input-widget" type="number" value="0" title="@{roll-penalty}${TITLE_BR}Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input grow-normal">
 ${" ".repeat(padding)}        </p>
 ${" ".repeat(padding)}    </div>`;
     ret += /*html*/`
@@ -2163,11 +2165,11 @@ outHtml += /*html*/`
                                                             </span>+
                                                         </div>
                                                         <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
-                                                            <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint mote-hint-one" title="Charm dices for the Roll&#013;&#010;Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
-                                                            <input type="number" name="attr_reprolls-ycharm-paid-dices" class="sheet-rolls-ycharm-dices grow-normal" title="Charm dices for the Roll&#013;&#010;Cost already paid" value="0" placeholder="0" min="0">+
+                                                            <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint mote-hint-one" title="Charm dices for the Roll${TITLE_BR}Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
+                                                            <input type="number" name="attr_reprolls-ycharm-paid-dices" class="sheet-rolls-ycharm-dices grow-normal" title="Charm dices for the Roll${TITLE_BR}Cost already paid" value="0" placeholder="0" min="0">+
                                                         </div>
                                                         <div class="inline-flex grow-normal">
-                                                            <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0">-
+                                                            <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll${TITLE_BR}Doesn't cost motes of Essence" value="0" placeholder="0">-
                                                             <label for="rollpen-input-widget"><span name="attr_roll-penalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." class="rollpenalty not-inverted"></span></label>-
                                                             <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty not-inverted" data-formula="@{wound-penalty}">
                                                         </div>
@@ -2191,11 +2193,11 @@ outHtml += /*html*/`
                                                         </select>+
                                                     </div>
                                                     <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
-                                                        <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
-                                                        <input type="number" name="attr_reprolls-ycharm-paid-successes" class="sheet-rolls-ycharm-successes grow-normal" title="Charm successes for the roll&#013;&#010;Cost already paid" value="0" placeholder="1" min="0">+
+                                                        <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint mote-hint-two inverted-color" title="Charm successes for the roll${TITLE_BR}Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
+                                                        <input type="number" name="attr_reprolls-ycharm-paid-successes" class="sheet-rolls-ycharm-successes grow-normal" title="Charm successes for the roll${TITLE_BR}Cost already paid" value="0" placeholder="1" min="0">+
                                                     </div>
                                                     <div class="inline-flex grow-normal">
-                                                        <input type="number" name="attr_reprolls-ncharm-successes" class="sheet-rolls-ncharm-successes grow-normal" title="Non Charm successes for the roll&#013;&#010;Doesn't cost motes of Essence" value="0" placeholder="0" min="0">
+                                                        <input type="number" name="attr_reprolls-ncharm-successes" class="sheet-rolls-ncharm-successes grow-normal" title="Non Charm successes for the roll${TITLE_BR}Doesn't cost motes of Essence" value="0" placeholder="0" min="0">
                                                     </div>
                                                 </div>
                                                 <div class="flex success-area-total">
@@ -2226,7 +2228,7 @@ ${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionNa
 ${" ".repeat(padding+4)}<hr />\n`;
     if (appendBeforeTotalFx)
         ret += `${" ".repeat(padding+4)}${appendBeforeTotalFx(padding)}\n`;
-    ret += /*html*/`${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap&#013;&#010;${totalTitleEnd}">\n`;
+    ret += /*html*/`${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}">\n`;
     ret += `${" ".repeat(padding)}</div>`;
     return ret;
 }
@@ -2292,7 +2294,7 @@ outHtml += /*html*/`
                                     <input type="hidden" name="attr_reprolls-toggle-desc" class="sheet-rolls-toggle-desc-val" value="0">
                                     <textarea name="attr_reprolls-desc" class="rolls-textarea"></textarea>
                                     <div class="flex roll-section show-on-edit">
-                                        <div class="header-section" title="Configurable Roll&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                        <div class="header-section" title="Configurable Roll${TITLE_BR}TOGGLE EDIT MODE ON CLICK">
                                             <div class="edit-toggle">
                                                 <input type="checkbox" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit" value="1">
                                                 <span title="Roll:"></span>
@@ -2310,14 +2312,14 @@ outHtml += /*html*/`
                                                 </div>
                                                 <div class="flex grow-max">
                                                     <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                                    <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
+                                                    <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
                                                     <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                                     <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                                 </div>
                                             </div>
                                             <div class="flex grow-normal">
                                                 <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                                <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                                <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
                                                 <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
                                                 <input type="hidden" name="attr_rep-cost-macro">
                                                 <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2328,7 +2330,7 @@ outHtml += /*html*/`
                                         </div>
                                     </div>
                                     <div class="flex roll-section hide-on-edit">
-                                        <div class="header-section" title="Configurable Roll&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                        <div class="header-section" title="Configurable Roll${TITLE_BR}TOGGLE EDIT MODE ON CLICK">
                                             <div class="edit-toggle">
                                                 <input type="checkbox" name="attr_reprolls-toggle-edit" class="sheet-rolls-toggle-edit" value="1">
                                                 <span title="Roll:"></span>
@@ -2372,14 +2374,14 @@ ${" ".repeat(padding)}    <div class="flex">
 ${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
 ${" ".repeat(padding)}        <div class="sheet-table-cell">
 ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${" ".repeat(padding)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}&#013;&#010;Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}&#013;&#010;Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}${TITLE_BR}Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}${TITLE_BR}Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex">
 ${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
 ${" ".repeat(padding)}        <div class="sheet-table-cell">
 ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}&#013;&#010;Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}&#013;&#010;Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}${TITLE_BR}Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}${TITLE_BR}Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>`;
     if (includeExc) {
@@ -2393,7 +2395,7 @@ ${" ".repeat(padding)}    <div class="flex">
 ${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
 ${" ".repeat(padding)}        <div class="sheet-table-cell">
 ${" ".repeat(padding)}            <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-${" ".repeat(padding)}            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}&#013;&#010;Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
+${" ".repeat(padding)}            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}${TITLE_BR}Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
@@ -2402,7 +2404,7 @@ ${" ".repeat(padding)}</div>`;
 
 function getSocialStatCol(padding = 0) {
     const getStatBlock = (attr, qcToggle = true) => /*html*/`<div class="sheet-table-row${qcToggle ?' qc-toggle-display' : ''}">
-${" ".repeat(padding)}            <div class="sheet-table-cell"><span>${attr}</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_${attr.toLowerCase()}" style="width: 27px ; margin-right: 3px" title="@{${attr.toLowerCase()}}&#013;&#010;${attr}" readonly tabindex="-1"></div>
+${" ".repeat(padding)}            <div class="sheet-table-cell"><span>${attr}</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_${attr.toLowerCase()}" style="width: 27px ; margin-right: 3px" title="@{${attr.toLowerCase()}}${TITLE_BR}${attr}" readonly tabindex="-1"></div>
 ${" ".repeat(padding)}        </div>`;
     return /*html*/`<div class="sheet-col stat-col">
 ${" ".repeat(padding)}    <input type="hidden" class="qc-panel-check" name="attr_qc">
@@ -2532,9 +2534,9 @@ ${" ".repeat(padding)}        <span class="sheet-spelleffect" title="Crippling:"
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="wound-pen"><!-- WOUND PEN -->
 ${" ".repeat(padding)}        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-${" ".repeat(padding)}        <input type="number" value="@{wound-penalty}" disabled="disabled" title="@{wound-penalty}&#013;&#010;Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+${" ".repeat(padding)}        <input type="number" value="@{wound-penalty}" disabled="disabled" title="@{wound-penalty}${TITLE_BR}Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
 ${" ".repeat(padding)}        <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
-${" ".repeat(padding)}        <input type="number" value="0" title="@{roll-penalty}&#013;&#010;Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
+${" ".repeat(padding)}        <input type="number" value="0" title="@{roll-penalty}${TITLE_BR}Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
 }
@@ -2558,7 +2560,7 @@ outHtml += /*html*/`
                     </div>
                     <div class="health-line flex sheet-bg-show"><!-- HEALTH BG -->
                         <div class="sheet-health-track grow-normal">
-                            <p class="flex grow-normal" title="@{battlegroup-magnitude} & @{battlegroup-magnitude_max}&#013;&#010;Represent a BG 'health'.">Magnitude:
+                            <p class="flex grow-normal" title="@{battlegroup-magnitude} & @{battlegroup-magnitude_max}${TITLE_BR}Represent a BG 'health'.">Magnitude:
                                 <input type="number" name="attr_battlegroup-magnitude" value="8" class="grow-normal">/
                                 <input type="number" name="attr_battlegroup-magnitude_max" readonly="readonly">
                             </p>
@@ -2610,7 +2612,7 @@ outHtml += /*html*/`
                                     </div>
                                     <div class="flex grow-max">
                                         <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                        <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="${defaultRoll20AddedDicePrompt}">-
+                                        <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="${defaultRoll20AddedDicePrompt}">-
                                         <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                         <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
                                     </div>
@@ -2618,7 +2620,7 @@ outHtml += /*html*/`
                                 <div class="init-section third-line grow-normal flex">
                                     <div class="flex grow-max">
                                         <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                        <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="${baseInit}${defaultRoll20AddedSuccPrompt}" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                        <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="${baseInit}${defaultRoll20AddedSuccPrompt}" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                                         <input type="hidden" name="attr_repinit-final-macro-replaced">
                                         <input type="hidden" name="attr_rep-cost-macro" value="${moteCostBase}${fullWpPrompt}">
                                         <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2652,13 +2654,13 @@ outHtml += /*html*/`
                                     </div>
                                     <div class="weapon-section grow-normal flex">
                                         <p class="accu-color rounded-box grow-normal flex">
-                                            <label>Acc:<input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk grow-normal" value="4" title="Accuracy of the Weapon used&#013;&#010;Used in Withering Attacks as is (refer to color)&#013;&#010;Use the withering attack bonus dice field for varying accuracy value"></label>
+                                            <label>Acc:<input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk grow-normal" value="4" title="Accuracy of the Weapon used${TITLE_BR}Used in Withering Attacks as is (refer to color)${TITLE_BR}Use the withering attack bonus dice field for varying accuracy value"></label>
                                         </p>
                                         <p class="dmg-color rounded-box grow-normal flex">
-                                            <label>Dmg:<input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg grow-normal" value="7" title="Damage of the Weapon used&#013;&#010;Used in Withering Damage as is (refer to color)&#013;&#010;Use the withering damage bonus dice field for varying damage value"></label>
+                                            <label>Dmg:<input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg grow-normal" value="7" title="Damage of the Weapon used${TITLE_BR}Used in Withering Damage as is (refer to color)${TITLE_BR}Use the withering damage bonus dice field for varying damage value"></label>
                                         </p>
                                         <p class="ovw-color rounded-box grow-normal flex">
-                                            <label>Ovw:<input type="number" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw grow-normal" value="1" title="Overwhelming of the Weapon used&#013;&#010;Used in Withering Damage to set the minimum dice to be rolled in any case&#013;&#010;Set before each attach if multiple Overwhelming values"></label>
+                                            <label>Ovw:<input type="number" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw grow-normal" value="1" title="Overwhelming of the Weapon used${TITLE_BR}Used in Withering Damage to set the minimum dice to be rolled in any case${TITLE_BR}Set before each attach if multiple Overwhelming values"></label>
                                         </p>
                                     </div>
                                 </div>
@@ -2666,7 +2668,7 @@ outHtml += /*html*/`
                             <input type="hidden" name="attr_combat-toggle-desc" class="sheet-combat-toggle-desc-val" value="0">
                             <textarea name="attr_repcombat-desc" class="combat-textarea"></textarea>
                             <div class="attack-section withering-section show-on-edit">
-                                <div class="header-section" title="An Attack vs An Opponent with mostly narrative damage but build momentum (Initiative)&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                <div class="header-section" title="An Attack vs An Opponent with mostly narrative damage but build momentum (Initiative)${TITLE_BR}TOGGLE EDIT MODE ON CLICK">
                                     <div class="edit-toggle">
                                         <input type="checkbox" name="attr_combat-toggle-edit" class="sheet-combat-toggle-edit" value="1">
                                         <span title="Withering:"></span>
@@ -2683,11 +2685,11 @@ outHtml += /*html*/`
                                                 <select name="attr_repcombat-watk-abi" title="Ability for the Roll" class="grow-normal">
                                                     ${getAbiOptions(52, true, ABI_BRAWL_ID)}
                                                 </select>+
-                                                <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
+                                                <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used${TITLE_BR}Auto Filled, edit the field above">
                                             </div>
                                             <div class="flex grow-max">
-                                                <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability&#013;&#010;(Special for Archery & Thrown)">+</button>
-                                                <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
+                                                <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability${TITLE_BR}(Special for Archery & Thrown)">+</button>
+                                                <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
                                                 <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}"></p>
                                                 -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
@@ -2695,7 +2697,7 @@ outHtml += /*html*/`
                                         </div>
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-watk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                            <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                            <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
                                             <input type="hidden" name="attr_repcombat-watk-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro">
                                             <input type="text" name="attr_repcombat-watk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2707,20 +2709,20 @@ outHtml += /*html*/`
                                     <div class="dmg-section flex-wrap">
                                         <div class="flex grow-normal">
                                             <div class="flex grow-normal">
-                                                <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
+                                                <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent${TITLE_BR}Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
                                                 (<select name="attr_repcombat-wdmg-attr" title="Attribute for the Roll" class="grow-normal">
                                                     ${getAttrOptions(52, true, ATTR_STR_ID)}
                                                 </select>+
-                                                <input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg dark-dmg-color" readonly="readonly" title="Damage of the Weapon used&#013;&#010;Auto Filled, edit the field above">+
+                                                <input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg dark-dmg-color" readonly="readonly" title="Damage of the Weapon used${TITLE_BR}Auto Filled, edit the field above">+
                                             </div>
                                             <div class="flex grow-max">
-                                                <input type="text" name="attr_repcombat-wdmg-bonus-dices" class="sheet-wdmg-bonus-dices grow-normal" title="Bonus dices for the Roll (Threshold & Soak already included)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">
+                                                <input type="text" name="attr_repcombat-wdmg-bonus-dices" class="sheet-wdmg-bonus-dices grow-normal" title="Bonus dices for the Roll (Threshold & Soak already included)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">
                                                 <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-dmg-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-dmg-boost}"></p>d)
                                             </div>
                                         </div>
                                         <div class="flex grow-normal">
                                             +
-                                            <input type="text" name="attr_repcombat-wdmg-bonus-successes" class="sheet-wdmg-bonus-successes grow-double" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                            <input type="text" name="attr_repcombat-wdmg-bonus-successes" class="sheet-wdmg-bonus-successes grow-double" title="Bonus successes for the roll${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
                                             <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced">
                                             <input type="hidden" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw">
                                             <input type="text" name="attr_repcombat-wdmg-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2732,7 +2734,7 @@ outHtml += /*html*/`
                                 </div>
                             </div>
                             <div class="attack-section decisive-section show-on-edit">
-                                <div class="header-section" title="An Attack vs An Opponent with real damage based on built momentum (Initiative)&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                <div class="header-section" title="An Attack vs An Opponent with real damage based on built momentum (Initiative)${TITLE_BR}TOGGLE EDIT MODE ON CLICK">
                                     <div class="edit-toggle">
                                         <input type="checkbox" name="attr_combat-toggle-edit" class="sheet-combat-toggle-edit" value="1">
                                         <span title="Decisive:"></span>
@@ -2752,7 +2754,7 @@ outHtml += /*html*/`
                                             </div>
                                             <div class="flex grow-max">
                                                 <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
-                                                <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
+                                                <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
                                                 <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}"></p>
                                                 -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
                                                 <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
@@ -2760,7 +2762,7 @@ outHtml += /*html*/`
                                         </div>
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-datk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                            <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                            <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
                                             <input type="hidden" name="attr_repcombat-datk-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro">
                                             <input type="text" name="attr_repcombat-datk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2771,20 +2773,20 @@ outHtml += /*html*/`
                                     </div>
                                     <div class="dmg-section flex-wrap">
                                         <div class="flex grow-normal">
-                                            <button type="action" name="act_default-macro-datk-set-name" class="head stealth-btn" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)&#013;&#010;By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule&#013;&#010;CLICK to set default token name as character sheet name">DMG</button>
-                                            (<input type="text" name="attr_repcombat-ddmg-dices" class="sheet-ddmg-bonus-dices grow-normal" value="@{tracker|YOUR_TOKEN_NAME_HERE}" title="Number of dice to be rolled&#013;&#010;Already included a macro that target a token initiative value&#013;&#010;You only need to copy paste the exact token name instead of the placeholder&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">d)
+                                            <button type="action" name="act_default-macro-datk-set-name" class="head stealth-btn" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)${TITLE_BR}By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule${TITLE_BR}CLICK to set default token name as character sheet name">DMG</button>
+                                            (<input type="text" name="attr_repcombat-ddmg-dices" class="sheet-ddmg-bonus-dices grow-normal" value="@{tracker|YOUR_TOKEN_NAME_HERE}" title="Number of dice to be rolled${TITLE_BR}Already included a macro that target a token initiative value${TITLE_BR}You only need to copy paste the exact token name instead of the placeholder${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">d)
                                         </div>
                                         <div class="flex-wrap grow-normal">
                                             <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced">
                                             <div class="flex grow-normal">
                                                 +
-                                                <input type="text" name="attr_repcombat-ddmg-bonus-successes" class="sheet-ddmg-bonus-successes grow-normal" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
-                                                <input type="text" name="attr_repcombat-ddmg-final-macro-options" class="sheet-init-macro-options grow-normal" value="-D" title="Macro options for the Roll. Type '!exr -help' in chat to learn more&#013;&#010;Default macro included is no 10 doubled as it's the default rule used for Decisive">
+                                                <input type="text" name="attr_repcombat-ddmg-bonus-successes" class="sheet-ddmg-bonus-successes grow-normal" title="Bonus successes for the roll${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
+                                                <input type="text" name="attr_repcombat-ddmg-final-macro-options" class="sheet-init-macro-options grow-normal" value="-D" title="Macro options for the Roll. Type '!exr -help' in chat to learn more${TITLE_BR}Default macro included is no 10 doubled as it's the default rule used for Decisive">
                                             </div>
                                             <div class="flex grow-normal">
                                                 <input type="hidden" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset-val" value="">
                                                 <p class="dark-init-color rounded-box flex grow-normal">
-                                                    <label title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">RESET INIT TO:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
+                                                    <label title="Fill this field to reset your initiative, leave blank to not reset${TITLE_BR}Gambits use this blank for example${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">RESET INIT TO:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
                                                 </p>
                                                 <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced">
                                                 <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
@@ -2800,7 +2802,7 @@ outHtml += /*html*/`
                             </div>
                             <div class="flex-wrap">
                                 <div class="attack-section withering-section hide-on-edit grow-normal">
-                                    <div class="header-section" title="An Attack vs An Opponent with mostly narrative damage but build momentum (Initiative)&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                    <div class="header-section" title="An Attack vs An Opponent with mostly narrative damage but build momentum (Initiative)${TITLE_BR}TOGGLE EDIT MODE ON CLICK">
                                         <div class="edit-toggle">
                                             <input type="checkbox" name="attr_combat-toggle-edit" class="sheet-combat-toggle-edit" value="1">
                                             <span title="Withering:"></span>
@@ -2816,7 +2818,7 @@ outHtml += /*html*/`
                                             </div>
                                         </div>
                                         <div class="dmg-section flex">
-                                            <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
+                                            <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent${TITLE_BR}Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
                                             <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-wdmg', '', `!exr ${getFinalMacroName('repcombat-wdmg')} -NB`)}
@@ -2825,7 +2827,7 @@ outHtml += /*html*/`
                                     </div>
                                 </div>
                                 <div class="attack-section decisive-section hide-on-edit grow-max">
-                                    <div class="header-section" title="An Attack vs An Opponent with real damage based on built momentum (Initiative)&#013;&#010;TOGGLE EDIT MODE ON CLICK">
+                                    <div class="header-section" title="An Attack vs An Opponent with real damage based on built momentum (Initiative)${TITLE_BR}TOGGLE EDIT MODE ON CLICK">
                                         <div class="edit-toggle">
                                             <input type="checkbox" name="attr_combat-toggle-edit" class="sheet-combat-toggle-edit" value="1">
                                             <span title="Decisive:"></span>
@@ -2841,11 +2843,11 @@ outHtml += /*html*/`
                                             </div>
                                         </div>
                                         <div class="dmg-section flex grow-normal">
-                                            <p class="head" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)&#013;&#010;By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule">DMG</p>
+                                            <p class="head" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)${TITLE_BR}By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule">DMG</p>
                                             <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced">
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset-val" value="">
                                             <p class="dark-init-color rounded-box flex grow-normal">
-                                                <label title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">R.INIT:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
+                                                <label title="Fill this field to reset your initiative, leave blank to not reset${TITLE_BR}Gambits use this blank for example${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">R.INIT:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
                                             </p>
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
