@@ -2213,57 +2213,43 @@ outHtml += /*html*/`
                                                     ${generateDirectRollAndInteractiveRollButtons(52, 'roll-widget', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>`;
+
+function getExcellencyCap(padding, sectionName, totalExpr, totalTitleEnd, appendTopFx, appendBeforeTotalFx) {
+    let ret = `<div class="${sectionName}-type-excellency">\n`;
+    ret += `${" ".repeat(padding+4)}<img class="caste-img">\n`;
+    ret += `${" ".repeat(padding+4)}CAP\n`;
+    if (appendTopFx)
+        ret += `${" ".repeat(padding+4)}${appendTopFx(padding)}\n`;
+    ret += /*html*/`${" ".repeat(padding+4)}<input type="hidden" name="attr_sign" value="(@{reprolls-exc-${sectionName}-total-calc} - @{reprolls-exc-${sectionName}-sum-calc})" disabled>
+${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+${" ".repeat(padding+4)}<hr />\n`;
+    if (appendBeforeTotalFx)
+        ret += `${" ".repeat(padding+4)}${appendBeforeTotalFx(padding)}\n`;
+    ret += /*html*/`${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="(${totalExpr})" disabled title="Total limit of Excellency Cap&#013;&#010;${totalTitleEnd}">\n`;
+    ret += `${" ".repeat(padding)}</div>`;
+    return ret;
+}
+
+const getLunarTop = (padding) => /*html*/`<select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint">
+${" ".repeat(padding+8)}${returnOptions(padding+8, [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0)}
+${" ".repeat(padding+4)}</select>`;
+
+const getLiminalTop = (padding) => /*html*/`<div class="anima-flare-box-mode liminal-hint">
+${" ".repeat(padding+8)}<input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
+${" ".repeat(padding+8)}<span class="sheet-spelleffect" title="Toggle"></span>
+${" ".repeat(padding+4)}</div>`;
+
+const getSiderealEnd = () => /*html*/`<input type="hidden" name="attr_reprolls-exc-sidereal-total-calc-max" value="(((@{essence} + 3) + abs(@{essence} - 3)) / 2)" disabled>`;
+
+outHtml += /*html*/`
                                         <div class="excellency-cap-section" title="Limit Detail for the Excellency">
                                             <input type="hidden" name="attr_reprolls-caste" class="sheet-rolls-caste-val" disabled value="@{caste}">
-                                            <div class="solar-type-excellency">
-                                                <img class="caste-img">
-                                                CAP
-                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-solar-total-calc} - @{reprolls-exc-solar-sum-calc})" disabled>
-                                                <input type="number" name="attr_reprolls-exc-solar-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
-                                                <hr />
-                                                <input type="number" name="attr_reprolls-exc-solar-total-calc" class="exc-total" value="(@{reprolls-attr}+@{reprolls-abi})" disabled title="Total limit of Excellency Cap&#013;&#010;Solar=>ATTR+ABI">
-                                            </div>
-                                            <div class="lunar-type-excellency">
-                                                <img class="caste-img">
-                                                CAP
-                                                <select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint">
-                                                    ${returnOptions(52, [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0)}
-                                                </select>
-                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-lunar-total-calc} - @{reprolls-exc-lunar-sum-calc})" disabled>
-                                                <input type="number" name="attr_reprolls-exc-lunar-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
-                                                <hr />
-                                                <input type="number" name="attr_reprolls-exc-lunar-total-calc" class="exc-total" value="(@{reprolls-attr}+@{reprolls-attr-lunar-exc})" disabled title="Total limit of Excellency Cap&#013;&#010;Lunar=>ATTR, +ATTR2 if Stunted accordingly">
-                                            </div>
-                                            <div class="db-type-excellency">
-                                                <img class="caste-img">
-                                                CAP
-                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-db-total-calc} - @{reprolls-exc-db-sum-calc})" disabled>
-                                                <input type="number" name="attr_reprolls-exc-db-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
-                                                <hr />
-                                                <input type="number" name="attr_reprolls-exc-db-total-calc" class="exc-total" value="(@{reprolls-abi}+@{reprolls-specialty})" disabled title="Total limit of Excellency Cap&#013;&#010;DB=>ABI+SPE">
-                                            </div>
-                                            <div class="liminal-type-excellency">
-                                                <img class="caste-img">
-                                                CAP
-                                                <div class="anima-flare-box-mode liminal-hint">
-                                                    <input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
-                                                    <span class="sheet-spelleffect" title="Toggle"></span>
-                                                </div>
-                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-liminal-total-calc} - @{reprolls-exc-liminal-sum-calc})" disabled>
-                                                <input type="number" name="attr_reprolls-exc-liminal-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
-                                                <hr />
-                                                <input type="number" name="attr_reprolls-exc-liminal-total-calc" class="exc-total" value="(@{reprolls-abi}+@{reprolls-anima-flare})" disabled title="Total limit of Excellency Cap&#013;&#010;Liminal=>ABI, +ESSENCE if Anima Flare">
-                                            </div>
-                                            <div class="sidereal-type-excellency">
-                                                <img class="caste-img">
-                                                CAP
-                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-sidereal-total-calc} - @{reprolls-exc-sidereal-sum-calc})" disabled>
-                                                <input type="number" name="attr_reprolls-exc-sidereal-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
-                                                <hr />
-                                                <input type="hidden" name="attr_reprolls-exc-sidereal-total-calc-max" value="(((@{essence} + 3) + abs(@{essence} - 3)) / 2)" disabled>
-                                                <input type="number" name="attr_reprolls-exc-sidereal-total-calc" class="exc-total" value="(((@{reprolls-exc-sidereal-total-calc-max} + 5) - abs(@{reprolls-exc-sidereal-total-calc-max} - 5)) / 2)" disabled title="Total limit of Excellency Cap&#013;&#010;Sidereal=> Based on ESSENCE, min 3, max 5">
-                                            </div>
+                                            ${getExcellencyCap(44, 'solar', '@{reprolls-attr}+@{reprolls-abi}', 'Solar=>ATTR+ABI')}
+                                            ${getExcellencyCap(44, 'lunar', '@{reprolls-attr}+@{reprolls-attr-lunar-exc}', 'Lunar=>ATTR, +ATTR2 if Stunted accordingly', getLunarTop)}
+                                            ${getExcellencyCap(44, 'db', '@{reprolls-abi}+@{reprolls-specialty}', 'DB=>ABI+SPE')}
+                                            ${getExcellencyCap(44, 'liminal', '@{reprolls-abi}+@{reprolls-anima-flare}', 'Liminal=>ABI, +ESSENCE if Anima Flare', getLiminalTop)}
+                                            ${getExcellencyCap(44, 'sidereal', '((@{reprolls-exc-sidereal-total-calc-max} + 5) - abs(@{reprolls-exc-sidereal-total-calc-max} - 5)) / 2', 'Sidereal=> Based on ESSENCE, min 3, max 5', undefined, getSiderealEnd)}
                                         </div>
                                     </div>
                                 </div>
