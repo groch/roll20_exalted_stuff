@@ -2022,6 +2022,49 @@ ${" ".repeat(padding)}</div>`;
     return ret;
 }
 
+const ATTR_STR_ID = 0, ATTR_DEX_ID = 1, ATTR_WITS_ID = 8, ABI_AWARENESS_ID = 2, ABI_BRAWL_ID = 3;
+function getAttrOptions(padding, includePrompts = false, selected = -1, rawCount = includePrompts ? 11 : 21) {
+    let ret =`${returnOptions(padding, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}\n${" ".repeat(padding)}`;
+    if (includePrompts)
+        ret +=  /*html*/`<option disabled>-------ATTRIBUTES PROMPTS------</option>
+${" ".repeat(padding)}<option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
+${" ".repeat(padding)}<option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
+${" ".repeat(padding)}<option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
+${" ".repeat(padding)}<option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
+${" ".repeat(padding)}<option value="?{Custom Attribute}[Custom]">Simple Prompt</option>\n${" ".repeat(padding)}`;
+    ret += /*html*/`<option disabled>-------RAW------</option>
+${" ".repeat(padding)}${returnOptions(padding, [...Array(rawCount).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}`;
+    return ret;
+}
+
+function getAbiOptions(padding, includePrompts = false, selected = -1, rawCount = includePrompts ? 11 : 21) {
+    let ret =`${returnOptions(padding, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}\n${" ".repeat(padding)}`;
+    if (includePrompts) {
+        ret += /*html*/`<option disabled>-------ABILITIES PROMPTS------</option>
+${" ".repeat(padding)}<option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
+${" ".repeat(padding)}<option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
+${" ".repeat(padding)}<option value="${buildAbilityPrompt(padding)}">Full Ability Prompt</option>
+${" ".repeat(padding)}<option value="?{Custom Ability}">Simple Prompt</option>\n${" ".repeat(padding)}`;
+    } else {
+        ret += /*html*/`<option disabled>------CRAFTS-----</option>
+${" ".repeat(padding)}${returnOptions(padding, Object.entries(craftAbilities.subSections).map(([k,v]) => ({val: `@{${v}}[${k}]`, label: k})), -1)}
+${" ".repeat(padding)}<option disabled>-------M-A------</option>
+${" ".repeat(padding)}${returnOptions(padding, Object.entries(maAbilities.subSections).map(([k,v]) => ({val: `@{${v}}[${k}]`, label: k})), -1)}\n${" ".repeat(padding)}`;
+    }
+    ret += /*html*/`<option disabled>-------ATTRIBUTES------</option>
+${" ".repeat(padding)}${returnOptions(padding, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}\n${" ".repeat(padding)}`;
+    if (includePrompts) {
+    ret += /*html*/`<option disabled>-------ATTRIBUTES PROMPTS------</option>
+${" ".repeat(padding)}<option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
+${" ".repeat(padding)}<option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
+${" ".repeat(padding)}<option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
+${" ".repeat(padding)}<option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>\n${" ".repeat(padding)}`;
+    }
+    ret += /*html*/`<option disabled>-------RAW------</option>
+${" ".repeat(padding)}${returnOptions(padding, [...Array(rawCount).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}`;
+    return ret;
+}
+
 outHtml += /*html*/`
             <div class="sheet-body sheet-tab-content sheet-tab-rolls-sheet">
                 <h1><span>Rolls</span></h1>
@@ -2094,20 +2137,10 @@ outHtml += /*html*/`
                                                 <div class="flex flex-wrap grow-normal dice-area-details">
                                                     <div class="flex grow-normal basis-100">
                                                         <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal solar-hint lunar-hint">
-                                                            ${returnOptions(60, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                            <option disabled>-------RAW------</option>
-                                                            ${returnOptions(60, [...Array(21).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                            ${getAttrOptions(60)}
                                                         </select>+
                                                         <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal solar-hint db-hint liminal-hint">
-                                                            ${returnOptions(60, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                            <option disabled>------CRAFTS-----</option>
-                                                            ${returnOptions(60, Object.entries(craftAbilities.subSections).map(([k,v]) => ({val: `@{${v}}[${k}]`, label: k})), -1)}
-                                                            <option disabled>-------M-A------</option>
-                                                            ${returnOptions(60, Object.entries(maAbilities.subSections).map(([k,v]) => ({val: `@{${v}}[${k}]`, label: k})), -1)}
-                                                            <option disabled>----ATTRIBUTES---</option>
-                                                            ${returnOptions(60, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                            <option disabled>-------RAW------</option>
-                                                            ${returnOptions(60, [...Array(21).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                            ${getAbiOptions(60)}
                                                         </select>+
                                                     </div>
                                                     <div class="flex grow-normal basis-100">
@@ -2279,32 +2312,10 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <div class="flex grow-normal">
                                                     (<select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal">
-                                                        ${returnOptions(56, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                        <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                        <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                        <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                        <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                        <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
-                                                        <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
-                                                        <option disabled>-------RAW------</option>
-                                                        ${returnOptions(56, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                        ${getAttrOptions(56, true)}
                                                     </select>+
                                                     <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal">
-                                                        ${returnOptions(56, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                        <option disabled>-------ABILITIES PROMPTS------</option>
-                                                        <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                                        <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
-                                                        <option value="${buildAbilityPrompt(56)}">Full Ability Prompt</option>
-                                                        <option value="?{Custom Ability}">Simple Prompt</option>
-                                                        <option disabled>----ATTRIBUTES---</option>
-                                                        ${returnOptions(56, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                        <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                        <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                        <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                        <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                        <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
-                                                        <option disabled>-------RAW------</option>
-                                                        ${returnOptions(56, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                        ${getAbiOptions(56, true)}
                                                     </select>
                                                 </div>
                                                 <div class="flex grow-max">
@@ -2615,32 +2626,10 @@ outHtml += /*html*/`
                                 <div class="init-section second-line grow-normal flex">
                                     <div class="flex grow-normal">
                                         (<select name="attr_repinit-attr" title="Attribute for the Roll" class="grow-normal">
-                                            ${returnOptions(44, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 8)}
-                                            <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                            <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                            <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                            <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                            <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
-                                            <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
-                                            <option disabled>-------RAW------</option>
-                                            ${returnOptions(44, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                            ${getAttrOptions(44, true, ATTR_WITS_ID)}
                                         </select>+
                                         <select name="attr_repinit-abi" title="Ability for the Roll" class="grow-normal">
-                                            ${returnOptions(44, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 2)}
-                                            <option disabled>-------ABILITIES PROMPTS------</option>
-                                            <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                            <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
-                                            <option value="${buildAbilityPrompt(44)}">Full Ability Prompt</option>
-                                            <option value="?{Custom Ability}">Simple Prompt</option>
-                                            <option disabled>----ATTRIBUTES---</option>
-                                            ${returnOptions(44, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                            <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                            <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                            <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                            <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                            <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
-                                            <option disabled>-------RAW------</option>
-                                            ${returnOptions(44, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                            ${getAbiOptions(44, true, ABI_AWARENESS_ID)}
                                         </select>
                                     </div>
                                     <div class="flex grow-max">
@@ -2720,32 +2709,10 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <p class="head" title="Trying to Hit an opponent with mostly narrative damage but build momentum (Initiative)">ATK</p>
                                                 (<select name="attr_repcombat-watk-attr" title="Attribute for the Roll" class="grow-normal">
-                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 1)}
-                                                    <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                    <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                    <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                    <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                    <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
-                                                    <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
-                                                    <option disabled>-------RAW------</option>
-                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                    ${getAttrOptions(52, true, ATTR_DEX_ID)}
                                                 </select>+
                                                 <select name="attr_repcombat-watk-abi" title="Ability for the Roll" class="grow-normal">
-                                                    ${returnOptions(52, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 3)}
-                                                    <option disabled>-------ABILITIES PROMPTS------</option>
-                                                    <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
-                                                    <option value="${buildAbilityPrompt(52)}">Full Ability Prompt</option>
-                                                    <option value="?{Custom Ability}">Simple Prompt</option>
-                                                    <option disabled>----ATTRIBUTES---</option>
-                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                    <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                    <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                    <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                    <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                    <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
-                                                    <option disabled>-------RAW------</option>
-                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                    ${getAbiOptions(52, true, ABI_BRAWL_ID)}
                                                 </select>+
                                                 <input type="number" name="attr_repcombat-weap-atk" class="sheet-weap-atk accu-color" readonly="readonly" title="Accuracy of the Weapon used&#013;&#010;Auto Filled, edit the field above">
                                             </div>
@@ -2780,15 +2747,7 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
                                                 (<select name="attr_repcombat-wdmg-attr" title="Attribute for the Roll" class="grow-normal">
-                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})))}
-                                                    <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                    <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                    <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                    <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                    <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
-                                                    <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
-                                                    <option disabled>-------RAW------</option>
-                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                    ${getAttrOptions(52, true, ATTR_STR_ID)}
                                                 </select>+
                                                 <input type="number" name="attr_repcombat-weap-dmg" class="sheet-weap-dmg dark-dmg-color" readonly="readonly" title="Damage of the Weapon used&#013;&#010;Auto Filled, edit the field above">+
                                             </div>
@@ -2830,32 +2789,10 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal">
                                                 <p class="head" title="Trying to Hit an opponent with real damage based on built momentum (Initiative)">ATK</p>
                                                 (<select name="attr_repcombat-datk-attr" title="Attribute for the Roll" class="grow-normal">
-                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 1)}
-                                                    <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                    <option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                    <option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                    <option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                    <option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
-                                                    <option value="?{Custom Attribute}[Custom]">Simple Prompt</option>
-                                                    <option disabled>-------RAW------</option>
-                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                    ${getAttrOptions(52, true, ATTR_DEX_ID)}
                                                 </select>+
                                                 <select name="attr_repcombat-datk-abi" title="Ability for the Roll" class="grow-normal">
-                                                    ${returnOptions(52, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), 3)}
-                                                    <option disabled>-------ABILITIES PROMPTS------</option>
-                                                    <option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other]}">Craft Prompt</option>
-                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other]}">Martial Arts Prompt</option>
-                                                    <option value="${buildAbilityPrompt(52)}">Full Ability Prompt</option>
-                                                    <option value="?{Custom Ability}">Simple Prompt</option>
-                                                    <option disabled>----ATTRIBUTES---</option>
-                                                    ${returnOptions(52, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}
-                                                    <option disabled>-------ATTRIBUTES PROMPTS------</option>
-                                                    <option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-                                                    <option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-                                                    <option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-                                                    <option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>
-                                                    <option disabled>-------RAW------</option>
-                                                    ${returnOptions(52, [...Array(11).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}
+                                                    ${getAbiOptions(52, true, ABI_BRAWL_ID)}
                                                 </select>
                                             </div>
                                             <div class="flex grow-max">
