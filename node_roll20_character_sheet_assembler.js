@@ -2226,7 +2226,7 @@ ${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionNa
 ${" ".repeat(padding+4)}<hr />\n`;
     if (appendBeforeTotalFx)
         ret += `${" ".repeat(padding+4)}${appendBeforeTotalFx(padding)}\n`;
-    ret += /*html*/`${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="(${totalExpr})" disabled title="Total limit of Excellency Cap&#013;&#010;${totalTitleEnd}">\n`;
+    ret += /*html*/`${" ".repeat(padding+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap&#013;&#010;${totalTitleEnd}">\n`;
     ret += `${" ".repeat(padding)}</div>`;
     return ret;
 }
@@ -2240,16 +2240,19 @@ ${" ".repeat(padding+8)}<input type="checkbox" name="attr_reprolls-anima-flare" 
 ${" ".repeat(padding+8)}<span class="sheet-spelleffect" title="Toggle"></span>
 ${" ".repeat(padding+4)}</div>`;
 
-const getSiderealEnd = () => /*html*/`<input type="hidden" name="attr_reprolls-exc-sidereal-total-calc-max" value="(((@{essence} + 3) + abs(@{essence} - 3)) / 2)" disabled>`;
+const getAutoCalcMax = (a, b) => `(((${a} + ${b}) + abs(${a} - ${b})) / 2)`;
+const getAutoCalcMin = (a, b) => `(((${a} + ${b}) - abs(${a} - ${b})) / 2)`;
+
+const getSiderealEnd = () => /*html*/`<input type="hidden" name="attr_reprolls-exc-sidereal-total-calc-max" value="${getAutoCalcMax('@{essence}', 3)}" disabled>`;
 
 outHtml += /*html*/`
                                         <div class="excellency-cap-section" title="Limit Detail for the Excellency">
                                             <input type="hidden" name="attr_reprolls-caste" class="sheet-rolls-caste-val" disabled value="@{caste}">
-                                            ${getExcellencyCap(44, 'solar', '@{reprolls-attr}+@{reprolls-abi}', 'Solar=>ATTR+ABI')}
-                                            ${getExcellencyCap(44, 'lunar', '@{reprolls-attr}+@{reprolls-attr-lunar-exc}', 'Lunar=>ATTR, +ATTR2 if Stunted accordingly', getLunarTop)}
-                                            ${getExcellencyCap(44, 'db', '@{reprolls-abi}+@{reprolls-specialty}', 'DB=>ABI+SPE')}
-                                            ${getExcellencyCap(44, 'liminal', '@{reprolls-abi}+@{reprolls-anima-flare}', 'Liminal=>ABI, +ESSENCE if Anima Flare', getLiminalTop)}
-                                            ${getExcellencyCap(44, 'sidereal', '((@{reprolls-exc-sidereal-total-calc-max} + 5) - abs(@{reprolls-exc-sidereal-total-calc-max} - 5)) / 2', 'Sidereal=> Based on ESSENCE, min 3, max 5', undefined, getSiderealEnd)}
+                                            ${getExcellencyCap(44, 'solar', '(@{reprolls-attr}+@{reprolls-abi})', 'Solar=>ATTR+ABI')}
+                                            ${getExcellencyCap(44, 'lunar', '(@{reprolls-attr}+@{reprolls-attr-lunar-exc})', 'Lunar=>ATTR, +ATTR2 if Stunted accordingly', getLunarTop)}
+                                            ${getExcellencyCap(44, 'db', '(@{reprolls-abi}+@{reprolls-specialty})', 'DB=>ABI+SPE')}
+                                            ${getExcellencyCap(44, 'liminal', '(@{reprolls-abi}+@{reprolls-anima-flare})', 'Liminal=>ABI, +ESSENCE if Anima Flare', getLiminalTop)}
+                                            ${getExcellencyCap(44, 'sidereal', `${getAutoCalcMin('@{reprolls-exc-sidereal-total-calc-max}', 5)}`, 'Sidereal=> Based on ESSENCE, min 3, max 5', undefined, getSiderealEnd)}
                                         </div>
                                     </div>
                                 </div>
