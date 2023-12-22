@@ -9294,8 +9294,14 @@
                                                 </p>
                                                 <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                                 <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
+                                                    <div class="interactive-roll">
+                                                        <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
+                                                        <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
+                                                    </div>
+                                                    <div class="companion-roll">
+                                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
+                                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
+                                                    </div>
                                                 </div>
                                                 <div class="sheet-grouped-buttons end noreset-init" title="Do not Reset Initiative (Gambits Usually)">
                                                     <div class="interactive-roll">

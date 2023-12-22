@@ -486,20 +486,21 @@ function getAllMoteCost(diceEx, succEx) {
     return `${(diceEx || succEx) ? moteCostPromptBase : ''}${getMoteCostToSet(diceEx, succEx)}`;
 }
 
-function getExRoll(diceEx, succEx, gm = false, padding = 36) {
+function getExRoll(diceEx, succEx, gm, padding) {
     let retStr = `!exr (${buildBigExRollPromptDiceBase(padding)}${diceEx ? ` ${diceExAddedPrompt}` : ''}${bigExRollPromptDiceEnd})#`;
     retStr += `${bigExRollPromptSuccBase}${succEx ? succExAddedPrompt : ''}${bigExRollPromptSuccEnd}${gm ? ' -gm' : ''}`;
     retStr += `\\n!exr ${moteCostBase}${getAllMoteCost(diceEx, succEx)}${fullWpPrompt}`;
     return retStr;
 }
 
-function getQCRoll(diceEx, succEx, gm = false) {
+function getQCRoll(diceEx, succEx, gm) {
     let retStr = `!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${diceEx ? ` ${diceExAddedPrompt}` : ''}${bigExRollPromptDiceEnd})#`;
     retStr += `${bigExRollPromptSuccBase}${succEx ? succExAddedPrompt : ''}${bigExRollPromptSuccEnd}${gm ? ' -gm' : ''}`;
     retStr += `\\n!exr ${moteCostBase}${getAllMoteCost(diceEx, succEx)}${fullWpPrompt}`;
     return retStr;
 }
 
+const getDefaultRollButton = (buttonLabel, type, addedClass, name, value) => /*html*/`<button type="${type}" class="sheet-roll btn ui-draggable ${addedClass}" name="${name}" value="${value}">${buttonLabel}</button>`;
 function getExRolls(qc = false, padding = 28) {
     const bonusDiceStr = '+DiceExcellency', bonusSuccStr = '+SuccessExcellency';
     const getTitle = (diceEx, succEx) => `Generic Roll with prompts for ${qc ? 'Pool' : 'Attribute+Ability'}+BonusDices${diceEx ? bonusDiceStr : ''} and BonusSucces${succEx ? bonusSuccStr : ''}, and finally an optionnal Custom Macro`;
@@ -512,8 +513,8 @@ function getExRolls(qc = false, padding = 28) {
         retStr += `<div class="sheet-exroll exroll-${classArray[i]}">\n`;
         retStr += `${" ".repeat(padding+4)}<div class="header-section" title="${getTitle(diceEx, succEx)}">ExRoll</div>\n`;
         retStr += `${" ".repeat(padding+4)}<div class="sheet-grouped-buttons end" title="Cast Generic Roll">\n`;
-        retStr += `${" ".repeat(padding+8)}<button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="${finalName(i)}" value="${fx(diceEx, succEx, false, padding+8)}">Cast</button>\n`;
-        retStr += `${" ".repeat(padding+8)}<button type="roll" class="sheet-roll btn ui-draggable gm-whisper" name="${finalName(i, true)}" value="${fx(diceEx, succEx, true, padding+8)}">to GM</button>\n`;
+        retStr += `${" ".repeat(padding+8)}${getDefaultRollButton('Cast', 'roll', 'default-whisper', finalName(i), fx(diceEx, succEx, false, padding+8))}\n`;
+        retStr += `${" ".repeat(padding+8)}${getDefaultRollButton('to GM', 'roll', 'gm-whisper', finalName(i, true), fx(diceEx, succEx, true, padding+8))}\n`;
         retStr += `${" ".repeat(padding+4)}</div>\n`;
         retStr += `${" ".repeat(padding)}</div>`;
         if (i < 3) retStr += `\n${" ".repeat(padding)}`;
@@ -2058,6 +2059,20 @@ ${" ".repeat(padding)}${returnOptions(padding, [...Array(rawCount).keys()].map(i
     return ret;
 }
 
+const getFinalMacroName = (name) => `@{${name}-final-macro-replaced}`;
+function generateDirectRollAndInteractiveRollButtons(padding, startName, endName, rollStr, endStr) {
+    const replaceEndStr = (gmTest) => `${endStr ? `${endStr.charAt(0) === '\\' ? '' : ' '}${gmTest ? endStr.replace('/r ', '/gr ') : endStr}` : ''}`;
+    let ret = ``;
+    for (const section of [{baseClass: 'interactive', rollType: 'action', baseName: 'act'},{baseClass: 'companion', rollType: 'roll', baseName: 'roll'}]) {
+        ret += /*html*/`<div class="${section.baseClass}-roll">\n${" ".repeat(padding)}`;
+        for (const line of [{baseClass: 'default', addedName: 'cast', endVal: '', str: 'Cast'},{baseClass: 'gm', addedName: 'gmcast', endVal: ' -gm', str: 'to GM'}])
+            ret += `    ${getDefaultRollButton(line.str, section.rollType, `${line.baseClass}-whisper cost-trigger`, `${section.baseName}_${startName}-${line.addedName}${endName}`, `${rollStr}${line.endVal}${replaceEndStr(line.baseClass === 'gm')}`)}\n${" ".repeat(padding)}`;
+        ret += /*html*/`</div>`;
+        if (section.baseClass !== 'companion') ret += `\n${" ".repeat(padding)}`;
+    }
+    return ret;
+}
+
 outHtml += /*html*/`
             <div class="sheet-body sheet-tab-content sheet-tab-rolls-sheet">
                 <h1><span>Rolls</span></h1>
@@ -2195,14 +2210,7 @@ outHtml += /*html*/`
                                                 <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
                                                 <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                                 <div class="sheet-grouped-buttons end interactive-roll" title="Cast Custom Roll">
-                                                    <div class="interactive-roll">
-                                                        <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-widget-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                        <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-widget-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                    </div>
-                                                    <div class="companion-roll">
-                                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-widget-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-widget-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                    </div>
+                                                    ${generateDirectRollAndInteractiveRollButtons(52, 'roll-widget', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
                                                 </div>
                                             </div>
                                         </div>
@@ -2325,14 +2333,7 @@ outHtml += /*html*/`
                                                 <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                                 <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                                 <div class="sheet-grouped-buttons end interactive-roll" title="Cast Custom Roll">
-                                                    <div class="interactive-roll">
-                                                        <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                        <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                    </div>
-                                                    <div class="companion-roll">
-                                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                    </div>
+                                                    ${generateDirectRollAndInteractiveRollButtons(52, 'roll', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
                                                 </div>
                                             </div>
                                         </div>
@@ -2348,14 +2349,7 @@ outHtml += /*html*/`
                                             <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <div class="sheet-grouped-buttons end interactive-roll" title="Cast Custom Roll">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_roll-cast" value="!exr @{reprolls-final-macro-replaced} @{rep-cost-macro}">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_roll-gmcast" value="!exr @{reprolls-final-macro-replaced} -gm @{rep-cost-macro}">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'roll', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
                                             </div>
                                         </div>
                                     </div>
@@ -2641,14 +2635,7 @@ outHtml += /*html*/`
                                         <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                     </div>
                                     <div class="sheet-grouped-buttons" title="Cast INIT Rolls (Remember to select you token to set INIT correctly)">
-                                        <div class="interactive-roll">
-                                            <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_init-cast" value="!exr @{repinit-final-macro-replaced} -turn @{rep-cost-macro}">Cast</button>
-                                            <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_init-gmcast" value="!exr @{repinit-final-macro-replaced} -turn -gm @{rep-cost-macro}">to GM</button>
-                                        </div>
-                                        <div class="companion-roll">
-                                            <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_init-cast" value="!exr @{repinit-final-macro-replaced} -turn @{rep-cost-macro}">Cast</button>
-                                            <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_init-gmcast" value="!exr @{repinit-final-macro-replaced} -turn -gm @{rep-cost-macro}">to GM</button>
-                                        </div>
+                                        ${generateDirectRollAndInteractiveRollButtons(40, 'init', '', `!exr ${getFinalMacroName('repinit')} -turn`, '@{rep-cost-macro}')}
                                     </div>
                                 </div>
                             </div>
@@ -2724,14 +2711,7 @@ outHtml += /*html*/`
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <input type="text" name="attr_repcombat-watk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-watk', '', `!exr ${getFinalMacroName('repcombat-watk')}`, '@{rep-cost-macro} ==atk==')}
                                             </div>
                                         </div>
                                     </div>
@@ -2756,14 +2736,7 @@ outHtml += /*html*/`
                                             <input type="hidden" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw">
                                             <input type="text" name="attr_repcombat-wdmg-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-wdmg', '', `!exr ${getFinalMacroName('repcombat-wdmg')} -NB`)}
                                             </div>
                                         </div>
                                     </div>
@@ -2803,14 +2776,7 @@ outHtml += /*html*/`
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <input type="text" name="attr_repcombat-datk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-datk', '', `!exr ${getFinalMacroName('repcombat-datk')}`, '@{rep-cost-macro} ==atk==')}
                                             </div>
                                         </div>
                                     </div>
@@ -2833,18 +2799,10 @@ outHtml += /*html*/`
                                                 </p>
                                                 <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                                 <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
+                                                    ${generateDirectRollAndInteractiveRollButtons(52, 'cbt-ddmg', '-rst', `!exr ${getFinalMacroName('repcombat-ddmg')} -NB`, `\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}`)}
                                                 </div>
                                                 <div class="sheet-grouped-buttons end noreset-init" title="Do not Reset Initiative (Gambits Usually)">
-                                                    <div class="interactive-roll">
-                                                        <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
-                                                        <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                    </div>
-                                                    <div class="companion-roll">
-                                                        <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-ddmg-cast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
-                                                        <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-ddmg-gmcast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                    </div>
+                                                    ${generateDirectRollAndInteractiveRollButtons(52, 'cbt-ddmg', '-std', `!exr ${getFinalMacroName('repcombat-ddmg')} -NB`)}
                                                 </div>
                                             </div>
                                         </div>
@@ -2865,28 +2823,14 @@ outHtml += /*html*/`
                                             <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-watk-cast" value="!exr @{repcombat-watk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-watk-gmcast" value="!exr @{repcombat-watk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-watk', '', `!exr ${getFinalMacroName('repcombat-watk')}`, '@{rep-cost-macro} ==atk==')}
                                             </div>
                                         </div>
                                         <div class="dmg-section flex">
                                             <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
                                             <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-wdmg-cast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-wdmg-gmcast" value="!exr @{repcombat-wdmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-wdmg', '', `!exr ${getFinalMacroName('repcombat-wdmg')} -NB`)}
                                             </div>
                                         </div>
                                     </div>
@@ -2904,14 +2848,7 @@ outHtml += /*html*/`
                                             <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
                                             <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-datk-cast" value="!exr @{repcombat-datk-final-macro-replaced} @{rep-cost-macro} ==atk==">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-datk-gmcast" value="!exr @{repcombat-datk-final-macro-replaced} -gm @{rep-cost-macro} ==atk==">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-datk', '', `!exr ${getFinalMacroName('repcombat-datk')}`, '@{rep-cost-macro} ==atk==')}
                                             </div>
                                         </div>
                                         <div class="dmg-section flex grow-normal">
@@ -2923,24 +2860,10 @@ outHtml += /*html*/`
                                             </p>
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-ddmg-cast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-ddmg-gmcast-rst" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm\\n/gr @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-ddmg', '-rst', `!exr ${getFinalMacroName('repcombat-ddmg')} -NB`, `\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}`)}
                                             </div>
                                             <div class="sheet-grouped-buttons end noreset-init" title="Do not Reset Initiative (Gambits Usually)">
-                                                <div class="interactive-roll">
-                                                    <button type="action" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="act_cbt-ddmg-cast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
-                                                    <button type="action" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="act_cbt-ddmg-gmcast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                </div>
-                                                <div class="companion-roll">
-                                                    <button type="roll" class="sheet-roll btn ui-draggable default-whisper cost-trigger" name="roll_cbt-ddmg-cast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB">Cast</button>
-                                                    <button type="roll" class="sheet-roll btn ui-draggable gm-whisper cost-trigger" name="roll_cbt-ddmg-gmcast-std" value="!exr @{repcombat-ddmg-final-macro-replaced} -NB -gm">to GM</button>
-                                                </div>
+                                                ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-ddmg', '-std', `!exr ${getFinalMacroName('repcombat-ddmg')} -NB`)}
                                             </div>
                                         </div>
                                     </div>
