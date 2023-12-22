@@ -1117,7 +1117,7 @@ outHtml += /*html*/`
                                     </select>
                                     <div class="flex grow-normal"><label><span>Cost: </span><input type="text" name="attr_charm-cost" class="sheet-charms-spells-trait sheet-charms-spells-trait-cost" placeholder="1m/die"></label></div>
                                     <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
-                                    <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                    <input type="hidden" name="attr_rep-cost-macro">
                                     ${generateCastButtons(36, charmExpr)}
                                     <input type="text" name="attr_charm-short-desc" class="sheet-charms-spells-trait sheet-charms-spells-trait-short-desc" placeholder="short desc">
                                     <input type="checkbox" name="attr_charm-learnt" class="sheet-charms-spells-trait sheet-charms-spells-trait-learnt" title="Learnt" value="1" checked>
@@ -1184,7 +1184,7 @@ outHtml += /*html*/`
                                 ${returnOptions(32, ['','Terrestrial','Celestial','Solar'].map(i => ({val: i, label: i})), -1)}
                             </select>
                             <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
-                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                            <input type="hidden" name="attr_rep-cost-macro">
                             ${generateCastButtons(28, spellExpr, false)}
                             <input type="text" name="attr_charm-short-desc" class="sheet-charms-spells-trait sheet-charms-spells-trait-short-desc" placeholder="short desc">
                         </div>
@@ -1644,7 +1644,7 @@ ${" ".repeat(padding)}                </div>
 ${" ".repeat(padding)}                <input type="hidden" name="attr_charm-learnt" class="charm-learnt-check" value="1">
 ${" ".repeat(padding)}                <input type="text" name="attr_charm-name" readonly tabindex="-1">
 ${" ".repeat(padding)}                <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
-${" ".repeat(padding)}                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+${" ".repeat(padding)}                <input type="hidden" name="attr_rep-cost-macro">
 ${" ".repeat(padding)}                <input type="hidden" name="attr_charm-skill" class="sheet-tab-charms-inside-check">
 ${" ".repeat(padding)}                <input type="hidden" name="attr_charm-keywords">
 ${" ".repeat(padding)}                <input type="hidden" name="attr_charm-mute">
@@ -2208,7 +2208,7 @@ outHtml += /*html*/`
                                                 </select>
                                                 <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                                 <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
-                                                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                                <input type="hidden" name="attr_rep-cost-macro">
                                                 <div class="sheet-grouped-buttons end interactive-roll" title="Cast Custom Roll">
                                                     ${generateDirectRollAndInteractiveRollButtons(52, 'roll-widget', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
                                                 </div>
@@ -2330,7 +2330,7 @@ outHtml += /*html*/`
                                                 <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                                 <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
                                                 <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
-                                                <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                                <input type="hidden" name="attr_rep-cost-macro">
                                                 <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                                 <div class="sheet-grouped-buttons end interactive-roll" title="Cast Custom Roll">
                                                     ${generateDirectRollAndInteractiveRollButtons(52, 'roll', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
@@ -2346,8 +2346,8 @@ outHtml += /*html*/`
                                             </div>
                                         </div>
                                         <div class="inner-section flex">
-                                            <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                            <input type="hidden" name="attr_reprolls-final-macro-replaced">
+                                            <input type="hidden" name="attr_rep-cost-macro">
                                             <div class="sheet-grouped-buttons end interactive-roll" title="Cast Custom Roll">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'roll', '', `!exr ${getFinalMacroName('reprolls')}`, '@{rep-cost-macro}')}
                                             </div>
@@ -2630,8 +2630,8 @@ outHtml += /*html*/`
                                     <div class="flex grow-max">
                                         <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                         <input type="text" name="attr_repinit-bonus-successes" class="sheet-init-bonus-successes grow-double" value="${baseInit}${defaultRoll20AddedSuccPrompt}" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
-                                        <input type="hidden" name="attr_repinit-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                        <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro" value="${moteCostBase}${fullWpPrompt}">
+                                        <input type="hidden" name="attr_repinit-final-macro-replaced">
+                                        <input type="hidden" name="attr_rep-cost-macro" value="${moteCostBase}${fullWpPrompt}">
                                         <input type="text" name="attr_repinit-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                     </div>
                                     <div class="sheet-grouped-buttons" title="Cast INIT Rolls (Remember to select you token to set INIT correctly)">
@@ -2707,8 +2707,8 @@ outHtml += /*html*/`
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-watk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                             <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
-                                            <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                            <input type="hidden" name="attr_repcombat-watk-final-macro-replaced">
+                                            <input type="hidden" name="attr_rep-cost-macro">
                                             <input type="text" name="attr_repcombat-watk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-watk', '', `!exr ${getFinalMacroName('repcombat-watk')}`, '@{rep-cost-macro} ==atk==')}
@@ -2732,7 +2732,7 @@ outHtml += /*html*/`
                                         <div class="flex grow-normal">
                                             +
                                             <input type="text" name="attr_repcombat-wdmg-bonus-successes" class="sheet-wdmg-bonus-successes grow-double" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
-                                            <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                            <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced">
                                             <input type="hidden" name="attr_repcombat-weap-ovw" class="sheet-weap-ovw">
                                             <input type="text" name="attr_repcombat-wdmg-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
@@ -2772,8 +2772,8 @@ outHtml += /*html*/`
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-datk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
                                             <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
-                                            <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                            <input type="hidden" name="attr_repcombat-datk-final-macro-replaced">
+                                            <input type="hidden" name="attr_rep-cost-macro">
                                             <input type="text" name="attr_repcombat-datk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
                                             <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-datk', '', `!exr ${getFinalMacroName('repcombat-datk')}`, '@{rep-cost-macro} ==atk==')}
@@ -2786,7 +2786,7 @@ outHtml += /*html*/`
                                             (<input type="text" name="attr_repcombat-ddmg-dices" class="sheet-ddmg-bonus-dices grow-normal" value="@{tracker|YOUR_TOKEN_NAME_HERE}" title="Number of dice to be rolled&#013;&#010;Already included a macro that target a token initiative value&#013;&#010;You only need to copy paste the exact token name instead of the placeholder&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">d)
                                         </div>
                                         <div class="flex-wrap grow-normal">
-                                            <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                            <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced">
                                             <div class="flex grow-normal">
                                                 +
                                                 <input type="text" name="attr_repcombat-ddmg-bonus-successes" class="sheet-ddmg-bonus-successes grow-normal" title="Bonus successes for the roll&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">s
@@ -2797,7 +2797,7 @@ outHtml += /*html*/`
                                                 <p class="dark-init-color rounded-box flex grow-normal">
                                                     <label title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">RESET INIT TO:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
                                                 </p>
-                                                <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                                <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced">
                                                 <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
                                                     ${generateDirectRollAndInteractiveRollButtons(52, 'cbt-ddmg', '-rst', `!exr ${getFinalMacroName('repcombat-ddmg')} -NB`, `\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}`)}
                                                 </div>
@@ -2820,15 +2820,15 @@ outHtml += /*html*/`
                                     <div class="inner-section">
                                         <div class="atk-section flex">
                                             <p class="head" title="Trying to Hit an opponent with mostly narrative damage but build momentum (Initiative)">ATK</p>
-                                            <input type="hidden" name="attr_repcombat-watk-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                            <input type="hidden" name="attr_repcombat-watk-final-macro-replaced">
+                                            <input type="hidden" name="attr_rep-cost-macro">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Attack => Trying to Hit with Accuracy included">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-watk', '', `!exr ${getFinalMacroName('repcombat-watk')}`, '@{rep-cost-macro} ==atk==')}
                                             </div>
                                         </div>
                                         <div class="dmg-section flex">
                                             <p class="head" title="Hit is confirmed => how much momentum (Initiative) you steal to you opponent&#013;&#010;Add 1 more Initiative to you (so you gain at least 1 initiative)">DMG</p>
-                                            <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                            <input type="hidden" name="attr_repcombat-wdmg-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end" title="Cast Withering Damage (You will be prompt to select you target for Soak value)">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-wdmg', '', `!exr ${getFinalMacroName('repcombat-wdmg')} -NB`)}
                                             </div>
@@ -2845,20 +2845,20 @@ outHtml += /*html*/`
                                     <div class="inner-section">
                                         <div class="atk-section flex sheet-bg-hide">
                                             <p class="head" title="Trying to Hit an opponent with real damage based on built momentum (Initiative)">ATK</p>
-                                            <input type="hidden" name="attr_repcombat-datk-final-macro-replaced" class="sheet-init-final-macro-replaced">
-                                            <input type="hidden" name="attr_rep-cost-macro" class="sheet-cost-macro">
+                                            <input type="hidden" name="attr_repcombat-datk-final-macro-replaced">
+                                            <input type="hidden" name="attr_rep-cost-macro">
                                             <div class="sheet-grouped-buttons end" title="Cast Decisive Attack => Trying to Hit">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-datk', '', `!exr ${getFinalMacroName('repcombat-datk')}`, '@{rep-cost-macro} ==atk==')}
                                             </div>
                                         </div>
                                         <div class="dmg-section flex grow-normal">
                                             <p class="head" title="Hit is confirmed => how much damage you deal to you opponent as Health Levels or magnitude (for BattleGroups)&#013;&#010;By default, uses momentum built in combat (Initiative) as damage pool, without 10s rule">DMG</p>
-                                            <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                            <input type="hidden" name="attr_repcombat-ddmg-final-macro-replaced">
                                             <input type="hidden" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset-val" value="">
                                             <p class="dark-init-color rounded-box flex grow-normal">
                                                 <label title="Fill this field to reset your initiative, leave blank to not reset&#013;&#010;Gambits use this blank for example&#013;&#010;You can include roll20 syntax like @{essence} or [[]] for complex configurations">R.INIT:<input type="text" name="attr_repcombat-ddmg-init-to-set" class="sheet-atk-decisive-init-to-reset grow-normal" placeholder="3" value=""></label>
                                             </p>
-                                            <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced" class="sheet-init-final-macro-replaced">
+                                            <input type="hidden" name="attr_repcombat-ddmg-init-to-set-final-macro-replaced">
                                             <div class="sheet-grouped-buttons end reset-init" title="Reset Initiative (Remember to select you token to set INIT correctly)">
                                                 ${generateDirectRollAndInteractiveRollButtons(48, 'cbt-ddmg', '-rst', `!exr ${getFinalMacroName('repcombat-ddmg')} -NB`, `\\n/r @{repcombat-ddmg-init-to-set-final-macro-replaced} &{tracker}`)}
                                             </div>

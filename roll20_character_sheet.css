@@ -2712,7 +2712,6 @@ and (min-resolution:.001dpcm) {
 }
 
 .charsheet .sheet-tab-spell-sheet input.shaping-ritual-check[value="1"] ~ div [name="attr_repspell-circle"],
-.charsheet .sheet-tab-spell-sheet input.shaping-ritual-check[value="1"] ~ div .sheet-cost-macro,
 .charsheet .sheet-tab-spell-sheet input.shaping-ritual-check[value="1"] ~ div .duration,
 .charsheet .sheet-tab-spell-sheet input.shaping-ritual-check[value="1"] ~ div .cost,
 .charsheet .sheet-tab-spell-sheet input.shaping-ritual-check[value="1"] ~ div .cost-section,
