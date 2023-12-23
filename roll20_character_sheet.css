@@ -1327,6 +1327,10 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     width: 250px;
 }
 
+.charsheet input[type=checkbox].sheet-unnamed-toggle:checked + span[title="Show styles"] + div {
+    width: 355px;
+}
+
 .charsheet input[type=checkbox].sheet-unnamed-toggle + span::before {
     background: #fff8aa;
 }

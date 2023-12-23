@@ -1,5 +1,5 @@
 <script type="text/worker">
-    const version = 2.62, debug = 1;
+    const version = 2.63, debug = 1;
     var TAS;
 
     /**
@@ -216,8 +216,7 @@
 
     on('sheet:opened', setDebugWrapper(updateParry));
     on('change:dexterity change:brawl change:melee', TAS._fn(updateParry));
-    on('change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane change:ma-nightingale '
-      +'change:ma-devil change:ma-claw change:ma-pearl change:ma-steel', TAS._fn(updateParry));
+    //maAttrsArray.forEach(ma => on(`change:${ma}`, TAS._fn(updateParry))); //- DONE LATER
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef change:repeating_weapon:repweaponabi remove:repeating_weapon', TAS._fn(updateParry));
     on('change:qc-parry', TAS._fn(updateParry));
 
@@ -230,31 +229,23 @@
         const pen = values['wound-penalty'] || 0;
         var finalAttr = {};
         if (debug === 2) TAS.debug('updateParry:: Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
-        TAS.repeating('martialarts').fields('repmartialarts').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
-            'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(setDebugWrapper(async function getMaxMaAndApply(rows, attrs) {
-            var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
-                                attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
-                                attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']);
+        TAS.repeating('martialarts').fields('repmartialarts').attrs(...maAttrsArray).tap(setDebugWrapper(async function getMaxMaAndApply(rows, attrs) {
+            let ma = 0;
+            for (const maName of maAttrsArray)
+                ma = Math.max(ma, attrs.I[maName]);
+
             const dex = Number(values['dexterity']),
                 brawl = Number(values['brawl']),
                 melee = Number(values['melee']),
                 qcParry = Number(values['qc-parry']),
-                isQc = Number(values['qc']),
-                correspondingTable = {
+                isQc = Number(values['qc']);
+
+            const correspondingTable = {
                     'brawl': brawl,
-                    'melee': melee,
-                    'snake': attrs.I['ma-snake'],
-                    'tiger': attrs.I['ma-tiger'],
-                    'void': attrs.I['ma-void'],
-                    'reaper': attrs.I['ma-reaper'],
-                    'ebon': attrs.I['ma-ebon'],
-                    'crane': attrs.I['ma-crane'],
-                    'nightingale': attrs.I['ma-nightingale'],
-                    'devil': attrs.I['ma-devil'],
-                    'claw': attrs.I['ma-claw'],
-                    'pearl': attrs.I['ma-pearl'],
-                    'steel': attrs.I['ma-steel']
+                    'melee': melee
                 };
+            for (const maName of maAttrsArray)
+                correspondingTable[maName] = attrs.I[maName];
 
             if (debug === 2) TAS.debug(`updateParry:: values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
             _.each(rows, function(v, k) {
@@ -643,6 +634,7 @@
         {version: 2.57, fn: upgradeto258},
         {version: 2.60, fn: upgradeto261},
         {version: 2.61, fn: upgradeto262},
+        {version: 2.62, fn: upgradeto263},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -837,6 +829,70 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    function objectFlip(obj) {
+        const ret = {};
+        Object.keys(obj).forEach(key => ret[obj[key]] = key);
+        return ret;
+    }
+
+    function objectFilter(obj, fx = i => i) {
+        const ret = {};
+        for (const key of Object.keys(obj)) {
+            if (fx(key))
+                ret[key] = obj[key];
+        }
+        return ret;
+    }
+
+    async function upgradeto263() {
+        const finalObj = {
+            'version': 2.63
+        };
+
+        await setCorrespondingOldMaToNew(finalObj);
+        await setWeaponCorrespondingOldMaToNew(finalObj);
+        TAS.debug(`upgradeto263:: finalObj=`, finalObj);
+        setAttrs(finalObj);
+    }
+
+    async function setCorrespondingOldMaToNew(finalObj) {
+        const getAndSet = async (oldName, newName) => {
+            const value = await getSingleAttrAsync(oldName);
+            if (value && oldName !== newName) finalObj[newName] = value;
+        };
+        const flippedHash = objectFlip(oldMaNameHash);
+        const filteredHash = objectFilter(correspondingCharmSectionValue, (i) => i.indexOf('charms-ma-') === 0);
+        for (const [k,v] of Object.entries(flippedHash)) {
+            for (const [k2,v2] of Object.entries(filteredHash)) {
+                if (v === v2) {
+                    getAndSet(k.substring(2, k.length - 1), k2.substring(7));
+                    break;
+                }
+            }
+        }
+    }
+
+    async function setWeaponCorrespondingOldMaToNew(finalObj) {
+        const flippedHash = objectFlip(oldMaNameHash);
+        const oldMaNameArray = Object.keys(flippedHash).map(i => i.substring(5, i.length - 1));
+        const flippedFiltered = objectFlip(objectFilter(correspondingCharmSectionValue, (i) => i.indexOf('charms-ma-') === 0));
+        const correspondingOldMaToNew = {};
+        for (const old of oldMaNameArray)
+            correspondingOldMaToNew[old] = flippedFiltered[flippedHash[`@{ma-${old}}`]].replace('charms-', '');
+
+        const idWeaponList = await getSectionIDsAsync('weapon');
+        const arrayAttr = [];
+        for (const id of idWeaponList)
+            arrayAttr.push(`repeating_weapon_${id}_repweaponabi`);
+        const val = await getAttrsAsync(arrayAttr);
+
+        for (const id of idWeaponList) {
+            if (oldMaNameArray.includes(val[`repeating_weapon_${id}_repweaponabi`])) {
+                finalObj[`repeating_weapon_${id}_repweaponabi`] = correspondingOldMaToNew[val[`repeating_weapon_${id}_repweaponabi`]];
+            }
+        }
+    }
 
     async function upgradeto262() {
         const finalObj = {
@@ -1573,6 +1629,21 @@
         'charms-ma-whiteveil',
         'charms-ma-other'
     ];
+    var maAttrsArray = charmMaRepeatableSectionArray.slice(0, -1).map(i => i.replace('charms-',''));
+    maAttrsArray.forEach(ma => on(`change:${ma}`, TAS._fn(updateParry)));
+    var oldMaNameHash = {
+        'Snake Style': '@{ma-snake}',
+        'Tiger Style': '@{ma-tiger}',
+        'Single Point Shining Into The Void Style': '@{ma-void}',
+        'White Reaper Style': '@{ma-reaper}',
+        'Ebon Shadow Style': '@{ma-ebon}',
+        'Crane Style': '@{ma-crane}',
+        'Silver-Voiced Nightingale Style': '@{ma-nightingale}',
+        'Righteous Devil Style': '@{ma-devil}',
+        'Black Claw Style': '@{ma-claw}',
+        'Dreaming Pearl Courtesan Style': '@{ma-pearl}',
+        'Steel Devil Style': '@{ma-steel}',
+    };
     const charmSolarRepeatableSectionArray = [
         'charms-archery',
         'charms-athletics',
@@ -3523,52 +3594,52 @@
                                             <input type="radio" class="sheet-dots10" name="attr_ma-tiger" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-void}">
+                                    <div class="sheet-trait" title="@{ma-spsitv}">
                                         <label>Single Point Shining Into The Void Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-void" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-void" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-void" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-void" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-void" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-void" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-void" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-void" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-void" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-void" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-void" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-spsitv" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-spsitv" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-spsitv" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-spsitv" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-spsitv" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-spsitv" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-spsitv" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-spsitv" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-spsitv" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-spsitv" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-spsitv" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-reaper}">
+                                    <div class="sheet-trait" title="@{ma-whitereaper}">
                                         <label>White Reaper Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-reaper" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-reaper" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-reaper" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-reaper" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-reaper" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-reaper" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-reaper" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-reaper" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-reaper" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-reaper" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-reaper" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-whitereaper" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-whitereaper" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-whitereaper" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-whitereaper" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-whitereaper" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-whitereaper" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-whitereaper" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-whitereaper" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-whitereaper" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-whitereaper" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-whitereaper" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-ebon}">
+                                    <div class="sheet-trait" title="@{ma-ebonshadow}">
                                         <label>Ebon Shadow Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-ebon" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-ebon" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-ebon" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-ebon" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-ebon" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-ebon" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-ebon" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-ebon" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-ebon" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-ebon" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-ebon" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-ebonshadow" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-ebonshadow" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-ebonshadow" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-ebonshadow" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-ebonshadow" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-ebonshadow" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-ebonshadow" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-ebonshadow" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-ebonshadow" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-ebonshadow" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-ebonshadow" value="10"><span></span>
                                         </div>
                                     </div>
                                     <div class="sheet-trait" title="@{ma-crane}">
@@ -3587,84 +3658,276 @@
                                             <input type="radio" class="sheet-dots10" name="attr_ma-crane" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-nightingale}">
+                                    <div class="sheet-trait" title="@{ma-silvervoice}">
                                         <label>Silver-Voiced Nightingale Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-nightingale" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-nightingale" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-nightingale" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-nightingale" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-nightingale" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-nightingale" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-nightingale" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-nightingale" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-nightingale" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-nightingale" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-nightingale" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-silvervoice" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-silvervoice" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-silvervoice" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-silvervoice" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-silvervoice" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-silvervoice" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-silvervoice" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-silvervoice" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-silvervoice" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-silvervoice" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-silvervoice" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-devil}">
+                                    <div class="sheet-trait" title="@{ma-righteousdevil}">
                                         <label>Righteous Devil Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-devil" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-devil" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-devil" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-devil" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-devil" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-devil" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-devil" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-devil" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-devil" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-devil" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-devil" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-righteousdevil" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-righteousdevil" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-righteousdevil" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-righteousdevil" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-righteousdevil" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-righteousdevil" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-righteousdevil" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-righteousdevil" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-righteousdevil" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-righteousdevil" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-righteousdevil" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-claw}">
+                                    <div class="sheet-trait" title="@{ma-blackclaw}">
                                         <label>Black Claw Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-claw" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-claw" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-claw" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-claw" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-claw" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-claw" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-claw" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-claw" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-claw" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-claw" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-claw" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-blackclaw" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-blackclaw" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-blackclaw" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-blackclaw" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-blackclaw" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-blackclaw" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-blackclaw" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-blackclaw" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-blackclaw" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-blackclaw" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-blackclaw" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-pearl}">
+                                    <div class="sheet-trait" title="@{ma-dreamingpearl}">
                                         <label>Dreaming Pearl Courtesan Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-pearl" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-pearl" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-pearl" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-pearl" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-pearl" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-pearl" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-pearl" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-pearl" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-pearl" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-pearl" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-pearl" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-dreamingpearl" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-dreamingpearl" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-dreamingpearl" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-dreamingpearl" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-dreamingpearl" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-dreamingpearl" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-dreamingpearl" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-dreamingpearl" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-dreamingpearl" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-dreamingpearl" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-dreamingpearl" value="10"><span></span>
                                         </div>
                                     </div>
-                                    <div class="sheet-trait" title="@{ma-steel}">
+                                    <div class="sheet-trait" title="@{ma-steeldevil}">
                                         <label>Steel Devil Style</label>
                                         <div class="sheet-dots">
-                                            <input type="radio" class="sheet-dots0" name="attr_ma-steel" value="0" checked="checked"><span></span>
-                                            <input type="radio" class="sheet-dots1" name="attr_ma-steel" value="1"><span></span>
-                                            <input type="radio" class="sheet-dots2" name="attr_ma-steel" value="2"><span></span>
-                                            <input type="radio" class="sheet-dots3" name="attr_ma-steel" value="3"><span></span>
-                                            <input type="radio" class="sheet-dots4" name="attr_ma-steel" value="4"><span></span>
-                                            <input type="radio" class="sheet-dots5" name="attr_ma-steel" value="5"><span></span>
-                                            <input type="radio" class="sheet-dots6" name="attr_ma-steel" value="6"><span></span>
-                                            <input type="radio" class="sheet-dots7" name="attr_ma-steel" value="7"><span></span>
-                                            <input type="radio" class="sheet-dots8" name="attr_ma-steel" value="8"><span></span>
-                                            <input type="radio" class="sheet-dots9" name="attr_ma-steel" value="9"><span></span>
-                                            <input type="radio" class="sheet-dots10" name="attr_ma-steel" value="10"><span></span>
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-steeldevil" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-steeldevil" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-steeldevil" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-steeldevil" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-steeldevil" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-steeldevil" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-steeldevil" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-steeldevil" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-steeldevil" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-steeldevil" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-steeldevil" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-centipede}">
+                                        <label>Centipede Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-centipede" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-centipede" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-centipede" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-centipede" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-centipede" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-centipede" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-centipede" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-centipede" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-centipede" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-centipede" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-centipede" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-falcon}">
+                                        <label>Falcon Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-falcon" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-falcon" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-falcon" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-falcon" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-falcon" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-falcon" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-falcon" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-falcon" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-falcon" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-falcon" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-falcon" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-laughingmonster}">
+                                        <label>Laughing Monster Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-laughingmonster" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-laughingmonster" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-laughingmonster" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-laughingmonster" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-laughingmonster" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-laughingmonster" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-laughingmonster" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-laughingmonster" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-laughingmonster" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-laughingmonster" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-laughingmonster" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-swayinggrass}">
+                                        <label>Swaying Grass Dance Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-swayinggrass" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-swayinggrass" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-swayinggrass" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-swayinggrass" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-swayinggrass" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-swayinggrass" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-swayinggrass" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-swayinggrass" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-swayinggrass" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-swayinggrass" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-swayinggrass" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-airdragon}">
+                                        <label>Air Dragon Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-airdragon" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-airdragon" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-airdragon" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-airdragon" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-airdragon" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-airdragon" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-airdragon" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-airdragon" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-airdragon" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-airdragon" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-airdragon" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-earthdragon}">
+                                        <label>Earth Dragon Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-earthdragon" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-earthdragon" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-earthdragon" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-earthdragon" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-earthdragon" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-earthdragon" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-earthdragon" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-earthdragon" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-earthdragon" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-earthdragon" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-earthdragon" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-firedragon}">
+                                        <label>Fire Dragon Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-firedragon" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-firedragon" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-firedragon" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-firedragon" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-firedragon" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-firedragon" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-firedragon" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-firedragon" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-firedragon" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-firedragon" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-firedragon" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-waterdragon}">
+                                        <label>Water Dragon Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-waterdragon" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-waterdragon" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-waterdragon" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-waterdragon" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-waterdragon" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-waterdragon" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-waterdragon" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-waterdragon" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-waterdragon" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-waterdragon" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-waterdragon" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-wooddragon}">
+                                        <label>Wood Dragon Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-wooddragon" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-wooddragon" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-wooddragon" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-wooddragon" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-wooddragon" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-wooddragon" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-wooddragon" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-wooddragon" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-wooddragon" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-wooddragon" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-wooddragon" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-goldenjanissary}">
+                                        <label>Golden Janissary Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-goldenjanissary" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-goldenjanissary" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-goldenjanissary" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-goldenjanissary" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-goldenjanissary" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-goldenjanissary" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-goldenjanissary" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-goldenjanissary" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-goldenjanissary" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-goldenjanissary" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-goldenjanissary" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-mantis}">
+                                        <label>Mantis Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-mantis" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-mantis" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-mantis" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-mantis" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-mantis" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-mantis" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-mantis" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-mantis" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-mantis" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-mantis" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-mantis" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{ma-whiteveil}">
+                                        <label>White Veil Style</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_ma-whiteveil" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_ma-whiteveil" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_ma-whiteveil" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_ma-whiteveil" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_ma-whiteveil" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_ma-whiteveil" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_ma-whiteveil" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_ma-whiteveil" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_ma-whiteveil" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_ma-whiteveil" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_ma-whiteveil" value="10"><span></span>
                                         </div>
                                     </div>
                                     <fieldset class="repeating_martialarts" style="display: none;">
@@ -4040,15 +4303,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4091,15 +4366,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4147,15 +4434,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4198,15 +4497,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4254,15 +4565,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4305,15 +4628,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4361,15 +4696,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4412,15 +4759,27 @@
                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                         Melee (@{melee}),@{melee}[Melee]|
@@ -4887,16 +5246,29 @@
                                         <select name="attr_repweaponabi" class="select-abi">
                                             <option value="brawl" selected>Brawl</option>
                                             <option value="melee">Melee</option>
-                                            <option value="snake">Snake Style</option>
-                                            <option value="tiger">Tiger Style</option>
-                                            <option value="void">Single Point Shining Into the Void Style</option>
-                                            <option value="reaper">White Reaper Style</option>
-                                            <option value="ebon">Ebon Shadow Style</option>
-                                            <option value="crane">Crane Style</option>
-                                            <option value="nightingale">Silver-Voiced Nightingale Style</option>
-                                            <option value="devil">Righteous Devil Style</option>
-                                            <option value="claw">Black Claw Style</option>
-                                            <option value="pearl">Dreaming Pearl Courtesan Style</option>
+                                            <option value="ma-snake">Snake Style</option>
+                                            <option value="ma-tiger">Tiger Style</option>
+                                            <option value="ma-spsitv">Single Point Shining Into The Void Style</option>
+                                            <option value="ma-whitereaper">White Reaper Style</option>
+                                            <option value="ma-ebonshadow">Ebon Shadow Style</option>
+                                            <option value="ma-crane">Crane Style</option>
+                                            <option value="ma-silvervoice">Silver-Voiced Nightingale Style</option>
+                                            <option value="ma-righteousdevil">Righteous Devil Style</option>
+                                            <option value="ma-blackclaw">Black Claw Style</option>
+                                            <option value="ma-dreamingpearl">Dreaming Pearl Courtesan Style</option>
+                                            <option value="ma-steeldevil">Steel Devil Style</option>
+                                            <option value="ma-centipede">Centipede Style</option>
+                                            <option value="ma-falcon">Falcon Style</option>
+                                            <option value="ma-laughingmonster">Laughing Monster Style</option>
+                                            <option value="ma-swayinggrass">Swaying Grass Dance Style</option>
+                                            <option value="ma-airdragon">Air Dragon Style</option>
+                                            <option value="ma-earthdragon">Earth Dragon Style</option>
+                                            <option value="ma-firedragon">Fire Dragon Style</option>
+                                            <option value="ma-waterdragon">Water Dragon Style</option>
+                                            <option value="ma-wooddragon">Wood Dragon Style</option>
+                                            <option value="ma-goldenjanissary">Golden Janissary Style</option>
+                                            <option value="ma-mantis">Mantis Style</option>
+                                            <option value="ma-whiteveil">White Veil Style</option>
                                             <option disabled>-------RAW------</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
@@ -6001,15 +6373,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6052,15 +6436,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6108,15 +6504,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6159,15 +6567,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6215,15 +6635,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6266,15 +6698,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6322,15 +6766,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6373,15 +6829,27 @@
                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                             Melee (@{melee}),@{melee}[Melee]|
@@ -6867,15 +7335,27 @@
                                                             <option disabled>-------M-A------</option>
                                                             <option value="@{ma-snake}[Snake Style]">Snake Style</option>
                                                             <option value="@{ma-tiger}[Tiger Style]">Tiger Style</option>
-                                                            <option value="@{ma-void}[Single Point Shining Into The Void Style]">Single Point Shining Into The Void Style</option>
-                                                            <option value="@{ma-reaper}[White Reaper Style]">White Reaper Style</option>
-                                                            <option value="@{ma-ebon}[Ebon Shadow Style]">Ebon Shadow Style</option>
+                                                            <option value="@{ma-spsitv}[Single Point Shining Into The Void Style]">Single Point Shining Into The Void Style</option>
+                                                            <option value="@{ma-whitereaper}[White Reaper Style]">White Reaper Style</option>
+                                                            <option value="@{ma-ebonshadow}[Ebon Shadow Style]">Ebon Shadow Style</option>
                                                             <option value="@{ma-crane}[Crane Style]">Crane Style</option>
-                                                            <option value="@{ma-nightingale}[Silver-Voiced Nightingale Style]">Silver-Voiced Nightingale Style</option>
-                                                            <option value="@{ma-devil}[Righteous Devil Style]">Righteous Devil Style</option>
-                                                            <option value="@{ma-claw}[Black Claw Style]">Black Claw Style</option>
-                                                            <option value="@{ma-pearl}[Dreaming Pearl Courtesan Style]">Dreaming Pearl Courtesan Style</option>
-                                                            <option value="@{ma-steel}[Steel Devil Style]">Steel Devil Style</option>
+                                                            <option value="@{ma-silvervoice}[Silver-Voiced Nightingale Style]">Silver-Voiced Nightingale Style</option>
+                                                            <option value="@{ma-righteousdevil}[Righteous Devil Style]">Righteous Devil Style</option>
+                                                            <option value="@{ma-blackclaw}[Black Claw Style]">Black Claw Style</option>
+                                                            <option value="@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]">Dreaming Pearl Courtesan Style</option>
+                                                            <option value="@{ma-steeldevil}[Steel Devil Style]">Steel Devil Style</option>
+                                                            <option value="@{ma-centipede}[Centipede Style]">Centipede Style</option>
+                                                            <option value="@{ma-falcon}[Falcon Style]">Falcon Style</option>
+                                                            <option value="@{ma-laughingmonster}[Laughing Monster Style]">Laughing Monster Style</option>
+                                                            <option value="@{ma-swayinggrass}[Swaying Grass Dance Style]">Swaying Grass Dance Style</option>
+                                                            <option value="@{ma-airdragon}[Air Dragon Style]">Air Dragon Style</option>
+                                                            <option value="@{ma-earthdragon}[Earth Dragon Style]">Earth Dragon Style</option>
+                                                            <option value="@{ma-firedragon}[Fire Dragon Style]">Fire Dragon Style</option>
+                                                            <option value="@{ma-waterdragon}[Water Dragon Style]">Water Dragon Style</option>
+                                                            <option value="@{ma-wooddragon}[Wood Dragon Style]">Wood Dragon Style</option>
+                                                            <option value="@{ma-goldenjanissary}[Golden Janissary Style]">Golden Janissary Style</option>
+                                                            <option value="@{ma-mantis}[Mantis Style]">Mantis Style</option>
+                                                            <option value="@{ma-whiteveil}[White Veil Style]">White Veil Style</option>
                                                             <option disabled>-------ATTRIBUTES------</option>
                                                             <option value="@{strength}[Strength]">Strength</option>
                                                             <option value="@{dexterity}[Dexterity]">Dexterity</option>
@@ -6919,7 +7399,7 @@
                                                             </select>+
                                                             <span class="specialty-box db-hint">
                                                                 <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
-                                                                <span class="sheet-spelleffect" title="Spé"></span>
+                                                                <span class="sheet-spelleffect" title="Spe"></span>
                                                             </span>+
                                                         </div>
                                                         <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
@@ -7154,7 +7634,7 @@
                                                         <option value="@{war}[War]">War</option>
                                                         <option disabled>-------ABILITIES PROMPTS------</option>
                                                         <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                                        <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}), @{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}), @{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}), @{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-nightingale}), @{ma-nightingale}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}), @{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}), @{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}), @{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}), @{ma-steel}[Steel Devil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
+                                                        <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                         <option value="?{Ability|
                                                             Archery (@{archery}),@{archery}[Archery]|
                                                             Athletics (@{athletics}),@{athletics}[Athletics]|
@@ -7181,15 +7661,27 @@
                                                             Martial Arts (...),?{Martial Arts&amp;#124;
                                                                 Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                                 Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                                Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                                White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                                Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                                Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                                White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                                Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                                 Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                                Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                                Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                                Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                                Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                                Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                                Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                                Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                                Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                                Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                                Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                                Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                                Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                                Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                                Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                                Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                                Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                                Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                                Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                                Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                                Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                                Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                                White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                                 Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                                             Medicine (@{medicine}),@{medicine}[Medicine]|
                                                             Melee (@{melee}),@{melee}[Melee]|
@@ -7825,16 +8317,29 @@
                                     <select name="attr_repweaponabi" class="select-abi">
                                         <option value="brawl" selected>Brawl</option>
                                         <option value="melee">Melee</option>
-                                        <option value="snake">Snake Style</option>
-                                        <option value="tiger">Tiger Style</option>
-                                        <option value="void">Single Point Shining Into the Void Style</option>
-                                        <option value="reaper">White Reaper Style</option>
-                                        <option value="ebon">Ebon Shadow Style</option>
-                                        <option value="crane">Crane Style</option>
-                                        <option value="nightingale">Silver-Voiced Nightingale Style</option>
-                                        <option value="devil">Righteous Devil Style</option>
-                                        <option value="claw">Black Claw Style</option>
-                                        <option value="pearl">Dreaming Pearl Courtesan Style</option>
+                                        <option value="ma-snake">Snake Style</option>
+                                        <option value="ma-tiger">Tiger Style</option>
+                                        <option value="ma-spsitv">Single Point Shining Into The Void Style</option>
+                                        <option value="ma-whitereaper">White Reaper Style</option>
+                                        <option value="ma-ebonshadow">Ebon Shadow Style</option>
+                                        <option value="ma-crane">Crane Style</option>
+                                        <option value="ma-silvervoice">Silver-Voiced Nightingale Style</option>
+                                        <option value="ma-righteousdevil">Righteous Devil Style</option>
+                                        <option value="ma-blackclaw">Black Claw Style</option>
+                                        <option value="ma-dreamingpearl">Dreaming Pearl Courtesan Style</option>
+                                        <option value="ma-steeldevil">Steel Devil Style</option>
+                                        <option value="ma-centipede">Centipede Style</option>
+                                        <option value="ma-falcon">Falcon Style</option>
+                                        <option value="ma-laughingmonster">Laughing Monster Style</option>
+                                        <option value="ma-swayinggrass">Swaying Grass Dance Style</option>
+                                        <option value="ma-airdragon">Air Dragon Style</option>
+                                        <option value="ma-earthdragon">Earth Dragon Style</option>
+                                        <option value="ma-firedragon">Fire Dragon Style</option>
+                                        <option value="ma-waterdragon">Water Dragon Style</option>
+                                        <option value="ma-wooddragon">Wood Dragon Style</option>
+                                        <option value="ma-goldenjanissary">Golden Janissary Style</option>
+                                        <option value="ma-mantis">Mantis Style</option>
+                                        <option value="ma-whiteveil">White Veil Style</option>
                                         <option disabled>-------RAW------</option>
                                         <option value="0">0</option>
                                         <option value="1">1</option>
@@ -8708,7 +9213,7 @@
                                             <option value="@{war}[War]">War</option>
                                             <option disabled>-------ABILITIES PROMPTS------</option>
                                             <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                            <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}), @{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}), @{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}), @{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-nightingale}), @{ma-nightingale}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}), @{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}), @{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}), @{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}), @{ma-steel}[Steel Devil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
+                                            <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                             <option value="?{Ability|
                                                 Archery (@{archery}),@{archery}[Archery]|
                                                 Athletics (@{athletics}),@{athletics}[Athletics]|
@@ -8735,15 +9240,27 @@
                                                 Martial Arts (...),?{Martial Arts&amp;#124;
                                                     Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                     Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                    Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                    White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                    Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                    Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                    White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                    Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                     Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                    Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                    Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                    Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                    Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                    Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                    Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                    Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                    Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                    Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                    Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                    Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                    Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                    Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                    Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                    Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                    Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                    Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                    Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                    Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                    Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                    Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                    White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                     Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                                 Medicine (@{medicine}),@{medicine}[Medicine]|
                                                 Melee (@{melee}),@{melee}[Melee]|
@@ -8930,7 +9447,7 @@
                                                     <option value="@{war}[War]">War</option>
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
                                                     <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}), @{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}), @{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}), @{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-nightingale}), @{ma-nightingale}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}), @{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}), @{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}), @{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}), @{ma-steel}[Steel Devil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
+                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                     <option value="?{Ability|
                                                         Archery (@{archery}),@{archery}[Archery]|
                                                         Athletics (@{athletics}),@{athletics}[Athletics]|
@@ -8957,15 +9474,27 @@
                                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                                         Melee (@{melee}),@{melee}[Melee]|
@@ -9167,7 +9696,7 @@
                                                     <option value="@{war}[War]">War</option>
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
                                                     <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}), @{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}), @{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}), @{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-nightingale}), @{ma-nightingale}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}), @{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}), @{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}), @{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}), @{ma-steel}[Steel Devil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
+                                                    <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                     <option value="?{Ability|
                                                         Archery (@{archery}),@{archery}[Archery]|
                                                         Athletics (@{athletics}),@{athletics}[Athletics]|
@@ -9194,15 +9723,27 @@
                                                         Martial Arts (...),?{Martial Arts&amp;#124;
                                                             Snake Style (@{ma-snake})&amp;#44;@{ma-snake}[Snake Style]&amp;#124;
                                                             Tiger Style (@{ma-tiger})&amp;#44;@{ma-tiger}[Tiger Style]&amp;#124;
-                                                            Single Point Shining Into The Void Style (@{ma-void})&amp;#44;@{ma-void}[Single Point Shining Into The Void Style]&amp;#124;
-                                                            White Reaper Style (@{ma-reaper})&amp;#44;@{ma-reaper}[White Reaper Style]&amp;#124;
-                                                            Ebon Shadow Style (@{ma-ebon})&amp;#44;@{ma-ebon}[Ebon Shadow Style]&amp;#124;
+                                                            Single Point Shining Into The Void Style (@{ma-spsitv})&amp;#44;@{ma-spsitv}[Single Point Shining Into The Void Style]&amp;#124;
+                                                            White Reaper Style (@{ma-whitereaper})&amp;#44;@{ma-whitereaper}[White Reaper Style]&amp;#124;
+                                                            Ebon Shadow Style (@{ma-ebonshadow})&amp;#44;@{ma-ebonshadow}[Ebon Shadow Style]&amp;#124;
                                                             Crane Style (@{ma-crane})&amp;#44;@{ma-crane}[Crane Style]&amp;#124;
-                                                            Silver-Voiced Nightingale Style (@{ma-nightingale})&amp;#44;@{ma-nightingale}[Silver-Voiced Nightingale Style]&amp;#124;
-                                                            Righteous Devil Style (@{ma-devil})&amp;#44;@{ma-devil}[Righteous Devil Style]&amp;#124;
-                                                            Black Claw Style (@{ma-claw})&amp;#44;@{ma-claw}[Black Claw Style]&amp;#124;
-                                                            Dreaming Pearl Courtesan Style (@{ma-pearl})&amp;#44;@{ma-pearl}[Dreaming Pearl Courtesan Style]&amp;#124;
-                                                            Steel Devil Style (@{ma-steel})&amp;#44;@{ma-steel}[Steel Devil Style]&amp;#124;
+                                                            Silver-Voiced Nightingale Style (@{ma-silvervoice})&amp;#44;@{ma-silvervoice}[Silver-Voiced Nightingale Style]&amp;#124;
+                                                            Righteous Devil Style (@{ma-righteousdevil})&amp;#44;@{ma-righteousdevil}[Righteous Devil Style]&amp;#124;
+                                                            Black Claw Style (@{ma-blackclaw})&amp;#44;@{ma-blackclaw}[Black Claw Style]&amp;#124;
+                                                            Dreaming Pearl Courtesan Style (@{ma-dreamingpearl})&amp;#44;@{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]&amp;#124;
+                                                            Steel Devil Style (@{ma-steeldevil})&amp;#44;@{ma-steeldevil}[Steel Devil Style]&amp;#124;
+                                                            Centipede Style (@{ma-centipede})&amp;#44;@{ma-centipede}[Centipede Style]&amp;#124;
+                                                            Falcon Style (@{ma-falcon})&amp;#44;@{ma-falcon}[Falcon Style]&amp;#124;
+                                                            Laughing Monster Style (@{ma-laughingmonster})&amp;#44;@{ma-laughingmonster}[Laughing Monster Style]&amp;#124;
+                                                            Swaying Grass Dance Style (@{ma-swayinggrass})&amp;#44;@{ma-swayinggrass}[Swaying Grass Dance Style]&amp;#124;
+                                                            Air Dragon Style (@{ma-airdragon})&amp;#44;@{ma-airdragon}[Air Dragon Style]&amp;#124;
+                                                            Earth Dragon Style (@{ma-earthdragon})&amp;#44;@{ma-earthdragon}[Earth Dragon Style]&amp;#124;
+                                                            Fire Dragon Style (@{ma-firedragon})&amp;#44;@{ma-firedragon}[Fire Dragon Style]&amp;#124;
+                                                            Water Dragon Style (@{ma-waterdragon})&amp;#44;@{ma-waterdragon}[Water Dragon Style]&amp;#124;
+                                                            Wood Dragon Style (@{ma-wooddragon})&amp;#44;@{ma-wooddragon}[Wood Dragon Style]&amp;#124;
+                                                            Golden Janissary Style (@{ma-goldenjanissary})&amp;#44;@{ma-goldenjanissary}[Golden Janissary Style]&amp;#124;
+                                                            Mantis Style (@{ma-mantis})&amp;#44;@{ma-mantis}[Mantis Style]&amp;#124;
+                                                            White Veil Style (@{ma-whiteveil})&amp;#44;@{ma-whiteveil}[White Veil Style]&amp;#124;
                                                             Other&amp;#44;?{Enter the number of M.A. dots of this style&amp;amp;#124;0&amp;amp;#125;[Other-MA]&amp;#125;|
                                                         Medicine (@{medicine}),@{medicine}[Medicine]|
                                                         Melee (@{melee}),@{melee}[Melee]|

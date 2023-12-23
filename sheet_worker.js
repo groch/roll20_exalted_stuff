@@ -1,4 +1,4 @@
-    const version = 2.62, debug = 1;
+    const version = 2.63, debug = 1;
     var TAS;
 
     /**
@@ -215,8 +215,7 @@
 
     on('sheet:opened', setDebugWrapper(updateParry));
     on('change:dexterity change:brawl change:melee', TAS._fn(updateParry));
-    on('change:ma-snake change:ma-tiger change:ma-void change:ma-reaper change:ma-ebon change:ma-crane change:ma-nightingale '
-      +'change:ma-devil change:ma-claw change:ma-pearl change:ma-steel', TAS._fn(updateParry));
+    //maAttrsArray.forEach(ma => on(`change:${ma}`, TAS._fn(updateParry))); //- DONE LATER
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef change:repeating_weapon:repweaponabi remove:repeating_weapon', TAS._fn(updateParry));
     on('change:qc-parry', TAS._fn(updateParry));
 
@@ -229,31 +228,23 @@
         const pen = values['wound-penalty'] || 0;
         var finalAttr = {};
         if (debug === 2) TAS.debug('updateParry:: Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
-        TAS.repeating('martialarts').fields('repmartialarts').attrs('ma-snake', 'ma-tiger', 'ma-void', 'ma-reaper', 'ma-ebon', 'ma-crane',
-            'ma-nightingale', 'ma-devil', 'ma-claw', 'ma-pearl', 'ma-steel').tap(setDebugWrapper(async function getMaxMaAndApply(rows, attrs) {
-            var ma = Math.max(0, attrs.I['ma-snake'], attrs.I['ma-tiger'], attrs.I['ma-void'], attrs.I['ma-reaper'],
-                                attrs.I['ma-ebon'], attrs.I['ma-crane'], attrs.I['ma-nightingale'], attrs.I['ma-devil'],
-                                attrs.I['ma-claw'], attrs.I['ma-pearl'], attrs.I['ma-steel']);
+        TAS.repeating('martialarts').fields('repmartialarts').attrs(...maAttrsArray).tap(setDebugWrapper(async function getMaxMaAndApply(rows, attrs) {
+            let ma = 0;
+            for (const maName of maAttrsArray)
+                ma = Math.max(ma, attrs.I[maName]);
+
             const dex = Number(values['dexterity']),
                 brawl = Number(values['brawl']),
                 melee = Number(values['melee']),
                 qcParry = Number(values['qc-parry']),
-                isQc = Number(values['qc']),
-                correspondingTable = {
+                isQc = Number(values['qc']);
+
+            const correspondingTable = {
                     'brawl': brawl,
-                    'melee': melee,
-                    'snake': attrs.I['ma-snake'],
-                    'tiger': attrs.I['ma-tiger'],
-                    'void': attrs.I['ma-void'],
-                    'reaper': attrs.I['ma-reaper'],
-                    'ebon': attrs.I['ma-ebon'],
-                    'crane': attrs.I['ma-crane'],
-                    'nightingale': attrs.I['ma-nightingale'],
-                    'devil': attrs.I['ma-devil'],
-                    'claw': attrs.I['ma-claw'],
-                    'pearl': attrs.I['ma-pearl'],
-                    'steel': attrs.I['ma-steel']
+                    'melee': melee
                 };
+            for (const maName of maAttrsArray)
+                correspondingTable[maName] = attrs.I[maName];
 
             if (debug === 2) TAS.debug(`updateParry:: values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
             _.each(rows, function(v, k) {
@@ -642,6 +633,7 @@
         {version: 2.57, fn: upgradeto258},
         {version: 2.60, fn: upgradeto261},
         {version: 2.61, fn: upgradeto262},
+        {version: 2.62, fn: upgradeto263},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -836,6 +828,70 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    function objectFlip(obj) {
+        const ret = {};
+        Object.keys(obj).forEach(key => ret[obj[key]] = key);
+        return ret;
+    }
+
+    function objectFilter(obj, fx = i => i) {
+        const ret = {};
+        for (const key of Object.keys(obj)) {
+            if (fx(key))
+                ret[key] = obj[key];
+        }
+        return ret;
+    }
+
+    async function upgradeto263() {
+        const finalObj = {
+            'version': 2.63
+        };
+
+        await setCorrespondingOldMaToNew(finalObj);
+        await setWeaponCorrespondingOldMaToNew(finalObj);
+        TAS.debug(`upgradeto263:: finalObj=`, finalObj);
+        setAttrs(finalObj);
+    }
+
+    async function setCorrespondingOldMaToNew(finalObj) {
+        const getAndSet = async (oldName, newName) => {
+            const value = await getSingleAttrAsync(oldName);
+            if (value && oldName !== newName) finalObj[newName] = value;
+        };
+        const flippedHash = objectFlip(oldMaNameHash);
+        const filteredHash = objectFilter(correspondingCharmSectionValue, (i) => i.indexOf('charms-ma-') === 0);
+        for (const [k,v] of Object.entries(flippedHash)) {
+            for (const [k2,v2] of Object.entries(filteredHash)) {
+                if (v === v2) {
+                    getAndSet(k.substring(2, k.length - 1), k2.substring(7));
+                    break;
+                }
+            }
+        }
+    }
+
+    async function setWeaponCorrespondingOldMaToNew(finalObj) {
+        const flippedHash = objectFlip(oldMaNameHash);
+        const oldMaNameArray = Object.keys(flippedHash).map(i => i.substring(5, i.length - 1));
+        const flippedFiltered = objectFlip(objectFilter(correspondingCharmSectionValue, (i) => i.indexOf('charms-ma-') === 0));
+        const correspondingOldMaToNew = {};
+        for (const old of oldMaNameArray)
+            correspondingOldMaToNew[old] = flippedFiltered[flippedHash[`@{ma-${old}}`]].replace('charms-', '');
+
+        const idWeaponList = await getSectionIDsAsync('weapon');
+        const arrayAttr = [];
+        for (const id of idWeaponList)
+            arrayAttr.push(`repeating_weapon_${id}_repweaponabi`);
+        const val = await getAttrsAsync(arrayAttr);
+
+        for (const id of idWeaponList) {
+            if (oldMaNameArray.includes(val[`repeating_weapon_${id}_repweaponabi`])) {
+                finalObj[`repeating_weapon_${id}_repweaponabi`] = correspondingOldMaToNew[val[`repeating_weapon_${id}_repweaponabi`]];
+            }
+        }
+    }
 
     async function upgradeto262() {
         const finalObj = {
@@ -1572,6 +1628,21 @@
         'charms-ma-whiteveil',
         'charms-ma-other'
     ];
+    var maAttrsArray = charmMaRepeatableSectionArray.slice(0, -1).map(i => i.replace('charms-',''));
+    maAttrsArray.forEach(ma => on(`change:${ma}`, TAS._fn(updateParry)));
+    var oldMaNameHash = {
+        'Snake Style': '@{ma-snake}',
+        'Tiger Style': '@{ma-tiger}',
+        'Single Point Shining Into The Void Style': '@{ma-void}',
+        'White Reaper Style': '@{ma-reaper}',
+        'Ebon Shadow Style': '@{ma-ebon}',
+        'Crane Style': '@{ma-crane}',
+        'Silver-Voiced Nightingale Style': '@{ma-nightingale}',
+        'Righteous Devil Style': '@{ma-devil}',
+        'Black Claw Style': '@{ma-claw}',
+        'Dreaming Pearl Courtesan Style': '@{ma-pearl}',
+        'Steel Devil Style': '@{ma-steel}',
+    };
     const charmSolarRepeatableSectionArray = [
         'charms-archery',
         'charms-athletics',

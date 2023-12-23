@@ -22,92 +22,85 @@ eval(sheetWorkerStr+/*javascript*/`
         OTHER: ['Exigent','Getimian','God','God-Blooded','Elemental','Demon','Undead','Mortal','Custom'],
     };
 
-    var attributes = [
-        'Strength',
-        'Dexterity',
-        'Stamina',
-        'Charisma',
-        'Manipulation',
-        'Appearance',
-        'Perception',
-        'Intelligence',
-        'Wits'
-    ];
-    var craftAbilities = {
-        name:'Craft',
-        toggleStr:'Show crafts',
-        placeholderStr:'Fate',
-        shortName:'craft',
-        customPrompt:'Enter the number of Craft dots',
-        sheetLayer: 6,
-        subSections: {
-            'Armoring': '@{craft-armoring}',
-            'Artifact': '@{craft-artifact}',
-            'Cooking': '@{craft-cooking}',
-            'First Age Artifice': '@{craft-artifice}',
-            'Gemcutting': '@{craft-gemcutting}',
-            'Geomancy': '@{craft-geomancy}',
-            'Jewelry': '@{craft-jewelry}',
-            'Tailoring': '@{craft-tailoring}',
-            'Weapon Forging': '@{craft-forging}',
-        }
-    };
-    var maAbilities = {
-        name:'Martial Arts',
-        toggleStr:'Show styles',
-        placeholderStr:'Celestial Monkey Style',
-        shortName:'ma',
-        customPrompt:'Enter the number of M.A. dots of this style',
-        sheetLayer: 4,
-        subSections: {
-            'Snake Style': '@{ma-snake}',
-            'Tiger Style': '@{ma-tiger}',
-            'Single Point Shining Into The Void Style': '@{ma-void}',
-            'White Reaper Style': '@{ma-reaper}',
-            'Ebon Shadow Style': '@{ma-ebon}',
-            'Crane Style': '@{ma-crane}',
-            'Silver-Voiced Nightingale Style': '@{ma-nightingale}',
-            'Righteous Devil Style': '@{ma-devil}',
-            'Black Claw Style': '@{ma-claw}',
-            'Dreaming Pearl Courtesan Style': '@{ma-pearl}',
-            'Steel Devil Style': '@{ma-steel}',
-        }
-    };
-    var abilities = [
-        'Archery',
-        'Athletics',
-        'Awareness',
-        'Brawl',
-        'Bureaucracy',
-        craftAbilities,
-        'Dodge',
-        'Integrity',
-        'Investigation',
-        'Larceny',
-        'Linguistics',
-        'Lore',
-        maAbilities,
-        'Medicine',
-        'Melee',
-        'Occult',
-        'Performance',
-        'Presence',
-        'Resistance',
-        'Ride',
-        'Sail',
-        'Socialize',
-        'Stealth',
-        'Survival',
-        'Thrown',
-        'War',
-    ];
-
     var solarCharmArray = charmSolarRepeatableSectionArray;
     var lunarCharmArray = charmLunarRepeatableSectionArray;
     var maCharmArray = charmMaRepeatableSectionArray;
 
     var hashCharmName = correspondingCharmSectionValue;
 `);
+
+var attributes = [
+    'Strength',
+    'Dexterity',
+    'Stamina',
+    'Charisma',
+    'Manipulation',
+    'Appearance',
+    'Perception',
+    'Intelligence',
+    'Wits'
+];
+
+const maHash = {};
+for (const key of maAttrsArray) {
+    maHash[hashCharmName[`charms-${key}`]] = `@{${key}}`;
+}
+var craftAbilities = {
+    name:'Craft',
+    toggleStr:'Show crafts',
+    placeholderStr:'Fate',
+    shortName:'craft',
+    customPrompt:'Enter the number of Craft dots',
+    sheetLayer: 6,
+    subSections: {
+        'Armoring': '@{craft-armoring}',
+        'Artifact': '@{craft-artifact}',
+        'Cooking': '@{craft-cooking}',
+        'First Age Artifice': '@{craft-artifice}',
+        'Gemcutting': '@{craft-gemcutting}',
+        'Geomancy': '@{craft-geomancy}',
+        'Jewelry': '@{craft-jewelry}',
+        'Tailoring': '@{craft-tailoring}',
+        'Weapon Forging': '@{craft-forging}',
+    }
+};
+var maAbilities = {
+    name:'Martial Arts',
+    toggleStr:'Show styles',
+    placeholderStr:'Celestial Monkey Style',
+    shortName:'ma',
+    customPrompt:'Enter the number of M.A. dots of this style',
+    sheetLayer: 4,
+    subSections: maHash
+};
+var abilities = [
+    'Archery',
+    'Athletics',
+    'Awareness',
+    'Brawl',
+    'Bureaucracy',
+    craftAbilities,
+    'Dodge',
+    'Integrity',
+    'Investigation',
+    'Larceny',
+    'Linguistics',
+    'Lore',
+    maAbilities,
+    'Medicine',
+    'Melee',
+    'Occult',
+    'Performance',
+    'Presence',
+    'Resistance',
+    'Ride',
+    'Sail',
+    'Socialize',
+    'Stealth',
+    'Survival',
+    'Thrown',
+    'War',
+];
 
 const allCharmArray = [
     ...solarCharmArray,
@@ -871,16 +864,7 @@ ${" ".repeat(padding)}        <div class="sheet-table-cell">
 ${" ".repeat(padding)}            <select name="attr_repweaponabi" class="select-abi">
 ${" ".repeat(padding)}                <option value="brawl" selected>Brawl</option>
 ${" ".repeat(padding)}                <option value="melee">Melee</option>
-${" ".repeat(padding)}                <option value="snake">Snake Style</option>
-${" ".repeat(padding)}                <option value="tiger">Tiger Style</option>
-${" ".repeat(padding)}                <option value="void">Single Point Shining Into the Void Style</option>
-${" ".repeat(padding)}                <option value="reaper">White Reaper Style</option>
-${" ".repeat(padding)}                <option value="ebon">Ebon Shadow Style</option>
-${" ".repeat(padding)}                <option value="crane">Crane Style</option>
-${" ".repeat(padding)}                <option value="nightingale">Silver-Voiced Nightingale Style</option>
-${" ".repeat(padding)}                <option value="devil">Righteous Devil Style</option>
-${" ".repeat(padding)}                <option value="claw">Black Claw Style</option>
-${" ".repeat(padding)}                <option value="pearl">Dreaming Pearl Courtesan Style</option>
+${" ".repeat(padding)}                ${returnOptions(padding+16, maAttrsArray.map(i => ({val: i, label: hashCharmName[`charms-${i}`]})), -1)}
 ${" ".repeat(padding)}                <option disabled>-------RAW------</option>
 ${" ".repeat(padding)}                ${returnOptions(padding+16, [...Array(11).keys()].map(i => ({val: i, label: i})), -1)}
 ${" ".repeat(padding)}                <option disabled>-------SPECIAL------</option>
