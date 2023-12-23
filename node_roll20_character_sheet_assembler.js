@@ -52,17 +52,7 @@ var craftAbilities = {
     shortName:'craft',
     customPrompt:'Enter the number of Craft dots',
     sheetLayer: 6,
-    subSections: {
-        'Armoring': '@{craft-armoring}',
-        'Artifact': '@{craft-artifact}',
-        'Cooking': '@{craft-cooking}',
-        'First Age Artifice': '@{craft-artifice}',
-        'Gemcutting': '@{craft-gemcutting}',
-        'Geomancy': '@{craft-geomancy}',
-        'Jewelry': '@{craft-jewelry}',
-        'Tailoring': '@{craft-tailoring}',
-        'Weapon Forging': '@{craft-forging}',
-    }
+    subSections: objectFlip(craftAbilitiesHash)
 };
 var maAbilities = {
     name:'Martial Arts',

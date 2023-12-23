@@ -288,10 +288,21 @@
         setAttrs({'roll-penalty': rollPen, ...await repeatGlobalToRepeatableAttrToValue('roll-penalty', rollPen)});
     }
 
+    var craftAbilitiesHash = {
+        '@{craft-armoring}':'Armoring',
+        '@{craft-artifact}':'Artifact',
+        '@{craft-cooking}':'Cooking',
+        '@{craft-artifice}':'First Age Artifice',
+        '@{craft-gemcutting}':'Gemcutting',
+        '@{craft-geomancy}':'Geomancy',
+        '@{craft-jewelry}':'Jewelry',
+        '@{craft-tailoring}':'Tailoring',
+        '@{craft-forging}':'Weapon Forging'
+    };
+
     on('sheet:opened', onCraftChange);
-    on('change:craft-armoring change:craft-artifact change:craft-cooking change:craft-artifice change:craft-gemcutting '
-        + 'change:craft-geomancy change:craft-jewelry change:craft-tailoring change:craft-forging change:repeating_crafts '
-        + 'remove:repeating_crafts', TAS._fn(onCraftChange));
+    on(Object.keys(craftAbilitiesHash).map(i => `change:${i.substring(2, i.length - 1)}`).join(' '), TAS._fn(onCraftChange));
+    on('change:repeating_crafts remove:repeating_crafts', TAS._fn(onCraftChange));
 
     function onCraftChange(e) {
         if (debug === 2) TAS.debug(`craft changed, e=${JSON.stringify(e)}`);
