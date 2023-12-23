@@ -45,6 +45,11 @@ const maHash = {};
 for (const key of maAttrsArray) {
     maHash[hashCharmName[`charms-${key}`]] = `@{${key}}`;
 }
+function objectFlipFullNameAndKey(obj) {
+    const ret = {};
+    Object.keys(obj).forEach(key => ret[obj[key].full] = key);
+    return ret;
+}
 var craftAbilities = {
     name:'Craft',
     toggleStr:'Show crafts',
@@ -52,7 +57,7 @@ var craftAbilities = {
     shortName:'craft',
     customPrompt:'Enter the number of Craft dots',
     sheetLayer: 6,
-    subSections: objectFlip(craftAbilitiesHash)
+    subSections: objectFlipFullNameAndKey(craftAbilitiesHash)
 };
 var maAbilities = {
     name:'Martial Arts',
@@ -1394,226 +1399,66 @@ ${" ".repeat(padding)}</div>`;
     return ret;
 }
 
+function getReminderCell(padding, spanStr, attr, baseTitle = attr[0] + attr.substring(1)) {
+    return /*html*/`<div class="reminder-cell" title="${baseTitle}">
+${" ".repeat(padding)}    <span>${spanStr}</span>
+${" ".repeat(padding)}    <input type="number" class="reminder-val" name="attr_${attr}" readonly tabindex="-1" title="@{${attr}}">
+${" ".repeat(padding)}</div>`;
+}
+
+function getReminderCellsFromArray(padding, array) {
+    let ret = '', i = 0;
+    for (const item of array) {
+        if (typeof item === 'string') {
+            ret += /*html*/`${getReminderCell(padding, item.substring(0, 3), item.toLowerCase(), item)}`;
+            if (i != array.length - 1) ret += `\n${" ".repeat(padding)}`;
+        }
+        i++;
+    }
+    return ret;
+}
+
+function getReminderCellsFromHash(padding, hash) {
+    const hashArray = Object.entries(hash), len = hashArray.length;
+    let ret = '', i = 0;
+    for (const [k,v] of hashArray) {
+        ret += /*html*/`${getReminderCell(padding, v.short, k.substring(2, k.length - 1), v.full)}`;
+        if (i++ != len - 1) ret += `\n${" ".repeat(padding)}`;
+    }
+    return ret;
+}
+
 function getRemindersAttr(padding = 0) {
     let ret = /*html*/`<input type="hidden" class="qc-panel-check" name="attr_qc">
 ${" ".repeat(padding)}<div class="sheet-box-reminder sheet-attr-reminder qc-toggle-display">
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Attr" class="sheet-layer6"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer5">
-${" ".repeat(padding)}        <div class="reminder-cell" title="Strength">
-${" ".repeat(padding)}            <span>Str</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_strength" readonly tabindex="-1" title="@{strength}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Dexterity">
-${" ".repeat(padding)}            <span>Dex</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_dexterity" readonly tabindex="-1" title="@{dexterity}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Stamina">
-${" ".repeat(padding)}            <span>Sta</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_stamina" readonly tabindex="-1" title="@{stamina}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Charisma">
-${" ".repeat(padding)}            <span>Cha</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_charisma" readonly tabindex="-1" title="@{charisma}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Manipulation">
-${" ".repeat(padding)}            <span>Man</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_manipulation" readonly tabindex="-1" title="@{manipulation}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Appearance">
-${" ".repeat(padding)}            <span>App</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_appearance" readonly tabindex="-1" title="@{appearance}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Perception">
-${" ".repeat(padding)}            <span>Per</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_perception" readonly tabindex="-1" title="@{perception}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Intelligence">
-${" ".repeat(padding)}            <span>Int</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_intelligence" readonly tabindex="-1" title="@{intelligence}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Wits">
-${" ".repeat(padding)}            <span>Wit</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_wits" readonly tabindex="-1" title="@{wits}">
-${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        ${getReminderCellsFromArray(padding+8, attributes)}
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
     return ret;
 }
 
 function getRemindersCharms(padding = 0) {
+    const getHiddenInput = (attr) => /*html*/`<input type="hidden" name="attr_charm-${attr}" class="check-charm-${attr}">`;
+    const getHiddenOption = (attr, val) => /*html*/`<option class="reminder-charm opt-charm-${attr}" value="${val}">${val.replace(' Style', '')}</option>`;
+    const getBlockFromArray = (array, addedPadding, fx) => {
+        let ret = '', i = 0;
+        for (const item of array) {
+            ret += fx(item);
+            if (i++ != array.length - 1) ret += `\n${" ".repeat(padding+addedPadding)}`;
+        }
+        return ret;
+    };
     let ret = /*html*/`<div class="sheet-box-reminder sheet-charm-reminder">
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Charms" class="sheet-layer5"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer4">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-archery" class="check-charm-archery">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-athletics" class="check-charm-athletics">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-awareness" class="check-charm-awareness">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-brawl" class="check-charm-brawl">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-bureaucracy" class="check-charm-bureaucracy">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-craft" class="check-charm-craft">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-dodge" class="check-charm-dodge">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-integrity" class="check-charm-integrity">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-investigation" class="check-charm-investigation">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-larceny" class="check-charm-larceny">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-linguistics" class="check-charm-linguistics">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-lore" class="check-charm-lore">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-medicine" class="check-charm-medicine">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-melee" class="check-charm-melee">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-occult" class="check-charm-occult">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-performance" class="check-charm-performance">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-presence" class="check-charm-presence">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-resistance" class="check-charm-resistance">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ride" class="check-charm-ride">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-sail" class="check-charm-sail">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-socialize" class="check-charm-socialize">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-stealth" class="check-charm-stealth">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-survival" class="check-charm-survival">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-thrown" class="check-charm-thrown">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-war" class="check-charm-war">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-universal" class="check-charm-universal">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-str-offense" class="check-charm-str-offense">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-str-mobility" class="check-charm-str-mobility">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-str-fos" class="check-charm-str-fos">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-dex-offensive" class="check-charm-dex-offensive">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-dex-defense" class="check-charm-dex-defense">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-dex-subterfuge" class="check-charm-dex-subterfuge">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-dex-mobility" class="check-charm-dex-mobility">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-dex-swarm" class="check-charm-dex-swarm">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-sta-defense" class="check-charm-sta-defense">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-sta-endurance" class="check-charm-sta-endurance">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-sta-berserker" class="check-charm-sta-berserker">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-cha-influence" class="check-charm-cha-influence">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-cha-territory" class="check-charm-cha-territory">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-cha-warfare" class="check-charm-cha-warfare">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-man-influence" class="check-charm-man-influence">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfugr">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-man-guile" class="check-charm-man-guile">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-app-influence" class="check-charm-app-influence">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-app-subterfuge" class="check-charm-app-subterfuge">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-app-warfare" class="check-charm-app-warfare">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-per-senses" class="check-charm-per-senses">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-per-scrutiny" class="check-charm-per-scrutiny">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-per-mysticism" class="check-charm-per-mysticism">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-int-knowledge" class="check-charm-int-knowledge">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-int-mysticism" class="check-charm-int-mysticism">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-int-crafting" class="check-charm-int-crafting">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-int-warfare" class="check-charm-int-warfare">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-int-sorcery" class="check-charm-int-sorcery">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-wit-resolve" class="check-charm-wit-resolve">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-wit-animalken" class="check-charm-wit-animalken">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-wit-navigation" class="check-charm-wit-navigation">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-wit-cache" class="check-charm-wit-cache">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-wit-territory" class="check-charm-wit-territory">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-snake" class="check-charm-ma-snake">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-tiger" class="check-charm-ma-tiger">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-spsitv" class="check-charm-ma-spsitv">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-whitereaper" class="check-charm-ma-whitereaper">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-ebonshadow" class="check-charm-ma-ebonshadow">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-crane" class="check-charm-ma-crane">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-silvervoice" class="check-charm-ma-silvervoice">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-righteousdevil" class="check-charm-ma-righteousdevil">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-blackclaw" class="check-charm-ma-blackclaw">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-dreamingpearl" class="check-charm-ma-dreamingpearl">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-steeldevil" class="check-charm-ma-steeldevil">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-centipede" class="check-charm-ma-centipede">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-falcon" class="check-charm-ma-falcon">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-laughingmonster" class="check-charm-ma-laughingmonster">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-swayinggrass" class="check-charm-ma-swayinggrass">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-airdragon" class="check-charm-ma-airdragon">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-earthdragon" class="check-charm-ma-earthdragon">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-firedragon" class="check-charm-ma-firedragon">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-waterdragon" class="check-charm-ma-waterdragon">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-wooddragon" class="check-charm-ma-wooddragon">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-goldenjanissary" class="check-charm-ma-goldenjanissary">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-mantis" class="check-charm-ma-mantis">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-whiteveil" class="check-charm-ma-whiteveil">
-${" ".repeat(padding)}        <input type="hidden" name="attr_charm-ma-other" class="check-charm-ma-other">
+${" ".repeat(padding)}        ${getBlockFromArray([...solarCharmArray, ...lunarCharmArray, ...maCharmArray], 8, item => getHiddenInput(item.replace('charms-', '')))}
 ${" ".repeat(padding)}        <input type="hidden" name="attr_charm-evocation" class="check-charm-evocations">
 ${" ".repeat(padding)}        <input type="hidden" name="attr_charm-old" class="check-charm">
 ${" ".repeat(padding)}        <select name="attr_charm_sheet" style="flex-grow: 42000;">
 ${" ".repeat(padding)}            <option>--- SELECT ONE ---</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-archery" value="Archery">Archery</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-athletics" value="Athletics">Athletics</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-awareness" value="Awareness">Awareness</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-brawl" value="Brawl">Brawl</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-bureaucracy" value="Bureaucracy">Bureaucracy</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-craft" value="Craft">Craft</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-dodge" value="Dodge">Dodge</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-integrity" value="Integrity">Integrity</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-investigation" value="Investigation">Investigation</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-larceny" value="Larceny">Larceny</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-linguistics" value="Linguistics">Linguistics</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-lore" value="Lore">Lore</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-medicine" value="Medicine">Medicine</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-melee" value="Melee">Melee</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-occult" value="Occult">Occult</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-performance" value="Performance">Performance</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-presence" value="Presence">Presence</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-resistance" value="Resistance">Resistance</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ride" value="Ride">Ride</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-sail" value="Sail">Sail</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-socialize" value="Socialize">Socialize</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-stealth" value="Stealth">Stealth</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-survival" value="Survival">Survival</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-thrown" value="Thrown">Thrown</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-war" value="War">War</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-universal" value="Universal">Universal</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-str-offense" value="Strength - Offense">Strength - Offense</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-str-mobility" value="Strength - Mobility">Strength - Mobility</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-str-fos" value="Strength - Feats of Strength">Strength - Feats of Strength</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-dex-offensive" value="Dexterity - Offensive">Dexterity - Offensive</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-dex-defense" value="Dexterity - Defense">Dexterity - Defense</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-dex-subterfuge" value="Dexterity - Subterfuge">Dexterity - Subterfuge</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-dex-mobility" value="Dexterity - Mobility">Dexterity - Mobility</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-dex-swarm" value="Dexterity - Swarm">Dexterity - Swarm</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-sta-defense" value="Stamina - Defense">Stamina - Defense</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-sta-endurance" value="Stamina - Endurance">Stamina - Endurance</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-sta-berserker" value="Stamina - Berserker">Stamina - Berserker</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-cha-influence" value="Charisma - Influence">Charisma - Influence</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-cha-territory" value="Charisma - Territory">Charisma - Territory</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-cha-warfare" value="Charisma - Warfare">Charisma - Warfare</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-man-influence" value="Manipulation - Influence">Manipulation - Influence</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-man-subterfugr" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-man-guile" value="Manipulation - Guile">Manipulation - Guile</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-app-influence" value="Appearance - Influence">Appearance - Influence</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-app-subterfuge" value="Appearance - Subterfuge">Appearance - Subterfuge</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-app-warfare" value="Appearance - Warfare">Appearance - Warfare</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-per-senses" value="Perception - Senses">Perception - Senses</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-per-scrutiny" value="Perception - Scrutiny">Perception - Scrutiny</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-per-mysticism" value="Perception - Mysticism">Perception - Mysticism</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-int-knowledge" value="Intelligence - Knowledge">Intelligence - Knowledge</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-int-mysticism" value="Intelligence - Mysticism">Intelligence - Mysticism</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-int-crafting" value="Intelligence - Crafting">Intelligence - Crafting</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-int-warfare" value="Intelligence - Warfare">Intelligence - Warfare</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-int-sorcery" value="Intelligence - Sorcery">Intelligence - Sorcery</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-wit-resolve" value="Wits - Resolve">Wits - Resolve</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-wit-animalken" value="Wits - Animal Ken">Wits - Animal Ken</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-wit-navigation" value="Wits - Navigation">Wits - Navigation</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-wit-cache" value="Wits - Cache">Wits - Cache</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-wit-territory" value="Wits - Territory">Wits - Territory</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-snake" value="Snake Style">Snake</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-tiger" value="Tiger Style">Tiger</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-spsitv" value="Single Point Shining Into The Void Style">Single Point Shining Into The Void</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-whitereaper" value="White Reaper Style">White Reaper</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-ebonshadow" value="Ebon Shadow Style">Ebon Shadow</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-crane" value="Crane Style">Crane</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightningale</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-righteousdevil" value="Righteous Devil Style">Righteous Devil</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-blackclaw" value="Black Claw Style">Black Claw</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-dreamingpearl" value="Dreaming Pearl Courtesan Style">Dreaming Pearl Courtesan</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-steeldevil" value="Steel Devil Style">Steel Devil</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-centipede" value="Centipede Style">Centipede</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-falcon" value="Falcon Style">Falcon</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-laughingmonster" value="Laughing Monster Style">Laughing Monster</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Style">Swaying Grass Dance</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-airdragon" value="Air Dragon Style">Air Dragon</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-earthdragon" value="Earth Dragon Style">Earth Dragon</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-firedragon" value="Fire Dragon Style">Fire Dragon</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-waterdragon" value="Water Dragon Style">Water Dragon</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-wooddragon" value="Wood Dragon Style">Wood Dragon</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-goldenjanissary" value="Golden Janissary Style">Golden Janissary</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-mantis" value="Mantis Style">Mantis</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-whiteveil" value="White Veil Style">White Veil</option>
-${" ".repeat(padding)}            <option class="reminder-charm opt-charm-ma-other" value="MA - Other">Ma-Other</option>
+${" ".repeat(padding)}            ${getBlockFromArray([...solarCharmArray, ...lunarCharmArray, ...maCharmArray], 12, item => getHiddenOption(item.replace('charms-', ''), hashCharmName[item]))}
 ${" ".repeat(padding)}            <option class="reminder-charm opt-charm-evocations" value="Evocation">Evocation</option>
 ${" ".repeat(padding)}            <option class="reminder-charm opt-charm" value="other">Other</option>
 ${" ".repeat(padding)}        </select>
@@ -1679,102 +1524,7 @@ function getRemindersAbi(padding = 0, includeHiddenQc = true) {
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer6">
 ${" ".repeat(padding)}        <div class="main-abi">
-${" ".repeat(padding)}            <div class="reminder-cell" title="Archery">
-${" ".repeat(padding)}                <span>Arc</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_archery" readonly tabindex="-1" title="@{archery}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Athletics">
-${" ".repeat(padding)}                <span>Ath</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_athletics" readonly tabindex="-1" title="@{athletics}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Awareness">
-${" ".repeat(padding)}                <span>Awa</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_awareness" readonly tabindex="-1" title="@{awareness}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Brawl">
-${" ".repeat(padding)}                <span>Bra</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_brawl" readonly tabindex="-1" title="@{brawl}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Bureaucracy">
-${" ".repeat(padding)}                <span>Bur</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_bureaucracy" readonly tabindex="-1" title="@{bureaucracy}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Dodge">
-${" ".repeat(padding)}                <span>Dod</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_dodge" readonly tabindex="-1" title="@{dodge}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Integrity">
-${" ".repeat(padding)}                <span>Int</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_integrity" readonly tabindex="-1" title="@{integrity}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Investigation">
-${" ".repeat(padding)}                <span>Inv</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_investigation" readonly tabindex="-1" title="@{investigation}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Larceny">
-${" ".repeat(padding)}                <span>Lar</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_larceny" readonly tabindex="-1" title="@{larceny}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Linguistics">
-${" ".repeat(padding)}                <span>Lin</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_linguistics" readonly tabindex="-1" title="@{linguistics}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Lore">
-${" ".repeat(padding)}                <span>Lor</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_lore" readonly tabindex="-1" title="@{lore}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Medicine">
-${" ".repeat(padding)}                <span>Med</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_medicine" readonly tabindex="-1" title="@{medicine}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Melee">
-${" ".repeat(padding)}                <span>Mel</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_melee" readonly tabindex="-1" title="@{melee}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Occult">
-${" ".repeat(padding)}                <span>Occ</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_occult" readonly tabindex="-1" title="@{occult}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Performance">
-${" ".repeat(padding)}                <span>Per</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_performance" readonly tabindex="-1" title="@{performance}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Presence">
-${" ".repeat(padding)}                <span>Pre</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_presence" readonly tabindex="-1" title="@{presence}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Resistance">
-${" ".repeat(padding)}                <span>Res</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_resistance" readonly tabindex="-1" title="@{resistance}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Ride">
-${" ".repeat(padding)}                <span>Rid</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_ride" readonly tabindex="-1" title="@{ride}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Sail">
-${" ".repeat(padding)}                <span>Sai</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_sail" readonly tabindex="-1" title="@{sail}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Socialize">
-${" ".repeat(padding)}                <span>Soc</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_socialize" readonly tabindex="-1" title="@{socialize}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Stealth">
-${" ".repeat(padding)}                <span>Ste</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_stealth" readonly tabindex="-1" title="@{stealth}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Survival">
-${" ".repeat(padding)}                <span>Sur</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_survival" readonly tabindex="-1" title="@{survival}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Thrown">
-${" ".repeat(padding)}                <span>Thr</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_thrown" readonly tabindex="-1" title="@{thrown}">
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="War">
-${" ".repeat(padding)}                <span>War</span>
-${" ".repeat(padding)}                <input type="number" class="reminder-val" name="attr_war" readonly tabindex="-1" title="@{war}">
-${" ".repeat(padding)}            </div>
+${" ".repeat(padding)}            ${getReminderCellsFromArray(padding+12, abilities)}
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}        <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
 ${" ".repeat(padding)}        <div class="rep-toggle">
@@ -1802,42 +1552,7 @@ function getRemindersCraft(padding = 0) {
     let ret = /*html*/`<div class="sheet-box-reminder sheet-craft-reminder qc-toggle-display">
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Craft" class="sheet-layer6"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer5">
-${" ".repeat(padding)}        <div class="reminder-cell" title="Armoring">
-${" ".repeat(padding)}            <span>Arm</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-armoring" readonly tabindex="-1" title="@{craft-armoring}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Artifact">
-${" ".repeat(padding)}            <span>Art</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1" title="@{craft-artifact}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Cooking">
-${" ".repeat(padding)}            <span>Coo</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1" title="@{craft-cooking}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="First Age Artifice">
-${" ".repeat(padding)}            <span>FAA</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-artifice" readonly tabindex="-1" title="@{craft-artifice}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Gemcutting">
-${" ".repeat(padding)}            <span>Gem</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-gemcutting" readonly tabindex="-1" title="@{craft-gemcutting}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Geomancy">
-${" ".repeat(padding)}            <span>Geo</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-geomancy" readonly tabindex="-1" title="@{craft-geomancy}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Jewelry">
-${" ".repeat(padding)}            <span>Jew</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-jewelry" readonly tabindex="-1" title="@{craft-jewelry}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Tailoring">
-${" ".repeat(padding)}            <span>Tai</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-tailoring" readonly tabindex="-1" title="@{craft-tailoring}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Weapon Forging">
-${" ".repeat(padding)}            <span>Wea</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1" title="@{craft-forging}">
-${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        ${getReminderCellsFromHash(padding+8, craftAbilitiesHash)}
 ${" ".repeat(padding)}        <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
 ${" ".repeat(padding)}        <div class="rep-toggle">
 ${" ".repeat(padding)}            <hr />
@@ -1853,54 +1568,34 @@ ${" ".repeat(padding)}</div>`;
 return ret;
 }
 
+const maHashShort = {
+    'ma-spsitv': 'SPS',
+    'ma-whitereaper': 'WR',
+    'ma-ebonshadow': 'ES',
+    'ma-silvervoice': 'SVN',
+    'ma-righteousdevil': 'RD',
+    'ma-blackclaw': 'BC',
+    'ma-dreamingpearl': 'DPC',
+    'ma-steeldevil': 'SDS',
+    'ma-swayinggrass': 'SGD',
+    'ma-whiteveil': 'WV'
+};
+const maAbilitiesHash = {};
+for (const ma of maAttrsArray) {
+    maAbilitiesHash[`@{${ma}}`] = {full: hashCharmName[`charms-${ma}`]};
+    if (Object.keys(maHashShort).includes(ma)) {
+        maAbilitiesHash[`@{${ma}}`].short = maHashShort[ma];
+    } else {
+        maAbilitiesHash[`@{${ma}}`].short = hashCharmName[`charms-${ma}`].substring(0, 3);
+    }
+}
+
+
 function getRemindersMA(padding = 0) {
     let ret = /*html*/`<div class="sheet-box-reminder sheet-ma-reminder qc-toggle-display">
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show M-A" class="sheet-layer5"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer4">
-${" ".repeat(padding)}        <div class="reminder-cell" title="Snake Style">
-${" ".repeat(padding)}            <span>Sna</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-snake" readonly tabindex="-1" title="@{ma-snake}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Tiger Style">
-${" ".repeat(padding)}            <span>Tig</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1" title="@{ma-tiger}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Single Point Shining Into the Void Style">
-${" ".repeat(padding)}            <span>SPS</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1" title="@{ma-void}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="White Reaper Style">
-${" ".repeat(padding)}            <span>WR</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1" title="@{ma-reaper}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Ebon Shadow Style">
-${" ".repeat(padding)}            <span>ES</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1" title="@{ma-ebon}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Crane Style">
-${" ".repeat(padding)}            <span>Cra</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-crane" readonly tabindex="-1" title="@{ma-crane}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Silver-Voiced Nightingale Style">
-${" ".repeat(padding)}            <span>SVN</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1" title="@{ma-nightingale}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Righteous Devil Style">
-${" ".repeat(padding)}            <span>RD</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1" title="@{ma-devil}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Black Claw Style">
-${" ".repeat(padding)}            <span>BC</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1" title="@{ma-claw}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Dreaming Pearl Courtesan Style">
-${" ".repeat(padding)}            <span>DPC</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1" title="@{ma-pearl}">
-${" ".repeat(padding)}        </div>
-${" ".repeat(padding)}        <div class="reminder-cell" title="Steel Devil Style">
-${" ".repeat(padding)}            <span>SDS</span>
-${" ".repeat(padding)}            <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1" title="@{ma-steel}">
-${" ".repeat(padding)}        </div>
+${" ".repeat(padding)}        ${getReminderCellsFromHash(padding+8, maAbilitiesHash)}
 ${" ".repeat(padding)}        <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
 ${" ".repeat(padding)}        <div class="rep-toggle">
 ${" ".repeat(padding)}            <hr />

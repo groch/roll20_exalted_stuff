@@ -290,16 +290,20 @@
     }
 
     var craftAbilitiesHash = {
-        '@{craft-armoring}':'Armoring',
-        '@{craft-artifact}':'Artifact',
-        '@{craft-cooking}':'Cooking',
-        '@{craft-artifice}':'First Age Artifice',
-        '@{craft-gemcutting}':'Gemcutting',
-        '@{craft-geomancy}':'Geomancy',
-        '@{craft-jewelry}':'Jewelry',
-        '@{craft-tailoring}':'Tailoring',
-        '@{craft-forging}':'Weapon Forging'
+        '@{craft-armoring}':    {full: 'Armoring'},
+        '@{craft-artifact}':    {full: 'Artifact'},
+        '@{craft-cooking}':     {full: 'Cooking'},
+        '@{craft-artifice}':    {full: 'First Age Artifice', short: 'FAA'},
+        '@{craft-gemcutting}':  {full: 'Gemcutting'},
+        '@{craft-geomancy}':    {full: 'Geomancy'},
+        '@{craft-jewelry}':     {full: 'Jewelry'},
+        '@{craft-tailoring}':   {full: 'Tailoring'},
+        '@{craft-forging}':     {full: 'Weapon Forging'}
     };
+    for (const [k,v] of Object.entries(craftAbilitiesHash)) {
+        if (!v.short)
+            craftAbilitiesHash[k].short = v.full.substring(0, 3);
+    }
 
     on('sheet:opened', onCraftChange);
     on(Object.keys(craftAbilitiesHash).map(i => `change:${i.substring(2, i.length - 1)}`).join(' '), TAS._fn(onCraftChange));
@@ -6159,7 +6163,7 @@
                                         <input type="hidden" name="attr_charm-cha-territory" class="check-charm-cha-territory">
                                         <input type="hidden" name="attr_charm-cha-warfare" class="check-charm-cha-warfare">
                                         <input type="hidden" name="attr_charm-man-influence" class="check-charm-man-influence">
-                                        <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfugr">
+                                        <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfuge">
                                         <input type="hidden" name="attr_charm-man-guile" class="check-charm-man-guile">
                                         <input type="hidden" name="attr_charm-app-influence" class="check-charm-app-influence">
                                         <input type="hidden" name="attr_charm-app-subterfuge" class="check-charm-app-subterfuge">
@@ -6246,7 +6250,7 @@
                                             <option class="reminder-charm opt-charm-cha-territory" value="Charisma - Territory">Charisma - Territory</option>
                                             <option class="reminder-charm opt-charm-cha-warfare" value="Charisma - Warfare">Charisma - Warfare</option>
                                             <option class="reminder-charm opt-charm-man-influence" value="Manipulation - Influence">Manipulation - Influence</option>
-                                            <option class="reminder-charm opt-charm-man-subterfugr" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
+                                            <option class="reminder-charm opt-charm-man-subterfuge" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
                                             <option class="reminder-charm opt-charm-man-guile" value="Manipulation - Guile">Manipulation - Guile</option>
                                             <option class="reminder-charm opt-charm-app-influence" value="Appearance - Influence">Appearance - Influence</option>
                                             <option class="reminder-charm opt-charm-app-subterfuge" value="Appearance - Subterfuge">Appearance - Subterfuge</option>
@@ -6270,7 +6274,7 @@
                                             <option class="reminder-charm opt-charm-ma-whitereaper" value="White Reaper Style">White Reaper</option>
                                             <option class="reminder-charm opt-charm-ma-ebonshadow" value="Ebon Shadow Style">Ebon Shadow</option>
                                             <option class="reminder-charm opt-charm-ma-crane" value="Crane Style">Crane</option>
-                                            <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightningale</option>
+                                            <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightingale</option>
                                             <option class="reminder-charm opt-charm-ma-righteousdevil" value="Righteous Devil Style">Righteous Devil</option>
                                             <option class="reminder-charm opt-charm-ma-blackclaw" value="Black Claw Style">Black Claw</option>
                                             <option class="reminder-charm opt-charm-ma-dreamingpearl" value="Dreaming Pearl Courtesan Style">Dreaming Pearl Courtesan</option>
@@ -6278,7 +6282,7 @@
                                             <option class="reminder-charm opt-charm-ma-centipede" value="Centipede Style">Centipede</option>
                                             <option class="reminder-charm opt-charm-ma-falcon" value="Falcon Style">Falcon</option>
                                             <option class="reminder-charm opt-charm-ma-laughingmonster" value="Laughing Monster Style">Laughing Monster</option>
-                                            <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Style">Swaying Grass Dance</option>
+                                            <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Dance Style">Swaying Grass Dance</option>
                                             <option class="reminder-charm opt-charm-ma-airdragon" value="Air Dragon Style">Air Dragon</option>
                                             <option class="reminder-charm opt-charm-ma-earthdragon" value="Earth Dragon Style">Earth Dragon</option>
                                             <option class="reminder-charm opt-charm-ma-firedragon" value="Fire Dragon Style">Fire Dragon</option>
@@ -6287,7 +6291,7 @@
                                             <option class="reminder-charm opt-charm-ma-goldenjanissary" value="Golden Janissary Style">Golden Janissary</option>
                                             <option class="reminder-charm opt-charm-ma-mantis" value="Mantis Style">Mantis</option>
                                             <option class="reminder-charm opt-charm-ma-whiteveil" value="White Veil Style">White Veil</option>
-                                            <option class="reminder-charm opt-charm-ma-other" value="MA - Other">Ma-Other</option>
+                                            <option class="reminder-charm opt-charm-ma-other" value="MA - Other">MA - Other</option>
                                             <option class="reminder-charm opt-charm-evocations" value="Evocation">Evocation</option>
                                             <option class="reminder-charm opt-charm" value="other">Other</option>
                                         </select>
@@ -7094,17 +7098,17 @@
                                             <span>Tig</span>
                                             <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1" title="@{ma-tiger}">
                                         </div>
-                                        <div class="reminder-cell" title="Single Point Shining Into the Void Style">
+                                        <div class="reminder-cell" title="Single Point Shining Into The Void Style">
                                             <span>SPS</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1" title="@{ma-void}">
+                                            <input type="number" class="reminder-val" name="attr_ma-spsitv" readonly tabindex="-1" title="@{ma-spsitv}">
                                         </div>
                                         <div class="reminder-cell" title="White Reaper Style">
                                             <span>WR</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1" title="@{ma-reaper}">
+                                            <input type="number" class="reminder-val" name="attr_ma-whitereaper" readonly tabindex="-1" title="@{ma-whitereaper}">
                                         </div>
                                         <div class="reminder-cell" title="Ebon Shadow Style">
                                             <span>ES</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1" title="@{ma-ebon}">
+                                            <input type="number" class="reminder-val" name="attr_ma-ebonshadow" readonly tabindex="-1" title="@{ma-ebonshadow}">
                                         </div>
                                         <div class="reminder-cell" title="Crane Style">
                                             <span>Cra</span>
@@ -7112,23 +7116,71 @@
                                         </div>
                                         <div class="reminder-cell" title="Silver-Voiced Nightingale Style">
                                             <span>SVN</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1" title="@{ma-nightingale}">
+                                            <input type="number" class="reminder-val" name="attr_ma-silvervoice" readonly tabindex="-1" title="@{ma-silvervoice}">
                                         </div>
                                         <div class="reminder-cell" title="Righteous Devil Style">
                                             <span>RD</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1" title="@{ma-devil}">
+                                            <input type="number" class="reminder-val" name="attr_ma-righteousdevil" readonly tabindex="-1" title="@{ma-righteousdevil}">
                                         </div>
                                         <div class="reminder-cell" title="Black Claw Style">
                                             <span>BC</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1" title="@{ma-claw}">
+                                            <input type="number" class="reminder-val" name="attr_ma-blackclaw" readonly tabindex="-1" title="@{ma-blackclaw}">
                                         </div>
                                         <div class="reminder-cell" title="Dreaming Pearl Courtesan Style">
                                             <span>DPC</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1" title="@{ma-pearl}">
+                                            <input type="number" class="reminder-val" name="attr_ma-dreamingpearl" readonly tabindex="-1" title="@{ma-dreamingpearl}">
                                         </div>
                                         <div class="reminder-cell" title="Steel Devil Style">
                                             <span>SDS</span>
-                                            <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1" title="@{ma-steel}">
+                                            <input type="number" class="reminder-val" name="attr_ma-steeldevil" readonly tabindex="-1" title="@{ma-steeldevil}">
+                                        </div>
+                                        <div class="reminder-cell" title="Centipede Style">
+                                            <span>Cen</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-centipede" readonly tabindex="-1" title="@{ma-centipede}">
+                                        </div>
+                                        <div class="reminder-cell" title="Falcon Style">
+                                            <span>Fal</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-falcon" readonly tabindex="-1" title="@{ma-falcon}">
+                                        </div>
+                                        <div class="reminder-cell" title="Laughing Monster Style">
+                                            <span>Lau</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-laughingmonster" readonly tabindex="-1" title="@{ma-laughingmonster}">
+                                        </div>
+                                        <div class="reminder-cell" title="Swaying Grass Dance Style">
+                                            <span>SGD</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-swayinggrass" readonly tabindex="-1" title="@{ma-swayinggrass}">
+                                        </div>
+                                        <div class="reminder-cell" title="Air Dragon Style">
+                                            <span>Air</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-airdragon" readonly tabindex="-1" title="@{ma-airdragon}">
+                                        </div>
+                                        <div class="reminder-cell" title="Earth Dragon Style">
+                                            <span>Ear</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-earthdragon" readonly tabindex="-1" title="@{ma-earthdragon}">
+                                        </div>
+                                        <div class="reminder-cell" title="Fire Dragon Style">
+                                            <span>Fir</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-firedragon" readonly tabindex="-1" title="@{ma-firedragon}">
+                                        </div>
+                                        <div class="reminder-cell" title="Water Dragon Style">
+                                            <span>Wat</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-waterdragon" readonly tabindex="-1" title="@{ma-waterdragon}">
+                                        </div>
+                                        <div class="reminder-cell" title="Wood Dragon Style">
+                                            <span>Woo</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-wooddragon" readonly tabindex="-1" title="@{ma-wooddragon}">
+                                        </div>
+                                        <div class="reminder-cell" title="Golden Janissary Style">
+                                            <span>Gol</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-goldenjanissary" readonly tabindex="-1" title="@{ma-goldenjanissary}">
+                                        </div>
+                                        <div class="reminder-cell" title="Mantis Style">
+                                            <span>Man</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-mantis" readonly tabindex="-1" title="@{ma-mantis}">
+                                        </div>
+                                        <div class="reminder-cell" title="White Veil Style">
+                                            <span>WV</span>
+                                            <input type="number" class="reminder-val" name="attr_ma-whiteveil" readonly tabindex="-1" title="@{ma-whiteveil}">
                                         </div>
                                         <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
                                         <div class="rep-toggle">
@@ -7878,7 +7930,7 @@
                             <input type="hidden" name="attr_charm-cha-territory" class="check-charm-cha-territory">
                             <input type="hidden" name="attr_charm-cha-warfare" class="check-charm-cha-warfare">
                             <input type="hidden" name="attr_charm-man-influence" class="check-charm-man-influence">
-                            <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfugr">
+                            <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfuge">
                             <input type="hidden" name="attr_charm-man-guile" class="check-charm-man-guile">
                             <input type="hidden" name="attr_charm-app-influence" class="check-charm-app-influence">
                             <input type="hidden" name="attr_charm-app-subterfuge" class="check-charm-app-subterfuge">
@@ -7965,7 +8017,7 @@
                                 <option class="reminder-charm opt-charm-cha-territory" value="Charisma - Territory">Charisma - Territory</option>
                                 <option class="reminder-charm opt-charm-cha-warfare" value="Charisma - Warfare">Charisma - Warfare</option>
                                 <option class="reminder-charm opt-charm-man-influence" value="Manipulation - Influence">Manipulation - Influence</option>
-                                <option class="reminder-charm opt-charm-man-subterfugr" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
+                                <option class="reminder-charm opt-charm-man-subterfuge" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
                                 <option class="reminder-charm opt-charm-man-guile" value="Manipulation - Guile">Manipulation - Guile</option>
                                 <option class="reminder-charm opt-charm-app-influence" value="Appearance - Influence">Appearance - Influence</option>
                                 <option class="reminder-charm opt-charm-app-subterfuge" value="Appearance - Subterfuge">Appearance - Subterfuge</option>
@@ -7989,7 +8041,7 @@
                                 <option class="reminder-charm opt-charm-ma-whitereaper" value="White Reaper Style">White Reaper</option>
                                 <option class="reminder-charm opt-charm-ma-ebonshadow" value="Ebon Shadow Style">Ebon Shadow</option>
                                 <option class="reminder-charm opt-charm-ma-crane" value="Crane Style">Crane</option>
-                                <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightningale</option>
+                                <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightingale</option>
                                 <option class="reminder-charm opt-charm-ma-righteousdevil" value="Righteous Devil Style">Righteous Devil</option>
                                 <option class="reminder-charm opt-charm-ma-blackclaw" value="Black Claw Style">Black Claw</option>
                                 <option class="reminder-charm opt-charm-ma-dreamingpearl" value="Dreaming Pearl Courtesan Style">Dreaming Pearl Courtesan</option>
@@ -7997,7 +8049,7 @@
                                 <option class="reminder-charm opt-charm-ma-centipede" value="Centipede Style">Centipede</option>
                                 <option class="reminder-charm opt-charm-ma-falcon" value="Falcon Style">Falcon</option>
                                 <option class="reminder-charm opt-charm-ma-laughingmonster" value="Laughing Monster Style">Laughing Monster</option>
-                                <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Style">Swaying Grass Dance</option>
+                                <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Dance Style">Swaying Grass Dance</option>
                                 <option class="reminder-charm opt-charm-ma-airdragon" value="Air Dragon Style">Air Dragon</option>
                                 <option class="reminder-charm opt-charm-ma-earthdragon" value="Earth Dragon Style">Earth Dragon</option>
                                 <option class="reminder-charm opt-charm-ma-firedragon" value="Fire Dragon Style">Fire Dragon</option>
@@ -8006,7 +8058,7 @@
                                 <option class="reminder-charm opt-charm-ma-goldenjanissary" value="Golden Janissary Style">Golden Janissary</option>
                                 <option class="reminder-charm opt-charm-ma-mantis" value="Mantis Style">Mantis</option>
                                 <option class="reminder-charm opt-charm-ma-whiteveil" value="White Veil Style">White Veil</option>
-                                <option class="reminder-charm opt-charm-ma-other" value="MA - Other">Ma-Other</option>
+                                <option class="reminder-charm opt-charm-ma-other" value="MA - Other">MA - Other</option>
                                 <option class="reminder-charm opt-charm-evocations" value="Evocation">Evocation</option>
                                 <option class="reminder-charm opt-charm" value="other">Other</option>
                             </select>
@@ -8604,7 +8656,7 @@
                                 <input type="hidden" name="attr_charm-cha-territory" class="check-charm-cha-territory">
                                 <input type="hidden" name="attr_charm-cha-warfare" class="check-charm-cha-warfare">
                                 <input type="hidden" name="attr_charm-man-influence" class="check-charm-man-influence">
-                                <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfugr">
+                                <input type="hidden" name="attr_charm-man-subterfuge" class="check-charm-man-subterfuge">
                                 <input type="hidden" name="attr_charm-man-guile" class="check-charm-man-guile">
                                 <input type="hidden" name="attr_charm-app-influence" class="check-charm-app-influence">
                                 <input type="hidden" name="attr_charm-app-subterfuge" class="check-charm-app-subterfuge">
@@ -8691,7 +8743,7 @@
                                     <option class="reminder-charm opt-charm-cha-territory" value="Charisma - Territory">Charisma - Territory</option>
                                     <option class="reminder-charm opt-charm-cha-warfare" value="Charisma - Warfare">Charisma - Warfare</option>
                                     <option class="reminder-charm opt-charm-man-influence" value="Manipulation - Influence">Manipulation - Influence</option>
-                                    <option class="reminder-charm opt-charm-man-subterfugr" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
+                                    <option class="reminder-charm opt-charm-man-subterfuge" value="Manipulation - Subterfuge">Manipulation - Subterfuge</option>
                                     <option class="reminder-charm opt-charm-man-guile" value="Manipulation - Guile">Manipulation - Guile</option>
                                     <option class="reminder-charm opt-charm-app-influence" value="Appearance - Influence">Appearance - Influence</option>
                                     <option class="reminder-charm opt-charm-app-subterfuge" value="Appearance - Subterfuge">Appearance - Subterfuge</option>
@@ -8715,7 +8767,7 @@
                                     <option class="reminder-charm opt-charm-ma-whitereaper" value="White Reaper Style">White Reaper</option>
                                     <option class="reminder-charm opt-charm-ma-ebonshadow" value="Ebon Shadow Style">Ebon Shadow</option>
                                     <option class="reminder-charm opt-charm-ma-crane" value="Crane Style">Crane</option>
-                                    <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightningale</option>
+                                    <option class="reminder-charm opt-charm-ma-silvervoice" value="Silver-Voiced Nightingale Style">Silver-Voiced Nightingale</option>
                                     <option class="reminder-charm opt-charm-ma-righteousdevil" value="Righteous Devil Style">Righteous Devil</option>
                                     <option class="reminder-charm opt-charm-ma-blackclaw" value="Black Claw Style">Black Claw</option>
                                     <option class="reminder-charm opt-charm-ma-dreamingpearl" value="Dreaming Pearl Courtesan Style">Dreaming Pearl Courtesan</option>
@@ -8723,7 +8775,7 @@
                                     <option class="reminder-charm opt-charm-ma-centipede" value="Centipede Style">Centipede</option>
                                     <option class="reminder-charm opt-charm-ma-falcon" value="Falcon Style">Falcon</option>
                                     <option class="reminder-charm opt-charm-ma-laughingmonster" value="Laughing Monster Style">Laughing Monster</option>
-                                    <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Style">Swaying Grass Dance</option>
+                                    <option class="reminder-charm opt-charm-ma-swayinggrass" value="Swaying Grass Dance Style">Swaying Grass Dance</option>
                                     <option class="reminder-charm opt-charm-ma-airdragon" value="Air Dragon Style">Air Dragon</option>
                                     <option class="reminder-charm opt-charm-ma-earthdragon" value="Earth Dragon Style">Earth Dragon</option>
                                     <option class="reminder-charm opt-charm-ma-firedragon" value="Fire Dragon Style">Fire Dragon</option>
@@ -8732,7 +8784,7 @@
                                     <option class="reminder-charm opt-charm-ma-goldenjanissary" value="Golden Janissary Style">Golden Janissary</option>
                                     <option class="reminder-charm opt-charm-ma-mantis" value="Mantis Style">Mantis</option>
                                     <option class="reminder-charm opt-charm-ma-whiteveil" value="White Veil Style">White Veil</option>
-                                    <option class="reminder-charm opt-charm-ma-other" value="MA - Other">Ma-Other</option>
+                                    <option class="reminder-charm opt-charm-ma-other" value="MA - Other">MA - Other</option>
                                     <option class="reminder-charm opt-charm-evocations" value="Evocation">Evocation</option>
                                     <option class="reminder-charm opt-charm" value="other">Other</option>
                                 </select>
@@ -8979,17 +9031,17 @@
                                     <span>Tig</span>
                                     <input type="number" class="reminder-val" name="attr_ma-tiger" readonly tabindex="-1" title="@{ma-tiger}">
                                 </div>
-                                <div class="reminder-cell" title="Single Point Shining Into the Void Style">
+                                <div class="reminder-cell" title="Single Point Shining Into The Void Style">
                                     <span>SPS</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-void" readonly tabindex="-1" title="@{ma-void}">
+                                    <input type="number" class="reminder-val" name="attr_ma-spsitv" readonly tabindex="-1" title="@{ma-spsitv}">
                                 </div>
                                 <div class="reminder-cell" title="White Reaper Style">
                                     <span>WR</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-reaper" readonly tabindex="-1" title="@{ma-reaper}">
+                                    <input type="number" class="reminder-val" name="attr_ma-whitereaper" readonly tabindex="-1" title="@{ma-whitereaper}">
                                 </div>
                                 <div class="reminder-cell" title="Ebon Shadow Style">
                                     <span>ES</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-ebon" readonly tabindex="-1" title="@{ma-ebon}">
+                                    <input type="number" class="reminder-val" name="attr_ma-ebonshadow" readonly tabindex="-1" title="@{ma-ebonshadow}">
                                 </div>
                                 <div class="reminder-cell" title="Crane Style">
                                     <span>Cra</span>
@@ -8997,23 +9049,71 @@
                                 </div>
                                 <div class="reminder-cell" title="Silver-Voiced Nightingale Style">
                                     <span>SVN</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-nightingale" readonly tabindex="-1" title="@{ma-nightingale}">
+                                    <input type="number" class="reminder-val" name="attr_ma-silvervoice" readonly tabindex="-1" title="@{ma-silvervoice}">
                                 </div>
                                 <div class="reminder-cell" title="Righteous Devil Style">
                                     <span>RD</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-devil" readonly tabindex="-1" title="@{ma-devil}">
+                                    <input type="number" class="reminder-val" name="attr_ma-righteousdevil" readonly tabindex="-1" title="@{ma-righteousdevil}">
                                 </div>
                                 <div class="reminder-cell" title="Black Claw Style">
                                     <span>BC</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-claw" readonly tabindex="-1" title="@{ma-claw}">
+                                    <input type="number" class="reminder-val" name="attr_ma-blackclaw" readonly tabindex="-1" title="@{ma-blackclaw}">
                                 </div>
                                 <div class="reminder-cell" title="Dreaming Pearl Courtesan Style">
                                     <span>DPC</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-pearl" readonly tabindex="-1" title="@{ma-pearl}">
+                                    <input type="number" class="reminder-val" name="attr_ma-dreamingpearl" readonly tabindex="-1" title="@{ma-dreamingpearl}">
                                 </div>
                                 <div class="reminder-cell" title="Steel Devil Style">
                                     <span>SDS</span>
-                                    <input type="number" class="reminder-val" name="attr_ma-steel" readonly tabindex="-1" title="@{ma-steel}">
+                                    <input type="number" class="reminder-val" name="attr_ma-steeldevil" readonly tabindex="-1" title="@{ma-steeldevil}">
+                                </div>
+                                <div class="reminder-cell" title="Centipede Style">
+                                    <span>Cen</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-centipede" readonly tabindex="-1" title="@{ma-centipede}">
+                                </div>
+                                <div class="reminder-cell" title="Falcon Style">
+                                    <span>Fal</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-falcon" readonly tabindex="-1" title="@{ma-falcon}">
+                                </div>
+                                <div class="reminder-cell" title="Laughing Monster Style">
+                                    <span>Lau</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-laughingmonster" readonly tabindex="-1" title="@{ma-laughingmonster}">
+                                </div>
+                                <div class="reminder-cell" title="Swaying Grass Dance Style">
+                                    <span>SGD</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-swayinggrass" readonly tabindex="-1" title="@{ma-swayinggrass}">
+                                </div>
+                                <div class="reminder-cell" title="Air Dragon Style">
+                                    <span>Air</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-airdragon" readonly tabindex="-1" title="@{ma-airdragon}">
+                                </div>
+                                <div class="reminder-cell" title="Earth Dragon Style">
+                                    <span>Ear</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-earthdragon" readonly tabindex="-1" title="@{ma-earthdragon}">
+                                </div>
+                                <div class="reminder-cell" title="Fire Dragon Style">
+                                    <span>Fir</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-firedragon" readonly tabindex="-1" title="@{ma-firedragon}">
+                                </div>
+                                <div class="reminder-cell" title="Water Dragon Style">
+                                    <span>Wat</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-waterdragon" readonly tabindex="-1" title="@{ma-waterdragon}">
+                                </div>
+                                <div class="reminder-cell" title="Wood Dragon Style">
+                                    <span>Woo</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-wooddragon" readonly tabindex="-1" title="@{ma-wooddragon}">
+                                </div>
+                                <div class="reminder-cell" title="Golden Janissary Style">
+                                    <span>Gol</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-goldenjanissary" readonly tabindex="-1" title="@{ma-goldenjanissary}">
+                                </div>
+                                <div class="reminder-cell" title="Mantis Style">
+                                    <span>Man</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-mantis" readonly tabindex="-1" title="@{ma-mantis}">
+                                </div>
+                                <div class="reminder-cell" title="White Veil Style">
+                                    <span>WV</span>
+                                    <input type="number" class="reminder-val" name="attr_ma-whiteveil" readonly tabindex="-1" title="@{ma-whiteveil}">
                                 </div>
                                 <input type="hidden" class="rep-enabled-check" name="attr_rep-ma-enabled" />
                                 <div class="rep-toggle">

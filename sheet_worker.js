@@ -289,16 +289,20 @@
     }
 
     var craftAbilitiesHash = {
-        '@{craft-armoring}':'Armoring',
-        '@{craft-artifact}':'Artifact',
-        '@{craft-cooking}':'Cooking',
-        '@{craft-artifice}':'First Age Artifice',
-        '@{craft-gemcutting}':'Gemcutting',
-        '@{craft-geomancy}':'Geomancy',
-        '@{craft-jewelry}':'Jewelry',
-        '@{craft-tailoring}':'Tailoring',
-        '@{craft-forging}':'Weapon Forging'
+        '@{craft-armoring}':    {full: 'Armoring'},
+        '@{craft-artifact}':    {full: 'Artifact'},
+        '@{craft-cooking}':     {full: 'Cooking'},
+        '@{craft-artifice}':    {full: 'First Age Artifice', short: 'FAA'},
+        '@{craft-gemcutting}':  {full: 'Gemcutting'},
+        '@{craft-geomancy}':    {full: 'Geomancy'},
+        '@{craft-jewelry}':     {full: 'Jewelry'},
+        '@{craft-tailoring}':   {full: 'Tailoring'},
+        '@{craft-forging}':     {full: 'Weapon Forging'}
     };
+    for (const [k,v] of Object.entries(craftAbilitiesHash)) {
+        if (!v.short)
+            craftAbilitiesHash[k].short = v.full.substring(0, 3);
+    }
 
     on('sheet:opened', onCraftChange);
     on(Object.keys(craftAbilitiesHash).map(i => `change:${i.substring(2, i.length - 1)}`).join(' '), TAS._fn(onCraftChange));
