@@ -41,15 +41,15 @@ eval(sheetWorkerStr+/*javascript*/`
         customPrompt:'Enter the number of Craft dots',
         sheetLayer: 6,
         subSections: {
-            'Armoring': 'craft-armoring',
-            'Artifact': 'craft-artifact',
-            'Cooking': 'craft-cooking',
-            'First Age Artifice': 'craft-artifice',
-            'Gemcutting': 'craft-gemcutting',
-            'Geomancy': 'craft-geomancy',
-            'Jewelry': 'craft-jewelry',
-            'Tailoring': 'craft-tailoring',
-            'Weapon Forging': 'craft-forging',
+            'Armoring': '@{craft-armoring}',
+            'Artifact': '@{craft-artifact}',
+            'Cooking': '@{craft-cooking}',
+            'First Age Artifice': '@{craft-artifice}',
+            'Gemcutting': '@{craft-gemcutting}',
+            'Geomancy': '@{craft-geomancy}',
+            'Jewelry': '@{craft-jewelry}',
+            'Tailoring': '@{craft-tailoring}',
+            'Weapon Forging': '@{craft-forging}',
         }
     };
     var maAbilities = {
@@ -60,17 +60,17 @@ eval(sheetWorkerStr+/*javascript*/`
         customPrompt:'Enter the number of M.A. dots of this style',
         sheetLayer: 4,
         subSections: {
-            'Snake Style': 'ma-snake',
-            'Tiger Style': 'ma-tiger',
-            'Single Point Shining Into The Void Style': 'ma-void',
-            'White Reaper Style': 'ma-reaper',
-            'Ebon Shadow Style': 'ma-ebon',
-            'Crane Style': 'ma-crane',
-            'Silver-Voiced Nightingale Style': 'ma-nightingale',
-            'Righteous Devil Style': 'ma-devil',
-            'Black Claw Style': 'ma-claw',
-            'Dreaming Pearl Courtesan Style': 'ma-pearl',
-            'Steel Devil Style': 'ma-steel',
+            'Snake Style': '@{ma-snake}',
+            'Tiger Style': '@{ma-tiger}',
+            'Single Point Shining Into The Void Style': '@{ma-void}',
+            'White Reaper Style': '@{ma-reaper}',
+            'Ebon Shadow Style': '@{ma-ebon}',
+            'Crane Style': '@{ma-crane}',
+            'Silver-Voiced Nightingale Style': '@{ma-nightingale}',
+            'Righteous Devil Style': '@{ma-devil}',
+            'Black Claw Style': '@{ma-claw}',
+            'Dreaming Pearl Courtesan Style': '@{ma-pearl}',
+            'Steel Devil Style': '@{ma-steel}',
         }
     };
     var abilities = [
@@ -375,10 +375,10 @@ ${" ".repeat(padding)}        <div class="sheet-layer${ability.sheetLayer}">`;
 
     for (const [k,v] of Object.entries(ability.subSections)) {
         ret += /*html*/`
-${" ".repeat(padding)}            <div class="sheet-trait" title="@{${v}}">
+${" ".repeat(padding)}            <div class="sheet-trait" title="${v}">
 ${" ".repeat(padding)}                <label>${k}</label>
 ${" ".repeat(padding)}                <div class="sheet-dots">
-${" ".repeat(padding)}                    ${returnDotsRadio(padding+20, `attr_${v}`)}
+${" ".repeat(padding)}                    ${returnDotsRadio(padding+20, `attr_${v.substr(2, v.length - 3)}`)}
 ${" ".repeat(padding)}                </div>
 ${" ".repeat(padding)}            </div>`;
     }
@@ -452,7 +452,24 @@ outHtml += /*html*/`
                             </div>
                         </fieldset>\n`;
 
-const attributePrompt = `?{Attribute|${attributes.map(i => `${i} (@{${i.toLowerCase()}}), @{${i.toLowerCase()}}[${i}]`).join('|')}}`;
+function buildPrompt(promptStr, hashMap, addedOtherVal, multiLine = false, padding = 36) {
+    let retStr = `?{${promptStr}`;
+    for (const [k,v] of Object.entries(hashMap))
+        retStr += `|${multiLine ? `\n${" ".repeat(padding+4)}` : ''}${k} (${v}), ${v}[${k}]`;
+    if (addedOtherVal)
+        retStr += `|${multiLine ? `\n${" ".repeat(padding+4)}` : ''}Other, ${addedOtherVal}`;
+    retStr += `${multiLine ? `\n${" ".repeat(padding)}` : ''}}`;
+    return retStr;
+}
+
+function getHashMapFromArray(array, fxVal = (i) => `@{${i.toLowerCase()}}`) {
+    const objRet = {};
+    for (const item of array)
+        objRet[item] = fxVal(item);
+    return objRet;
+}
+
+const attributePrompt = buildPrompt('Attribute', {...getHashMapFromArray(attributes)});
 const abilityPromptBASE = `?{Ability|\n`;
 function buildAbilityPrompt(padding = 36) {
     let retStr = `${abilityPromptBASE}`;
@@ -462,7 +479,7 @@ function buildAbilityPrompt(padding = 36) {
         } else {
             retStr += `${" ".repeat(padding+4)}${ability.name} (...),?{${ability.name}&amp;#124;\n`;
             for (const [k, v] of Object.entries(ability.subSections)) {
-                retStr += `${" ".repeat(padding+8)}${k} (@{${v}})&amp;#44;@{${v}}[${k}]&amp;#124;\n`;
+                retStr += `${" ".repeat(padding+8)}${k} (${v})&amp;#44;${v}[${k}]&amp;#124;\n`;
             }
             const roll20CommentName = ability.shortName.length === 2 ? ability.shortName.toUpperCase() : ability.shortName.charAt(0).toUpperCase() + ability.shortName.slice(1);
             retStr += `${" ".repeat(padding+8)}Other&amp;#44;?{${ability.customPrompt}&amp;amp;#124;0&amp;amp;#125;[Other-${roll20CommentName}]&amp;#125;|\n`;
@@ -2023,10 +2040,10 @@ function getAttrOptions(padding, includePrompts = false, selected = -1, rawCount
     let ret =`${returnOptions(padding, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}\n${" ".repeat(padding)}`;
     if (includePrompts)
         ret +=  /*html*/`<option disabled>-------ATTRIBUTES PROMPTS------</option>
-${" ".repeat(padding)}<option value="?{Physical Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-${" ".repeat(padding)}<option value="?{Social Attribute ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-${" ".repeat(padding)}<option value="?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-${" ".repeat(padding)}<option value="?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Physical Attribute ?', {...getHashMapFromArray([attributes[0], attributes[1], attributes[2]])})}">Physical Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Social Attribute ?', {...getHashMapFromArray([attributes[3], attributes[4], attributes[5]])})}">Social Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Mental Attribute ?', {...getHashMapFromArray([attributes[6], attributes[7], attributes[8]])})}">Mental Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Full Attribute ?', getHashMapFromArray(attributes))}">Full Prompt</option>
 ${" ".repeat(padding)}<option value="?{Custom Attribute}[Custom]">Simple Prompt</option>\n${" ".repeat(padding)}`;
     ret += /*html*/`<option disabled>-------RAW------</option>
 ${" ".repeat(padding)}${returnOptions(padding, [...Array(rawCount).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}`;
@@ -2037,24 +2054,24 @@ function getAbiOptions(padding, includePrompts = false, selected = -1, rawCount 
     let ret =`${returnOptions(padding, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}\n${" ".repeat(padding)}`;
     if (includePrompts) {
         ret += /*html*/`<option disabled>-------ABILITIES PROMPTS------</option>
-${" ".repeat(padding)}<option value="?{Craft|Armoring (@{craft-armoring}),@{craft-armoring}[Armoring]|Artifact (@{craft-artifact}),@{craft-artifact}[Artifact]|Cooking (@{craft-cooking}),@{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}),@{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}),@{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}),@{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}),@{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}),@{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}),@{craft-forging}[Weapon Forging]|Other,?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
-${" ".repeat(padding)}<option value="?{Martial Arts|Snake Style (@{ma-snake}),@{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}),@{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-void}),@{ma-void}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-reaper}),@{ma-reaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebon}),@{ma-ebon}[Ebon Shadow Style]|Crane Style (@{ma-crane}),@{ma-crane}[Crane Style]|Silver-voiced Nightingale Style (@{ma-nightingale}),@{ma-nightingale}[Silver-voiced Nightingale Style]|Righteous Devil Style (@{ma-devil}),@{ma-devil}[Righteous Devil Style]|Black Claw Style (@{ma-claw}),@{ma-claw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-pearl}),@{ma-pearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steel}),@{ma-steel}[Steel Devil Style]|Other,?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Craft', craftAbilities.subSections, '?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]')}">Craft Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Martial Arts', maAbilities.subSections, '?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]')}">Martial Arts Prompt</option>
 ${" ".repeat(padding)}<option value="${buildAbilityPrompt(padding)}">Full Ability Prompt</option>
 ${" ".repeat(padding)}<option value="?{Custom Ability}">Simple Prompt</option>\n${" ".repeat(padding)}`;
     } else {
         ret += /*html*/`<option disabled>------CRAFTS-----</option>
-${" ".repeat(padding)}${returnOptions(padding, Object.entries(craftAbilities.subSections).map(([k,v]) => ({val: `@{${v}}[${k}]`, label: k})), -1)}
+${" ".repeat(padding)}${returnOptions(padding, Object.entries(craftAbilities.subSections).map(([k,v]) => ({val: `${v}[${k}]`, label: k})), -1)}
 ${" ".repeat(padding)}<option disabled>-------M-A------</option>
-${" ".repeat(padding)}${returnOptions(padding, Object.entries(maAbilities.subSections).map(([k,v]) => ({val: `@{${v}}[${k}]`, label: k})), -1)}\n${" ".repeat(padding)}`;
+${" ".repeat(padding)}${returnOptions(padding, Object.entries(maAbilities.subSections).map(([k,v]) => ({val: `${v}[${k}]`, label: k})), -1)}\n${" ".repeat(padding)}`;
     }
     ret += /*html*/`<option disabled>-------ATTRIBUTES------</option>
 ${" ".repeat(padding)}${returnOptions(padding, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}\n${" ".repeat(padding)}`;
     if (includePrompts) {
     ret += /*html*/`<option disabled>-------ATTRIBUTES PROMPTS------</option>
-${" ".repeat(padding)}<option value="?{Physical Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]}">Physical Prompt</option>
-${" ".repeat(padding)}<option value="?{Social Attribute 2 ?|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]}">Social Prompt</option>
-${" ".repeat(padding)}<option value="?{Mental Attribute 2 ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Mental Prompt</option>
-${" ".repeat(padding)}<option value="?{Full Attribute 2 ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}">Full Attribute Prompt</option>\n${" ".repeat(padding)}`;
+${" ".repeat(padding)}<option value="${buildPrompt('Physical Attribute 2 ?', {...getHashMapFromArray([attributes[0], attributes[1], attributes[2]])})}">Physical Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Social Attribute 2 ?', {...getHashMapFromArray([attributes[3], attributes[4], attributes[5]])})}">Social Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Mental Attribute 2 ?', {...getHashMapFromArray([attributes[6], attributes[7], attributes[8]])})}">Mental Prompt</option>
+${" ".repeat(padding)}<option value="${buildPrompt('Full Attribute 2 ?', getHashMapFromArray(attributes))}">Full Attribute Prompt</option>\n${" ".repeat(padding)}`;
     }
     ret += /*html*/`<option disabled>-------RAW------</option>
 ${" ".repeat(padding)}${returnOptions(padding, [...Array(rawCount).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}`;
@@ -2161,7 +2178,7 @@ outHtml += /*html*/`
                                                             </select>+
                                                             <span class="specialty-box db-hint">
                                                                 <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
-                                                                <span class="sheet-spelleffect" title="Spé"></span>
+                                                                <span class="sheet-spelleffect" title="Spe"></span>
                                                             </span>+
                                                         </div>
                                                         <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
@@ -2319,7 +2336,7 @@ outHtml += /*html*/`
                                             </div>
                                             <div class="flex grow-normal">
                                                 <button type="action" name="act_default-macro-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                                <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                                <input type="text" name="attr_reprolls-bonus-successes" class="sheet-rolls-bonus-successes grow-normal" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus success ?|0}">s
                                                 <input type="hidden" name="attr_reprolls-final-macro-replaced" class="sheet-rolls-final-macro-replaced">
                                                 <input type="hidden" name="attr_rep-cost-macro">
                                                 <input type="text" name="attr_reprolls-final-macro-options" class="sheet-rolls-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2697,7 +2714,7 @@ outHtml += /*html*/`
                                         </div>
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-watk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                            <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                            <input type="text" name="attr_repcombat-watk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus success ?|0}">s
                                             <input type="hidden" name="attr_repcombat-watk-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro">
                                             <input type="text" name="attr_repcombat-watk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
@@ -2762,7 +2779,7 @@ outHtml += /*html*/`
                                         </div>
                                         <div class="flex grow-normal">
                                             <button type="action" name="act_default-macro-datk-s" class="stealth-btn" title="Override/Set additional success Default Macro">+</button>
-                                            <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus succès ?|0}">s
+                                            <input type="text" name="attr_repcombat-datk-bonus-successes" class="sheet-watk-bonus-successes grow-double" title="Bonus successes for the roll (Willpower for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="?{Bonus success ?|0}">s
                                             <input type="hidden" name="attr_repcombat-datk-final-macro-replaced">
                                             <input type="hidden" name="attr_rep-cost-macro">
                                             <input type="text" name="attr_repcombat-datk-final-macro-options" class="sheet-init-macro-options grow-normal" title="Macro options for the Roll. Type '!exr -help' in chat to learn more" placeholder="-d 8,9 -R 1 -rl2 2,3">
