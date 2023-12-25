@@ -1,4 +1,4 @@
-    const version = 2.63, debug = 1;
+    const version = 2.64, debug = 1;
     var TAS;
 
     /**
@@ -556,7 +556,8 @@
             "personal-equation": "0", "peripheral-equation": "0",
             "showanimadiv": 1, "showsupdiv": 0, "showlimit": 0,
             "caste-low": 'unknown',
-            "diceex": 1, "succex": 0, "canspendmote": 0
+            "diceex": 1, "succex": 0, "canspendmote": 0,
+            "def-exc-cost-multiplier": 2
         };
         if (isSolarBasedExalt(caste)) {
             finalObj["personal-equation"]   = "@{essence} * 3 + 10 - @{committedessperso}";
@@ -576,6 +577,7 @@
             finalObj["personal-equation"]   = "@{essence} * 2 + 9 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 6 + 25 - @{committedesstotal}";
             finalObj["showlimit"] = 1;
+            finalObj["def-exc-cost-multiplier"] = 1;
         } else if (isLiminal(caste)){
             finalObj["personal-equation"]   = "@{essence} * 3 + 10 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 4 + 23 - @{committedesstotal}";
@@ -649,6 +651,7 @@
         {version: 2.60, fn: upgradeto261},
         {version: 2.61, fn: upgradeto262},
         {version: 2.62, fn: upgradeto263},
+        {version: 2.63, fn: upgradeto264},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -685,9 +688,9 @@
             description: 'The Exalt infuse her essence inside the action to magnify it.', effect:'The Exalt add [[?{Dice Added ?|1}]] dices to the action.'}, old);
             
         addNewCharmToFinalObj(charmObj, generateNewRowId(idNewCharms), {name:'Generic Defense Excellency', type:'Supplemental',
-            cost:'[[?{Defense Added ?|1} * 2]]', cost_mote:'[[?{Defense Added ?|1} * 2]]', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ?|1} * 2]]',
+            cost:'[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]', cost_mote:'[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]',
             short_d: 'bonus to defensive static values', skill:'Exalted Power', duration:'Instant', aspect:aspectStr,
-            description: 'The Exalt infuse her essence inside her defenses to appear impenetrable.', effect:'The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.'}, old);
+            description: 'The Exalt infuse her essence inside her defenses to appear impenetrable.', effect:'The Exalt add [[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}]] to the static value of the related defense.'}, old);
     }
 
     function hasCasteImg(caste) {
@@ -843,6 +846,13 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    async function upgradeto264() {
+        setAttrs({
+            "def-exc-cost-multiplier": isSidereal(await getSingleAttrAsync("caste")) ? 1 : 2,
+            'version': 2.64
+        });
+    }
 
     function objectFlip(obj) {
         const ret = {};

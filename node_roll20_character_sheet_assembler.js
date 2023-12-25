@@ -221,6 +221,7 @@ let outHtml = /*html*/
         <input name="attr_show-charname-in-charms" type="hidden" value="1">
         <input name="attr_show_character_name" type="hidden">
         <input name="attr_hide-not-learnt-charms-in-reminders" type="hidden">
+        <input name="attr_def-exc-cost-multiplier" type="hidden" value="2">
 
         <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="1">
         <input class="sheet-show-antisocial-tab" type="hidden" name="attr_antisocialtab" value="0">
@@ -967,7 +968,7 @@ ${" ".repeat(padding)}            <input type="number" value="(ceil((@{dexterity
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col def-exc">
-${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
+${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]">Def Exc</button>
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}    <div class="flex-col">
 ${" ".repeat(padding)}        <div class="flex">
@@ -1359,6 +1360,10 @@ outHtml += /*html*/
                 <div class="flex-wrap mote-pool-eq">
                     <label>Max Personal Motes<input type="text" name="attr_personal-equation" value="@{essence} * 3 + 10 - @{committedessperso}"><span> </span></label>
                     <label>Max Peripheral Motes<input type="text" name="attr_peripheral-equation" value="@{essence} * 7 + 26 - @{committedesstotal}"><span></span></label>
+                </div>
+                <h1 class="def-exc-cost"><span>Defense Excellency Cost Multiplier</span></h1>
+                <div class="flex-wrap def-exc-cost">
+                    <label>Multiplier<input type="number" name="attr_def-exc-cost-multiplier" min=1 title="@{def-exc-cost-multiplier}"><span> </span></label>
                 </div>
             </div>
 
@@ -2073,7 +2078,7 @@ ${" ".repeat(padding)}    </div>`;
     if (includeExc) {
         ret += /*html*/`
 ${" ".repeat(padding)}    <div class="sheet-table-cell def-exc">
-${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ?|1} * 2]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ?|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ?|1} * 2]]">Def Exc</button>
+${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}]] to the static value of the related defense.}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]">Def Exc</button>
 ${" ".repeat(padding)}    </div>`;
     }
     ret += /*html*/`

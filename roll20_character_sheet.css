@@ -751,6 +751,15 @@ input[type="number"] {
     margin-right: 0;
 }
 
+.charsheet .flex.main-page .sheet-tab-settings-sheet .def-exc-cost {
+    display: none;
+}
+
+.charsheet .caste-check[value="Exigent"]       ~ .flex.main-page .sheet-tab-settings-sheet .def-exc-cost,
+.charsheet .caste-check[value="Custom"]        ~ .flex.main-page .sheet-tab-settings-sheet .def-exc-cost {
+    display: block;
+}
+
 .charsheet .sheet-2colrow.sheet-checklist.sheet-main-config {
     width: 100%;
     justify-content: space-between;
