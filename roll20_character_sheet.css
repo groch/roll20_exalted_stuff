@@ -2757,7 +2757,7 @@ and (min-resolution:.001dpcm) {
     cursor: pointer;
 }
 
-.charsheet .sheet-table-cell.def-exc button.sheet-roll {
+.charsheet .sheet-tab-intimacies-sheet .flex-col.def-exc button.sheet-roll {
     height: 1em;
 }
 

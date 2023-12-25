@@ -928,6 +928,13 @@ outHtml += /*html*/
                 <!-- 1.4 JOINED AGAIN = HEALTH & DEFENSE -->
 \n`;
 
+const defaultDefExcPrompt = `?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}`;
+function getDefExcDiv(padding) {
+    return /*html*/`<div class="flex-col def-exc">
+${" ".repeat(padding)}    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[${defaultDefExcPrompt} * @{def-exc-cost-multiplier}]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[${defaultDefExcPrompt}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[${defaultDefExcPrompt} * @{def-exc-cost-multiplier}]]">Def Exc</button>
+${" ".repeat(padding)}</div>`;
+}
+
 function getDefenseLine(padding = 0) {
     return /*html*/`<div class="sheet-defenses flex-wrap">
 ${" ".repeat(padding)}    <div class="flex-col">
@@ -967,9 +974,7 @@ ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" na
 ${" ".repeat(padding)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>
-${" ".repeat(padding)}    <div class="flex-col def-exc">
-${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]">Def Exc</button>
-${" ".repeat(padding)}    </div>
+${" ".repeat(padding)}    ${getDefExcDiv(padding+4)}
 ${" ".repeat(padding)}    <div class="flex-col">
 ${" ".repeat(padding)}        <div class="flex">
 ${" ".repeat(padding)}            <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
@@ -2075,12 +2080,8 @@ ${" ".repeat(padding)}            <input type="hidden" class="qc-panel-check" na
 ${" ".repeat(padding)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}${TITLE_BR}Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}${TITLE_BR}Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}    </div>`;
-    if (includeExc) {
-        ret += /*html*/`
-${" ".repeat(padding)}    <div class="sheet-table-cell def-exc">
-${" ".repeat(padding)}        <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}]] to the static value of the related defense.}\\n!exr ${moteCostBase}${moteCostPromptBase}[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]">Def Exc</button>
-${" ".repeat(padding)}    </div>`;
-    }
+    if (includeExc)
+        ret += `\n${" ".repeat(padding)}    ${getDefExcDiv(padding+4)}`;
     ret += /*html*/`
 ${" ".repeat(padding)}    <div class="flex">
 ${" ".repeat(padding)}        <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
