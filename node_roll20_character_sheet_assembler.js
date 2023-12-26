@@ -1860,7 +1860,7 @@ outHtml += /*html*/`
                                                                 <span class="sheet-spelleffect" title="Spe"></span>
                                                             </span>+
                                                         </div>
-                                                        <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
+                                                        <div class="inline-flex grow-normal excellency-box reset-hint" title="Excellency Box">
                                                             <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint mote-hint-one" title="Charm dices for the Roll${TITLE_BR}Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
                                                             <input type="number" name="attr_reprolls-ycharm-paid-dices" class="sheet-rolls-ycharm-dices grow-normal" title="Charm dices for the Roll${TITLE_BR}Cost already paid" value="0" placeholder="0" min="0">+
                                                         </div>
@@ -1888,7 +1888,7 @@ outHtml += /*html*/`
                                                             ${returnOptions(60, [{val: 0, label: '(0) No'},{val: 1, label: '(1) Yes'}])}
                                                         </select>+
                                                     </div>
-                                                    <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
+                                                    <div class="inline-flex grow-normal excellency-box reset-hint" title="Excellency Box">
                                                         <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint mote-hint-two inverted-color" title="Charm successes for the roll${TITLE_BR}Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
                                                         <input type="number" name="attr_reprolls-ycharm-paid-successes" class="sheet-rolls-ycharm-successes grow-normal" title="Charm successes for the roll${TITLE_BR}Cost already paid" value="0" placeholder="1" min="0">+
                                                     </div>
@@ -1915,7 +1915,7 @@ outHtml += /*html*/`
 
 function getExcellencyCap(padding, sectionName, totalExpr, totalTitleEnd, appendTopFx, appendBeforeTotalFx) {
     let ret = `<div class="${sectionName}-type-excellency">\n`;
-    ret += `${" ".repeat(padding+4)}<img class="caste-img">\n`;
+    ret += `${" ".repeat(padding+4)}<button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>\n`;
     ret += `${" ".repeat(padding+4)}CAP\n`;
     if (appendTopFx)
         ret += `${" ".repeat(padding+4)}${appendTopFx(padding)}\n`;
@@ -1929,11 +1929,11 @@ ${" ".repeat(padding+4)}<hr />\n`;
     return ret;
 }
 
-const getLunarTop = (padding) => /*html*/`<select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint">
+const getLunarTop = (padding) => /*html*/`<select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint reset-hint">
 ${" ".repeat(padding+8)}${returnOptions(padding+8, [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0)}
 ${" ".repeat(padding+4)}</select>`;
 
-const getLiminalTop = (padding) => /*html*/`<div class="anima-flare-box-mode liminal-hint">
+const getLiminalTop = (padding) => /*html*/`<div class="anima-flare-box-mode liminal-hint reset-hint">
 ${" ".repeat(padding+8)}<input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
 ${" ".repeat(padding+8)}<span class="sheet-spelleffect" title="Toggle"></span>
 ${" ".repeat(padding+4)}</div>`;

@@ -2432,6 +2432,23 @@
         }
     }));
 
+    /* Reset Dice Cap in roll through caste image hidden Triggers */
+    on('clicked:repeating_rolls-widget:reset-roll-cap', setDebugWrapper(async function clickResetDiceCap(e) {
+        if (debug === 2) TAS.debug(`CLICK reset-roll-cap !!! e=${JSON.stringify(e)}`);
+        const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
+        const finalObj = {}, attrArray = [
+            ...resetOnNegAttrs.slice(0, -1),
+            'reprolls-attr-lunar-exc',
+            'reprolls-anima-flare',
+        ];
+        for (const key of attrArray)
+            finalObj[`${attr_name}${key}`] = 0;
+
+        if (debug === 2) TAS.debug(`clickResetDiceCap:: RESETTING:`, finalObj);
+        setAttrs(finalObj);
+        await updateRollWidgetForCostAsync(e);
+    }));
+
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
@@ -2442,7 +2459,12 @@
         'reprolls-willpower-toggle',
         'reprolls-ycharm-dices',
         'reprolls-ycharm-successes',
-        'reprolls-pool-starting'
+        'reprolls-pool-starting',
+        // added to trigger taint
+        'reprolls-ycharm-paid-dices',
+        'reprolls-ycharm-paid-successes',
+        'reprolls-attr-lunar-exc',
+        'reprolls-anima-flare',
     ];
 
     for (const attr of widgetCostAttrs) {
@@ -7480,7 +7502,7 @@
                                                                 <span class="sheet-spelleffect" title="Spe"></span>
                                                             </span>+
                                                         </div>
-                                                        <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
+                                                        <div class="inline-flex grow-normal excellency-box reset-hint" title="Excellency Box">
                                                             <input type="number" name="attr_reprolls-ycharm-dices" class="sheet-rolls-ycharm-dices grow-normal mote-hint mote-hint-one" title="Charm dices for the Roll&#013;&#010;Cost motes of Essence 1:1" value="0" placeholder="5" min="0">+
                                                             <input type="number" name="attr_reprolls-ycharm-paid-dices" class="sheet-rolls-ycharm-dices grow-normal" title="Charm dices for the Roll&#013;&#010;Cost already paid" value="0" placeholder="0" min="0">+
                                                         </div>
@@ -7509,7 +7531,7 @@
                                                             <option value="1">(1) Yes</option>
                                                         </select>+
                                                     </div>
-                                                    <div class="inline-flex grow-normal excellency-box" title="Excellency Box">
+                                                    <div class="inline-flex grow-normal excellency-box reset-hint" title="Excellency Box">
                                                         <input type="number" name="attr_reprolls-ycharm-successes" class="sheet-rolls-ycharm-successes grow-normal mote-hint mote-hint-two inverted-color" title="Charm successes for the roll&#013;&#010;Cost motes of Essence 2:1 success" value="0" placeholder="1" min="0">+
                                                         <input type="number" name="attr_reprolls-ycharm-paid-successes" class="sheet-rolls-ycharm-successes grow-normal" title="Charm successes for the roll&#013;&#010;Cost already paid" value="0" placeholder="1" min="0">+
                                                     </div>
@@ -7544,7 +7566,7 @@
                                         <div class="excellency-cap-section" title="Limit Detail for the Excellency">
                                             <input type="hidden" name="attr_reprolls-caste" class="sheet-rolls-caste-val" disabled value="@{caste}">
                                             <div class="solar-type-excellency">
-                                                <img class="caste-img">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
                                                 CAP
                                                 <input type="hidden" name="attr_sign" value="(@{reprolls-exc-solar-total-calc} - @{reprolls-exc-solar-sum-calc})" disabled>
                                                 <input type="number" name="attr_reprolls-exc-solar-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
@@ -7552,9 +7574,9 @@
                                                 <input type="number" name="attr_reprolls-exc-solar-total-calc" class="exc-total" value="(@{reprolls-attr}+@{reprolls-abi})" disabled title="Total limit of Excellency Cap&#013;&#010;Solar=>ATTR+ABI">
                                             </div>
                                             <div class="lunar-type-excellency">
-                                                <img class="caste-img">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
                                                 CAP
-                                                <select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint">
+                                                <select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint reset-hint">
                                                     <option value="0" selected>---</option>
                                                     <option value="@{strength}">str</option>
                                                     <option value="@{dexterity}">dex</option>
@@ -7572,7 +7594,7 @@
                                                 <input type="number" name="attr_reprolls-exc-lunar-total-calc" class="exc-total" value="(@{reprolls-attr}+@{reprolls-attr-lunar-exc})" disabled title="Total limit of Excellency Cap&#013;&#010;Lunar=>ATTR, +ATTR2 if Stunted accordingly">
                                             </div>
                                             <div class="db-type-excellency">
-                                                <img class="caste-img">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
                                                 CAP
                                                 <input type="hidden" name="attr_sign" value="(@{reprolls-exc-db-total-calc} - @{reprolls-exc-db-sum-calc})" disabled>
                                                 <input type="number" name="attr_reprolls-exc-db-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
@@ -7580,9 +7602,9 @@
                                                 <input type="number" name="attr_reprolls-exc-db-total-calc" class="exc-total" value="(@{reprolls-abi}+@{reprolls-specialty})" disabled title="Total limit of Excellency Cap&#013;&#010;DB=>ABI+SPE">
                                             </div>
                                             <div class="liminal-type-excellency">
-                                                <img class="caste-img">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
                                                 CAP
-                                                <div class="anima-flare-box-mode liminal-hint">
+                                                <div class="anima-flare-box-mode liminal-hint reset-hint">
                                                     <input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
                                                     <span class="sheet-spelleffect" title="Toggle"></span>
                                                 </div>
@@ -7592,7 +7614,7 @@
                                                 <input type="number" name="attr_reprolls-exc-liminal-total-calc" class="exc-total" value="(@{reprolls-abi}+@{reprolls-anima-flare})" disabled title="Total limit of Excellency Cap&#013;&#010;Liminal=>ABI, +ESSENCE if Anima Flare">
                                             </div>
                                             <div class="sidereal-type-excellency">
-                                                <img class="caste-img">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
                                                 CAP
                                                 <input type="hidden" name="attr_sign" value="(@{reprolls-exc-sidereal-total-calc} - @{reprolls-exc-sidereal-sum-calc})" disabled>
                                                 <input type="number" name="attr_reprolls-exc-sidereal-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">

@@ -2431,6 +2431,23 @@
         }
     }));
 
+    /* Reset Dice Cap in roll through caste image hidden Triggers */
+    on('clicked:repeating_rolls-widget:reset-roll-cap', setDebugWrapper(async function clickResetDiceCap(e) {
+        if (debug === 2) TAS.debug(`CLICK reset-roll-cap !!! e=${JSON.stringify(e)}`);
+        const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
+        const finalObj = {}, attrArray = [
+            ...resetOnNegAttrs.slice(0, -1),
+            'reprolls-attr-lunar-exc',
+            'reprolls-anima-flare',
+        ];
+        for (const key of attrArray)
+            finalObj[`${attr_name}${key}`] = 0;
+
+        if (debug === 2) TAS.debug(`clickResetDiceCap:: RESETTING:`, finalObj);
+        setAttrs(finalObj);
+        await updateRollWidgetForCostAsync(e);
+    }));
+
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
@@ -2441,7 +2458,12 @@
         'reprolls-willpower-toggle',
         'reprolls-ycharm-dices',
         'reprolls-ycharm-successes',
-        'reprolls-pool-starting'
+        'reprolls-pool-starting',
+        // added to trigger taint
+        'reprolls-ycharm-paid-dices',
+        'reprolls-ycharm-paid-successes',
+        'reprolls-attr-lunar-exc',
+        'reprolls-anima-flare',
     ];
 
     for (const attr of widgetCostAttrs) {
