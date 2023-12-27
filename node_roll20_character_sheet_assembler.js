@@ -467,9 +467,9 @@ outHtml += /*html*/`
 function buildPrompt(promptStr, hashMap, addedOtherVal, multiLine = false, p = 36) {
     let retStr = `?{${promptStr}`;
     for (const [k,v] of Object.entries(hashMap))
-        retStr += `|${multiLine ? `\n${" ".repeat(p+4)}` : ''}${k} (${v}), ${v}[${k}]`;
+        retStr += `|${multiLine ? `${brPad(p+4)}` : ''}${k} (${v}), ${v}[${k}]`;
     if (addedOtherVal)
-        retStr += `|${multiLine ? `\n${" ".repeat(p+4)}` : ''}Other, ${addedOtherVal}`;
+        retStr += `|${multiLine ? `${brPad(p+4)}` : ''}Other, ${addedOtherVal}`;
     retStr += `${multiLine ? brPad(p) : ''}}`;
     return retStr;
 }
@@ -487,17 +487,17 @@ function buildAbilityPrompt(p = 36) {
     let retStr = `${abilityPromptBASE}`;
     for (const ability of abilities) {
         if (typeof ability === 'string') {
-            retStr += `${" ".repeat(p+4)}${ability} (@{${ability.toLowerCase()}}),@{${ability.toLowerCase()}}[${ability}]|\n`;
+            retStr += `${pad(p+4)}${ability} (@{${ability.toLowerCase()}}),@{${ability.toLowerCase()}}[${ability}]|\n`;
         } else {
-            retStr += `${" ".repeat(p+4)}${ability.name} (...),?{${ability.name}&amp;#124;\n`;
+            retStr += `${pad(p+4)}${ability.name} (...),?{${ability.name}&amp;#124;\n`;
             for (const [k, v] of Object.entries(ability.subSections)) {
-                retStr += `${" ".repeat(p+8)}${k} (${v})&amp;#44;${v}[${k}]&amp;#124;\n`;
+                retStr += `${pad(p+8)}${k} (${v})&amp;#44;${v}[${k}]&amp;#124;\n`;
             }
             const roll20CommentName = ability.shortName.length === 2 ? ability.shortName.toUpperCase() : ability.shortName.charAt(0).toUpperCase() + ability.shortName.slice(1);
-            retStr += `${" ".repeat(p+8)}Other&amp;#44;?{${ability.customPrompt}&amp;amp;#124;0&amp;amp;#125;[Other-${roll20CommentName}]&amp;#125;|\n`;
+            retStr += `${pad(p+8)}Other&amp;#44;?{${ability.customPrompt}&amp;amp;#124;0&amp;amp;#125;[Other-${roll20CommentName}]&amp;#125;|\n`;
         }
     }
-    retStr += `${" ".repeat(p+4)}Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]\n`;
+    retStr += `${pad(p+4)}Other,?{Enter the number of dots of this attribute&amp;#124;0&amp;#125;[Other]\n`;
     retStr += `${pad(p)}}`;
     return retStr;
 }
@@ -536,11 +536,11 @@ function getExRolls(qc = false, p = 28) {
     for (let i = 0; i < 4; i++) {
         const diceEx = i % 2, succEx = Math.floor(i / 2);
         retStr += `<div class="sheet-exroll exroll-${classArray[i]}">\n`;
-        retStr += `${" ".repeat(p+4)}<div class="header-section" title="${getTitle(diceEx, succEx)}">ExRoll</div>\n`;
-        retStr += `${" ".repeat(p+4)}<div class="sheet-grouped-buttons end" title="Cast Generic Roll">\n`;
-        retStr += `${" ".repeat(p+8)}${getDefaultRollButton('Cast', 'roll', 'default-whisper', finalName(i), fx(diceEx, succEx, false, p+8))}\n`;
-        retStr += `${" ".repeat(p+8)}${getDefaultRollButton('to GM', 'roll', 'gm-whisper', finalName(i, true), fx(diceEx, succEx, true, p+8))}\n`;
-        retStr += `${" ".repeat(p+4)}</div>\n`;
+        retStr += `${pad(p+4)}<div class="header-section" title="${getTitle(diceEx, succEx)}">ExRoll</div>\n`;
+        retStr += `${pad(p+4)}<div class="sheet-grouped-buttons end" title="Cast Generic Roll">\n`;
+        retStr += `${pad(p+8)}${getDefaultRollButton('Cast', 'roll', 'default-whisper', finalName(i), fx(diceEx, succEx, false, p+8))}\n`;
+        retStr += `${pad(p+8)}${getDefaultRollButton('to GM', 'roll', 'gm-whisper', finalName(i, true), fx(diceEx, succEx, true, p+8))}\n`;
+        retStr += `${pad(p+4)}</div>\n`;
         retStr += `${pad(p)}</div>`;
         if (i < 3) retStr += brPad(p);
     }
@@ -556,7 +556,7 @@ function getQCAttr(p, name, label, opt) {
         ...(opt?.includeTitle === undefined && {includeTitle: true}),
         ...(opt?.excNotVisible === undefined && {excNotVisible: false}),
     };
-    const getFoSLine = () => /*html*/`<input type="number" name="attr_strength" title="Strength Cap for FoS">\n${" ".repeat(p+8)}`;
+    const getFoSLine = () => /*html*/`<input type="number" name="attr_strength" title="Strength Cap for FoS">${brPad(p+8)}`;
     const getSimple = () => /*html*/`<span>${label}</span>`;
     const getDouble = () => /*html*/`<span class="flex">
 ${pad(p)}        <span>${label} :</span>
@@ -1086,7 +1086,7 @@ function getCharmTitleLinesFromArray(p = 0, array) {
     const getCharmTitleLine = (className, label) => /*html*/`<h1 class="sheet-tab-charm-sheet-${className}"><span>${label}</span></h1>`;
     let ret = `<div class="sheet-body sheet-tab-content">\n`, i = 0;
     for (const item of array)
-        ret += `${" ".repeat(p+4)}${getCharmTitleLine(item, hashCharmName[`charms-${item}`])}\n`;
+        ret += `${pad(p+4)}${getCharmTitleLine(item, hashCharmName[`charms-${item}`])}\n`;
     ret += `${pad(p)}</div>`;
     return ret;
 }
@@ -1242,7 +1242,7 @@ function getAbiConfigOptionList(p = 0) {
     const separators = [8,16], abilitiesFiltered = abilities.map(i => typeof i !== 'string' ? i.name : i).filter(i => i !== 'Martial Arts');
     let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
     for (const abilitie of abilitiesFiltered) {
-        ret += `${" ".repeat(p+4)}${getConfigOptionLabel(abilitie)}\n`;
+        ret += `${pad(p+4)}${getConfigOptionLabel(abilitie)}\n`;
         if (separators.includes(i++)) ret += /*html*/`${pad(p)}</div>${brPad(p)}<div class="sheet-checklist sheet-col">\n`;
     }
     ret += /*html*/`${pad(p)}</div>`;
@@ -1253,7 +1253,7 @@ function getAttrConfigOptionList(p = 0) {
     const separators = [10,19], lunarFiltered = lunarCharmArray.slice(1).map(i => i.replace('charms-',''));
     let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
     for (const abilitie of lunarFiltered) {
-        ret += `${" ".repeat(p+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`])}\n`;
+        ret += `${pad(p+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`])}\n`;
         if (separators.includes(i++)) ret += /*html*/`${pad(p)}</div>${brPad(p)}<div class="sheet-checklist sheet-col">\n`;
     }
     ret += /*html*/`${pad(p)}</div>`;
@@ -1264,7 +1264,7 @@ function getMAConfigOptionList(p = 0) {
     const separators = [7,15], maFiltered = maCharmArray.map(i => i.replace('charms-',''));
     let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
     for (const abilitie of maFiltered) {
-        ret += `${" ".repeat(p+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`].replace(' Style', '').replace('MA - ', ''))}\n`;
+        ret += `${pad(p+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`].replace(' Style', '').replace('MA - ', ''))}\n`;
         if (separators.includes(i++)) ret += /*html*/`${pad(p)}</div>${brPad(p)}<div class="sheet-checklist sheet-col">\n`;
     }
     ret += /*html*/`${pad(p)}</div>`;
@@ -1478,7 +1478,7 @@ function getRemindersCharms(p = 0) {
         let ret = '', i = 0;
         for (const item of array) {
             ret += fx(item);
-            if (i++ != array.length - 1) ret += `\n${" ".repeat(p+addedPadding)}`;
+            if (i++ != array.length - 1) ret += `${brPad(p+addedPadding)}`;
         }
         return ret;
     };
@@ -1645,12 +1645,12 @@ return ret;
 
 function getRemindersQC(p = 0) {
     const getReminderQCCell = (spanStr, attr, baseTitle, inputType = 'text', excIncluded = true) => /*html*/`<div class="reminder-cell" title="${baseTitle}">
-${" ".repeat(p+12)}    <span>${spanStr}</span>
-${" ".repeat(p+12)}    <span>
-${" ".repeat(p+12)}        <input type="number" class="reminder-val" name="attr_${attr}" readonly tabindex="-1">
-${" ".repeat(p+12)}        <input type="${inputType}" class="reminder-val ${!excIncluded ? `not-visible ` : ''}qc-have-exc"${excIncluded ? ` name="attr_${attr}-exc" readonly tabindex="-1"` : ''}>
-${" ".repeat(p+12)}    </span>
-${" ".repeat(p+12)}</div>`;
+${pad(p+12)}    <span>${spanStr}</span>
+${pad(p+12)}    <span>
+${pad(p+12)}        <input type="number" class="reminder-val" name="attr_${attr}" readonly tabindex="-1">
+${pad(p+12)}        <input type="${inputType}" class="reminder-val ${!excIncluded ? `not-visible ` : ''}qc-have-exc"${excIncluded ? ` name="attr_${attr}-exc" readonly tabindex="-1"` : ''}>
+${pad(p+12)}    </span>
+${pad(p+12)}</div>`;
     let ret = /*html*/`<div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
 ${pad(p)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
 ${pad(p)}    <div class="sheet-layer5">
@@ -1884,28 +1884,28 @@ outHtml += /*html*/`
 
 function getExcellencyCap(p, sectionName, totalExpr, totalTitleEnd, appendTopFx, appendBeforeTotalFx) {
     let ret = `<div class="${sectionName}-type-excellency">\n`;
-    ret += `${" ".repeat(p+4)}<button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>\n`;
-    ret += `${" ".repeat(p+4)}CAP\n`;
+    ret += `${pad(p+4)}<button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>\n`;
+    ret += `${pad(p+4)}CAP\n`;
     if (appendTopFx)
-        ret += `${" ".repeat(p+4)}${appendTopFx(p)}\n`;
-    ret += /*html*/`${" ".repeat(p+4)}<input type="hidden" name="attr_sign" value="(@{reprolls-exc-${sectionName}-total-calc} - @{reprolls-exc-${sectionName}-sum-calc})" disabled>
-${" ".repeat(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
-${" ".repeat(p+4)}<hr />\n`;
+        ret += `${pad(p+4)}${appendTopFx(p)}\n`;
+    ret += /*html*/`${pad(p+4)}<input type="hidden" name="attr_sign" value="(@{reprolls-exc-${sectionName}-total-calc} - @{reprolls-exc-${sectionName}-sum-calc})" disabled>
+${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+${pad(p+4)}<hr />\n`;
     if (appendBeforeTotalFx)
-        ret += `${" ".repeat(p+4)}${appendBeforeTotalFx(p)}\n`;
-    ret += /*html*/`${" ".repeat(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}">\n`;
+        ret += `${pad(p+4)}${appendBeforeTotalFx(p)}\n`;
+    ret += /*html*/`${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}">\n`;
     ret += `${pad(p)}</div>`;
     return ret;
 }
 
 const getLunarTop = (p) => /*html*/`<select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint reset-hint">
-${" ".repeat(p+8)}${returnOptions(p+8, [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0)}
-${" ".repeat(p+4)}</select>`;
+${pad(p+8)}${returnOptions(p+8, [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0)}
+${pad(p+4)}</select>`;
 
 const getLiminalTop = (p) => /*html*/`<div class="anima-flare-box-mode liminal-hint reset-hint">
-${" ".repeat(p+8)}<input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
-${" ".repeat(p+8)}<span class="sheet-spelleffect" title="Toggle"></span>
-${" ".repeat(p+4)}</div>`;
+${pad(p+8)}<input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
+${pad(p+8)}<span class="sheet-spelleffect" title="Toggle"></span>
+${pad(p+4)}</div>`;
 
 const getAutoCalcMax = (a, b) => `(((${a} + ${b}) + abs(${a} - ${b})) / 2)`;
 const getAutoCalcMin = (a, b) => `(((${a} + ${b}) - abs(${a} - ${b})) / 2)`;
@@ -2034,7 +2034,7 @@ outHtml += /*html*/`
 function getSocialHeadline(p = 0, includeExc = false) {
     let ret = /*html*/`<div class="head-line flex flex-wrap">`;
     if (includeExc) ret += /*html*/`
-${" ".repeat(p+4)}${getRemindersCharms(p+4)}`;
+${pad(p+4)}${getRemindersCharms(p+4)}`;
     ret += /*html*/`
 ${pad(p)}    <div class="flex">
 ${pad(p)}        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
