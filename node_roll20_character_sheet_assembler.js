@@ -779,59 +779,52 @@ outHtml += /*html*/
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div><!-- 1.3.3.4 EXPERIENCE & CRAFTING -->
+                        </div>\n`;
+
+const getLabelBlock = (p, spanLabel, attr) => /*html*/`<label>
+${pad(p)}    <span>${spanLabel}XP:</span>
+${pad(p)}    <input type="number" name="attr_${attr}">
+${pad(p)}</label>`;
+function getXpsBlock(p) {
+    const getXpBlock = (spanLabel, baseAttr) => /*html*/`<label>
+${pad(p)}    ${getLabelBlock(p+4, `Spent ${spanLabel}`, `${baseAttr}`)}
+${pad(p)}    ${getLabelBlock(p+4, `Total ${spanLabel}`, `${baseAttr}_max`)}
+${pad(p)}</label>`;
+    let ret = ``, i = 0;
+    for (const item of [['', 'xp'],['Role ', 'rxp']])
+        ret += `${i++ !== 0 ? brPad(p) : ''}${getXpBlock(...item)}`;
+    return ret;
+}
+function getCraftXpsBlock(p) {
+    let ret = ``, i = 0;
+    for (const item of ['Silver','Gold', 'White'])
+        ret += `${i++ !== 0 ? brPad(p) : ''}${getLabelBlock(p, `${item} `, `${item.toLowerCase()}-xp`)}`;
+    return ret;
+}
+
+function getDefaultProjectsBlock(p) {
+    const getProjectBlock = (i) => /*html*/`<div class="sheet-flexbox-h sheet-flexbox0">
+${pad(p)}    <input type="text" name="attr_major-project${i}-name" placeholder="Longsword">
+${pad(p)}    <select disabled="disabled"><option>Major</option></select>
+${pad(p)}</div>`;
+    let ret = ``;
+    for (let i = 0; i < 3; i++)
+        ret += `${i !== 0 ? brPad(p) : ''}${getProjectBlock(i+1)}`;
+    return ret;
+}
+
+outHtml += /*html*/
+`                        <div><!-- 1.3.3.4 EXPERIENCE & CRAFTING -->
                             <h1><span class="sheet-experience">Experience &amp; Crafting</span></h1>
                             <div class="sheet-experience sheet-flexbox-h sheet-flexbox-inline">
-                                <label>
-                                    <label>
-                                        <span>Spent XP:</span>
-                                        <input type="number" name="attr_xp">
-                                    </label>
-                                    <label>
-                                        <span>Total XP:</span>
-                                        <input type="number" name="attr_xp_max">
-                                    </label>
-                                </label>
-                                <label>
-                                    <label>
-                                        <span>Spent Role XP:</span>
-                                        <input type="number" name="attr_rxp">
-                                    </label>
-                                    <label>
-                                        <span>Total Role XP:</span>
-                                        <input type="number" name="attr_rxp_max">
-                                    </label>
-                                </label>
+                                ${getXpsBlock(32)}
                             </div>
                             <div class="sheet-experience sheet-2colrow">
                                 <div class="sheet-col sheet-flexbox-h">
-                                    <label>
-                                        <span>Silver XP</span>:
-                                        <input type="number" name="attr_silver-xp">
-                                    </label>
-                                    <label>
-                                        <span>Gold XP</span>:
-                                        <input type="number" name="attr_gold-xp">
-                                    </label>
-                                    <label>
-                                        <span>White XP</span>:
-                                        <input type="number" name="attr_white-xp">
-                                    </label>
+                                    ${getCraftXpsBlock(36)}
                                 </div>
                                 <div class="sheet-crafting-projects sheet-col">
-                                    <div class="sheet-flexbox-h sheet-flexbox0">
-                                        <input type="text" name="attr_major-project1-name" placeholder="Longsword">
-                                        <select disabled="disabled"><option>Major</option></select>
-                                    </div>
-                                    <div class="sheet-flexbox-h sheet-flexbox0">
-                                        <input type="text" name="attr_major-project2-name" placeholder="Longsword">
-                                        <select disabled="disabled"><option>Major</option></select>
-                                    </div>
-                                    <div class="sheet-flexbox-h sheet-flexbox0">
-                                        <input type="text" name="attr_major-project3-name" placeholder="Longsword">
-                                        <select disabled="disabled"><option>Major</option></select>
-                                    </div>
+                                    ${getDefaultProjectsBlock(36)}
                                     <fieldset class="repeating_crafting-projects" style="display: none;">
                                         <div class="sheet-flexbox-h sheet-flexbox0">
                                             <input type="text" name="attr_project-name" placeholder="Longsword">
