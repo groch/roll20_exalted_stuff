@@ -525,8 +525,7 @@ function getQCRoll(diceEx, succEx, gm) {
 }
 const getDefaultRollButton = (buttonLabel, type, addedClass, name, value) => /*html*/`<button type="${type}" class="sheet-roll btn ui-draggable ${addedClass}" name="${name}" value="${value}">${buttonLabel}</button>`;
 function getExRolls(qc = false, padding = 28) {
-    const bonusDiceStr = '+DiceExcellency', bonusSuccStr = '+SuccessExcellency';
-    const getTitle = (diceEx, succEx) => `Generic Roll with prompts for ${qc ? 'Pool' : 'Attribute+Ability'}+BonusDices${diceEx ? bonusDiceStr : ''} and BonusSucces${succEx ? bonusSuccStr : ''}, and finally an optionnal Custom Macro`;
+    const getTitle = (diceEx, succEx) => `Generic Roll with prompts for ${qc ? 'Pool' : 'Attribute+Ability'}+BonusDices${diceEx ? '+DiceExcellency' : ''} and BonusSucces${succEx ? '+SuccessExcellency' : ''}, and finally an optionnal Custom Macro`;
     const classArray = ['vanilla','diceex','succex','full'], nameArray = ['','-diceex','-succex','-fullex'];
     const finalName = (i, gm) => `roll_${qc ? 'QCRoll' : 'ExRoll'}${gm ? '-GM' : ''}${nameArray[i]}`;
     const fx = qc ? getQCRoll : getExRoll;
@@ -725,7 +724,7 @@ outHtml += /*html*/`
                                         <div class="sheet-motes">
                                             <span>Personal<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button></span>
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
-                                                <input type="number" name="attr_personal-essence" readonly tabindex="-1" title="@{personal-essence}"> /
+                                                <input type="number" name="attr_personal-essence" title="@{personal-essence}" readonly tabindex="-1"> /
                                                 <input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}"> C:
                                                 <input type="number" name="attr_committedessperso" title="@{committedessperso}${TITLE_BR}Personal Commited" class="free-commit"><input type="number" name="attr_committedessperso" title="@{committedessperso}${TITLE_BR}Personal Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
@@ -733,7 +732,7 @@ outHtml += /*html*/`
                                         <div class="sheet-motes">
                                             <span>Peripheral<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button></span>
                                             <span><!-- Remove readonly & after in the next line to have manual mote edition -->
-                                                <input type="number" name="attr_peripheral-essence" readonly tabindex="-1" title="@{peripheral-essence}"> /
+                                                <input type="number" name="attr_peripheral-essence" title="@{peripheral-essence}" readonly tabindex="-1"> /
                                                 <input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}"> C:
                                                 <input type="number" name="attr_committedesstotal" title="@{committedesstotal}${TITLE_BR}Peripheral Commited" class="free-commit"><input type="number" name="attr_committedesstotal" title="@{committedesstotal}${TITLE_BR}Peripheral Commited" class="commit-system" readonly tabindex="-1">
                                             </span>
