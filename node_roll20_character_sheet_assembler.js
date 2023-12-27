@@ -295,6 +295,16 @@ function getSupernalList(padding = 0) {
     return ret;
 }
 
+function returnOptions(padding, array, checked = 0) {
+    const getOption = (item, selected) => `<option value="${item.val}"${selected ? ' selected' : ''}>${item.label}</option>`;
+    let retStr = '', i = 0;
+    for (const item of array) {
+        retStr += getOption(item, i === checked);
+        if (i++ <= array.length - 2) retStr += `\n${" ".repeat(padding)}`;
+    }
+    return retStr;
+}
+
 outHtml += /*html*/`
                     <div class="sheet-col"><!-- 1.1.1 1st column (Name, Player, SELECT Caste) -->
                         <div class="sheet-flexbox-h"><label>Name: <input type="text" name="attr_character_name" placeholder="Karal Fire Orchid"></label></div>
@@ -326,12 +336,12 @@ outHtml += /*html*/`
 
                 <!-- 1.2 1st BLOCK = ATTRIBUTES -->\n`;
 
-function returnDotsRadio(padding, name, checked = 0, count = 10) {
-    const getRadio = (name, val, checked) => `<input type="radio" class="sheet-dots${val}" name="${name}" value="${val}"${checked ? ' checked="checked"' : ''}><span></span>`;
+function returnDotsRadio(padding, attrName, checked = 0, count = 10) {
+    const getRadio = (val, checked) => `<input type="radio" class="sheet-dots${val}" name="attr_${attrName}" value="${val}"${checked ? ' checked="checked"' : ''}><span></span>`;
     let retStr = '';
     for (let i = 0; i <= count; i++) {
-        retStr += getRadio(name, i, i === checked);
-        if (i + 1 <= count) retStr += `\n${" ".repeat(padding)}`;
+        retStr += getRadio(i, i === checked);
+        if (i <= count - 1) retStr += `\n${" ".repeat(padding)}`;
     }
     return retStr;
 }
@@ -345,7 +355,7 @@ ${" ".repeat(padding)}        <input type="checkbox" name="attr_${attribute.toLo
 ${" ".repeat(padding)}        <span>${attribute}</span>
 ${" ".repeat(padding)}    </label>
 ${" ".repeat(padding)}    <div class="sheet-dots">
-${" ".repeat(padding)}        ${returnDotsRadio(padding+8, `attr_${attribute.toLowerCase()}`, 1)}
+${" ".repeat(padding)}        ${returnDotsRadio(padding+8, attribute.toLowerCase(), 1)}
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
         if (i++ != attributes.length - 1) ret += `\n${" ".repeat(padding)}`;
@@ -378,7 +388,7 @@ ${" ".repeat(padding)}        <div class="sheet-layer${ability.sheetLayer}">`;
 ${" ".repeat(padding)}            <div class="sheet-trait" title="${v}">
 ${" ".repeat(padding)}                <label>${k}</label>
 ${" ".repeat(padding)}                <div class="sheet-dots">
-${" ".repeat(padding)}                    ${returnDotsRadio(padding+20, `attr_${v.substr(2, v.length - 3)}`)}
+${" ".repeat(padding)}                    ${returnDotsRadio(padding+20, v.substr(2, v.length - 3))}
 ${" ".repeat(padding)}                </div>
 ${" ".repeat(padding)}            </div>`;
     }
@@ -391,7 +401,7 @@ ${" ".repeat(padding)}            <fieldset class="repeating_${repeatingSectionN
 ${" ".repeat(padding)}                <div class="sheet-trait">
 ${" ".repeat(padding)}                    <input type="text" name="attr_rep${repeatingSectionName}name" placeholder="${ability.placeholderStr}">
 ${" ".repeat(padding)}                    <div class="sheet-dots">
-${" ".repeat(padding)}                        ${returnDotsRadio(padding+24, `attr_rep${repeatingSectionName}`)}
+${" ".repeat(padding)}                        ${returnDotsRadio(padding+24, `rep${repeatingSectionName}`)}
 ${" ".repeat(padding)}                    </div>
 ${" ".repeat(padding)}                </div>
 ${" ".repeat(padding)}            </fieldset>
@@ -401,7 +411,6 @@ ${" ".repeat(padding)}</div>`;
 
     return ret;
 }
-
 function getAbilitiesBlock(padding = 0) {
     const getSimpleAbi = (ability) => /*html*/`<div class="sheet-trait" title="@{${ability.toLowerCase()}}">
 ${" ".repeat(padding)}    <label>
@@ -409,7 +418,7 @@ ${" ".repeat(padding)}        <input type="checkbox" name="attr_${ability.toLowe
 ${" ".repeat(padding)}        <span>${ability}</span>
 ${" ".repeat(padding)}    </label>
 ${" ".repeat(padding)}    <div class="sheet-dots">
-${" ".repeat(padding)}        ${returnDotsRadio(padding+8, `attr_${ability.toLowerCase()}`)}
+${" ".repeat(padding)}        ${returnDotsRadio(padding+8, ability.toLowerCase())}
 ${" ".repeat(padding)}    </div>
 ${" ".repeat(padding)}</div>`;
     let ret = '', i = 0;
@@ -432,7 +441,7 @@ outHtml += /*html*/`
                                     <input type="text" name="attr_repabilityname" placeholder="Astrology">
                                 </label>
                                 <div class="sheet-dots">
-                                    ${returnDotsRadio(36, `attr_repability`)}
+                                    ${returnDotsRadio(36, `repability`)}
                                 </div>
                             </div>
                         </fieldset>
@@ -502,21 +511,18 @@ const fullWpPrompt = `:will;${wpPrompt}`;
 function getAllMoteCost(diceEx, succEx) {
     return `${(diceEx || succEx) ? moteCostPromptBase : ''}${getMoteCostToSet(diceEx, succEx)}`;
 }
-
 function getExRoll(diceEx, succEx, gm, padding) {
     let retStr = `!exr (${buildBigExRollPromptDiceBase(padding)}${diceEx ? ` ${diceExAddedPrompt}` : ''}${bigExRollPromptDiceEnd})#`;
     retStr += `${bigExRollPromptSuccBase}${succEx ? succExAddedPrompt : ''}${bigExRollPromptSuccEnd}${gm ? ' -gm' : ''}`;
     retStr += `\\n!exr ${moteCostBase}${getAllMoteCost(diceEx, succEx)}${fullWpPrompt}`;
     return retStr;
 }
-
 function getQCRoll(diceEx, succEx, gm) {
     let retStr = `!exr (?{Pool}[QCPool] +${defaultRoll20AddedDicePrompt}${diceEx ? ` ${diceExAddedPrompt}` : ''}${bigExRollPromptDiceEnd})#`;
     retStr += `${bigExRollPromptSuccBase}${succEx ? succExAddedPrompt : ''}${bigExRollPromptSuccEnd}${gm ? ' -gm' : ''}`;
     retStr += `\\n!exr ${moteCostBase}${getAllMoteCost(diceEx, succEx)}${fullWpPrompt}`;
     return retStr;
 }
-
 const getDefaultRollButton = (buttonLabel, type, addedClass, name, value) => /*html*/`<button type="${type}" class="sheet-roll btn ui-draggable ${addedClass}" name="${name}" value="${value}">${buttonLabel}</button>`;
 function getExRolls(qc = false, padding = 28) {
     const bonusDiceStr = '+DiceExcellency', bonusSuccStr = '+SuccessExcellency';
@@ -535,17 +541,6 @@ function getExRolls(qc = false, padding = 28) {
         retStr += `${" ".repeat(padding+4)}</div>\n`;
         retStr += `${" ".repeat(padding)}</div>`;
         if (i < 3) retStr += `\n${" ".repeat(padding)}`;
-    }
-    return retStr;
-}
-
-function returnOptions(padding, array, checked = 0) {
-    const getOption = (item, selected) => `<option value="${item.val}"${selected ? ' selected' : ''}>${item.label}</option>`;
-    let retStr = '';
-    let i = 0;
-    for (const item of array) {
-        retStr += getOption(item, i === checked);
-        if (i++ <= array.length - 2) retStr += `\n${" ".repeat(padding)}`;
     }
     return retStr;
 }
@@ -692,7 +687,7 @@ outHtml += /*html*/`
                                 </div>
                                 <div class="merit-dot-toggle-wrapper">
                                     <div class="sheet-dots merits-dots">
-                                        ${returnDotsRadio(40, `attr_repmerits`)}
+                                        ${returnDotsRadio(40, `repmerits`)}
                                     </div>
                                     <div class="merits-div-cast">
                                         <label>
@@ -717,13 +712,13 @@ outHtml += /*html*/`
                                     </div>
                                     <div style="padding-left: 6px" title="@{willpower_max}${TITLE_BR}Max Willpower">
                                         <div class="sheet-dots-full">
-                                            ${returnDotsRadio(44, `attr_willpower_max`, 5)}
+                                            ${returnDotsRadio(44, `willpower_max`, 5)}
                                         </div>
                                     </div>
                                     <h1><span>Essence</span></h1>
                                     <div style="padding-left: 6px" title="@{essence}">
                                         <div class="sheet-dots-full">
-                                            ${returnDotsRadio(44, `attr_essence`, 1)}
+                                            ${returnDotsRadio(44, `essence`, 1)}
                                         </div>
                                     </div>
                                     <div class="sheet-hide-to-mortal">
@@ -752,7 +747,7 @@ outHtml += /*html*/`
                                         <h1 class="sheet-limit"><span>Limit Break</span></h1>
                                         <div class="sheet-limit" style="padding-left: 6px ; margin: 9px 0 9px 0" title="@{limit}">
                                             <div class="sheet-dots-full">
-                                                ${returnDotsRadio(48, `attr_limit`)}
+                                                ${returnDotsRadio(48, `limit`)}
                                             </div>
                                         </div>
                                         <h1 class="sheet-limit"><span>Limit Trigger</span></h1>
@@ -1644,33 +1639,30 @@ ${" ".repeat(padding)}</div>`;
 return ret;
 }
 
-function getReminderQCCell(padding, spanStr, attr, baseTitle, inputType = 'text', excIncluded = true) {
-    return /*html*/`<div class="reminder-cell" title="${baseTitle}">
-${" ".repeat(padding)}    <span>${spanStr}</span>
-${" ".repeat(padding)}    <span>
-${" ".repeat(padding)}        <input type="number" class="reminder-val" name="attr_${attr}" readonly tabindex="-1">
-${" ".repeat(padding)}        <input type="${inputType}" class="reminder-val ${!excIncluded ? `not-visible ` : ''}qc-have-exc"${excIncluded ? ` name="attr_${attr}-exc" readonly tabindex="-1"` : ''}>
-${" ".repeat(padding)}    </span>
-${" ".repeat(padding)}</div>`;
-}
-
 function getRemindersQC(padding = 0) {
+    const getReminderQCCell = (spanStr, attr, baseTitle, inputType = 'text', excIncluded = true) => /*html*/`<div class="reminder-cell" title="${baseTitle}">
+${" ".repeat(padding+12)}    <span>${spanStr}</span>
+${" ".repeat(padding+12)}    <span>
+${" ".repeat(padding+12)}        <input type="number" class="reminder-val" name="attr_${attr}" readonly tabindex="-1">
+${" ".repeat(padding+12)}        <input type="${inputType}" class="reminder-val ${!excIncluded ? `not-visible ` : ''}qc-have-exc"${excIncluded ? ` name="attr_${attr}-exc" readonly tabindex="-1"` : ''}>
+${" ".repeat(padding+12)}    </span>
+${" ".repeat(padding+12)}</div>`;
     let ret = /*html*/`<div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer5">
 ${" ".repeat(padding)}        <div class="flex flex-wrap">
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'RI','qc-read-intentions', 'Read Intentions')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'SI','qc-social-influence', 'Social Influence')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'S/L','qc-stealth-larc', 'Stealth/Larceny')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Sen','qc-senses', 'Senses')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'FoS','qc-fos-pool', 'Feats of Strength')}
+${" ".repeat(padding)}            ${getReminderQCCell('RI','qc-read-intentions', 'Read Intentions')}
+${" ".repeat(padding)}            ${getReminderQCCell('SI','qc-social-influence', 'Social Influence')}
+${" ".repeat(padding)}            ${getReminderQCCell('S/L','qc-stealth-larc', 'Stealth/Larceny')}
+${" ".repeat(padding)}            ${getReminderQCCell('Sen','qc-senses', 'Senses')}
+${" ".repeat(padding)}            ${getReminderQCCell('FoS','qc-fos-pool', 'Feats of Strength')}
 ${" ".repeat(padding)}            <hr />
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'JB','qc-join-battle', 'Join Battle')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Mvt','qc-move', 'Combat Movement')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Gra','qc-grapple', 'Grapple')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'GrC','qc-grapple-control', 'Grapple Control')}
+${" ".repeat(padding)}            ${getReminderQCCell('JB','qc-join-battle', 'Join Battle')}
+${" ".repeat(padding)}            ${getReminderQCCell('Mvt','qc-move', 'Combat Movement')}
+${" ".repeat(padding)}            ${getReminderQCCell('Gra','qc-grapple', 'Grapple')}
+${" ".repeat(padding)}            ${getReminderQCCell('GrC','qc-grapple-control', 'Grapple Control')}
 ${" ".repeat(padding)}            <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'App','appearance', 'Appearance', 'number', false)}
+${" ".repeat(padding)}            ${getReminderQCCell('App','appearance', 'Appearance', 'number', false)}
 ${" ".repeat(padding)}            <hr />
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}        <fieldset class="repeating_qcactions" style="display: none;">
@@ -2108,7 +2100,7 @@ outHtml += /*html*/`
                 ${getRessourceLine(16, false, true)}
                 ${getSocialHeadline(16, true)}
                 <div class="sheet-3colrow">
-                    ${getSocialStatCol(20, true)}
+                    ${getSocialStatCol(20)}
                     <div class="sheet-3col inti-col">
                         <h1><span>Intimacies</span></h1>
                         <div class="intimacy-qol-button">
@@ -2154,7 +2146,7 @@ outHtml += /*html*/`
                 <h1><span>Social attributes and abilities</span></h1>
                 ${getSocialHeadline(16)}
                 <div class="sheet-3colrow">
-                    ${getSocialStatCol(20, true)}
+                    ${getSocialStatCol(20)}
                     <div class="sheet-3col inti-col">
                         <h1><span>Intimacies Read</span></h1>
                         <input type="hidden" value="0" name="attr_init-intimacies">
