@@ -1644,12 +1644,12 @@ ${" ".repeat(padding)}</div>`;
 return ret;
 }
 
-function getReminderQCCell(padding, spanStr, attr, baseTitle) {
+function getReminderQCCell(padding, spanStr, attr, baseTitle, inputType = 'text', excIncluded = true) {
     return /*html*/`<div class="reminder-cell" title="${baseTitle}">
 ${" ".repeat(padding)}    <span>${spanStr}</span>
 ${" ".repeat(padding)}    <span>
-${" ".repeat(padding)}        <input type="number" class="reminder-val" name="attr_qc-${attr}" readonly tabindex="-1">
-${" ".repeat(padding)}        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-${attr}-exc" readonly tabindex="-1">
+${" ".repeat(padding)}        <input type="number" class="reminder-val" name="attr_${attr}" readonly tabindex="-1">
+${" ".repeat(padding)}        <input type="${inputType}" class="reminder-val ${!excIncluded ? `not-visible ` : ''}qc-have-exc"${excIncluded ? ` name="attr_${attr}-exc" readonly tabindex="-1"` : ''}>
 ${" ".repeat(padding)}    </span>
 ${" ".repeat(padding)}</div>`;
 }
@@ -1659,24 +1659,18 @@ function getRemindersQC(padding = 0) {
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer5">
 ${" ".repeat(padding)}        <div class="flex flex-wrap">
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'RI','read-intentions', 'Read Intentions')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'SI','social-influence', 'Social Influence')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'S/L','stealth-larc', 'Stealth/Larceny')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Sen','senses', 'Senses')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'FoS','fos-pool', 'Feats of Strength')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'RI','qc-read-intentions', 'Read Intentions')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'SI','qc-social-influence', 'Social Influence')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'S/L','qc-stealth-larc', 'Stealth/Larceny')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Sen','qc-senses', 'Senses')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'FoS','qc-fos-pool', 'Feats of Strength')}
 ${" ".repeat(padding)}            <hr />
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'JB','join-battle', 'Join Battle')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Mvt','move', 'Combat Movement')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Gra','grapple', 'Grapple')}
-${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'GrC','grapple-control', 'Grapple Control')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'JB','qc-join-battle', 'Join Battle')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Mvt','qc-move', 'Combat Movement')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Gra','qc-grapple', 'Grapple')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'GrC','qc-grapple-control', 'Grapple Control')}
 ${" ".repeat(padding)}            <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
-${" ".repeat(padding)}            <div class="reminder-cell" title="Appearance">
-${" ".repeat(padding)}                <span>App</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_appearance" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="number" class="reminder-val not-visible qc-have-exc">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'App','appearance', 'Appearance', 'number', false)}
 ${" ".repeat(padding)}            <hr />
 ${" ".repeat(padding)}        </div>
 ${" ".repeat(padding)}        <fieldset class="repeating_qcactions" style="display: none;">
