@@ -1,6 +1,7 @@
 README.md
 workspace.code-workspace
 dup_token.js
+kikiratio.js
 node_modules
 package-lock.json
 *.patch
