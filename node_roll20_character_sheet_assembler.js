@@ -193,6 +193,16 @@ const hashCharmTitle = {
     'charms-old': 'Other'
 };
 
+const abiDiceCapTypeHash = {
+    'Ability Based':'Ability',
+    'Dragon-Blooded Variant':'DB',
+}, attrDiceCapTypeHash = {
+    'Attribute Based':'Attribute',
+}, essenceDiceCapTypeHash = {
+    'Sidereal':'Sidereal',
+    'Liminal':'Liminal',
+};
+
 function getHiddenInputs(array, padding = 0) {
     let ret = '', i = 0;
     for (const charmSection of array) {
@@ -250,6 +260,7 @@ let outHtml = /*html*/
         <input class="roll-can-spend-motes" name="attr_canspendmote" type="hidden" value="0">
         <input class="caste-have-exc-check" name="attr_caste-have-exc" type="hidden" value="0">
         <input class="exalt-type-check" name="attr_exalt-type" type="hidden" value="None">
+        <input class="dicecap-type-check" name="attr_dicecap-type" type="hidden" value="None">
         <input type="hidden" name="attr_usecommitsystem" class="use-commit-system" value="1">
         <input type="hidden" name="attr_commit-list-shown" value="0">
         <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
@@ -1336,6 +1347,18 @@ outHtml += /*html*/
                             <span>Token Size (%)</span>
                             <input type="number" name="attr_token-size-percent" value="100" min="1">
                         </label>
+                        <label class="select-dicecap-type">
+                            <span>Dice Cap Type</span>
+                            <select name="attr_dicecap-type">
+                                <option value="None" selected></option>
+                                <option disabled>---Ability Based---</option>
+                                ${returnOptions(32, Object.entries(abiDiceCapTypeHash).map(([k,v]) => ({val: v, label: k})), -1)}
+                                <option disabled>---Attribute Based---</option>
+                                ${returnOptions(32, Object.entries(attrDiceCapTypeHash).map(([k,v]) => ({val: v, label: k})), -1)}
+                                <option disabled>---Essence Based / Custom---</option>
+                                ${returnOptions(32, Object.entries(essenceDiceCapTypeHash).map(([k,v]) => ({val: v, label: k})), -1)}
+                            </select>
+                        </label>
                     </div>
                 </div>
                 <h1><span>Charms list configuration</span></h1>
@@ -1946,6 +1969,7 @@ const getSiderealEnd = () => /*html*/`<input type="hidden" name="attr_reprolls-e
 outHtml += /*html*/`
                                         <div class="excellency-cap-section" title="Limit Detail for the Excellency">
                                             <input type="hidden" name="attr_reprolls-caste" class="sheet-rolls-caste-val" disabled value="@{caste}">
+                                            <input type="hidden" name="attr_reprolls-dicecap-type" class="dicecap-type-check" disabled value="@{dicecap-type}">
                                             ${getExcellencyCap(44, 'solar', '(@{reprolls-attr}+@{reprolls-abi})', 'Solar=>ATTR+ABI')}
                                             ${getExcellencyCap(44, 'lunar', '(@{reprolls-attr}+@{reprolls-attr-lunar-exc})', 'Lunar=>ATTR, +ATTR2 if Stunted accordingly', getLunarTop)}
                                             ${getExcellencyCap(44, 'db', '(@{reprolls-abi}+@{reprolls-specialty})', 'DB=>ABI+SPE')}

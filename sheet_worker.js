@@ -1,4 +1,4 @@
-    const version = 2.64, debug = 1;
+    const version = 2.65, debug = 1;
     var TAS;
 
     /**
@@ -564,24 +564,29 @@
             finalObj["peripheral-equation"] = "@{essence} * 7 + 26 - @{committedesstotal}";
             finalObj["showsupdiv"] = 1;
             finalObj["showlimit"] = 1;
+            finalObj["dicecap-type"] = 'Ability';
         } else if (isDB(caste)){
             finalObj["personal-equation"]   = "@{essence} * 1 + 11 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 4 + 23 - @{committedesstotal}";
             finalObj["succex"] = 1;
+            finalObj["dicecap-type"] = 'DB';
         } else if (isAttributeBasedExalt(caste)){
             finalObj["personal-equation"]   = "@{essence} * 1 + 15 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 4 + 34 - @{committedesstotal}";
             finalObj["showlimit"] = 1;
             finalObj["succex"] = 1;
+            finalObj["dicecap-type"] = 'Attribute';
         } else if (isSidereal(caste)){
             finalObj["personal-equation"]   = "@{essence} * 2 + 9 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 6 + 25 - @{committedesstotal}";
             finalObj["showlimit"] = 1;
             finalObj["def-exc-cost-multiplier"] = 1;
+            finalObj["dicecap-type"] = 'Sidereal';
         } else if (isLiminal(caste)){
             finalObj["personal-equation"]   = "@{essence} * 3 + 10 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 4 + 23 - @{committedesstotal}";
             finalObj["succex"] = 1;
+            finalObj["dicecap-type"] = 'Liminal';
         } else if (isSpirit(caste)){
             finalObj["personal-equation"]   = "@{essence} * 10 + 50 - @{committedessperso}";
             finalObj["peripheral-equation"] = "@{essence} * 0 - @{committedesstotal}";
@@ -600,13 +605,8 @@
             TAS.debug(`updateMotePool:: No settings found, stay as is !`);
             return;
         }
-
-        for (const exaltTypeName of Object.keys(casteTree)) {
-            if (casteTree[exaltTypeName].includes(caste)) {
-                finalObj["exalt-type"] = exaltTypeName;
-                break;
-            }
-        }
+        
+        finalObj["exalt-type"] = getExaltType(caste);
 
         if (hasCasteImg(caste))
             finalObj["caste-low"] = caste.toLowerCase();
@@ -652,6 +652,7 @@
         {version: 2.61, fn: upgradeto262},
         {version: 2.62, fn: upgradeto263},
         {version: 2.63, fn: upgradeto264},
+        {version: 2.64, fn: upgradeto265},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -846,6 +847,34 @@
         "?{Mental Attribute ?|": "?{Mental Attribute ?|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}",
         "?{Full Attribute ?|": "?{Full Attribute ?|Strenght (@{strength}),@{strength}[Strength]|Dexterity (@{dexterity}),@{dexterity}[Dexterity]|Stamina (@{stamina}), @{stamina}[Stamina]|Charisma (@{charisma}), @{charisma}[Charisma]|Manipulation (@{manipulation}), @{manipulation}[Manipulation]|Appearance (@{appearance}), @{appearance}[Appearance]|Perception (@{perception}), @{perception}[Perception]|Intelligence (@{intelligence}), @{intelligence}[Intelligence]|Wits (@{wits}), @{wits}[Wits]}"
     };
+
+    function getExaltType(caste) {
+        for (const exaltTypeName of Object.keys(casteTree)) {
+            if (casteTree[exaltTypeName].includes(caste))
+                return exaltTypeName;
+        }
+        return 'None';
+    }
+
+    async function upgradeto265() {
+        const finalObj = {
+            'version': 2.65
+        };
+        const caste = await getSingleAttrAsync('caste');
+        if (isSolarBasedExalt(caste))
+            finalObj["dicecap-type"] = 'Ability';
+        else if (isDB(caste))
+            finalObj["dicecap-type"] = 'DB';
+        else if (isAttributeBasedExalt(caste))
+            finalObj["dicecap-type"] = 'Attribute';
+        else if (isSidereal(caste))
+            finalObj["dicecap-type"] = 'Sidereal';
+        else if (isLiminal(caste))
+            finalObj["dicecap-type"] = 'Liminal';
+        finalObj["exalt-type"] = getExaltType(caste);
+        TAS.debug(`upgradeto263:: finalObj=`, finalObj);
+        setAttrs(finalObj);
+    }
 
     async function upgradeto264() {
         setAttrs({
@@ -1090,15 +1119,7 @@
     }
 
     async function upgradeto251() {
-        let exaltType = 'None';
-        const caste = await getSingleAttrAsync('caste');
-        for (const exaltTypeName of Object.keys(casteTree)) {
-            if (casteTree[exaltTypeName].includes(caste)) {
-                exaltType = exaltTypeName;
-                break;
-            }
-        }
-        setAttrs({"exalt-type": exaltType, 'version': 2.51});
+        setAttrs({"exalt-type": getExaltType(await getSingleAttrAsync('caste')), 'version': 2.51});
     }
 
     async function upgradeto250() {
