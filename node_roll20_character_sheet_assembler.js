@@ -1644,75 +1644,31 @@ ${" ".repeat(padding)}</div>`;
 return ret;
 }
 
+function getReminderQCCell(padding, spanStr, attr, baseTitle) {
+    return /*html*/`<div class="reminder-cell" title="${baseTitle}">
+${" ".repeat(padding)}    <span>${spanStr}</span>
+${" ".repeat(padding)}    <span>
+${" ".repeat(padding)}        <input type="number" class="reminder-val" name="attr_qc-${attr}" readonly tabindex="-1">
+${" ".repeat(padding)}        <input type="text" class="reminder-val qc-have-exc" name="attr_qc-${attr}-exc" readonly tabindex="-1">
+${" ".repeat(padding)}    </span>
+${" ".repeat(padding)}</div>`;
+}
+
 function getRemindersQC(padding = 0) {
     let ret = /*html*/`<div class="sheet-box-reminder sheet-qcattr-reminder qc-toggle-display-inv">
 ${" ".repeat(padding)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="QCAttrs" class="sheet-layer6"></span>
 ${" ".repeat(padding)}    <div class="sheet-layer5">
 ${" ".repeat(padding)}        <div class="flex flex-wrap">
-${" ".repeat(padding)}            <div class="reminder-cell" title="Read Intentions">
-${" ".repeat(padding)}                <span>RI</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-read-intentions" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-read-intentions-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Social Influence">
-${" ".repeat(padding)}                <span>SI</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-social-influence" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-social-influence-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Stealth/Larceny">
-${" ".repeat(padding)}                <span>S/L</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-stealth-larc" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-stealth-larc-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Senses">
-${" ".repeat(padding)}                <span>Sen</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-senses" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-senses-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Feats of Strength">
-${" ".repeat(padding)}                <span>FoS</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-fos-pool" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-fos-pool-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'RI','read-intentions', 'Read Intentions')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'SI','social-influence', 'Social Influence')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'S/L','stealth-larc', 'Stealth/Larceny')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Sen','senses', 'Senses')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'FoS','fos-pool', 'Feats of Strength')}
 ${" ".repeat(padding)}            <hr />
-${" ".repeat(padding)}            <div class="reminder-cell" title="Join Battle">
-${" ".repeat(padding)}                <span>JB</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-join-battle" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-join-battle-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Combat Movement">
-${" ".repeat(padding)}                <span>Mvt</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-move" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-move-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Grapple">
-${" ".repeat(padding)}                <span>Gra</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-grapple" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
-${" ".repeat(padding)}            <div class="reminder-cell" title="Grapple Control">
-${" ".repeat(padding)}                <span>GrC</span>
-${" ".repeat(padding)}                <span>
-${" ".repeat(padding)}                    <input type="number" class="reminder-val" name="attr_qc-grapple-control" readonly tabindex="-1">
-${" ".repeat(padding)}                    <input type="text" class="reminder-val qc-have-exc" name="attr_qc-grapple-control-exc" readonly tabindex="-1">
-${" ".repeat(padding)}                </span>
-${" ".repeat(padding)}            </div>
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'JB','join-battle', 'Join Battle')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Mvt','move', 'Combat Movement')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'Gra','grapple', 'Grapple')}
+${" ".repeat(padding)}            ${getReminderQCCell(padding+12,'GrC','grapple-control', 'Grapple Control')}
 ${" ".repeat(padding)}            <input type="hidden" class="hideous-check" name="attr_qc-hideous" value="0">
 ${" ".repeat(padding)}            <div class="reminder-cell" title="Appearance">
 ${" ".repeat(padding)}                <span>App</span>
