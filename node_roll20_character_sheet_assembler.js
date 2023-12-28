@@ -931,7 +931,7 @@ outHtml += /*html*/
                 <!-- 1.4 JOINED AGAIN = HEALTH & DEFENSE -->
 \n`;
 
-const defaultDefExcPrompt = `?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1}`;
+const defaultDefExcPrompt = `?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)|1}`;
 function getDefExcDiv(p) {
     return /*html*/`<div class="flex-col def-exc">
 ${pad(p)}    <button type="roll" class="sheet-roll btn ui-draggable default-whisper" name="act_defexc" title="quick access to Generic Defense Excellency (!NOT the one editable in Other!)" value="&amp;{template:exalted3e_cast} {{charm-name=Generic Defense Excellency}} {{character-name=@{character_name}}} {{aspect=@{caste-low}}} {{balanced=0}} {{type=Supplemental}} {{cost=[[${defaultDefExcPrompt} * @{def-exc-cost-multiplier}]]}} {{duration=Instant}} {{description=The Exalt infuse her essence inside her defenses to appear impenetrable.}} {{effect=The Exalt add [[${defaultDefExcPrompt}]] to the static value of the related defense.}}\\n!exr ${moteCostBase}${moteCostPromptBase}[[${defaultDefExcPrompt} * @{def-exc-cost-multiplier}]]">Def Exc</button>
