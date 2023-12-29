@@ -2459,7 +2459,9 @@
         const finalObj = {}, attrArray = [
             ...resetOnNegAttrs.slice(0, -1),
             'reprolls-attr-lunar-exc',
-            'reprolls-anima-flare',
+            'reprolls-attr-puppeteer-exc',
+            'reprolls-uphold-ideal',
+            'reprolls-intimacy-hearteater',
         ];
         for (const key of attrArray)
             finalObj[`${attr_name}${key}`] = 0;

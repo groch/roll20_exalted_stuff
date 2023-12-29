@@ -2460,7 +2460,9 @@
         const finalObj = {}, attrArray = [
             ...resetOnNegAttrs.slice(0, -1),
             'reprolls-attr-lunar-exc',
-            'reprolls-anima-flare',
+            'reprolls-attr-puppeteer-exc',
+            'reprolls-uphold-ideal',
+            'reprolls-intimacy-hearteater',
         ];
         for (const key of attrArray)
             finalObj[`${attr_name}${key}`] = 0;
@@ -5876,6 +5878,10 @@
                             <input type="checkbox" name="attr_combattab" value="1" checked><span></span>
                             <span>Show Combat Tab</span>
                         </label>
+                        <label class="sheet-force-limit">
+                            <input type="checkbox" name="attr_showlimit" value="1"><span></span>
+                            <span>Show Limit Bar</span>
+                        </label>
                         <label>
                             <input type="checkbox" name="attr_diceex" value="1"><span></span>
                             <span>Include Dice Excellency</span>
@@ -5971,9 +5977,15 @@
                                 <option value="DB">Dragon-Blooded Variant</option>
                                 <option disabled>---Attribute Based---</option>
                                 <option value="Attribute">Attribute Based</option>
+                                <option value="Architect">Architect Variant</option>
                                 <option disabled>---Essence Based / Custom---</option>
                                 <option value="Sidereal">Sidereal</option>
                                 <option value="Liminal">Liminal</option>
+                                <option value="Puppeteer">Puppeteer</option>
+                                <option value="Sovereign">Sovereign</option>
+                                <option value="DreamSouled">Dream-Souled</option>
+                                <option value="Hearteater">Hearteater</option>
+                                <option value="Umbral">Umbral</option>
                             </select>
                         </label>
                     </div>
@@ -7400,7 +7412,7 @@
                                             <div class="flex grow-normal dice-area inverted-color">
                                                 <div class="flex flex-wrap grow-normal dice-area-details">
                                                     <div class="flex grow-normal basis-100">
-                                                        <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal solar-hint lunar-hint">
+                                                        <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal solar-hint lunar-hint architect-hint hearteater-hint umbral-hint">
                                                             <option value="@{strength}[Strength]">Strength</option>
                                                             <option value="@{dexterity}[Dexterity]">Dexterity</option>
                                                             <option value="@{stamina}[Stamina]">Stamina</option>
@@ -7433,7 +7445,7 @@
                                                             <option value="19[RAW]">19</option>
                                                             <option value="20[RAW]">20</option>
                                                         </select>+
-                                                        <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal solar-hint db-hint liminal-hint">
+                                                        <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal solar-hint db-hint liminal-hint dreamsouled-hint">
                                                             <option value="@{archery}[Archery]">Archery</option>
                                                             <option value="@{athletics}[Athletics]">Athletics</option>
                                                             <option value="@{awareness}[Awareness]">Awareness</option>
@@ -7533,7 +7545,7 @@
                                                                 <option value="0" selected>(0) Std Stunt</option>
                                                                 <option value="2">(2) Stunt 1+</option>
                                                             </select>+
-                                                            <span class="specialty-box db-hint">
+                                                            <span class="specialty-box db-hint puppeteer-hint">
                                                                 <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
                                                                 <span class="sheet-spelleffect" title="Spe"></span>
                                                             </span>+
@@ -7641,7 +7653,7 @@
                                             <div class="liminal-type-excellency">
                                                 <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
                                                 CAP
-                                                <div class="anima-flare-box-mode liminal-hint reset-hint">
+                                                <div class="scope-here anima-flare-box-mode liminal-hint">
                                                     <input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
                                                     <span class="sheet-spelleffect" title="Toggle"></span>
                                                 </div>
@@ -7658,6 +7670,80 @@
                                                 <hr />
                                                 <input type="hidden" name="attr_reprolls-exc-sidereal-total-calc-max" value="(((@{essence} + 3) + abs(@{essence} - 3)) / 2)" disabled>
                                                 <input type="number" name="attr_reprolls-exc-sidereal-total-calc" class="exc-total" value="(((@{reprolls-exc-sidereal-total-calc-max} + 5) - abs(@{reprolls-exc-sidereal-total-calc-max} - 5)) / 2)" disabled title="Total limit of Excellency Cap&#013;&#010;Sidereal=> Based on ESSENCE, min 3, max 5">
+                                            </div>
+                                            <div class="architect-type-excellency">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
+                                                CAP
+                                                <div class="scope-here inside-city-box-mode architect-hint">
+                                                    <input type="checkbox" name="attr_reprolls-inside-city" class="sheet-rolls-inside-city-checkbox" title="Toggle Inside City" value="@{essence}">
+                                                    <span class="sheet-spelleffect" title="Toggle"></span>
+                                                </div>
+                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-architect-total-calc} - @{reprolls-exc-architect-sum-calc})" disabled>
+                                                <input type="number" name="attr_reprolls-exc-architect-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                                <hr />
+                                                <input type="number" name="attr_reprolls-exc-architect-total-calc" class="exc-total" value="((((@{reprolls-attr}+@{reprolls-inside-city}) + 10) - abs((@{reprolls-attr}+@{reprolls-inside-city}) - 10)) / 2)" disabled title="Total limit of Excellency Cap&#013;&#010;Architect=>ATTR, +ESSENCE if Inside a City">
+                                            </div>
+                                            <div class="puppeteer-type-excellency">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
+                                                CAP
+                                                <select name="attr_reprolls-attr-puppeteer-exc" title="Type of Action for the Excellency" class="puppeteer-attr-excellency grow-normal puppeteer-hint reset-hint">
+                                                    <option value="0" selected>---</option>
+                                                    <option value="@{dexterity}">Phy</option>
+                                                    <option value="@{manipulation}">Soc</option>
+                                                    <option value="@{wits}">Men</option>
+                                                </select>
+                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-puppeteer-total-calc} - @{reprolls-exc-puppeteer-sum-calc})" disabled>
+                                                <input type="number" name="attr_reprolls-exc-puppeteer-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                                <hr />
+                                                <input type="number" name="attr_reprolls-exc-puppeteer-total-calc" class="exc-total" value="(@{reprolls-attr-puppeteer-exc}+@{reprolls-specialty})" disabled title="Total limit of Excellency Cap&#013;&#010;Puppeteer=>[Dex, Manip, Wits](depending on action type)+SPE">
+                                            </div>
+                                            <div class="sovereign-type-excellency">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
+                                                CAP
+                                                <select name="attr_reprolls-anima-sovereign" title="Anima Level for the Excellency" class="sovereign-anima-excellency grow-normal sovereign-hint">
+                                                    <option value="0" selected>Dim</option>
+                                                    <option value="1">Glo</option>
+                                                    <option value="2">Bur</option>
+                                                    <option value="3">Bon</option>
+                                                </select>
+                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-sovereign-total-calc} - @{reprolls-exc-sovereign-sum-calc})" disabled>
+                                                <input type="number" name="attr_reprolls-exc-sovereign-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                                <hr />
+                                                <input type="number" name="attr_reprolls-exc-sovereign-total-calc" class="exc-total" value="(4+@{reprolls-anima-sovereign})" disabled title="Total limit of Excellency Cap&#013;&#010;Sovereign=> 4, +ANIMA Level">
+                                            </div>
+                                            <div class="dreamsouled-type-excellency">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
+                                                CAP
+                                                <div class="scope-here uphold-ideal-box-mode dreamsouled-hint reset-hint">
+                                                    <input type="checkbox" name="attr_reprolls-uphold-ideal" class="sheet-rolls-uphold-ideal-checkbox" title="Toggle Uphold Ideal" value="@{essence}">
+                                                    <span class="sheet-spelleffect" title="Toggle"></span>
+                                                </div>
+                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-dreamsouled-total-calc} - @{reprolls-exc-dreamsouled-sum-calc})" disabled>
+                                                <input type="number" name="attr_reprolls-exc-dreamsouled-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                                <hr />
+                                                <input type="number" name="attr_reprolls-exc-dreamsouled-total-calc" class="exc-total" value="((((@{reprolls-abi}+@{reprolls-uphold-ideal}) + 10) - abs((@{reprolls-abi}+@{reprolls-uphold-ideal}) - 10)) / 2)" disabled title="Total limit of Excellency Cap&#013;&#010;Dream-Souled=>ABI, +ESSENCE if Uphold their Ideal">
+                                            </div>
+                                            <div class="hearteater-type-excellency">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
+                                                CAP
+                                                <select name="attr_reprolls-intimacy-hearteater" title="Intimacy Level for the Excellency" class="hearteater-anima-excellency grow-normal hearteater-hint reset-hint">
+                                                    <option value="0" selected>---</option>
+                                                    <option value="2">Min</option>
+                                                    <option value="3">Maj</option>
+                                                    <option value="4">Def</option>
+                                                </select>
+                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-hearteater-total-calc} - @{reprolls-exc-hearteater-sum-calc})" disabled>
+                                                <input type="number" name="attr_reprolls-exc-hearteater-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                                <hr />
+                                                <input type="number" name="attr_reprolls-exc-hearteater-total-calc" class="exc-total" value="(@{reprolls-attr}+1+@{reprolls-intimacy-hearteater})" disabled title="Total limit of Excellency Cap&#013;&#010;Hearteater=>ATTR+1, +INTIMACY Level">
+                                            </div>
+                                            <div class="umbral-type-excellency">
+                                                <button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>
+                                                CAP
+                                                <input type="hidden" name="attr_sign" value="(@{reprolls-exc-umbral-total-calc} - @{reprolls-exc-umbral-sum-calc})" disabled>
+                                                <input type="number" name="attr_reprolls-exc-umbral-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+                                                <hr />
+                                                <input type="number" name="attr_reprolls-exc-umbral-total-calc" class="exc-total" value="((((@{reprolls-attr}+@{limit}) + 10) - abs((@{reprolls-attr}+@{limit}) - 10)) / 2)" disabled title="Total limit of Excellency Cap&#013;&#010;Umbral=>ATTR+PENUMBRA(Limit)">
                                             </div>
                                         </div>
                                     </div>

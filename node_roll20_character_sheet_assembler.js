@@ -198,9 +198,15 @@ const abiDiceCapTypeHash = {
     'Dragon-Blooded Variant':'DB',
 }, attrDiceCapTypeHash = {
     'Attribute Based':'Attribute',
+    'Architect Variant':'Architect',
 }, essenceDiceCapTypeHash = {
     'Sidereal':'Sidereal',
     'Liminal':'Liminal',
+    'Puppeteer':'Puppeteer',
+    'Sovereign':'Sovereign',
+    'Dream-Souled':'DreamSouled',
+    'Hearteater':'Hearteater',
+    'Umbral':'Umbral',
 };
 
 const pad = (p) => `${" ".repeat(p)}`;
@@ -1283,6 +1289,7 @@ outHtml += /*html*/
                         ${getCheckboxLabel(24, 'charmwhisperboth', 'Show both buttons in Charm Tab')}
                         ${getCheckboxLabel(24, 'antisocialtab', 'Show 2nd Social Tab')}
                         ${getCheckboxLabel(24, 'combattab', 'Show Combat Tab', true)}
+                        ${getCheckboxLabel(24, 'showlimit', 'Show Limit Bar', false, 'sheet-force-limit')}
                         ${getCheckboxLabel(24, 'diceex', 'Include Dice Excellency')}
                         ${getCheckboxLabel(24, 'succex', 'Include Success Excellency')}
                         ${getCheckboxLabel(24, 'canspendmote', 'Can spend Motes')}
@@ -1804,10 +1811,10 @@ outHtml += /*html*/`
                                             <div class="flex grow-normal dice-area inverted-color">
                                                 <div class="flex flex-wrap grow-normal dice-area-details">
                                                     <div class="flex grow-normal basis-100">
-                                                        <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal solar-hint lunar-hint">
+                                                        <select name="attr_reprolls-attr" title="Attribute for the Roll" class="grow-normal solar-hint lunar-hint architect-hint hearteater-hint umbral-hint">
                                                             ${getAttrOptions(60)}
                                                         </select>+
-                                                        <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal solar-hint db-hint liminal-hint">
+                                                        <select name="attr_reprolls-abi" title="Ability for the Roll" class="grow-normal solar-hint db-hint liminal-hint dreamsouled-hint">
                                                             ${getAbiOptions(60)}
                                                         </select>+
                                                     </div>
@@ -1817,7 +1824,7 @@ outHtml += /*html*/`
                                                             <select name="attr_reprolls-stunt-dices" class="sheet-rolls-stunt-dices grow-normal" title="Bonus dices for the Roll awarded by the Stunt">
                                                                 ${returnOptions(64, [{val: 0, label: '(0) Std Stunt'},{val: 2, label: '(2) Stunt 1+'}])}
                                                             </select>+
-                                                            <span class="specialty-box db-hint">
+                                                            <span class="specialty-box db-hint puppeteer-hint">
                                                                 <input type="checkbox" name="attr_reprolls-specialty" class="sheet-rolls-specialty" title="Toggle Specialty" value="1">
                                                                 <span class="sheet-spelleffect" title="Spe"></span>
                                                             </span>+
@@ -1880,25 +1887,31 @@ function getExcellencyCap(p, sectionName, totalExpr, totalTitleEnd, appendTopFx,
     ret += `${pad(p+4)}<button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>\n`;
     ret += `${pad(p+4)}CAP\n`;
     if (appendTopFx)
-        ret += `${pad(p+4)}${appendTopFx(p)}\n`;
+        ret += `${pad(p+4)}${appendTopFx(p+4)}\n`;
     ret += /*html*/`${pad(p+4)}<input type="hidden" name="attr_sign" value="(@{reprolls-exc-${sectionName}-total-calc} - @{reprolls-exc-${sectionName}-sum-calc})" disabled>
 ${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
 ${pad(p+4)}<hr />\n`;
     if (appendBeforeTotalFx)
-        ret += `${pad(p+4)}${appendBeforeTotalFx(p)}\n`;
+        ret += `${pad(p+4)}${appendBeforeTotalFx(p+4)}\n`;
     ret += /*html*/`${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}">\n`;
     ret += `${pad(p)}</div>`;
     return ret;
 }
 
-const getLunarTop = (p) => /*html*/`<select name="attr_reprolls-attr-lunar-exc" title="2nd Attribute for the Excellency" class="lunar-attr-excellency grow-normal lunar-hint reset-hint">
-${pad(p+8)}${returnOptions(p+8, [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0)}
-${pad(p+4)}</select>`;
-
-const getLiminalTop = (p) => /*html*/`<div class="anima-flare-box-mode liminal-hint reset-hint">
-${pad(p+8)}<input type="checkbox" name="attr_reprolls-anima-flare" class="sheet-rolls-anima-flare-checkbox" title="Toggle Aura Flare" value="@{essence}">
-${pad(p+8)}<span class="sheet-spelleffect" title="Toggle"></span>
-${pad(p+4)}</div>`;
+const makeSelectTop = (p, attr, title, addedClass, arrayOptions, arraySelected, hintClass, resetHint) => /*html*/`<select name="attr_reprolls-${attr}" title="${title}" class="${addedClass} grow-normal${hintClass ? ` ${hintClass}` : ''}${resetHint ? ` reset-hint` : ''}">
+${pad(p+4)}${returnOptions(p+4, arrayOptions, arraySelected)}
+${pad(p)}</select>`;
+const makeCheckboxTop = (p, attr, title, value, hintClass, resetHint) => /*html*/`<div class="scope-here ${attr}-box-mode${hintClass ? ` ${hintClass}` : ''}${resetHint ? ` reset-hint` : ''}">
+${pad(p+4)}<input type="checkbox" name="attr_reprolls-${attr}" class="sheet-rolls-${attr}-checkbox" title="${title}" value="${value}">
+${pad(p+4)}<span class="sheet-spelleffect" title="Toggle"></span>
+${pad(p)}</div>`;
+const getLunarTop = (p) => makeSelectTop(p, 'attr-lunar-exc', '2nd Attribute for the Excellency', 'lunar-attr-excellency', [{val: '0', label: '---'}, ...attributes.map(i => ({val: `@{${i.toLowerCase()}}`, label: i.toLowerCase().substr(0, 3)}))], 0, 'lunar-hint', true);
+const getLiminalTop = (p) => makeCheckboxTop(p, 'anima-flare', 'Toggle Aura Flare', '@{essence}', 'liminal-hint');
+const getArchitectTop = (p) => makeCheckboxTop(p, 'inside-city', 'Toggle Inside City', '@{essence}', 'architect-hint');
+const getPuppeteerTop = (p) => makeSelectTop(p, 'attr-puppeteer-exc', 'Type of Action for the Excellency', 'puppeteer-attr-excellency', [{val: '0', label: '---'}, {val: '@{dexterity}', label: 'Phy'}, {val: '@{manipulation}', label: 'Soc'}, {val: '@{wits}', label: 'Men'}], 0, 'puppeteer-hint', true);
+const getSovereignTop = (p) => makeSelectTop(p, 'anima-sovereign', 'Anima Level for the Excellency', 'sovereign-anima-excellency', [{val: '0', label: 'Dim'}, {val: '1', label: 'Glo'}, {val: '2', label: 'Bur'}, {val: '3', label: 'Bon'}], 0, 'sovereign-hint');
+const getDreamSouledTop = (p) => makeCheckboxTop(p, 'uphold-ideal', 'Toggle Uphold Ideal', '@{essence}', 'dreamsouled-hint', true);
+const getHearteaterTop = (p) => makeSelectTop(p, 'intimacy-hearteater', 'Intimacy Level for the Excellency', 'hearteater-anima-excellency', [{val: '0', label: '---'}, {val: '2', label: 'Min'}, {val: '3', label: 'Maj'}, {val: '4', label: 'Def'}], 0, 'hearteater-hint', true);
 
 const getAutoCalcMax = (a, b) => `(((${a} + ${b}) + abs(${a} - ${b})) / 2)`;
 const getAutoCalcMin = (a, b) => `(((${a} + ${b}) - abs(${a} - ${b})) / 2)`;
@@ -1914,6 +1927,12 @@ outHtml += /*html*/`
                                             ${getExcellencyCap(44, 'db', '(@{reprolls-abi}+@{reprolls-specialty})', 'DB=>ABI+SPE')}
                                             ${getExcellencyCap(44, 'liminal', '(@{reprolls-abi}+@{reprolls-anima-flare})', 'Liminal=>ABI, +ESSENCE if Anima Flare', getLiminalTop)}
                                             ${getExcellencyCap(44, 'sidereal', `${getAutoCalcMin('@{reprolls-exc-sidereal-total-calc-max}', 5)}`, 'Sidereal=> Based on ESSENCE, min 3, max 5', undefined, getSiderealEnd)}
+                                            ${getExcellencyCap(44, 'architect', `${getAutoCalcMin('(@{reprolls-attr}+@{reprolls-inside-city})', 10)}`, 'Architect=>ATTR, +ESSENCE if Inside a City', getArchitectTop)}
+                                            ${getExcellencyCap(44, 'puppeteer', '(@{reprolls-attr-puppeteer-exc}+@{reprolls-specialty})', 'Puppeteer=>[Dex, Manip, Wits](depending on action type)+SPE', getPuppeteerTop)}
+                                            ${getExcellencyCap(44, 'sovereign', '(4+@{reprolls-anima-sovereign})', 'Sovereign=> 4, +ANIMA Level', getSovereignTop)}
+                                            ${getExcellencyCap(44, 'dreamsouled', `${getAutoCalcMin('(@{reprolls-abi}+@{reprolls-uphold-ideal})', 10)}`, 'Dream-Souled=>ABI, +ESSENCE if Uphold their Ideal', getDreamSouledTop)}
+                                            ${getExcellencyCap(44, 'hearteater', '(@{reprolls-attr}+1+@{reprolls-intimacy-hearteater})', 'Hearteater=>ATTR+1, +INTIMACY Level', getHearteaterTop)}
+                                            ${getExcellencyCap(44, 'umbral', `${getAutoCalcMin('(@{reprolls-attr}+@{limit})', 10)}`, 'Umbral=>ATTR+PENUMBRA(Limit)')}
                                         </div>
                                     </div>
                                 </div>

@@ -539,6 +539,15 @@ input[type="number"] {
     display: block;
 }
 
+.charsheet .flex.main-page .sheet-tab-settings-sheet .sheet-force-limit {
+    display: none;
+}
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-settings-sheet .sheet-force-limit,
+.charsheet .caste-check[value="Exigent"] ~ .flex.main-page .sheet-tab-settings-sheet .sheet-force-limit,
+.charsheet .caste-check[value="Custom"]  ~ .flex.main-page .sheet-tab-settings-sheet .sheet-force-limit {
+    display: block;
+}
+
 .charsheet .charm-whisper-gm-check[value="1"] ~ .flex.main-page .default-whisper,
 .charsheet .charm-whisper-gm-check[value="0"] ~ .flex.main-page .gm-whisper,
 .charsheet .sheet-tab-charm-sheet .sheet-charm-effect .show-to-db-only
@@ -6161,6 +6170,12 @@ and (min-resolution:.001dpcm) {
 .sheet-rolls:has(.lunar-type-excellency .exc-total:hover) .roll-section .lunar-hint,
 .roll-section:has(.db-type-excellency .exc-total:hover) .inner-section .db-hint,
 .sheet-rolls:has(.liminal-type-excellency .exc-total:hover) .roll-section .liminal-hint,
+.sheet-rolls:has(.architect-type-excellency .exc-total:hover) .roll-section .architect-hint,
+.sheet-rolls:has(.puppeteer-type-excellency .exc-total:hover) .roll-section .puppeteer-hint,
+.sheet-rolls:has(.sovereign-type-excellency .exc-total:hover) .roll-section .sovereign-hint,
+.sheet-rolls:has(.dreamsouled-type-excellency .exc-total:hover) .roll-section .dreamsouled-hint,
+.sheet-rolls:has(.hearteater-type-excellency .exc-total:hover) .roll-section .hearteater-hint,
+.sheet-rolls:has(.umbral-type-excellency .exc-total:hover) .roll-section .umbral-hint,
 .roll-section .sidereal-type-excellency .exc-total:hover {
     box-shadow: var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-color),
                 var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-color),
@@ -6169,8 +6184,6 @@ and (min-resolution:.001dpcm) {
 }
 
 .charsheet .roll-section .excellency-cap-section .stealth-btn:focus,
-.charsheet .roll-section .excellency-cap-section .stealth-btn:hover,
-.charsheet .roll-section:has(.excellency-cap-section .stealth-btn:focus) .reset-hint,
 .charsheet .roll-section:has(.excellency-cap-section .stealth-btn:hover) .reset-hint {
     box-shadow: var(--bs-default-poffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-reset-color),
                 var(--bs-default-noffset) var(--bs-default-poffset) var(--bs-default-blur) var(--bs-charm-reset-color),
@@ -6246,7 +6259,13 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="DB"]            ~ div.db-type-excellency,
 .charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Attribute"]     ~ div.lunar-type-excellency,
 .charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Sidereal"]      ~ div.sidereal-type-excellency,
-.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Liminal"]       ~ div.liminal-type-excellency {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Liminal"]       ~ div.liminal-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Architect"]     ~ div.architect-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Puppeteer"]     ~ div.puppeteer-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Sovereign"]     ~ div.sovereign-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="DreamSouled"]   ~ div.dreamsouled-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Hearteater"]    ~ div.hearteater-type-excellency,
+.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="Umbral"]        ~ div.umbral-type-excellency {
     display: block;
 }
 
@@ -6259,11 +6278,17 @@ and (min-resolution:.001dpcm) {
     background-color: var(--bs-charm-warning-color-dark);
 }
 
-.charsheet .dicecap-type-check[value="Ability"]    ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
-.charsheet .dicecap-type-check[value="DB"]         ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
-.charsheet .dicecap-type-check[value="Attribute"]  ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
-.charsheet .dicecap-type-check[value="Sidereal"]   ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
-.charsheet .dicecap-type-check[value="Liminal"]    ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after {
+.charsheet .dicecap-type-check[value="Ability"]     ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="DB"]          ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Attribute"]   ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Sidereal"]    ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Liminal"]     ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Architect"]   ~ .flex.main-page .roll-section:has(.architect-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Puppeteer"]   ~ .flex.main-page .roll-section:has(.puppeteer-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Sovereign"]   ~ .flex.main-page .roll-section:has(.sovereign-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="DreamSouled"] ~ .flex.main-page .roll-section:has(.dreamsouled-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Hearteater"]  ~ .flex.main-page .roll-section:has(.hearteater-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after,
+.charsheet .dicecap-type-check[value="Umbral"]      ~ .flex.main-page .roll-section:has(.umbral-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after {
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
 }
@@ -6299,11 +6324,17 @@ test removing :after which i assume prevent roll20 clicks
     transition: opacity 0.3s ease-in-out;
 } */
 
-.charsheet .dicecap-type-check[value="Ability"]    ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.charsheet .dicecap-type-check[value="DB"]         ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.charsheet .dicecap-type-check[value="Attribute"]  ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.charsheet .dicecap-type-check[value="Sidereal"]   ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.charsheet .dicecap-type-check[value="Liminal"]    ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons {
+.charsheet .dicecap-type-check[value="Ability"]     ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="DB"]          ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Attribute"]   ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Sidereal"]    ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Liminal"]     ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Architect"]   ~ .flex.main-page .roll-section:has(.architect-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Puppeteer"]   ~ .flex.main-page .roll-section:has(.puppeteer-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Sovereign"]   ~ .flex.main-page .roll-section:has(.sovereign-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="DreamSouled"] ~ .flex.main-page .roll-section:has(.dreamsouled-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Hearteater"]  ~ .flex.main-page .roll-section:has(.hearteater-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.charsheet .dicecap-type-check[value="Umbral"]      ~ .flex.main-page .roll-section:has(.umbral-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons {
     background: linear-gradient(var(--bs-charm-warning-color), var(--bs-charm-warning-color)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
     /* back to normal ? */
     box-shadow: var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-warning-color),
@@ -6313,19 +6344,31 @@ test removing :after which i assume prevent roll20 clicks
     transition: box-shadow 0.3s;
 }
 
-.sheet-darkmode .charsheet .dicecap-type-check[value="Ability"]    ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.sheet-darkmode .charsheet .dicecap-type-check[value="DB"]         ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.sheet-darkmode .charsheet .dicecap-type-check[value="Attribute"]  ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.sheet-darkmode .charsheet .dicecap-type-check[value="Sidereal"]   ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
-.sheet-darkmode .charsheet .dicecap-type-check[value="Liminal"]    ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons {
+.sheet-darkmode .charsheet .dicecap-type-check[value="Ability"]     ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="DB"]          ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Attribute"]   ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Sidereal"]    ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Liminal"]     ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Architect"]   ~ .flex.main-page .roll-section:has(.architect-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Puppeteer"]   ~ .flex.main-page .roll-section:has(.puppeteer-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Sovereign"]   ~ .flex.main-page .roll-section:has(.sovereign-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="DreamSouled"] ~ .flex.main-page .roll-section:has(.dreamsouled-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Hearteater"]  ~ .flex.main-page .roll-section:has(.hearteater-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons,
+.sheet-darkmode .charsheet .dicecap-type-check[value="Umbral"]      ~ .flex.main-page .roll-section:has(.umbral-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons {
     background: linear-gradient(var(--bs-charm-warning-color-dark), var(--bs-charm-warning-color-dark)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
 }
 
-.charsheet .dicecap-type-check[value="Ability"]    ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
-.charsheet .dicecap-type-check[value="DB"]         ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
-.charsheet .dicecap-type-check[value="Attribute"]  ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
-.charsheet .dicecap-type-check[value="Sidereal"]   ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
-.charsheet .dicecap-type-check[value="Liminal"]    ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button {
+.charsheet .dicecap-type-check[value="Ability"]     ~ .flex.main-page .roll-section:has(.solar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="DB"]          ~ .flex.main-page .roll-section:has(.db-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Attribute"]   ~ .flex.main-page .roll-section:has(.lunar-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Sidereal"]    ~ .flex.main-page .roll-section:has(.sidereal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Liminal"]     ~ .flex.main-page .roll-section:has(.liminal-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Architect"]   ~ .flex.main-page .roll-section:has(.architect-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Puppeteer"]   ~ .flex.main-page .roll-section:has(.puppeteer-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Sovereign"]   ~ .flex.main-page .roll-section:has(.sovereign-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="DreamSouled"] ~ .flex.main-page .roll-section:has(.dreamsouled-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Hearteater"]  ~ .flex.main-page .roll-section:has(.hearteater-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button,
+.charsheet .dicecap-type-check[value="Umbral"]      ~ .flex.main-page .roll-section:has(.umbral-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button {
     cursor: not-allowed;
 }
 
@@ -6352,7 +6395,7 @@ test removing :after which i assume prevent roll20 clicks
     height: 1.3em;
 }
 
-div.anima-flare-box-mode.liminal-hint {
+div.scope-here {
     transform: scale(1);
 }
 
@@ -6360,10 +6403,8 @@ div.anima-flare-box-mode.liminal-hint {
     margin: 0;
 }
 
-.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"] + span::before {
-    color: #a00;
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[type="checkbox"] + span::before {
     background: transparent;
-    content: "Dim";
     height: 1em;
     border: 1px solid;
     border-radius: 5px;
@@ -6372,10 +6413,36 @@ div.anima-flare-box-mode.liminal-hint {
     width: 100%;
 }
 
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"] + span::before {
+    color: #a00;
+    content: "Dim";
+}
+
 .charsheet .sheet-rolls-div-widget .excellency-cap-section > div.liminal-type-excellency input[type="checkbox"]:checked + span::before {
     color: #aa0;
     content: "Flare";
     font-size: small;
+}
+
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.architect-type-excellency input[type="checkbox"] + span::before {
+    color: #a00;
+    content: "Out";
+}
+
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.architect-type-excellency input[type="checkbox"]:checked + span::before {
+    color: #0f0;
+    content: "Inside";
+    font-size: small;
+}
+
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.dreamsouled-type-excellency input[type="checkbox"] + span::before {
+    color: #a00;
+    content: "No";
+}
+
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div.dreamsouled-type-excellency input[type="checkbox"]:checked + span::before {
+    color: #0f0;
+    content: "Yes";
 }
 
 .charsheet .sheet-rolls-div-widget .excellency-cap-section > div input {
