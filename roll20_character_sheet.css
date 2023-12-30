@@ -62,11 +62,16 @@ input[type="number"] {
 }
 
 .charsheet {
+    --sheet-bg-col: white;
     position: absolute;
     left: 0;
     padding: 0 0 0 0 !important;
     height: -webkit-fill-available;
     width: calc(100% - 1px);
+}
+
+.sheet-darkmode .charsheet {
+    --sheet-bg-col: var(--dark-surface1);
 }
 
 @-moz-document url-prefix() {
@@ -3563,7 +3568,7 @@ body.sheet-darkmode {
 }
 
 .sheet-darkmode .charsheet select:focus, .sheet-darkmode .charsheet h1 span {
-    background: var(--dark-surface1);
+    background: var(--sheet-bg-col);
 	color: var(--dark-primarytext);
 }
 
@@ -3749,7 +3754,7 @@ body.sheet-darkmode {
 
 .sheet-darkmode .charsheet .wound-penalty-check[value="1"] ~ .flex.main-page .wound-taint {
     background-color: #d5d500 !important;
-    color: var(--dark-surface1);
+    color: var(--sheet-bg-col);
 }
 
 .sheet-darkmode .charsheet .wound-penalty-check[value="2"] ~ .flex.main-page .wound-taint {
@@ -4026,18 +4031,28 @@ body.sheet-darkmode {
 .charsheet .sheet-intimacyrepeating option[value="none"] {color: darkorange}
 .charsheet .sheet-intimacyrepeating option[value="Defining"]{background: rgba(0, 88, 255, 0.5)}
 .charsheet .sheet-intimacyrepeating option[value="Major"]{background: rgba(0, 243, 255, 0.34)}
+.charsheet .sheet-intimacyrepeating option[value="Major+"]{background: linear-gradient(rgba(0, 243, 255, 0.34),rgba(0, 88, 255, 0.5))}
+.charsheet .sheet-intimacyrepeating option[value="Minor+"]{background: linear-gradient(transparent, rgba(0, 243, 255, 0.34), rgba(0, 88, 255, 0.5))}
 
 .sheet-tab-intimacies-sheet .inti-col .intimacy-val-check[value="none"] ~ div.sheet-table-cell,
 .sheet-tab-antisocial-sheet .inti-col .intimacy-taint-check[value="1"] + .intimacy-val-check[value="none"] ~ div.sheet-table-cell {
     background: linear-gradient(180deg, transparent, rgba(255, 215, 0, 0.9), rgba(255, 215, 0, 0.3), transparent, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.9))
 }
 
-.inti-col .intimacy-val-check[value="Major"] ~ div.sheet-table-cell {
-    background: linear-gradient(180deg, transparent, rgba(0, 243, 255, 0.34), transparent)
+.inti-col .repitem:has(.intimacy-val-check[value="Minor+"]) {
+    background: linear-gradient(0deg, var(--sheet-bg-col) 0%, transparent 50%, var(--sheet-bg-col) 100%), linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.34), rgba(0, 88, 255, 0.5));
 }
 
-.inti-col .intimacy-val-check[value="Defining"] ~ div.sheet-table-cell {
-    background: linear-gradient(180deg, transparent, rgba(0, 88, 255, 0.5), transparent);
+.inti-col .repitem:has(.intimacy-val-check[value="Major"]) {
+    background: linear-gradient(0deg, var(--sheet-bg-col) 0%, transparent 50%, var(--sheet-bg-col) 100%), rgba(0, 243, 255, 0.34);
+}
+
+.inti-col .repitem:has(.intimacy-val-check[value="Major+"]) {
+    background: linear-gradient(0deg, var(--sheet-bg-col) 0%, transparent 50%, var(--sheet-bg-col) 100%), linear-gradient(90deg, rgba(0, 243, 255, 0.34),rgba(0, 88, 255, 0.5));
+}
+
+.inti-col .repitem:has(.intimacy-val-check[value="Defining"]) {
+    background: linear-gradient(0deg, var(--sheet-bg-col) 0%, transparent 50%, var(--sheet-bg-col) 100%), rgba(0, 88, 255, 0.5);
 }
 
 .charsheet .sheet-3col.inti-col input[name="attr_intimacyrepeatingxpspent"] {
@@ -4623,11 +4638,11 @@ body.sheet-darkmode {
 }
 
 .will-color-down {
-    background: linear-gradient(white, rgba(var(--willpower-color), 0.5));
+    background: linear-gradient(var(--sheet-bg-col), rgba(var(--willpower-color), 0.5));
 }
 
 .sheet-darkmode .will-color-down {
-    background: linear-gradient(var(--dark-surface1), rgb(var(--dark-willpower-color)));
+    background: linear-gradient(var(--sheet-bg-col), rgb(var(--dark-willpower-color)));
 }
 
 .mote-color {
@@ -4639,11 +4654,11 @@ body.sheet-darkmode {
 }
 
 .mote-color-down {
-    background: linear-gradient(white, rgba(var(--mote-color), 0.5))
+    background: linear-gradient(var(--sheet-bg-col), rgba(var(--mote-color), 0.5))
 }
 
 .sheet-darkmode .mote-color-down {
-    background: linear-gradient(var(--dark-surface1), rgb(var(--dark-mote-color)));
+    background: linear-gradient(var(--sheet-bg-col), rgb(var(--dark-mote-color)));
 }
 
 .mote-color-border-solid {
@@ -5477,10 +5492,7 @@ textarea::-webkit-scrollbar-track {
 
 .charsheet .reminder-charms-commited-div input[type="text"] {
     flex-grow: 1;
-    text-shadow: 0 0 5px white;
-}
-.sheet-darkmode .charsheet .reminder-charms-commited-div input[type="text"] {
-    text-shadow: 0 0 5px black;
+    text-shadow: 0 0 5px var(--sheet-bg-col);
 }
 
 .charsheet .reminder-charms-commited-div label input[type="text"] {
@@ -5490,10 +5502,7 @@ textarea::-webkit-scrollbar-track {
 
 .charsheet .reminder-charms-commited-div label {
     display: contents;
-    text-shadow: 0 0 5px white;
-}
-.sheet-darkmode .charsheet .reminder-charms-commited-div label {
-    text-shadow: 0 0 5px black;
+    text-shadow: 0 0 5px var(--sheet-bg-col);
 }
 
 .charsheet .sheet-box-reminder .repcontainer .repitem .reminder-cell {

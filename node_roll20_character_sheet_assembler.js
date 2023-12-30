@@ -843,6 +843,8 @@ outHtml += /*html*/
                             </div>
                         </div>\n`;
 
+const dodgeAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty}';
+const parryAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty}';
 function getWeaponsLine(p = 0) {
     return /*html*/`<div class="sheet-gear sheet-table">
 ${pad(p)}    <input type="hidden" name="attr_wound-penalty" value="-4">
@@ -879,12 +881,12 @@ ${pad(p)}        </div>
 ${pad(p)}        <div class="sheet-table-cell">
 ${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${pad(p)}            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-${pad(p)}            <input type="number" value="(@{repweaponparry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
+${pad(p)}            <input type="number" value="(@{repweaponparry} + ${parryAddedVariables})" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="sheet-table-cell">
 ${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${pad(p)}            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-${pad(p)}            <input type="number" value="(@{repweaponparryspe} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} - @{clash-def-penalty})" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
+${pad(p)}            <input type="number" value="(@{repweaponparryspe} + ${parryAddedVariables})" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
 ${pad(p)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
@@ -967,7 +969,7 @@ ${pad(p)}            <span title="Unarmed Parry= (Dex + Brawl)/2">UnA. Parry</sp
 ${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${pad(p)}            <input type="hidden" class="onslaught-check" name="attr_onslaught">
 ${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(@{parry} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}${TITLE_BR}Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + @{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}${TITLE_BR}Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" value="(@{parry} + ${parryAddedVariables})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}${TITLE_BR}Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + ${parryAddedVariables})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}${TITLE_BR}Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    <div class="flex-col">
@@ -980,7 +982,7 @@ ${pad(p)}        <div class="flex">
 ${pad(p)}            <span title="Dexterity + Dodge">Evasion</span>:
 ${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) - (@{apply-onslaught} * @{onslaught}) + @{battlegroup-def-boost} - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    ${getDefExcDiv(p+4)}
@@ -2183,7 +2185,7 @@ outHtml += /*html*/`
                                 <div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
                                 <div class="sheet-table-cell intimacy-taint">
                                     <select name="attr_intimacyrepeatingtype" class="sheet-intimacyrepeating" required="">
-                                        ${returnOptions(40, [{val: 'none', label: 'None'}, ...['Minor','Major','Defining'].map(i => ({val: i, label: i}))])}
+                                        ${returnOptions(40, [{val: 'none', label: 'None'}, ...['Minor','Minor+','Major','Major+','Defining'].map(i => ({val: i, label: i}))])}
                                     </select>
                                 </div>
                             </fieldset>
