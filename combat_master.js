@@ -3029,7 +3029,7 @@ var CombatMaster = CombatMaster || (function() {
         let title         = 'Conditions';
         let doneButton    = makeImageButton('!cmaster --turn,next',doneImage,'Done with Round','transparent',18,'white');
         let delayButton   = makeImageButton('!cmaster --turn,delay',delayImage,'Delay your Turn','transparent',18, 'white');
-        let fullDefButton = makeImageButton(`!token-mod --set statusmarkers&#124;=full-def;;6398340 --ids ${tokenObj.get('_id')}`,getDefaultIcon('Combat Master','full-def::6398340','display:inline-block', 18, 18, 18),'Full Defense','transparent',18, 'white');
+        let fullDefButton = makeImageButton(`!token-mod --set statusmarkers&#124;full-def;;6398340 --ids ${tokenObj.get('_id')}`,getDefaultIcon('Combat Master','full-def::6398340','display:inline-block', 18, 18, 18),'Full Defense','transparent',18, 'white');
 
         if (!show) {
             title   += `<div style="${styles.buttonRight}">${doneButton}</div>`;
