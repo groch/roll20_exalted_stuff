@@ -1,3 +1,4 @@
+/* Quick fix removing input showing +/- on Firefox */
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -11,6 +12,10 @@ input[type=number] {
     appearance: textfield;
 }
 
+
+
+
+/* TRANSITIONS */
 .ui-dialog,
 .nav > li > a,
 input[type="radio"].sheet-tab,
@@ -32,6 +37,11 @@ input[type="number"] {
     transition: color 1s, background-color 1s;
 }
 
+
+
+
+
+/* MAIN SHEET STYLES */
 .charsheet p {
     margin: 0 0 5px;
 }
@@ -49,7 +59,6 @@ input[type="number"] {
     box-shadow: none;
     transition: color 1s, text-shadow 1s;
 }
-
 .sheet-darkmode .charsheet button.stealth-btn {
     color: var(--dark-secondarytext);
 }
@@ -74,12 +83,23 @@ input[type="number"] {
     --sheet-bg-col: var(--dark-surface1);
 }
 
+body.sheet-darkmode {
+    color: var(--dark-secondarytext);
+}
+
+.sheet-darkmode input, .sheet-darkmode textarea, .sheet-darkmode select, .sheet-darkmode .uneditable-input {
+    color: var(--dark-primarytext);
+}
+
 @-moz-document url-prefix() {
     .charsheet {
         height: calc(100% - 4.7em);
     }
 }
 
+
+
+/* warning header for people not using browser supporting :has() */
 .charsheet .sheet-warning-header {
     display: none;
 }
@@ -122,20 +142,21 @@ input[type="number"] {
 }
 
 
+/* EXALTED SPECIFIC STYLES for Option Tab charms */
 .charsheet .solar-style {
     background-color: black;
     color: yellow;
 }
-
 .charsheet .lunar-style {
     background-color: black;
     color: #CEC6CE;
 }
-
 .charsheet .db-style {
     background-color: #B56808;
     color: yellow;
 }
+
+
 
 .charsheet .sheet-content > div.sheet-main-content {
     flex: 1 1 auto;
@@ -214,6 +235,10 @@ input[type="number"] {
 
 .charsheet .sheet-fixedwidth { display: inline-block; }
 
+
+/**
+ * Color Code Display for Status & Wound Pen
+ */
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
 .charsheet .onslaught-taint {
     background-color: #bc69c4;
@@ -226,15 +251,16 @@ input[type="number"] {
     background-image: none;
 }
 
-/* Simple */
-.charsheet .cover-bonus-check[value="1"] ~ .flex.main-page .cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color);
+/* Simple status + variables */
+.charsheet .cover-bonus-check:not([value="0"]) ~ .flex.main-page .cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color);
 }
-
+.charsheet .cover-bonus-check[value="1"] ~ .flex.main-page .cover-taint {
+    --loc-cover-color: var(--bs-light-cover-color);
+}
 .charsheet .cover-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color);
+    --loc-cover-color: var(--bs-heavy-cover-color);
 }
 
 .charsheet .clash-penalty-check[value="2"] ~ .flex.main-page .clash-taint {
@@ -256,138 +282,132 @@ input[type="number"] {
                 var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
 }
 
-.charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint {
-    box-shadow: 0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
-}
-
+.charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint,
 .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled {
-    box-shadow: 0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+    box-shadow: 0 var(--loc-prone-size) var(--bs-default-blur) var(--loc-prone-color);
+    --loc-prone-size: var(--bs-default-poffsetbigger);
+    --loc-prone-color: var(--bs-prone-color);
+}
+.charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled {
+    --loc-prone-size: var(--bs-default-poffsetbiggest);
+}
+.sheet-darkmode .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint,
+.sheet-darkmode .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled {
+    --loc-prone-color: var(--bs-prone-color-dark);
 }
 
-/* Double */
-.charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+/* Double status */
+.charsheet .cover-bonus-check:not([value="0"]) ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
                 var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
                 var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
 }
 
-.charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
+.charsheet .cover-bonus-check:not([value="0"]) ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint,
+.charsheet .cover-bonus-check:not([value="0"]) ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
+    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
+                0 var(--loc-prone-size) var(--bs-default-blur) var(--loc-prone-color);
 }
 
-.charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint {
-    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
-}
-
+.charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint,
 .charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint {
     box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
                 var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+                0 var(--loc-prone-size) var(--bs-default-blur) var(--loc-prone-color);
 }
 
-/* Triple */
-.charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
+/* Triple status */
+.charsheet .cover-bonus-check:not([value="0"]) ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint,
+.charsheet .cover-bonus-check:not([value="0"]) ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
+        box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
+                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--loc-cover-color),
                 var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
                 var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
-}
-
-.charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color);
+                0 var(--loc-prone-size) var(--bs-default-blur) var(--loc-prone-color);
 }
 
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .wound-taint {
-    background-color: rgba(128, 128, 128, 0.25);
+    --loc-wound-color: rgba(128, 128, 128, 0.25);
+    background-color: var(--loc-wound-color);
     font-weight: normal;
+}
+
+/* for woundpen */
+.charsheet .wound-penalty-check:not([value="0"]) ~ .flex.main-page .wound-taint {
+    background-color: var(--loc-wound-color) !important;
+    font-weight: bold;
 }
 
 .charsheet .wound-penalty-check[value="1"] ~ .flex.main-page .wound-taint {
-    background-color: yellow !important;
-    font-weight: bold;
+    --loc-wound-color: yellow;
+}
+.sheet-darkmode .charsheet .wound-penalty-check[value="1"] ~ .flex.main-page .wound-taint {
+    --loc-wound-color: #d5d500;
+    color: var(--sheet-bg-col);
 }
 
 .charsheet .wound-penalty-check[value="2"] ~ .flex.main-page .wound-taint {
-    background-color: orange !important;
-    font-weight: bold;
+    --loc-wound-color: orange;
+}
+.sheet-darkmode .charsheet .wound-penalty-check[value="2"] ~ .flex.main-page .wound-taint {
+    --loc-wound-color: #ab6f00;
 }
 
 .charsheet .wound-penalty-check[value="3"] ~ .flex.main-page .wound-taint {
-    background-color: orangered !important;
-    font-weight: bold;
+    --loc-wound-color: orangered;
+}
+.sheet-darkmode .charsheet .wound-penalty-check[value="3"] ~ .flex.main-page .wound-taint {
+    --loc-wound-color: #9f2c01;
 }
 
 .charsheet .wound-penalty-check[value="4"] ~ .flex.main-page .wound-taint {
-    background-color: red !important;
-    font-weight: bold;
+    --loc-wound-color: red;
+}
+.sheet-darkmode .charsheet .wound-penalty-check[value="4"] ~ .flex.main-page .wound-taint {
+    --loc-wound-color: darkred;
 }
 
 .charsheet input[type=number].onslaught-input {
-    background-color: #ea00ff;
+    --loc-wound-color: #ea00ff;
+    background-color: var(--loc-wound-color);
     font-weight: bold;
 }
 
-.charsheet .flex.main-page .apply-onslaught-check[value="0"] ~ input[type=number].onslaught-input {
-    background-color: rgba(128, 128, 128, 0.25);
+.charsheet .flex.main-page .apply-onslaught-check[value="0"] ~ input[type=number].onslaught-input,
+.charsheet .flex.main-page .onslaught-check[value="0"] ~ input[type=number].onslaught-input {
+    --loc-wound-color: rgba(128, 128, 128, 0.25);
 }
 
 .charsheet .flex.main-page .onslaught-check[value="0"] ~ input[type=number].onslaught-input {
-    background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
 }
+
+.charsheet .wound-penalty-check[value="5"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="6"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="7"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="8"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="9"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="10"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="11"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="12"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="13"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="14"] ~ .flex.main-page .wound-taint,
+.charsheet .wound-penalty-check[value="15"] ~ .flex.main-page .wound-taint {
+    --loc-wound-color: black;
+}
+
+.sheet-darkmode .charsheet input[type=number][disabled].rollpenalty,
+.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
+.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
+    background-color: darkred;
+}
+
+
+
 
 .charsheet input[disabled]:not([title]) {
     cursor: not-allowed;
@@ -407,62 +427,6 @@ input[type="number"] {
 .charsheet .sheet-content .sheet-tab-content input[type=number][disabled].woundpenalty-input,
 .charsheet .sheet-content .sheet-tab-content .rollpenalty-input[title] {
     width: 27px;
-}
-
-.charsheet .sheet-tab-rolls-sheet .rollpen-box p,
-.charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title],
-.charsheet .sheet-tab-intimacies-sheet .rollpen-box p,
-.charsheet .sheet-tab-intimacies-sheet .rollpenalty-input[title] {
-    background-color: rgb(255, 128, 128);
-}
-
-.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpen-box p,
-.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title],
-.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .rollpen-box p,
-.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .rollpenalty-input[title] {
-    background-color: darkred;
-}
-
-.charsheet .rollpenalty-input[title] {
-    background-color: yellow;
-}
-
-.sheet-darkmode .charsheet .rollpenalty-input[title] {
-    background-color: darkgoldenrod;
-}
-
-.charsheet .rollpenalty,
-.charsheet .woundpenalty,
-.charsheet .woundpenalty-input {
-    background-color: rgb(255, 128, 128);
-    font-weight: bold;
-}
-
-.sheet-darkmode .charsheet .rollpenalty,
-.sheet-darkmode .charsheet .woundpenalty,
-.sheet-darkmode .charsheet .woundpenalty-input {
-    background-color: darkred;
-}
-
-.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .woundpenalty,
-.charsheet .roll-penalty-check[value="0"] ~ .flex.main-page .rollpenalty,
-.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page input[type=number][disabled].woundpenalty-input {
-    background-color: rgba(128, 128, 128, 0.25);
-    font-weight: normal;
-}
-
-.charsheet .sheet-rolls-div-widget .inverted-color .rollpenalty.not-inverted,
-.charsheet .sheet-rolls-div-widget .inverted-color .woundpenalty.not-inverted {
-    color: white;
-}
-
-.sheet-darkmode .charsheet .sheet-rolls-div-widget .inverted-color .rollpenalty.not-inverted {
-    border-color: black;
-}
-
-.sheet-darkmode .charsheet .roll-penalty-check[value="0"] ~ .flex.main-page .inverted-color .rollpenalty.not-inverted,
-.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .inverted-color .woundpenalty.not-inverted {
-    color: black;
 }
 
 .charsheet .not-visible {
@@ -854,14 +818,24 @@ input[type="number"] {
 
 .charsheet .sheet-dotted { border-bottom: 1px dotted black; }
 
-.charsheet input[type=text],.charsheet input[type=number] {
+.charsheet input[type=text],
+.charsheet input[type=number] {
     display: inline-block;
     width: 165px;
     font-size: 12pt;
     height: 25px;
     border: 0px;
-    border-bottom: 1px solid black;
     background-color: transparent;
+    border-bottom: 1px solid black;
+}
+.sheet-darkmode .charsheet input[type=text],
+.sheet-darkmode .charsheet input[type=number],
+.sheet-darkmode .charsheet select {
+    border-bottom: 1px solid var(--dark-primarytext);
+}
+
+.sheet-darkmode .charsheet select:focus {
+    background: var(--sheet-bg-col);
 }
 
 .charsheet input[type=number] { text-align: center; }
@@ -901,9 +875,22 @@ input[type="number"] {
 }
 
 .charsheet h1 span {
-    background: #fff;
+    background: var(--sheet-bg-col);
     padding: 0 5px;
     font-variant: small-caps;
+}
+.sheet-darkmode .charsheet h1 span {
+	color: var(--dark-primarytext);
+}
+
+.sheet-darkmode .charsheet select:focus,
+.sheet-darkmode h1,
+.sheet-darkmode h2,
+.sheet-darkmode h3,
+.sheet-darkmode h4,
+.sheet-darkmode h5,
+.sheet-darkmode h6 {
+    color: var(--dark-primarytext);
 }
 
 .charsheet *,
@@ -1270,6 +1257,10 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     border-radius: 4px;
 }
 
+.sheet-darkmode .charsheet input[type=checkbox].sheet-unnamed-toggle:not(.btn) + span::before {
+    background: #420000;
+}
+
 .charsheet .add-multiple-div input[type=checkbox].sheet-unnamed-toggle + span::before {
     width: 7rem;
 }
@@ -1319,9 +1310,23 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     padding: 2px 10px;
     transition: color .2s;
 }
+.sheet-darkmode .btn, .sheet-darkmode .btn.btn-default {
+	background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+}
 
 .btn:hover {
     color: darkred;
+}
+.sheet-darkmode .btn:hover {
+    color: white;
+}
+
+.charsheet .sheet-grouped-buttons .btn:hover {
+    border-color: black;
+}
+
+.charsheet .sheet-grouped-buttons .btn:focus-visible {
+    outline: none;
 }
 
 .charsheet .sheet-layer7,.charsheet .sheet-layer7::before { z-index: 7; }
@@ -1342,10 +1347,13 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     left: -142px;
     border: 1px solid black;
     padding: 5px;
-    background: linear-gradient(#f6f6f6, #f6f6f6) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
 	border: 3px solid transparent;
     border-radius: 13px;
     width: 250px;
+    background: linear-gradient(#f6f6f6, #f6f6f6) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
+}
+.sheet-darkmode input[type=checkbox].sheet-unnamed-toggle:checked + span + div {
+    background: linear-gradient(#1F1F1F, #1F1F1F) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
 }
 
 .charsheet input[type=checkbox].sheet-unnamed-toggle:checked + span[title="Show styles"] + div {
@@ -1359,6 +1367,10 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
 .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
     background: radial-gradient(#f6f6f6, #dfdfdf);
+}
+.sheet-darkmode .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
+.sheet-darkmode .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
+    background: dimgray;
 }
 
 .charsheet .sheet-unnamed-toggle + span + div > .sheet-trait > label,
@@ -1474,6 +1486,10 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     display:block;
     content: 'NOM';
 }
+.sheet-darkmode .merits-div-checkbox input + strong:before{
+    background: dimgray;
+    color: #e6e6e6;
+}
 
 .charsheet .merits-div-checkbox label input {
     position:absolute;
@@ -1571,6 +1587,12 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .charsheet div.sheet-dots-full input[class^=sheet-dots] + span {
     width: 251px;
     height: 20px;
+}
+
+.sheet-darkmode .charsheet div.sheet-dots-full,
+.sheet-darkmode .charsheet div.sheet-damage-box,
+.sheet-darkmode .charsheet div.sheet-dots {
+    background-color: dimgray;
 }
 
 .charsheet input[class^=sheet-dots],
@@ -2566,15 +2588,20 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab::before {
    content: attr(title);
    padding: 0 4px;
-   border:1px solid #444;
+   border: 1px solid;
    border-top:0;
    border-radius:0 0 10px 10px;
    display: block;
-   color:#444;
-   background:#fff;
    line-height: 30px;
    font-size: 16px;
-   text-align:center
+   text-align:center;
+   --tab-color: #444;
+   color: var(--tab-color);
+   border-color: var(--tab-color);
+   background: var(--sheet-bg-col);
+}
+.sheet-darkmode .charsheet input.sheet-tab::before {
+    background: gray;
 }
 
 .charsheet input.sheet-tab-charms::before,
@@ -2596,6 +2623,7 @@ and (min-resolution:.001dpcm) {
 
 .charsheet .sheet-content input.sheet-tab:hover::before,
 .charsheet .sheet-content input.sheet-tab:checked::before,
+.charsheet .sheet-content input.sheet-tab[title="Rolls"]:checked::before,
 .charsheet .sheet-content input.sheet-tab:checked:hover::before {
    background:#840000;
    color: #FFDF00;
@@ -2606,26 +2634,31 @@ and (min-resolution:.001dpcm) {
    font-weight:bold;
 }
 
+.sheet-darkmode .charsheet input.sheet-tab[title="Character Sheet"]::before {
+    --tab-color: var(--dark-primarytext);
+}
+
 .charsheet input.sheet-tab[title="Rolls"]::before {
-    color: blue;
-    border-color: blue;
+    --tab-color: blue;
+}
+.sheet-darkmode .charsheet input.sheet-tab[title="Rolls"]::before {
+    background: lightgray;
 }
 .charsheet input.sheet-tab[title="Social"]::before,
 .charsheet input.sheet-tab[title="Tu perds ton Sang froid !"]::before {
-    color: cyan;
-    border-color: cyan;
+    --tab-color: cyan;
 }
 .charsheet input.sheet-tab[title="Charms"]::before {
-    color: gold;
-    border-color: gold;
+    --tab-color: gold;
 }
 .charsheet input.sheet-tab[title="Sorceries"]::before {
-    color: mediumpurple;
-    border-color: mediumpurple;
+    --tab-color: mediumpurple;
+}
+.sheet-darkmode .charsheet input.sheet-tab[title="Sorceries"]::before {
+    --tab-color: #612278;
 }
 .charsheet input.sheet-tab[title="Combat"]::before {
-    color: red;
-    border-color: red;
+    --tab-color: red;
     font-weight:bold;
 }
 
@@ -3519,18 +3552,7 @@ and (min-resolution:.001dpcm) {
     background-color: brown;
 }
 
-
-
-/* --- NIGHT MODE --- */
-
-body.sheet-darkmode {
-    color: var(--dark-secondarytext);
-}
-
-.sheet-darkmode input, .sheet-darkmode textarea, .sheet-darkmode select, .sheet-darkmode .uneditable-input {
-    color: var(--dark-primarytext);
-}
-
+/* --- INVERT COLOR Class --- */
 .inverted-color,
 .inverted-color input:not(.not-inverted),
 .inverted-color textarea:not(.not-inverted),
@@ -3556,10 +3578,6 @@ body.sheet-darkmode {
     color: black;
 }
 
-.sheet-darkmode .charsheet input[type=text], .sheet-darkmode .charsheet input[type=number], .sheet-darkmode .charsheet select {
-    border-bottom: 1px solid var(--dark-primarytext);
-}
-
 .sheet-darkmode .charsheet .inverted-color span.rollpenalty,
 .sheet-darkmode .charsheet .inverted-color input[type=text],
 .sheet-darkmode .charsheet .inverted-color input[type=number],
@@ -3567,271 +3585,63 @@ body.sheet-darkmode {
     border-bottom: 1px solid;
 }
 
-.sheet-darkmode .charsheet select:focus, .sheet-darkmode .charsheet h1 span {
-    background: var(--sheet-bg-col);
-	color: var(--dark-primarytext);
+/* rollpen + inverted rollpen */
+.charsheet .sheet-tab-rolls-sheet .rollpen-box p,
+.charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title],
+.charsheet .sheet-tab-intimacies-sheet .rollpen-box p,
+.charsheet .sheet-tab-intimacies-sheet .rollpenalty-input[title] {
+    background-color: rgb(255, 128, 128);
 }
 
-.sheet-darkmode h1, .sheet-darkmode h2, .sheet-darkmode h3, .sheet-darkmode h4, .sheet-darkmode h5, .sheet-darkmode h6 {
-    color: var(--dark-primarytext);
+.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpen-box p,
+.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .rollpenalty-input[title],
+.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .rollpen-box p,
+.sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .rollpenalty-input[title] {
+    background-color: darkred;
 }
 
-.sheet-darkmode .charsheet input.sheet-tab::before {
-    color: var(--dark-primarytext);
-    background: gray;
+.charsheet .rollpenalty-input[title] {
+    background-color: yellow;
 }
 
-.sheet-darkmode .charsheet .sheet-content input.sheet-tab:hover::before,
-.sheet-darkmode .charsheet .sheet-content input.sheet-tab:checked::before,
-.sheet-darkmode .charsheet .sheet-content input.sheet-tab:checked:hover::before {
-	color: #FFDF00;
-	background: #840000;
+.sheet-darkmode .charsheet .rollpenalty-input[title] {
+    background-color: darkgoldenrod;
 }
 
-.sheet-darkmode .charsheet input.sheet-tab[title="Rolls"]::before {
-    color: blue;
-    border-color: blue;
-    background-color: lightgray;
-}
-.sheet-darkmode .charsheet input.sheet-tab[title="Social"]::before,
-.sheet-darkmode .charsheet input.sheet-tab[title="Tu perds ton Sang froid !"]::before {
-    color: cyan;
-    border-color: cyan;
-}
-.sheet-darkmode .charsheet input.sheet-tab[title="Charms"]::before {
-    color: gold;
-    border-color: gold;
-}
-.sheet-darkmode .charsheet input.sheet-tab[title="Sorceries"]::before {
-    color: #612278;
-    border-color: #612278;
-}
-.sheet-darkmode .charsheet input.sheet-tab[title="Combat"]::before {
-    color: red;
-    border-color: red;
-}
-
-.sheet-darkmode .charsheet div.sheet-dots-full,
-.sheet-darkmode .charsheet div.sheet-damage-box,
-.sheet-darkmode .charsheet div.sheet-dots {
-    background-color: dimgray;
-}
-
-.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .flex.main-page .onslaught-taint {
-    background-color: #bc69c4;
+.charsheet .rollpenalty,
+.charsheet .woundpenalty,
+.charsheet .woundpenalty-input {
+    background-color: rgb(255, 128, 128);
     font-weight: bold;
 }
-
-/* Simple */
-.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .flex.main-page .cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color);
+.sheet-darkmode .charsheet .rollpenalty,
+.sheet-darkmode .charsheet .woundpenalty,
+.sheet-darkmode .charsheet .woundpenalty-input {
+    background-color: darkred;
 }
 
-.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color);
-}
-
-.sheet-darkmode .charsheet .clash-penalty-check[value="2"] ~ .flex.main-page .clash-taint {
-    outline: 2px solid var(--bs-clash-color);
-}
-
-.sheet-darkmode .charsheet .full-def-bonus-check[value="2"] ~ .flex.main-page .cover-taint {
-    --ts-offset: 2px;
-    --ts-blur: 1px;
-    --ts-color: #0070ff;
-    text-shadow: var(--ts-offset)            var(--ts-offset)            var(--ts-blur) var(--ts-color),
-                 calc(-1 * var(--ts-offset)) var(--ts-offset)            var(--ts-blur) var(--ts-color),
-                 var(--ts-offset)            calc(-1 * var(--ts-offset)) var(--ts-blur) var(--ts-color),
-                 calc(-1 * var(--ts-offset)) calc(-1 * var(--ts-offset)) var(--ts-blur) var(--ts-color);
-}
-
-.sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint {
-    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
-}
-
-.sheet-darkmode .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint {
-    box-shadow: 0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled {
-    box-shadow: 0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-/* Double */
-.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .flex.main-page .grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint {
-    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint {
-    box-shadow: var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-/* Triple */
-.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbigger) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="1"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-light-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .cover-bonus-check[value="2"] ~ .grab-penalty-check[value="2"] ~ .prone-penalty-check[value="1"] ~ .flex.main-page .prone-taint-doubled.grab-taint.cover-taint {
-    box-shadow: inset var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                inset var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-heavy-cover-color),
-                var(--bs-default-poffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                var(--bs-default-noffsetbiggest) 0 var(--bs-default-blurbig) var(--bs-grab-color),
-                0 var(--bs-default-poffsetbiggest) var(--bs-default-blur) var(--bs-prone-color-dark);
-}
-
-.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .wound-taint {
+.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .woundpenalty,
+.charsheet .roll-penalty-check[value="0"] ~ .flex.main-page .rollpenalty,
+.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page input[type=number][disabled].woundpenalty-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
 }
 
-.sheet-darkmode .charsheet .wound-penalty-check[value="1"] ~ .flex.main-page .wound-taint {
-    background-color: #d5d500 !important;
-    color: var(--sheet-bg-col);
-}
-
-.sheet-darkmode .charsheet .wound-penalty-check[value="2"] ~ .flex.main-page .wound-taint {
-    background-color: #ab6f00 !important;
-    font-weight: bold;
-}
-
-.sheet-darkmode .charsheet .wound-penalty-check[value="3"] ~ .flex.main-page .wound-taint {
-    background-color: #9f2c01 !important;
-    font-weight: bold;
-}
-
-.sheet-darkmode .charsheet .wound-penalty-check[value="4"] ~ .flex.main-page .wound-taint {
-    background-color: darkred !important;
-    font-weight: bold;
-}
-
-.sheet-darkmode .charsheet .wound-penalty-check[value="5"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="6"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="7"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="8"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="9"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="10"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="11"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="12"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="13"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="14"] ~ .flex.main-page .wound-taint,
-.sheet-darkmode .charsheet .wound-penalty-check[value="15"] ~ .flex.main-page .wound-taint {
-    background-color: black !important;
-    font-weight: bold;
-}
-
-.sheet-darkmode .charsheet input[type=number][disabled].rollpenalty,
-.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
-.sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
-    background-color: darkred;
-}
-
-.sheet-darkmode .btn, .sheet-darkmode .btn.btn-default {
-	background: linear-gradient(rgb(128, 128, 128), rgb(128, 128, 128)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
-	border: 2px solid transparent;
-	padding: 2px 10px;
-	transition: color .2s;
-}
-
-.sheet-darkmode .btn:hover {
+.charsheet .sheet-rolls-div-widget .inverted-color .rollpenalty.not-inverted,
+.charsheet .sheet-rolls-div-widget .inverted-color .woundpenalty.not-inverted {
     color: white;
 }
 
-.charsheet .sheet-grouped-buttons .btn:hover {
+.sheet-darkmode .charsheet .sheet-rolls-div-widget .inverted-color .rollpenalty.not-inverted {
     border-color: black;
 }
 
-.charsheet .sheet-grouped-buttons .btn:focus-visible {
-    outline: none;
+.sheet-darkmode .charsheet .roll-penalty-check[value="0"] ~ .flex.main-page .inverted-color .rollpenalty.not-inverted,
+.sheet-darkmode .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .inverted-color .woundpenalty.not-inverted {
+    color: black;
 }
 
-.sheet-darkmode .merits-div-checkbox input + strong:before{
-    background: dimgray;
-    color: #e6e6e6;
-}
-
-.sheet-darkmode input[type=checkbox].sheet-unnamed-toggle:checked + span + div {
-    background: linear-gradient(#1F1F1F, #1F1F1F) padding-box, linear-gradient(-42deg, #ffda12, #C0C0C0,#fdda12) border-box;
-	border: 3px solid transparent;
-    border-radius: 13px;
-}
-
-.sheet-darkmode .charsheet input[type=checkbox].sheet-unnamed-toggle:not(.btn) + span::before {
-    background: #420000;
-}
-
-.sheet-darkmode .charsheet .sheet-max-ma-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before,
-.sheet-darkmode .charsheet .sheet-max-craft-val[value="0"] ~ input[type=checkbox].sheet-unnamed-toggle + span::before {
-    background: dimgray;
-}
-
+/* Spell & Charms */
 .sheet-tab-spell-sheet .sheet-table-row textarea,
 .charm-tab-list textarea {
     margin-bottom: 0;
@@ -3971,16 +3781,11 @@ body.sheet-darkmode {
 .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
     --bs-section-color: var(--bs-charm-color);
 }
-
 .sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem {
     --bs-section-color: var(--bs-charm-color-dark);
 }
 
-.sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem:has(.charm-learnt-check[value="0"]) {
-    --bs-section-color: var(--bs-charm-disabled-color);
-    background-color: #575656;
-}
-
+.sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem:has(.charm-learnt-check[value="0"]),
 .sheet-darkmode .sheet-tab-charm-sheet .sheet-tab-content .repcontainer .repitem:has(.charm-learnt-check[value="0"]) {
     --bs-section-color: var(--bs-charm-disabled-color);
     background-color: #575656;
@@ -4017,15 +3822,12 @@ body.sheet-darkmode {
 /* --- COLOR INTIMACIES -- */
 
 .charsheet .sheet-tab-intimacies-sheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
-    background-color: rgb(255 134 134 / 15%);
     outline: 3px solid red;
     border-radius: 5px;
+    background-color: rgb(255 134 134 / 15%);
 }
-
 .sheet-darkmode .charsheet .sheet-tab-intimacies-sheet .sheet-3col.inti-col .intimacy-taint-check[value="1"] ~ .intimacy-taint {
     background-color: darkred;
-    outline: 3px solid red;
-    border-radius: 5px;
 }
 
 .charsheet .sheet-intimacyrepeating option[value="none"] {color: darkorange}
@@ -4640,7 +4442,6 @@ body.sheet-darkmode {
 .will-color-down {
     background: linear-gradient(var(--sheet-bg-col), rgba(var(--willpower-color), 0.5));
 }
-
 .sheet-darkmode .will-color-down {
     background: linear-gradient(var(--sheet-bg-col), rgb(var(--dark-willpower-color)));
 }
@@ -4656,7 +4457,6 @@ body.sheet-darkmode {
 .mote-color-down {
     background: linear-gradient(var(--sheet-bg-col), rgba(var(--mote-color), 0.5))
 }
-
 .sheet-darkmode .mote-color-down {
     background: linear-gradient(var(--sheet-bg-col), rgb(var(--dark-mote-color)));
 }
@@ -4667,9 +4467,13 @@ body.sheet-darkmode {
 
 .charsheet input.mote-hint-one {
     background: radial-gradient(circle, #ffd70080 0.4em ,#00000054,transparent 60%);
-    text-shadow: black 0 0 2px;
+}
+.charsheet input.mote-hint-two {
+    background: radial-gradient(circle, #ffd700ba 30%, transparent, #ffd700ba ,transparent 80%);
 }
 
+.charsheet input.mote-hint-one,
+.charsheet input.mote-hint-two,
 .sheet-darkmode .charsheet input.mote-hint-one,
 .sheet-darkmode .charsheet input.mote-hint-two {
     text-shadow: black 0 0 2px;
@@ -4679,10 +4483,6 @@ body.sheet-darkmode {
     border: 1px dashed rgb(var(--mote-color));
 }
 
-.charsheet input.mote-hint-two {
-    background: radial-gradient(circle, #ffd700ba 30%, transparent, #ffd700ba ,transparent 80%);
-    text-shadow: black 0 0 2px;
-}
 
 .charsheet .sheet-tab-content .ressource-line input[type="number"] {
     width: 2em;
@@ -5035,10 +4835,6 @@ textarea::-webkit-scrollbar-track {
     display: flex;
 }
 
-.sheet-darkmode .charsheet .combat-attacks .attack-section .header-section {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
 /* -- with/deci sections -- */
 
 .withering-section {
@@ -5144,9 +4940,14 @@ textarea::-webkit-scrollbar-track {
     align-items: center;
     padding: 0.2em 0 0.2em 0.2em;
     margin: 0 0.2em;
-    background-color: rgba(0, 0, 0, 0.4);
     border-radius: 4px;
     color: rgb(var(--goldish-color));
+    background-color: rgba(0, 0, 0, 0.4);
+}
+.sheet-darkmode .charsheet .sheet-tab-character-sheet .sheet-rolls-main .header-section,
+.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .left-column-rolls .header-section,
+.sheet-darkmode .charsheet .combat-attacks .attack-section .header-section {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .charsheet .sheet-tab-rolls-sheet .left-column-rolls .show-on-edit .header-section,
@@ -5156,11 +4957,6 @@ textarea::-webkit-scrollbar-track {
     min-height: 4.55em;
 }
 
-.sheet-darkmode .charsheet .sheet-tab-character-sheet .sheet-rolls-main .header-section,
-.sheet-darkmode .charsheet .sheet-tab-rolls-sheet .left-column-rolls .header-section,
-.sheet-darkmode .charsheet .combat-attacks .attack-section .header-section {
-    background-color: rgba(255, 255, 255, 0.2);
-}
 
 .charsheet .combat-attacks .attack-section .inner-section {
     width: calc(100% - 2em);
@@ -6002,7 +5798,6 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     color: black;
     background-color: red;
 }
-
 .sheet-darkmode .charsheet .sheet-rolls-div-widget .cost-section .sheet-cost-mote-total-taint[value="1"] ~ .sheet-cost-mote-total {
     background-color: rgb(255 129 0 / 86%);
 }
@@ -6079,7 +5874,6 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 .charsheet .sheet-rolls-div-widget .dice-area {
     background-color: rgba(var(--dice-color), 0.35);
 }
-
 .sheet-darkmode .charsheet .sheet-rolls-div-widget .dice-area {
     background-color: rgba(var(--dark-dice-color), 0.80);
 }
