@@ -1789,12 +1789,6 @@ Shinier Gold
     border-bottom: 2px solid transparent;
 }
 
-@-moz-document url-prefix() {
-    .charsheet .add-multiple-div {
-        top: -5px;
-    }
-}
-
 .charsheet .add-multiple-div .add-multiple-qty {
     height: 28px;
 }

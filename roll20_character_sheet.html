@@ -290,15 +290,17 @@
     }
 
     var craftAbilitiesHash = {
-        '@{craft-armoring}':    {full: 'Armoring'},
-        '@{craft-artifact}':    {full: 'Artifact'},
-        '@{craft-cooking}':     {full: 'Cooking'},
-        '@{craft-artifice}':    {full: 'First Age Artifice', short: 'FAA'},
-        '@{craft-gemcutting}':  {full: 'Gemcutting'},
-        '@{craft-geomancy}':    {full: 'Geomancy'},
-        '@{craft-jewelry}':     {full: 'Jewelry'},
-        '@{craft-tailoring}':   {full: 'Tailoring'},
-        '@{craft-forging}':     {full: 'Weapon Forging'}
+        '@{craft-armoring}':     {full: 'Armoring'},
+        '@{craft-artifact}':     {full: 'Artifact'},
+        '@{craft-architecture}': {full: 'Architecture'},
+        '@{craft-cooking}':      {full: 'Cooking'},
+        '@{craft-artifice}':     {full: 'First Age Artifice', short: 'FAA'},
+        '@{craft-gemcutting}':   {full: 'Gemcutting'},
+        '@{craft-geomancy}':     {full: 'Geomancy'},
+        '@{craft-jewelry}':      {full: 'Jewelry'},
+        '@{craft-tailoring}':    {full: 'Tailoring'},
+        '@{craft-forging}':      {full: 'Weapon Forging'},
+        '@{craft-woodworking}':  {full: 'Wood Working', short: 'WW'}
     };
     for (const [k,v] of Object.entries(craftAbilitiesHash)) {
         if (!v.short)
@@ -3378,6 +3380,22 @@
                                             <input type="radio" class="sheet-dots10" name="attr_craft-artifact" value="10"><span></span>
                                         </div>
                                     </div>
+                                    <div class="sheet-trait" title="@{craft-architecture}">
+                                        <label>Architecture</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_craft-architecture" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_craft-architecture" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_craft-architecture" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_craft-architecture" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_craft-architecture" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_craft-architecture" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_craft-architecture" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_craft-architecture" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_craft-architecture" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_craft-architecture" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_craft-architecture" value="10"><span></span>
+                                        </div>
+                                    </div>
                                     <div class="sheet-trait" title="@{craft-cooking}">
                                         <label>Cooking</label>
                                         <div class="sheet-dots">
@@ -3488,6 +3506,22 @@
                                             <input type="radio" class="sheet-dots8" name="attr_craft-forging" value="8"><span></span>
                                             <input type="radio" class="sheet-dots9" name="attr_craft-forging" value="9"><span></span>
                                             <input type="radio" class="sheet-dots10" name="attr_craft-forging" value="10"><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="sheet-trait" title="@{craft-woodworking}">
+                                        <label>Wood Working</label>
+                                        <div class="sheet-dots">
+                                            <input type="radio" class="sheet-dots0" name="attr_craft-woodworking" value="0" checked="checked"><span></span>
+                                            <input type="radio" class="sheet-dots1" name="attr_craft-woodworking" value="1"><span></span>
+                                            <input type="radio" class="sheet-dots2" name="attr_craft-woodworking" value="2"><span></span>
+                                            <input type="radio" class="sheet-dots3" name="attr_craft-woodworking" value="3"><span></span>
+                                            <input type="radio" class="sheet-dots4" name="attr_craft-woodworking" value="4"><span></span>
+                                            <input type="radio" class="sheet-dots5" name="attr_craft-woodworking" value="5"><span></span>
+                                            <input type="radio" class="sheet-dots6" name="attr_craft-woodworking" value="6"><span></span>
+                                            <input type="radio" class="sheet-dots7" name="attr_craft-woodworking" value="7"><span></span>
+                                            <input type="radio" class="sheet-dots8" name="attr_craft-woodworking" value="8"><span></span>
+                                            <input type="radio" class="sheet-dots9" name="attr_craft-woodworking" value="9"><span></span>
+                                            <input type="radio" class="sheet-dots10" name="attr_craft-woodworking" value="10"><span></span>
                                         </div>
                                     </div>
                                     <fieldset class="repeating_crafts" style="display: none;">
@@ -4358,6 +4392,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4365,6 +4400,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4421,6 +4457,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4428,6 +4465,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4489,6 +4527,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4496,6 +4535,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4552,6 +4592,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4559,6 +4600,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4620,6 +4662,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4627,6 +4670,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4683,6 +4727,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4690,6 +4735,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4751,6 +4797,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4758,6 +4805,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -4814,6 +4862,7 @@
                                         Craft (...),?{Craft&amp;#124;
                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -4821,6 +4870,7 @@
                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6456,6 +6506,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6463,6 +6514,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6519,6 +6571,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6526,6 +6579,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6587,6 +6641,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6594,6 +6649,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6650,6 +6706,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6657,6 +6714,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6718,6 +6776,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6725,6 +6784,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6781,6 +6841,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6788,6 +6849,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6849,6 +6911,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6856,6 +6919,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -6912,6 +6976,7 @@
                                             Craft (...),?{Craft&amp;#124;
                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -6919,6 +6984,7 @@
                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -7132,6 +7198,10 @@
                                             <span>Art</span>
                                             <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1" title="@{craft-artifact}">
                                         </div>
+                                        <div class="reminder-cell" title="Architecture">
+                                            <span>Arc</span>
+                                            <input type="number" class="reminder-val" name="attr_craft-architecture" readonly tabindex="-1" title="@{craft-architecture}">
+                                        </div>
                                         <div class="reminder-cell" title="Cooking">
                                             <span>Coo</span>
                                             <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1" title="@{craft-cooking}">
@@ -7159,6 +7229,10 @@
                                         <div class="reminder-cell" title="Weapon Forging">
                                             <span>Wea</span>
                                             <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1" title="@{craft-forging}">
+                                        </div>
+                                        <div class="reminder-cell" title="Wood Working">
+                                            <span>WW</span>
+                                            <input type="number" class="reminder-val" name="attr_craft-woodworking" readonly tabindex="-1" title="@{craft-woodworking}">
                                         </div>
                                         <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
                                         <div class="rep-toggle">
@@ -7473,6 +7547,7 @@
                                                             <option disabled>------CRAFTS-----</option>
                                                             <option value="@{craft-armoring}[Armoring]">Armoring</option>
                                                             <option value="@{craft-artifact}[Artifact]">Artifact</option>
+                                                            <option value="@{craft-architecture}[Architecture]">Architecture</option>
                                                             <option value="@{craft-cooking}[Cooking]">Cooking</option>
                                                             <option value="@{craft-artifice}[First Age Artifice]">First Age Artifice</option>
                                                             <option value="@{craft-gemcutting}[Gemcutting]">Gemcutting</option>
@@ -7480,6 +7555,7 @@
                                                             <option value="@{craft-jewelry}[Jewelry]">Jewelry</option>
                                                             <option value="@{craft-tailoring}[Tailoring]">Tailoring</option>
                                                             <option value="@{craft-forging}[Weapon Forging]">Weapon Forging</option>
+                                                            <option value="@{craft-woodworking}[Wood Working]">Wood Working</option>
                                                             <option disabled>-------M-A------</option>
                                                             <option value="@{ma-snake}[Snake Style]">Snake Style</option>
                                                             <option value="@{ma-tiger}[Tiger Style]">Tiger Style</option>
@@ -7856,7 +7932,7 @@
                                                         <option value="@{thrown}[Thrown]">Thrown</option>
                                                         <option value="@{war}[War]">War</option>
                                                         <option disabled>-------ABILITIES PROMPTS------</option>
-                                                        <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
+                                                        <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Architecture (@{craft-architecture}), @{craft-architecture}[Architecture]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Wood Working (@{craft-woodworking}), @{craft-woodworking}[Wood Working]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                                         <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                         <option value="?{Ability|
                                                             Archery (@{archery}),@{archery}[Archery]|
@@ -7867,6 +7943,7 @@
                                                             Craft (...),?{Craft&amp;#124;
                                                                 Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                                 Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                                Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                                 Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                                 First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                                 Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -7874,6 +7951,7 @@
                                                                 Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                                 Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                                 Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                                Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                                 Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                                             Dodge (@{dodge}),@{dodge}[Dodge]|
                                                             Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -9142,6 +9220,10 @@
                                     <span>Art</span>
                                     <input type="number" class="reminder-val" name="attr_craft-artifact" readonly tabindex="-1" title="@{craft-artifact}">
                                 </div>
+                                <div class="reminder-cell" title="Architecture">
+                                    <span>Arc</span>
+                                    <input type="number" class="reminder-val" name="attr_craft-architecture" readonly tabindex="-1" title="@{craft-architecture}">
+                                </div>
                                 <div class="reminder-cell" title="Cooking">
                                     <span>Coo</span>
                                     <input type="number" class="reminder-val" name="attr_craft-cooking" readonly tabindex="-1" title="@{craft-cooking}">
@@ -9169,6 +9251,10 @@
                                 <div class="reminder-cell" title="Weapon Forging">
                                     <span>Wea</span>
                                     <input type="number" class="reminder-val" name="attr_craft-forging" readonly tabindex="-1" title="@{craft-forging}">
+                                </div>
+                                <div class="reminder-cell" title="Wood Working">
+                                    <span>WW</span>
+                                    <input type="number" class="reminder-val" name="attr_craft-woodworking" readonly tabindex="-1" title="@{craft-woodworking}">
                                 </div>
                                 <input type="hidden" class="rep-enabled-check" name="attr_rep-crafts-enabled" />
                                 <div class="rep-toggle">
@@ -9485,7 +9571,7 @@
                                             <option value="@{thrown}[Thrown]">Thrown</option>
                                             <option value="@{war}[War]">War</option>
                                             <option disabled>-------ABILITIES PROMPTS------</option>
-                                            <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
+                                            <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Architecture (@{craft-architecture}), @{craft-architecture}[Architecture]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Wood Working (@{craft-woodworking}), @{craft-woodworking}[Wood Working]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                             <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                             <option value="?{Ability|
                                                 Archery (@{archery}),@{archery}[Archery]|
@@ -9496,6 +9582,7 @@
                                                 Craft (...),?{Craft&amp;#124;
                                                     Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                     Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                    Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                     Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                     First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                     Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -9503,6 +9590,7 @@
                                                     Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                     Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                     Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                    Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                     Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                                 Dodge (@{dodge}),@{dodge}[Dodge]|
                                                 Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -9719,7 +9807,7 @@
                                                     <option value="@{thrown}[Thrown]">Thrown</option>
                                                     <option value="@{war}[War]">War</option>
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
-                                                    <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
+                                                    <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Architecture (@{craft-architecture}), @{craft-architecture}[Architecture]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Wood Working (@{craft-woodworking}), @{craft-woodworking}[Wood Working]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                                     <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                     <option value="?{Ability|
                                                         Archery (@{archery}),@{archery}[Archery]|
@@ -9730,6 +9818,7 @@
                                                         Craft (...),?{Craft&amp;#124;
                                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -9737,6 +9826,7 @@
                                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                                         Integrity (@{integrity}),@{integrity}[Integrity]|
@@ -9968,7 +10058,7 @@
                                                     <option value="@{thrown}[Thrown]">Thrown</option>
                                                     <option value="@{war}[War]">War</option>
                                                     <option disabled>-------ABILITIES PROMPTS------</option>
-                                                    <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
+                                                    <option value="?{Craft|Armoring (@{craft-armoring}), @{craft-armoring}[Armoring]|Artifact (@{craft-artifact}), @{craft-artifact}[Artifact]|Architecture (@{craft-architecture}), @{craft-architecture}[Architecture]|Cooking (@{craft-cooking}), @{craft-cooking}[Cooking]|First Age Artifice (@{craft-artifice}), @{craft-artifice}[First Age Artifice]|Gemcutting (@{craft-gemcutting}), @{craft-gemcutting}[Gemcutting]|Geomancy (@{craft-geomancy}), @{craft-geomancy}[Geomancy]|Jewelry (@{craft-jewelry}), @{craft-jewelry}[Jewelry]|Tailoring (@{craft-tailoring}), @{craft-tailoring}[Tailoring]|Weapon Forging (@{craft-forging}), @{craft-forging}[Weapon Forging]|Wood Working (@{craft-woodworking}), @{craft-woodworking}[Wood Working]|Other, ?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]}">Craft Prompt</option>
                                                     <option value="?{Martial Arts|Snake Style (@{ma-snake}), @{ma-snake}[Snake Style]|Tiger Style (@{ma-tiger}), @{ma-tiger}[Tiger Style]|Single Point Shining Into The Void Style (@{ma-spsitv}), @{ma-spsitv}[Single Point Shining Into The Void Style]|White Reaper Style (@{ma-whitereaper}), @{ma-whitereaper}[White Reaper Style]|Ebon Shadow Style (@{ma-ebonshadow}), @{ma-ebonshadow}[Ebon Shadow Style]|Crane Style (@{ma-crane}), @{ma-crane}[Crane Style]|Silver-Voiced Nightingale Style (@{ma-silvervoice}), @{ma-silvervoice}[Silver-Voiced Nightingale Style]|Righteous Devil Style (@{ma-righteousdevil}), @{ma-righteousdevil}[Righteous Devil Style]|Black Claw Style (@{ma-blackclaw}), @{ma-blackclaw}[Black Claw Style]|Dreaming Pearl Courtesan Style (@{ma-dreamingpearl}), @{ma-dreamingpearl}[Dreaming Pearl Courtesan Style]|Steel Devil Style (@{ma-steeldevil}), @{ma-steeldevil}[Steel Devil Style]|Centipede Style (@{ma-centipede}), @{ma-centipede}[Centipede Style]|Falcon Style (@{ma-falcon}), @{ma-falcon}[Falcon Style]|Laughing Monster Style (@{ma-laughingmonster}), @{ma-laughingmonster}[Laughing Monster Style]|Swaying Grass Dance Style (@{ma-swayinggrass}), @{ma-swayinggrass}[Swaying Grass Dance Style]|Air Dragon Style (@{ma-airdragon}), @{ma-airdragon}[Air Dragon Style]|Earth Dragon Style (@{ma-earthdragon}), @{ma-earthdragon}[Earth Dragon Style]|Fire Dragon Style (@{ma-firedragon}), @{ma-firedragon}[Fire Dragon Style]|Water Dragon Style (@{ma-waterdragon}), @{ma-waterdragon}[Water Dragon Style]|Wood Dragon Style (@{ma-wooddragon}), @{ma-wooddragon}[Wood Dragon Style]|Golden Janissary Style (@{ma-goldenjanissary}), @{ma-goldenjanissary}[Golden Janissary Style]|Mantis Style (@{ma-mantis}), @{ma-mantis}[Mantis Style]|White Veil Style (@{ma-whiteveil}), @{ma-whiteveil}[White Veil Style]|Other, ?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]}">Martial Arts Prompt</option>
                                                     <option value="?{Ability|
                                                         Archery (@{archery}),@{archery}[Archery]|
@@ -9979,6 +10069,7 @@
                                                         Craft (...),?{Craft&amp;#124;
                                                             Armoring (@{craft-armoring})&amp;#44;@{craft-armoring}[Armoring]&amp;#124;
                                                             Artifact (@{craft-artifact})&amp;#44;@{craft-artifact}[Artifact]&amp;#124;
+                                                            Architecture (@{craft-architecture})&amp;#44;@{craft-architecture}[Architecture]&amp;#124;
                                                             Cooking (@{craft-cooking})&amp;#44;@{craft-cooking}[Cooking]&amp;#124;
                                                             First Age Artifice (@{craft-artifice})&amp;#44;@{craft-artifice}[First Age Artifice]&amp;#124;
                                                             Gemcutting (@{craft-gemcutting})&amp;#44;@{craft-gemcutting}[Gemcutting]&amp;#124;
@@ -9986,6 +10077,7 @@
                                                             Jewelry (@{craft-jewelry})&amp;#44;@{craft-jewelry}[Jewelry]&amp;#124;
                                                             Tailoring (@{craft-tailoring})&amp;#44;@{craft-tailoring}[Tailoring]&amp;#124;
                                                             Weapon Forging (@{craft-forging})&amp;#44;@{craft-forging}[Weapon Forging]&amp;#124;
+                                                            Wood Working (@{craft-woodworking})&amp;#44;@{craft-woodworking}[Wood Working]&amp;#124;
                                                             Other&amp;#44;?{Enter the number of Craft dots&amp;amp;#124;0&amp;amp;#125;[Other-Craft]&amp;#125;|
                                                         Dodge (@{dodge}),@{dodge}[Dodge]|
                                                         Integrity (@{integrity}),@{integrity}[Integrity]|

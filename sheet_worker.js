@@ -289,15 +289,17 @@
     }
 
     var craftAbilitiesHash = {
-        '@{craft-armoring}':    {full: 'Armoring'},
-        '@{craft-artifact}':    {full: 'Artifact'},
-        '@{craft-cooking}':     {full: 'Cooking'},
-        '@{craft-artifice}':    {full: 'First Age Artifice', short: 'FAA'},
-        '@{craft-gemcutting}':  {full: 'Gemcutting'},
-        '@{craft-geomancy}':    {full: 'Geomancy'},
-        '@{craft-jewelry}':     {full: 'Jewelry'},
-        '@{craft-tailoring}':   {full: 'Tailoring'},
-        '@{craft-forging}':     {full: 'Weapon Forging'}
+        '@{craft-armoring}':     {full: 'Armoring'},
+        '@{craft-artifact}':     {full: 'Artifact'},
+        '@{craft-architecture}': {full: 'Architecture'},
+        '@{craft-cooking}':      {full: 'Cooking'},
+        '@{craft-artifice}':     {full: 'First Age Artifice', short: 'FAA'},
+        '@{craft-gemcutting}':   {full: 'Gemcutting'},
+        '@{craft-geomancy}':     {full: 'Geomancy'},
+        '@{craft-jewelry}':      {full: 'Jewelry'},
+        '@{craft-tailoring}':    {full: 'Tailoring'},
+        '@{craft-forging}':      {full: 'Weapon Forging'},
+        '@{craft-woodworking}':  {full: 'Wood Working', short: 'WW'}
     };
     for (const [k,v] of Object.entries(craftAbilitiesHash)) {
         if (!v.short)
