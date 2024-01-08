@@ -1388,15 +1388,15 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     createCommitedListId = async (characterId, commitedList, commitName, removedTo) => {
         const uniqCommitedListIds = [...new Set(commitedList.map(i => i.get('name').split('_')[2]))];
         const commitedCorrespondingId = generateNewRowID(uniqCommitedListIds);
-        let poolType;
         logger(LOGLEVEL.INFO, `createCommitedListId:: !! CREATING COMMITED id=${commitedCorrespondingId} !!`);
         const name = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-name`, current: commitName, characterid: characterId});
         const commitedCorrespondingState = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-state`, current: '1', characterid: characterId});
         const commitedCorrespondingPeri  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-peri`, current: `${removedTo['peripheral-essence']}`, characterid: characterId});
         const commitedCorrespondingPerso = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-cost-perso`, current: `${removedTo['personal-essence']}`, characterid: characterId});
+        let poolType;
         if (removedTo['peripheral-essence'] && removedTo['personal-essence'])   poolType = 'mixed';
-        else if (removedTo['peripheral-essence'])                               poolType = '1';
         else if (removedTo['personal-essence'])                                 poolType = '0';
+        else                                                                    poolType = '1';
         const commitedCorrespondingPool  = createObj('attribute', {name: `repeating_commited-list_${commitedCorrespondingId}_commited-pool-type`, current: poolType, characterid: characterId});
         commitedList.push(name, commitedCorrespondingState, commitedCorrespondingPool, commitedCorrespondingPeri, commitedCorrespondingPerso);
     },
