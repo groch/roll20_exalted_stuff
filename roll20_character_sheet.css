@@ -104,6 +104,7 @@ input[type="number"] {
 .qc-appearance-trait .onslaught-checkbox:focus + span::before {
     outline: 2px red solid;
 }
+.charsheet .roll-type-toggler input[type=checkbox]:hover + span::before,
 .charsheet input[type=checkbox].sheet-unnamed-toggle:not(.btn):hover + span::before,
 .sheet-combat-attack:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
 .sheet-combat-attack:has(textarea.combat-textarea:focus) .desc-toggle input + span:before,
