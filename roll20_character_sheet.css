@@ -3811,29 +3811,15 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     width: 5.8em;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0)
-and (min-resolution:.001dpcm) {
-    .charsheet .sheet-rolls-div-widget select.sheet-rolls-stunt-dices:has(option[value="2"]:checked),
-    .charsheet .sheet-rolls-div-widget select.sheet-rolls-wp-toggle:has(option[value="1"]:checked),
-    .charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
-        outline: 3px solid;
-    }
-
-    .charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
-        outline-color: rgb(var(--mote-color));
-    }
+.charsheet .sheet-rolls-div-widget select.sheet-rolls-stunt-dices:has(option[value="2"]:checked),
+.charsheet .sheet-rolls-div-widget select.sheet-rolls-wp-toggle:has(option[value="1"]:checked),
+.charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
+    outline: 3px solid;
 }
 
-@-moz-document url-prefix() {
-    .charsheet .sheet-rolls-div-widget .stunt-dices-check[value="2"] ~ select.sheet-rolls-stunt-dices,
-    .charsheet .sheet-rolls-div-widget .willpower-toggle-check[value="1"] ~ select.sheet-rolls-wp-toggle,
-    .charsheet .sheet-rolls-div-widget .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
-        outline: 3px solid;
-    }
-
-    .charsheet .sheet-rolls-div-widget .pool-starting-check[value="1"] ~ .sheet-rolls select.sheet-rolls-pool-starting {
-        outline-color: rgb(var(--mote-color));
-    }
+.charsheet .sheet-rolls-div-widget select.sheet-rolls-pool-starting:has(option[value="1"]:checked) {
+    outline-color: rgb(var(--mote-color));
+    outline-offset: -3px;
 }
 
 .dice-area-details,
@@ -3877,6 +3863,7 @@ and (min-resolution:.001dpcm) {
     padding: 3px;
 }
 
+.charsheet .sheet-tab-rolls-sheet:has(.sheet-rolls-div-widget .willpower-toggle-check[value="1"]) .ressource-line input[name="attr_willpower"],
 .charsheet .sheet-tab-rolls-sheet:has(.sheet-rolls-wp-toggle:hover) .ressource-line input[name="attr_willpower"] {
     outline: 5px solid;
 }
