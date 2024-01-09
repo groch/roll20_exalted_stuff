@@ -1409,6 +1409,14 @@ textarea::-webkit-scrollbar-track {
     border-radius:4px;
     border:1px solid var(--merit-button-border-color);
 }
+.charsheet .merits-div-checkbox:has(> label:hover),
+.charsheet .merits-div-checkbox:has(input:focus) {
+    --merit-button-border-color: gold;
+    outline: 1px solid var(--merit-button-border-color);
+}
+.charsheet .merits-div-checkbox:has(> label:hover):has(input:focus) {
+    --merit-button-border-color: rgb(255, 174, 0);
+}
 
 .charsheet .merits-div-checkbox input + strong:before {
     text-align:center;
