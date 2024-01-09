@@ -3951,11 +3951,11 @@ and (min-resolution:.001dpcm) {
 }
 
 /* hide kirby on reminder opened */
-.charsheet .sheet-tab-rolls-sheet .rolls-area:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-separator-hidden-checkbox,
-.charsheet .sheet-tab-rolls-sheet .rolls-area:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-toggle-desc,
-.charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-initeffect,
-.charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-combat-toggle-desc,
-.charsheet .sheet-tab-combat-sheet:has(input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-attacks input.sheet-combat-toggle-desc {
+.charsheet .sheet-tab-rolls-sheet .rolls-area:has(.sheet-box-reminder > input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-separator-hidden-checkbox,
+.charsheet .sheet-tab-rolls-sheet .rolls-area:has(.sheet-box-reminder > input.sheet-unnamed-toggle[type="checkbox"]:checked) .sheet-rolls-div input.sheet-rolls-toggle-desc,
+.charsheet .sheet-tab-combat-sheet:has(.sheet-box-reminder > input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-initeffect,
+.charsheet .sheet-tab-combat-sheet:has(.sheet-box-reminder > input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-init input.sheet-combat-toggle-desc,
+.charsheet .sheet-tab-combat-sheet:has(.sheet-box-reminder > input.sheet-unnamed-toggle[type="checkbox"]:checked) .combat-attacks input.sheet-combat-toggle-desc {
     display: none;
 }
 
