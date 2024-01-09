@@ -99,44 +99,71 @@ input[type="number"] {
 
 
 
-/* FOCUS VISIBILITY */
+/* FOCUS/HOVER VISIBILITY */
+.qc-appearance-trait .onslaught-checkbox:hover + span::before,
 .qc-appearance-trait .onslaught-checkbox:focus + span::before {
     outline: 2px red solid;
 }
+.charsheet input[type=checkbox].sheet-unnamed-toggle:not(.btn):hover + span::before,
 .sheet-combat-attack:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
 .sheet-combat-attack:has(textarea.combat-textarea:focus) .desc-toggle input + span:before,
 .sheet-combat-init:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
 .sheet-combat-init:has(textarea.combat-textarea:focus) .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:hover) .sheet-rolls .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:focus) .sheet-rolls .desc-toggle input + span:before,
+input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:hover + span::before,
 input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before,
+.flex.control input[type=checkbox][name="attr_repspell-control"]:hover + span::before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
 .charsheet input.sheet-tab:focus::before,
+.sheet-tab-settings-sheet input[type=checkbox]:hover + span::before,
 .sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
+.health-line .crippling-box input[type=checkbox]:hover + span::before,
 .health-line .crippling-box input[type=checkbox]:focus + span::before,
+.charsheet input.sheet-initeffect:hover + span::before,
 .charsheet input.sheet-initeffect:focus + span::before,
+.charsheet input.sheet-charmeffect:hover + span::before,
 .charsheet input.sheet-charmeffect:focus + span::before,
+.charsheet input.sheet-spelleffect:hover + span::before,
 .charsheet input.sheet-spelleffect:focus + span::before,
+.sheet-tab-antisocial-sheet input[type=checkbox]:hover + span::before,
 .sheet-tab-antisocial-sheet input[type=checkbox]:focus + span::before,
+.sheet-tab-intimacies-sheet input[type=checkbox]:hover + span::before,
 .sheet-tab-intimacies-sheet input[type=checkbox]:focus + span::before,
+input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:hover + span::before,
 input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
+.sheet-dots:has(> input[type="radio"]:hover),
 .sheet-dots:has(> input[type="radio"]:focus),
+.sheet-dots-full:has(> input[type="radio"]:hover),
 .sheet-dots-full:has(> input[type="radio"]:focus),
+.sheet-trait label input:hover + span:before,
 .sheet-trait label input:focus + span:before,
+.excellency-cap-section > div > select:hover,
 .excellency-cap-section > div > select:focus,
+.excellency-cap-section > div > div.dicecap-checkbox input[type=checkbox]:hover + span::before,
 .excellency-cap-section > div > div.dicecap-checkbox input[type=checkbox]:focus + span::before,
+.charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:hover + span::before,
 .charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:focus + span::before,
 .sheet-damage-box:has(input:focus) {
     outline: 2px gold solid;
 }
+input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:hover + span::before,
 input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before,
+.qc-appearance-trait .onslaught-checkbox:hover + span::before,
 .qc-appearance-trait .onslaught-checkbox:focus + span::before,
+.flex.control input[type=checkbox][name="attr_repspell-control"]:hover + span::before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
+.sheet-tab-settings-sheet input[type=checkbox]:hover + span::before,
 .sheet-tab-settings-sheet input[type=checkbox]:focus + span::before,
+.charsheet input.sheet-initeffect:hover + span::before,
 .charsheet input.sheet-initeffect:focus + span::before,
+.sheet-tab-antisocial-sheet input[type=checkbox]:hover + span::before,
 .sheet-tab-antisocial-sheet input[type=checkbox]:focus + span::before,
+.sheet-tab-intimacies-sheet input[type=checkbox]:hover + span::before,
 .sheet-tab-intimacies-sheet input[type=checkbox]:focus + span::before,
+input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:hover + span::before,
 input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
+.sheet-trait label input:hover + span:before,
 .sheet-trait label input:focus + span:before {
     outline-offset: -2px;
     border-radius: 3px;
