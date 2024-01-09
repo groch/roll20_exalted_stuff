@@ -1891,11 +1891,11 @@ function getExcellencyCap(p, sectionName, totalExpr, totalTitleEnd, appendTopFx,
     if (appendTopFx)
         ret += `${pad(p+4)}${appendTopFx(p+4)}\n`;
     ret += /*html*/`${pad(p+4)}<input type="hidden" name="attr_sign" value="(@{reprolls-exc-${sectionName}-total-calc} - @{reprolls-exc-${sectionName}-sum-calc})" disabled>
-${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap">
+${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap" tabindex="-1">
 ${pad(p+4)}<hr />\n`;
     if (appendBeforeTotalFx)
         ret += `${pad(p+4)}${appendBeforeTotalFx(p+4)}\n`;
-    ret += /*html*/`${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}">\n`;
+    ret += /*html*/`${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}" tabindex="-1">\n`;
     ret += `${pad(p)}</div>`;
     return ret;
 }
@@ -1903,7 +1903,7 @@ ${pad(p+4)}<hr />\n`;
 const makeSelectTop = (p, attr, title, addedClass, arrayOptions, arraySelected, hintClass, resetHint) => /*html*/`<select name="attr_reprolls-${attr}" title="${title}" class="${addedClass} grow-normal${hintClass ? ` ${hintClass}` : ''}${resetHint ? ` reset-hint` : ''}">
 ${pad(p+4)}${returnOptions(p+4, arrayOptions, arraySelected)}
 ${pad(p)}</select>`;
-const makeCheckboxTop = (p, attr, title, value, hintClass, resetHint) => /*html*/`<div class="scope-here ${attr}-box-mode${hintClass ? ` ${hintClass}` : ''}${resetHint ? ` reset-hint` : ''}">
+const makeCheckboxTop = (p, attr, title, value, hintClass, resetHint) => /*html*/`<div class="scope-here dicecap-checkbox ${attr}-box-mode${hintClass ? ` ${hintClass}` : ''}${resetHint ? ` reset-hint` : ''}">
 ${pad(p+4)}<input type="checkbox" name="attr_reprolls-${attr}" class="sheet-rolls-${attr}-checkbox" title="${title}" value="${value}">
 ${pad(p+4)}<span class="sheet-spelleffect" title="Toggle"></span>
 ${pad(p)}</div>`;
@@ -2654,45 +2654,5 @@ outHtml += /*html*/`
         </tr>
         {{/description}}
     </table>
-</rolltemplate>
-
-<!-- --- Turns --- NOT USED -->
-
-<rolltemplate class="sheet-rolltemplate-exalted3e_turn">
-    <div class="main-div">
-        <div class="condition-div">
-            <span class="color-white">Conditions
-                <div class="float-right">
-                    <div class="condition-item">
-                        <a class="condition-link" href="!cmaster --turn&#44;next" title="Done with Round">
-                            <span class="color-white condition-span">3</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="float-right">
-                    <div class="condition-item">
-                        <a class="condition-link" href="!cmaster --turn&#44;delay" title="Delay your Turn">
-                            <span class="color-white condition-span">}</span>
-                        </a>
-                    </div>
-                </div>
-            </span>
-        </div>
-        <div class="center-div">
-            <div class="image">
-                <!-- <img src="{{imgSrc}}" width="50px" height="50px"> -->
-                {{img}}
-            </div>
-            <div class="main-content">
-                {{turn-message}}
-                {{#onslaught}}&nbsp;<b>and reseted his onslaught (was <u>{{onslaught}}</u>) !</b>{{/onslaught}}
-            </div>
-        </div>
-        {{#test}}
-        <div class="test-content">
-            {{test}}
-        </div>
-        {{/test}}
-    </div>
 </rolltemplate>`;
 console.log(outHtml);
