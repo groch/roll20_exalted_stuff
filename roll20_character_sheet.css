@@ -104,6 +104,11 @@ input[type="number"] {
 .qc-appearance-trait .onslaught-checkbox:focus + span::before {
     outline: 2px red solid;
 }
+
+input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:hover + span::before,
+input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before {
+    outline: 2px var(--onslaught-color) solid;
+}
 .charsheet .roll-type-toggler input[type=checkbox]:hover + span::before,
 .charsheet input[type=checkbox].sheet-unnamed-toggle:not(.btn):hover + span::before,
 .sheet-combat-attack:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
@@ -112,8 +117,6 @@ input[type="number"] {
 .sheet-combat-init:has(textarea.combat-textarea:focus) .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:hover) .sheet-rolls .desc-toggle input + span:before,
 .sheet-rolls-div .repitem:has(textarea:focus) .sheet-rolls .desc-toggle input + span:before,
-input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:hover + span::before,
-input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:hover + span::before,
 .flex.control input[type=checkbox][name="attr_repspell-control"]:focus + span::before,
 .charsheet input.sheet-tab:focus::before,
@@ -204,6 +207,8 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     --stunt-color: 128, 128, 128;
     --dice-color: 0, 0, 0;
     --dark-dice-color: 255, 255, 255;
+
+    --onslaught-color: rgb(234, 0, 255);
 
     --bs-default-poffset: 1px;
     --bs-default-noffset: -1px;
@@ -1677,7 +1682,7 @@ textarea::-webkit-scrollbar-track {
 .charsheet .onslaught-taint {
     background-color: #bc69c4;
     font-weight: bold;
-    background-image: linear-gradient(-45deg, #ea00ff, transparent, transparent);
+    background-image: linear-gradient(-45deg, var(--onslaught-color), transparent, transparent);
 }
  
 .charsheet .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
@@ -1806,7 +1811,7 @@ textarea::-webkit-scrollbar-track {
 }
 
 .charsheet input[type=number].onslaught-input {
-    --loc-wound-color: #ea00ff;
+    --loc-wound-color: var(--onslaught-color);
     background-color: var(--loc-wound-color);
     font-weight: bold;
 }
