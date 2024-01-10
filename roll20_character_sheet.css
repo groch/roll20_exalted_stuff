@@ -148,6 +148,7 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
 .excellency-cap-section > div > div.dicecap-checkbox input[type=checkbox]:focus + span::before,
 .charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:hover + span::before,
 .charsheet .sheet-rolls-div-widget .specialty-box input[type=checkbox]:focus + span::before,
+.sheet-damage-box:has(input:hover),
 .sheet-damage-box:has(input:focus) {
     outline: 2px gold solid;
 }
