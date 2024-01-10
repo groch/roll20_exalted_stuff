@@ -1231,7 +1231,7 @@ textarea::-webkit-scrollbar-track {
 
 .charsheet .sheet-unnamed-toggle + span + div > .sheet-trait > label,
 .charsheet [data-groupname=repeating_crafts] input,
-.charsheet [data-groupname=repeating_ma] input { width: 130px; }
+.charsheet [data-groupname=repeating_ma] input { width: 130px; height: 20px; }
 
 .charsheet .sheet-unnamed-toggle + span + div > .sheet-trait > label,
 .charsheet .sheet-unnamed-toggle + span + div > .sheet-trait > label > label {
