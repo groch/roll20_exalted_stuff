@@ -2129,8 +2129,8 @@ outHtml += /*html*/`
                             <div class="sheet-table-header">
                                 <div class="sheet-table-row">
                                     <div class="sheet-table-cell" style="width: 2.0em; text-align: center;">XP</div>
-                                    <div class="sheet-table-cell" style="width: 2.8em;">Tainted</div>
-                                    <div class="sheet-table-cell">Intimacy</div>
+                                    <div class="sheet-table-cell" style="width: 1em;">Tainted</div>
+                                    <div class="sheet-table-cell" style="text-align: center;">Intimacy</div>
                                     <div class="sheet-table-cell" style="width: 6em;">Intensity</div>
                                 </div>
                             </div>
@@ -2142,7 +2142,7 @@ outHtml += /*html*/`
                                     <label><input type="number" name="attr_intimacyrepeatingxpspent" min="1" max="999"><span></span></label>
                                 </div>
                                 <div class="sheet-table-cell">
-                                    <label style="margin-left: 0.9em;"><input type="checkbox" name="attr_intimacyrepeatingtaint" value="1"><span></span></label>
+                                    <label><input type="checkbox" name="attr_intimacyrepeatingtaint" value="1"><span></span></label>
                                 </div>
                                 <div class="sheet-table-cell intimacy-taint"><input type="text" name="attr_intimacyrepeatingname" placeholder="Winter Plum (Grief)"></div>
                                 <div class="sheet-table-cell intimacy-taint">
