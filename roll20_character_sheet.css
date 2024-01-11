@@ -401,6 +401,12 @@ body.sheet-darkmode {
 .charsheet .sheet-layer4,.charsheet .sheet-layer4::before { z-index: 4; }
 .charsheet .sheet-layer3,.charsheet .sheet-layer3::before { z-index: 3; }
 
+.charsheet .sheet-layer7 .sheet-trait,
+.charsheet .sheet-layer6 .sheet-trait,
+.charsheet .sheet-layer5 .sheet-trait,
+.charsheet .sheet-layer4 .sheet-trait,
+.charsheet .sheet-layer3 .sheet-trait { padding-bottom: 2px;}
+
 .charsheet .sheet-fixedwidth { display: inline-block; }
 
 .charsheet input[disabled]:not([title]) {
