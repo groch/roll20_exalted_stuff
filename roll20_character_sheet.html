@@ -1588,6 +1588,7 @@
         'charms-thrown': 'Thrown',
         'charms-war': 'War',
         'charms-universal': 'Universal',
+        'charms-heartsblood': 'Heart\'s Blood',
         'charms-str-offense': 'Strength - Offense',
         'charms-str-mobility': 'Strength - Mobility',
         'charms-str-fos': 'Strength - Feats of Strength',
@@ -1721,6 +1722,7 @@
     ];
     const charmLunarRepeatableSectionArray = [
         'charms-universal',
+        'charms-heartsblood',
         'charms-str-offense',
         'charms-str-mobility',
         'charms-str-fos',
@@ -2850,6 +2852,7 @@
         <input class="sheet-charm-war" name="attr_charm-war" type="hidden" value="0">
 
         <input class="sheet-charm-universal" name="attr_charm-universal" type="hidden" value="0">
+        <input class="sheet-charm-heartsblood" name="attr_charm-heartsblood" type="hidden" value="0">
         <input class="sheet-charm-str-offense" name="attr_charm-str-offense" type="hidden" value="0">
         <input class="sheet-charm-str-mobility" name="attr_charm-str-mobility" type="hidden" value="0">
         <input class="sheet-charm-str-fos" name="attr_charm-str-fos" type="hidden" value="0">
@@ -5600,6 +5603,7 @@
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-thrown sheet-tab-charm-thrown" name="attr_charm_sheet" title="Thrown" type="radio" value="Thrown">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-war sheet-tab-charm-war" name="attr_charm_sheet" title="War" type="radio" value="War">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-universal sheet-tab-charm-universal" name="attr_charm_sheet" title="Universal" type="radio" value="Universal">
+                    <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-heartsblood sheet-tab-charm-heartsblood" name="attr_charm_sheet" title="Heart's Blood" type="radio" value="Heart's Blood">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-offense sheet-tab-charm-str-offense" name="attr_charm_sheet" title="STR - Offense" type="radio" value="Strength - Offense">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-mobility sheet-tab-charm-str-mobility" name="attr_charm_sheet" title="STR - Mobility" type="radio" value="Strength - Mobility">
                     <input class="sheet-tab sheet-tab-charms sheet-tab-charm-sheet-str-fos sheet-tab-charm-str-fos" name="attr_charm_sheet" title="STR - FoS" type="radio" value="Strength - Feats of Strength">
@@ -5687,6 +5691,7 @@
                         <h1 class="sheet-tab-charm-sheet-thrown"><span>Thrown</span></h1>
                         <h1 class="sheet-tab-charm-sheet-war"><span>War</span></h1>
                         <h1 class="sheet-tab-charm-sheet-universal"><span>Universal</span></h1>
+                        <h1 class="sheet-tab-charm-sheet-heartsblood"><span>Heart's Blood</span></h1>
                         <h1 class="sheet-tab-charm-sheet-str-offense"><span>Strength - Offense</span></h1>
                         <h1 class="sheet-tab-charm-sheet-str-mobility"><span>Strength - Mobility</span></h1>
                         <h1 class="sheet-tab-charm-sheet-str-fos"><span>Strength - Feats of Strength</span></h1>
@@ -6076,7 +6081,10 @@
                     </div>
                 </div>
                 <h2 style="text-align: center;"><span class="lunar-style">Lunar</span></h2>
-                <div class="sheet-checklist" style="margin:auto; width: 90px;"><label><input type="checkbox" name="attr_charm-universal" value="1"><span> Universal</span></label></div>
+                <div class="sheet-checklist sheet-2colrow" style="margin:auto;">
+                    <label><input type="checkbox" name="attr_charm-universal" value="1"><span> Universal</span></label>
+                    <label><input type="checkbox" name="attr_charm-heartsblood" value="1"><span style="color: darkred;"> Heart's Blood</span></label>
+                </div>
                 <div class="sheet-checklist sheet-3colrow">
                     <div class="sheet-checklist sheet-col">
                         <label><input type="checkbox" name="attr_charm-str-offense" value="1"><span> Strength - Offense</span></label>
@@ -6283,6 +6291,7 @@
                                         <input type="hidden" name="attr_charm-thrown" class="check-charm-thrown">
                                         <input type="hidden" name="attr_charm-war" class="check-charm-war">
                                         <input type="hidden" name="attr_charm-universal" class="check-charm-universal">
+                                        <input type="hidden" name="attr_charm-heartsblood" class="check-charm-heartsblood">
                                         <input type="hidden" name="attr_charm-str-offense" class="check-charm-str-offense">
                                         <input type="hidden" name="attr_charm-str-mobility" class="check-charm-str-mobility">
                                         <input type="hidden" name="attr_charm-str-fos" class="check-charm-str-fos">
@@ -6370,6 +6379,7 @@
                                             <option class="reminder-charm opt-charm-thrown" value="Thrown">Thrown</option>
                                             <option class="reminder-charm opt-charm-war" value="War">War</option>
                                             <option class="reminder-charm opt-charm-universal" value="Universal">Universal</option>
+                                            <option class="reminder-charm opt-charm-heartsblood" value="Heart's Blood">Heart's Blood</option>
                                             <option class="reminder-charm opt-charm-str-offense" value="Strength - Offense">Strength - Offense</option>
                                             <option class="reminder-charm opt-charm-str-mobility" value="Strength - Mobility">Strength - Mobility</option>
                                             <option class="reminder-charm opt-charm-str-fos" value="Strength - Feats of Strength">Strength - Feats of Strength</option>
@@ -8153,6 +8163,7 @@
                             <input type="hidden" name="attr_charm-thrown" class="check-charm-thrown">
                             <input type="hidden" name="attr_charm-war" class="check-charm-war">
                             <input type="hidden" name="attr_charm-universal" class="check-charm-universal">
+                            <input type="hidden" name="attr_charm-heartsblood" class="check-charm-heartsblood">
                             <input type="hidden" name="attr_charm-str-offense" class="check-charm-str-offense">
                             <input type="hidden" name="attr_charm-str-mobility" class="check-charm-str-mobility">
                             <input type="hidden" name="attr_charm-str-fos" class="check-charm-str-fos">
@@ -8240,6 +8251,7 @@
                                 <option class="reminder-charm opt-charm-thrown" value="Thrown">Thrown</option>
                                 <option class="reminder-charm opt-charm-war" value="War">War</option>
                                 <option class="reminder-charm opt-charm-universal" value="Universal">Universal</option>
+                                <option class="reminder-charm opt-charm-heartsblood" value="Heart's Blood">Heart's Blood</option>
                                 <option class="reminder-charm opt-charm-str-offense" value="Strength - Offense">Strength - Offense</option>
                                 <option class="reminder-charm opt-charm-str-mobility" value="Strength - Mobility">Strength - Mobility</option>
                                 <option class="reminder-charm opt-charm-str-fos" value="Strength - Feats of Strength">Strength - Feats of Strength</option>
@@ -8881,6 +8893,7 @@
                                 <input type="hidden" name="attr_charm-thrown" class="check-charm-thrown">
                                 <input type="hidden" name="attr_charm-war" class="check-charm-war">
                                 <input type="hidden" name="attr_charm-universal" class="check-charm-universal">
+                                <input type="hidden" name="attr_charm-heartsblood" class="check-charm-heartsblood">
                                 <input type="hidden" name="attr_charm-str-offense" class="check-charm-str-offense">
                                 <input type="hidden" name="attr_charm-str-mobility" class="check-charm-str-mobility">
                                 <input type="hidden" name="attr_charm-str-fos" class="check-charm-str-fos">
@@ -8968,6 +8981,7 @@
                                     <option class="reminder-charm opt-charm-thrown" value="Thrown">Thrown</option>
                                     <option class="reminder-charm opt-charm-war" value="War">War</option>
                                     <option class="reminder-charm opt-charm-universal" value="Universal">Universal</option>
+                                    <option class="reminder-charm opt-charm-heartsblood" value="Heart's Blood">Heart's Blood</option>
                                     <option class="reminder-charm opt-charm-str-offense" value="Strength - Offense">Strength - Offense</option>
                                     <option class="reminder-charm opt-charm-str-mobility" value="Strength - Mobility">Strength - Mobility</option>
                                     <option class="reminder-charm opt-charm-str-fos" value="Strength - Feats of Strength">Strength - Feats of Strength</option>

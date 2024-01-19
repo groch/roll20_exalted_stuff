@@ -140,6 +140,7 @@ var hashCharmTitle = {
     'charms-thrown': 'Thrown',
     'charms-war': 'War',
     'charms-universal': 'Universal',
+    'charms-heartsblood': 'Heart\'s Blood',
     'charms-str-offense': 'STR - Offense',
     'charms-str-mobility': 'STR - Mobility',
     'charms-str-fos': 'STR - FoS',

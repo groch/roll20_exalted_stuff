@@ -6,5 +6,5 @@ node_modules
 package-lock.json
 *.patch
 *.ps1
-*.test.html
+*.test.*
 WIP/

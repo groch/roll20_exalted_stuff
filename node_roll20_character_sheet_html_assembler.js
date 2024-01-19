@@ -1047,7 +1047,7 @@ function getAbiConfigOptionList(p = 0) {
 }
 
 function getAttrConfigOptionList(p = 0) {
-    const separators = [10,19], lunarFiltered = lunarCharmArray.slice(1).map(i => i.replace('charms-',''));
+    const separators = [10,19], lunarFiltered = lunarCharmArray.slice(2).map(i => i.replace('charms-',''));
     let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
     for (const abilitie of lunarFiltered) {
         ret += `${pad(p+4)}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`])}\n`;
@@ -1164,7 +1164,10 @@ outHtml += /*html*/
                     ${getAbiConfigOptionList(20)}
                 </div>
                 <h2 style="text-align: center;"><span class="lunar-style">Lunar</span></h2>
-                <div class="sheet-checklist" style="margin:auto; width: 90px;"><label><input type="checkbox" name="attr_charm-universal" value="1"><span> Universal</span></label></div>
+                <div class="sheet-checklist sheet-2colrow" style="margin:auto;">
+                    ${getConfigOptionLabel('universal', 'Universal')}
+                    ${getConfigOptionLabel('heartsblood', 'Heart\'s Blood', "color: darkred;")}
+                </div>
                 <div class="sheet-checklist sheet-3colrow">
                     ${getAttrConfigOptionList(20)}
                 </div>

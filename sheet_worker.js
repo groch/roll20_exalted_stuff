@@ -1587,6 +1587,7 @@
         'charms-thrown': 'Thrown',
         'charms-war': 'War',
         'charms-universal': 'Universal',
+        'charms-heartsblood': 'Heart\'s Blood',
         'charms-str-offense': 'Strength - Offense',
         'charms-str-mobility': 'Strength - Mobility',
         'charms-str-fos': 'Strength - Feats of Strength',
@@ -1720,6 +1721,7 @@
     ];
     const charmLunarRepeatableSectionArray = [
         'charms-universal',
+        'charms-heartsblood',
         'charms-str-offense',
         'charms-str-mobility',
         'charms-str-fos',
