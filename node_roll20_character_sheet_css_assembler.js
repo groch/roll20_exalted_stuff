@@ -2278,6 +2278,13 @@ ${allCharmArray.slice(0, -1).map(i => /*css*/`.charsheet .reminder-charm-selecto
 	display: none;
 }
 
+.ui-dialog .charsheet .charm-sheet-all .repcontainer[data-groupname="repeating_charms-all"] .repitem.repitembroken {
+    border: 4px solid transparent !important;
+}
+.ui-dialog .charsheet .reminder-charms-main-div .repcontainer[data-groupname="repeating_charms-all"] .repitem.repitembroken {
+    border: unset !important;
+}
+
 /* --- REMINDER SELECT SHOW/HIDE OPTION TRICKS --- */
 .charsheet .sheet-charm-reminder select option.reminder-charm {
     display: none;
@@ -2288,7 +2295,55 @@ ${allCharmArrayCss.map(i => i.replace('charms', 'charm')).map(i => /*css*/`.char
     display: revert;
 }
 
+/* --- SELECT FOR ADDING TEMPLATE CHARMS --- */
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Evocation"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+${maCharmArray.map(i => /*css*/`.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="${hashCharmName[i]}"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms`).join(',\n')},
+.charm-special-add-div .select-add-template-charms {
+    display: none;
+}
+.charsheet .exalt-type-check[value="Solar"]    ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="Abyssal"]  ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="DB"]       ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="Lunar"]    ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms {
+    display: inline-flex;
+    width: calc(100% - 4em);
+    height: 26px;
+}
+.charm-special-add-div .select-add-template-charms select {
+    width: auto;
+    max-width: calc(103vw - 20em);
+    height: 26px;
+    flex-shrink: 1;
+}
+.charm-special-add-div .select-add-template-charms button {
+    margin-top: 1px;
+    height: 18px;
+}
+.charm-special-add-div .select-add-template-charms .template-charm-name-selected-check[value=""] ~ button {
+    display: none;
+}\n`
 
+function getTemplateCharmsOptions() {
+    let ret = ``, i = 0;
+    for (const exalt of Object.keys(charmCompendiumPerExalt)) {
+        for (const abi of Object.keys(charmCompendiumPerExalt[exalt])) {
+            ret += `${i++ > 0 ? ',\n' : ''}.charsheet .exalt-type-check[value="${exalt}"] ~ .flex.main-page .sheet-tab-charms-check[value="${abi}"] ~ .charm-sheet-all .select-add-template-charms option.${exalt}-charm[title="${abi}"]`;
+        }
+    }
+    return ret;
+}
+
+outHtml += /*css*/`
+/* hiding options in select by default */
+.charm-special-add-div .select-add-template-charms select option {
+    display: none;
+}
+${getTemplateCharmsOptions()},
+.charm-special-add-div .select-add-template-charms select option[value=""] {
+    display: block;
+}
 
 
 
@@ -3727,9 +3782,11 @@ ${maCharmArray.map(i => /*css*/`.charsheet .sheet-tab-charms-check[value="${hash
 }
 
 .charsheet .charm-sheet-all .charm-special-add-div {
-    width: fit-content;
+    width: calc(100% - 5em);
+    height: 2.1em;
     position: absolute;
     bottom: 0;
+    white-space: nowrap;
 }
 .charsheet .charm-sheet-all .charm-sheet-all-footer {
     height: 2em;

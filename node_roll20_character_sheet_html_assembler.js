@@ -51,6 +51,7 @@ let outHtml = /*html*/
 
         ${getHiddenInputs(solarCharmArray, 8)}\n
         ${getHiddenInputs(lunarCharmArray, 8)}\n
+        ${getHiddenInputs(sidCharmArray, 8)}\n
         ${getHiddenInputs(maCharmArray, 8)}
 
         <input class="sheet-charm-evocation" name="attr_charm-evocation" type="hidden" value="0">
@@ -906,6 +907,19 @@ function generateCastButtons(p, rollStr, includeShow = true) {
     return ret;
 }
 
+function getTemplateCharmsOptions(p) {
+    let ret = /*html*/`<option value=""></option>`, i = 0;
+    for (const exalt of Object.keys(charmCompendiumPerExalt)) {
+        for (const abi of Object.keys(charmCompendiumPerExalt[exalt])) {
+            for (const [id, charm] of charmCompendiumPerExalt[exalt][abi].entries()) {
+                ret += /*html*/`${brPad(p)}<option value="${id}" class="${exalt}-charm" title="${abi}">${charm['charm-name']}</option>`;
+                // if (i++ >= 42) return ret;
+            }
+        }
+    }
+    return ret;
+}
+
 outHtml += /*html*/`
             <div class="sheet-tab-content sheet-tab-charm-sheet">
                 <h1><span>Charms &amp; Evocations</span></h1>
@@ -973,6 +987,13 @@ outHtml += /*html*/`
                         </fieldset>
                         <div class="charm-special-add-div">
                             <button type="action" name="act_add-charm-to-all" class="btn repcontrol_add">+Add</button>
+                            <div class="select-add-template-charms">
+                                <select name="attr_template-charm-name-selected">
+                                    ${getTemplateCharmsOptions(36)}
+                                </select>
+                                <input type="hidden" name="attr_template-charm-name-selected" class="template-charm-name-selected-check" value="">
+                                <button type="action" name="act_add-template-charm-to-all" class="btn repcontrol_add">Add Selected</button>
+                            </div>
                         </div>
                         <div class="charm-sheet-all-footer"></div>
                     </div>
@@ -1036,7 +1057,7 @@ outHtml += /*html*/`
 const getConfigOptionLabel = (name, label = name, spanStyle) => /*html*/`<label><input type="checkbox" name="attr_charm-${name.toLowerCase()}" value="1"><span${spanStyle ? ` style="${spanStyle}"` : ''}> ${label}</span></label>`;
 
 function getAbiConfigOptionList(p = 0) {
-    const separators = [8,16], abilitiesFiltered = abilities.map(i => typeof i !== 'string' ? i.name : i).filter(i => i !== 'Martial Arts');
+    const separators = [8,17], abilitiesFiltered = abilities.map(i => typeof i !== 'string' ? i.name : i).filter(i => i !== 'Martial Arts');
     let ret = /*html*/`<div class="sheet-checklist sheet-col">\n`, i = 0;
     for (const abilitie of abilitiesFiltered) {
         ret += `${pad(p+4)}${getConfigOptionLabel(abilitie)}\n`;
@@ -1054,6 +1075,15 @@ function getAttrConfigOptionList(p = 0) {
         if (separators.includes(i++)) ret += /*html*/`${pad(p)}</div>${brPad(p)}<div class="sheet-checklist sheet-col">\n`;
     }
     ret += /*html*/`${pad(p)}</div>`;
+    return ret;
+}
+
+function getSidConfigOptionList(p = 0) {
+    const sidFiltered = sidCharmArray.map(i => i.replace('charms-',''));
+    let ret = /*html*/``, i = 0;
+    for (const abilitie of sidFiltered) {
+        ret += `${i++ > 0 ? brPad(p) : ''}${getConfigOptionLabel(abilitie, hashCharmName[`charms-${abilitie}`])}`;
+    }
     return ret;
 }
 
@@ -1170,6 +1200,10 @@ outHtml += /*html*/
                 </div>
                 <div class="sheet-checklist sheet-3colrow">
                     ${getAttrConfigOptionList(20)}
+                </div>
+                <h2 style="text-align: center;">Sidereal</h2>
+                <div class="sheet-checklist" style="margin:auto;">
+                    ${getSidConfigOptionList(20)}
                 </div>
                 <h2 style="text-align: center;">Martial Arts</h2>
                 <div class="sheet-checklist sheet-3colrow">

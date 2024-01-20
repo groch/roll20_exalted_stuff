@@ -33,6 +33,7 @@ var dicecapArray = [
 
 var solarCharmArray = charmSolarRepeatableSectionArray;
 var lunarCharmArray = charmLunarRepeatableSectionArray;
+var sidCharmArray = charmSiderealRepeatableSectionArray;
 var maCharmArray = charmMaRepeatableSectionArray;
 
 var hashCharmName = correspondingCharmSectionValue;
@@ -93,6 +94,7 @@ var abilities = [
     'Medicine',
     'Melee',
     'Occult',
+    'Sorcery',
     'Performance',
     'Presence',
     'Resistance',
@@ -106,10 +108,10 @@ var abilities = [
 ];
 
 var allCharmArray = [
-    ...solarCharmArray, ...lunarCharmArray, ...maCharmArray,
+    ...solarCharmArray, ...lunarCharmArray, ...sidCharmArray, ...maCharmArray,
     'charms-evocation', 'old'
 ], allCharmArrayCss = [
-    ...solarCharmArray, ...lunarCharmArray, ...maCharmArray,
+    ...solarCharmArray, ...lunarCharmArray, ...sidCharmArray, ...maCharmArray,
     'charms-evocations'
 ];
 
@@ -129,6 +131,7 @@ var hashCharmTitle = {
     'charms-medicine': 'Medicine',
     'charms-melee': 'Melee',
     'charms-occult': 'Occult',
+    'charms-sorcery': 'Sorcery',
     'charms-performance': 'Performance',
     'charms-presence': 'Presence',
     'charms-resistance': 'Resistance',
@@ -144,7 +147,7 @@ var hashCharmTitle = {
     'charms-str-offense': 'STR - Offense',
     'charms-str-mobility': 'STR - Mobility',
     'charms-str-fos': 'STR - FoS',
-    'charms-dex-offensive': 'DEX - Offensive',
+    'charms-dex-offensive': 'DEX - Offense',
     'charms-dex-defense': 'DEX - Defense',
     'charms-dex-subterfuge': 'DEX - Subterfuge',
     'charms-dex-mobility': 'DEX - Mobility',
@@ -198,6 +201,11 @@ var hashCharmTitle = {
     'charms-ma-mantis': 'MA - Mantis',
     'charms-ma-whiteveil': 'MA - White Veil',
     'charms-ma-other': 'MA - other',
+    'charms-sid-journeys': 'House of Journeys',
+    'charms-sid-serenity': 'House of Serenity',
+    'charms-sid-battles': 'House of Battles',
+    'charms-sid-secrets': 'House of Secrets',
+    'charms-sid-endings': 'House of Endings',
     'charms-evocation': 'Evocation',
     'charms-old': 'Other'
 };

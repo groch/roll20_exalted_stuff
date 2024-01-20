@@ -2256,6 +2256,7 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet-medicine:checked           ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-medicine,
 .charsheet input.sheet-tab-charm-sheet-melee:checked              ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-melee,
 .charsheet input.sheet-tab-charm-sheet-occult:checked             ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-occult,
+.charsheet input.sheet-tab-charm-sheet-sorcery:checked            ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-sorcery,
 .charsheet input.sheet-tab-charm-sheet-performance:checked        ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-performance,
 .charsheet input.sheet-tab-charm-sheet-presence:checked           ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-presence,
 .charsheet input.sheet-tab-charm-sheet-resistance:checked         ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-resistance,
@@ -2301,6 +2302,11 @@ and (min-resolution:.001dpcm) {
 .charsheet input.sheet-tab-charm-sheet-wit-navigation:checked     ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-wit-navigation,
 .charsheet input.sheet-tab-charm-sheet-wit-cache:checked          ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-wit-cache,
 .charsheet input.sheet-tab-charm-sheet-wit-territory:checked      ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-wit-territory,
+.charsheet input.sheet-tab-charm-sheet-sid-journeys:checked       ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-sid-journeys,
+.charsheet input.sheet-tab-charm-sheet-sid-serenity:checked       ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-sid-serenity,
+.charsheet input.sheet-tab-charm-sheet-sid-battles:checked        ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-sid-battles,
+.charsheet input.sheet-tab-charm-sheet-sid-secrets:checked        ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-sid-secrets,
+.charsheet input.sheet-tab-charm-sheet-sid-endings:checked        ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-sid-endings,
 .charsheet input.sheet-tab-charm-sheet-ma-snake:checked           ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-ma-snake,
 .charsheet input.sheet-tab-charm-sheet-ma-tiger:checked           ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-ma-tiger,
 .charsheet input.sheet-tab-charm-sheet-ma-spsitv:checked          ~ div.sheet-body.sheet-tab-content .sheet-tab-charm-sheet-ma-spsitv,
@@ -2358,6 +2364,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-charm-medicine[value="0"]           ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-medicine,
 .charsheet .sheet-charm-melee[value="0"]              ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-melee,
 .charsheet .sheet-charm-occult[value="0"]             ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-occult,
+.charsheet .sheet-charm-sorcery[value="0"]            ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sorcery,
 .charsheet .sheet-charm-performance[value="0"]        ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-performance,
 .charsheet .sheet-charm-presence[value="0"]           ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-presence,
 .charsheet .sheet-charm-resistance[value="0"]         ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-resistance,
@@ -2403,6 +2410,11 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-charm-wit-navigation[value="0"]     ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-navigation,
 .charsheet .sheet-charm-wit-cache[value="0"]          ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-cache,
 .charsheet .sheet-charm-wit-territory[value="0"]      ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-wit-territory,
+.charsheet .sheet-charm-sid-journeys[value="0"]       ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sid-journeys,
+.charsheet .sheet-charm-sid-serenity[value="0"]       ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sid-serenity,
+.charsheet .sheet-charm-sid-battles[value="0"]        ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sid-battles,
+.charsheet .sheet-charm-sid-secrets[value="0"]        ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sid-secrets,
+.charsheet .sheet-charm-sid-endings[value="0"]        ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-sid-endings,
 .charsheet .sheet-charm-ma-snake[value="0"]           ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-snake,
 .charsheet .sheet-charm-ma-tiger[value="0"]           ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-tiger,
 .charsheet .sheet-charm-ma-spsitv[value="0"]          ~ .flex.main-page div.sheet-tab-charm-sheet .sheet-tab-charm-ma-spsitv,
@@ -2465,6 +2477,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Medicine"]                                    ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Medicine"]),
 .charsheet .sheet-tab-charms-check[value="Melee"]                                       ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Melee"]),
 .charsheet .sheet-tab-charms-check[value="Occult"]                                      ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Occult"]),
+.charsheet .sheet-tab-charms-check[value="Sorcery"]                                     ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Sorcery"]),
 .charsheet .sheet-tab-charms-check[value="Performance"]                                 ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Performance"]),
 .charsheet .sheet-tab-charms-check[value="Presence"]                                    ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Presence"]),
 .charsheet .sheet-tab-charms-check[value="Resistance"]                                  ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Resistance"]),
@@ -2480,7 +2493,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Strength - Offense"]                          ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Offense"]),
 .charsheet .sheet-tab-charms-check[value="Strength - Mobility"]                         ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Mobility"]),
 .charsheet .sheet-tab-charms-check[value="Strength - Feats of Strength"]                ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Feats of Strength"]),
-.charsheet .sheet-tab-charms-check[value="Dexterity - Offensive"]                       ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offensive"]),
+.charsheet .sheet-tab-charms-check[value="Dexterity - Offense"]                         ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offense"]),
 .charsheet .sheet-tab-charms-check[value="Dexterity - Defense"]                         ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Defense"]),
 .charsheet .sheet-tab-charms-check[value="Dexterity - Subterfuge"]                      ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Subterfuge"]),
 .charsheet .sheet-tab-charms-check[value="Dexterity - Mobility"]                        ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Mobility"]),
@@ -2510,6 +2523,11 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Wits - Navigation"]                           ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
 .charsheet .sheet-tab-charms-check[value="Wits - Cache"]                                ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
 .charsheet .sheet-tab-charms-check[value="Wits - Territory"]                            ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
+.charsheet .sheet-tab-charms-check[value="The House of Journeys"]                       ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Journeys"]),
+.charsheet .sheet-tab-charms-check[value="The House of Serenity"]                       ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Serenity"]),
+.charsheet .sheet-tab-charms-check[value="The House of Battles"]                        ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Battles"]),
+.charsheet .sheet-tab-charms-check[value="The House of Secrets"]                        ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Secrets"]),
+.charsheet .sheet-tab-charms-check[value="The House of Endings"]                        ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Endings"]),
 .charsheet .sheet-tab-charms-check[value="Snake Style"]                                 ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Snake Style"]),
 .charsheet .sheet-tab-charms-check[value="Tiger Style"]                                 ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Tiger Style"]),
 .charsheet .sheet-tab-charms-check[value="Single Point Shining Into The Void Style"]    ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Single Point Shining Into The Void Style"]),
@@ -2553,6 +2571,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Medicine"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Melee"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Occult"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Sorcery"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Performance"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Presence"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Resistance"]),
@@ -2568,7 +2587,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Offense"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Mobility"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Feats of Strength"]),
-.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offensive"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offense"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Defense"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Subterfuge"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Mobility"]),
@@ -2598,6 +2617,11 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Journeys"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Serenity"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Battles"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Secrets"]),
+.charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="The House of Endings"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Snake Style"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Tiger Style"]),
 .charsheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .repitem:has(.sheet-tab-charms-inside-check[value="Single Point Shining Into The Void Style"]),
@@ -2646,6 +2670,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .reminder-charm-selector-input[value="Medicine"]                                 ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Medicine"]),
 .charsheet .reminder-charm-selector-input[value="Melee"]                                    ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Melee"]),
 .charsheet .reminder-charm-selector-input[value="Occult"]                                   ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Occult"]),
+.charsheet .reminder-charm-selector-input[value="Sorcery"]                                  ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Sorcery"]),
 .charsheet .reminder-charm-selector-input[value="Performance"]                              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Performance"]),
 .charsheet .reminder-charm-selector-input[value="Presence"]                                 ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Presence"]),
 .charsheet .reminder-charm-selector-input[value="Resistance"]                               ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Resistance"]),
@@ -2661,7 +2686,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .reminder-charm-selector-input[value="Strength - Offense"]                       ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Offense"]),
 .charsheet .reminder-charm-selector-input[value="Strength - Mobility"]                      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Mobility"]),
 .charsheet .reminder-charm-selector-input[value="Strength - Feats of Strength"]             ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Feats of Strength"]),
-.charsheet .reminder-charm-selector-input[value="Dexterity - Offensive"]                    ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offensive"]),
+.charsheet .reminder-charm-selector-input[value="Dexterity - Offense"]                      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offense"]),
 .charsheet .reminder-charm-selector-input[value="Dexterity - Defense"]                      ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Defense"]),
 .charsheet .reminder-charm-selector-input[value="Dexterity - Subterfuge"]                   ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Subterfuge"]),
 .charsheet .reminder-charm-selector-input[value="Dexterity - Mobility"]                     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Mobility"]),
@@ -2691,6 +2716,11 @@ and (min-resolution:.001dpcm) {
 .charsheet .reminder-charm-selector-input[value="Wits - Navigation"]                        ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
 .charsheet .reminder-charm-selector-input[value="Wits - Cache"]                             ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
 .charsheet .reminder-charm-selector-input[value="Wits - Territory"]                         ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
+.charsheet .reminder-charm-selector-input[value="The House of Journeys"]                    ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Journeys"]),
+.charsheet .reminder-charm-selector-input[value="The House of Serenity"]                    ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Serenity"]),
+.charsheet .reminder-charm-selector-input[value="The House of Battles"]                     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Battles"]),
+.charsheet .reminder-charm-selector-input[value="The House of Secrets"]                     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Secrets"]),
+.charsheet .reminder-charm-selector-input[value="The House of Endings"]                     ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Endings"]),
 .charsheet .reminder-charm-selector-input[value="Snake Style"]                              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Snake Style"]),
 .charsheet .reminder-charm-selector-input[value="Tiger Style"]                              ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Tiger Style"]),
 .charsheet .reminder-charm-selector-input[value="Single Point Shining Into The Void Style"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Single Point Shining Into The Void Style"]),
@@ -2734,6 +2764,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Medicine"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Melee"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Occult"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Sorcery"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Performance"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Presence"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Resistance"]),
@@ -2749,7 +2780,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Offense"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Mobility"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Strength - Feats of Strength"]),
-.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offensive"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Offense"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Defense"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Subterfuge"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Dexterity - Mobility"]),
@@ -2779,6 +2810,11 @@ and (min-resolution:.001dpcm) {
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Navigation"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Cache"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Wits - Territory"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Journeys"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Serenity"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Battles"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Secrets"]),
+.charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="The House of Endings"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Snake Style"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Tiger Style"]),
 .charsheet .reminder-charm-selector-input[value="Other"] ~ .repcontainer .repitem:has(.sheet-tab-charms-inside-check[value="Single Point Shining Into The Void Style"]),
@@ -2812,6 +2848,13 @@ and (min-resolution:.001dpcm) {
 	display: none;
 }
 
+.ui-dialog .charsheet .charm-sheet-all .repcontainer[data-groupname="repeating_charms-all"] .repitem.repitembroken {
+    border: 4px solid transparent !important;
+}
+.ui-dialog .charsheet .reminder-charms-main-div .repcontainer[data-groupname="repeating_charms-all"] .repitem.repitembroken {
+    border: unset !important;
+}
+
 /* --- REMINDER SELECT SHOW/HIDE OPTION TRICKS --- */
 .charsheet .sheet-charm-reminder select option.reminder-charm {
     display: none;
@@ -2832,6 +2875,7 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-charm-reminder input.check-charm-medicine[value="1"] ~ select option.opt-charm-medicine,
 .charsheet .sheet-charm-reminder input.check-charm-melee[value="1"] ~ select option.opt-charm-melee,
 .charsheet .sheet-charm-reminder input.check-charm-occult[value="1"] ~ select option.opt-charm-occult,
+.charsheet .sheet-charm-reminder input.check-charm-sorcery[value="1"] ~ select option.opt-charm-sorcery,
 .charsheet .sheet-charm-reminder input.check-charm-performance[value="1"] ~ select option.opt-charm-performance,
 .charsheet .sheet-charm-reminder input.check-charm-presence[value="1"] ~ select option.opt-charm-presence,
 .charsheet .sheet-charm-reminder input.check-charm-resistance[value="1"] ~ select option.opt-charm-resistance,
@@ -2877,6 +2921,11 @@ and (min-resolution:.001dpcm) {
 .charsheet .sheet-charm-reminder input.check-charm-wit-navigation[value="1"] ~ select option.opt-charm-wit-navigation,
 .charsheet .sheet-charm-reminder input.check-charm-wit-cache[value="1"] ~ select option.opt-charm-wit-cache,
 .charsheet .sheet-charm-reminder input.check-charm-wit-territory[value="1"] ~ select option.opt-charm-wit-territory,
+.charsheet .sheet-charm-reminder input.check-charm-sid-journeys[value="1"] ~ select option.opt-charm-sid-journeys,
+.charsheet .sheet-charm-reminder input.check-charm-sid-serenity[value="1"] ~ select option.opt-charm-sid-serenity,
+.charsheet .sheet-charm-reminder input.check-charm-sid-battles[value="1"] ~ select option.opt-charm-sid-battles,
+.charsheet .sheet-charm-reminder input.check-charm-sid-secrets[value="1"] ~ select option.opt-charm-sid-secrets,
+.charsheet .sheet-charm-reminder input.check-charm-sid-endings[value="1"] ~ select option.opt-charm-sid-endings,
 .charsheet .sheet-charm-reminder input.check-charm-ma-snake[value="1"] ~ select option.opt-charm-ma-snake,
 .charsheet .sheet-charm-reminder input.check-charm-ma-tiger[value="1"] ~ select option.opt-charm-ma-tiger,
 .charsheet .sheet-charm-reminder input.check-charm-ma-spsitv[value="1"] ~ select option.opt-charm-ma-spsitv,
@@ -2906,7 +2955,209 @@ and (min-resolution:.001dpcm) {
     display: revert;
 }
 
+/* --- SELECT FOR ADDING TEMPLATE CHARMS --- */
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Evocation"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Other"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Snake Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Tiger Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Single Point Shining Into The Void Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="White Reaper Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Ebon Shadow Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Crane Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Silver-Voiced Nightingale Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Righteous Devil Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Black Claw Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Dreaming Pearl Courtesan Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Steel Devil Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Centipede Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Falcon Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Laughing Monster Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Swaying Grass Dance Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Air Dragon Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Earth Dragon Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Fire Dragon Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Water Dragon Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Wood Dragon Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Golden Janissary Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="Mantis Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="White Veil Style"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charsheet .flex.main-page .sheet-tab-charm-sheet .sheet-tab-charms-check[value="MA - Other"] ~ .charm-sheet-all .charm-special-add-div .select-add-template-charms,
+.charm-special-add-div .select-add-template-charms {
+    display: none;
+}
+.charsheet .exalt-type-check[value="Solar"]    ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="Abyssal"]  ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="DB"]       ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="Lunar"]    ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms,
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charm-sheet .charm-special-add-div .select-add-template-charms {
+    display: inline-flex;
+    width: calc(100% - 4em);
+    height: 26px;
+}
+.charm-special-add-div .select-add-template-charms select {
+    width: auto;
+    max-width: calc(103vw - 20em);
+    height: 26px;
+    flex-shrink: 1;
+}
+.charm-special-add-div .select-add-template-charms button {
+    margin-top: 1px;
+    height: 18px;
+}
+.charm-special-add-div .select-add-template-charms .template-charm-name-selected-check[value=""] ~ button {
+    display: none;
+}
 
+/* hiding options in select by default */
+.charm-special-add-div .select-add-template-charms select option {
+    display: none;
+}
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Archery"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Archery"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Athletics"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Athletics"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Awareness"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Awareness"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Brawl"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Brawl"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Bureaucracy"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Bureaucracy"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Craft"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Craft"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Dodge"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Dodge"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Integrity"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Integrity"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Investigation"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Investigation"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Larceny"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Larceny"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Linguistics"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Linguistics"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Lore"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Lore"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Medicine"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Medicine"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Melee"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Melee"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Occult"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Occult"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Sorcery"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Sorcery"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Performance"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Performance"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Presence"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Presence"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Resistance"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Resistance"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Ride"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Ride"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Sail"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Sail"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Socialize"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Socialize"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Stealth"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Stealth"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Survival"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Survival"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Thrown"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Thrown"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="War"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="War"],
+.charsheet .exalt-type-check[value="Solar"] ~ .flex.main-page .sheet-tab-charms-check[value="Universal"] ~ .charm-sheet-all .select-add-template-charms option.Solar-charm[title="Universal"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Archery"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Archery"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Athletics"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Athletics"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Awareness"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Awareness"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Brawl"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Brawl"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Bureaucracy"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Bureaucracy"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Craft"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Craft"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Dodge"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Dodge"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Integrity"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Integrity"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Investigation"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Investigation"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Larceny"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Larceny"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Linguistics"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Linguistics"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Lore"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Lore"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Medicine"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Medicine"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Melee"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Melee"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Occult"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Occult"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Performance"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Performance"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Presence"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Presence"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Resistance"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Resistance"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Ride"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Ride"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Sail"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Sail"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Socialize"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Socialize"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Stealth"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Stealth"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Survival"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Survival"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="Thrown"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="Thrown"],
+.charsheet .exalt-type-check[value="Abyssal"] ~ .flex.main-page .sheet-tab-charms-check[value="War"] ~ .charm-sheet-all .select-add-template-charms option.Abyssal-charm[title="War"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Archery"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Archery"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Athletics"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Athletics"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Awareness"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Awareness"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Brawl"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Brawl"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Bureaucracy"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Bureaucracy"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Craft"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Craft"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Dodge"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Dodge"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Integrity"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Integrity"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Investigation"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Investigation"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Larceny"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Larceny"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Linguistics"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Linguistics"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Lore"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Lore"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Medicine"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Medicine"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Melee"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Melee"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Occult"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Occult"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Sorcery"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Sorcery"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Performance"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Performance"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Presence"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Presence"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Resistance"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Resistance"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Ride"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Ride"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Sail"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Sail"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Socialize"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Socialize"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Stealth"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Stealth"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Survival"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Survival"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="Thrown"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="Thrown"],
+.charsheet .exalt-type-check[value="DB"] ~ .flex.main-page .sheet-tab-charms-check[value="War"] ~ .charm-sheet-all .select-add-template-charms option.DB-charm[title="War"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Heart's Blood"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Heart's Blood"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Universal"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Universal"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Appearance - Influence"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Appearance - Influence"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Appearance - Subterfuge"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Appearance - Subterfuge"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Appearance - Warfare"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Appearance - Warfare"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Charisma - Influence"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Charisma - Influence"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Charisma - Warfare"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Charisma - Warfare"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Charisma - Territory"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Charisma - Territory"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Dexterity - Offense"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Dexterity - Offense"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Dexterity - Defense"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Dexterity - Defense"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Dexterity - Mobility"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Dexterity - Mobility"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Dexterity - Subterfuge"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Dexterity - Subterfuge"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Dexterity - Swarm"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Dexterity - Swarm"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Intelligence - Knowledge"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Intelligence - Knowledge"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Intelligence - Mysticism"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Intelligence - Mysticism"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Intelligence - Crafting"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Intelligence - Crafting"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Intelligence - Warfare"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Intelligence - Warfare"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Intelligence - Sorcery"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Intelligence - Sorcery"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Manipulation - Influence"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Manipulation - Influence"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Manipulation - Guile"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Manipulation - Guile"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Manipulation - Subterfuge"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Manipulation - Subterfuge"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Perception - Senses"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Perception - Senses"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Perception - Scrutiny"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Perception - Scrutiny"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Perception - Mysticism"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Perception - Mysticism"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Stamina - Defense"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Stamina - Defense"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Stamina - Endurance"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Stamina - Endurance"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Stamina - Berserker"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Stamina - Berserker"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Strength - Offense"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Strength - Offense"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Strength - Mobility"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Strength - Mobility"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Strength - Feats of Strength"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Strength - Feats of Strength"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Wits - Resolve"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Wits - Resolve"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Wits - Animal Ken"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Wits - Animal Ken"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Wits - Navigation"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Wits - Navigation"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Wits - Cache"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Wits - Cache"],
+.charsheet .exalt-type-check[value="Lunar"] ~ .flex.main-page .sheet-tab-charms-check[value="Wits - Territory"] ~ .charm-sheet-all .select-add-template-charms option.Lunar-charm[title="Wits - Territory"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="The House of Journeys"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="The House of Journeys"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Resistance"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Resistance"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Ride"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Ride"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Sail"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Sail"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Survival"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Survival"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Thrown"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Thrown"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="The House of Serenity"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="The House of Serenity"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Craft"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Craft"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Dodge"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Dodge"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Linguistics"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Linguistics"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Performance"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Performance"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Socialize"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Socialize"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="The House of Battles"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="The House of Battles"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Archery"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Archery"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Brawl"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Brawl"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Melee"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Melee"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Presence"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Presence"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="War"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="War"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="The House of Secrets"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="The House of Secrets"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Investigation"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Investigation"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Larceny"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Larceny"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Lore"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Lore"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Occult"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Occult"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Stealth"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Stealth"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="The House of Endings"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="The House of Endings"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Athletics"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Athletics"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Awareness"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Awareness"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Bureaucracy"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Bureaucracy"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Integrity"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Integrity"],
+.charsheet .exalt-type-check[value="Sidereal"] ~ .flex.main-page .sheet-tab-charms-check[value="Medicine"] ~ .charm-sheet-all .select-add-template-charms option.Sidereal-charm[title="Medicine"],
+.charm-special-add-div .select-add-template-charms select option[value=""] {
+    display: block;
+}
 
 
 
@@ -4430,9 +4681,11 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 }
 
 .charsheet .charm-sheet-all .charm-special-add-div {
-    width: fit-content;
+    width: calc(100% - 5em);
+    height: 2.1em;
     position: absolute;
     bottom: 0;
+    white-space: nowrap;
 }
 .charsheet .charm-sheet-all .charm-sheet-all-footer {
     height: 2em;
