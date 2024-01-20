@@ -2370,17 +2370,14 @@
         const charmObj = {};
         const idNewCharm = generateNewRowId(idsCharms);
 
-        if (actualSection === 'Evocation')
-            charmObj[`repeating_charms-all_${idNewCharm}_isEvoc`] = 'Evocation';
-        else if (actualSection === 'other')
-            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = `${caste} Power`;
-        else
-            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = actualSection;
-
         for (const [k, v] of Object.entries(charmCompendiumPerExalt[exaltType][actualSection][templateCharmId])) {
             if (!['attr-mins', 'prereq'].includes(k)) {
                 charmObj[`repeating_charms-all_${idNewCharm}_${k}`] = v;
             }
+        }
+
+        if (isSidereal(caste) && charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`].indexOf('—') !== -1) {
+            charmObj[`repeating_charms-all_${idNewCharm}_charm-skill`] = actualSection;
         }
 
         const moteCommit = !['instant','permanent'].includes(charmObj[`repeating_charms-all_${idNewCharm}_charm-duration`].toLowerCase()) ? 1 : 0;
