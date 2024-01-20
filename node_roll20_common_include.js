@@ -147,7 +147,7 @@ var hashCharmTitle = {
     'charms-str-offense': 'STR - Offense',
     'charms-str-mobility': 'STR - Mobility',
     'charms-str-fos': 'STR - FoS',
-    'charms-dex-offensive': 'DEX - Offense',
+    'charms-dex-offense': 'DEX - Offense',
     'charms-dex-defense': 'DEX - Defense',
     'charms-dex-subterfuge': 'DEX - Subterfuge',
     'charms-dex-mobility': 'DEX - Mobility',

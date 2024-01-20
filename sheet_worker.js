@@ -1,4 +1,4 @@
-    const version = 2.65, debug = 1;
+    const version = 2.66, debug = 1;
     var TAS;
 
     /**
@@ -655,6 +655,7 @@
         {version: 2.62, fn: upgradeto263},
         {version: 2.63, fn: upgradeto264},
         {version: 2.64, fn: upgradeto265},
+        {version: 2.65, fn: upgradeto266},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -858,6 +859,22 @@
         return 'None';
     }
 
+    async function upgradeto266() {
+        const finalObj = {'version': 2.66};
+        const oldOffense = await getSingleAttrAsync('charm-dex-offensive');
+        if (oldOffense) finalObj['charm-dex-offense'] = oldOffense;
+        const idsCharms = await getSectionIDsAsync('charms-all');
+        const attrList = idsCharms.map(id => `repeating_charms-all_${id}_charm-skill`);
+        const valAttrs = await getAttrsAsync(attrList);
+        for (const id of idsCharms) {
+            if (valAttrs[`repeating_charms-all_${id}_charm-skill`] === 'Dexterity - Offensive')
+                finalObj[`repeating_charms-all_${id}_charm-skill`] = 'Dexterity - Offense';
+        }
+        
+        TAS.debug(`upgradeto266:: finalObj=`, finalObj);
+        setAttrs(finalObj);
+    }
+
     async function upgradeto265() {
         const finalObj = {
             'version': 2.65
@@ -874,7 +891,7 @@
         else if (isLiminal(caste))
             finalObj["dicecap-type"] = 'Liminal';
         finalObj["exalt-type"] = getExaltType(caste);
-        TAS.debug(`upgradeto263:: finalObj=`, finalObj);
+        TAS.debug(`upgradeto265:: finalObj=`, finalObj);
         setAttrs(finalObj);
     }
 
@@ -1592,7 +1609,7 @@
         'charms-str-offense': 'Strength - Offense',
         'charms-str-mobility': 'Strength - Mobility',
         'charms-str-fos': 'Strength - Feats of Strength',
-        'charms-dex-offensive': 'Dexterity - Offense',
+        'charms-dex-offense': 'Dexterity - Offense',
         'charms-dex-defense': 'Dexterity - Defense',
         'charms-dex-subterfuge': 'Dexterity - Subterfuge',
         'charms-dex-mobility': 'Dexterity - Mobility',
@@ -1732,7 +1749,7 @@
         'charms-str-offense',
         'charms-str-mobility',
         'charms-str-fos',
-        'charms-dex-offensive',
+        'charms-dex-offense',
         'charms-dex-defense',
         'charms-dex-subterfuge',
         'charms-dex-mobility',
