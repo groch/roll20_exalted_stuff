@@ -1,0 +1,1 @@
+node .\json_reprocessor.js .\Solaire.json "Ex3 Core" && node .\json_reprocessor.js .\Solaire_add.json "Solar : MotSE" && node .\json_merger.js '.\Solaire.out.json' '.\Solaire_add.out.json' 'Solaire_full.json'

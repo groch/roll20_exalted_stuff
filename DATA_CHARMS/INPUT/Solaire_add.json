@@ -1,0 +1,880 @@
+{
+    "Archery": [
+        {
+            "Title": "Hanging Judgment Arc",
+            "Cost": " 6m",
+            "Mins": " Archery 4, Essence 2",
+            "Type": " Reflexive",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Fiery Arrow Attack",
+            "Description": "The Lawgiver’s divine judgment pours down on the heads of the wicked. Immediately upon joining battle, the Solar may target a specific bit of scenery that is not occupied by an enemy combatant. Naming it off limits, she fires a scintillating shot high into the air. Her arrow flies up and up and does not come down unless the opponent crosses through, over, or into the designated position, at which point they become subject to a decisive attack with the Solar’s unmodified attack pool, and with damage equal to the Initiative she had the moment she fired the shot. In addition , this shot is enhanced by the prerequisite at no extra charge. If Hanging Judgment Arc succeeds at damaging the target, the Solar’s Initiative does not return to base. If the Exalt is crashed, slain, or the scene ends without  the attack being triggered, the arrow comes down and will set fire to any flammable thing it touches. Any use of this Charm must occur in places with enough vertical  space to fire an arrow upward without it getting lodged in the ceiling. The player can’t threat-mark an area inside an enclosed building or chamber while standing outside. Special activation rules: If the Lawgiver threatens a specific character with this attack, (ie “Winglord Kvetu may not retreat across that bridge”) the attack gains (Essence) automatic successes, (Essence) bonus dice, and (Essence) automatic damage successes. At Archery 5+, Essence 3+, the Lawgiver may use this Charm out of combat for eight motes, setting the Charm’s duration to Indefinite, and giving it a base damage of 17. With Archery 5+ Essence 4+, the out-of-combat use becomes  Stackable up to (Essence) times. These bans do not end if the Solar is crashed or slain, only if the threat is triggered or the Lawgiver ends her commitment. On Hanging Judgment Arc The backer had a really awesome name and idea for an Archery Charm, but execution was trickier than it looked. In case you are wondering, if you mark an area where your ally is standing when an enemy triggers the attack, the attack is precise enough to only hit the enemy . But whether or not they both catch on fire is a totally different issue. Backer: Andrew Bartkus "
+        },
+        {
+            "Title": "Nova Arrow Attack",
+            "Cost": " 6m, 1wp",
+            "Mins": " Archery 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Dazzling Flare Attack",
+            "Description": "The Solar channels her fiery Essence into an arrow that explodes on impact. This is a non-standard decisive attack  that targets no particular character directly, but the range band they’re standing in. The shot lands without a roll, and everything at close range to the arrow is subject  to an explosion that can’t be parried, only dodged. The explosion has an attack pool of the Solar’s Initiative (maximum 10 dice), and rolls decisive damage equal to the Solar’s Initiative. If this attack is successful against at least one enemy, then it resets the Solar’s Initiative to base. It can expressly be used to blow up inanimate objects, scenery, and siege weaponry without affecting the Solar’s Initiative. All characters struck by this attack are knocked out of the exploded range band and land prone, losing one Initiative each, not transferred to the Solar. Characters blown down by this Charm have no control over where they land; characters  who dodge this explosion are automatically knocked to the next range band, but they do not lose Initiative nor do they fall to prone, simply rolling to their feet or skidding along on their heels without losing balance. If used to damage a battle group, Nova Arrow Attack causes disarray and panic, applying a -2 success penalty to its next attack. On Nova Arrow Attack The natural evolution of Fiery Arrow Attack, I wanted to do this Charm originally, but was too pressed for time to come up with a balanced explosion mechanic. Fortunately as I was rounding out the Archery section of this book one came to me, partly inspired by one of the new Brawl Charm mechanics below. (Guess which.) "
+        },
+        {
+            "Title": "Hell-Heeling Arrow",
+            "Cost": " 13m, 1wp",
+            "Mins": " Archery 5, Essence 4",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Nova Arrow Attack, Searing",
+            "Description": "Sunfire Interdiction The Exalt gives her enemies a taste of her wrathful Essence. As with Nova Arrow Attack, she fires an explosive arrow into a range band at close range with an enemy. But instead of exploding on contact, the arrow sits and smokes and rumbles. Characters within short range of this arrow can feel their slightest movement causing it to agitate and surge with Solar anima; their barest shifts in posture threaten to cause an explosion. If it explodes, Hell-Heeling Arrow will hit everything in short range, and the only way to escape it is to successfully disengage — once if at short range, twice if at close. The difficulty of this roll is 5. If any character simply moves a range band (or gets moved), the arrow explodes, doing a non-standard decisive  attack to all targets with an attack pool of (Essence + Initiative) dice (maximum 12), with a damage pool of (Initiative) dice. The blast from this explosion can only be dodged, and has the same knockdown rules as Nova Arrow Attack. In addition, characters knocked down by this attack are automatically lit on fire, suffering bonfire (4L/round) damage until they can put it out. Hell-Heeling Arrow does not reset the Solar’s Initiative to base. It can only be used once per battle, but may be reset by joining battle. On Hell-Heeling Arrow Continuing to play up Archery’s theme of range band domination, a (sort of) converse of Searing Sunfire Interdiction. "
+        },
+        {
+            "Title": "Solar Judgment Flare",
+            "Cost": " 3m, 1wp and 1m per damage die",
+            "Mins": " Archery 5, Essence 5",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Heart-Eating Incineration, Nova",
+            "Description": "Arrow Attack The Exalt pours incandescent Solar Essence through her bow, firing a streaking shot of immolating flame. If the Solar has 15+ Initiative then she may use this Charm to unleash a horrific attack against opponents a minimum of three range bands away. If successful, this attack does (greater of Essence or three) automatic damage, and dice on the damage roll may be augmented at a rate of one mote per die, to a limit of (half current Initiative rounded up). Where this arrow strikes, it will send out a line of burning destruction, one range band for every five Initiative (rounded up). Everything caught in this burning nova swath takes damage; characters are subject to a high intensity (6L/round) bonfire, while scenery takes fiat levels of damage. A character struck with this attack is likewise flung backwards one range band for every three health levels lost from the attack. If a Solar uses this Charm against a ship made of natural materials, every three damage successes equals a point of hull damage. If she uses it against a battle group, they are automatically at -2 successes from their next rout check. Solar Judgment Flare can be used without an aim action. On Solar Judgment Flare The backer is brand new to Exalted, so I had to help him find the exact right Charm. The first couple of Resistance Charms we worked on didn’t feel right to his personality, so we scrapped them. Finally I asked him what characters he likes most, and he started to talk about an overpowered archer from Fate Stay/Night. I had known since the beginning that Archery yet needed an overpowered Charm, so I worked out this incredibly powerful mechanic. There may be yet be another upgrade  to this Charm, one of unfathomable power. Backer: Maha "
+        }
+    ],
+    "Athletics": [
+        {
+            "Title": "Strength-Hying Heave",
+            "Cost": " 4m",
+            "Mins": " Athletics 4, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Increasing Strength Exercise",
+            "Description": "A Solar who has used the prerequisite to increase her Strength to the limit is sufficiently strong enough to hurl a human-sized ally forward or up one range band. This Charm uses the Solar’s own movement action for the round. If the Solar has learned Power Suffusing Form Technique (see Exalted, p. 266), she can combine that Charm with this to hurl an ally the size of a horse and rider safely up or forward one range band, or she may toss a human-sized ally forward two range bands. This use adds one Willpower to the cost of this Charm, but drops the mote cost to two. On Strength-Hying Heave The backer wanted something like the “Fastball Special” from Claremont’s run on the Uncanny X-Men, where Colossus hurls Wolverine at a target. I figured, why not let someone with superhuman strength throw a very heavy ally as well? I can already see a player writing in to tell me how their Zenith stood at the end of a dock as the Night rode up on an armored destrier, and they hurled horse and rider onto the deck of a retreating ship. That said, a Solar using Nine Aeons Thew and other Charms might be able to throw an ally three or more range bands, but they will take falling damage unless they have Charms such as Soaring Crane Leap that will help them land safely. This is a good example of how Solar Charms can and do work together in ways that aren’t expressly outlined in the rules. Backer: Mike Gill "
+        },
+        {
+            "Title": "Faster than Self Technique",
+            "Cost": " 10m, 1wp (+1m per round)",
+            "Mins": " Athletics 5, Essence 5",
+            "Type": " Simple",
+            "Keyword": " Perilous",
+            "Duration": " One scene",
+            "Prerequisite": " Living Wind Approach, Hurricane",
+            "Description": " Spirit Speed Like the Unconquered Sun, the Solar is everywhere and nowhere at once. Moving at impossible, Essence-fueled speeds, the Solar becomes multiple copies of herself. As long as she keeps moving, she is each of her copies and none of them at the same time. The Lawgiver becomes  a battle group having Size (Essence / 2 rounded up), Magnitude 10 (regardless of her maximum Health Levels), and no bonuses from Drill or Might — simply use the Solar’s normal combat pool. This Charm is incompatible with heavy armor, and incompatible  with all Resistance Charms except those which are Permanent-type or Simple-type Charms which were activated before using Faster than Self Technique. Nor can the Solar benefit from giving her “battle group self” enhanced abilities through the use of War Charms. Each round this Charm is active costs the Solar an additional  mote of Essence to keep active. In addition, when the Solar’s Magnitude track fills up with damage and she loses a point of Size, instead of a rout check she is subject to a difficulty 3 Stamina + Athletics roll to maintain the Charm. Ending this Charm gives the Exalt a -1 success fatigue penalty  to all of her Athletics rolls for the next three rounds. Faster than Self Technique can only be activated once per scene. On Faster than Self Technique The backer’s friend, Koray Bilgin, is the genius behind this Charm. He came up with the name, the concept, and the framework of the mechanics. I just took care of balancing issues and placement in the tree. It’s a really fantastic idea! Backer: U. Kaya YAVUZ "
+        }
+    ],
+    "Brawl": [
+        {
+            "Title": "Swift Strike Prana",
+            "Cost": " 3m, 1wp",
+            "Mins": " Brawl 4, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Ferocious Jab, Thunderclap Rush",
+            "Description": "Attack Sensing an opening, the Solar launches a vicious blow with any part of her body. When the Exalt successfully disarms a close range opponent by any means, then she may use this Charm to launch an immediate decisive attack against them. If the opponent is trivial, ignore the Willpower cost. On Swift Strike Prana This Charm will help those of you who like your disarm gambits, and especially those of you who like to antagonize  the entire city guard. "
+        },
+        {
+            "Title": "Heart-Eating Fist",
+            "Cost": " 3a, 1wp",
+            "Mins": " Brawl 5, Essence 5",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Ascendant Battle Visage",
+            "Description": "Fist swirling with molten fury, the Lawgiver punches her enemy in the heart, rips it out of his chest, and offers it up as a prayer to the divine force that flows through her. This Charm is a decisive gambit with a difficulty of the target’s remaining health levels. If successful, it does exactly  enough damage to kill that opponent. The Solar rips her victim’s heart out, then she lifts it to the sky. The last thing they see is their heart going up in a gout of flames as the Solar’s fist closes around it. When the Solar kills a trivial opponent with this Charm, she gains a point of Willpower and automatically terrifies all other trivial opponents. When she kills a non-trivial opponent with Heart-Eating Fist, she gains no Willpower, but is suffused with a sudden surge of storming transformative anima. As the power of the Unconquered Sun flows through her, she automatically heals (half Essence rounded up) health levels and may reflexively trigger Ascendant Battle Visage or Burning Sky Apocalypse Strike at no cost. On Heart-Eating Fist The Dragon Kings of old, prehuman worshipers of the Unconquered Sun, used to offer up sacrificial hearts to the Most High. Held aloft against the sunlight, these hearts would burn, signaling the Unconquered Sun’s acceptance  of the offering. With this Charm, the Lawgiver offers up the heart to herself. As her fires consume it, she gains a surge of incredible power. "
+        },
+        {
+            "Title": "Burning Sky Apocalypse Strike",
+            "Cost": " 15m, 1wp",
+            "Mins": " Brawl 5, Essence 5",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Heart-Eating Fist",
+            "Description": "Drawing in tremendous spirit energy, the Solar launches  an explosive attack that carries her skyward with the force of the rising sun. This Charm can only be triggered at 20+ Initiative. It unleashes a massive decisive attack to everything within short range of the Lawgiver. The Exalt’s form is suffused with burning Solar Essence that fires straight up in a column that can be seen for miles. This is a non-standard decisive attack; roll the Solar’s Dexterity + Brawl once and apply the result to the entire group. This attack can hit allies. Targets struck by this attack are carried upward on a column of destructive force, one range band for every ten Initiative the Solar possesses. For every range band the targets are lifted, they are subject to three dice of hardness-ignoring decisive  bashing damage and must then contend with falling damage. This portion of the attack does not reset the Solar’s Initiative. The Solar is also carried up to the same height as her enemies, but at the apex she pauses, Essence and anima swirling around her like a second sun. Then she plummets  at an angle in any chosen direction, falling half the range bands she rose (rounded up). There she comes down like a falling star, hammering a crater into the earth and striking all opponents at close range with her explosive fury. This is a normal decisive attack that, if successful, does half her Initiative (rounded up) in hardness -ignoring decisive damage dice to all opponents at close range. This calamitous falling strike does no harm to the Solar. On Burning Sky Apocalypse Strike *John lowers an LP of smooth slow “doo-wop” onto the spindle and swishes his brandy around in a shot glass while staring out the window at the setting sun.* "
+        }
+    ],
+    "Bureaucracy": [
+        {
+            "Title": "Honor-Instilling Mantra",
+            "Cost": " 6m",
+            "Mins": " Bureaucracy 5, Essence 2",
+            "Type": " Simple",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Enigmatic Bureau Understanding",
+            "Description": "By spending an hour meditating on a charter of an organization  she owns or leads, the Lawgiver may instill that charter with Intimacies that she feels are essential to running her business. This code of honor must be reflected in the writing of the charter, and the charter itself must be made available to every member the Solar wishes to effect with this Charm. Members who read the charter, or have had it read to them by a superior, become aware of the imbued Intimacies and can choose to act as the Solar would, taking advantage of those Intimacies as if they possessed them. Such a member can, for example, cite the Solar’s Intimacy in a decision point when someone is trying to promote corruption in the ranks of the Exalt’s subordinates. The effects of this Charm last until the Solar alters the charter, and may even continue beyond her death. On Honor-Instilling Mantra The backer wanted a Bureaucracy Charm that would allow him to instill the organization’s members such that they would always act as the Solar would. I felt that was way too powerful. Mind-controlling hundreds of people with a single Charm defeats the purpose of social influence. Instead we came up with a Charm that allows members of an organization to consult the Solar’s vision  of honor and leadership, creating a communal well of ethical and moral action to draw strength from. No one under the effect of this Charm is forced to abide by it, but there are undeniable benefits for those who do. Couple that with the power of the prerequisite and the Solar gains a very sharp understanding of what goes on in her offices while she is not there. Special thanks goes to Holden for the core mechanic of this Charm. Backer: J Walker "
+        },
+        {
+            "Title": "Pattern-Exploiting Commerce Spirit",
+            "Cost": " 5m",
+            "Mins": " Bureaucracy 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Mute",
+            "Duration": " Indefinite",
+            "Prerequisite": " Ungoverned Market Awareness",
+            "Description": "It often isn’t safe for a Lawgiver to hang out her shingle. Meditating on the business she seeks, the Solar expands her Essence outward so that it may guide troubled customers to her door. This Charm covers a city block from the Solar’s position, and will guide customers with financial or mercantile  problems to the Exalt’s location, even going so far as to lead them through hidden alleys and secret doors to do so. When activating the Charm, the Solar must be very specific  about which kind of customers she will attract based on their Resources rating. The player can specify customers  with “financial problems and Resources 5”, “multiple Resources 5 who need to deposit vast sums of money”, “a valuation inquiry and any Resources rating”, and so on. As long as the Solar’s net isn’t cast extremely wide, as soon as a person with the designated problem steps into the area affected by her Essence they will be drawn to her. Note that an arriving customer won’t exactly understand why they’ve been drawn to the Solar or how it was done. It’s up to the Solar to recognize the customer, figure out what their problem is, and impress them with her expertise and preeminence in all things commercial. Special activation rules: If the Solar knows the Larceny Charm Seasoned Criminal Method, the player may use this Charm to specify targets with “Larceny problems difficulty 1-5” or of one specific difficulty. The player may also combine specifications: “a subject with Resources 5 that has a difficulty 5 Larceny problem.” On Pattern-Exploiting Commerce Spirit The backer’s favorite Caste is Eclipse, and their favorite  Ability is Bureaucracy, so I decided to make them a very mystical, extremely useful Charm for Solars trying to operate in the shadow economy or who are simply trying to be very exclusive. Readers might be interested to know that the J.P. Morgan banking dynasty began with banking services catering only to the ultra rich, usually exclusively to trade organizations. They never advertised, and never opened up more than a single office  in one country, and that exclusivity elevated them to a nigh-mythic stature. A Solar dealing in gigantic sums of capital, troubleshooting economic problems and providing  legal services can become an even greater subject of myth, and even more sought after. This Charm also helps the Solar to protect herself, since direct advertisement  or street-side storefronts aren’t always safe. Players should note that this Charm is bound to be more effective in busy trade districts of bustling cities. If you use this Charm in the dusty village of some half-dry desert  watering hole, you might not have much luck attracting  customers. Backer: Jordan Neal "
+        },
+        {
+            "Title": "Creation of Adamant Specie",
+            "Cost": " 5m",
+            "Mins": " Bureaucracy 5, Essence 4",
+            "Type": " Simple",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Pattern-Exploiting Commerce Spirit",
+            "Description": "Taking a coin of natural metal in her hand, the Solar infuses it with her Essence, transforming it. In the moment  the Exalt uses this Charm, an obscuring shadow slowly passes over her face. When it has passed, the coin between her fingers has become a coin of pure adamant, with the Unconquered Sun’s emblem on one side and the Solar’s sigil on the other. This coin has a number of properties and abilities. The Solar may give this coin to another, authorizing them to use it in the Solar’s name. Any ghost, god, or raksha who sees the coin will automatically recognize  the bearer as a business agent of one of the Solar Exalted. Such beings gain automatic knowledge of the Solar’s full Resources rating, allowing the bearer to settle  accounts and make purchases without an exchange of wealth. When the bearer makes such purchases on the Lawgiver’s behalf, the Adamant Specie represents a heavenly oath on the Solar’s behalf to pay the debt out of her standing Resources within a year and a day. If the target in this transaction is destroyed or makes it deliberately  impossible for the Exalt to settle her account, the heavenly oath — but perhaps not the debt — is nullified. Mortal merchants have no power to recognize the accounts  of the Solar Exalted at a glance, and Guildsmen are particularly well-trained in not accepting magicked coins. Demons, as participants in deliberately insurgent economies, recognize the Solar’s accounts but may always  refuse to confer them credit. Ergo, neither demons nor Guildsmen honor such trade. Such a coin also has a number of other strange effects. For one, the bearer can travel through the bordermarches  of the Wyld and as long as they are holding the coin, neither they nor the things they are wearing or carrying can be warped by the Wyld. The coin also evinces personal agency. If it is stolen, it can cause sudden cases of bad luck — 9s and 10s turned to 1s. To some it appears to give off a cursed silvery glow and they refuse to touch it. Others try to lift it and find that it is far beyond mortal strength to lift. In the open market, it has a way of getting mixed into local tender, riding commerce to the edges of the Solar’s reach. If taken up by someone who fits one of the specified  criteria of Pattern-Exploiting Commerce Spirit, the coin will lead that person to the Solar, even if they are at the far end of the city. Note that characters who are not authorized cannot use the coin to make purchases on the Solar’s account. Special activation rules: The Solar may only create one such coin per day, but may have up to (Essence) coins in circulation. She may at any time pay one mote reflexively to cause the magic to flee a coin, causing it to transform instantly  into a dull lead coin with faded inscription. She may also will a coin back to herself, causing it to travel from person  to person, riding transactions and turns of luck to make itself known to her so that she can reclaim it. This process usually takes five or six hours to complete. Less, if the Solar goes looking for it. If the Solar is slain, all of her adamant coins immediately lose their magic and turn to lead. On Creation of Adamant Specie A very strange and interesting Charm, particularly apt as it sits inside the Eclipse wheelhouse. This Charm also demonstrates how Solar Charms sometimes get a little inventive and outside-the-box at higher Essence, something I was hard-pressed to show while writing the framework of the design. The reason ghosts are an applicable  target for this Charm is because ghosts are often fettered to the living world, and concerned with trade and transaction. Gods, as natural bureaucrats, also quite often find it very natural to wheel and deal. Both types of spirits adore worship, and so the loftier ideal of “credit” is something they can easily and very naturally grasp and work with. Demons are excluded from this triad for a number of reasons, from insurgent economy to slave caveat. What it boils down to is that a Yozi wants a Solar to conduct her business in person. The Lords of Chaos are however included because their existence is so often defined by relational trade with Creation. Raksha are simply “in the know” when it comes to doing business with their Solar enemies, and Solar magic accounts for them. And for those who are wondering, magical materials  do not count as natural metals. "
+        },
+        {
+            "Title": "Spectacle-Inciting Order",
+            "Cost": " 8m",
+            "Mins": " Bureaucracy 5, Essence 4",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Infinitely-Efficient Register",
+            "Description": "If the Solar has established herself as a person of business renown in an area and has a practice or organization that is currently functioning, then she may use this Charm once per season to call a prestigious and strange package to be delivered to a local market or other place of public commerce . This delivery comes to Creation through a spirit court, a raksha court, or from the court of the ancestors, and what is inside will be strange, ethereal, or morbid as matches its source. In any case, the package is wrapped in glorious, scintillating, luminously textured paper, but is magically bound by a ribbon and can be opened by none other than the Solar. The package draws fascinated crowds and it is automatically perceived as something wondrous, a gift from the gods, or something strange and exciting. Roll the Solar’s unmodified Intelligence + Bureaucracy against a difficulty of 2 to determine the package’s Resources value. The Solar does not know what is in the box before she opens it, but she does know its exact value the moment it is delivered, and may trade on the expectation of what might be inside. Through repeated use of this Charm, and the eventual delivery of goods which are nigh priceless, the Solar can drive up speculation on the mysterious delivery and, on the fiction of never knowing the value of what’s inside, she can sell away something utterly worthless for a fortune, and can keep something priceless for herself, or use high Resources packages to entice future prospects into bigger gambling, business partnerships, and so on. On Spectacle-Inciting Order The backer wanted a Charm that would allow him to make money in a crazy, unexpected way. Backer: Greg Link "
+        }
+    ],
+    "Craft": [
+        {
+            "Title": "Ever-Ready Innovation Discipline",
+            "Cost": " 15m, 1wp",
+            "Mins": " Craft 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Thousand-Forge Hands",
+            "Description": "Through prolific work in her chosen discipline, the Solar shows incomparable foresight. A Solar with this Charm may retroactively complete a major project she never officially  began in order to even the odds against a threat, dangerous obstacle, or critical conflict that has arisen. Upon using the Charm, the Solar’s player describes a retroactive continuity in which their Solar planned and built — or in some cases destroyed — the thing for just such an occasion. The sole limitation is that this plot device  cannot simply resolve the conflict on its own. It can only be something that helps to make an unfair situation less inequitable. Special activation rules: The Solar must have at least 15+ silver points on hand to use this Charm. However, using this Charm requires no expenditure of craft experience . The finished project must reflect the Exalt’s chosen Craft Ability as well; a Solar with no skill as a seamstress cannot produce a ballgown to help an urchin look like a princess, nor can a Solar with no engineering skill reveal the location of a secret earthwork and palisade  she built as a fallback position against the advancing  Wyld Hunt. This Charm may only be used (Essence / 2 round up) times per story. Lastly, if the player shows ingenuity or cleverness in their Solar’s invention, award them one silver and two gold points. If they devise something very witty, funny, or interesting — especially if it helps drive conflict — grant the Solar three gold and one white point. On Ever-Ready Innovation Discipline The backer requested a Charm for his Twilight mastermind , that would allow him to build a contingency plan through a flashback retcon. I decided to put it in Craft to help players insert a fresh opportunity to describe their character’s crafting efforts over time in a moment relevant to the scene at hand, essentially allowing them to bring their craftsmanship center stage. I stipulated that their labor couldn’t completely resolve the conflict because it made it easier to appreciate an act of Deus ex Anathema if the other players were allowed to get in on the action, as with a Solar who presents the Night Caste with a rickety hang-glider built from coastal ship-wreckage when she needs over the walls of Ostagul without actually touching them. Or the Solar who has revealed she’s dismantled three of the nine ballistae being  wheeled up to the city gates — snapping her fingers and causing them to fall apart completely — so that the Dawn Caste can hold off the rest. Storytellers, if you feel like the plot device the player describes  would resolve the conflict, feel free to reduce, alter, or damage it in some way to bring the conflict back into question. In addition, if you feel like there was absolutely no behind-the-scenes opportunity for the Exalt to finish the project they are describing, you can veto a use of this Charm. However, try to avoid doing this; if you can fathom the Exalt working into the wee hours working on her craft between all the other events in your story, allow it! Players need every opportunity to bring the long term (and therefore background) fruits of their labors into live, ongoing scenes. Examples in play: • As the Eclipse returns to port in her trireme, she is set upon by a number of enemy ships which lay ambush to her in the bay. As her Circle contemplates  its options, the Twilight reveals a small ship — swift, sleek, and able — that will carry them to their comrade’s side. • An earthquake causes damage to thousands of expensive wheels of cheese, which will go bad if they are not used immediately, causing the economic  collapse of an entire industry. The Solar chef produces a recipe for cheese soup that allows  restaurateurs to buy the damaged wheels in increased volume, to attempt to save the industry from total collapse. See Projects on page 226 of Exalted. • A Lunar warlord-queen is sweet on the Dawn Caste, but if he makes an ass of himself at her feast the entire Circle is going to be kicked out of her dominion, and they badly need to remain there until their work is finished. Rather than trusting him to dress himself, the Zenith tailor presents a highly-stylized garment fit for royalty, so that the Circle’s fashion victim doesn’t get them exiled. • “What can be done about the Ten Thousand Wooden Soldiers of Andus Gouch? These thousand  fire arrows I batched up are a start. Now let’s hope the winds are in our favor.” Backer: Meridian "
+        }
+    ],
+    "Integrity": [
+        {
+            "Title": "Empathic Aegis Discipline",
+            "Cost": " 5m",
+            "Mins": " Integrity 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Watchful Eyes of Heaven",
+            "Description": "The Solar might grow to consider her allies to be an extension  of her self. With a touch, the Lawgiver may use Empathic Aegis Discipline to deepen this connection. If the Solar has a Major or Defining Tie for a character who shares one of her Defining Principles, when the subject feels physical or emotional agony the Solar senses it and understands the context of their suffering. This is not a debilitating experience — a subject losing a hand does not have the same impact on the Solar. But she does understand that he’s been caught thieving and is being punished. If the subject is somewhere the Lawgiver has been, this Charm makes her aware of the subject’s whereabouts. If not, she gets a general sense of direction and (greater of Essence or three) non-Charm successes to Awareness, Investigation, or Survival to find them. At Essence 4+, the cost of this Charm drops to three motes. Special activation rules: As long as the Solar has committed  this Charm to at least one character, it automatically  applies to every character that is bound to her through a magically powerful oath such as one produced through sorcery or the Eclipse anima power. On Empathic Aegis Discipline The backer asked for a Charm that would let him sense when his closest allies were in peril. For those of you who are wondering which Ability to use in order to find someone with this Charm, think of Awareness, Investigation, and Survival in terms of distances. If your friend has been tied, weighted, and thrown into a canal running through a busy city, you might be close enough — say, inside a nearby building — that upon emerging, you use Awareness Charms to hear their heartbeat at the bottom of the river, applying this Charm’s bonus to your attempt. But say they’re across the city, in a warehouse you’ve never seen, and someone is torturing them to reveal a secret. In that case, you would want to use Investigation Charms to try to find evidence of the abduction. But over a much larger distance, like a vast woodland, you would use Survival to track someone. Note that Awareness based Solar Charms are always helpful in noticing clues with Investigation or using Survival to see the minutest traces of a presence that has disturbed a natural environment. Backer: Alexandre Tiv "
+        },
+        {
+            "Title": "Strength from Conviction Stance",
+            "Cost": " 4m",
+            "Mins": " Integrity 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Bridge",
+            "Duration": " Instant",
+            "Prerequisite": " Steel Heart Stance or any five",
+            "Description": "Ability Charms The Lawgiver wears her scars like armor. In a decision point she may cite something precious that she lost in defense of a Principle she still holds. Perhaps she lost an eye or a limb, or had to let go of someone she loved in order to pursue the path she’s now on. In doing so, she can resolve the decision point without paying a point of Willpower, and without tapping a relevant Intimacy (if any even exist). This Charm can only be used once per story, but can be reset by successfully resisting influence regarding the defended Principle twice more. On Strength from Conviction Stance The backer wanted something weighty and emotionally charged — a Charm to help demonstrate the strength and courage of a tremendously dedicated individual who has endured suffering in the pursuit of their cause. This Charm is uncanny, because at a glance it appears simple, but it is a little more complicated than it seems, yet at the same time it’s very easy to grasp when looking backward from the social influence system. If you’re a little fuzzy on decision points, this Charm functions by modifying the rule on Exalted page 221, third paragraph under the “Overturning Influence” header, about overturning influence  by citing what has come before. Only it expands the definition of what you are allowed to cite, and doesn’t require an Intimacy. (You might have lost a Tie when a loved one died, but did you have an Intimacy for your lost eye? Probably not.) It also doesn’t require that you be under the effect of an ongoing persuade action; it simply treats your Principle as if it has the weight of a legendary quest. It’s also recursive; by waiving your need to tap an Intimacy, you can cite the very same reasons the next time you fall into a decision point. You’ll have to pay the Willpower and come up with a new Intimacy if you fall into a third decision point, but I feel the second repetition helps it feel like the Solar’s Conviction is profound. Backer: Sean Mattox "
+        }
+    ],
+    "Investigation": [
+        {
+            "Title": "Fetich-Tracing Eye",
+            "Cost": " 1m",
+            "Mins": " Investigation 3, Essence 1, ",
+            "Type": " Supplemental",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Crafty Observation Method",
+            "Description": "When the Solar is tracking something that was taken from her, she can see lines and traces of that object’s Essence. This Charm supplements a case scene action to locate stolen items belonging to the Lawgiver, giving her one automatic success to find evidence leading her back to what she has lost. This Charm can also be used in Survival-based tracking rolls. On Fetich-Tracing Eye The backer wanted a Charm that would help him locate items that were stolen from his Solar. Backer: Bryan Buschmann "
+        },
+        {
+            "Title": "Truth-Rendering Attitude",
+            "Cost": " 3m",
+            "Mins": " Investigation 4, Essence 2",
+            "Type": " Simple",
+            "Keyword": " Mute",
+            "Duration": " One action",
+            "Prerequisite": " Judge’s Ear Technique",
+            "Description": "The Lawgiver can reconstruct the statements of a witness  so perfectly that the Solar gains a psychic vision of any case scene (Exalted p. 224) or profile character (Exalted p. 225) action the character describes. So long as that character has undertaken such an action, the Exalt can analyze the evidence or the profiled character as if she were there, adding her own Wits or Perception + Investigation roll to the witness’s own result and making an even more profound or clear reading of the situation. The Lawgiver may use Judge’s Ear Technique to evaluate any statements heard by the witness during this psychic vision, and she may use the Investigation Excellency to amplify her roll, but she may not use any Simple-type Charms or Charms which would require her to handle evidence in order to fill out the witness’s testimony. On Truth-Rendering Attitude The backer wanted me to create a Charm for his Solar “Gavin of Nighthammer,” that would allow him to make a remote investigation through the eyes of a familiar or a subordinate. I decided to go with an approach that allows  you to finish an action started by another, to model a great detective who can hear someone’s analysis of a crime scene and solve it instantly, or who can take their incomplete read on a particularly inscrutable or mysterious  person, and give a full composite of that person and their most probable identity. Note that if someone tries to describe an event they did not witness, this Charm simply reveals nothing to the Solar. She should probably use the prerequisite to evaluate what she’s hearing. Also I decided to make it Mute to offset the weighty price. Backer: Ryan “Galby” Galbraith "
+        }
+    ],
+    "Larceny": [
+        {
+            "Title": "Criminal Seduction Method",
+            "Cost": " —",
+            "Mins": " Larceny 3, Essence 2;",
+            "Type": " Permanent",
+            "Keyword": " None",
+            "Duration": " Permanent",
+            "Prerequisite": " Spurious Presence",
+            "Description": "Speaking of treasure halls and harems’ jewels, easy money  and ecstatic murder, the Solar can persuade almost anyone to break the law. If the Lawgiver is aware of an Intimacy which would allow her to persuade someone to commit a crime, this Charm gives her (Essence) bonus dice to a Presence- or Socialize-based attempt to do so. On Criminal Seduction Method The backer was interested in a Larceny Charm to help him convince other characters to join him on heists and other criminal activities. Backer: Silent Winters Sun "
+        },
+        {
+            "Title": "Sun-Stealing Shadow Spirit",
+            "Cost": " 7m",
+            "Mins": " Larceny 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Master Plan Meditation",
+            "Description": "No fortress is impregnable to one of the Solar Exalted. Through continuous observation of movement and interactions  around a specific location, the Solar becomes supernaturally aware of flaws in a pattern of security. She might notice an unlocked window or door, a guard who leaves his post at a certain time every night, a secret entrance, a pattern in security patrols, and so on. She can complete (Essence) weeks of observation in (difficulty x 10) minutes; flows of Essence show her snarls in the order of day to day operations, such that she can know a daily pattern after only having been present for just minutes. Roll the Solar’s Perception + Larceny with a difficulty  based on the size and tightness of security, with an undefended shop rating difficulty 1, a merchant prince’s mansion rating difficulty 3, and the Imperial Treasury rating difficulty 6. The difficulty of this roll can be lowered  with appropriately stunted Awareness Charms. If successful, the Lawgiver can introduce one fact about a weakness in the location’s security, and for every additional  two successes she may name another factual security  weakness, place of concealment, or other means of gaining surreptitious access to a place. Unlike introducing a fact with Lore, if the Solar beats the set difficulty, the Storyteller should always allow whatever fact the player introduces. If the Storyteller deems there are absolutely no flaws, the difficulty should be set to 10 and if the Solar jumps this hurdle then they still find at least one flaw. Special activation rules: By spending six points accrued  by Master Plan Meditation, this Charm may be used retroactively, without a roll and for free, allowing the Solar to declare away a guard that’s just caught her, a trap that’s just sprung on her, a hiding place that wasn’t there before, and so on. She may only introduce a single fact in this fashion. On Sun-Stealing Shadow Spirit I badly wanted to do a Charm that would allow the Solar to effectively case a location using Larceny, but my initial try at it way back in 2013 was unworkable. Conversely, I came up with this mechanic as an afterthought while putting in bonus Charms. Oh the changes wrought by time and experience. "
+        }
+    ],
+    "Linguistics": [
+        {
+            "Title": "Soul-Drawing Pattern",
+            "Cost": " 8m, 1wp",
+            "Mins": " Linguistics 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Stolen Voice Technique",
+            "Description": "The Lawgiver settles down for a minimum of one minute, writing a description of a person with certain character traits the Exalt requires. In a single minute she can describe a character’s specific appearance (“a man with an islander ’s cast”), skill set (“good at being discrete, fully literate in Seatongue and skilled in Azurite legal writ”), social Ties (or lack thereof), and a Major or Defining Principle. Then the Solar waits. If a mortal who matches the description of the character is within a day’s travel, they will arrive at the place where the Solar wrote the description within the day. If the Solar is in an unreachable or foreboding place the character will only go as far as they are comfortable before returning to their regular course. Characters drawn by this Charm are not aware of any overt magic that has drawn them to the place of writing. It is up to the Exalt to identify the character, and then to do with them as she wishes. This Charm provides no guarantee that the subject will cooperate, or that they will appreciate being set on by the Solar. It gives her no control over them whatsoever, only a chance to compel them to her purposes. It may also come to pass that no character in range perfectly matches the Solar’s bequest. In that case, the nearest match to the description will be drawn instead. On Soul-Drawing Pattern A neat little power, giving you anything from a helpful lawyer to a hot date. "
+        },
+        {
+            "Title": "Indelible Spoken Script",
+            "Cost": " 5m (+1wp)",
+            "Mins": " Linguistics: 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Written-only",
+            "Duration": " Indefinite",
+            "Prerequisite": " Twisted Words Technique",
+            "Description": "The Lawgiver’s words emblazon a solid surface in the vibrant, multi-hued colors of Solar anima. This creates a message no longer than two breaths in spoken length, and lays it over a space up to (Essence x 3) yards wide or (x 5) high. This message appears in the runes, pictograms , or letters of the language the Exalt is speaking. If she wishes to infuse this message with Written-only Linguistics magic, she may pay to do so at this time, treating Simple-type Linguistic Charms as if they were Reflexive. The Solar must be within fifty yards of the surface she is speaking words onto. Anyone who reads this message is subject to any social influence entailed in the script — usually modeled as a typical contest of Linguistics vs. Resolve — but only the first time they read it. As long as the Solar keeps motes committed to this effect, the script cannot be scrubbed from the surface of the wall, and any attempt to write over it fails. If the script it painted  over, it bleeds through. Any attempt to otherwise cover it ends in horrific botches. The only way to remove the Lawgiver’s words are to kill her, destroy the surface her words are written on, or use a special sorcerous working (Terrestrial Circle, Ambition 2, Finesse 1, Terminus 3). This sorcerous working costs no experience points, but requires one point of temporary Willpower on each one week interval. Failing to reach the goal by the terminus makes this effect immune to any sorcerous tampering by any sorcerer for two weeks. This failure can be noticed by a character using All-Encompassing Sorcerer’s Sight (Exalted p. 356) or similar magic. By paying one Willpower when activating this Charm, the Lawgiver raises the difficulty of removing her words with a sorcerous working to (Terrestrial Circle, Ambition 2, Finesse 3, Terminus 1) and can choose to gouge her words into a surface as hard as granite. On Indelible Spoken Script When I note that the failure can be noticed with All- Encompassing Sorcerer’s Sight, I am not only referring to the temporary invincibility of the effect, but also the sorcerer who failed the working. A sorcerer who looks into the world of Essence will see the failed sorcerer emblazoned with the Solar’s message. "
+        }
+    ],
+    "Lore": [
+        {
+            "Title": "Soul-Light Spreading Discipline",
+            "Cost": " —",
+            "Mins": " Lore 5, Essence 2",
+            "Type": " Permanent",
+            "Keyword": " None",
+            "Duration": " Permanent",
+            "Prerequisite": " Flowing Mind Prana",
+            "Description": "Over time, the Solar’s wisdom becomes the foundation of empires. Whenever students of the Solar — characters significantly educated or trained by the Solar — pass on her knowledge in turn, the act of following her teachings becomes a kind of worship. Conceptualizing the Solar’s teachings themselves as a character, for every dot of Followers her teachings might accrue, the Solar may count half those (rounded down, minimum one) as a dot of Cult. On Soul-Light Spreading Discipline The backer requested a Lore Charm that would create a circular flow of benefit from the Solar teacher to their students, allowing the system to interpret the Solar’s students as her cult. A very cool concept indeed! In case you are wondering, for the hypothetical purposes of this Charm, Followers 4 reflects 1000+ followers, while Followers 5 reflects 5000+. Backer: Matt Rock "
+        },
+        {
+            "Title": "Cloud-Wreathed Scholar",
+            "Cost": " 1m",
+            "Mins": " Lore 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Bottomless Wellspring Approach",
+            "Description": "The Solar is a bottomless font of knowledge, renewed by any source of true intrigue. While pursuing the goals of her Circle or the goals of someone for whom she holds a Major or Defining Tie, the Solar may use this Charm to roll to introduce a fact, even if she has already introduced  a fact that scene. The Solar may only use this Charm when she perceives a need for her expertise, and only if it pertains to the events at hand. On Cloud-Wreathed Scholar When I wrote the Lore rules, I limited players to one introduced fact per scene. I was wary of clogging one scene with too many lore-based revelations. But I think this Charm is significantly limited enough to prevent such abuse, while allowing the Solar savant to tackle a continuous flow of puzzles, riddles, and historical mysteries  to aid her allies in advancement. "
+        },
+        {
+            "Title": "Hundred Sages Focus",
+            "Cost": " 6m",
+            "Mins": " Lore 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Truth-Rendering Gaze",
+            "Description": "With the wisdom of the ages flowing through her mind, the Solar’s concentration can induce an epiphany. With a moment of intense observation of practically anything — a natural phenomena, geographical feature, architectural  feature, riddle, puzzle, and so on — the Lawgiver can name the Lore difficulty to introduce a fact about what she is observing, and the Lore background needed in order to make that roll. This Charm does not give the Solar knowledge she doesn’t have — it can’t turn a geologist  into a student of ancient histories — but it does tell her where to begin her studies anew. On Hundred Sages Focus I came up with this Charm while preparing to run my own personal game of Exalted. As I was seeding the environment with deeply-seated lore and “unsolvable” mysteries, I started looking at the hidden histories of my game and deciding what it would take for our group’s Lore Solar to crack those mysteries wide open. In my game notes I started tagging environmental features thusly: “geological formation: geology difficulty 3”, “colossal  arm of blue stone sticking out of the mountain: ‘biography of the Celestial Incarnae’ difficulty 10” and so on. In the former case, geology is the needed background  or “Lore topic.” The latter refers to a book in a library in Yu-Shan, of which there is no other copy, and which has never been to Creation. Whenever I contemplate running an Exalted game, I always consider which Charms my players are using and which Abilities they are going to be rolling, and then I fill out the structure of every night’s gaming with a list of interesting Ability checks and opportunities to use said Charms. I seed the environment with difficult challenges . For my friend the investigator, I create mysteries and leave evidence. For the Solar savant, I fill the game with wondrous lore. For the occult specialist, strange and uncanny  mysteries that are outside Lore’s purview. In essence, I build my personal games of Exalted around my players. This Charm is an outgrowth of that, allowing  a player to mine the hidden secrets from the setting, to find the presents I have buried for the whole Circle to stare at — in wonder, in horror. One last thing: Harmonious Academic Methodology increases the gamut of your Solar’s knowledge. So if you find your Storyteller has placed a mystery in front of you that is outside your Solar’s background, hit the library, conduct interviews at the local academy, quiz a Sidereal, put a spirit in a headlock and make them teach you — whatever it takes to expand your Solar’s mind — and use that Charm whenever you can, so your Solar’s knowledge grows voluminously. "
+        },
+        {
+            "Title": "Legend-Spirit Convocation",
+            "Cost": " –",
+            "Mins": " Lore 5, Essence 3",
+            "Type": " Permanent",
+            "Keyword": " None",
+            "Duration": " Permanent",
+            "Prerequisite": " Wake the Sleeper",
+            "Description": "This Charm upgrades the prerequisite, allowing it to be used on weapons and armor forged of natural metals  such as brass, iron, and steel. As the Solar clasps a weapon, she speaks her legend into it, and the whispers of mysterious spirits flow into it, filling it with tales of her past incarnations. The empowering effect of Wake the Sleeper is less profound on such mortal panoplies: the roll is always difficulty 2, and the weapon gains a single  Instant-duration Evocation whether it is successful or not. If the roll succeeds, the weapon may (optionally) become visually transformed by the Solar’s anima, taking  on elements of her iconic form, and gains a passive or Permanent-duration Evocation that enhances the weapon or armor in question. Special activation rules: In order to enhance mortal gear, it must be a favored and select weapon or armor of the character in question. The Solar may explicitly use this Charm to enhance the weaponry of someone for whom she holds a Major or greater Intimacy, positive or negative, so long as they join the Lawgiver in holding the object aloft as she channels the Essence of legend through its form. On Legend-Spirit Convocation The backer asked for a Charm that would expand what Wake the Sleeper could do, so I wrote this. Backer: Nick Khorlin "
+        },
+        {
+            "Title": "All-Knowing Enlightened Sovereign",
+            "Cost": " 7m, 1wp",
+            "Mins": " Lore 5, Essence 4",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Hundred Sages Focus",
+            "Description": "By expanding her mind, the Lawgiver can consult an Essence that touches the ends of the universe to find the answer . This Charm allows the Solar to attempt to challenge a Lore difficulty that is outside the background reflected by her Lore rating. With especially difficult challenges, such a roll is not even possible, but the Lawgiver may challenge any difficulty and any topic with her Lore by using this Charm. This Charm confers no knowledge of the required difficulty, though the Solar becomes aware of the topic the moment she uses this Charm, if she doesn’t know already. This Charm can be used once per story, but can be reset by a scene in which the Solar spends time studying the Lore topic she last challenged with this Charm. On All-Knowing Enlightened Sovereign Seems like a no-brainer. Or should we say all-brainer? "
+        }
+    ],
+    "Medicine": [
+        {
+            "Title": "Time-Halting Flow",
+            "Cost": " 15m, 1wp",
+            "Mins": " Medicine 5, Essence 5",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Anondyne of Celestial Dreaming",
+            "Description": "The Lawgiver can hold back the hands of time. The Exalt channels her Essence and strikes the soul of a terminally ill, comatose, or mortally wounded patient, flooding their chakras with sustaining Solar Essence. For as long as this Charm is committed, any disease or poison interval is permanently  halted, and unless done direct harm by external forces, the patient’s physical injuries cannot drive them into a worse condition. While under the effect of this Charm, the patient’s vital signs drop to virtually nothing, and they stop aging entirely. This Charm allows the Solar the time she needs to devise an effective treatment or to handle threats to life and limb without losing her patient. Healing the patient does not automatically restore them to consciousness. This Charm can be disrupted by an attack on the patient, or by an impassioned plea for them to wake up, if it is coming from someone for whom they hold a Major or Defining Tie. It automatically ends if the Exalt dies or ends her commitment. On Time-Halting Flow In case your Solar should need to postpone treatment, or the character has an ailment she hasn’t figured out how to deal with yet. The Abyssal version of this is bound to be nasty. "
+        }
+    ],
+    "Melee": [
+        {
+            "Title": "Nimble Reaving Wind",
+            "Cost": " 1m",
+            "Mins": " Melee 1, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " Dual",
+            "Duration": " Instant",
+            "Prerequisite": " None",
+            "Description": "The Solar moves across the battlefield like an implacable force. She may use this Charm on her turn to move away from a target without using a disengage action, so long as she uses her movement to enter into close range with another target and uses her attack action against that target. Though it is learned through Melee, this Charm is expressly allowed to aid in close range Brawl and Martial Arts attacks. On Nimble Reaving Wind A simple yet delicious effect. Enjoy! "
+        },
+        {
+            "Title": "Arc Shedding Rain Technique",
+            "Cost": " 3m",
+            "Mins": " Melee 3, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " Uniform",
+            "Duration": " Instant",
+            "Prerequisite": " Dipping Swallow Defense",
+            "Description": "The Solar strikes away lesser attacks with speed that can stop the falling rain. Upon successfully parrying a trivial opponent, the Solar may use this Charm to strike their weapon away from herself, automatically disarming them. If she has any Charms which allow her to attack an opponent she has disarmed she may then do so, even if she has already attacked for the round. This Charm explicitly  allows the Exalt to switch to a Brawl or Martial Arts based attack, provided that she makes the attack unarmed or with a legal weapon. This Charm confers no ability to draw such a weapon instantly, however. Arc Shedding Rain Technique can only be used once per round, but may be reset during the round by successfully parrying  any attack while suffering an onslaught penalty of -2 or greater, or by parrying the attack of a dangerous opponent, or by killing any opponent with a Counterattack Charm. On Arc Shedding Rain Technique The backer’s favorite anime is Moribito, so she wanted a Melee Charm that would help her fight like Balsa. This was a tricky Charm to write, as Melee Charms have to work not only with spears, but with axes, swords, claymores, etc. After watching Balsa fight, I decided to make the Charm a very solid defense against greater numbers that would allow the Solar to create openings for Charms such as Savage Wolf Attack (Exalted p. 419), or yet-unwritten Martial Arts or Brawl Charms. The Solar parries away an enemy attack and then spin kicks them face down in a rice paddy. Go Balsa or go home. Backer: Lindsay Steussy "
+        },
+        {
+            "Title": "Gleaming Sever",
+            "Cost": " 1m, 1i",
+            "Mins": " Melee 4, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " Uniform",
+            "Duration": " Instant",
+            "Prerequisite": " Fire and Stones Strike",
+            "Description": "In the moment before she strikes, the Solar focuses her Essence along the edge of her blade, making it infinitely sharp. Fueling an attack with this Charm guarantees it one automatic success, and grants it one bonus die of damage, guaranteeing that die gets rolled regardless of the target’s soak or hardness. If she is using this Charm in combination with the Clash keyword to destroy rubble  or other heavy scenery that has been hurled at her with a decisive gambit, this Charm grants three automatic  successes to the Initiative roll. On Gleaming Sever A nice little boost of power to help round out Essence 1 Melee. This Charm’s effect has been balanced against narrative, owing to the dramatic effect a powerful blow has on an object in motion. Storytellers should be wary about allowing it to easily cut down stationary objects like massive fortress gates or thick castle walls. "
+        },
+        {
+            "Title": "Stark Truth of Steel Method",
+            "Cost": " 2m, 1i",
+            "Mins": " Melee 4, Essence 2",
+            "Type": " Reflexive",
+            "Keyword": " Uniform",
+            "Duration": " Instant",
+            "Prerequisite": " Fire and Stones Strike",
+            "Description": "Through combat the Solar sees all things truly. When she witnesses an opponent successfully apply their Parry or Evasion with the aid of Charms or magic, the Exalt is able to understand the principle behind their defense and may strike through it. This Charm adds an automatic non-Charm success to an attack after the opponent has applied their Defense, if and only if they are using a defensive magic the Solar has seen them use previously in the battle. The insight the Solar gains is fleeting and momentary; this advantage fades after the Solar has used this Charm, and she must witness or experience  her opponent’s defense again in one round in order to use this Charm in the round that follows. On Stark Truth of Steel Method The backer wanted a Melee Charm that would allow him to exploit a flaw in his opponent’s defense to land an attack. I felt that a Charm that magnified wound or onslaught penalties was a bit too divorced from an expression of Melee skill, so I went with this Charm, which would reveal a weakness or flaw in an opponent through a mystical insight. This Charm neither requires nor conveys inherit knowledge of magic; the Solar can simply analyze tactical magic as if it were any other technique and find a way around it. Backer: John Esslinger Victorious Wreath "
+        },
+        {
+            "Title": "(Against the World Stance)",
+            "Cost": " 6m, 1wp (+1i per round)",
+            "Mins": " Melee 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Perilous",
+            "Duration": " One scene",
+            "Prerequisite": " Fivefold Bulwark Stance, Ready",
+            "Description": "in Eight Directions Stance The Lawgiver sees every angle for attack and counterattack , her every parry and strike building on one another to make her unassailable. While using this Charm, every time the Exalt successfully parries, she gains a number of motes equal to the difference between her Parry and the attack’s successes plus one. These motes can only be used to fuel Melee Charms, and vanish at the end of her next action. Victorious Wreath has a one Initiative per round upkeep, and if the Solar is crashed, the Charm is broken and the full cost must be paid again if she wishes to reinstate it. A repurchase of this Charm allows an Exalt using Ready in Eight Directions Stance to keep their Initiative from returning to base at the end of the round, so long as they successfully parry every attack launched at them during the round while using Victorious Wreath. On Victorious Wreath (Against the World Stance) The backer wanted a Melee Charm for use by his Solar, the Invincible Sword Princess. He wanted Princess to have a Charm that would help her deal with focus fire from a group of opponents, so I came up with an effect that would defray the cost of continual use of Dipping Swallow Defense or Ready in Eight Directions Stance. I imagine fighting the Invincible Sword Princess to be like trying to fight someone who is wreathed in Essence and steel and able to move faster than light. Thus you have Victorious Wreath, or the more narrative Against the World Stance. Backer: Jye Nicolson "
+        },
+        {
+            "Title": "Whirlwind-Tempest Deflection",
+            "Cost": " 6m, 1wp",
+            "Mins": " Melee 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Counterattack, Decisive-only, Perilous",
+            "Duration": " Instant",
+            "Prerequisite": " Flashing Edge of Dawn, Heavenly",
+            "Description": "Guardian Defense Even a world-consuming maelstrom is driven aside by a Solar’s defense. Brandishing her Essence-laden weapon, when the Solar successfully parries a decisive attack of 17+ base damage, she may use this Charm to redirect the damage in a shockwave that cuts a circle of destruction around herself. This attack automatically damages or destroys any non-magical scenery in range, doing automatic damage equal to half the decisive attack (rounded down). Done in a temple, pillars will begin to slide off of their bases. Done in a forest, trees will begin to topple all around the Solar. This attack also automatically hits every trivial opponent  in close range, and (greater of Essence or three) dangerous opponents in close range. Roll decisive damage  equal to half the attack’s Initiative (round down) against the dangerous opponents. Trivial opponents take automatic decisive damage equal to the dangerous opponent who takes the most damage plus three. This attack does not use the Solar’s Initiative and does not reset  her to base Initiative. The Solar may use this Charm once per battle, but may reset it by raising her Initiative to 20+ and then landing a decisive attack, or by rolling Join Battle. If the Solar knows Sandstorm-Wind Attack, Whirlwind- Tempest Deflection can be increased to short range by paying three extra motes. On Whirlwind-Tempest Deflection The backer wanted a Charm that would allow him to block an attack and redirect a destructive shockwave around himself from parrying the force of the blow. A decidedly simple request that ended up being a fairly complicated Charm! I tried to make it as roll-free as possible  while retaining its balance. Thus the limitation to how often you can use it and the similarly high cost. Backer: Scott Ryder "
+        },
+        {
+            "Title": "Shattering Clash",
+            "Cost": " 5m",
+            "Mins": " Melee 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Fervent Blow",
+            "Description": "The Solar’s interdicting strike lays waste to her opponent . Upon a successful decisive attack, but before damage is rolled, the Lawgiver channels the fury of her Essence through the strike. If the attack does at least six health levels of damage to the target, three of that damage can be traded to destroy the target’s weapon, provided that weapon is made of natural (non-magical) materials such as steel. On Shattering Clash This Charm is risky because of the cost and the fact that you have to throw it before you see the damage roll. Because 10s are not doubled on the damage roll of a decisive attack you want to use this Charm with 14+ Initiative for the best chance to do the required damage. "
+        },
+        {
+            "Title": "Omniscient Focus Attack",
+            "Cost": " 6m, 1wp",
+            "Mins": " Melee 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Clash, Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Fervent Blow",
+            "Description": "Even gods may be cut by the sharp light of Solar fury. As long as she is gripping her weapon, the Solar feels the slightest movement in the air around her and may react with impossible speed. The Solar may use Fervent Blow to clash an attack she is not aware of; she becomes aware of the attack at the last moment. This Charm also allows her to strike immaterial opponents with a clash. This Charm does not force spirits to materialize, even if the Solar’s attack manages to wound them. On Omniscient Focus Attack I wrote this bonus Charm to give Solar Melee a little more overt supernatural capacity. The Solar can clash an opponent with the hypothetical ability to strike while immaterial. The ability to attack while immaterial is typically a power belonging only to spirits. Omniscient Focus Attack will work on concealed foes as well. For the most part, attacking from concealment reveals the attacker’s location, but if they are using magic to keep this from happening and yet the Solar does a lot of damage  or kills them with her clash, the Storyteller should consider them revealed anyway, as the Solar slashes through a grate and blood pours from the place of concealment , or a dead body tumbles down out of a well of perfect shadows. "
+        },
+        {
+            "Title": "All-Sundering Strike",
+            "Cost": " 3m, 1wp",
+            "Mins": " Melee 5, Essence 3",
+            "Type": " Supplemental",
+            "Keyword": " Clash",
+            "Duration": " Instant",
+            "Prerequisite": " Fervent Blow, Hail-Shattering",
+            "Description": "Practice The Solar meets an attack with a strike that can cut through the heavens. This Charm supplements a clash attack, allowing the Solar to roll her clash twice and take the higher of two results. In addition, any Charms she uses on the first roll enhance the second roll for free. New Charms may not be added to the rerolled clash. On All-Sundering Strike The backer requested a Charm for his Solar who he described  as a “master of clashes.” One of the most incomparably  strong mechanics in the game is the free “mimic ” reroll that copies your Charms. This Supplemental clash enhancer is limited by its high price point. Backer: Matthew McGuire "
+        },
+        {
+            "Title": "Divine Executioner Stance",
+            "Cost": " 6m (+1m)",
+            "Mins": " Melee 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Uniform",
+            "Duration": " Indefinite",
+            "Prerequisite": " Rising Sun Slash",
+            "Description": "When her sense of justice or righteousness is offended, the Solar’s wrath suffuses her blades, making her attacks  swing faster and bite harder. When she first uses this Charm, she grips her weapon tightly and makes a vow based on a Principle or Tie that she holds, to use her every means to defend or protect that Intimacy. This act has great mystical significance, recorded in the celestial  registers of Heaven, as the Lawgiver swears on her weapon and her skill to protect what is most dear. Thenceforth, whenever the Exalt makes a Melee attack in defense of the attached Intimacy and pays one mote, she gains bonus dice equal to (Intensity). In addition, if her target has acted to harm one of her Ties or threaten one of her Principles, a successful attack adds damage equal to the target’s strongest opposed Intimacy to the Solar or her protected Tie or Principle. In simple terms, the Lawgiver may not know her opponent’s Intimacies, but the Storyteller does, and can select the most appropriate  Intimacy on the damage roll. If the Solar has vowed to protect the street urchins of Nighthammer, she may not realize that her target despises children, but the damage of her attack rips through his corrosive spirit  and wounds him that much more deeply. This Charm confers no knowledge of Intimacies to the Solar. In addition, if the target is a cursed, blighted creature, such as a ghost or a demon, or one of the Abyssal Exalted, the damage on this attack is increased by one, gains one automatic success, and the damage is aggravated. On Divine Executioner Stance The backer wanted a Melee Charm that would give him some added whomp from drawing on his Intimacies for an attack. A critical read on this Charm reveals that Solar Essence rips through and obliterates beings that are antithetical to the Solar’s spirit, ideals, and personal character. Intimacies are important to the formulation of a character’s identity, and a character’s identity is the foundation of their Essence, their total being. Thus the Divine Executioner is poised to strike down those who stand against her and the things she represents. Backer: Patrick “Ash” Colford "
+        }
+    ],
+    "Occult": [
+        {
+            "Title": "Six Eternities’ Travail",
+            "Cost": " —(1wp)",
+            "Mins": " Occult 5, Essence 2",
+            "Type": " Permanent",
+            "Keyword": " None",
+            "Duration": " Permanent",
+            "Prerequisite": " Ancient Tongue Understanding",
+            "Description": "In becoming one with strange forces, the Solar experiences  the hardships of the infinite. Through their suffering  she is enlightened. This Charm upgrades Ancient Tongue Understanding, bringing the Solar’s Essence closer to true embodiment of the spirit of the Old Realm language. If she adds a point of Willpower to the cost of the prerequisite, then any Occult roll she makes is enhanced while it is active, rolling additional dice for (Essence) 10s that appear in the result. If any 10s appear in these bonus dice, they are also rolled again. On Six Eternities’ Travail The backer wanted a Charm that would help him as a sorcerer. I decided to bring it in line with the Solar Charm set by making it applicable to any Occult roll. Backer: Alec Humphrey "
+        },
+        {
+            "Title": "Anima-Suffused Spirit",
+            "Cost": " 1m + 2m, 1a per health level",
+            "Mins": " Occult 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Material Exegesis Prana",
+            "Description": "Focusing her Essence into the corporeal form of a spirit familiar , a summoned elemental, or sorcerously-bound demon, the Solar may pour her anima into such a creature to heal its wounds. The Exalt pays one mote to activate the Charm, and for every two motes and one level of anima she spends, one of the spirit’s damaged health levels is instantly healed. On Anima-Suffused Spirit The backer asked for a Charm that would allow him to heal his spirit familiar in combat. Backer: Brian Rivers "
+        },
+        {
+            "Title": "What Light Reveals (Living Specter’s Flame)",
+            "Cost": " 6m, 1wp",
+            "Mins": " Occult 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " One scene",
+            "Prerequisite": " Burning Exorcism Technique",
+            "Description": "The Solar occultist’s burning anima is alive with the Essence of the strange. When the Lawgiver’s anima is visible, it brings her spirit familiar into sharper relief, amplifying their power. The Solar may temporarily impart  spirit Charms to her familiar that belong to spirits whose Essence patterns she has captured with Burning Exorcism Technique. • At the dim level, the spirit gains no benefit. • At the glowing level, she can impart (Essence / 2, rounded up) minor Charms. • At the burning level, she can impart an additional major Charm. • At the iconic level, she can add yet another minor and major Charm. As long as the Solar’s anima is visible, the familiar gains the imparted Charms automatically. If it drops a level the Charms it can use are likewise reduced. If the Solar has learned any spirit Charms through the use of Carnal Spirit Rending, Gloaming Eye Understanding, or Divine Mantle, she may choose to impart such Charms to her familiar as well. On What Light Reveals (Living Specter’s Flame) The backer wanted a Charm that would power up their spirit familiar based on the intensity of their anima. I decided it would be an Occult Charm, because the uncanny  nature of Occult Charms allows for strangeness in the method. This Charm demonstrates the nature of Essence to be the whole or sum of the being. Therefore, if a Solar is absorbing the Essence of spirits, her own Essence is affected. For more on conceptualizing spirit Charms, read Divine Mantle on page 310 of Exalted. Backer: M.C.G. "
+        }
+    ],
+    "Performance": [
+        {
+            "Title": "Divine Instrument",
+            "Cost": " 1m or 2m",
+            "Mins": " Performance 4, Essence 2",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Mood-Inducing Music",
+            "Description": "With but a gesture, the Solar dismisses her instrument. Be it a sanxian or a lyre, she sends it Elsewhere for one mote. The Solar may only draw it back with a flourish, often a swipe of her hand that causes it to materialize from a glimmer, or from a gout of Solar flame. This flourish costs two motes, and all who witness it become immediately aware of the Solar’s divinity. Any relevant Intimacies they have for “divine beings” or “spirits” or “holiness” automatically qualify as Resolve modifiers for the Solar’s music, regardless of what she intends by it. On Divine Instrument I deliberated for a long time about whether to include this in the effect in the core book. I even wrote it as a different Charm, but decided to cut it for space. This Charm is actually a much better version with a more interesting name and mechanic. For those who are interested, the Abyssal version is very similar, and has you drawing a musician’s bow across the Shroud, eliciting a screech as it passes over invisible strings into your hand. Then as you flourish and bow in introduction, your instrument appears in a gout of black flame. But don’t worry; if you don’t use a bow, plectrum, baton, et al, you’ll still be covered. Another kind of Exalt has their own version called Oud Flying Elsewhere; they hold their instrument high, let go, and it falls into the sky. When they need it back they reach up and it falls back down into their hand. Even in a completely enclosed space, it comes right down. "
+        },
+        {
+            "Title": "Seventeen Cycles Symphony",
+            "Cost": " 5m, 1wp",
+            "Mins": " Performance 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Heart-Compelling Method, Plectral",
+            "Description": " Harbinger’s Approach The Solar becomes a conduit of divine music; beautiful unnatural melodies flow through her. When confronted with a natural environmental hazard such as a forest fire, a driving blizzard, a hurricane, and so on, the Solar may dispel nature’s fury with overriding music. Roll the Lawgiver’s Charisma + Performance with Essence automatic  successes against the difficulty of the hazard. If successful, she creates a safe path for a group of followers (Essence + [one per two extra successes]) in Size. A raging  inferno that covers a hundred miles will snuff out in a path large enough for her party to pass safely through, a river of magma becomes cool enough to cross barefoot, and a hurricane may be diverted narrowly from its course. The Solar’s music need only contend with elemental forces for a handful of seconds in order to dispel them, but this effect lasts (Essence x 30) minutes, despite the listed duration. Lastly, the effect is centered around the Solar, and if she is still in a state of danger from the environmental hazard when this Charm’s time is up, she becomes aware of her need to re-use the Charm at least five minutes in advance. In that case, waive the Willpower cost to reactivate the Charm. A repurchase of this Charm allows the Exalt to deal with supernatural environmental hazards and unusual hazards such as acid baths. She can turn a cauldron of boiling oil into a warm bath or ward off the demon winds of Malfeas. After a repurchase, at Essence 4+, the Solar can use this Charm to destroy a sorcerous working that is barring her in the pursuit of a Defining Intimacy, rolling Charisma or Manipulation + Performance against the Resolve of the sorcerer who placed it, even if they are dead. A success allows her to shatter a minor working, or undo a major working until she has safely passed through it. Such a working is typically never an environmental hazard. It might be a massive seam where two mountains were fused to seal a path, an immovable capstone over a cave of lost dreams, a mind-worm whose screams force your best friend to fight you to the death, and so on. On Seventeen Cycles Symphony The backer wanted a Charm that would allow him to play a Solar Orpheus, able to quell nature’s wrath. I liked the idea so much I decided to expand it to make it a real homage to the mythical hero, who would stop at nothing in his quest. Storytellers should allow some creative latitude in basic interpretation of this Charm. A bank of thick fog over a rocky bay might not count as an environmental hazard in the strictest terms, but you should let a Solar dispel the fog so her captain can steer a safer course. Her song can’t get rid of the rocks, but perhaps it can calm the tides. You also might note that using this to cut a swath through a blizzard won’t make it magically warm and sunny. It will just get rid of the worst, most dangerous and threatening conditions of the blizzard, allowing your group to pass. Backer: Nathan Henderson "
+        },
+        {
+            "Title": "Drama-Fueling Ardor",
+            "Cost": " 1m",
+            "Mins": " Performance 4, Essence 2",
+            "Type": " Supplemental",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Master Thespian Style",
+            "Description": "When acting in a play, the Solar’s energetic charisma and sexual energy is almost palpable. This Charm supplements a Performance roll when play-acting, adding one automatic  success. In addition, this Charm mutes the (highest of [Essence] or three) peripheral motes used on that tick, while taking any successes over the average audience member ’s Resolve (or Guile if applicable) and awarding them to the person acting opposite the Solar, to be used as non- Charm dice for their next Performance roll. Characters thus enhanced feed off the Solar’s energy, enhancing their own acting. The Solar’s fellow actors experience this not as an infusion of “good acting magic” but rather feel the Solar inhabits the soul of the character she is playing, reads the audience perfectly, and puts on a performance of such magnitude that they themselves are elevated. If such a character’s acting is particularly well received after critics review their performance, they will generate  an appropriate Intimacy for the Solar, such as awed respect for her talent, or adoration for the Solar herself. Lastly, any 9s or 10s on the enhanced roll by the actor opposite the Solar restore an equal number of motes to the Solar. On Drama-Fueling Ardor Another case of not having enough room in the core book. I really wanted to explore the thespian arm of the Performance tree, but there was simply no room. Here we have a Charm that gets something interesting started, and helps ingratiate you to your acting troupe. The muting effect helps the Solar pour everything into her performance. A Solar who uses this Charm leaves her heart on the stage. "
+        },
+        {
+            "Title": "Divinely-Inspired Performance",
+            "Cost": " 5m",
+            "Mins": " Performance 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Drama-Fueling Ardor",
+            "Description": "By attuning herself to the Essence flowing between stage, actors, and audience, the Solar can inhabit a role completely. Upon activating this Charm, the Solar knows every line of a play she is acting in, without having  read the script. She can divine the correct line and which character must speak it, just from listening to the dialogue. She also understands the exact emotion that needs to be evoked from any one response. On Divinely-Inspired Performance This Charm models a Solar whose genius is so profound that she seems almost to be possessed by the author. She can fashion the perfect line — the exact correct line — just from listening to dialogue and interpreting cues. It’s not as if she has a magic teleprompter reading her the script, but rather that she becomes so completely immersed in the world of the play that she becomes the perfect avatar of her character. "
+        },
+        {
+            "Title": "Seven Thunders Voice",
+            "Cost": " 5m, 1wp (6m, 1wp)",
+            "Mins": " Performance 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " One scene",
+            "Prerequisite": " Impassioned Orator Technique",
+            "Description": "The Solar’s voice is mighty and can be heard for long distances. This Charm allows the Lawgiver’s speech to be heard up to extreme long range. Even in a city riot, the Solar’s voice can be heard above the din. While her mighty voice reverberates, she is only capable of inspire and threaten actions, but ignores all penalties from environment , distance, or group influence to do so. She may always choose to lower her voice and speak normally while using this Charm, and must do so in order to use other forms of social influence. This Charm may also be used shape the Lawgiver’s voice into a weapon, blasting into the target of her ire with a single explosive utterance. This use of the Charm costs six motes, one Willpower, and has a duration of Instant. Roll a full free Charisma + Performance excellency decisive  attack with (Essence) automatic successes. This attack can only be parried or dodged with magic. If it hits, the target is flung wildly backwards one range band and lands prone, taking one automatic bashing damage. For every three extra successes on the attack, the target is flung an extra range band up or backwards, taking one automatic bashing damage for every level they are flung. If they impact with a solid surface they do so explosively , taking falling damage equal to number of range bands they were thrown minus one. This attack does not use the Solar’s Initiative for damage, but resets the Solar’s Initiative to base. On Seven Thunders Voice Ever wanted to blow the doors off a courtroom with a spoken word, or shout from the rooftops of Nexus and be heard across the city? Now you can. "
+        }
+    ],
+    "Presence": [
+        {
+            "Title": "Poised Lion Attitude",
+            "Cost": " 3m",
+            "Mins": " Presence 4, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Harmonious Presence Meditation",
+            "Description": "The Solar’s presence is such that she affects unnatural ease, even on the battlefield. This Charm allows the Exalt to engage in Presence or Socialize-based social influence on her turn during combat without the use of a flurry. On Poised Lion Attitude The backer asked for a Charm that would aid him in banter  on a battlefield. I felt like this would be a good start. Backer: Nathan Henderson "
+        },
+        {
+            "Title": "Holy Touch",
+            "Cost": " 6m, 1wp",
+            "Mins": " Presence 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Enemy-Castigating Solar Judgment",
+            "Description": "The Solar drives the fullness of her presence into her hand and touches someone, connecting them to the current of power that runs through her. Such a character is blasted away from her and lands prone. This Charm is a decisive gambit using (Charisma or Appearance) + Presence, with a difficulty of 3. On a success, the Exalt lays a hand on the target, her palm surges with Solar Essence, and the target is blasted back one range band and is knocked down, taking  a single range band of falling damage. This Charm can be used to instantly break free of a grapple. On Holy Touch This Charm can also be used socially if combat wouldn’t make sense — generally against characters the Storyteller wouldn’t have you Join Battle to defeat with a regular attack. In this case, the Solar can trigger the Charm without a gambit; roleplaying and social influence determines  whether she makes the appropriate contact. I’d also like to note that a Solar who has the power of Holy Touch can gather her Essence, condensing her anima into a visible sphere in her palms. This has no cost or overt social influence, but characters who see it will certainly  have some reaction to it. "
+        },
+        {
+            "Title": "God-Heeling Gesture",
+            "Cost": " 4m",
+            "Mins": " Presence 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Majestic Radiant Presence",
+            "Description": "Presence suffused with the Essence of divinity, the Solar wields her charisma to restore order. The Exalt may use this Charm once per round on her turn to make a sudden  gesture or action that completely reverses a lesser miracle. Generally this works without a roll, but if the Storyteller deems it necessary, roll a clash between the Charisma + Presence of the two characters. Thus with a clap of her hands, the Solar can cause a withered  flower to stand back up and bloom brightly. With a stomp of her foot she can cause a spring that dried out centuries ago to well up with fresh water. Altering a spirit’s dominion in this fashion automatically informs the spirit of the presence of one of the Solar Exalted. No other being could so casually gainsay a god. On God-Heeling Gesture This Charm cannot be used to counter the effects of magic that supplements or creates an attack. Use your noggin when adjudicating where and when to allow this Charm in play. If “winter thaw” cruelly kills a random sparrow, the Solar can make a mudra to restore the bird to life. If the Solar’s sparrow familiar is killed by a lightning  bolt hurled by a god, nothing can restore it to life. "
+        },
+        {
+            "Title": "Unnerving Solar Presence",
+            "Cost": " 6m",
+            "Mins": " Presence 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Threefold Magnetic Ardor",
+            "Description": "The Solar magnifies her presence to overwhelm a supplicant ’s senses. The Solar may use this Charm in response to social influence being initiated by someone who desires her sexually or who is intimidated by her, amplifying their desire or unease to such a degree that they lose their social ease and become flustered. This Charm removes (Solar’s Essence) dice from an initiate’s attempt at social influence. The Solar’s fearsome aspect becomes momentarily more terrifying or her best features become ethereally pronounced. This effect is experienced subjectively and only by the initiate. To observers , the Solar merely inclines to listen. On Unnerving Solar Presence The backer asked for a perfect defense in social influence, and I wasn’t able to write one that was balanced. So instead  we settled for a less top-heavy effect that felt nevertheless  appropriate to Solars and to the Presence Ability. Backer: Tom Huber Voice-Empowering Aspect "
+        },
+        {
+            "Title": "(Aspect-Imbued Voice)",
+            "Cost": " 6m (1m, 1wp)",
+            "Mins": " Presence 5, Essence 4",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Prophet-Uplifting Evocation",
+            "Description": "Channeling the fullness of her presence briefly, the Lawgiver passes her divine aspect into another. The Exalt may only use this Charm on a character enhanced by the prerequisite. The enhanced character must also possess Charisma 3+ and Presence 3+ to receive this power. This Charm adds three motes to the prophet’s mote pool and grants them a Charm called Divine Aspect, a one mote reflexive Charm that grants them one automatic success to a Presence roll to social influence that is an accordance with one of the Solar’s Defining Principles. This Charm confers knowledge of a single such Intimacy; if the Intimacy is already known, this Charm confirms it as the Solar commands her prophet to go forth and be righteous and just according to her wishes. Divine Aspect may also be used to reflexively raise the prophet’s Resolve by one. Lastly, whenever the prophet uses Divine Aspect to rebuke  or command one who has transgressed against the Solar, the Lawgiver senses it and may pay one mote, one Willpower to cause the prophet to blaze with her glory, lit up with Solar anima. Wreathed in flame, the prophet’s mien appears as the Solar’s, and the prophet speaks with the Solar’s voice, and the Solar may inhabit her prophet’s form, using them as a vessel for her own Presence and Integrity Charms for (Essence) rounds. The Solar can use her prophet’s senses and can control their gestures, but this does not confer the Solar sensory control necessary for Awareness or Investigation, or the ability to fight using her prophet’s body. The Solar pays the cost of any Presence or Integrity Charms used on her prophet’s behalf. On Voice-Empowering Aspect (Aspect-Imbued Voice) The backer requested a Charm that would allow a Solar to suffuse a follower with her sacred and divine presence  so that they might go forth in the Solar’s name like a prophet of old and do battle with evil. He specifically mentioned the conferring of power from Elijah to Elisha and gave the sense that he wanted to confront evil ideas through social influence rather than through violence. Backer: Nathan Colon Divinity-Conferring Touch "
+        },
+        {
+            "Title": "(Celestial Exaltation Method)",
+            "Cost": " 10m",
+            "Mins": " Presence 5, Essence 5",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Favor-Conferring Prana",
+            "Description": "The Lawgiver may confer the power of divinity upon a mortal subordinate, allowing them to taste the power of the Exalted. The Solar touches the subject and uses this Charm. They feel the charge of Solar Essence, and their mind is spiritually opened for just a moment, long enough for them to hear the prayers of the Solar’s cult, like the flutterings of moths. As long as the Exalt keeps this Charm committed, the target may draw Willpower from the Solar’s cult. The subject also gains three specific  spirit Charms — two minor miracles, and one major miracle — that fit their most significant Principles. Any time they use the cult-derived point of Willpower to enhance  one of their dice rolls to uphold or defend one of their Intimacies, the prayers of the cult are channeled into them for a moment, giving them the Essence they need to perform the Charm for the Charm’s duration. This does not grant the mortal an Essence pool, but allows them to sustain divine, transformative power in accordance with the divinity conferred to them by the Solar and the mystic power generated by her worshipers . The subject loses access to these miracles if the Solar ends her commitment to this Charm. As long as the Solar is continually expanding her cult through overt and subtle miracles, the Willpower her subject draws from the Solar’s cult does not diminish the reservoir of worship  (Willpower) the Solar herself draws upon. On Divinity-Conferring Touch (Celestial Exaltation Method) The backer wanted a Charm to uplift his mortal followers  with divine status and power. It should be noted that players and Storytellers should work out the details of what kind of spirit Charms should be conferred to the subject in advance. For one who wishes to spy on the Solar’s enemies, thereby upholding a Principle of belief in the Solar’s right to rule, the subject’s major miracle could be something like “Creeping Willow Meditation” in which her flesh becomes as bark and gnarled wood and she winds herself around a tree, melding with it so that she goes completely unnoticed in the forest where conspirators are known to meet. A minor miracle called “Sweet Ivy’s Bliss” would allow her to inflict sudden plant-based toxic necrosis in the skin of someone she touched — for example, if one of the conspirators confronted  her as she was leaving the woods. Backer: Ross Ramsay "
+        }
+    ],
+    "Resistance": [
+        {
+            "Title": "Armed and Ready Discipline",
+            "Cost": " 3m",
+            "Mins": " Resistance 2, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Whirlwind Armor-Donning Prana",
+            "Description": "On each round of donning armor with the prerequisite, the Lawgiver can attack without a flurry by doing a stunt in which she attacks while putting on a piece of armor. If she knows Call the Blade or Summoning the Loyal Steel, she may use either Charm reflexively for free while Armed and Ready Discipline is active. On Armed and Ready Discipline The backer wanted a Charm that would let him use Whirlwind Armor-Donning Prana and Summoning the Loyal Steel at the same time, and I thought “why stop there?” It was actually a tricky Charm to work out, since those other Charms are about as efficient as you can possibly  get. In the end I decided to value-add this Charm by allowing you to arm yourself while attacking, punching through vambraces to snap them on, clapping on a breastplate  while delivering a spinning slash, drop-kicking into your greaves, and so on. Backer: Johan Westber "
+        },
+        {
+            "Title": "Blade-Turning Body Technique",
+            "Cost": " 5m",
+            "Mins": " Resistance 4, Essence 2",
+            "Type": " Simple",
+            "Keyword": " Apocryphal, Dual",
+            "Duration": " One scene",
+            "Prerequisite": " Iron Skin Concentration",
+            "Description": "Through rigorous training and the fortifying might of her Essence, the Solar learns to harden her skin until it can resist blade and flame alike as well as a suit of fine armor. While this Charm is active, the Solar is immune to incidental injury such as being cut by glass when crashing through a window, or bloodying her knuckles on a fore’s jaw. She can ignore outright any environmental  damage that would burn or lacerate her body of 3L or lower intensity, though she remains fully vulnerable to more insidious forms of damage such as freezing cold or deadly fumes. The Solar gains 8 soak against withering attacks while this Charm is active, along with 5 hardness. Blade- Turning Body Technique is incompatible with both armor  and with Diamond-Body Prana. On Blade-Turning Body Technique: The backer wanted a defensive soak option for his shirtless (his word) Solar, but without the variability of Diamond- Body Prana. The resulting Charm is Apocryphal because it uses the design logic of Solar armor-creating Charms. It averages out the soak-granting result of Diamond-Body Prana, but loses a bit of power in its incidental resistances to compensate for its reliability, along with the possibility of being further strengthened by Martial Arts Charms. Backer: Matt Palsson "
+        },
+        {
+            "Title": "Fortress-Body Discipline",
+            "Cost": " 3m, 1wp",
+            "Mins": " Resistance 5, Essence 4",
+            "Type": " Reflexive",
+            "Keyword": " Dual",
+            "Duration": " One scene",
+            "Prerequisite": " Ruin-Abasing Shrug",
+            "Description": "The Exalt exudes toughness; every fiber of her being is solid steel. Upon using this Charm, the Exalt gains (Essence) soak and (half Essence, rounded up) hardness for the rest of the scene. Unlike most forms of hardness , this bonus explicitly stacks with that offered by Diamond-Body Prana and Durability of Oak Meditation, but reduces the benefit of the latter to +2 rather than +4. Fortress-Body Discipline is incompatible with armor. On Fortress-Body Discipline For players who want a bit more “umph” for unarmored Resistance Solars, here is a much-coveted Reflexive that can be stacked with the awesome power of Diamond- Body Prana. "
+        }
+    ],
+    "Ride": [
+        {
+            "Title": "Storm-Racing Destrier",
+            "Cost": " 2m",
+            "Mins": " Ride 3, Survival 3, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " One day",
+            "Prerequisite": " Flashing Thunderbolt Steed,",
+            "Description": "Hardship-Surviving Mendicant Spirit The Lawgiver can ride her mount into the teeth of the storm. If the Solar uses Hardship-Surviving Mendicant Spirit, she may commit two additional motes to extend the power of that Charm to her mount. The Solar can dismount without losing commitment to the Charm, but the protection only functions to protect her mount while the Solar is riding it. If the Solar knows Element- Resisting Prana, extend the effect of that Charm to her mount as well, using the Solar’s Resistance. On Storm-Racing Destrier This is one of four ultra-rare Charms with a dual prerequisite . Two are in the core book, and another is below, under  Sail. For those who are wondering, the Ability listed first in the “Mins” is the Ability the Charm belongs to. "
+        }
+    ],
+    "Sail": [
+        {
+            "Title": "Skiff-to-Scow Method",
+            "Cost": " 5m",
+            "Mins": " Sail 4, Essence 1",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Ship-Claiming Stance",
+            "Description": "By disguising her ship’s sail, rigging style, ornamentation, and crew uniform, the Solar may use this Charm to complete  the illusion. After a process of disguising the ship that takes one hour, this Charm completes the disguise, making  it look like a vessel of slightly smaller or slightly larger build, going so far as to change the hull’s construction so that it appears as a completely different type of boat, and giving it the telltale ornamentation, flag, and name appropriate  to the style of vessel the Solar intends. As long as the ship is not behaving suspiciously, the disguise is perfect, allowing a pirate vessel to slip into a harbor disguised as a coastal merchant. This effect becomes uncertain when suspicious characters come within three range bands of the ship. Such characters can attempt to pierce this Charm by rolling Perception + Sail or Perception + Lore against the Lawgiver’s Manipulation + Sail. If successful, the suspicious  character sees some flaw that collapses the whole illusion. What constitutes “suspicious behavior” is up to the dramatic whim of the Storyteller. On Skiff-to-Scow Method The backer wanted a Charm that would help disguise his ship on pirate raids. Backer: Legion over Midnight water "
+        },
+        {
+            "Title": "Ash and Storm Aegis",
+            "Cost": " 8m, 1wp",
+            "Mins": " Sail 5, Survival 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " One hour",
+            "Prerequisite": " Hull-Preserving Technique, Element",
+            "Description": "-Resisting Prana While using Hardship-Surviving Mendicant Spirit, the Lawgiver pours her Essence into the ship’s hull, merging  with the ship’s anima and extending her protection over vessel and crew. This extends lesser but significant defenses against environmental hazards as Element- Resisting Prana; the ship and crew take three less damage  per interval, but only a single member of the crew or the ship can be harmed per round, and none can be affected twice in a row. On Ash and Storm Aegis The backer wanted a Charm that would let him fly into a storm, sail into a volcanic eruption, or ride a sand-sea barge through a sandstorm without losing his entire crew. This Charm largely immunizes the crew to toxic fumes, severe heat, and violent winds, though it can’t make them as tough as the Solar. The limited resistance guarantees someone will eventually take some damage, but the number of characters taking damage has been reduced exponentially, so it becomes easily manageable. Backer: Andrew Stephens "
+        },
+        {
+            "Title": "Perfect Reckoning Technique",
+            "Cost": " 4m",
+            "Mins": " Sail 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " None",
+            "Description": "Feeling the pulse of energy that moves through the world, the Solar can sense her exact position on any body of water. As long as she is on the deck of a ship, and that ship is touching a body of water, the Exalt can sense both the direction of the Pole of Earth and the North Star, even in broad daylight. The moment she uses this Charm, she knows her exact latitude, longitude, and bearing, and can plot an accurate course without a roll. On Perfect Reckoning Technique Originally this Charm was in the core rules, but I changed that Charm’s name to Safe Bearing Technique in order to have a more powerful version of this classic Solar Charm. Because Creation is flat, getting latitude and longitude works differently. It requires charts that map the course of the sun at certain dates and times of the day, and the use of a backstaff to measure the sun’s angle and distance from the horizon. This is a difficulty 3 roll for those who have been trained (Celestial Navigation specialty in Sail), difficulty 4 for those who have not. Without charts and a backstaff, the difficulty is raised by 2. A Solar with this Charm always knows her position relevant to the sun’s arc even at night, and she can see through sunlight to the North Star even by day. The reason this Charm requires her to be on a ship atop a body of water is because she is “feeling” along the greater surface area of her submerged hull to sense the flow of Water Essence. All bodies of water in Creation, even the Dreaming Sea, are resonant with the Pole of Earth — if one can feel along the Essence that flows through oceans and rivers, one’s sense will inevitably  be pulled toward the Pole of Earth. Thus a Solar standing on a ship, floating on water, needs no jade magnet needle to know the direction of the Imperial Mountain in relation to the North. "
+        },
+        {
+            "Title": "Mast of Everything Situation",
+            "Cost": " 10m, 1wp",
+            "Mins": " Sail 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Apocryphal",
+            "Duration": " One scene",
+            "Prerequisite": " None",
+            "Description": "Sometimes your ship’s mast suddenly explodes. Not a problem if you are one of the Solar Exalted! With this Charm you can quickly build a ship’s mast out of whatever is lying around. Cook-pots, old shoes, the ship’s cat, jewelry, loose weapons, and other contraband  will interlock tighter than the chains that hold up the walls of Pale Dominion. Building this mast is an action that takes the Solar just a handful of seconds, though that doesn’t account for gathering the materials . At the end of the scene, when the Charm ends, the magic holding up the mast fails and it all comes tumbling down. Disclaimer: Ship’s cat was not harmed in the writing of this Charm. On Mast of Everything Situation The backer describes opening a fortune cookie with a hilarious typo that has become a running joke in his Exalted games ever since, and so we were quite pleased to write a Sail Charm per his request. Backer: Alex Richetta "
+        },
+        {
+            "Title": "Death-Daring Maneuver",
+            "Cost": " 6m",
+            "Mins": " Sail 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Apocryphal, Pilot",
+            "Duration": " Instant",
+            "Prerequisite": " Any five Sail Charms",
+            "Description": "They say a sailor’s mistress is the sea. Well, the Solar captain’s only true mistress is death. But not even death would try the crazy shit a Lawgiver captain is liable to pull. When the Solar uses this Charm, her player may introduce a hazard that imperils her ship and one other, that may only be avoided through incredible sailing. Roll the Solar’s Wits + Sail against that of her adversary. If the Solar has the greater result, her maneuvering not only allows her ship to skate through unscathed, but also causes the other ship to wreck spectacularly. This might involve the Solar sailing to the edge of a waterfall and pulling an impossible u-turn as her adversary sails right over the edge, or it might describe a Solar pushing her skyship into a steep descent, so the sun blinds her pursuer  and causes them to wreck on a high cliff. However, if the Solar loses the clash of sail, her opponent not only escapes the trap, but it also backfires, doing two damage to the hull of the Solar’s ship. This Charm can be used once per story, but may be reset by using Sail to overcome a distinct disadvantage that threatens your crew or your ship. This Charm can in fact reset itself. Repeatedly, if needs be. On Death-Daring Manuever This Charm is chiefly apocryphal because it is really powerful. The backer wanted a Charm to help him create  dangerous hazards he could sail around while other players wreck their shit. If you like it, use it anyway. Without a Willpower cost, you can technically use it repeatedly, provided your ship is damaged or you are suffering wound penalties, or have some other distinct disadvantage. Use it to force a bunch of ships to follow you down a whirlpool and laugh maniacally as you are the only one that sails back out again. Backer: Clear Frozen Skies "
+        },
+        {
+            "Title": "Master and Commander Method",
+            "Cost": " 10m, 1wp",
+            "Mins": " Sail 5, Essence 3",
+            "Type": " Reflexive",
+            "Keyword": " Apocryphal, Pilot",
+            "Duration": " One scene",
+            "Prerequisite": " Implacable Sea Wolf Spirit",
+            "Description": "During a pitched naval battle, the Solar’s skills are tested  to their utmost. Her sense of her ship and the flow of battle become the avenue for a critical apotheosis of Solar, ship, and skill. In a single moment of transfiguring  brilliance, the Lawgiver merges with her vessel and crew, moving them through open air, phasing them from one position to another in order to escape destruction and to unleash an attack of their own. To use this Charm, the Exalt activates it and becomes keenly  aware of every flaw in her opponents’ movements. The Solar’s player begins to track all 1s and 2s rolled by enemy captains in the scene. When 15 of these have been accrued, they can be “spent” as special momentum to trigger this Charm’s unique stratagem, in which the ship teleports out of the way of a broadside maneuver (Exalted, p. 245) or other successful attack, phasing her ship out and in at a new position at the same relative distance from the enemy vessel. This counts as an uncontested positioning stratagem (Exalted, p. 245) — roll the Solar’s Wits + Sail and convert the result to momentum. In addition, this momentum can be paid to roll an immediate Broadside attack against the attacking enemy. Master and Commander Method can be used in one scene per story, and within that scene as many times as the Solar can charge it. An Essence 4+ repurchase also allows the Solar to count her enemy’s 3s in order to use it. It can be reset by overcoming a major enemy while sailing under some penalty that cannot be easily rectified  through the use of the Solar’s current Sail Charms. On Master and Commander Method The backer wanted a Charm that was as close as possible to the Picard Maneuver from Star Trek, which involves flying your starship at an attacking starship using warp speed to confuse ship sensors and create an illusion of being in two places at once, allowing the phasing ship to launch an unexpected salvo against the confused vessel . The main reason this is apocryphal is because Solar Charms tend to depict one single action and this depicts several. The Solar teleporting her ship and crew over a short distance is a legal effect if it is reasonably hard to do, but this Charm requires the completion of multiple actions that stretches the limits of how Solar magic functions , and it might make the Charm feel like more of an actor than the Solar. As stated in the core rules on page 250, Charms don’t “do” anything. Charms reflect the actions of the Solar. A Solar’s action can entail wholly supernatural expansions of the Ability, but their skill must always be present. Like all other characters in Exalted, Solars are limited to specific actions per round. When a Charm depicts multiple complicated actions being completed that are usually left as round to round interactions of the rules and Storytelling, it starts to mark out the Charm as more of an actor than the Solar. Just remember this is a very apocryphal Charm and you should be wary of treating Solar mechanics this way. Backer: Scott “The Hanged Man” McNabb Corpany "
+        }
+    ],
+    "Socialize": [
+        {
+            "Title": "Viper-Scenting Method",
+            "Cost": " 3m",
+            "Mins": " Socialize 4, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " One scene",
+            "Prerequisite": " Motive-Discerning Technique",
+            "Description": "While using Mastery of Small Manners, the Lawgiver has a perfect intuition for social mores. While under its effects, the Lawgiver can use Viper-Scenting Method to augment her sense of social harmonics, such that she automatically notices when a character expresses disfavor toward her, even if they express it indirectly through a gesture, facial expression, disinterest in the Solar’s words, or whispered comments to someone else. The Lawgiver need not be watching or listening for such cues; this Charm points them out to her. Since Mastery of Small Manners makes it impossible to impugn her etiquette, the Solar understands by process of elimination  that xenophobic or other personal attitudes make the initiate distrust or dislike her. Still, the Lawgiver does not know the exact context of any Intimacies the character might hold. However, this Charm grants one automatic non-Charm success to reveal such an Intimacy with a read intentions action. On Viper-Scenting Method The backer wanted a Charm to amp up the power of Mastery of Small Manners, helping him to establish himself in a lasting role within a culture. The biggest obstacle to foreign inclusion are the prohibitive biases of members of that culture. This Charm helps the Solar figure  out the exact context of those attitudes by aiding her in revealing related Intimacies. By gathering social intelligence , the Solar can work to defeat those who might seek to undermine her position in a foreign society. Backer: Matthew Pascal "
+        },
+        {
+            "Title": "Energic Influence Technique",
+            "Cost": " 3m",
+            "Mins": " Socialize 4, Essence 1",
+            "Type": " Supplemental",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Motive-Discerning Technique",
+            "Description": "The Lawgiver can seed the minds of others with resounding  goodwill or disfavor. This Charm supplements an instill action in which the Solar attempts to raise a target’s Minor Intimacy to Major, or a Major Intimacy to Defining. If the instill action is successful, the target also gains a new Minor Intimacy that reflects the one being increased. Thus a Solar could link “duty to one’s nation” to “appreciation for the captain of the guard.” This Charm fails if the target has Major or Defining Intimacies that directly  contradict the proposed Minor Intimacy. Special activation rules: The player must declare what Minor Intimacy they plan to tack on before using this Charm. During the instill action, the declared Intimacy must be a part of the Solar’s pitch. On Energic Influence Technique The backer asked for a Charm that would allow him to take the Defining Principle of a character and turn it into a Defining Tie for a related character. For example, if you love your nation, that Charm could automatically  make you love your nation’s leader. We deemed this far too powerful effect, and decided to instead go with something a little more hands-on, that allows a Solar to increase favor with someone by using their goodwill, seeding them with an Intimacy for future use. Note that this Charm can also be used to increase and introduce  negative Intimacies. This Charm only moves in one direction, though. You can’t use it to decrease one Intimacy and raise another. Backer: Dan Sanford "
+        },
+        {
+            "Title": "Rancor-Raising Spirit",
+            "Cost": " 3m",
+            "Mins": " Socialize 5, Essence 1",
+            "Type": " Supplemental",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Energic Influence Technique",
+            "Description": "Sometimes the Lawgiver must tear down in order to build up. This Charm supplements an instill action to erode an Intimacy. If successful, the target also gains a new negative Minor Intimacy that reflects the one that has been eroded. Thus a Solar’s arguments could work to sow disfavor for the Guild, while also instilling a negative view of slavery. This Charm fails if the target has Major or Defining Intimacies that directly contradict the proposed Minor Intimacy. Special activation rules: The player must declare what Minor Intimacy they plan to tack on before using this Charm. During the instill action, the declared Intimacy must be a part of the Solar’s pitch. On Rancor-Raising Spirit I wrote this Charm to demonstrate a more powerful converse  of the prerequisite. The Solar can use this to defeat the iniquities that plague her lands, by coupling negative  viewpoints onto vehement or convincing obloquy. Some of you might think this Charm doesn’t work by its example, because someone with a positive view of the Guild would have to have a positive view of slavery. But that’s not actually true — the Guild deals in a number of vast enterprises, and this can work to conceal the effects of slave labor. Moreover, it is human nature to overlook or to refuse to see the moral or ethical contradictions in every day life. Evil flourishes thusly. Indeed, there is no other way that it flourishes. "
+        },
+        {
+            "Title": "Soul-Testing Method",
+            "Cost": " 1m, 1wp",
+            "Mins": " Socialize 5, Essence 2",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Umbral Eyes Focus",
+            "Description": "The Solar can draw on a mutual history or shared experience  in order to make a powerful appeal. If the Solar shares a deep emotional connection to a specific society or culture with another character — as represented by an identical Major or Defining Intimacy they both hold — then the Lawgiver may use that bond to convince a target not to take an action the Solar disapproves of. This puts the character in a decision point immediately, without a roll, allowing them to evaluate whether the connection they share with the Solar outweighs the decision they have made. This Charm ignores restrictions on Intimacy use in decision points — the Exalt may use this Charm even if the target has already cited the shared Intimacy in a decision point. Nor does it count as exploiting a Tie to the Solar directly. With a stunt, the Solar can also use a shared experience (such as serving in the same mercenary company during a legendary battle) as a reason for persuasion, even if there is no actual clear Intimacy being shared. This powerful social influence Charm can be used once per story. On Soul-Testing Method The backer wanted a Socialize Charm that would exploit  cultural ties to allow him to reason with his enemies . I expanded it so that it would be effective for a much broader set of characters. This Charm augments social bonds and ties that exist between people, basically using the Solar’s legendary reputation and the target’s emotional connection to an event to make them stop and think about what they’re doing. Backer: Jeroboam “Fist of God” Sneerly "
+        }
+    ],
+    "Stealth": [
+        {
+            "Title": "Stalking Shadow Spirit",
+            "Cost": " 5m",
+            "Mins": " Stealth 4, Essence 1",
+            "Type": " Simple",
+            "Keyword": " Mute",
+            "Duration": " Indefinite",
+            "Prerequisite": " Perfect Shadow Stillness",
+            "Description": "Upon using this Charm, the Exalt patrols an area for an hour, studying its shadows and learning its secrets. During this time, the Solar examines boltholes, discovers blind-spots and sight-lines, and prepares hiding places. At the end of the hour, roll the Solar’s Wits + Stealth, adding (Essence) automatic successes. Successes on this roll are available to the Lawgiver as long as the Charm is committed or until spent entirely. These successes can only be used on Stealth attempts within the specific location  the Solar patrolled, but the player can parcel them out across multiple attempts, deciding when to use them, and how many to use. The Solar is expressly allowed to use these successes after making the Stealth roll. Special activation rules: Typically this Charm allows the Lawgiver to cover an area the size of a large warehouse  or small park. This area can be slightly increased, but the Storyteller should apply a difficulty of 1 or 2 to the roll if the player wants to extend the range of the effect. By spending five points accrued by the Larceny Charm Master Plan Meditation (see Exalted, p. 318), this Charm may be used retroactively, as long as the Solar has the motes. On Stalking Shadow Spirit The backer wanted a Charm that would help him feel like he has Matrix-level knowledge of his surroundings , able to anticipate where others will be looking or standing to simply not be there. Players are encouraged, while spending the successes to augment concealment, to describe their Solar’s manipulation of sight-lines and blindspots, to stand to the left when a guard is facing right, and so on. As a side-note, all Charms that accrue successes for you to use later treat those as “non-Charm” successes unless otherwise stated. Backer: Clete D. Collum "
+        },
+        {
+            "Title": "Killing Shroud Technique",
+            "Cost": " 5m, 1wp",
+            "Mins": " Stealth 5, Essence 2",
+            "Type": " Reflexive",
+            "Keyword": " Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Stalking Wolf Attitude",
+            "Description": "While concealed, the Lawgiver may grapple an opponent who has failed their Awareness check without taking a penalty to her concealment, gaining one non-Charm automatic  success in the attempt, and one automatic success  in the Initiative roll. If successful, the Exalt pulls her victim into the shadows. This is completely impossible to notice. The grabbed opponent seems simply to vanish. While the Lawgiver is still concealed, her victim is hidden for (control) rounds, unless the Solar’s Stealth check fails. The grapple is automatically released; though she is still thought to be holding the opponent in concealment, combat between the Lawgiver and her victim proceeds  as if there was no grapple occurring. During this time, the Solar may attack her hidden foe without breaking concealment, but takes a -1 die penalty to her Stealth check for doing so. Victims killed during this attack die in an unnoticeable fashion and their bodies cannot be discovered for (Solar’s Essence) rounds, and then not without a difficulty 3 Awareness check that explicitly ignores the Solar’s whereabouts, regardless  of its result. On Killing Shroud Technique The backer said their favorite Caste is Night, and their favorite Ability is Stealth, so I wrote them a Charm that makes a Solar a terrifying opponent to take on in a poorly -lit space with plenty of hiding places, like a shadowy warehouse or the docks of Nighthammer in Nexus. Backer: Silent Shadow "
+        },
+        {
+            "Title": "Shadow-Striking Way",
+            "Cost": " 4m",
+            "Mins": " Stealth 5, Essence 3",
+            "Type": " Supplemental",
+            "Keyword": " Decisive-only, Mute",
+            "Duration": " Instant",
+            "Prerequisite": " Hidden Snake Recoil, Killing",
+            "Description": "Shroud Technique The Lawgiver strikes from the shadows and is gone again. This Charm supplements a decisive attack made from concealment, and uses extra successes from the attack as automatic non-Charm successes on a Stealth roll for the Solar to re-enter concealment, ignoring the penalty for attempting concealment during combat. If the roll for concealment is successful, the Lawgiver moves to a new hiding place within one range band. As her old location is discovered, the Lawgiver must move in order to use this Charm. If the Storyteller deems there are no other places of cover or concealment within one range band, this Charm can’t be used. Extra decisive attack successes used by Shadow-Striking Way cannot be used by hypothetical other Charms that might use them. If the Solar combines this Charm with Shadow-Crossing Leap Technique (Exalted p. 408) lower the cost of that Charm to one mote, one Willpower, and double the automatic  successes granted to the Lawgiver’s Stealth attempt. On Shadow-Striking Way The backer wanted a way to attack from concealment and immediately disappear like a deadly shadow. I could tell from his description that he wanted something a little more versatile than Hidden Snake Recoil. The problem with this effect has always been balancing it. Fighting from a state of concealment is prohibitive on purpose. Thus, I balanced this Charm against the significant advantage  it confers. Charms that follow Shadow-Striking Way will only enhance it in very gradual ways. Like many Solar Charms, Shadow-Striking Way is a central effect from which small upgrade Charms might radiate outward. Backer: Kalzera of Nugasya "
+        }
+    ],
+    "Survival": [
+        {
+            "Title": "Harmony with Nature Approach",
+            "Cost": " –",
+            "Mins": " Survival 3, Essence 1",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Food-Gathering Exercise, Friendship",
+            "Description": " with Animals Approach, Hardship-Surviving Mendicant  Spirit Sitting in quiet meditation, the Solar centers herself within the cycle of the elements and the forces of nature. Once per day, the Solar may use this Charm to generate motes that may only be used for activating Survival Charms, and which vanish at the end of the day if they aren’t used. Roll the Exalt’s Charisma or Wits + Survival and add one to the result to determine how many motes the Solar is able to accrue. On Harmony with Nature Approach Free motes to fuel your familiar’s Donkey Kong Rampage? Love me. Gotta learn Food-Gathering Exercise first? Curse me. Such is the life of the Exalted Developer. "
+        },
+        {
+            "Title": "Elements-Sculpted Avatar",
+            "Cost": " 6m",
+            "Mins": " Survival 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " Indefinite",
+            "Prerequisite": " Food-Gathering Exercise, Friendship",
+            "Description": " with Animals Approach, Element-Resisting Prana The Solar communes with the elements and with the beasts of nature, gaining harmonious elements of both. This Charm requires use of Hardship-Surviving Mendicant Spirit and is completed by a Simple action in which the Lawgiver spends an hour meditating in a place where the elements are strong and fierce, such as the center of a sandstorm or beneath a massive waterfall. Over the course of the hour, the Solar’s physical appearance  becomes shaped by the surrounding elements. She gains distinct elemental and / or bestial features, though not the benefits associated with true mutations. This ethereal transformation raises her Appearance by one, even if this raises her Appearance above five. In addition , she gains one non-Charm bonus die to soothe or comfort any elemental, beast, or Lunar Exalted through the use of social influence. On Elements-Sculpted Avatar For those of you who love your Appearance cap-breakers  — but only if you are willing to take the side trip into Survival. Also, just a friendly reminder that someone who wants to play a terrifying character with the Hideous Merit can benefit from Appearance magnifying Charms. Just give them a bunch of threatening or strange markings . This voids the Charm’s ability to soothe aforementioned  characters, and does not conversely give them a bonus to social influence to horrify such creatures. "
+        },
+        {
+            "Title": "Riotous Cry of the Beast",
+            "Cost": " 8m, 1wp",
+            "Mins": " Survival 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " None",
+            "Duration": " One scene",
+            "Prerequisite": " Red-Toothed Execution Order",
+            "Description": "In a moment of desperation, the Solar may call upon the fury of nature. Focusing her primal Essence through a mighty shout or the cry of her familiar, the Solar calls upon all natural animals within (Essence) miles that match the species of her familiar. These animals assemble  into a Size 2 battle group (see Exalted p. 205) with average Drill — elite if they are pack hunters such as wolves or Lions — and Might 0 unless they are diminutive  creatures such as rabbits or squirrels, in which case the amplitude of Solar Essence increases their Might to 2. Outside of combat, this battle group takes around ten minutes to assemble unless the assembled beasts are particularly slow. Battle groups of incredibly fast creatures such as hawks can assemble in less than a minute, as can battle groups composed as creatures who are in the immediate vicinity. In combat, assembly  takes a number of rounds equal to eight minus the Dexterity of the average member of the battle group, or a single round if the subjects are all nearby or are incredibly swift. The battle group is led by the Solar’s familiar. If the familiar  is not present, the battle group will still instinctively attack targets on the Solar’s behalf, and will attempt to follow her if she moves or attempts to flee or indicates a new target for them to savage. War Charms that directly control battle groups are ineffective at leading such a mob, but Survival Charms that enhance the familiar’s own actions allow it to pass on orders and bonuses from the Solar’s War Charms, such as it is able to understand them. Lastly, at Essence 4+, all successful withering attacks made by this battle group award half the Initiative (rounded up) to the Solar’s familiar, if it is present on the battlefield. This Charm has no effect on the familiars of other characters , spirit animals, or an animal that has a Major or Defining Intimacy of hatred for the Solar. On Riotous Cry of the Beast The backer wanted to use his Survival to call up an army of forest creatures to aid him in battle. I expanded the concept to any creature matching the Exalt’s familiar, and conceptualized it as a battle group and tertiary buff for your familiar. This Charm also allows rather “weak” animals to remain valid choices for a familiar. Players are encouraged to conceptualize a Might 2 animal as moving at tremendous speeds, leaping through the air, and fighting with unusual bravery, just like a Solar. Backer: Kristopher Todd "
+        },
+        {
+            "Title": "Colossal Rampaging Beast",
+            "Cost": " 7m, 3a, 1wp",
+            "Mins": " Survival 5, Essence 4",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " One scene",
+            "Prerequisite": " Deadly Predator Method",
+            "Description": "While her familiar is under the effects of the prerequisite, the Solar may infuse it with a surge of anima-laden Essence, magnifying its strength and size to a frightening degree. Using this Charm automatically triggers Saga Beast Virtue, replacing the cost of that Charm entirely. It also makes the size bonuses from all familiar-enhancing Charms non-optional; all take effect while this Charm is active. In addition, the familiar grows massively large. Large creatures grow exponentially; a bull grows larger than a war elephant, while already gigantic creatures grow slightly less, a war elephant growing large enough to peer into a second story window. Smaller familiars become large enough to ride, reaching excesses of 1000 pounds. In addition to the benefits of the prerequisite and Saga Beast Virtue, familiars gain an additional three mutations. The largest familiars (tyrant lizards, mammoths, giant snakes) gain three automatic non-Charm successes to their feats of strength, and may reach into the short range band to attack targets. In addition, targets at short range must roll disengage to move away from such a massive opponent. As targets at close range must also disengage to escape, a target who starts at close range must disengage twice to get away. Such familiars double the hardness from any purchases of Hide-Hardening Practice and gain two additional -4 health levels and three additional -0health levels while this Charm is active. The smaller familiars compensate by gaining three automatic  non-Charm successes to rush and disengage, and one automatic success to each of their attacks. They gain two -0 health levels. On Colossal Rampaging Beast The backer wanted another size booster for his familiar, one that would let his smaller creature get large enough to ride. I decided “why stop there?” and made it so your pet tyrant lizard becomes a fortress-busting tank. Backer: Michael Brewer "
+        },
+        {
+            "Title": "Baara-Unleashing Technique",
+            "Cost": " —",
+            "Mins": " Survival 5, Essence 5",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Colossal Rampaging Beast",
+            "Description": "The Solar calls the inmost soul of her familiar outward, transforming it into a divine and terrible creature of wrath. This Charm can only be used on a familiar enhanced by Spirit-Tied Pet, and the Solar must take a moment to sense ride the animal before using this Charm. When in this state, she can trigger Saga Beast Virtue, Deadly Predator Method, Colossal Rampaging Beast, and Ambush Predator Style simultaneously and for free, across any plane of existence. The Solar need not continue to sense ride her familiar after using this Charm, unless she wishes to augment its actions with Survival Charms across extreme long distances. On Baara-Unleashing Technique The backer wanted a Charm that would allow his familiar  to get powered up while he is not there to protect it. Thus Baara-Unleashing Technique. A “baara” in Exalted context is a divine creature, usually a gigantic beast. Backer: Trey Mason "
+        }
+    ],
+    "Thrown": [
+        {
+            "Title": "Spitting Hand Technique",
+            "Cost": " 1m",
+            "Mins": " Thrown 3, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " None",
+            "Description": "The Solar draws her weapon and hurls it with blazing speed. This Charm allows the Exalt to switch weapons reflexively, without a draw/ready weapon action. This includes hurling improvised weapons. If she can reach it and she can lift it, then it’s fair game. On Spitting Hand Technique Novia drunkenly tangled her bandoliers on a chair and instead  hurled every bottle and glass off the bar at her assailant, whirling, spinning, making blind around-the-back throws, every glass arcing and connecting until her attacker fled. "
+        },
+        {
+            "Title": "Diving Hawk Discipline",
+            "Cost": " 3m",
+            "Mins": " Thrown 4, Essence 1",
+            "Type": " Supplemental",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Spitting Hand Technique",
+            "Description": "When she sees the perfect moment to act, the Lawgiver strikes with unthinkable speed. This Charm supplements  a Thrown Disarm, Distract, or Unhorse Gambit, allowing it to be made without needing an aim action. On Diving Hawk Discipline Thrown is about versatility, utility, and quick bursts of damage. The more versatile it becomes, the better it gets at the other two. "
+        },
+        {
+            "Title": "Thunder-Quelling Gesture",
+            "Cost": " 3m, 2i",
+            "Mins": " Thrown 5, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Angle-Tracing Edge",
+            "Description": "With a quick eye and lightning movement, the Solar may reflexively hurl a Thrown-based decisive attack at an opponent who takes an aim action, without needing to aim herself. If her attack does at least one health level of damage, the aim action is interrupted. This Charm allows  the Exalt to attack ahead of her actual turn, so long as she can perceive the aim action being readied. Using this Charm uses the Exalt’s combat action, and therefore cannot be used if the Exalt has already attacked on that round. Lastly, this Charm allows the Solar to use the prerequisite  reflexively in combination with itself. At Thrown 5+ Essence 3+, the Solar may use this Charm without using her combat action once per round. On Thunder-Quelling Gesture The Exalt needs to be aware of her target taking aim in order to use this Charm. This Charm does not confer knowledge of whether or not this is happening, so if it is not clearly apparent, the player should consider using Awareness Charms and the prerequisite, Angle-Tracing Edge. With Awareness Charms dedicated to hearing, the Solar could commit herself to listening for the nigh-inaudible  pull of a bowstring, and with the appropriate Awareness roll (difficulty or Stealth contest determined by the Storyteller) she could pinpoint the exact position of an archer hiding out of sight, and bounce her missile off a wall or a parapet (via prerequisite) to strike her target and stop them from taking aim. Note that this Charm does not specify who the target is aiming at. Use this Charm to judiciously intercept the slings and arrows that will no doubt be hurled at your Solar’s friends and allies. This Charm was written in response to a backer’s desire to have some defense within the Thrown ability from formidable  ranged attacks. It was structured as it is in order to meet that demand without violating the tactical limits of Thrown. Backer: Robert-Sean Harley "
+        },
+        {
+            "Title": "Death-Dealing Diffusion",
+            "Cost": " 1m, 1wp",
+            "Mins": " Thrown 5, Essence 2",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Diving Hawk Discipline",
+            "Description": "With this Charm, the Lawgiver whips out two missiles in succession. Whirling in at blinding speed, her attacks may confuse and disarm her opponents. This Charm allows  the Solar to complete two eligible gambits at once, with a single difficulty 5 gambit. The eligible gambits are disarm, distract, and unhorse. On Death-Dealing Diffusion Don’t mistake this for a pure utility mechanic. This Charm is a signature trick that sets a Thrown Solar apart from her contemporaries. "
+        },
+        {
+            "Title": "Whirlwind Hand of the Striker",
+            "Cost": " 4m, 1wp",
+            "Mins": " Thrown 5, Essence 2",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Diving Hawk Discipline",
+            "Description": "The Solar makes an Essence-infused throw that strikes her opponent to the ground. This Charm is a difficulty 4 Thrown gambit that, if successful, will knock down an opponent. Alternately, if the Solar hurls a bola, net, or other snare, then she makes a difficulty 4 Thrown-based grapple gambit against her target. If successful, roll (Strength + Thrown) to establish clinch control, with a number of automatic successes equal to extra successes on the initial attack roll plus one. The control roll cannot be modified by Thrown or other Ability Charms. If successful the target is snared for the number of control rounds plus one. If the number of control rounds exceeds their Strength, they also fall to the ground. A snared character  can attempt to struggle free by spending a complete action without a flurry to remove two rounds of control each turn. They can also instantly break free from snares made of non-magical materials (cords, cables, etc) with a Strength 5+ difficulty 5 feat of strength. Lastly, if the Lawgiver has the other end of a line, rope, or other tether hooked to the snare, then if she knows the Brawl Charm Crashing Wave Throw (Exalted p. 275) then she can use it to sling her opponent violently  into scenery with a decisive throw. The Solar is considered to have (Essence + 1) more Strength than her actual rating for the purpose of this stunt. Damage on this attack resets the Solar to base Initiative. Lastly, unassisted characters must struggle at least one round to remove this snare, even if the control rounds have been completely expended. A net won’t just fall off on its own, and a character bound by the legs and hurled with Crashing Wave Throw isn’t set free by smashing into scenery, even though this forfeits all rounds of control. This gambit can be supplemented by Diving Hawk Discipline. On Whirlwind Hand of the Striker I know it is a complex Charm. Just make sure to record extra  successes on the attack roll to apply to the control roll. The Crashing Wave Throw tie-in can be ignored if you don’t have Brawl, but if you want to play a character who hooks people by the legs with a weighted line and then hurls them to a dangle over the rooftops, this is the Charm for you. As an aside, if you want to free a snared character, there are a couple of ways you might do it. A Storyteller should require a character to use their action without a flurry and an appropriate stunt to try to help a friend get free, removing an additional -2 rounds of control. Alternately you might have them try a difficulty 3 gambit to cut the snare loose with an edged, lethal weapon. A botch on the Initiative roll should be rather spectacular. "
+        },
+        {
+            "Title": "Dancing Steel Symphony",
+            "Cost": " 9m, 1wp",
+            "Mins": " Thrown 5, Essence 3",
+            "Type": " Simple",
+            "Keyword": " Decisive-only",
+            "Duration": " Instant",
+            "Prerequisite": " Death-Dealing Diffusion, Shower",
+            "Description": "of Deadly Blades The Solar whirls like a mad conductor, hurling precision  strikes in every direction. The Solar targets up to (Dexterity + 2) enemies out to short range with a barrage of Thrown disarm, distract, or unhorse gambits. Each attack is rolled separately, and each gambit is difficulty 1. The Solar need not aim to use this Charm. While this Charm is in effect, Spitting Hand Technique costs zero motes, and if she knows Whirlwind Hand of the Striker she may also throw snaring grapple gambits. At Essence 4+, the Lawgiver may activate Death-Dealing Diffusion as if it were a Supplemental-type Charm while under the effect of Dancing Steel Symphony. This raises the difficulty of each gambit to 2, but drops the Willpower cost from that Charm, requiring the Solar to instead pay one mote for each gambit she wishes to double. On Dancing Steel Symphony Sometimes a Night Caste needs to knock down, unhorse, and snare an entire warehouse full of thugs as she passes casually through their attempted ambush. "
+        }
+    ],
+    "War": [
+        {
+            "Title": "Unstoppable Solar Conqueror",
+            "Cost": " 5m",
+            "Mins": " War 3, Essence 1",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " One scene",
+            "Prerequisite": " Holistic Battle Understanding",
+            "Description": "When the Exalt’s Initiative is higher than the enemy general’s, her order actions gain a dice bonus equal to the Size difference between her battle group and the enemy forces. If the enemy general is not rolled into battle , this Charm doesn’t work, nor does it work if there is no opposed battle group. On Unstoppable Solar Conqueror Just a bonus Charm for all you players of strategists and generals. Something to help you round out your basic power structure. "
+        },
+        {
+            "Title": "One With Five Forces",
+            "Cost": " 5m",
+            "Mins": " War 5, Essence 4",
+            "Type": " Reflexive",
+            "Keyword": " None",
+            "Duration": " Instant",
+            "Prerequisite": " Four Glories Meditation",
+            "Description": "The Solar general, having made many calculations and knowing her enemy as well as herself, is at one with the five forces. At harmony with the universe, the Solar cannot be defeated. This is the Charm of the Dawn Caste generals who tore apart and routed the invincible armies of the Great Masters in the Time Before. When the Exalt’s battle group makes a successful attack against another battle group augmented by an order action, the Solar may use this Charm to take further control of the battle, forfeiting  damage and using extra successes on the attack roll to place the enemy under the effects of a new stratagem. In literal terms, the Solar uses her superior knowledge and tactics to control the enemy army, forcing it into a disadvantageous state for the rest of the battle. The Exalt may instead use this Charm to erase a stratagem of equal or lesser value that has been used against her own forces, allowing them to escape from the most harrowing  of disadvantages through her military genius. The Solar may deploy up to (Essence) additional stratagems  with repeated use of this Charm. If any stratagems the Solar deploys seem incompatible, void the incompatible  one and increase the severity of disadvantage in a pre-existing penalty. For example, an army trapped in a desert canyon is suffering from lack of water normally, but the compounded stratagem reveals that they are also sinking in quicksand. Increase penalties accordingly. On One With Five Forces The backer wanted to expand the order action to make it more interesting and tactical from round to round. The backer also wanted the Charm to be Essence 4. His request led to the creation of this balanced but tremendously powerful  Charm that will greatly reward supernal War characters. Backer: Brent A. Nellis "
+        }
+    ],
+    "Universal": [
+        {
+            "Title": "Hallowed Bond of Night and Flame (Hallowed Soul and Flesh Merging)",
+            "Cost": " 10m, 3a, 1wp",
+            "Mins": " Essence 3",
+            "Type": " Simple",
+            "Keyword": " Apocryphal",
+            "Duration": " One scene",
+            "Prerequisite": " ???",
+            "Description": "When a Solar has a deeply physical and spiritual bond with one of the Lunar Exalted, that Lunar is said to be her bond mate — a tradition going back thousands of years. This Charm is occluded, hidden from the normal roll of Solar Abilities, and only becomes available to the Solar to learn if she has a Defining Tie for her Lunar and vice versa, and if their bond has been deeply established according  to the Storyteller. Then, in circumstances where they are touching each other — sparring, one holding the other’s wrist to keep them from going over a cliff, sharing a kiss, etc — the Storyteller may deem that the Solar feels a sudden oneness with her Lunar. The Lunar will feel this same oneness in turn. Roll their combined Essence scores, and if the result is one or greater, the Storyteller describes a numinous moment in which the Solar and Lunar touch mind and soul and become as one. This can be a completely  disassociated stream of consciousness event, or it can be a series of images from their past lives. The end of this sequence leaves the Solar capable of learning this Charm. This Charm allows the Solar to physically merge with her Lunar mate, becoming a single entity of divine wrath and living flame for one scene. The combined being resembles  a fusion of the Solar’s physical form with her iconic anima, and the spirit-animal of her Lunar mate. This form usually has four arms, has bestial and ethereal traits, such as horns, hair that floats and crackles with lightning, gale force-winds that whip around in her vicinity , and so on. The mote pool for the merged being is the Solar’s current pool + 25, and the health levels of the combined being are equal to the Lunar’s undamaged health levels. As a quick character, the fusion has all of the traits of the Solar, but the players may do the work to assign the merged character its own sheet, giving it the Lunar’s Attributes and the Solar’s Abilities. In any case, the merged Exalt uses all of the Solar’s Charms for actions, but its Attributes on any roll can be enhanced by any Attribute-boosting Charms the Lunar has learned. In addition, the form gains horns, fangs, claws, wings, and other mutations applicable to the Lunar’s spirit form and the Solar’s iconic manifestation, a number equal to the Lunar’s Appearance or Stamina +1. These natural weapons  can be used to use animal attacks such as Bite, Gore, and so on, listed in the antagonists chapter of Exalted. To use this Charm, the Exalts must share a Defining Principle that they are merging in order to defend. If they are killed while in this form, they both die. Once they have used this Charm, they may not end their merged form until the end of the scene, though they may choose to end it if they fall into Initiative Crash. On Hallowed Bond of Night and Flame This Charm was written in response to a backer’s desire to see a Charm that uses the Solar / Lunar bond to make a merged being with some combination of Solar and Lunar Charms and appearance. This Charm is hugely apocryphal. If we were to allow something like this to happen normally, we’d require a deeper buildup with a number of requisite Charms and story events. However, it is a delightful Charm and if you really want to use it we hope the Apocryphal keyword won’t get in your way. According to the backer, this Charm was used by her Lunar, Scarlet-Wings-Over-The-Mountain and her Solar lover, Brass Storm Spirit. Storytellers beware, this Charm is mechanically overpowered. Use with caution. Backer: Jennifer Alyxendra Barron"
+        }
+    ]
+}

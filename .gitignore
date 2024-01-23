@@ -5,6 +5,5 @@ kikiratio.js
 node_modules
 package-lock.json
 *.patch
-*.ps1
 *.test.*
 WIP/
