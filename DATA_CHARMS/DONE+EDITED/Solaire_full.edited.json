@@ -7844,7 +7844,7 @@
             "charm-rollexpr": ""
         }
     ],
-    "Linguistics": [{
+    "Linguistics DONE": [{
             "attr-mins": {
                 "linguistics": 1,
                 "essence": 1
@@ -7866,7 +7866,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Written-only",
             "charm-description": "",
-            "charm-effect": "A Solar with this technique writes with superhuman speed. The Exalt pens brief social influence or short communiqu és with incredible speed—she can write a full-page letter in just seconds, while shorter missives may be constructed almost instantly. She can also quickly copy massive volumes of information. This Charm does not allow her to produce new work longer than a few pages, but she may flawlessly copy a written work of any length as she reads it, writing quickly enough that she may copy a large book in a single day, or prepare a document that would take hours to transcribe in a matter of minutes. The Solar can even perfectly transcribe a rapid conversation between multiple parties. The Solar may also quickly copy maps—though this Charm lends nothing to her artistic ability, she is able to convey all the information the original conveys, such that one could be substituted for the other, in function if not in form. This Charm does not destroy quills from writing too fast, but writing instruments do wear down at the regular speed, and the Solar’s writing consumes the normal amount of ink. As this Charm entails a dramatic action in which the Solar copies a work, the duration of the effect varies. In a scene where the Solar has used Whirling Brush Method, additional activation costs only one mote.",
+            "charm-effect": "A Solar with this technique writes with superhuman speed. The Exalt pens brief social influence or short communiqués with incredible speed—she can write a full-page letter in just seconds, while shorter missives may be constructed almost instantly. She can also quickly copy massive volumes of information. This Charm does not allow her to produce new work longer than a few pages, but she may flawlessly copy a written work of any length as she reads it, writing quickly enough that she may copy a large book in a single day, or prepare a document that would take hours to transcribe in a matter of minutes. The Solar can even perfectly transcribe a rapid conversation between multiple parties. The Solar may also quickly copy maps—though this Charm lends nothing to her artistic ability, she is able to convey all the information the original conveys, such that one could be substituted for the other, in function if not in form. This Charm does not destroy quills from writing too fast, but writing instruments do wear down at the regular speed, and the Solar’s writing consumes the normal amount of ink. As this Charm entails a dramatic action in which the Solar copies a work, the duration of the effect varies. In a scene where the Solar has used Whirling Brush Method, additional activation costs only one mote.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -7889,8 +7889,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Written-only",
-            "charm-description": "",
-            "charm-effect": "The Solar concentrates all of her talent into a perfect expression of form. With this Charm, she may perfectly copy any written work down to the finest detail. Her flawless precision makes her script impossible to tell apart from the original, allowing her to create a perfect replica of a work. If the Exalt focuses intently on aesthetic elements, she may even use this Charm to copy them, flawlessly reproducing pictograms, illustrations and even maps. The Exalt may also forge signatures effortlessly , but cannot use this Charm to forge seals or other impressions affixed to a document. It is impossible to pierce this deception through normal means. Magic which can detect the Solar’s forgery must overcome a difficulty equal to the Solar’s [[ @{linguistics}+@{essence} ]](Linguistics + Essence) score at the time of writing.",
+            "charm-description": "The Solar concentrates all of her talent into a perfect expression of form.",
+            "charm-effect": "With this Charm, she may perfectly copy any written work down to the finest detail. Her flawless precision makes her script impossible to tell apart from the original, allowing her to create a perfect replica of a work. If the Exalt focuses intently on aesthetic elements, she may even use this Charm to copy them, flawlessly reproducing pictograms, illustrations and even maps. The Exalt may also forge signatures effortlessly , but cannot use this Charm to forge seals or other impressions affixed to a document. It is impossible to pierce this deception through normal means. Magic which can detect the Solar’s forgery must overcome a difficulty equal to the Solar’s [[ @{linguistics}+@{essence} ]](Linguistics + Essence) score at the time of writing.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -7961,8 +7961,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Written-only",
-            "charm-description": "",
-            "charm-effect": "Drawing on the Essence of her formidable mind, the Exalt perfects her arguments and sharpens her words, so that her writing is pristine, flawless and precise. This Charm supplements written Linguistics actions with double 9s. ARTISTIC TALENT: LINGUISTICS OR CRAFT? Linguistics is not the “Art” skill, any more than Investigation is the “Sight” skill. Linguistics does entail a very specific artistic skill—in the ability to produce elegant calligraphy, and the ability to produce, translate , or reproduce very specific aesthetics. Language in itself is a representative of such aesthetics: words evolve from pictograms to ideograms, hieroglyphs form and refine into runes that make up descendent languages thousands of years later. Very specific forms of art are also constructs of language : maps, diagrams, and supplemental illustrations fall into these categories. Where art is concerned, Linguistics mainly provides the ability to produce beautiful and complex letters, and extremely complex, detailed informational illustrations. Drawing one’s Lunar mate gobbling cake, or painting a gorgeous landscape or a portrait of the Circle’s Twilight, are all examples of the Craft Ability. At Linguistics 5+, Essence 3+, she may repurchase this Charm, learning a three mote version that doubles 8s. This repurchase requires that she know Flawless Brush Discipline. At Linguistics 5+, Essence 5+, she may purchase this Charm a third time, learning a four mote version that grants double 7s.",
+            "charm-description": "Drawing on the Essence of her formidable mind, the Exalt perfects her arguments and sharpens her words, so that her writing is pristine, flawless and precise.",
+            "charm-effect": "This Charm supplements written Linguistics actions with double 9s. At Linguistics 5+, Essence 3+, she may repurchase this Charm, learning a three mote version that doubles 8s. This repurchase requires that she know Flawless Brush Discipline. At Linguistics 5+, Essence 5+, she may purchase this Charm a third time, learning a four mote version that grants double 7s.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -7986,7 +7986,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Tuning Essence through her language centers, the Exalt reconciles a character’s vocal tone, inflection, and gestures into a clear statement of intent. This allows her to accurately interpret statements made in languages she doesn’t know. As the Solar’s concentration congeals into a moment of perfect clarity, she must evaluate each statement separately . Each activation of this Charm allows her to understand three or four simple sentences or one long, complex sentence. The Solar may also use this Charm to reflexively lower the Guile of a speaker using abstruse language to conceal an issue or artificially inflate the importance of a topic, reducing his Guile by one.",
+            "charm-effect": "Tuning Essence through her language centers, the Exalt reconciles a character’s vocal tone, inflection, and gestures into a clear statement of intent. This allows her to accurately interpret statements made in languages she doesn’t know. As the Solar’s concentration congeals into a moment of perfect clarity, she must evaluate each statement separately. Each activation of this Charm allows her to understand three or four simple sentences or one long, complex sentence. The Solar may also use this Charm to reflexively lower the Guile of a speaker using abstruse language to conceal an issue or artificially inflate the importance of a topic, reducing his Guile by one.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8034,7 +8034,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "The Exalt can bind together any two languages she knows into a third language which is intuitively understood by those listeners who understand at least one of the base languages . For four motes, one Willpower, she uses her Essence to fuse two such languages together. For each additional three motes committed, she may fuse an additional language into the strain. A Solar who is gifted with knowledge of many languages can become the unifying voice of nations.",
+            "charm-effect": "The Exalt can bind together any two languages she knows into a third language which is intuitively understood by those listeners who understand at least one of the base languages. For four motes, one Willpower, she uses her Essence to fuse two such languages together. For each additional three motes committed, she may fuse an additional language into the strain. A Solar who is gifted with knowledge of many languages can become the unifying voice of nations.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8057,8 +8057,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar’s wit is incisive and her mind is canny. By reading a text, she also may read its author. The Solar may invoke this Charm after reading a text but before any social influence is rolled or checked. This allows the Solar to make a ([Wits, Charisma, or Manipulation] + Linguistics) read intentions action that is automatically successful. In that moment, she instantly knows if the writing indicates any of the author’s Intimacies, and what those Intimacies are. This may come across as a clear slant or bias in the narrative , or a sense of mood or emotion in the writing which highlights the context of a Tie. This Charm does not reveal the writer’s hidden motives behind any work, but it can reveal the absence of any Intimacies in the writing, potentially denoting that the work is a forgery, a copy, or that the author didn’t believe what he was writing.",
+            "charm-description": "The Solar’s wit is incisive and her mind is canny. By reading a text, she also may read its author.",
+            "charm-effect": "The Solar may invoke this Charm after reading a text but before any social influence is rolled or checked. This allows the Solar to make a ([Wits, Charisma, or Manipulation] + Linguistics) read intentions action that is automatically successful. In that moment, she instantly knows if the writing indicates any of the author’s Intimacies, and what those Intimacies are. This may come across as a clear slant or bias in the narrative , or a sense of mood or emotion in the writing which highlights the context of a Tie. This Charm does not reveal the writer’s hidden motives behind any work, but it can reveal the absence of any Intimacies in the writing, potentially denoting that the work is a forgery, a copy, or that the author didn’t believe what he was writing.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8082,7 +8082,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "If the Exalt suspects she is about to suffer negative influence , she may use this Charm after using Sagacious Reading of Intent, raising her Resolve by half her Linguistics , rounded up, before her Resolve is compared to the influence’s recorded successes.",
+            "charm-effect": "If the Exalt suspects she is about to suffer negative influence, she may use this Charm after using Sagacious Reading of Intent, raising her Resolve by half her Linguistics [[ ceil(@{linguistics} / 2) ]], rounded up, before her Resolve is compared to the influence’s recorded successes.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8105,8 +8105,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Written-only",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver’s keen ear, sharp eye and steady hand makes her an inveterate thief of words. With this Charm, the Solar can adapt the writing voice of another character. The Solar need only have read one manuscript or three smaller examples of the character’s writing in order to perfectly mimic his writing style. This Charm does not mimic the effects of Flawless Brush Discipline, so the Solar may need to use that Charm to make her script all the more deceiving. Like the prerequisite, the difficulty to pierce this deception is the Solar’s [[ @{linguistics}+@{essence} ]](Linguistics + Essence) score at the time of writing. Combining this Charm with its prerequisite raises that difficulty by one. Stolen Voice Technique’s deception is automatically successful unless the target has a reason to scrutinize the writing.",
+            "charm-description": "The Lawgiver’s keen ear, sharp eye and steady hand makes her an inveterate thief of words.",
+            "charm-effect": "With this Charm, the Solar can adapt the writing voice of another character. The Solar need only have read one manuscript or three smaller examples of the character’s writing in order to perfectly mimic his writing style. This Charm does not mimic the effects of Flawless Brush Discipline, so the Solar may need to use that Charm to make her script all the more deceiving. Like the prerequisite, the difficulty to pierce this deception is the Solar’s [[ @{linguistics}+@{essence} ]](Linguistics + Essence) score at the time of writing. Combining this Charm with its prerequisite raises that difficulty by one. Stolen Voice Technique’s deception is automatically successful unless the target has a reason to scrutinize the writing.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8177,8 +8177,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Psyche, Written-only",
-            "charm-description": "",
-            "charm-effect": "The Solar binds her words with Essence, folding language into form so winding and deep that all meaning falls into the abyss. This Charm may be used to supplement the writing of letters or other brief works. The information contained in such writing cannot be repeated. The reader momentarily loses his ability to process or remember the contents of the message if he tries to speak it aloud or write it down. Any attempt by the reader to communicate what he knows is rendered useless unless he sees an action occurring in which a Defining Intimacy is threatened by withholding what he knows. Only then may the reader pay [[ @{essence} ]](Solar’s current Essence rating) Willpower to shake off the effects of this Charm.",
+            "charm-description": "The Solar binds her words with Essence, folding language into form so winding and deep that all meaning falls into the abyss.",
+            "charm-effect": "This Charm may be used to supplement the writing of letters or other brief works. The information contained in such writing cannot be repeated. The reader momentarily loses his ability to process or remember the contents of the message if he tries to speak it aloud or write it down. Any attempt by the reader to communicate what he knows is rendered useless unless he sees an action occurring in which a Defining Intimacy is threatened by withholding what he knows. Only then may the reader pay [[ @{essence} ]](Solar’s current Essence rating) Willpower to shake off the effects of this Charm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8201,8 +8201,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "There is a point in the infinite distance where purity and entropy touch. That point is both “before” and “after” but the Solar may reach it with a thought, to draw forth perfect language. While this Charm is active, the Solar speaks a language that can be understood by all who hear it. Knowledge of this language is purely instinctual; characters understand the Solar’s words as she shapes them. Her perfect language cannot be learned, as it has no intelligible words, letters or mechanics. Consequently, it cannot be repeated back to the Solar such that she would comprehend it. This Charm allows purely one way communications, imparting no knowledge of languages the Solar has not yet learned. Spirits despise being addressed by a Solar using this Charm, and the Fair Folk feel physical pain to hear it spoken. A Solar should only use this Charm against such beings if she deliberately intends to cause offense.",
+            "charm-description": "There is a point in the infinite distance where purity and entropy touch. That point is both “before” and “after” but the Solar may reach it with a thought, to draw forth perfect language.",
+            "charm-effect": "While this Charm is active, the Solar speaks a language that can be understood by all who hear it. Knowledge of this language is purely instinctual; characters understand the Solar’s words as she shapes them. Her perfect language cannot be learned, as it has no intelligible words, letters or mechanics. Consequently, it cannot be repeated back to the Solar such that she would comprehend it. This Charm allows purely one way communications, imparting no knowledge of languages the Solar has not yet learned. Spirits despise being addressed by a Solar using this Charm, and the Fair Folk feel physical pain to hear it spoken. A Solar should only use this Charm against such beings if she deliberately intends to cause offense.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8225,8 +8225,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar dwells in a temple of words. With this Charm, she may affect a textual absorption so complete that her Guile becomes perfect and unbreakable. So long as she is reading, she cannot be read. This effect lasts for moments after she has finished reading, allowing the Exalt to completely hide her reaction to what she just read. Using this Charm with Perfect Recollection Discipline allows the Solar to phase out completely, evading prying questions and other attempts to gauge her. In this instance, her defense is no longer perfect, and her Guile may be engaged. However, without magic to pierce her deception, characters will only notice that she is extremely preoccupied or distracted.",
+            "charm-description": "The Solar dwells in a temple of words.",
+            "charm-effect": "With this Charm, she may affect a textual absorption so complete that her Guile becomes perfect and unbreakable. So long as she is reading, she cannot be read. This effect lasts for moments after she has finished reading, allowing the Exalt to completely hide her reaction to what she just read. Using this Charm with Perfect Recollection Discipline allows the Solar to phase out completely, evading prying questions and other attempts to gauge her. In this instance, her defense is no longer perfect, and her Guile may be engaged. However, without magic to pierce her deception, characters will only notice that she is extremely preoccupied or distracted.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8250,7 +8250,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "The Exalt can make out the minute traces of writing that was once readable but has now been damaged or erased. Examples include palimpsests, water-soluble inks that have been left in the damp, and stone monuments that have been rendered unreadable by vandalism or the elements . This Charm cannot read the writing on inscriptions that have been crushed into sand or letters that have been burned to ashes. This Charm does not convey the ability to understand a language the Solar cannot normally read, but she may use this Charm in concert with Flawless Brush Discipline to make a perfect, undamaged copy of the original script for later translation.",
+            "charm-effect": "The Exalt can make out the minute traces of writing that was once readable but has now been damaged or erased. Examples include palimpsests, water-soluble inks that have been left in the damp, and stone monuments that have been rendered unreadable by vandalism or the elements. This Charm cannot read the writing on inscriptions that have been crushed into sand or letters that have been burned to ashes. This Charm does not convey the ability to understand a language the Solar cannot normally read, but she may use this Charm in concert with Flawless Brush Discipline to make a perfect, undamaged copy of the original script for later translation.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8297,8 +8297,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Written-only",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver strikes a body of text with her fingers, reshaping the language to serve her purposes. With this Charm, the Solar may edit a manuscript, letter, or tome with untraceable precision. Where she draws her fingertips through lines, words lift from pages as if they were never written. Where she draws her fingertips through runes, ink chases itself into the shapes of new words. Through use of this Charm, the Solar can change the targets of written social influence, and can redefine what is intended by any social influence she encounters. Modifying a work encrypted with magic allows her to redirect the targets of that magic. If she wishes to alter magic she is incapable of producing, she must possess Essence 5+ and must use Power-Snaring Image in combination with this Charm. This combination explicitly allows her to alter magic for which she does not meet minimums.",
+            "charm-description": "The Lawgiver strikes a body of text with her fingers, reshaping the language to serve her purposes.",
+            "charm-effect": "With this Charm, the Solar may edit a manuscript, letter, or tome with untraceable precision. Where she draws her fingertips through lines, words lift from pages as if they were never written. Where she draws her fingertips through runes, ink chases itself into the shapes of new words. Through use of this Charm, the Solar can change the targets of written social influence, and can redefine what is intended by any social influence she encounters. Modifying a work encrypted with magic allows her to redirect the targets of that magic. If she wishes to alter magic she is incapable of producing, she must possess Essence 5+ and must use Power-Snaring Image in combination with this Charm. This combination explicitly allows her to alter magic for which she does not meet minimums.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8321,15 +8321,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Psyche, Written-only",
-            "charm-description": "",
-            "charm-effect": "The Solar unwinds language with her Essence, writing in such a way that it unbinds the pattern of her reader’s understanding. This Charm supplements a letter written to a specific target, the Solar rolling (Manipulation + Linguistics) to determine its accuracy. If her target reads the letter, he must roll his (Perception + Linguistics) to defend against a swarm of unbinding words that penetrates his mind where languages live. If he fails, his knowledge of all languages is unbound, causing him to forget every language he’s currently able to speak. In addition, the subject develops a completely new language on the spot. This language is both functional and logical—and has letters and grammar mechanics—but it is known only to the Charm’s victim. An Exalt may break this control by paying [[ @{essence} ]](Solar’s Essence rating) Willpower, instantly recovering one of his spoken languages and another every hour until his knowledge has been restored. Otherwise, this effect lasts until the Solar lifts the commitment. When Mind-Swallowing Missive is broken, the subject’s new language vanishes from his memory. This Charm does not affect spirits.",
+            "charm-description": "The Solar unwinds language with her Essence, writing in such a way that it unbinds the pattern of her reader’s understanding.",
+            "charm-effect": "This Charm supplements a letter written to a specific target, the Solar rolling (Manipulation + Linguistics) to determine its accuracy. If her target reads the letter, he must roll his (Perception + Linguistics) to defend against a swarm of unbinding words that penetrates his mind where languages live. If he fails, his knowledge of all languages is unbound, causing him to forget every language he’s currently able to speak. In addition, the subject develops a completely new language on the spot. This language is both functional and logical—and has letters and grammar mechanics—but it is known only to the Charm’s victim. An Exalt may break this control by paying [[ @{essence} ]](Solar’s Essence rating) Willpower, instantly recovering one of his spoken languages and another every hour until his knowledge has been restored. Otherwise, this effect lasts until the Solar lifts the commitment. When Mind-Swallowing Missive is broken, the subject’s new language vanishes from his memory. This Charm does not affect spirits.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "linguistics": 5,
                 "essence": 3
             },
-            "prereq": ["Mind-Swallowing Missive", "Voice-"],
+            "prereq": ["Mind-Swallowing Missive", "Voice-Caging Calligraphy"],
             "charm-skill": "Linguistics",
             "charm-name": "Cup Boils Over",
             "charm-type": "Simple",
@@ -8345,15 +8345,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Written-only",
-            "charm-description": "",
-            "charm-effect": "Caging Calligraphy The Lawgiver pens a soul-shattering missive, convincing her subject he leads a pointless existence. This Charm can only be directed at a specific target. Roll the Exalt’s ([Charisma or Manipulation] + Linguistics), rerolling 6s until 6s fail to appear. If she beats her target’s Resolve, his soul falls off and sinks directly into lethe. This Charm only targets characters who have unintelligibly abstruse Intimacies or no Intimacies at all; however, its effect depends on such an unfulfilled soul’s yearning for purpose and meaning—characters who are incapable of feeling (such as the soul-eaten victims of the Fair Folk) are not valid targets for this Charm.",
+            "charm-description": "The Lawgiver pens a soul-shattering missive, convincing her subject he leads a pointless existence.",
+            "charm-effect": "This Charm can only be directed at a specific target. Roll the Exalt’s ([Charisma or Manipulation] + Linguistics), rerolling 6s until 6s fail to appear. If she beats her target’s Resolve, his soul falls off and sinks directly into lethe. This Charm only targets characters who have unintelligibly abstruse Intimacies or no Intimacies at all; however, its effect depends on such an unfulfilled soul’s yearning for purpose and meaning—characters who are incapable of feeling (such as the soul-eaten victims of the Fair Folk) are not valid targets for this Charm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "linguistics": 5,
                 "essence": 3
             },
-            "prereq": ["Flowing Elegant Hand", "Letter-"],
+            "prereq": ["Flowing Elegant Hand", "Letter-Within-A-Letter Technique", "Subtle Speech Method"],
             "charm-skill": "Linguistics",
             "charm-name": "Twisted Words Technique",
             "charm-type": "Simple",
@@ -8369,15 +8369,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Psyche",
-            "charm-description": "",
-            "charm-effect": "Within-A-Letter Technique, Subtle Speech Method Concentrating on the formation of sounds and the weight of certain meanings, the Solar shapes her words like a weapon. This Charm is a mental attack disguised as social influence, entailing a written or spoken action made with (Manipulation + [Linguistics or another relevant Social Ability]). The Solar must target an Intimacy when using this Charm—exploiting something the character cares about to get him to accept influence. However, upon success, the target will feel overwhelmingly compelled to act in a way that is the opposite of what she agreed to, as if her Intimacy had been inverted. For example, a Solar convinces an Immaculate priest of the evils of the har- lotry in Great Forks, convincing her to shun the temple prostitutes. The priest agrees vehemently, and then goes to live with them. Likewise, a Solar forced to brainwash a Circle member could outwardly torture him, while actually strengthening his Intimacies of love for her and his understanding of why his suffering is necessary. Once successful, persuasion caused by this Charm can’t be resisted with Willpower until another character successfully dissuades the target from a chosen course of action (p. 221), and upon doing so, the target must pay [[@{essence}]](Solar’s Essence) Willpower to break free. Intimacies tainted by this Charm are more insidious— they are both harder to root out, but also indecipherable from what a character truly believes. While Transcendent Hero’s Meditation (p. 308) can shatter persuasion caused by this Charm, it can’t change the Solar’s Intimacies, though it does make her realize how she’s been influenced.",
+            "charm-description": "Concentrating on the formation of sounds and the weight of certain meanings, the Solar shapes her words like a weapon.",
+            "charm-effect": "This Charm is a mental attack disguised as social influence, entailing a written or spoken action made with (Manipulation + [Linguistics or another relevant Social Ability]). The Solar must target an Intimacy when using this Charm—exploiting something the character cares about to get him to accept influence. However, upon success, the target will feel overwhelmingly compelled to act in a way that is the opposite of what she agreed to, as if her Intimacy had been inverted. For example, a Solar convinces an Immaculate priest of the evils of the har- lotry in Great Forks, convincing her to shun the temple prostitutes. The priest agrees vehemently, and then goes to live with them. Likewise, a Solar forced to brainwash a Circle member could outwardly torture him, while actually strengthening his Intimacies of love for her and his understanding of why his suffering is necessary. Once successful, persuasion caused by this Charm can’t be resisted with Willpower until another character successfully dissuades the target from a chosen course of action (p. 221), and upon doing so, the target must pay [[@{essence}]](Solar’s Essence) Willpower to break free. Intimacies tainted by this Charm are more insidious— they are both harder to root out, but also indecipherable from what a character truly believes. While Transcendent Hero’s Meditation (p. 308) can shatter persuasion caused by this Charm, it can’t change the Solar’s Intimacies, though it does make her realize how she’s been influenced.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "linguistics": 5,
                 "essence": 3
             },
-            "prereq": ["Single"],
+            "prereq": ["Single Voice Kata", "Strange Tongue Understanding"],
             "charm-skill": "Linguistics",
             "charm-name": "Excellent Emissary’s Tongue",
             "charm-type": "Reflexive",
@@ -8394,14 +8394,14 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Voice Kata, Strange Tongue Understanding With this Charm, the Exalt may learn to speak and understand a language just by hearing it spoken. The Exalt must spend at least an hour being exposed to the language conversationally. She does not need to be the target of such talk, and can gain this exposure any number of ways: sidling a group of strangers, listening to a carnival barker, and attending a play are all valid examples. After an hour, the Exalt may activate this Charm. At that moment, her understanding of language congeals. As her Essence races to encompass this new system of words, she can speak and understand her new acquisition perfectly, though she retains a -3 penalty to social influence until she has retained and practiced the language intensely for a week. The Solar’s understanding of this language is predicated by her commitment of Essence to the effect. Should she release the motes she has committed to this Charm, her knowledge of the language fades within the hour. However, if she works with an acquired language for a season or more, she learns it permanently and for free, and may safely end her commitment to the effect.",
+            "charm-effect": "With this Charm, the Exalt may learn to speak and understand a language just by hearing it spoken. The Exalt must spend at least an hour being exposed to the language conversationally. She does not need to be the target of such talk, and can gain this exposure any number of ways: sidling a group of strangers, listening to a carnival barker, and attending a play are all valid examples. After an hour, the Exalt may activate this Charm. At that moment, her understanding of language congeals. As her Essence races to encompass this new system of words, she can speak and understand her new acquisition perfectly, though she retains a -3 penalty to social influence until she has retained and practiced the language intensely for a week. The Solar’s understanding of this language is predicated by her commitment of Essence to the effect. Should she release the motes she has committed to this Charm, her knowledge of the language fades within the hour. However, if she works with an acquired language for a season or more, she learns it permanently and for free, and may safely end her commitment to the effect.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "linguistics": 5,
                 "essence": 3
             },
-            "prereq": ["Discerning"],
+            "prereq": ["Discerning Savant’s Eye"],
             "charm-skill": "Linguistics",
             "charm-name": "Perfect Recollection Discipline",
             "charm-type": "Reflexive",
@@ -8417,8 +8417,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "Savant’s Eye Binding a written work or illustration into her consciousness, the Solar creates a perfect memory. A character using this Charm can perfectly memorize such a work in the time it takes to read or study it, activating this Charm to store a mental record of the completed subject. She may then pay one mote to reference any part of the work. As long as she continues to reference the stored work at least once a week, she maintains a perfect memory of any part of it. Once she has maintained such use for a season, the information becomes ingrained and innate, and she may release her mote commitment. If such knowledge fades, the Solar need only pay one mote to revive her memory of the work. Note that this Charm is not a generally eidetic memory: it only conveys memories of that which has been recorded through a medium of language. She can remember what was written on a road sign, but she might be unclear as to where she encountered that sign or what the sign itself looked like. Likewise, memories created in relation to this Charm are not necessarily dependent on magic. Knowledge of a book’s contents, and specific phrases which were significant to her, or which she accessed with this Charm, may stay in her memory after knowledge of a work fades.",
+            "charm-description": "Binding a written work or illustration into her consciousness, the Solar creates a perfect memory",
+            "charm-effect": " A character using this Charm can perfectly memorize such a work in the time it takes to read or study it, activating this Charm to store a mental record of the completed subject. She may then pay one mote to reference any part of the work. As long as she continues to reference the stored work at least once a week, she maintains a perfect memory of any part of it. Once she has maintained such use for a season, the information becomes ingrained and innate, and she may release her mote commitment. If such knowledge fades, the Solar need only pay one mote to revive her memory of the work. Note that this Charm is not a generally eidetic memory: it only conveys memories of that which has been recorded through a medium of language. She can remember what was written on a road sign, but she might be unclear as to where she encountered that sign or what the sign itself looked like. Likewise, memories created in relation to this Charm are not necessarily dependent on magic. Knowledge of a book’s contents, and specific phrases which were significant to her, or which she accessed with this Charm, may stay in her memory after knowledge of a work fades.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8441,8 +8441,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "Mind quickened by flowing Essence, the Exalt reads at superhuman speed. She can read a scroll as quickly as she can unroll it, and a book as fast as she can turn the pages— approximately three pages per second.",
+            "charm-description": "Mind quickened by flowing Essence, the Exalt reads at superhuman speed.",
+            "charm-effect": "She can read a scroll as quickly as she can unroll it, and a book as fast as she can turn the pages— approximately three pages per second.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8465,8 +8465,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "Even chained in a lightless dungeon, the Lawgiver can write a book that transforms the world. This Charm allows the Solar to engage an extended roll to produce a long work (p. 221) without requiring that she have any writing instruments. The Exalt stores her progress mentally, and may copy it down at her earliest convenience. There is no limit to how many novels, epics, and dogmas the Exalt may store in this fashion. As the Solar is copying her own work, she may use a combination of Whirling Brush Method and Perfect Recollection Discipline to copy a remembered work with tremendous speed. The Solar is explicitly permitted to enhance any writing she composes in her head with other Linguistics Charms, even those with the written-only keyword.",
+            "charm-description": "Even chained in a lightless dungeon, the Lawgiver can write a book that transforms the world.",
+            "charm-effect": "This Charm allows the Solar to engage an extended roll to produce a long work (p. 221) without requiring that she have any writing instruments. The Exalt stores her progress mentally, and may copy it down at her earliest convenience. There is no limit to how many novels, epics, and dogmas the Exalt may store in this fashion. As the Solar is copying her own work, she may use a combination of Whirling Brush Method and Perfect Recollection Discipline to copy a remembered work with tremendous speed. The Solar is explicitly permitted to enhance any writing she composes in her head with other Linguistics Charms, even those with the written-only keyword.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8489,8 +8489,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Essence of the universe flowing through her mind, the Solar draws on a library of words as deep as the celestial vault. This Charm magnifies the Solar’s ability to compose massive volumes of complex information, allowing her to complete difficult manuscripts with increased speed. This Charm supplements an extended roll to produce such work (see p. 221), automatically reducing the interval by one unit, from years to seasons, seasons to months, and months to weeks. While this Charm greatly speeds the Solar’s efforts, it does not directly influence the mechanical speed with which she lays down words—her speed is increased by a streamlining of thought processes and an amplification of the mental faculties that surround vocabulary and dissemination skills, rather than an increase of manual dexterity. The Exalt must use this Charm against each interval she wishes to shorten, and must be able to dedicate the required time and writing instruments to the task. If this Charm is used in combination with its prerequisite, ignore this Charm’s Willpower cost. A repurchase at Essence 4+ allows the Exalt to pay twelve motes, one Willpower, to reduce an interval by two units. Reducing the work of years to months, or seasons to weeks is a challenging feat if the Solar does all the work mentally ; if she is physically writing, she may need Whirling Brush Method to keep up with the speed at which she can process ideas. The Lawgiver may not yet reduce production time of a tome to less than a unit of weeks. A second repurchase at Essence 5+ allows the Exalt to pay fifteen motes, one Willpower, to reduce an interval by a full three units of time. An Exalt with this Charm can reduce the time it takes to produce work from years to weeks, and from months to hours. If the Lawgiver is writing as she works, she will not get the full speed of her creative process without the use of Whirling Brush Method, and even then, she may be seen to spend several sleepless nights constructing single massive works.",
+            "charm-description": "The Essence of the universe flowing through her mind, the Solar draws on a library of words as deep as the celestial vault.",
+            "charm-effect": "This Charm magnifies the Solar’s ability to compose massive volumes of complex information, allowing her to complete difficult manuscripts with increased speed. This Charm supplements an extended roll to produce such work (see p. 221), automatically reducing the interval by one unit, from years to seasons, seasons to months, and months to weeks. While this Charm greatly speeds the Solar’s efforts, it does not directly influence the mechanical speed with which she lays down words—her speed is increased by a streamlining of thought processes and an amplification of the mental faculties that surround vocabulary and dissemination skills, rather than an increase of manual dexterity. The Exalt must use this Charm against each interval she wishes to shorten, and must be able to dedicate the required time and writing instruments to the task. If this Charm is used in combination with its prerequisite, ignore this Charm’s Willpower cost. A repurchase at Essence 4+ allows the Exalt to pay twelve motes, one Willpower, to reduce an interval by two units. Reducing the work of years to months, or seasons to weeks is a challenging feat if the Solar does all the work mentally ; if she is physically writing, she may need Whirling Brush Method to keep up with the speed at which she can process ideas. The Lawgiver may not yet reduce production time of a tome to less than a unit of weeks. A second repurchase at Essence 5+ allows the Exalt to pay fifteen motes, one Willpower, to reduce an interval by a full three units of time. An Exalt with this Charm can reduce the time it takes to produce work from years to weeks, and from months to hours. If the Lawgiver is writing as she works, she will not get the full speed of her creative process without the use of Whirling Brush Method, and even then, she may be seen to spend several sleepless nights constructing single massive works.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8537,8 +8537,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Psyche",
-            "charm-description": "",
-            "charm-effect": "The Solar speaks in such a magnetic and engaging fashion that those who can hear her become powerless to do anything but listen. Roll the Solar’s (Manipulation + Linguistics ) with [[@{essence}]](Essence) automatic successes, ignoring the penalty for group influence. The Solar may not exploit targeted Intimacies to lower Resolve, nor may Intimacies be invoked to raise Resolve against this effect. Those who fail their Resolve checks are entranced by the Solar’s voice and are held enraptured until she ceases speaking for more than a few seconds. Even characters who don’t understand the Solar’s language can succumb to this power. This Charm may also be used to ensnare and captivate a reader: if a character reads so much as a single line of writing reinforced with Unbreakable Fascination Method, he must engage his Resolve, and if he fails, he must continue reading what the Solar has written in its entirety, though this Charm may only hold a reader rapt for [[@{essence}]](Essence) minutes. This Charm may not be resisted with Willpower. Attack cancels the Charm, but only direct physical danger disrupts the effect. A brave or suicidal Exalt could keep a platoon of guards with her in a burning building until it was fully engulfed, but they would not stand there listening as the flaming timbers started crashing down around them.",
+            "charm-description": "The Solar speaks in such a magnetic and engaging fashion that those who can hear her become powerless to do anything but listen.",
+            "charm-effect": "Roll the Solar’s (Manipulation + Linguistics ) with [[@{essence}]](Essence) automatic successes, ignoring the penalty for group influence. The Solar may not exploit targeted Intimacies to lower Resolve, nor may Intimacies be invoked to raise Resolve against this effect. Those who fail their Resolve checks are entranced by the Solar’s voice and are held enraptured until she ceases speaking for more than a few seconds. Even characters who don’t understand the Solar’s language can succumb to this power. This Charm may also be used to ensnare and captivate a reader: if a character reads so much as a single line of writing reinforced with Unbreakable Fascination Method, he must engage his Resolve, and if he fails, he must continue reading what the Solar has written in its entirety, though this Charm may only hold a reader rapt for [[@{essence}]](Essence) minutes. This Charm may not be resisted with Willpower. Attack cancels the Charm, but only direct physical danger disrupts the effect. A brave or suicidal Exalt could keep a platoon of guards with her in a burning building until it was fully engulfed, but they would not stand there listening as the flaming timbers started crashing down around them.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8561,8 +8561,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver settles down for a minimum of one minute, writing a description of a person with certain character traits the Exalt requires. In a single minute she can describe a character’s specific appearance (“a man with an islander ’s cast”), skill set (“good at being discrete, fully literate in Seatongue and skilled in Azurite legal writ”), social Ties (or lack thereof), and a Major or Defining Principle. Then the Solar waits. If a mortal who matches the description of the character is within a day’s travel, they will arrive at the place where the Solar wrote the description within the day. If the Solar is in an unreachable or foreboding place the character will only go as far as they are comfortable before returning to their regular course. Characters drawn by this Charm are not aware of any overt magic that has drawn them to the place of writing. It is up to the Exalt to identify the character, and then to do with them as she wishes. This Charm provides no guarantee that the subject will cooperate, or that they will appreciate being set on by the Solar. It gives her no control over them whatsoever, only a chance to compel them to her purposes. It may also come to pass that no character in range perfectly matches the Solar’s bequest. In that case, the nearest match to the description will be drawn instead. On Soul-Drawing Pattern A neat little power, giving you anything from a helpful lawyer to a hot date.",
+            "charm-description": "The Lawgiver settles down for a minimum of one minute, writing a description of a person with certain character traits the Exalt requires.",
+            "charm-effect": "In a single minute she can describe a character’s specific appearance (“a man with an islander ’s cast”), skill set (“good at being discrete, fully literate in Seatongue and skilled in Azurite legal writ”), social Ties (or lack thereof), and a Major or Defining Principle. Then the Solar waits. If a mortal who matches the description of the character is within a day’s travel, they will arrive at the place where the Solar wrote the description within the day. If the Solar is in an unreachable or foreboding place the character will only go as far as they are comfortable before returning to their regular course. Characters drawn by this Charm are not aware of any overt magic that has drawn them to the place of writing. It is up to the Exalt to identify the character, and then to do with them as she wishes. This Charm provides no guarantee that the subject will cooperate, or that they will appreciate being set on by the Solar. It gives her no control over them whatsoever, only a chance to compel them to her purposes. It may also come to pass that no character in range perfectly matches the Solar’s bequest. In that case, the nearest match to the description will be drawn instead. On Soul-Drawing Pattern A neat little power, giving you anything from a helpful lawyer to a hot date.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8590,7 +8590,7 @@
             "charm-rollexpr": ""
         }
     ],
-    "Lore": [{
+    "Lore DONE": [{
             "attr-mins": {
                 "lore": 2,
                 "essence": 1
@@ -8611,8 +8611,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver is the embodiment of order. With her knowledge and will, chaos is cast asunder. Through use of this Charm, the Exalt may fix her notice on any object, structure , or character (including herself) at the moment it is first affected by the twisting power of the Wyld. The Solar’s solid knowledge flows out in a rush of Essence, sluicing away the Wyld’s influence. In addition, roll ([the Solar’s Mental Attribute] + Lore) with [[@{essence}]](Essence) non-Charm bonus dice, with a difficulty based on the source of the warping, with the bordermarches being difficulty 3 and the deep Wyld being difficulty 5. Any extra successes on this roll equates to a number of turns (in combat) or minutes (out of combat) for which the target of Wyld- Dispelling Prana becomes immune to further twisting. This Charm may affect a character at up to medium range, and requires multiple uses to protect objects or structures larger than a horse. Special activation rules: After using this Charm once in a scene, the Solar does not need to pay to use it again unless she fails the subsequent Lore roll; she may continue to direct sluicing bolts of Essence at targets for free, until the subsequent Lore roll fails to produce any successes.",
+            "charm-description": "The Lawgiver is the embodiment of order. With her knowledge and will, chaos is cast asunder.",
+            "charm-effect": "Through use of this Charm, the Exalt may fix her notice on any object, structure , or character (including herself) at the moment it is first affected by the twisting power of the Wyld. The Solar’s solid knowledge flows out in a rush of Essence, sluicing away the Wyld’s influence. In addition, roll ([the Solar’s Mental Attribute] + Lore) with [[@{essence}]](Essence) non-Charm bonus dice, with a difficulty based on the source of the warping, with the bordermarches being difficulty 3 and the deep Wyld being difficulty 5. Any extra successes on this roll equates to a number of turns (in combat) or minutes (out of combat) for which the target of Wyld- Dispelling Prana becomes immune to further twisting. This Charm may affect a character at up to medium range, and requires multiple uses to protect objects or structures larger than a horse. Special activation rules: After using this Charm once in a scene, the Solar does not need to pay to use it again unless she fails the subsequent Lore roll; she may continue to direct sluicing bolts of Essence at targets for free, until the subsequent Lore roll fails to produce any successes.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8635,8 +8635,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "By asserting her existence against the ravages of chaos, the Solar makes her person sacrosanct. Through use of this Charm, the Solar protects an area around herself out to short range in every direction. Characters within this area of focus cannot be twisted by the Wyld, nor can their minds be torn asunder by its influence. Chaos- Repelling Pattern also forces the environment within its area of effect to behave with the physical laws of Creation. The ground will not transform beneath the Solar’s feet, nor will she suddenly fall into the sky. However, this Charm does nothing to stop creatures of the Wyld from attacking the Solar, nor will it do anything to change their composition. At the end of an hour, if the Exalt chooses to reactivate this Charm, ignore the Willpower cost.",
+            "charm-description": "By asserting her existence against the ravages of chaos, the Solar makes her person sacrosanct.",
+            "charm-effect": "Through use of this Charm, the Solar protects an area around herself out to short range in every direction. Characters within this area of focus cannot be twisted by the Wyld, nor can their minds be torn asunder by its influence. Chaos- Repelling Pattern also forces the environment within its area of effect to behave with the physical laws of Creation. The ground will not transform beneath the Solar’s feet, nor will she suddenly fall into the sky. However, this Charm does nothing to stop creatures of the Wyld from attacking the Solar, nor will it do anything to change their composition. At the end of an hour, if the Exalt chooses to reactivate this Charm, ignore the Willpower cost.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8659,8 +8659,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar’s mind covers a spectrum of mastered topics. With this Charm, add the Solar’s Essence in non-Charm automatic successes to any Lore roll that involves a Lore specialty. In addition, the player may add an additional Lore specialty to her list of Lore topics at the end of each story. The Storyteller may veto any particular topic, in which case the player is allowed to choose another specialty that’s more acceptable. Finally, at any point in which the Solar succeeds at a moderately or extremely difficult roll to introduce or challenge a fact (p. 237), the player may request to add a related topic to the Solar’s library of known topics. As with all other topics, this is allowable only at the Storyteller’s discretion.",
+            "charm-description": "The Solar’s mind covers a spectrum of mastered topics.",
+            "charm-effect": "With this Charm, add the Solar’s Essence in non-Charm automatic successes to any Lore roll that involves a Lore specialty. In addition, the player may add an additional Lore specialty to her list of Lore topics at the end of each story. The Storyteller may veto any particular topic, in which case the player is allowed to choose another specialty that’s more acceptable. Finally, at any point in which the Solar succeeds at a moderately or extremely difficult roll to introduce or challenge a fact (p. 237), the player may request to add a related topic to the Solar’s library of known topics. As with all other topics, this is allowable only at the Storyteller’s discretion.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8683,8 +8683,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "Affecting a calm and patient demeanor, the Solar is able to project the light of her knowledge into the darkest of places. While affecting this Charm, the Solar ignores all penalties to teach someone. She can educate a person who is deemed medically incapable of learning, such as someone who is developmentally disabled, or someone who has suffered traumatic injury or privation by the Fair Folk. This Charm does not affect social influence rolls to persuade a character of something.",
+            "charm-description": "Affecting a calm and patient demeanor, the Solar is able to project the light of her knowledge into the darkest of places.",
+            "charm-effect": "While affecting this Charm, the Solar ignores all penalties to teach someone. She can educate a person who is deemed medically incapable of learning, such as someone who is developmentally disabled, or someone who has suffered traumatic injury or privation by the Fair Folk. This Charm does not affect social influence rolls to persuade a character of something.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8707,8 +8707,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver is a master instructor, capable of passing on truths and talents as surely as the sun passes daylight. To activate this Charm, the Solar commits a number of experience points from her own unspent experience total. She may confer these experience points to another character by delivering a lesson she has constructed, allowing her to train a character’s Attributes or Abilities up to a rating of 5, even if this puts the character beyond her own rating. However, for each three experience points the Solar spends on the character in question, that character must adopt, at the Minor level, an Intimacy the Solar holds. The Solar may choose which Intimacy is conferred. For each three experience points conferred, the Solar may confer individual Intimacies, or she may increase a single Intimacy’s intensity from Minor to Major, or from Major to Defining, so long as she holds that Intimacy at the Major or Defining level herself. Intimacies conferred in this manner cannot be decayed for any reason until the character has performed at least one task equal to that Intimacy ’s intensity (p. 215). The Solar has sole discretion over who is able to benefit from the experience points on offer. Refer to training times on page 178 to determine how long each training session should take. At the end of each story, the Solar may roll a number of dice equal to experience points spent on this Charm, regaining a number of experience equal to her successes, but not beyond the total amount of experience she expended in training. A Solar with Socialize Charms related to the creation of personas may use this Charm while in the guise of a persona, but she must pay from both her main unspent experience total and the persona’s unspent experience total to do so. Lastly, the Solar cannot benefit from this or any other experience-granting training Charm in the same story in which she uses it to benefit someone else.",
+            "charm-description": "The Lawgiver is a master instructor, capable of passing on truths and talents as surely as the sun passes daylight.",
+            "charm-effect": "To activate this Charm, the Solar commits a number of experience points from her own unspent experience total. She may confer these experience points to another character by delivering a lesson she has constructed, allowing her to train a character’s Attributes or Abilities up to a rating of 5, even if this puts the character beyond her own rating. However, for each three experience points the Solar spends on the character in question, that character must adopt, at the Minor level, an Intimacy the Solar holds. The Solar may choose which Intimacy is conferred. For each three experience points conferred, the Solar may confer individual Intimacies, or she may increase a single Intimacy’s intensity from Minor to Major, or from Major to Defining, so long as she holds that Intimacy at the Major or Defining level herself. Intimacies conferred in this manner cannot be decayed for any reason until the character has performed at least one task equal to that Intimacy ’s intensity (p. 215). The Solar has sole discretion over who is able to benefit from the experience points on offer. Refer to training times on page 178 to determine how long each training session should take. At the end of each story, the Solar may roll a number of dice equal to experience points spent on this Charm, regaining a number of experience equal to her successes, but not beyond the total amount of experience she expended in training. A Solar with Socialize Charms related to the creation of personas may use this Charm while in the guise of a persona, but she must pay from both her main unspent experience total and the persona’s unspent experience total to do so. Lastly, the Solar cannot benefit from this or any other experience-granting training Charm in the same story in which she uses it to benefit someone else.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8731,8 +8731,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver fortifies her allies with actions as surely as with words. Upon touching a target and paying three motes, the Solar may transfer up to [[ @{essence} * 3 ]](Essence * 3) motes from her mote pool to her target’s. In addition, once per scene she may roll Wits + Lore, generating a number of motes equal to her successes and awarding them to her target. If the target cannot accept all the motes transferred by Essence-Lending Method he has until his next action to spend them before they dissipate.",
+            "charm-description": "The Lawgiver fortifies her allies with actions as surely as with words.",
+            "charm-effect": "Upon touching a target and paying three motes, the Solar may transfer up to [[ @{essence} * 3 ]](Essence * 3) motes from her mote pool to her target’s. In addition, once per scene she may roll Wits + Lore, generating a number of motes equal to her successes and awarding them to her target. If the target cannot accept all the motes transferred by Essence-Lending Method he has until his next action to spend them before they dissipate.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8779,8 +8779,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "A Solar is not safe to pass on her knowledge. This Charm supplements an effort to train characters with the prerequisite , disguising subversive or dangerous lessons as something they’re not. The Lawgiver might appear to be giving a lesson on Immaculate catechisms while actually training itinerants to resist the Realm; a lesson on eroticism might hide insights into demonology. Only the targets of the Solar’s training can understand the true meaning of her lesson.",
+            "charm-description": "A Solar is not safe to pass on her knowledge.",
+            "charm-effect": "This Charm supplements an effort to train characters with the prerequisite, disguising subversive or dangerous lessons as something they’re not. The Lawgiver might appear to be giving a lesson on Immaculate catechisms while actually training itinerants to resist the Realm; a lesson on eroticism might hide insights into demonology. Only the targets of the Solar’s training can understand the true meaning of her lesson.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8803,15 +8803,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "In a flash of insight, the student becomes the master. As per Flowing Mind Prana, when the Solar rolls to regain experience points at the end of the story, she may pay one experience point to activate this Charm, reflecting on her student’s progress. This allows her to reroll all non-successes on the roll to regain experience a single time. This Charm explicitly allows the Solar to gain back more experience points than she invested in training. If this occurs, “overage” experience does not count toward progress to raise the character’s Essence.",
+            "charm-description": "In a flash of insight, the student becomes the master.",
+            "charm-effect": "As per Flowing Mind Prana, when the Solar rolls to regain experience points at the end of the story, she may pay one experience point to activate this Charm, reflecting on her student’s progress. This allows her to reroll all non-successes on the roll to regain experience a single time. This Charm explicitly allows the Solar to gain back more experience points than she invested in training. If this occurs, “overage” experience does not count toward progress to raise the character’s Essence.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "lore": 4,
                 "essence": 2
             },
-            "prereq": ["Harmonious"],
+            "prereq": ["Harmonious Academic Methodology"],
             "charm-skill": "Lore",
             "charm-name": "Bottomless Wellspring Approach",
             "charm-type": "Permanent",
@@ -8827,8 +8827,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "Academic Methodology The Solar is a living font of vital knowledge. This Charm enhances rolls to introduce or challenge facts. She can now roll to establish a fact whenever her knowledge of historical events, cultural norms, local myths and rumors, number systems, etc. is challenged. If the topic in question falls into the Solar’s Lore expertise—that is, the background reflected by her Lore rating—or any of her Lore specialties, she gains one automatic success on the roll, and any extra successes she generates are doubled. However, the criteria under which Storytellers may veto introduced facts remain unchanged.",
+            "charm-description": "The Solar is a living font of vital knowledge.",
+            "charm-effect": "This Charm enhances rolls to introduce or challenge facts. She can now roll to establish a fact whenever her knowledge of historical events, cultural norms, local myths and rumors, number systems, etc. is challenged. If the topic in question falls into the Solar’s Lore expertise—that is, the background reflected by her Lore rating—or any of her Lore specialties, she gains one automatic success on the roll, and any extra successes she generates are doubled. However, the criteria under which Storytellers may veto introduced facts remain unchanged.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8851,8 +8851,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar draws the legend of Creation from deep within her consciousness. This Charm supplements an attempt to introduce or challenge a fact (p. 237), awarding one automatic success and rerolling 6s until 6s no longer appear. If the Exalt has learned Immanent Solar Glory (p. 334), the Solar may always roll to establish her knowledge , even if the Storyteller determines she succeeds without a roll.",
+            "charm-description": "The Solar draws the legend of Creation from deep within her consciousness.",
+            "charm-effect": "This Charm supplements an attempt to introduce or challenge a fact (p. 237), awarding one automatic success and rerolling 6s until 6s no longer appear. If the Exalt has learned Immanent Solar Glory (p. 334), the Solar may always roll to establish her knowledge , even if the Storyteller determines she succeeds without a roll.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8875,8 +8875,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "By focusing intently on a subject, the Solar can produce a sudden insight. This Charm is a ([Mental Attribute] + Lore) based read intentions action against a difficulty based on whether the subject of this examination falls into the Solar’s area of expertise. This read intentions action can be used on an object to reveal its purpose and function, such as with a mysterious artifact, though it does not reveal how to use it. It can also be used on geography which the Solar has studied, to give the Lawgiver or the person she is advising [[@{essence}]](Solar’s Essence) non-Charm bonus dice for Survival or War rolls for the rest of the scene. If she is a student of Shogunate architecture, she could tell that a dilapidated structure being used for a market was a Shogunate-era Immaculate temple. If she is a mathematician, the numbers speak to her; she may solve a complex proof in her head, in a matter of seconds. With this Charm, the Solar polymath awakens the world from its dark slumber.",
+            "charm-description": "By focusing intently on a subject, the Solar can produce a sudden insight.",
+            "charm-effect": "This Charm is a ([Mental Attribute] + Lore) based read intentions action against a difficulty based on whether the subject of this examination falls into the Solar’s area of expertise. This read intentions action can be used on an object to reveal its purpose and function, such as with a mysterious artifact, though it does not reveal how to use it. It can also be used on geography which the Solar has studied, to give the Lawgiver or the person she is advising [[@{essence}]](Solar’s Essence) non-Charm bonus dice for Survival or War rolls for the rest of the scene. If she is a student of Shogunate architecture, she could tell that a dilapidated structure being used for a market was a Shogunate-era Immaculate temple. If she is a mathematician, the numbers speak to her; she may solve a complex proof in her head, in a matter of seconds. With this Charm, the Solar polymath awakens the world from its dark slumber.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8899,8 +8899,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver can channel her very life-force into another. The Solar must touch her target to use this technique, healing up to [[@{essence}]](Essence) damaged health levels in her target and taking a like amount of damage herself. It is possible for an Exalt to kill herself with this Charm.",
+            "charm-description": "The Lawgiver can channel her very life-force into another.",
+            "charm-effect": "The Solar must touch her target to use this technique, healing up to [[@{essence}]](Essence) damaged health levels in her target and taking a like amount of damage herself. It is possible for an Exalt to kill herself with this Charm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8923,8 +8923,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar becomes a conduit for tremendous power. This Charm turns the prerequisite and Essence-Lending Method into Reflexive Charms, allowing them to be combined. Furthermore , when they are combined, ignore the three mote cost of Essence-Lending Method and the Willpower cost of Will-Bolstering Method. In addition, each roll in this cascade gains recurring 10s. That is, if a 10 appears, roll another die. Keep rolling dice until no further 10s appear.",
+            "charm-description": "The Solar becomes a conduit for tremendous power.",
+            "charm-effect": "This Charm turns the prerequisite and Essence-Lending Method into Reflexive Charms, allowing them to be combined. Furthermore , when they are combined, ignore the three mote cost of Essence-Lending Method and the Willpower cost of Will-Bolstering Method. In addition, each roll in this cascade gains recurring 10s. That is, if a 10 appears, roll another die. Keep rolling dice until no further 10s appear.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -8995,15 +8995,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "By examining a relic of the past, the Lawgiver can unlock the secret of how to use it. Using this Charm requires that the Solar touch an artifact whose purpose or use is unknown, rolling (Intelligence + Lore) against a difficulty of the artifact ’s rating. If successful, the Exalt gains a vision that reveals how to activate or employ the artifact. If the object or structure ’s rating is N/A, the difficulty is 8-10, and rather than revealing exactly how the construct functions, the Solar only learns a fact about it which brings her closer to understanding it. This latter use can only be employed once per story.",
+            "charm-description": "By examining a relic of the past, the Lawgiver can unlock the secret of how to use it.",
+            "charm-effect": "Using this Charm requires that the Solar touch an artifact whose purpose or use is unknown, rolling (Intelligence + Lore) against a difficulty of the artifact ’s rating. If successful, the Exalt gains a vision that reveals how to activate or employ the artifact. If the object or structure ’s rating is N/A, the difficulty is 8-10, and rather than revealing exactly how the construct functions, the Solar only learns a fact about it which brings her closer to understanding it. This latter use can only be employed once per story.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "lore": 5,
                 "essence": 3
             },
-            "prereq": ["Sacred Relic Understanding + Any"],
+            "prereq": ["Sacred Relic Understanding + Any two Lore Charms"],
             "charm-skill": "Lore",
             "charm-name": "Wake the Sleeper",
             "charm-type": "Simple",
@@ -9019,15 +9019,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "two Lore Charms The Solar can unlock the true potential of an artifact. Grasping an artifact to which she is attuned, and which is capable of Evocations, the Lawgiver sends her Essence surging through the relic’s chakras, merging its spirit with her own. Roll the Solar’s ([Intelligence or Wits] + Lore) against a difficulty of (the object’s rating + 2), or 10 if it’s N/A. If the roll gains at least one success, the Solar automatically unlocks one of the artifact’s Evocations without spending experience points. If the Solar rolls successes in excess of the difficulty, she unlocks half the extra successes (rounded down) in Evocations. This Charm may be used once per story, and may not be used again on the same artifact until an amount of experience has been invested in it equal to the cost of the Evocations that were unlocked for free. The Exalt may not use this Charm to aid another character in awakening Evocations until she is Essence 5+. Waive this requirement if Lore is her Supernal Ability.",
+            "charm-description": "The Solar can unlock the true potential of an artifact.",
+            "charm-effect": "Grasping an artifact to which she is attuned, and which is capable of Evocations, the Lawgiver sends her Essence surging through the relic’s chakras, merging its spirit with her own. Roll the Solar’s ([Intelligence or Wits] + Lore) against a difficulty of (the object’s rating + 2), or 10 if it’s N/A. If the roll gains at least one success, the Solar automatically unlocks one of the artifact’s Evocations without spending experience points. If the Solar rolls successes in excess of the difficulty, she unlocks half the extra successes (rounded down) in Evocations. This Charm may be used once per story, and may not be used again on the same artifact until an amount of experience has been invested in it equal to the cost of the Evocations that were unlocked for free. The Exalt may not use this Charm to aid another character in awakening Evocations until she is Essence 5+. Waive this requirement if Lore is her Supernal Ability.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "lore": 5,
                 "essence": 3
             },
-            "prereq": ["Truth-Rendering Gaze + Any two"],
+            "prereq": ["Truth-Rendering Gaze + Any two Lore Charms"],
             "charm-skill": "Lore",
             "charm-name": "Heaven-Turning Calculations",
             "charm-type": "Permanent",
@@ -9044,7 +9044,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Lore Charms This Charm is special, in that it requires the Solar’s Lore rating to reflect a background of intense mathematic study. With this Charm, the Exalt’s study of number theory and proofs unlocks her ability to approach complex problems mathematically. Add [[@{essence}]](Essence) non-Charm bonus dice to her Craft, spell effects, and speculative Bureaucracy rolls, to Lore rolls which require logic or mathematics, and to any use of Wyld-Shaping Technique.",
+            "charm-effect": "This Charm is special, in that it requires the Solar’s Lore rating to reflect a background of intense mathematic study. With this Charm, the Exalt’s study of number theory and proofs unlocks her ability to approach complex problems mathematically. Add [[@{essence}]](Essence) non-Charm bonus dice to her Craft, spell effects, and speculative Bureaucracy rolls, to Lore rolls which require logic or mathematics, and to any use of Wyld-Shaping Technique.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9091,8 +9091,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Exalt may draw the Essence from a target with a touch. If the target possesses a mote pool, the Exalt may touch him and pay one Willpower to roll (Wits + Lore) against his Resolve (unmodified by Intimacies), stealing motes equal to the extra successes from his peripheral mote pool (defaulting to personal if their peripheral Essence is depleted ). In combat, this is a difficulty 5 gambit executed with a hand-to-hand combat Ability of the Exalt’s choice.",
+            "charm-description": "The Exalt may draw the Essence from a target with a touch.",
+            "charm-effect": "If the target possesses a mote pool, the Exalt may touch him and pay one Willpower to roll (Wits + Lore) against his Resolve (unmodified by Intimacies), stealing motes equal to the extra successes from his peripheral mote pool (defaulting to personal if their peripheral Essence is depleted ). In combat, this is a difficulty 5 gambit executed with a hand-to-hand combat Ability of the Exalt’s choice.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9139,8 +9139,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Clash, Decisive-only",
-            "charm-description": "",
-            "charm-effect": "The Solar’s knowledge of the world’s secrets allows her to gainsay any force that would strike her down. As she is struck with a decisive attack, the Solar glances into the underpinnings of the universe, and utters a cipher she sees there. Roll the Exalt’s (Wits + Lore). Each success removes a single die of damage from the attack and converts it to a point of Initiative granted to the Lawgiver. Solars have been seen to walk unharmed through direct hits from offensive sorcery through use of this Charm. Force-Draining Whisper may be used once per scene, but is reset if the Solar or any of her allies reaches their last undamaged health level. At Essence 4+, the Solar may use this Charm to protect an ally at up to long range.",
+            "charm-description": "The Solar’s knowledge of the world’s secrets allows her to gainsay any force that would strike her down.",
+            "charm-effect": "As she is struck with a decisive attack, the Solar glances into the underpinnings of the universe, and utters a cipher she sees there. Roll the Exalt’s (Wits + Lore). Each success removes a single die of damage from the attack and converts it to a point of Initiative granted to the Lawgiver. Solars have been seen to walk unharmed through direct hits from offensive sorcery through use of this Charm. Force-Draining Whisper may be used once per scene, but is reset if the Solar or any of her allies reaches their last undamaged health level. At Essence 4+, the Solar may use this Charm to protect an ally at up to long range.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9163,8 +9163,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar draws strength from her own recurring Essence. Any time the Solar rolls a 10 for any Lore-based roll, or any Lore Charm, she gains a mote of Essence.",
+            "charm-description": "The Solar draws strength from her own recurring Essence.",
+            "charm-effect": "Any time the Solar rolls a 10 for any Lore-based roll, or any Lore Charm, she gains a mote of Essence.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9211,8 +9211,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Perilous",
-            "charm-description": "",
-            "charm-effect": "When her anima is blazing, the Solar sees the flows of power clearly. While in combat, she may use this Charm to release her iconic anima. The blazing tendrils of her power race in every direction, striking her allies and drawing new power to them. The range of this effect is unlimited, within the same scene. Roll the Solar’s (Perception + Lore) with [[@{essence}]](Essence) automatic successes. Convert generated successes into motes of Essence and divide the awards amongst applicable allies. Using this Charm returns the Solar’s anima to the dim level. At Essence 5+, remove the Perilous keyword, allowing her to spend Initiative into the negatives.",
+            "charm-description": "When her anima is blazing, the Solar sees the flows of power clearly.",
+            "charm-effect": "While in combat, she may use this Charm to release her iconic anima. The blazing tendrils of her power race in every direction, striking her allies and drawing new power to them. The range of this effect is unlimited, within the same scene. Roll the Solar’s (Perception + Lore) with [[@{essence}]](Essence) automatic successes. Convert generated successes into motes of Essence and divide the awards amongst applicable allies. Using this Charm returns the Solar’s anima to the dim level. At Essence 5+, remove the Perilous keyword, allowing her to spend Initiative into the negatives.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9259,8 +9259,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The ravages of the Wyld and alterations to the Loom of Fate can be reversed by the Solar Exalted. With this Charm, the Solar can shatter the twisting effects of magic and the Wyld, stripping away all such effects and restoring a target to his natural state. If the target does not want to be touched, this can be executed socially with a successful Larceny vs. Awareness contest to clandestinely touch the target, or if the target is a bit more incautious, the Solar may attempt to seduce him in order to deliver the touch. In combat, this Charm is a difficulty 5 gambit made with the Solar’s chosen hand-to-hand combat Ability. Fair Folk touched by this Charm are not undone, but experience a temporary transformation lasting [[@{essence}]](Solar’s Essence) scenes, whose severity is based on an Intimacy the Fair Folk has for the Solar, as well as its context. If the Fair Folk has no Intimacy for the Solar, the Storyteller may decide how it is changed. The Fair Folk’s player may also veto any changes to their character that makes him virtually unplayable or helpless.",
+            "charm-description": "The ravages of the Wyld and alterations to the Loom of Fate can be reversed by the Solar Exalted.",
+            "charm-effect": "With this Charm, the Solar can shatter the twisting effects of magic and the Wyld, stripping away all such effects and restoring a target to his natural state. If the target does not want to be touched, this can be executed socially with a successful Larceny vs. Awareness contest to clandestinely touch the target, or if the target is a bit more incautious, the Solar may attempt to seduce him in order to deliver the touch. In combat, this Charm is a difficulty 5 gambit made with the Solar’s chosen hand-to-hand combat Ability. Fair Folk touched by this Charm are not undone, but experience a temporary transformation lasting [[@{essence}]](Solar’s Essence) scenes, whose severity is based on an Intimacy the Fair Folk has for the Solar, as well as its context. If the Fair Folk has no Intimacy for the Solar, the Storyteller may decide how it is changed. The Fair Folk’s player may also veto any changes to their character that makes him virtually unplayable or helpless.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9307,8 +9307,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar can teach the land to hone its masters. With use of this Charm, each time the Exalt uses Wyld-Shaping Technique to build a place of trade, practice, or service, her creation will also produce a specialist to work there. This works through a system of conceptual graduation: if she shapes forest lands, the people who rise from her working will be forest people. If she creates a blacksmith’s forge, one of the arisen mortals will be a blacksmith with an appropriately high Craft score. If she creates a hunting lodge, her working will produce hunters. If she creates a medicine hut, her land will produce a shaman-healer, and so on.",
+            "charm-description": "The Solar can teach the land to hone its masters.",
+            "charm-effect": "With use of this Charm, each time the Exalt uses Wyld-Shaping Technique to build a place of trade, practice, or service, her creation will also produce a specialist to work there. This works through a system of conceptual graduation: if she shapes forest lands, the people who rise from her working will be forest people. If she creates a blacksmith’s forge, one of the arisen mortals will be a blacksmith with an appropriately high Craft score. If she creates a hunting lodge, her working will produce hunters. If she creates a medicine hut, her land will produce a shaman-healer, and so on.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9331,8 +9331,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver’s greater understanding increases her power to more easily shape the Wyld. This Charm grants [[@{essence}]](Essence) automatic successes to each phase of Wyld- Shaping Technique.",
+            "charm-description": "The Lawgiver’s greater understanding increases her power to more easily shape the Wyld.",
+            "charm-effect": "This Charm grants [[@{essence}]](Essence) automatic successes to each phase of Wyld-Shaping Technique.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9355,8 +9355,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "In order to shape a daiklave or other Artifact weapon from the Wyld, the Solar must be capable of a greater refinement of Wyld-Shaping Technique. This Charm models Solars who have mastered one such refinement. In order to create an Artifact four weapon with one active Evocation, the Exalt must reach phase four and use this Charm before the roll is made. To draw forth a greater weapon such as a Thousand-Year Daiklave, the Solar must proceed to phase five, while a Ten-Thousand Year Daiklave can only be made at phase six. All weapons created in this manner possess one active Evocation. If the Solar intends to shape such a weapon, each phase is spent creating a narrative vector through which the weapon can be materialized. The form this description takes is entirely up to the player.",
+            "charm-description": "In order to shape a daiklave or other Artifact weapon from the Wyld, the Solar must be capable of a greater refinement of Wyld-Shaping Technique.",
+            "charm-effect": "This Charm models Solars who have mastered one such refinement. In order to create an Artifact four weapon with one active Evocation, the Exalt must reach phase four and use this Charm before the roll is made. To draw forth a greater weapon such as a Thousand-Year Daiklave, the Solar must proceed to phase five, while a Ten-Thousand Year Daiklave can only be made at phase six. All weapons created in this manner possess one active Evocation. If the Solar intends to shape such a weapon, each phase is spent creating a narrative vector through which the weapon can be materialized. The form this description takes is entirely up to the player.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9388,7 +9388,7 @@
                 "linguistics": 5,
                 "essence": 3
             },
-            "prereq": ["Wyld-Shaping Technique", "Mind-"],
+            "prereq": ["Wyld-Shaping Technique", "Mind-Scribing Method"],
             "charm-skill": "Lore",
             "charm-name": "Tome-Rearing Gesture",
             "charm-type": "Simple",
@@ -9405,14 +9405,14 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Scribing Method With this Charm the Lawgiver may instantly shape from chaos a single copy of a book she has mentally written with Mind-Scribing Method. This can be done without a roll to create a tome with an average cover and simple font, though a (Wits + Lore) roll against a Storyteller-defined difficulty can change the cover’s material and design, give the book multiple lingual translations and a striking font, illustrations, color-edged pages and so on. This Charm does not require an activation of Wyld-Shaping Technique —the Solar is simply powerful enough to unleash the story in her mind upon the Wyld and shape it page by page. This does however require that she be in at least the bordermarches of chaos.",
+            "charm-effect": "With this Charm the Lawgiver may instantly shape from chaos a single copy of a book she has mentally written with Mind-Scribing Method. This can be done without a roll to create a tome with an average cover and simple font, though a (Wits + Lore) roll against a Storyteller-defined difficulty can change the cover’s material and design, give the book multiple lingual translations and a striking font, illustrations, color-edged pages and so on. This Charm does not require an activation of Wyld-Shaping Technique —the Solar is simply powerful enough to unleash the story in her mind upon the Wyld and shape it page by page. This does however require that she be in at least the bordermarches of chaos.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "lore": 5,
                 "essence": 4
             },
-            "prereq": ["Essence Font Technique", "Selfsame"],
+            "prereq": ["Essence Font Technique", "Selfsame Master Instructor"],
             "charm-skill": "Lore",
             "charm-name": "Power-Awarding Prana",
             "charm-type": "Simple",
@@ -9428,8 +9428,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Stackable",
-            "charm-description": "",
-            "charm-effect": "Master Instructor The Solar can uplift another Lawgiver, making him a vector for her power. With a touch, the Exalt grants the target a Solar Charm he qualifies for, even if the initiating Exalt does not know the Charm herself. If the initiating Solar has a higher Essence rating than her target, or has selected Lore as her Supernal Ability, the recipient may learn Charms at one Essence higher than his current rating. To use this Charm, the Solar commits five motes plus a number of motes equal to the experience points cost the target would have to pay to learn the Charm. The recipient pays the activation costs of such Charms from his own mote pools. At any time she wishes, the initiating Solar may end commitment to this effect, causing knowledge of the conferred Charm to fade from the recipient’s mind. Power-Awarding Prana can never be forcefully dispelled or prematurely ended by any sort of magic. At Essence 5+, the Solar can use this Charm on herself. If Lore is her Supernal Ability, waive this requirement. If the target is Essence 5 and beyond, Power-Awarding Prana does not allow the training of Charms at higher Essence ratings than the character ’s current maximum. For example, an Essence 5 Solar cannot teach herself Essence 6 Charms, but she can still confer Essence 5 Charms to an Essence 4 character. Sorcery cannot be granted with this Charm.",
+            "charm-description": "The Solar can uplift another Lawgiver, making him a vector for her power.",
+            "charm-effect": "With a touch, the Exalt grants the target a Solar Charm he qualifies for, even if the initiating Exalt does not know the Charm herself. If the initiating Solar has a higher Essence rating than her target, or has selected Lore as her Supernal Ability, the recipient may learn Charms at one Essence higher than his current rating. To use this Charm, the Solar commits five motes plus a number of motes equal to the experience points cost the target would have to pay to learn the Charm. The recipient pays the activation costs of such Charms from his own mote pools. At any time she wishes, the initiating Solar may end commitment to this effect, causing knowledge of the conferred Charm to fade from the recipient’s mind. Power-Awarding Prana can never be forcefully dispelled or prematurely ended by any sort of magic. At Essence 5+, the Solar can use this Charm on herself. If Lore is her Supernal Ability, waive this requirement. If the target is Essence 5 and beyond, Power-Awarding Prana does not allow the training of Charms at higher Essence ratings than the character ’s current maximum. For example, an Essence 5 Solar cannot teach herself Essence 6 Charms, but she can still confer Essence 5 Charms to an Essence 4 character. Sorcery cannot be granted with this Charm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9452,15 +9452,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver’s knowledge of the past and her understanding of physical laws allows her to make nigh-flawless general predictions. To use this Charm, the Exalt must spend a day studying a subject from an authoritative or definitive source. Her player may then make a pronouncement against an ongoing project based on knowledge her studies reveal, creating bonuses for those who act in accordance with her accurate predictions, and penalties for those who go against them. For example, after reading about the patterns of weather, hostile elemental activity and famine in Jiara during the summer months over the last thousand years, she predicts that Mnemon will not attack Jiaran rebels until fall at the earliest, and will instead spend the summer months consolidating her forces while conserving water and gathering resources for a winter campaign. If Mnemon enacts a project to consolidate her forces while gathering resources until winter, the Storyteller should consider Mnemon ’s project vastly more successful and easier to complete than otherwise. If Mnemon instead decides to invade Jiaran rebel territory in the summer, her invasion will be met with project difficulties, such as resource shortages, elemental attacks, inclement weather, and more specifically, mechanical penalties to the first War rolls her generals make in the conflict. Conversely, if Mnemon harbors her forces and the Jiaran rebels instead try to attack her, it is their commanders who will suffer penalties to their opening War rolls. Once the Solar has made a prediction, it may not be canceled with a conflicting use of this or similar Charms, though it may be counteracted with Sidereal Astrology or similar powerful fate-bending magic. Though this Charm has an instant duration, the motes spent activating it are committed until the Exalt has had a full night’s rest.",
+            "charm-description": "The Lawgiver’s knowledge of the past and her understanding of physical laws allows her to make nigh-flawless general predictions. ",
+            "charm-effect": "To use this Charm, the Exalt must spend a day studying a subject from an authoritative or definitive source. Her player may then make a pronouncement against an ongoing project based on knowledge her studies reveal, creating bonuses for those who act in accordance with her accurate predictions, and penalties for those who go against them. For example, after reading about the patterns of weather, hostile elemental activity and famine in Jiara during the summer months over the last thousand years, she predicts that Mnemon will not attack Jiaran rebels until fall at the earliest, and will instead spend the summer months consolidating her forces while conserving water and gathering resources for a winter campaign. If Mnemon enacts a project to consolidate her forces while gathering resources until winter, the Storyteller should consider Mnemon ’s project vastly more successful and easier to complete than otherwise. If Mnemon instead decides to invade Jiaran rebel territory in the summer, her invasion will be met with project difficulties, such as resource shortages, elemental attacks, inclement weather, and more specifically, mechanical penalties to the first War rolls her generals make in the conflict. Conversely, if Mnemon harbors her forces and the Jiaran rebels instead try to attack her, it is their commanders who will suffer penalties to their opening War rolls. Once the Solar has made a prediction, it may not be canceled with a conflicting use of this or similar Charms, though it may be counteracted with Sidereal Astrology or similar powerful fate-bending magic. Though this Charm has an instant duration, the motes spent activating it are committed until the Exalt has had a full night’s rest.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "lore": 5,
                 "essence": 4
             },
-            "prereq": ["Chaos-Repelling Pattern", "Force-"],
+            "prereq": ["Chaos-Repelling Pattern", "Force-Draining Whisper"],
             "charm-skill": "Lore",
             "charm-name": "Will-Shattering Illusion",
             "charm-type": "Simple",
@@ -9477,7 +9477,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Draining Whisper Drawing from the deepest well of her existence, the Solar conjures forth a riddle or apparition from her ancient Essence and channels it against a single target. Roll the Solar’s (Wits + Lore) with [[@{essence}]](Essence) bonus dice. The successes on this roll create the difficulty of the riddle or illusion posed to her target. The character must answer this effect with his own ([Intelligence or Wits] + Lore). If he fails the roll, his mind is momentarily shattered, and he loses two points of temporary Willpower. When done in combat, the target also loses four Initiative, awarded to the Solar. If the target has equal or greater Essence than the Exalt, the Solar also gains a point of Willpower. This Charm may be used once per scene.",
+            "charm-effect": "Drawing from the deepest well of her existence, the Solar conjures forth a riddle or apparition from her ancient Essence and channels it against a single target. Roll the Solar’s (Wits + Lore) with [[@{essence}]](Essence) bonus dice. The successes on this roll create the difficulty of the riddle or illusion posed to her target. The character must answer this effect with his own ([Intelligence or Wits] + Lore). If he fails the roll, his mind is momentarily shattered, and he loses two points of temporary Willpower. When done in combat, the target also loses four Initiative, awarded to the Solar. If the target has equal or greater Essence than the Exalt, the Solar also gains a point of Willpower. This Charm may be used once per scene.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9500,8 +9500,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The stresses of mental violence draw power from the recesses of the Solar’s mind. Once per scene, the Solar may use this Charm to restore a number of motes based on her current temporary Willpower. For each permanent Willpower dot she possesses above her current temporary Willpower score, she gains two motes of Essence. When used in combat, this Charm adds an extra mote to the Solar’s per-round regeneration, upping it from five to six. This effect lasts until she is struck with an attack that does successful withering damage. This Charm is reset by earning three or more points of temporary Willpower through stunts, Charms, and so on.",
+            "charm-description": "The stresses of mental violence draw power from the recesses of the Solar’s mind.",
+            "charm-effect": "Once per scene, the Solar may use this Charm to restore a number of motes based on her current temporary Willpower. For each permanent Willpower dot she possesses above her current temporary Willpower score, she gains two motes of Essence. When used in combat, this Charm adds an extra mote to the Solar’s per-round regeneration, upping it from five to six. This effect lasts until she is struck with an attack that does successful withering damage. This Charm is reset by earning three or more points of temporary Willpower through stunts, Charms, and so on.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9524,8 +9524,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Lawgiver unbinds a lost vision of glory and rises to greater power. The next time the Exalt stands to benefit from Immanent Solar Glory, that Charm now counts 8s, 9s and 10s for the purposes of restoring essence. Also upon using this Charm, the Solar’s anima automatically increases by one level, an effect which cannot be muted by any means. This Charm may be used once per scene, but can be reset by a two point stunt which may include the activation of this Charm. At Essence 5+, this Charm becomes Reflexive and may be used during phases of Wyld-Shaping Technique.",
+            "charm-description": "The Lawgiver unbinds a lost vision of glory and rises to greater power.",
+            "charm-effect": "The next time the Exalt stands to benefit from Immanent Solar Glory, that Charm now counts 8s, 9s and 10s for the purposes of restoring essence. Also upon using this Charm, the Solar’s anima automatically increases by one level, an effect which cannot be muted by any means. This Charm may be used once per scene, but can be reset by a two point stunt which may include the activation of this Charm. At Essence 5+, this Charm becomes Reflexive and may be used during phases of Wyld-Shaping Technique.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9548,8 +9548,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar is a force of living lore that compels the Wyld into shape. Once per attempted Wyld-Shaping Technique, the Exalt may ignore the Willpower cost of the Charm, and apply a free full Lore Excellency to the phase.",
+            "charm-description": "The Solar is a force of living lore that compels the Wyld into shape. ",
+            "charm-effect": "Once per attempted Wyld-Shaping Technique, the Exalt may ignore the Willpower cost of the Charm, and apply a free full Lore Excellency to the phase.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9620,15 +9620,15 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar learns to draw Essence from her nascent world to empower greater acts of Creation. After each successfully -completed phase, roll (Essence + completed phase) dice. Each success restores two motes of Essence. This bonus stacks with Immanent Solar Glory.",
+            "charm-description": "The Solar learns to draw Essence from her nascent world to empower greater acts of Creation. ",
+            "charm-effect": "After each successfully -completed phase, roll (Essence + completed phase) dice. Each success restores two motes of Essence. This bonus stacks with Immanent Solar Glory.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
                 "lore": 5,
                 "essence": 5
             },
-            "prereq": ["Prophet of Seventeen Cycles + any"],
+            "prereq": ["Prophet of Seventeen Cycles + any three Lore Charms"],
             "charm-skill": "Lore",
             "charm-name": "God-King’s Shrike (Dogstar Ruminations)",
             "charm-type": "Simple",
@@ -9644,8 +9644,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "three Lore Charms Sage-emperors returned from their long slumber, the Solars’ great beards have shattered their stone tables. In their great and terrible throes, they may call upon the forces of doom in order to save their world. The Solar must spend a full week contemplating and researching a region’s history, climate, geography, etc. before using this Charm. Casting her gaze toward a foe, the Solar draws deep from the well of her experience, her knowledge of this life connecting to her knowledge of lives before. Through this Charm she reaches realization of a certain calamity that must happen, and her consciousness is recognized, in turn, by the universe . In this instance, what the Solar realizes she causes to happen. Roll the Solar’s (Intelligence + Lore) against difficulty 5. A basic success is tantamount to the Solar predicting a natural disaster that has relatively damning effects: flash floods ruin roads, a drought destroys crops, an earth- quake disables a vitally important manse, and so on. Two to four extra successes results in a more devastating cataclysm : a tsunami wipes out a fleet of battleships; a series of earthquakes devastate the infrastructures of several cities and roads; a volcano detonates and wipes a city entirely off the map, etc. Five or more extra successes equates to the Solar predicting one of the seven great dooms: a star falls and annihilates a region; a behemoth rises from its slumber and plows through a number of predicted cities; an army of the dead spills from its Shadowland during Calibration to wreak havoc, and so on. The Solar decides what region to research and pronounce doom upon, but the Storyteller decides the nature of the doom she divines based on the result of the roll. The Solar may show mercy by repudiating her pronouncement of devastation at any point before the cataclysm manifests itself, thereby negating her dread prophecy. Though this Charm’s duration is instant, the motes spent activating it are committed for one week if a pronouncement of doom is uttered and allowed to manifest. This Charm may only be used once per year, though it can be reset as often as once per season by paying 12 experience points.",
+            "charm-description": "Sage-emperors returned from their long slumber, the Solars’ great beards have shattered their stone tables. In their great and terrible throes, they may call upon the forces of doom in order to save their world.",
+            "charm-effect": "The Solar must spend a full week contemplating and researching a region’s history, climate, geography, etc. before using this Charm. Casting her gaze toward a foe, the Solar draws deep from the well of her experience, her knowledge of this life connecting to her knowledge of lives before. Through this Charm she reaches realization of a certain calamity that must happen, and her consciousness is recognized, in turn, by the universe . In this instance, what the Solar realizes she causes to happen. Roll the Solar’s (Intelligence + Lore) against difficulty 5. A basic success is tantamount to the Solar predicting a natural disaster that has relatively damning effects: flash floods ruin roads, a drought destroys crops, an earth- quake disables a vitally important manse, and so on. Two to four extra successes results in a more devastating cataclysm : a tsunami wipes out a fleet of battleships; a series of earthquakes devastate the infrastructures of several cities and roads; a volcano detonates and wipes a city entirely off the map, etc. Five or more extra successes equates to the Solar predicting one of the seven great dooms: a star falls and annihilates a region; a behemoth rises from its slumber and plows through a number of predicted cities; an army of the dead spills from its Shadowland during Calibration to wreak havoc, and so on. The Solar decides what region to research and pronounce doom upon, but the Storyteller decides the nature of the doom she divines based on the result of the roll. The Solar may show mercy by repudiating her pronouncement of devastation at any point before the cataclysm manifests itself, thereby negating her dread prophecy. Though this Charm’s duration is instant, the motes spent activating it are committed for one week if a pronouncement of doom is uttered and allowed to manifest. This Charm may only be used once per year, though it can be reset as often as once per season by paying 12 experience points.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9676,7 +9676,7 @@
                 "lore": 5,
                 "essence": 5
             },
-            "prereq": ["Incalculable Flowing Mind"],
+            "prereq": ["Incalculable Flowing Mind", "Surging Inner Fire"],
             "charm-skill": "Lore",
             "charm-name": "Unstoppable Magnus Approach",
             "charm-type": "Reflexive",
@@ -9692,8 +9692,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Perilous",
-            "charm-description": "",
-            "charm-effect": "Surging Inner Fire With mental skill beyond comparison, the Solar deftly converts the flow of combat into restorative power. In combat, the Lawgiver may use this Charm to gain one point of temporary Willpower.",
+            "charm-description": "With mental skill beyond comparison, the Solar deftly converts the flow of combat into restorative power.",
+            "charm-effect": "In combat, the Lawgiver may use this Charm to gain one point of temporary Willpower.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9716,8 +9716,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar is forever transformed by the knowledge that has awakened inside her. This Charm permanently lowers the mote cost of Wyld-Shaping Technique by five motes. Martial Arts With the exception of Excellent Solar Martial Arts, which they develop under the same conditions as other Excellencies (p. 255), the Solar Exalted don’t develop native Martial Arts Charms; rather, they partake of the rich tradition of martial arts techniques shared between all the Exalted. Chapter Seven presents eleven of Creation’s many martial arts styles.",
+            "charm-description": "The Solar is forever transformed by the knowledge that has awakened inside her.",
+            "charm-effect": "This Charm permanently lowers the mote cost of Wyld-Shaping Technique by five motes. Martial Arts With the exception of Excellent Solar Martial Arts, which they develop under the same conditions as other Excellencies (p. 255), the Solar Exalted don’t develop native Martial Arts Charms; rather, they partake of the rich tradition of martial arts techniques shared between all the Exalted. Chapter Seven presents eleven of Creation’s many martial arts styles.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9740,8 +9740,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "Over time, the Solar’s wisdom becomes the foundation of empires. Whenever students of the Solar — characters significantly educated or trained by the Solar — pass on her knowledge in turn, the act of following her teachings becomes a kind of worship. Conceptualizing the Solar’s teachings themselves as a character, for every dot of Followers her teachings might accrue, the Solar may count half those (rounded down, minimum one) as a dot of Cult. On Soul-Light Spreading Discipline The backer requested a Lore Charm that would create a circular flow of benefit from the Solar teacher to their students, allowing the system to interpret the Solar’s students as her cult. A very cool concept indeed! In case you are wondering, for the hypothetical purposes of this Charm, Followers 4 reflects 1000+ followers, while Followers 5 reflects 5000+. Backer: Matt Rock",
+            "charm-description": "Over time, the Solar’s wisdom becomes the foundation of empires. Whenever students of the Solar — characters significantly educated or trained by the Solar — pass on her knowledge in turn, the act of following her teachings becomes a kind of worship.",
+            "charm-effect": "Conceptualizing the Solar’s teachings themselves as a character, for every dot of Followers her teachings might accrue, the Solar may count half those (rounded down, minimum one) as a dot of Cult. On Soul-Light Spreading Discipline The backer requested a Lore Charm that would create a circular flow of benefit from the Solar teacher to their students, allowing the system to interpret the Solar’s students as her cult. A very cool concept indeed! In case you are wondering, for the hypothetical purposes of this Charm, Followers 4 reflects 1000+ followers, while Followers 5 reflects 5000+. Backer: Matt Rock",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9764,8 +9764,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "The Solar is a bottomless font of knowledge, renewed by any source of true intrigue. While pursuing the goals of her Circle or the goals of someone for whom she holds a Major or Defining Tie, the Solar may use this Charm to roll to introduce a fact, even if she has already introduced a fact that scene. The Solar may only use this Charm when she perceives a need for her expertise, and only if it pertains to the events at hand. On Cloud-Wreathed Scholar When I wrote the Lore rules, I limited players to one introduced fact per scene. I was wary of clogging one scene with too many lore-based revelations. But I think this Charm is significantly limited enough to prevent such abuse, while allowing the Solar savant to tackle a continuous flow of puzzles, riddles, and historical mysteries to aid her allies in advancement.",
+            "charm-description": "The Solar is a bottomless font of knowledge, renewed by any source of true intrigue",
+            "charm-effect": " While pursuing the goals of her Circle or the goals of someone for whom she holds a Major or Defining Tie, the Solar may use this Charm to roll to introduce a fact, even if she has already introduced a fact that scene. The Solar may only use this Charm when she perceives a need for her expertise, and only if it pertains to the events at hand. On Cloud-Wreathed Scholar When I wrote the Lore rules, I limited players to one introduced fact per scene. I was wary of clogging one scene with too many lore-based revelations. But I think this Charm is significantly limited enough to prevent such abuse, while allowing the Solar savant to tackle a continuous flow of puzzles, riddles, and historical mysteries to aid her allies in advancement.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9788,8 +9788,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "With the wisdom of the ages flowing through her mind, the Solar’s concentration can induce an epiphany. With a moment of intense observation of practically anything — a natural phenomena, geographical feature, architectural feature, riddle, puzzle, and so on — the Lawgiver can name the Lore difficulty to introduce a fact about what she is observing, and the Lore background needed in order to make that roll. This Charm does not give the Solar knowledge she doesn’t have — it can’t turn a geologist into a student of ancient histories — but it does tell her where to begin her studies anew. On Hundred Sages Focus I came up with this Charm while preparing to run my own personal game of Exalted. As I was seeding the environment with deeply-seated lore and “unsolvable” mysteries, I started looking at the hidden histories of my game and deciding what it would take for our group’s Lore Solar to crack those mysteries wide open. In my game notes I started tagging environmental features thusly: “geological formation: geology difficulty 3”, “colossal arm of blue stone sticking out of the mountain: ‘biography of the Celestial Incarnae’ difficulty 10” and so on. In the former case, geology is the needed background or “Lore topic.” The latter refers to a book in a library in Yu-Shan, of which there is no other copy, and which has never been to Creation. Whenever I contemplate running an Exalted game, I always consider which Charms my players are using and which Abilities they are going to be rolling, and then I fill out the structure of every night’s gaming with a list of interesting Ability checks and opportunities to use said Charms. I seed the environment with difficult challenges . For my friend the investigator, I create mysteries and leave evidence. For the Solar savant, I fill the game with wondrous lore. For the occult specialist, strange and uncanny mysteries that are outside Lore’s purview. In essence, I build my personal games of Exalted around my players. This Charm is an outgrowth of that, allowing a player to mine the hidden secrets from the setting, to find the presents I have buried for the whole Circle to stare at — in wonder, in horror. One last thing: Harmonious Academic Methodology increases the gamut of your Solar’s knowledge. So if you find your Storyteller has placed a mystery in front of you that is outside your Solar’s background, hit the library, conduct interviews at the local academy, quiz a Sidereal, put a spirit in a headlock and make them teach you — whatever it takes to expand your Solar’s mind — and use that Charm whenever you can, so your Solar’s knowledge grows voluminously.",
+            "charm-description": "With the wisdom of the ages flowing through her mind, the Solar’s concentration can induce an epiphany.",
+            "charm-effect": "With a moment of intense observation of practically anything — a natural phenomena, geographical feature, architectural feature, riddle, puzzle, and so on — the Lawgiver can name the Lore difficulty to introduce a fact about what she is observing, and the Lore background needed in order to make that roll. This Charm does not give the Solar knowledge she doesn’t have — it can’t turn a geologist into a student of ancient histories — but it does tell her where to begin her studies anew. On Hundred Sages Focus I came up with this Charm while preparing to run my own personal game of Exalted. As I was seeding the environment with deeply-seated lore and “unsolvable” mysteries, I started looking at the hidden histories of my game and deciding what it would take for our group’s Lore Solar to crack those mysteries wide open. In my game notes I started tagging environmental features thusly: “geological formation: geology difficulty 3”, “colossal arm of blue stone sticking out of the mountain: ‘biography of the Celestial Incarnae’ difficulty 10” and so on. In the former case, geology is the needed background or “Lore topic.” The latter refers to a book in a library in Yu-Shan, of which there is no other copy, and which has never been to Creation. Whenever I contemplate running an Exalted game, I always consider which Charms my players are using and which Abilities they are going to be rolling, and then I fill out the structure of every night’s gaming with a list of interesting Ability checks and opportunities to use said Charms. I seed the environment with difficult challenges . For my friend the investigator, I create mysteries and leave evidence. For the Solar savant, I fill the game with wondrous lore. For the occult specialist, strange and uncanny mysteries that are outside Lore’s purview. In essence, I build my personal games of Exalted around my players. This Charm is an outgrowth of that, allowing a player to mine the hidden secrets from the setting, to find the presents I have buried for the whole Circle to stare at — in wonder, in horror. One last thing: Harmonious Academic Methodology increases the gamut of your Solar’s knowledge. So if you find your Storyteller has placed a mystery in front of you that is outside your Solar’s background, hit the library, conduct interviews at the local academy, quiz a Sidereal, put a spirit in a headlock and make them teach you — whatever it takes to expand your Solar’s mind — and use that Charm whenever you can, so your Solar’s knowledge grows voluminously.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -9836,8 +9836,8 @@
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "",
-            "charm-effect": "By expanding her mind, the Lawgiver can consult an Essence that touches the ends of the universe to find the answer . This Charm allows the Solar to attempt to challenge a Lore difficulty that is outside the background reflected by her Lore rating. With especially difficult challenges, such a roll is not even possible, but the Lawgiver may challenge any difficulty and any topic with her Lore by using this Charm. This Charm confers no knowledge of the required difficulty, though the Solar becomes aware of the topic the moment she uses this Charm, if she doesn’t know already. This Charm can be used once per story, but can be reset by a scene in which the Solar spends time studying the Lore topic she last challenged with this Charm. On All-Knowing Enlightened Sovereign Seems like a no-brainer. Or should we say all-brainer?",
+            "charm-description": "By expanding her mind, the Lawgiver can consult an Essence that touches the ends of the universe to find the answer.",
+            "charm-effect": "This Charm allows the Solar to attempt to challenge a Lore difficulty that is outside the background reflected by her Lore rating. With especially difficult challenges, such a roll is not even possible, but the Lawgiver may challenge any difficulty and any topic with her Lore by using this Charm. This Charm confers no knowledge of the required difficulty, though the Solar becomes aware of the topic the moment she uses this Charm, if she doesn’t know already. This Charm can be used once per story, but can be reset by a scene in which the Solar spends time studying the Lore topic she last challenged with this Charm. On All-Knowing Enlightened Sovereign Seems like a no-brainer. Or should we say all-brainer?",
             "charm-rollexpr": ""
         }
     ],
