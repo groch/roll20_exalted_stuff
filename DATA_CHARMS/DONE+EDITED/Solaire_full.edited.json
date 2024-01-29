@@ -735,7 +735,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "perfect balance, negate roll",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -759,7 +759,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "jump 1 rb",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -767,7 +767,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt leaps with the speed and grace of a striking hawk.",
-            "charm-effect": "Using this technique, a Solar may automatically leap forward or straight up one range band. A Solar using this Charm can easily leap to the top of a twenty foot wall or cross a Nexus street over rooftops, without having to roll. This Charm counts as the Solar’s movement for the turn. If the Solar continues to leap to a different range band each turn, the cost is reduced to one mote after the first activation.",
+            "charm-effect": "Using this technique, a Solar may automatically leap forward or straight up one range band. A Solar using this Charm can easily leap to the top of a twenty foot wall or cross a Nexus street over rooftops, without having to roll.\nThis Charm counts as the Solar’s movement for the turn.\nIf the Solar continues to leap to a different range band each turn, the cost is reduced to one mote after the first activation.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -783,7 +783,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "slow fall",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -791,7 +791,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Striking an efficacious pose, the Exalt catches the wind to slow a fall.",
-            "charm-effect": "This allows her to drop down two range bands without taking damage. In order to survive a very long fall with this Charm, the Solar must use it at least once every three bands. The Exalt can also use this Charm to drift long distances through the air, expending her movement action to float forward a single range band even as she continues to fall. With an adequate amount of thrust, the Exalt can glide across long horizontal distances without falling, equaling her initial movement forward. For example, if she were to leap out over a chasm two range bands across with Monkey Leap Technique, she could then activate Soaring Crane Leap to glide across the second range band on her next turn. Appropriate stunts can increase straightacross movement before the Exalt begins to drop.",
+            "charm-effect": "This allows her to drop down two range bands without taking damage.\nIn order to survive a very long fall with this Charm, the Solar must use it at least once every three bands.\nThe Exalt can also use this Charm to drift long distances through the air, expending her movement action to float forward a single range band even as she continues to fall. With an adequate amount of thrust, the Exalt can glide across long horizontal distances without falling, equaling her initial movement forward.\nFor example, if she were to leap out over a chasm two range bands across with Monkey Leap Technique, she could then activate Soaring Crane Leap to glide across the second range band on her next turn. Appropriate stunts can increase straightacross movement before the Exalt begins to drop.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -807,7 +807,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 3,
-            "charm-short-desc": "",
+            "charm-short-desc": "create surprise attack by jumping",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -815,7 +815,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Fearless in combat, the Solar leaps over her stunned opponent.",
-            "charm-effect": "At close range, if the Exalt has higher Initiative (before cost) than her foe, she may use this Charm on her turn, rolling Dexterity + Athletics against her opponent’s Evasion. If successful, she leaps over her target, creating an opening, and may make a surprise attack (see p. 203) overhead or at their back. This Charm may only be used once per combat, but is reset by landing a decisive attack and building Initiative to 6+.",
+            "charm-effect": "At close range, if the Exalt has higher Initiative (before cost) than her foe, she may use this Charm on her turn, rolling Dexterity + Athletics against her opponent’s Evasion. If successful, she leaps over her target, creating an opening, and may make a surprise attack (see p. 203) overhead or at their back.\n\nThis Charm may only be used once per combat, but is reset by landing a decisive attack and building Initiative to 6+.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -839,8 +839,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Like a flashing bolt, the Exalt streaks toward her goal, trailing streamers of anima.",
-            "charm-effect": "This Charm can be used to enhance a rush action (see p. 197). The Exalt moves with terrific speed—add one automatic success and reroll all 5s and 6s until 5s and 6s fail to appear. Lightning Speed can also be used each interval of a foot race or other test of speed (see p. 189).",
-            "charm-rollexpr": ""
+            "charm-effect": "This Charm can be used to enhance a rush action (see p. 197). The Exalt moves with terrific speed—add one automatic success and reroll all 5s and 6s until 5s and 6s fail to appear.\nLightning Speed can also be used each interval of a foot race or other test of speed (see p. 189).",
+            "charm-rollexpr": "!exr -setOnce -R 5,6"
         }, {
             "attr-mins": {
                 "athletics": 4,
@@ -855,7 +855,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "gain motes/init when being faster",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -879,7 +879,7 @@
             "rep-cost-mote": "[[ ?{Cost as Motes ? (3m : 1 dot)} * 3 ]]",
             "rep-cost-will": 0,
             "rep-cost-init": "[[ ?{Cost as Initiative ? (3i : 1 dot)} * 3 ]]",
-            "charm-short-desc": "",
+            "charm-short-desc": "increase STR",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -887,7 +887,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar draws remarkable strength from deep within her core.",
-            "charm-effect": "For every three motes of Essence or Initiative the Exalt spends, her Strength score increases by one. Each dot of increase also raises the base damage of her decisive attacks by one. The Solar’s Strength cannot be increased by more than her Essence rating through use of this Charm, and this Charm may not grant her more than double her Strength score. Through use of Increasing Strength Exercise , Solars can reach the Strength minimums required to attempt certain feats of strength (p. 229).",
+            "charm-effect": "For every three motes of Essence or Initiative the Exalt spends, her Strength score increases by one. Each dot of increase also raises the base damage of her decisive attacks by one.\nThe Solar’s Strength cannot be increased by more than her Essence rating through use of this Charm, and this Charm may not grant her more than [[ @{strength} * 2 ]] (double her Strength score).\nThrough use of Increasing Strength Exercise, Solars can reach the Strength minimums required to attempt certain feats of strength (p. 229).",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -903,7 +903,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "extra success 3:1 count as FoS min",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -911,7 +911,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar magnifies her physical Essence, increasing her ability to move massive loads.",
-            "charm-effect": "This Charm supplements an attempt to lift or break something, allowing the Solar to attempt an action with a prerequisite beyond her current Strength rating. Pay two motes and roll the Exalt’s (Strength + Athletics) as normal, converting each three successes into a dot of Strength as needed, until the Solar meets the prerequisite. This bonus Strength does not enhance her current dice pool, as this momentary surge of might only establishes whether she can succeed with her current dice. Note that she must still have enough successes remaining, after increasing her Strength, to meet the difficulty requirement of the feat.",
+            "charm-effect": "This Charm supplements an attempt to lift or break something, allowing the Solar to attempt an action with a prerequisite beyond her current Strength rating.\nPay two motes and roll the Exalt’s (Strength + Athletics) as normal, converting each three successes into a dot of Strength as needed, until the Solar meets the prerequisite.\nThis bonus Strength does not enhance her current dice pool, as this momentary surge of might only establishes whether she can succeed with her current dice.\n\nNote that she must still have enough successes remaining, after increasing her Strength, to meet the difficulty requirement of the feat.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -927,7 +927,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "double decisive damage, can atk aerial at short & ground at medium",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -935,7 +935,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "The Exalt draws down on the Essence around her, pulling it through her upper body, her lungs, her core and down into her legs, and then explodes skyward, rising in a brilliant, Essence-laden arc.",
-            "charm-effect": "This Charm supplements a nonranged attack which can be made against aerial targets up to short range, or ground targets at another range band. The Solar leaps at her target, striking with incredible force— damage is doubled after it is rolled. If the Exalt uses this attack to move to another range band, it counts as her move- ment action for the round. After striking an aerial opponent, the Exalt may fall one range band without taking damage. Thunderbolt Attack Prana is expressly permitted to be used in conjunction with Charms of other Abilities, and it is suggested that the player use it to create a signature attack that fits the character’s attitude and style.",
+            "charm-effect": "This Charm supplements a nonranged attack which can be made against aerial targets up to short range, or ground targets at another range band.\nThe Solar leaps at her target, striking with incredible force— damage is doubled after it is rolled.\nIf the Exalt uses this attack to move to another range band, it counts as her movement action for the round.\nAfter striking an aerial opponent, the Exalt may fall one range band without taking damage.\n\nThunderbolt Attack Prana is expressly permitted to be used in conjunction with Charms of other Abilities, and it is suggested that the player use it to create a signature attack that fits the character’s attitude and style.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -951,7 +951,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "can run on water-like. A5 E2 can stand on water-like",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": 1,
@@ -959,7 +959,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Lightening her step and balancing carefully, the Exalt may run across fluid surfaces.",
-            "charm-effect": "She may dash over unstable surfaces as if they were solid and move over surfaces no thicker than rice paper without breaking through. At full speed, she may also move across lava or other dangerous surfaces without getting hurt. This effect lasts until the Exalt stops dashing. As long as she is moving at a quick pace, she need not pay the activation cost again. At Athletics 5, Essence 2+, the Exalt can pause on unstable surfaces without breaking through, changing the duration of this Charm to “one stunt.” She can walk slowly across the surface of a still pond, pause on the crumbling parapet of a castle to give a speech, and so on. This means if she’s using the Charm to dash across the water to reach a boat, then decides to pause on the water’s surface to address the captain, she must use the Charm twice. If the Exalt is still standing on an unstable surface and is unwilling or unable to renew Feather Foot Style, she becomes subject to the normal laws of gravity and buoyancy. Also note: while she may safely dash across a caustic or burning surface, standing on top of lava and other dangerous surfaces will cause harm.",
+            "charm-effect": "She may dash over unstable surfaces as if they were solid and move over surfaces no thicker than rice paper without breaking through. At full speed, she may also move across lava or other dangerous surfaces without getting hurt.\nThis effect lasts until the Exalt stops dashing. As long as she is moving at a quick pace, she need not pay the activation cost again.\n\nAt Athletics 5, Essence 2+, the Exalt can pause on unstable surfaces without breaking through, changing the duration of this Charm to “one stunt.” She can walk slowly across the surface of a still pond, pause on the crumbling parapet of a castle to give a speech, and so on.\nThis means if she’s using the Charm to dash across the water to reach a boat, then decides to pause on the water’s surface to address the captain, she must use the Charm twice.\nIf the Exalt is still standing on an unstable surface and is unwilling or unable to renew Feather Foot Style, she becomes subject to the normal laws of gravity and buoyancy.\n\nAlso note: while she may safely dash across a caustic or burning surface, standing on top of lava and other dangerous surfaces will cause harm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -975,15 +975,15 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "can run on walls, stand upside down ...",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": 1,
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
-            "charm-description": "With speed and balance heightened to the Nth degree, the Solar’s Essence may bond with a surface, allowing her to run up walls or stand upside down on horizontal surfaces such as tree branches, bridge bottoms or overhangs, or to lay flat against a ceiling looking down at her prey.",
-            "charm-effect": "Like Feather Foot Style, if the Solar is unable or unwilling to renew this effect, her preternatural grip dwindles and she may plummet and be subject to falling damage. Spider Foot Style’s effect can be extended for one round by a welldescribed stunt during a turn in which the Charm is active.",
+            "charm-description": "",
+            "charm-effect": "With speed and balance heightened to the Nth degree, the Solar’s Essence may bond with a surface, allowing her to run up walls or stand upside down on horizontal surfaces such as tree branches, bridge bottoms or overhangs, or to lay flat against a ceiling looking down at her prey.\nLike Feather Foot Style, if the Solar is unable or unwilling to renew this effect, her preternatural grip dwindles and she may plummet and be subject to falling damage.\n\nSpider Foot Style’s effect can be extended for one round by a welldescribed stunt during a turn in which the Charm is active.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -999,7 +999,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "cancel weight/gravity, jump without initial thrust",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1007,7 +1007,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "It is the Solar’s nature to rise above. Meditating on the tyrannical bonds of gravity, the Exalt learns to separate her Essence from that which pulls her down.",
-            "charm-effect": "By paying two extra motes to the activation of Soaring Crane Leap, the Exalt may drift across a horizontal range band without initial thrust, allowing her to plane along low ceilings or avoid traps that might detect a more wild leaping motion. In addition, she can use this Charm on each round after activating Soaring Crane Leap to continue to glide across range bands without dropping down.",
+            "charm-effect": "By paying two extra motes to the activation of Soaring Crane Leap, the Exalt may drift across a horizontal range band without initial thrust, allowing her to plane along low ceilings or avoid traps that might detect a more wild leaping motion.\nIn addition, she can use this Charm on each round after activating Soaring Crane Leap to continue to glide across range bands without dropping down.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1023,7 +1023,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "atk to medium range, dmg buffs",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1031,7 +1031,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Dual",
             "charm-description": "Meditating on the frozen moment, the Lawgiver sees the universe aligning around the neck of her target. Through strength, balance and control, she pulls at the distance between herself and her foe, and flashes in for the kill.",
-            "charm-effect": "The Exalt may use this Charm as far away as medium range, to instantly flash past her opponent, striking him at close range. If her attack is withering, it deals double damage after soak, but before damage is rolled. If it is decisive, it adds her Essence score to the base damage of the attack. As the Solar slides past her opponent, she ends the attack standing at close range. This counts as the character’s movement for the round. In order to use this Charm, the Solar must be at higher Initiative than her opponent, and at 6+ Initiative. Leaping Tiger Attack is explicitly allowed to be used in combination with the Charms of other Abilities, but is incompatible with Thunderbolt Attack Prana and Eagle-Wing Style.",
+            "charm-effect": "The Exalt may use this Charm as far away as medium range, to instantly flash past her opponent, striking him at close range.\n If her attack is withering, it deals double damage after soak, but before damage is rolled.\n If it is decisive, it adds her Essence score to the base damage of the attack. As the Solar slides past her opponent, she ends the attack standing at close range.\nThis counts as the character’s movement for the round.\n\nIn order to use this Charm, the Solar must be at higher Initiative than her opponent, and at 6+ Initiative.\n\nLeaping Tiger Attack is explicitly allowed to be used in combination with the Charms of other Abilities, but is incompatible with Thunderbolt Attack Prana and Eagle-Wing Style.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1047,7 +1047,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "big speed increase outside combat, bonus on rush",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1055,7 +1055,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Attuned to Essence currents that flow through the world, the Solar moves as if in a waking dream. She travels in flashing sprints and sparking leaps, moving from branch to branch like a skipping stone and leaving dust clouds in her wake.",
-            "charm-effect": "This Charm lasts one hour. During this hour, the Solar moves up to three range bands per turn, depending on the terrain and her ability to move at an uninterrupted clip. If she joins battle, her speed is greatly slowed, as she must focus more completely on her environment . The Solar resumes moving one range band per turn, but the Charm still has an effect: double 9s on rush attempts, and for every 10 rolled on a rush, the Solar gains a point of Initiative. If the Exalt knows the Charm Triumph -Forged God-Body, the rushes instead gain [[@{essence}]](Essence) bonus dice. These benefits also apply to each interval of a test of speed. If the Lawgiver chooses to renew this technique at the end of an hour, ignore the Willpower cost.",
+            "charm-effect": "This Charm lasts one hour. During this hour, the Solar moves up to three range bands per turn, depending on the terrain and her ability to move at an uninterrupted clip.\nIf she joins battle, her speed is greatly slowed, as she must focus more completely on her environment. The Solar resumes moving one range band per turn, but the Charm still has an effect: double 9s on rush attempts, and for every 10 rolled on a rush, the Solar gains a point of Initiative.\nIf the Exalt knows the Charm Triumph-Forged God-Body, the rushes instead gain [[@{essence}]](Essence) bonus dice.\n\nThese benefits also apply to each interval of a test of speed.\n\nIf the Lawgiver chooses to renew this technique at the end of an hour, ignore the Willpower cost.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1071,7 +1071,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "gain mote on successful rush til next turn",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1079,7 +1079,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar learns to channel the exhilaration she feels at chasing an opponent into a burst of adrenal power that restores her spirit.",
-            "charm-effect": "On successfully rushing an opponent, the Exalt gains three motes to be used on Athletics Charms. These motes last until she has taken her next turn.",
+            "charm-effect": "On successfully rushing an opponent, the Exalt gains three motes to be used on Athletics Charms.\nThese motes last until she has taken her next turn.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1095,7 +1095,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "on fail rush/ToS, opponent 10 count as 1succ for me",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1103,7 +1103,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar trains her body to feel the Essence of those she would outrun, matching their strength with her stride.",
-            "charm-effect": "When she falls behind in a test of speed, every 10 her fastest opponent rolls also counts as a single success to the Solar’s own roll. This Charm also functions in rushes, to aid in countering the target’s attempts to avoid the Solar.",
+            "charm-effect": "When she falls behind in a test of speed, every 10 her fastest opponent rolls also counts as a single success to the Solar’s own roll.\nThis Charm also functions in rushes, to aid in countering the target’s attempts to avoid the Solar.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1119,7 +1119,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "ignore hardness to close range decisive",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1127,7 +1127,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "Channeling her strength through her Essence, the Solar’s attacks strike harder and deeper.",
-            "charm-effect": "This Charm supplements a close range decisive attack, allowing the Solar to ignore [[ @{strength} ]](her Strength) hardness. Armor-Eating Strike is expressly permitted to be used in conjunction with Charms of other Abilities.",
+            "charm-effect": "This Charm supplements a close range decisive attack, allowing the Solar to ignore [[ @{strength} ]](her Strength) hardness.\nArmor-Eating Strike is expressly permitted to be used in conjunction with Charms of other Abilities.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1143,7 +1143,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reroll fails on a FoS",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1152,7 +1152,7 @@
             "charm-keywords": "",
             "charm-description": "Through intense muscle control, the Solar’s insides erupt with surging Essence power.",
             "charm-effect": "Reroll all non-successes on a feat of strength.",
-            "charm-rollexpr": ""
+            "charm-rollexpr": "!exr -setOnce -r 1,2,3,4,5,6"
         }, {
             "attr-mins": {
                 "athletics": 5,
@@ -1167,7 +1167,7 @@
             "rep-cost-mote": 7,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "jump to 3-4rb away; may need disengage; knock close targets",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1175,7 +1175,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar gathers enormous spiritual pressure into her legs and launches herself skyward.",
-            "charm-effect": "The Exalt makes a wild leap four range bands forward or three straight up. As the force of her leap is almost uncontrolled, she may not leap fewer than three range bands with this Charm. This Charm stays active every turn until the Solar stops leaping across range bands, making it possible for the Exalt to cross a mountain range in minutes. If this Charm is combined with Monkey Leap Technique, the Exalt can make a controlled leap to the second range band. If opponents are within close range before the Exalt activates this Charm, she must succeed at a disengage action before it can be activated. All minor opponents within close range when the Solar uses this Charm suffer automatic knockdown, and more impressive opponents may need to roll to keep their balance.",
+            "charm-effect": "The Exalt makes a wild leap four range bands forward or three straight up.\nAs the force of her leap is almost uncontrolled, she may not leap fewer than three range bands with this Charm. This Charm stays active every turn until the Solar stops leaping across range bands, making it possible for the Exalt to cross a mountain range in minutes.\nIf this Charm is combined with Monkey Leap Technique, the Exalt can make a controlled leap to the second range band.\nIf opponents are within close range before the Exalt activates this Charm, she must succeed at a disengage action before it can be activated.\nAll minor opponents within close range when the Solar uses this Charm suffer automatic knockdown, and more impressive opponents may need to roll to keep their balance.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1191,7 +1191,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "allow flight",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1199,7 +1199,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Focusing her Essence down her spine and through her lower extremities, the Exalt repels the ground with a tremendous leap.",
-            "charm-effect": "The Exalt locks onto an aerial target, whether it be a Haslanti skyship or a Stormwind Rider, leaps toward it and begins to soar. This moves her up to two range bands, expending her movement action, and allows her to continue flying one range band through the air on subsequent turns by paying two motes or two Initiative per turn. Once she is within combat range of an opponent, attacking is sufficient enough movement to keep her airborne. If she is a ranged fighter, she may also use Unbound Eagle Approach, paying two motes in order to hang in the air, planing along an air current as she takes an aim action. Lastly, the Solar can also channel a burst of speed for two motes, allowing her to rush or disengage from appropriate distances. If she fails to activate the Charm, gets knocked off-course or otherwise begins to fall, Eagle-Wing Style cannot be reactivated until she touches down and is able to leap again. Eagle-Wing Style can be activated at the apex of Mountain-Crossing Leap Technique, in which case it costs only four motes to activate.",
+            "charm-effect": "The Exalt locks onto an aerial target, whether it be a Haslanti skyship or a Stormwind Rider, leaps toward it and begins to soar. This moves her up to two range bands, expending her movement action, and allows her to continue flying one range band through the air on subsequent turns by paying two motes or two Initiative per turn.\n Once she is within combat range of an opponent, attacking is sufficient enough movement to keep her airborne.\n If she is a ranged fighter, she may also use Unbound Eagle Approach, paying two motes in order to hang in the air, planing along an air current as she takes an aim action.\nLastly, the Solar can also channel a burst of speed for two motes, allowing her to rush or disengage from appropriate distances.\nIf she fails to activate the Charm, gets knocked off-course or otherwise begins to fall, Eagle-Wing Style cannot be reactivated until she touches down and is able to leap again.\n\nEagle-Wing Style can be activated at the apex of Mountain-Crossing Leap Technique, in which case it costs only four motes to activate.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1215,7 +1215,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "rush from medium range",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1223,7 +1223,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "A Solar with this Charm can attempt a rush from medium range. If successful, she will automatically move one range band closer to her target on his next two turns, in addition to her normal movement.",
+            "charm-effect": "A Solar with this Charm can attempt a rush from medium range.\nIf successful, she will automatically move one range band closer to her target on his next two turns, in addition to her normal movement.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1239,7 +1239,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 1,
-            "charm-short-desc": "",
+            "charm-short-desc": "spend init for success 1:1",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1247,7 +1247,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Like a living storm, the Exalt gathers momentum and speed as she races over land.",
-            "charm-effect": "In combat, the Exalt may spend Initiative for successes to rush a target. In a test of speed she may use it at each interval.",
+            "charm-effect": "In combat, the Exalt may spend Initiative for successes to rush a target.\nIn a test of speed she may use it at each interval.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1263,7 +1263,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "rush to long range (extreme with Racing Hare)",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1271,7 +1271,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt projects herself forward on a pulse of Essence, faster than a heartbeat, moving like a blur.",
-            "charm-effect": "The Exalt may attempt a rush against an opponent up to three range bands away. If successful, she flashes out in a burst of speed, and flashes in at close range to her target that same instant. This Charm removes the flurry penalty for an attack made after a rush. If used in conjunction with Racing Hare Method, the Exalt can rush an opponent up to four range bands distant.",
+            "charm-effect": "The Exalt may attempt a rush against an opponent up to three range bands away. If successful, she flashes out in a burst of speed, and flashes in at close range to her target that same instant.\nThis Charm removes the flurry penalty for an attack made after a rush.\nIf used in conjunction with Racing Hare Method, the Exalt can rush an opponent up to four range bands distant.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1287,7 +1287,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "non charm dice to FoS",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1295,7 +1295,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt’s body is momentarily framed with surging power.",
-            "charm-effect": "This Charm supplements a feat of strength, adding [[ @{strength} ]](Strength) non-Charm bonus dice to the attempt. This is explicitly compatible with the bonus granted by Increasing Strength Exercise.",
+            "charm-effect": "This Charm supplements a feat of strength, adding [[ @{strength} ]](Strength) non-Charm bonus dice to the attempt.\nThis is explicitly compatible with the bonus granted by Increasing Strength Exercise.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1311,7 +1311,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reduce excellency cost on FoS",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1344,7 +1344,7 @@
             "charm-keywords": "",
             "charm-description": "The Solar possesses a body and spirit intensified by thousands of hours of vigorous exercise and meditation.",
             "charm-effect": "This Charm applies the double 9s rule to every Athletics roll.",
-            "charm-rollexpr": ""
+            "charm-rollexpr": "!exr -setOnce -d 9"
         }, {
             "attr-mins": {
                 "athletics": 5,
@@ -1359,7 +1359,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Sc: 2nd movement",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1383,7 +1383,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "in bonfire flying attacks generate mote for athletics charms",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1391,7 +1391,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Relentless in pursuit of her ideals, the Lawgiver’s anima becomes like a pair of burning wings that carry her across the sky.",
-            "charm-effect": "When using Eagle-Wing Style to engage in aerial combat, and when her anima is at the bonfire level, the Solar’s attacks benefit from the effects of Onrush Burst Method, generating motes that can be used to pay the activation costs of Athletics Charms. When in use, the Solar’s anima typically resolves into wings that resemble an eagle’s or something else appropriate to the Solar’s iconic manifestation.",
+            "charm-effect": "When using Eagle-Wing Style to engage in aerial combat, and when her anima is at the bonfire level, the Solar’s attacks benefit from the effects of Onrush Burst Method, generating motes that can be used to pay the activation costs of Athletics Charms.\nWhen in use, the Solar’s anima typically resolves into wings that resemble an eagle’s or something else appropriate to the Solar’s iconic manifestation.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1407,7 +1407,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "FoS diff -= 2",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1431,7 +1431,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Sc auto succeed rush",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1439,7 +1439,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Once per scene, the Solar may reflexively channel a burst of impossible speed to automatically succeed at a rush. In a test of speed, she may use this to generate one more success than her opponent on any one interval. If multiple Solars use this on the same interval, they all assume a result one greater than the highest number of successes.",
+            "charm-effect": "Once per scene, the Solar may reflexively channel a burst of impossible speed to automatically succeed at a rush.\nIn a test of speed, she may use this to generate one more success than her opponent on any one interval.\n\nIf multiple Solars use this on the same interval, they all assume a result one greater than the highest number of successes.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1455,7 +1455,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "7s on FoS",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1464,7 +1464,7 @@
             "charm-keywords": "",
             "charm-description": "Summoning the might of untold forces, the Exalt crosses the threshold of legend.",
             "charm-effect": "This Charm is the gateway to outrageous shows of physical prowess—the Solar gains double 7s to attempt a feat of strength, and she counts as meeting its Strength prerequisite (p. 229) no matter how high that requirement might be.",
-            "charm-rollexpr": ""
+            "charm-rollexpr": "!exr -setOnce -d 7,8,9"
         }, {
             "attr-mins": {
                 "athletics": 4,
@@ -1479,7 +1479,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "send ally 1rb ahead",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1487,7 +1487,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "A Solar who has used the prerequisite to increase her Strength to the limit is sufficiently strong enough to hurl a human-sized ally forward or up one range band. This Charm uses the Solar’s own movement action for the round. If the Solar has learned Power Suffusing Form Technique (see Exalted, p. 266), she can combine that Charm with this to hurl an ally the size of a horse and rider safely up or forward one range band, or she may toss a human-sized ally forward two range bands. This use adds one Willpower to the cost of this Charm, but drops the mote cost to two. On Strength-Hying Heave The backer wanted something like the “Fastball Special” from Claremont’s run on the Uncanny X-Men, where Colossus hurls Wolverine at a target. I figured, why not let someone with superhuman strength throw a very heavy ally as well? I can already see a player writing in to tell me how their Zenith stood at the end of a dock as the Night rode up on an armored destrier, and they hurled horse and rider onto the deck of a retreating ship. That said, a Solar using Nine Aeons Thew and other Charms might be able to throw an ally three or more range bands, but they will take falling damage unless they have Charms such as Soaring Crane Leap that will help them land safely. This is a good example of how Solar Charms can and do work together in ways that aren’t expressly outlined in the rules. Backer: Mike Gill",
+            "charm-effect": "A Solar who has used the prerequisite to increase her Strength to the limit is sufficiently strong enough to hurl a human-sized ally forward or up one range band.\nThis Charm uses the Solar’s own movement action for the round.\nIf the Solar has learned Power Suffusing Form Technique (see Exalted, p. 266), she can combine that Charm with this to hurl an ally the size of a horse and rider safely up or forward one range band, or she may toss a human-sized ally forward two range bands. This use adds one Willpower to the cost of this Charm, but drops the mote cost to two.\n\nOn Strength-Hying Heave The backer wanted something like the “Fastball Special” from Claremont’s run on the Uncanny X-Men, where Colossus hurls Wolverine at a target. I figured, why not let someone with superhuman strength throw a very heavy ally as well? I can already see a player writing in to tell me how their Zenith stood at the end of a dock as the Night rode up on an armored destrier, and they hurled horse and rider onto the deck of a retreating ship. That said, a Solar using Nine Aeons Thew and other Charms might be able to throw an ally three or more range bands, but they will take falling damage unless they have Charms such as Soaring Crane Leap that will help them land safely. This is a good example of how Solar Charms can and do work together in ways that aren’t expressly outlined in the rules.\nBacker: Mike Gill",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1503,7 +1503,7 @@
             "rep-cost-mote": "[[ 10 + ?{Added rounds ?} * 1 ]]",
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Sc become a BG",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1511,7 +1511,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Perilous",
             "charm-description": "Like the Unconquered Sun, the Solar is everywhere and nowhere at once. Moving at impossible, Essence-fueled speeds, the Solar becomes multiple copies of herself. As long as she keeps moving, she is each of her copies and none of them at the same time.",
-            "charm-effect": "The Lawgiver becomes a battle group having Size (Essence / 2 rounded up), Magnitude 10 (regardless of her maximum Health Levels), and no bonuses from Drill or Might — simply use the Solar’s normal combat pool. This Charm is incompatible with heavy armor, and incompatible with all Resistance Charms except those which are Permanent-type or Simple-type Charms which were activated before using Faster than Self Technique. Nor can the Solar benefit from giving her “battle group self” enhanced abilities through the use of War Charms. Each round this Charm is active costs the Solar an additional mote of Essence to keep active. In addition, when the Solar’s Magnitude track fills up with damage and she loses a point of Size, instead of a rout check she is subject to a difficulty 3 Stamina + Athletics roll to maintain the Charm. Ending this Charm gives the Exalt a -1 success fatigue penalty to all of her Athletics rolls for the next three rounds. Faster than Self Technique can only be activated once per scene. On Faster than Self Technique The backer’s friend, Koray Bilgin, is the genius behind this Charm. He came up with the name, the concept, and the framework of the mechanics. I just took care of balancing issues and placement in the tree. It’s a really fantastic idea! Backer: U. Kaya YAVUZ",
+            "charm-effect": "The Lawgiver becomes a battle group having Size [[ ceil(@{essence} / 2) ]](Essence / 2 rounded up), Magnitude 10 (regardless of her maximum Health Levels), and no bonuses from Drill or Might — simply use the Solar’s normal combat pool.\nThis Charm is incompatible with heavy armor, and incompatible with all Resistance Charms except those which are Permanent-type or Simple-type Charms which were activated before using Faster than Self Technique.\nNor can the Solar benefit from giving her “battle group self” enhanced abilities through the use of War Charms.\nEach round this Charm is active costs the Solar an additional mote of Essence to keep active.\n\nIn addition, when the Solar’s Magnitude track fills up with damage and she loses a point of Size, instead of a rout check she is subject to a difficulty 3 Stamina + Athletics roll to maintain the Charm.\nEnding this Charm gives the Exalt a -1 success fatigue penalty to all of her Athletics rolls for the next three rounds.\n\nFaster than Self Technique can only be activated once per scene.\n\nOn Faster than Self Technique The backer’s friend, Koray Bilgin, is the genius behind this Charm. He came up with the name, the concept, and the framework of the mechanics. I just took care of balancing issues and placement in the tree. It’s a really fantastic idea! Backer: U. Kaya YAVUZ",
             "charm-rollexpr": ""
         }
     ],
