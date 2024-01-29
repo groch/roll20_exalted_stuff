@@ -13552,7 +13552,7 @@
                 "presence": 5,
                 "essence": 1
             },
-            "prereq": ["Harmonious Presence Meditation","Listener-Swaying Argument"],
+            "prereq": ["Harmonious Presence Meditation", "Listener-Swaying Argument"],
             "charm-skill": "Presence",
             "charm-name": "Excellent Friend Approach",
             "charm-type": "Permanent",
