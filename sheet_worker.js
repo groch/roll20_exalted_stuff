@@ -3057,6 +3057,40 @@
         }
     }));
 
+    /**
+     * Populate Data charms
+     */
+
+    async function fetchJSON(request) {
+        try {
+            const response = await fetch(request, {
+                method: "GET",
+                headers: new Headers(),
+                mode: "cors",
+                cache: "default",
+            });
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new TypeError("Oops, we haven't got JSON!");
+            }
+            const jsonData = await response.json();
+            return jsonData;
+            // process your data further
+        } catch (error) {
+            TAS.error("Error Fetching:", error);
+        }
+    }
+
+    on('sheet:opened', async function populateCharmDatas(e) {
+        // if (debug === 2)
+            TAS.debug(`populateCharmDatas::populateCharmDatas e=`, e);
+        // const finalObj = {};
+        const solarCharms = await fetchJSON('https://github.com/groch/roll20_exalted_stuff/raw/main/DATA_CHARMS/DONE+EDITED/Solaire_full.cleaned1.json');
+        TAS.debug(`populateCharmDatas:: solarCharms.length=${solarCharms.length}`);
+        TAS.debug(`populateCharmDatas:: charmCompendiumPerExalt.Solar.length=${charmCompendiumPerExalt.Solar.length}`);
+        // setAttrs(finalObj);
+    });
+
     /* Reset Dice Cap in roll through caste image hidden Triggers */
     on('clicked:repeating_rolls-widget:reset-roll-cap', setDebugWrapper(async function clickResetDiceCap(e) {
         if (debug >= 2) TAS.debug(`CLICK reset-roll-cap !!! e=${JSON.stringify(e)}`);
