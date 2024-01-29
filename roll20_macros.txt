@@ -158,7 +158,8 @@ Roll:
 !exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,|GM Roll,-gm|Custom Roll,?{Commande a Ajouter &#125;}
 noDbl
 !exr (?{Nombre de dés a lancer ?|1})#+?{Bonus aux succès|0} ?{Type de Jet|Jet Standard,-D|GM Roll,-D -gm|Custom Roll,-D ?{Commande a Ajouter &#125;}
-
+limit
+!exr ?{Nombre de dés ?|1,1|2,2|3,3}# -o -NB -gm
 
 GM-Roll:
 !exr ?{Nombre de dés a lancer ?|1}#+?{Bonus aux succès|0} ?{Table ?|Doubles 10, |Doubles 9,-d 9|Doubles 8,-d 9&#44;8|Doubles 7,-d 9&#44;8&#44;7} -gm
