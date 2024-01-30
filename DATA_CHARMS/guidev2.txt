@@ -1,0 +1,28 @@
+Copie des charmes
+replace "C H A R M S\r\n" par vide
+replace "C H A P T E R 6\r\n" par vide
+replace "EX3\r\n[0-9]{3}" par vide
+Clean des sections bleues (visuel + recherche "ON " , "[A-Z]{2,}\r\n")
+retrait des - entre les mots replace "-\r\n([a-z]+)" par "($1)\r\n"
+retrait des double saut de ligne replace "\r\n\r\n" par "\r\n"
+"^[A-Z][a-z]+\r\n[A-Z][\S ]+\r\nCost" pour detecter les type d'abilities et les sous cat des abilities sauf le Performance Omni-Applicable
+replace "^([A-Z][a-z]+)(\r\n[A-Z][\S ]+\r\nCost)" par "],\r\n"($1)":[($2)" pour les Catégories
+certain Mins sont sur 2 lignes replace "(Mins[\S ]*)\r\n([\S ]*)\r\nType" par ($1)($2)\r\nType
+Unbowed Willow Meditation a son keyword sur la même ligne que le type, va savoir pourquoi
+tester le compte "^([\S ]+)\r\nCost:([\S ]+); Mins:([\S ]+)\r\nType:([\S ]+)\r\nKeywords:([\S ]+)\r\nDuration:([\S ]+)\r\nPrerequisite Charms:([\S ]+)\r\n" avec le compte "Cost:" si différent replace la première expression par du vide et rechercher le(s) "Cost:" restant(s)
+replace "^([\S ]+)\r\nCost:([\S ]+); Mins:([\S ]+)\r\nType:([\S ]+)\r\nKeywords:([\S ]+)\r\nDuration:([\S ]+)\r\nPrerequisite Charms:([\S ]+)\r\n" par ""}\r\n{\r\n"Title":"$1",\r\n"Cost":"$2",\r\n"Mins":"$3",\r\n"Type":"$4",\r\n"Keyword":"$5",\r\n"Duration":"$6",\r\n"Prerequisite":"$7",\r\n"Description":""
+replace "\r\n" par " "
+replace "} {" par "},\r\n{"
+replace ""Abilities"" par "\r\n"Abilities""
+replace ""\[ "\}" par ""\["
+replace "] \r\n" par ""}\r\n]\r\n"
+traiter début, fin fichier
+j'ai reconverti en tableau json en retirant les "Abilities" 
+valider le json il reste quelque coquille https://jsonlint.com/ je suis arrivé a la flemme des cas particuliers et
+
+
+sorcellery
+clean classique
+tester le compte "^([\S ]+)\r\nCost:([\S ]+)\r\nKeywords:([\S ]+)\r\nDuration:([\S ]+)\r\n" avec le compte "Cost:" si différent replace la première expression par du vide et rechercher le(s) "Cost:" restant(s)
+replace "^([\S ]+)\r\nCost:([\S ]+)\r\nKeywords:([\S ]+)\r\nDuration:([\S ]+)\r\n" par ""}\r\n{\r\n"Title":"$1",\r\n"Cost":"$2",\r\n"Keyword":"$3",\r\n"Duration":"$4",\r\n"Description":""
+
