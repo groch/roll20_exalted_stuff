@@ -141,7 +141,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Palming a mote of Essence, the Lawgiver pulls a thorn from her heart and fires it at the breast of her enemy.",
-            "charm-effect": "With this Charm, the Solar may continue firing her bow even when she has run out of arrows.\nIn addition, once per scene, the Exalt may suffuse a phantom or physical arrow with the import of one of her Intimacies. Doing so gives her attack a number of non- Charm bonus dice equal to the Intimacy’s strength, but also temporarily numbs her to that Intimacy.\nShe may not use this attack again until she has spent significant effort in restoring or remembering the Intimacy, or in the case of a negative Intimacy, has been reminded of her motivation for her ire.\n\nAdamant Arrow Technique: At Essence 3+, the Solar may infuse a single phantom or physical arrow per scene with her enduring Essence. So long as she lives, the arrow cannot be destroyed or pulled from the target.\nSuch arrows can be moved by cutting away the base into which they have landed—a tree can still be cut down, a wall still reduced to rubble—but the arrow will remain inviolate.\nOnly the Solar who fired this arrow, or one blessed with her permission, may remove it from its resting place.",
+            "charm-effect": "With this Charm, the Solar may continue firing her bow even when she has run out of arrows.\nIn addition, once per scene, the Exalt may suffuse a phantom or physical arrow with the import of one of her Intimacies. Doing so gives her attack a number of non-Charm bonus dice equal to the Intimacy’s strength, but also temporarily numbs her to that Intimacy.\nShe may not use this attack again until she has spent significant effort in restoring or remembering the Intimacy, or in the case of a negative Intimacy, has been reminded of her motivation for her ire.\n\nAdamant Arrow Technique: At Essence 3+, the Solar may infuse a single phantom or physical arrow per scene with her enduring Essence. So long as she lives, the arrow cannot be destroyed or pulled from the target.\nSuch arrows can be moved by cutting away the base into which they have landed—a tree can still be cut down, a wall still reduced to rubble—but the arrow will remain inviolate.\nOnly the Solar who fired this arrow, or one blessed with her permission, may remove it from its resting place.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -573,7 +573,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Clash, Perilous, Withering-only",
             "charm-description": "When the Lawgiver is cornered and fighting for her life, the burning power of her judgment becomes even more terrifying. Drawing the burning Essence of her life from her very wounds, she can unleash a powerful, Essence- laden shot from her bow that can override other attacks and overwhelm her attackers.",
-            "charm-effect": "The Solar may use this Charm to clash attacks against her from short or close range, but only when she is in her -4 health levels.\nThis clash gains [[@{essence}]](Essence) automatic successes, and the damage roll doubles 9s.\n However, Initiative damaged by this roll is not transferred to the Solar; it is instead rerolled as decisive damage against her target, ignoring hardness and doubling 10s.\n\nAn Essence 5+ repurchase of this Charm removes the Perilous keyword, allowing the Solar to spend herself into lower negative Initiative numbers while crashed.",
+            "charm-effect": "The Solar may use this Charm to clash attacks against her from short or close range, but only when she is in her -4 health levels.\nThis clash gains [[@{essence}]](Essence) automatic successes, and the damage roll doubles 9s (cmd:``-d 9``).\n However, Initiative damaged by this roll is not transferred to the Solar; it is instead rerolled as decisive damage against her target, ignoring hardness and doubling 10s (cmd:``remove -D, leave blank if no other``).\n\nAn Essence 5+ repurchase of this Charm removes the Perilous keyword, allowing the Solar to spend herself into lower negative Initiative numbers while crashed.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -839,7 +839,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Like a flashing bolt, the Exalt streaks toward her goal, trailing streamers of anima.",
-            "charm-effect": "This Charm can be used to enhance a rush action (see p. 197). The Exalt moves with terrific speed—add one automatic success and reroll all 5s and 6s until 5s and 6s fail to appear.\nLightning Speed can also be used each interval of a foot race or other test of speed (see p. 189).",
+            "charm-effect": "This Charm can be used to enhance a rush action (see p. 197). The Exalt moves with terrific speed—add one automatic success and reroll all 5s and 6s until 5s and 6s fail to appear (cmd:``-R 5,6``).\nLightning Speed can also be used each interval of a foot race or other test of speed (see p. 189).",
             "charm-rollexpr": "!exr -setOnce -R 5,6"
         }, {
             "attr-mins": {
@@ -1055,7 +1055,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Attuned to Essence currents that flow through the world, the Solar moves as if in a waking dream. She travels in flashing sprints and sparking leaps, moving from branch to branch like a skipping stone and leaving dust clouds in her wake.",
-            "charm-effect": "This Charm lasts one hour. During this hour, the Solar moves up to three range bands per turn, depending on the terrain and her ability to move at an uninterrupted clip.\nIf she joins battle, her speed is greatly slowed, as she must focus more completely on her environment. The Solar resumes moving one range band per turn, but the Charm still has an effect: double 9s on rush attempts, and for every 10 rolled on a rush, the Solar gains a point of Initiative.\nIf the Exalt knows the Charm Triumph-Forged God-Body, the rushes instead gain [[@{essence}]](Essence) bonus dice.\n\nThese benefits also apply to each interval of a test of speed.\n\nIf the Lawgiver chooses to renew this technique at the end of an hour, ignore the Willpower cost.",
+            "charm-effect": "This Charm lasts one hour. During this hour, the Solar moves up to three range bands per turn, depending on the terrain and her ability to move at an uninterrupted clip.\nIf she joins battle, her speed is greatly slowed, as she must focus more completely on her environment. The Solar resumes moving one range band per turn, but the Charm still has an effect: double 9s on rush attempts (cmd:``-d 9``), and for every 10 rolled on a rush, the Solar gains a point of Initiative.\nIf the Exalt knows the Charm Triumph-Forged God-Body, the rushes instead gain [[@{essence}]](Essence) bonus dice.\n\nThese benefits also apply to each interval of a test of speed.\n\nIf the Lawgiver chooses to renew this technique at the end of an hour, ignore the Willpower cost.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1151,7 +1151,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Through intense muscle control, the Solar’s insides erupt with surging Essence power.",
-            "charm-effect": "Reroll all non-successes on a feat of strength.",
+            "charm-effect": "Reroll all non-successes on a feat of strength (cmd:``-r 1,2,3,4,5,6``).",
             "charm-rollexpr": "!exr -setOnce -r 1,2,3,4,5,6"
         }, {
             "attr-mins": {
@@ -1343,7 +1343,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar possesses a body and spirit intensified by thousands of hours of vigorous exercise and meditation.",
-            "charm-effect": "This Charm applies the double 9s rule to every Athletics roll.",
+            "charm-effect": "This Charm applies the double 9s rule to every Athletics roll (cmd:``-d 9``).",
             "charm-rollexpr": "!exr -setOnce -d 9"
         }, {
             "attr-mins": {
@@ -1463,7 +1463,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Summoning the might of untold forces, the Exalt crosses the threshold of legend.",
-            "charm-effect": "This Charm is the gateway to outrageous shows of physical prowess—the Solar gains double 7s to attempt a feat of strength, and she counts as meeting its Strength prerequisite (p. 229) no matter how high that requirement might be.",
+            "charm-effect": "This Charm is the gateway to outrageous shows of physical prowess—the Solar gains double 7s to attempt a feat of strength (cmd:``-d 7,8,9``), and she counts as meeting its Strength prerequisite (p. 229) no matter how high that requirement might be.",
             "charm-rollexpr": "!exr -setOnce -d 7,8,9"
         }, {
             "attr-mins": {
