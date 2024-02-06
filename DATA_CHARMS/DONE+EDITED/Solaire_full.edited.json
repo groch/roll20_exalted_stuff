@@ -20141,7 +20141,7 @@
             "charm-rollexpr": ""
         }
     ],
-    "War": [{
+    "War DONE": [{
             "attr-mins": {
                 "war": 1,
                 "essence": 1
@@ -20155,7 +20155,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "ignore poor drill pen + boost size by 1 on JB",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20163,7 +20163,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Solars descend from the highest war god in Heaven. They speak armies into existence, and their mere presence is a call to arms.",
-            "charm-effect": "This Charm supplements the Strategic Maneuver roll (p. 211); as the Lawgiver develops a tactic for victory, fighters of the world are drawn to her call to glory. Ignore the -1 penalty for troops with poor drill, and increase the battle group’s effective Size by one upon joining battle.",
+            "charm-effect": "This Charm supplements the Strategic Maneuver roll (p. 211); as the Lawgiver develops a tactic for victory, fighters of the world are drawn to her call to glory.\nIgnore the -1 penalty for troops with poor drill, and increase the battle group’s effective Size by one upon joining battle.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20179,7 +20179,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "improve siege BG",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20187,7 +20187,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "By drilling with a ballista squad, catapult crew, or other team of siege weaponry operators, the Lawgiver burns an image of perfect actions into their minds.",
-            "charm-effect": "This simple action can last for one minute or one hour. The Solar drills her charges in loading, aiming, and firing siege weaponry and ballistae, giving each crewman an automatic success on the firing roll, and allowing him to reroll all non-successes . If she drills the crew for one minute, they gain this benefit for a single attack. If she drills them for an hour, they gain it for an entire combat scene.",
+            "charm-effect": "This simple action can last for one minute or one hour.\nThe Solar drills her charges in loading, aiming, and firing siege weaponry and ballistae, giving each crewman an automatic success on the firing roll, and allowing him to reroll all non-successes.\nIf she drills the crew for one minute, they gain this benefit for a single attack.\nIf she drills them for an hour, they gain it for an entire combat scene.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20203,7 +20203,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "BG cannot suffer demoralizing effects + ignore some frequents penalties",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20211,7 +20211,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Reaching out to the hearts of her charges with an impassioned speech and fatal purpose, the Solar invokes their reasons for fighting.",
-            "charm-effect": "This Charm is activated when the Exalt begins the long, arduous process of drilling her soldiers. As she toughens them with want and rain, she reminds them of the hardships they have endured at the hands of their tormentors. When they hunger, her words feed them. When they shiver, her exhortations warm them. Fed by the Solar’s will, they suffer less from long marches, empty bellies, or harsh climates. When the Lawgiver is finished drilling these troops, her commitment to the Charm ends, and her soldiers are forever improved: they cannot suffer demoralizing effects (such as the Demoralize stratagem on page 212) that are not created by Reflexive or Simple types of magic. In addition , ignore penalties on the Strategic Maneuver roll having to do with hunger, bad weather, or the physical exhaustion associated with long marches over difficult terrain.",
+            "charm-effect": "This Charm is activated when the Exalt begins the long, arduous process of drilling her soldiers. As she toughens them with want and rain, she reminds them of the hardships they have endured at the hands of their tormentors. When they hunger, her words feed them. When they shiver, her exhortations warm them. Fed by the Solar’s will, they suffer less from long marches, empty bellies, or harsh climates.\nWhen the Lawgiver is finished drilling these troops, her commitment to the Charm ends, and her soldiers are forever improved: they cannot suffer demoralizing effects (such as the Demoralize stratagem on page 212) that are not created by Reflexive or Simple types of magic.\nIn addition, ignore penalties on the Strategic Maneuver roll having to do with hunger, bad weather, or the physical exhaustion associated with long marches over difficult terrain.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20227,7 +20227,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reflexive rally",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20251,7 +20251,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "ignore all pen from unfamiliarity with opposing force",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20259,7 +20259,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Looking into the Essence of the battlefield, the Solar tactician knows the forces arrayed against her, if not in fact then in unerring instinct.",
-            "charm-effect": "This Charm supplements the Strategic Maneuver roll (see p. 211) to establish a stratagem , allowing the Solar to ignore all penalties from unfamiliarity with the opposing force or its generals.",
+            "charm-effect": "This Charm supplements the Strategic Maneuver roll (see p. 211) to establish a stratagem, allowing the Solar to ignore all penalties from unfamiliarity with the opposing force or its generals.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20275,7 +20275,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "9s on orders actions",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20283,8 +20283,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Sun’s Chosen speak in tongues of valor and know the ways of war. As one who has studied or waged war for a lifetime, the Solar simply knows what to do in any combat situation.",
-            "charm-effect": "This Charm applies the double 9s rule to all of the Solar’s order actions (p. 209). At War 5, Essence 3+, the Exalt may pay six motes, three Initiative to enhance her orders with double 8s.",
-            "charm-rollexpr": ""
+            "charm-effect": "This Charm applies the double 9s rule (Cmd: ``-d 9``) to all of the Solar’s order actions (p. 209).\n\nAt War 5, Essence 3+, the Exalt may pay six motes, three Initiative to enhance her orders with double 8s (Cmd: ``-d 8,9``).",
+            "charm-rollexpr": "!exr -setOnce -d 9"
         }, {
             "attr-mins": {
                 "war": 4,
@@ -20299,7 +20299,7 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "special training for BG",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20307,7 +20307,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "At the dawn of the world, man knew nothing of the gods save that they were inviolate and could not be vanquished. The Solar Exalted changed that.",
-            "charm-effect": "Through the use of this Charm, even the worst gutter-sweepings and bandits can be trained into an elite fighting force. This Charm enhances the effects of Drill (p. 206). The Solar’s training regimens are brilliant, ingraining her troops with perfect actions codified from a peerless mind for war. With this Charm, she can train an undisciplined unit up to Average after just a week, and she can instill an Average unit with Elite status after only a month. Any unit which gains Average Drill under the aegis of this training also gains the combat traits of battle-ready soldiers, while any unit raised to Elite Drill gains the combat traits of elite troops (p. 497). In addition, at Essence 3+, the Solar can further enhance an Elite battle group with her transforming will. Demon-Fighting Principle: For 2xp, she can train her elite units to be more effective at fighting ghosts, demons, and other nighted creatures from the haunted tracts of Creation. The battle group gains +2 Might against such foes. Giant-Slaying Tactics: For 2xp, the Exalt’s elite are versed in battle tactics having to do with fighting gigantic opponents . Her forces gain +2 Might against behemoths or other titanic foes. This effect does not stack with Demon- Fighting Principle. Glory of the Inevitable: The Solar’s Tiger Warriors need no truth but life is death, and death comes on the battlefield . For 3xp, she can instill her elite battle group with perfect morale (p. 210), making it impossible to fail a rout check without powerful magical influence.",
+            "charm-effect": "Through the use of this Charm, even the worst gutter-sweepings and bandits can be trained into an elite fighting force. This Charm enhances the effects of Drill (p. 206).\nThe Solar’s training regimens are brilliant, ingraining her troops with perfect actions codified from a peerless mind for war.\nWith this Charm, she can train an undisciplined unit up to Average after just a week, and she can instill an Average unit with Elite status after only a month.\nAny unit which gains Average Drill under the aegis of this training also gains the combat traits of battle-ready soldiers, while any unit raised to Elite Drill gains the combat traits of elite troops (p. 497).\n\nIn addition, at Essence 3+, the Solar can further enhance an Elite battle group with her transforming will.\n Demon-Fighting Principle: For 2xp, she can train her elite units to be more effective at fighting ghosts, demons, and other nighted creatures from the haunted tracts of Creation. The battle group gains +2 Might against such foes.\n Giant-Slaying Tactics: For 2xp, the Exalt’s elite are versed in battle tactics having to do with fighting gigantic opponents . Her forces gain +2 Might against behemoths or other titanic foes. This effect does not stack with Demon- Fighting Principle.\n Glory of the Inevitable: The Solar’s Tiger Warriors need no truth but life is death, and death comes on the battlefield. For 3xp, she can instill her elite battle group with perfect morale (p. 210), making it impossible to fail a rout check without powerful magical influence.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20323,7 +20323,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "use 1&2 on ennemy rally to restore magnitude",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20331,7 +20331,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Lawgiver walks the battlefield as a legend, feared and respected by friend and foe alike.",
-            "charm-effect": "After an enemy general takes a rally for numbers action (p. 210), the Solar may use this Charm to restore an amount of Magnitude to her battle group equal to the 1s and 2s in her opponent’s roll. This new influx of soldiers is pulled from the ranks of her enemy’s forces as they switch sides.",
+            "charm-effect": "After an enemy general takes a rally for numbers action (p. 210), the Solar may use this Charm to restore an amount of Magnitude to her battle group equal to the 1s and 2s in her opponent’s roll.\nThis new influx of soldiers is pulled from the ranks of her enemy’s forces as they switch sides.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20347,7 +20347,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reduce R-RG strategic man. diff by 1",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20371,7 +20371,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "enhance strategic man.",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20379,7 +20379,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Poring over maps and strategies real and remembered, the Solar sees perfect stillness beneath the chaotic Essence of combat.",
-            "charm-effect": "This Charm supplements the Strategic Maneuver roll, adding one automatic success plus [[@{essence}]](Essence) dice. In addition, the Exalt may choose to split her successes into multiple stratagems. The Solar may deploy no more stratagems than her Essence rating.",
+            "charm-effect": "This Charm supplements the Strategic Maneuver roll, adding one automatic success plus [[@{essence}]](Essence) dice.\nIn addition, the Exalt may choose to split her successes into multiple stratagems.\nThe Solar may deploy no more stratagems than her Essence rating.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20395,7 +20395,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 1,
             "rep-cost-init": 4,
-            "charm-short-desc": "",
+            "charm-short-desc": "special strat. man. with 7s",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20403,8 +20403,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Once per battle, the Lawgiver may enact a signature stratagem that may not be counteracted by prophetic magic or Charms such as Battle-Visionary’s Foresight. This roll may be a unique strategy described by the player, or it may be one of the template strategies on page 212. In any case, the Strategic Maneuver roll is made with double 7s.",
-            "charm-rollexpr": ""
+            "charm-effect": "Once per battle, the Lawgiver may enact a signature stratagem that may not be counteracted by prophetic magic or Charms such as Battle-Visionary’s Foresight.\nThis roll may be a unique strategy described by the player, or it may be one of the template strategies on page 212.\nIn any case, the Strategic Maneuver roll is made with double 7s (Cmd: ``-d 7,8,9``).",
+            "charm-rollexpr": "!exr -setOnce -d 7,8,9"
         }, {
             "attr-mins": {
                 "war": 4,
@@ -20419,7 +20419,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "if BG lose size, i can reroll JB",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20443,7 +20443,7 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Sc: auto successfull rally",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20451,7 +20451,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar represents a new dawn on the last day of Creation. Her coming foretells the battle’s end, a day of blood for the wicked and light to vanquish darkness from the world once more. When her army is routed, the Lawgiver may call upon glories past—in this life and those that came before—to create a rallying tactic that miraculously reforms her army.",
-            "charm-effect": "This Charm is an automatically successful rally action (p. 210). It can be used once per scene, but it can be reset if the Solar succeeds at vanquishing a terrible foe or conquering a powerful enemy through the might of her army.",
+            "charm-effect": "This Charm is an automatically successful rally action (p. 210).\nIt can be used once per scene, but it can be reset if the Solar succeeds at vanquishing a terrible foe or conquering a powerful enemy through the might of her army.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20467,7 +20467,7 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Cbt: reflexive rally for action",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20475,7 +20475,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt inspires loyalty such that the very beasts of the field flock to her call.",
-            "charm-effect": "Once per combat, the Exalt may make a reflexive rally for numbers action (see p. 210), adding [[@{essence}]](Essence) automatic successes. While this Charm cannot restore a dot of Size, any successes beyond the battle group’s total Magnitude will be restored in the rounds following the battle group taking additional damage, at a rate of up two Magnitude levels per round. A Solar whose appeals are sufficiently compelling—a level two stunt—will see wild animals leaping into the fray on her behalf, while a Solar whose call for retribution strikes with resounding force—a level three stunt—will be answered by the very rocks and trees, as elementals and other strange spirits rise up to join her ranks.",
+            "charm-effect": "Once per combat, the Exalt may make a reflexive rally for numbers action (see p. 210), adding [[@{essence}]](Essence) automatic successes.\nWhile this Charm cannot restore a dot of Size, any successes beyond the battle group’s total Magnitude will be restored in the rounds following the battle group taking additional damage, at a rate of up two Magnitude levels per round.\nA Solar whose appeals are sufficiently compelling—a level two stunt—will see wild animals leaping into the fray on her behalf, while a Solar whose call for retribution strikes with resounding force—a level three stunt—will be answered by the very rocks and trees, as elementals and other strange spirits rise up to join her ranks.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20491,7 +20491,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reroll 6s on War based roll",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20500,7 +20500,7 @@
             "charm-keywords": "",
             "charm-description": "The Chosen meditates on the never-ending cycle of strife and conflict until her form is instilled with the Essence of war.",
             "charm-effect": "Any War-based roll she makes rerolls any 6s in its result until 6s no longer appear.",
-            "charm-rollexpr": ""
+            "charm-rollexpr": "!exr -setOnce -R 6"
         }, {
             "attr-mins": {
                 "war": 5,
@@ -20515,7 +20515,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "can use JB threshold from BPA to create maneuver reflexively",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20523,7 +20523,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Reaching into a past filled with glories and terror, the Exalt shapes a divinely-inspired order for her army to follow.",
-            "charm-effect": "Whenever the Exalt uses Battle Path Ascendant, she may use this Charm to create and employ a stratagem with a threshold of half the successes of her Join Battle roll, rounded up. This stratagem must make sense in the context of the battlefield.",
+            "charm-effect": "Whenever the Exalt uses Battle Path Ascendant, she may use this Charm to create and employ a stratagem with a threshold of half the successes of her Join Battle roll, rounded up.\nThis stratagem must make sense in the context of the battlefield.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20539,7 +20539,7 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "guess 2 tactics, if ennemy use one of them, perfect counter it",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20547,7 +20547,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar taps a legacy of war greater and longer than the length of her life. Her battle-hardened visage stares into the Essence of the world through ancient eyes, seeing primal battles play out in ages lost.",
-            "charm-effect": "This Charm is used during strategic warfare, and requires one to five minutes to complete—the Solar concentrates on her foe, her army, the battlefield, and her memories, merging them into a single interlinked tactic that allows her to create a perfect response to enemy stratagems. The player privately chooses two stratagems (p. 212) and writes them down, not revealing them to fellow players. The selected tactics are hidden face down. If the opposing player wins the Strategic Maneuver roll and chooses to employ one of the strategies the Solar’s player has selected, the enemy finds that his stratagem has led him into a terrible mistake: the Solar general is ready with a perfect counter-tactic. In this case, treat the battle as if the Exalt’s player had won the strategic roll and deployed a stratagem of equal value to the one she just countered. The Solar’s player may also choose stratagems that are listed in later publications. Opposing players may not opt to choose “No stratagem.” However, armies led by the Chosen may gain access to special, mystical stratagems, such as the divine miracles allowed by the Chosen of Battles. Such tactics are rare, and upon encountering one, the Solar may trade two prepared tactics to counter one of these reflexively.",
+            "charm-effect": "This Charm is used during strategic warfare, and requires one to five minutes to complete—the Solar concentrates on her foe, her army, the battlefield, and her memories, merging them into a single interlinked tactic that allows her to create a perfect response to enemy stratagems.\nThe player privately chooses two stratagems (p. 212) and writes them down, not revealing them to fellow players.\nThe selected tactics are hidden face down.\nIf the opposing player wins the Strategic Maneuver roll and chooses to employ one of the strategies the Solar’s player has selected, the enemy finds that his stratagem has led him into a terrible mistake: the Solar general is ready with a perfect counter-tactic.\nIn this case, treat the battle as if the Exalt’s player had won the strategic roll and deployed a stratagem of equal value to the one she just countered.\nThe Solar’s player may also choose stratagems that are listed in later publications.\nOpposing players may not opt to choose “No stratagem.” However, armies led by the Chosen may gain access to special, mystical stratagems, such as the divine miracles allowed by the Chosen of Battles.\nSuch tactics are rare, and upon encountering one, the Solar may trade two prepared tactics to counter one of these reflexively.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20563,7 +20563,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "gain order action bonus if playing before enemy general & army size differs",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20571,7 +20571,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "When the Exalt’s Initiative is higher than the enemy general’s, her order actions gain a dice bonus equal to the Size difference between her battle group and the enemy forces. If the enemy general is not rolled into battle , this Charm doesn’t work, nor does it work if there is no opposed battle group. On Unstoppable Solar Conqueror Just a bonus Charm for all you players of strategists and generals. Something to help you round out your basic power structure.",
+            "charm-effect": "When the Exalt’s Initiative is higher than the enemy general’s, her order actions gain a dice bonus equal to the Size difference between her battle group and the enemy forces.\nIf the enemy general is not rolled into battle, this Charm doesn’t work, nor does it work if there is no opposed battle group.\n\nOn Unstoppable Solar Conqueror Just a bonus Charm for all you players of strategists and generals. Something to help you round out your basic power structure.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -20587,7 +20587,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "forfeit BG damage for changing enemy tactics",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20595,11 +20595,11 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar general, having made many calculations and knowing her enemy as well as herself, is at one with the five forces. At harmony with the universe, the Solar cannot be defeated.",
-            "charm-effect": "This is the Charm of the Dawn Caste generals who tore apart and routed the invincible armies of the Great Masters in the Time Before. When the Exalt’s battle group makes a successful attack against another battle group augmented by an order action, the Solar may use this Charm to take further control of the battle, forfeiting damage and using extra successes on the attack roll to place the enemy under the effects of a new stratagem. In literal terms, the Solar uses her superior knowledge and tactics to control the enemy army, forcing it into a disadvantageous state for the rest of the battle. The Exalt may instead use this Charm to erase a stratagem of equal or lesser value that has been used against her own forces, allowing them to escape from the most harrowing of disadvantages through her military genius. The Solar may deploy up to [[@{essence}]](Essence) additional stratagems with repeated use of this Charm. If any stratagems the Solar deploys seem incompatible, void the incompatible one and increase the severity of disadvantage in a pre-existing penalty. For example, an army trapped in a desert canyon is suffering from lack of water normally, but the compounded stratagem reveals that they are also sinking in quicksand. Increase penalties accordingly. On One With Five Forces The backer wanted to expand the order action to make it more interesting and tactical from round to round. The backer also wanted the Charm to be Essence 4. His request led to the creation of this balanced but tremendously powerful Charm that will greatly reward supernal War characters. Backer: Brent A. Nellis",
+            "charm-effect": "This is the Charm of the Dawn Caste generals who tore apart and routed the invincible armies of the Great Masters in the Time Before.\nWhen the Exalt’s battle group makes a successful attack against another battle group augmented by an order action, the Solar may use this Charm to take further control of the battle, forfeiting damage and using extra successes on the attack roll to place the enemy under the effects of a new stratagem.\nIn literal terms, the Solar uses her superior knowledge and tactics to control the enemy army, forcing it into a disadvantageous state for the rest of the battle.\nThe Exalt may instead use this Charm to erase a stratagem of equal or lesser value that has been used against her own forces, allowing them to escape from the most harrowing of disadvantages through her military genius.\nThe Solar may deploy up to [[@{essence}]](Essence) additional stratagems with repeated use of this Charm.\nIf any stratagems the Solar deploys seem incompatible, void the incompatible one and increase the severity of disadvantage in a pre-existing penalty. For example, an army trapped in a desert canyon is suffering from lack of water normally, but the compounded stratagem reveals that they are also sinking in quicksand. Increase penalties accordingly.\n\nOn One With Five Forces The backer wanted to expand the order action to make it more interesting and tactical from round to round. The backer also wanted the Charm to be Essence 4. His request led to the creation of this balanced but tremendously powerful Charm that will greatly reward supernal War characters. Backer: Brent A. Nellis",
             "charm-rollexpr": ""
         }
     ],
-    "Universal": [{
+    "Universal DONE": [{
             "attr-mins": {
                 "essence": 3
             },
@@ -20612,7 +20612,7 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "merge with the lunar mate for a scene",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -20620,7 +20620,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Apocryphal",
             "charm-description": "",
-            "charm-effect": "When a Solar has a deeply physical and spiritual bond with one of the Lunar Exalted, that Lunar is said to be her bond mate — a tradition going back thousands of years. This Charm is occluded, hidden from the normal roll of Solar Abilities, and only becomes available to the Solar to learn if she has a Defining Tie for her Lunar and vice versa, and if their bond has been deeply established according to the Storyteller. Then, in circumstances where they are touching each other — sparring, one holding the other’s wrist to keep them from going over a cliff, sharing a kiss, etc — the Storyteller may deem that the Solar feels a sudden oneness with her Lunar. The Lunar will feel this same oneness in turn. Roll their combined Essence scores, and if the result is one or greater, the Storyteller describes a numinous moment in which the Solar and Lunar touch mind and soul and become as one. This can be a completely disassociated stream of consciousness event, or it can be a series of images from their past lives. The end of this sequence leaves the Solar capable of learning this Charm. This Charm allows the Solar to physically merge with her Lunar mate, becoming a single entity of divine wrath and living flame for one scene. The combined being resembles a fusion of the Solar’s physical form with her iconic anima, and the spirit-animal of her Lunar mate. This form usually has four arms, has bestial and ethereal traits, such as horns, hair that floats and crackles with lightning, gale force-winds that whip around in her vicinity , and so on. The mote pool for the merged being is the Solar’s current pool + 25, and the health levels of the combined being are equal to the Lunar’s undamaged health levels. As a quick character, the fusion has all of the traits of the Solar, but the players may do the work to assign the merged character its own sheet, giving it the Lunar’s Attributes and the Solar’s Abilities. In any case, the merged Exalt uses all of the Solar’s Charms for actions, but its Attributes on any roll can be enhanced by any Attribute-boosting Charms the Lunar has learned. In addition, the form gains horns, fangs, claws, wings, and other mutations applicable to the Lunar’s spirit form and the Solar’s iconic manifestation, a number equal to the Lunar’s Appearance or Stamina +1. These natural weapons can be used to use animal attacks such as Bite, Gore, and so on, listed in the antagonists chapter of Exalted. To use this Charm, the Exalts must share a Defining Principle that they are merging in order to defend. If they are killed while in this form, they both die. Once they have used this Charm, they may not end their merged form until the end of the scene, though they may choose to end it if they fall into Initiative Crash. On Hallowed Bond of Night and Flame This Charm was written in response to a backer’s desire to see a Charm that uses the Solar / Lunar bond to make a merged being with some combination of Solar and Lunar Charms and appearance. This Charm is hugely apocryphal. If we were to allow something like this to happen normally, we’d require a deeper buildup with a number of requisite Charms and story events. However, it is a delightful Charm and if you really want to use it we hope the Apocryphal keyword won’t get in your way. According to the backer, this Charm was used by her Lunar, Scarlet-Wings-Over-The-Mountain and her Solar lover, Brass Storm Spirit. Storytellers beware, this Charm is mechanically overpowered. Use with caution. Backer: Jennifer Alyxendra Barron",
+            "charm-effect": "When a Solar has a deeply physical and spiritual bond with one of the Lunar Exalted, that Lunar is said to be her bond mate — a tradition going back thousands of years.\nThis Charm is occluded, hidden from the normal roll of Solar Abilities, and only becomes available to the Solar to learn if she has a Defining Tie for her Lunar and vice versa, and if their bond has been deeply established according to the Storyteller. Then, in circumstances where they are touching each other — sparring, one holding the other’s wrist to keep them from going over a cliff, sharing a kiss, etc — the Storyteller may deem that the Solar feels a sudden oneness with her Lunar. The Lunar will feel this same oneness in turn.\nRoll their combined Essence scores, and if the result is one or greater, the Storyteller describes a numinous moment in which the Solar and Lunar touch mind and soul and become as one. This can be a completely disassociated stream of consciousness event, or it can be a series of images from their past lives. The end of this sequence leaves the Solar capable of learning this Charm.\nThis Charm allows the Solar to physically merge with her Lunar mate, becoming a single entity of divine wrath and living flame for one scene. The combined being resembles a fusion of the Solar’s physical form with her iconic anima, and the spirit-animal of her Lunar mate. This form usually has four arms, has bestial and ethereal traits, such as horns, hair that floats and crackles with lightning, gale force-winds that whip around in her vicinity, and so on.\nThe mote pool for the merged being is the Solar’s current pool + 25, and the health levels of the combined being are equal to the Lunar’s undamaged health levels.\nAs a quick character, the fusion has all of the traits of the Solar, but the players may do the work to assign the merged character its own sheet, giving it the Lunar’s Attributes and the Solar’s Abilities. In any case, the merged Exalt uses all of the Solar’s Charms for actions, but its Attributes on any roll can be enhanced by any Attribute-boosting Charms the Lunar has learned.\nIn addition, the form gains horns, fangs, claws, wings, and other mutations applicable to the Lunar’s spirit form and the Solar’s iconic manifestation, a number equal to the Lunar’s Appearance or Stamina +1. These natural weapons can be used to use animal attacks such as Bite, Gore, and so on, listed in the antagonists chapter of Exalted.\nTo use this Charm, the Exalts must share a Defining Principle that they are merging in order to defend.\nIf they are killed while in this form, they both die.\nOnce they have used this Charm, they may not end their merged form until the end of the scene, though they may choose to end it if they fall into Initiative Crash.\n\nOn Hallowed Bond of Night and Flame This Charm was written in response to a backer’s desire to see a Charm that uses the Solar / Lunar bond to make a merged being with some combination of Solar and Lunar Charms and appearance. This Charm is hugely apocryphal. If we were to allow something like this to happen normally, we’d require a deeper buildup with a number of requisite Charms and story events. However, it is a delightful Charm and if you really want to use it we hope the Apocryphal keyword won’t get in your way. According to the backer, this Charm was used by her Lunar, Scarlet-Wings-Over-The-Mountain and her Solar lover, Brass Storm Spirit. Storytellers beware, this Charm is mechanically overpowered. Use with caution. Backer: Jennifer Alyxendra Barron",
             "charm-rollexpr": ""
         }
     ]
