@@ -97,10 +97,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
      *      -----
      * Parse Conditionals
      */
-    const parseCondCRStarter = (defaultConditionObj, parsedReturn) => {
-        logger(`parseCRStarter::parseCRStarter parsedReturn=${JSON.stringify(parsedReturn)}`);
+    const parseCondStarter = (defaultConditionObj, parsedReturn) => {
+        logger(`parseStarter::parseStarter parsedReturn=${JSON.stringify(parsedReturn)}`);
         defaultConditionObj.starterCount = Number(parsedReturn[1]);
-        logger(LOGLEVEL.NOTICE, `parseCRStarter:: Setting CRStarter dice count to ${defaultConditionObj.starterCount}`);
+        logger(LOGLEVEL.NOTICE, `parseStarter:: Setting Starter dice count to ${defaultConditionObj.starterCount}`);
         return defaultConditionObj;
     },
 
@@ -464,6 +464,23 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         }
     },
 
+    handleTurnConditionalHookESStarter = (result, turn, nextRollsToProcess, condIterator) => {
+        if (turn !== 1) return;
+        var cond = result.rollSetup.conditionalActivated[condIterator];
+        if (cond.starterCount > 0) {
+            result.rollSetup.finalResults.push(makeSectionDoneObj('Cond-ESStarter', conditionalColor, `&#013;&#010; ESStarter generate ${cond.starterCount} dices that could Explode on Success`));
+        }
+        for (var i = 0; i < cond.starterCount; i++) {
+            var newDie = randomInteger(10);
+            nextRollsToProcess.push({
+                v: newDie, wasEverRerolled: false,
+                wasRerolled: false, wasExploded: true, wasConditionallyAffected: true,
+                title: [`RollTurn (${strFill(turn + 1)}). C(ESStarter)    ->Face=${strFill(newDie)}.`],
+                tagList: ['ESStarter']
+            });
+        }
+    },
+
     handleTurnConditionalHookCRStarter = (result, turn, nextRollsToProcess, condIterator) => {
         if (turn !== 1) return;
         var cond = result.rollSetup.conditionalActivated[condIterator];
@@ -681,6 +698,22 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             },
             finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
         },
+        'ESStarter': {
+            regPattern: /ESStarter\s(\d+)/,
+            parseCommand: parseCondStarter, //f(defaultConditionObj, parsedReturn)
+            faceTrigger: (setup, result, cond) => setup.success && setup.tagList.includes('ESStarter'),
+            handleFaceMethod: handleFaceConditionExplodeSuccesses, //(result, setup, item, turn, condIterator)
+            turnHook: handleTurnConditionalHookESStarter, //f(result, turn, nextRollsToProcess, condIterator)
+            getDetailMethod: detailsCondESSectionDone, //f(condObj, showDone = false)
+            defaultConditionObj: {
+                name: 'ESStarter',
+                starterCount: 0,
+                done: 0,
+                conditionalColor: explodedColor
+            },
+            finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
+            tagAssociated: 'ESStarter'
+        },
         'CR': {
             regPattern: /CR(l\d*)?(?:\sIGNORETAGS=([(?:\w )+,]+))?/,
             parseCommand: parseCondCR, //f(defaultConditionObj, parsedReturn)
@@ -698,7 +731,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         },
         'CRStarter': {
             regPattern: /CRStarter\s(\d+)/,
-            parseCommand: parseCondCRStarter, //f(defaultConditionObj, parsedReturn)
+            parseCommand: parseCondStarter, //f(defaultConditionObj, parsedReturn)
             faceTrigger: (setup, result, cond) => setup.success && setup.tagList.includes('CRStarter') || !setup.success && cond.remainingToDo,
             handleFaceMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
             turnHook: handleTurnConditionalHookCRStarter, //f(result, turn, nextRollsToProcess, condIterator)
@@ -987,20 +1020,21 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 arraySecondCol: [
                     "<b>These commands are conditionals triggers</b>, name are abreviation from book, you should refer to the book for these ones and contact the developper if something feel off.",
                     "Actually there is :",
-                    '-1MotD : CRAFT=> First Movement of the Demiurge, Exalted Core, p298',
-                    '-DIT : CRAFT=> Divine Inspiration Technique, Exalted Core, p298',
-                    '-HMU : CRAFT=> Holistic Miracle Understanding (improved version of DIT), Exalted Core, p299',
+                    '-1MotD : CRAFT=> "First Movement of the Demiurge", Exalted Core, p298',
+                    '-DIT : CRAFT=> "Divine Inspiration Technique", Exalted Core, p298',
+                    '-HMU : CRAFT=> "Holistic Miracle Understanding" (improved version of DIT), Exalted Core, p299',
                     '-Ron10 : on 10 Reroll 1 non success',
-                    '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
-                    '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB SOCIALIZE=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
+                    '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> "Soaring Leap Technique", Exalted Dragon-Blooded, p169',
+                    '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB SOCIALIZE=> "Smoke-Wreathed Mien", Exalted Dragon-Blooded, p261',
                     '-ES : Explode on success (also called Cascading Reroll but its confusing), create another die each time the die turn as a success.',
-                    '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. can include limit as for other rolls, and IGNORETAGS (Example <code style=\"white-space: nowrap\">!exr 10# -R 1 TAGS=test -CR IGNORETAGS=test</code>)',
-                    '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
+                    '-ESStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -ESStarter 5</code> Explode on success Starter, explode dice that turn as success from these starter, used for "Ambush Predator Style" + "Familiar Honing Instruction" (Solar Survival).',
+                    '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. can include limit as for other rolls, and IGNORETAGS (Example <code style=\"white-space: nowrap\">!exr 10# -R 1 TAGS=test -CR IGNORETAGS=test</code>), used in "Inner Eye Focus" (Solar Awareness)',
+                    '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
                 ],
             }
         ],
         defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-        helpVersion = 1.24;
+        helpVersion = 1.25;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
