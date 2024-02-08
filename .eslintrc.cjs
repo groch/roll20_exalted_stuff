@@ -10,6 +10,6 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted" }]
+        "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted", "allowEmptyCase": "true" }]
     }
 }
