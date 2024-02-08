@@ -104,6 +104,20 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         return defaultConditionObj;
     },
 
+    parseCondCR = (defaultConditionObj, parsedReturn) => {
+        logger(LOGLEVEL.NOTICE, `parseCondCR::parseCondCR parsedReturn=${JSON.stringify(parsedReturn)}`);
+        defaultConditionObj.limit = parsedReturn[1] ? Number(parsedReturn[1].substring(1)) : 0;
+        logger(LOGLEVEL.NOTICE, `parseCondCR:: Setting CR limit to ${defaultConditionObj.limit}`);
+        if (parsedReturn[2]) {
+            if (parsedReturn[2].includes(','))
+                defaultConditionObj.ignoredTagList.push(...parsedReturn[2].split(',').filter(i => i)).map(i => i.trim());
+            else
+                defaultConditionObj.ignoredTagList.push(parsedReturn[2]);
+        }
+        logger(LOGLEVEL.NOTICE, `parseCondCR:: Setting ignoreList to:${JSON.stringify(defaultConditionObj.ignoredTagList)}`);
+        return defaultConditionObj;
+    },
+
     parseCondRSuccLTHon1 = (defaultConditionObj, parsedReturn) => {
         logger(`parseRSuccLTHon1::parseRSuccLTHon1 parsedReturn=${JSON.stringify(parsedReturn)}`);
         defaultConditionObj.limit = Number(parsedReturn[1]);
@@ -343,8 +357,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     },
 
     handleFaceConditionCR = (result, setup, item, turn, condIterator) => {
-        var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
-        logger(LOGLEVEL.INFO, `handleFaceConditionCR::face(${setup.face}) CONDITIONAL-REROLL POOL ON 10 TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
+        var toNextRollCondi, condiSectionDone = null, cond = result.rollSetup.conditionalActivated[condIterator];
+        logger(LOGLEVEL.INFO, `handleFaceConditionCR::face(${setup.face}) CONDITIONAL-CASCADING REROLL TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
 
         if (setup.success) {
             cond.remainingToDo++;
@@ -357,7 +371,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             for (var i = 0; i < result.rollSetup.finalResults.length && cond.remainingToDo > 0; i++) {
                 const dieTesting = result.rollSetup.finalResults[i];
                 if (dieTesting.v === 'SECTIONDONE') continue;
-                if (!dieTesting.success && !dieTesting.rerolled) {
+                if (!dieTesting.success && !dieTesting.rerolled && !dieTesting.tags.some(tag => cond.ignoredTagList.includes(tag))) {
                     var newDie = randomInteger(10);
                     logger(LOGLEVEL.INFO, `handleFaceConditionCR::found a die to reroll ! turning a ${dieTesting.v} into a ${newDie} die no=${diceNb++} dieTesting=${JSON.stringify(dieTesting)}`);
                     toNextRollCondi = {
@@ -372,11 +386,12 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                     cond.remainingToDo--, cond.done++;
                     dieTesting.title = makeNewTitleFromOld(result, dieTesting.title, ` CR rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`);
                     setup.titleText += ` CR rerolled a ${dieTesting.v} to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
+                    if (cond.limit !== 0 && cond.done === cond.limit) break;
                 }
             }
-        } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled)) {
+        } else if (cond.remainingToDo && !setup.rerolled && !(setup.success || setup.doubled) && !setup.tagList.some(tag => cond.ignoredTagList.includes(tag))) {
             var newDie = randomInteger(10);
-            logger(LOGLEVEL.INFO, `handleFaceConditionCR:: Rerolling THIS dice ! turning into a ${newDie}`);
+            logger(LOGLEVEL.INFO, `handleFaceConditionCR:: Rerolling THIS dice(tags=${JSON.stringify(setup.tagList)}) ! turning into a ${newDie}`);
             toNextRollCondi = {
                 v: newDie, wasEverRerolled: true,
                 wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
@@ -386,8 +401,12 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             cond.remainingToDo--, cond.done++;
             setup.titleText += ` CR rerolled to a ${newDie} (Rem.=${cond.remainingToDo}, Done=${cond.done}).`;
         }
+
+        if (cond.limit !== 0 && cond.done === cond.limit)
+            condiSectionDone = removeIteratorCondSectionMethod(result, condIterator);
+
         logger(`handleFaceConditionCR::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
-        return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
+        return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
     },
 
     handleFaceConditionRSuccLTHon1 = (result, setup, item, turn, condIterator) => {
@@ -560,7 +579,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
     detailsCondCRSectionDone = (condObj, showDone = false) => {
         logger(LOGLEVEL.NOTICE, `detailsCondCRSectionDone::COND-CR Detail SECTION DONE=${JSON.stringify(condObj)}`);
-        var detail = `&#013;&#010; Total rerolled =${condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
+        var detail = `&#013;&#010; Total rerolled =${condObj.limit != 0 ? `${condObj.done}/${condObj.limit}` : condObj.done}&#013;&#010; Remaining =${condObj.remainingToDo}`;
         return detail;
     },
 
@@ -663,13 +682,17 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
         },
         'CR': {
+            regPattern: /CR(l\d*)?(?:\sIGNORETAGS=([(?:\w )+,]+))?/,
+            parseCommand: parseCondCR, //f(defaultConditionObj, parsedReturn)
             faceTrigger: (setup, result, cond) => setup.success || cond.remainingToDo,
             handleFaceMethod: handleFaceConditionCR, //(result, setup, item, turn, condIterator)
             getDetailMethod: detailsCondCRSectionDone, //f(condObj, showDone = false)
             defaultConditionObj: {
                 name: 'CR',
+                limit: 0,
                 remainingToDo: 0,
-                done: 0
+                done: 0,
+                ignoredTagList: []
             },
             finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
         },
@@ -683,8 +706,10 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             defaultConditionObj: {
                 name: 'CRStarter',
                 starterCount: 0,
+                limit: 0,
                 remainingToDo: 0,
-                done: 0
+                done: 0,
+                ignoredTagList: []
             },
             finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
             tagAssociated: 'CRStarter'
@@ -968,14 +993,14 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                     '-Ron10 : on 10 Reroll 1 non success',
                     '-Rn1on10 : on 10 Reroll 1 non success which is not a 1; used in: DB ATHLETICS=> Soaring Leap Technique, Exalted Dragon-Blooded, p169',
                     '-RSuccLTHon1 NB : on 1 Reroll 1 success from lowest (usually 7) to highest; used in: DB SOCIALIZE=> Smoke-Wreathed Mien, Exalted Dragon-Blooded, p261',
-                    '-ES : Explode on success. NOT USED IN CHARMS',
-                    '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. used for Ambush Predator Style + Familiar Honing Instruction (Solar Survival)',
+                    '-ES : Explode on success (also called Cascading Reroll but its confusing), create another die each time the die turn as a success.',
+                    '-CR : Cascading Reroll, reroll one failed dice for one dice that turn as a success. can include limit as for other rolls, and IGNORETAGS (Example <code style=\"white-space: nowrap\">!exr 10# -R 1 TAGS=test -CR IGNORETAGS=test</code>)',
                     '-CRStarter NB : Example <code style=\"white-space: nowrap\">!exr 10#+1 -CRStarter 5 -gm</code> Cascading Reroll Starter, reroll one failed dice for one dice that turn as a success from these starter.'
                 ],
             }
         ],
         defaultTokenImage = 'https://s3.amazonaws.com/files.d20.io/images/284130603/IQ6eBu9uZ9SJqIcXlQaF9A/max.png?1651969373',
-        helpVersion = 1.23;
+        helpVersion = 1.24;
 
     // Attacks & Lack of Ressource message/GmWhisper styles
     const styles = {
@@ -2156,6 +2181,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             setup.toNextRollRerolled = {
                 v: rerolledVal, wasEverRerolled: true,
                 wasRerolled: true, wasExploded: false, wasConditionallyAffected: false,
+                tagList: setup.faceObj.rerolls[0].tagList,
                 title: [`RollTurn (${strFill(turn + 1)}). R${result.rollSetup.conditionalActivated.length ? condiPadder : ''} ->Face=${strFill(rerolledVal)}.`]
             };
         }
