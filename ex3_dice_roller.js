@@ -142,7 +142,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     },
 
     handleFaceCondition1MotD = (result, setup, item, turn, condIterator) => {
-        var toNextRollCondi, condiSectionDone = null, cond = result.rollSetup.conditionalActivated[condIterator];
+        var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
         logger(LOGLEVEL.INFO, `handleFaceCondition1MotD::face(${setup.face}) CONDITIONAL-1MotD TO DO ! rerolled=${setup.rerolled} exploded=${setup.exploded} section=${JSON.stringify(cond)}`);
         if (setup.success)
             cond.status[setup.face]++;
@@ -192,12 +192,12 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             }
         }
         // if (condition of removing section) condiSectionDone = removeIteratorCondSectionMethod(result, condIterator, true);
-        logger(`handleFaceCondition1MotD::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
-        return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
+        logger(`handleFaceCondition1MotD::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+        return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
     },
 
     handleFaceConditionDIT = (result, setup, item, turn, condIterator) => {
-        var toNextRollCondi, condiSectionDone = null, cond = result.rollSetup.conditionalActivated[condIterator];
+        var toNextRollCondi, cond = result.rollSetup.conditionalActivated[condIterator];
         logger(LOGLEVEL.INFO, `handleFaceConditionDIT::face(${setup.face}) CONDITIONAL-DIT TO DO ! success=${setup.success} doubled=${setup.doubled} section=${JSON.stringify(cond)}`);
         cond.status += setup.doubled ? 2 : 1;
         if (turn === 2 && setup.tagList.includes('DIT')) cond.firstTurnSuccesses += setup.doubled ? 2 : 1;
@@ -222,8 +222,8 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             setup.titleText += ` DIT created a ${strFill(newDie)} ( Done${strFill(cond.done)}).`;
         }
         // if (condition of removing section) condiSectionDone = removeIteratorCondSectionMethod(result, condIterator, true);
-        logger(LOGLEVEL.INFO, `handleFaceConditionDIT::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=${JSON.stringify(condiSectionDone)}`);
-        return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: condiSectionDone };
+        logger(LOGLEVEL.INFO, `handleFaceConditionDIT::QUITTING ! producedADie=${toNextRollCondi !== undefined}, titleText="${setup.titleText}", toNextRollCondi=${JSON.stringify(toNextRollCondi)}, condiSectionDone=null`);
+        return { localToNextRollCondi: toNextRollCondi, localCondiSectionDone: null };
     },
 
     handleFaceConditionRerollOn10 = (result, setup, item, turn, condIterator) => {
@@ -704,8 +704,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                 done: 0,
                 conditionalColor: '#FF0000'
             },
-            finalizeDefaultConditionObj: null, //finalizeDefaultConditionObjDIT
-            tagAssociated: 'CRStarter'
+            finalizeDefaultConditionObj: null //finalizeDefaultConditionObjDIT
         }
     };
 
@@ -753,7 +752,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
 
     const ParserConfig = [{
         categoryName: 'Rerolls',
-        pattern: /^(r|R)(l\d*)?(k|K)?\s([\d,]+)(?:\sTAGS=([(?:\w)+,]+))?$/,
+        pattern: /^(r|R)(l\d*)?(k|K)?\s([\d,]+)(?:\sTAGS=([(?:\w )+,]+))?$/,
         getCmdObj: (matchReturn) => ({
             cmd:        matchReturn[1],
             limit:      matchReturn[2] ? Number(matchReturn[2].substring(1)) : 0,
@@ -763,7 +762,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         })
     }, {
         categoryName: 'Reroll Pools',
-        pattern: /^(rP)\s([\d,]+)(?:\sIGNORE=([\d,]+))?(?:\sTAGS=([(?:\w)+,]+))?$/,
+        pattern: /^(rP)\s([\d,]+)(?:\sIGNORE=([\d,]+))?(?:\sTAGS=([(?:\w )+,]+))?$/,
         getCmdObj: (matchReturn) => ({
             cmd:        matchReturn[1],
             limit:      Number(matchReturn[2]),
@@ -1821,7 +1820,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
                     recReroll = true; // break omitted because same treatment
                 case 'r':
                     for (const face of item.faces) {
-                        logger(LOGLEVEL.INFO, `processCmds::adding reroll on face=${face}, limit=${item.limit}, rec=${item.recReroll}, keepBest=${item.keepBest}, tags='${item.tagList}'`);
+                        logger(LOGLEVEL.INFO, `processCmds::adding reroll on face=${face}, limit=${item.limit}, rec=${recReroll}, keepBest=${item.keepBest}, tags='${item.tagList}'`);
                         result.rollSetup.face[face].rerolls.push({
                             limit: item.limit,
                             done: 0,
@@ -2077,7 +2076,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
     * @param Number                        turn        number for turn, 1 = initial roll
     */
     handleRollTurn = (result, turn) => {
-        logger(LOGLEVEL.INFO, `handleROllTurn::handleROllTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
+        logger(LOGLEVEL.INFO, `handleRollTurn::handleRollTurn turn=${turn}, rollToProcess=${JSON.stringify(result.rollSetup.rollToProcess)}`);
         var nextRollsToProcess = [];
 
         if (turn === 1)
@@ -2299,7 +2298,7 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
             v: 'SECTIONDONE',
             sectionType: faceObj.rerolls[0].uuid ? 'RerollPool' : 'Reroll',
             color: rerolledColor,
-            details: `${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; face: ${faceObj.face}`}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`}${faceObj.rerolls[0].ignoreList ? `&#013;&#010; ignoreList: ${faceObj.rerolls[0].ignoreList.join(', ')}` : ''}${faceObj.rerolls[0].tagList.length ? `&#013;&#010; tagList: '${faceObj.rerolls[0].ignoreList.join('\', \'')}'` : ''}`
+            details: `${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; face: ${faceObj.face}`}&#013;&#010; limit: ${showDone ? faceObj.rerolls[0].done + '/' + faceObj.rerolls[0].limit : faceObj.rerolls[0].limit}${faceObj.rerolls[0].uuid ? '' : `&#013;&#010; keepBest: ${faceObj.rerolls[0].keepBest}&#013;&#010; recursive: ${faceObj.rerolls[0].recursive}`}${faceObj.rerolls[0].ignoreList ? `&#013;&#010; ignoreList: ${faceObj.rerolls[0].ignoreList.join(', ')}` : ''}${faceObj.rerolls[0].tagList.length ? `&#013;&#010; tagList: '${faceObj.rerolls[0].tagList.join('\', \'')}'` : ''}`
         };
         if (faceObj.rerolls[0].uuid) removeRerollPoolSections(result, faceObj)
         faceObj.rerolls.shift();
