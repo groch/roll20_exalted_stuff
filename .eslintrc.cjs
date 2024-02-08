@@ -1,14 +1,15 @@
-export default {
+module.exports = {
     "env": {
         "browser": true,
-        "es2021": true
+        "commonjs": true,
+        "es2021": true,
+        "node": true
     },
-    "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
     "rules": {
-        "no-unused-vars": ["error", { "args": "none" }],
         "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted" }]
     }
 }
