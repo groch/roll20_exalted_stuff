@@ -1515,7 +1515,7 @@
             "charm-rollexpr": ""
         }
     ],
-    "Awareness": [{
+    "Awareness DONE": [{
             "attr-mins": {
                 "awareness": 2,
                 "essence": 1
@@ -1529,7 +1529,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "9s for a sense, scene long",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1537,8 +1537,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "A breath of Essence seals the five senses into a more perfect form. The Solar’s senses are heightened and attuned to minute motions and sounds, dim and noisy conditions. She can differentiate between subtle tastes and textures with only the slightest variation. Thus sharpened, it is more difficult for characters to escape her notice, or to deceive her hunting senses.",
-            "charm-effect": "For the rest of the scene, the Exalt’s Awareness rolls benefit from double 9s. If the effect of any Unsurpassed (Sense) Discipline applies, reroll 6s until they cease to appear. Use of Sensory Acuity Prana comes without the danger of sensory overload; the Charm helps the Solar manage her senses more effectively.",
-            "charm-rollexpr": ""
+            "charm-effect": "For the rest of the scene, the Exalt’s Awareness rolls benefit from double 9s (cmd:``-d 9``).\nIf the effect of any Unsurpassed (Sense) Discipline applies, reroll 6s until they cease to appear (cmd:``-R 6``).\n\nUse of Sensory Acuity Prana comes without the danger of sensory overload; the Charm helps the Solar manage her senses more effectively.",
+            "charm-rollexpr": "!exr -setOnce ?{Options ?|Default,-d 9|Unsurpassed+,-d 9 -R 6 TAGS=Sensory Acuity Prana}"
         }, {
             "attr-mins": {
                 "awareness": 3,
@@ -1553,7 +1553,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "gain motes on 9 an 10 trying to reveal someone hidden",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1561,7 +1561,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Upon learning this technique, the Solar’s senses guard her from threats she is not consciously aware of. Whenever the Solar is in danger—even if she is not consciously aware of the threat—her relevant senses will home in on the source of danger, enhancing her Awareness to make the threat known to her.",
-            "charm-effect": "Surprise Anticipation Method has two functions. First: for every 9 she rolls on an Awareness check to reveal a hidden enemy, trap, or any source of harm not readily apparent, she gains a single mote of Essence, and for every 10 she gains two. This charge of Essence can only be used to offset the cost of activating Awareness Charms to reveal a threat. Motes returned in this fashion may retroactively lower the cost committed to Awareness Charms of a scene or longer duration, both lowering the committed cost and returning the discounted mote(s) to the Solar’s mote pool. Second: her senses function even when she is asleep or Incapacitated, allowing her to use any of her Awareness Charms subconsciously . A threat revealed to the Solar while she is asleep or unconscious automatically revives her, allowing her to defend herself.",
+            "charm-effect": "Surprise Anticipation Method has two functions.\n First: for every 9 she rolls on an Awareness check to reveal a hidden enemy, trap, or any source of harm not readily apparent, she gains a single mote of Essence, and for every 10 she gains two.\nThis charge of Essence can only be used to offset the cost of activating Awareness Charms to reveal a threat.\nMotes returned in this fashion may retroactively lower the cost committed to Awareness Charms of a scene or longer duration, both lowering the committed cost and returning the discounted mote(s) to the Solar’s mote pool.\n Second: her senses function even when she is asleep or Incapacitated, allowing her to use any of her Awareness Charms subconsciously.\nA threat revealed to the Solar while she is asleep or unconscious automatically revives her, allowing her to defend herself.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1577,7 +1577,7 @@
             "rep-cost-mote": "?{Cost ?|3|6}",
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "multiple visual improvement",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1585,7 +1585,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar’s visual acuity is heightened to several times that of a normal mortal.",
-            "charm-effect": "This Charm represents an array of mechanical benefits: the Solar may perform difficulty 2 or 3 sight-based actions without a roll. She gains an additional two dice to notice hidden persons or devices, to catch sleight of hand and see through disguises. In dim conditions, she sees as well as in broad daylight. Deeper visual hindrances such as dense smoke or fog represent less of a struggle: reduce the difficulty of seeing in such conditions by 1, and remove the -1 penalty to detect hidden threats in such environments. These effects reflect the Exalt’s ability to notice and process hundreds of minute details, as well as to focus and manage light sources more effectively. The Solar’s visual range is also increased: she can see tiny details at 100 yards, quickly count masses of troops, and notice threats well in advance of her position. Special activation rules: The player may choose to activate Keen Sight Technique by paying six motes, one willpower . Doing so sets the duration of this Charm to Indefinite . Despite being Simple type Charms, each Keen (Sense) Technique can be activated simultaneously by paying the full cost of each. In addition, these Charms are compatible with Sensory Acuity Prana as well as with each other.",
+            "charm-effect": "This Charm represents an array of mechanical benefits:\n the Solar may perform difficulty 2 or 3 sight-based actions without a roll.\n She gains an additional two dice to notice hidden persons or devices, to catch sleight of hand and see through disguises.\n In dim conditions, she sees as well as in broad daylight.\n Deeper visual hindrances such as dense smoke or fog represent less of a struggle: reduce the difficulty of seeing in such conditions by 1, and remove the -1 penalty to detect hidden threats in such environments.\n\nThese effects reflect the Exalt’s ability to notice and process hundreds of minute details, as well as to focus and manage light sources more effectively.\nThe Solar’s visual range is also increased: she can see tiny details at 100 yards, quickly count masses of troops, and notice threats well in advance of her position.\n\nSpecial activation rules: The player may choose to activate Keen Sight Technique by paying six motes, one willpower.\nDoing so sets the duration of this Charm to Indefinite.\n\nDespite being Simple type Charms, each Keen (Sense) Technique can be activated simultaneously by paying the full cost of each. In addition, these Charms are compatible with Sensory Acuity Prana as well as with each other.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1601,7 +1601,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "cancel double success for opponent stealth",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1609,7 +1609,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Iron Wolf’s gaze cannot be misdirected, and her focus cannot be dissuaded. Even the greatest feats of stealth pale before her genius eyes.",
-            "charm-effect": "When a character attempts to hide from the Solar, steal from her, or cheat her with a quick motion, revert [[@{essence}]](Essence) of his double successes— typically 10s, but 9s under the effect of double 9s and so on—to single successes. This effect can even contest magic that is considered impossible to notice. The benefit of this Charm only applies to the Solar—it is her eye which is unswerving . The player can choose to activate this Charm after the opposing roll has been made.",
+            "charm-effect": "When a character attempts to hide from the Solar, steal from her, or cheat her with a quick motion, revert [[@{essence}]](Essence) of his double successes— typically 10s, but 9s under the effect of double 9s and so on—to single successes.\nThis effect can even contest magic that is considered impossible to notice.\nThe benefit of this Charm only applies to the Solar—it is her eye which is unswerving.\n\nThe player can choose to activate this Charm after the opposing roll has been made.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1625,7 +1625,7 @@
             "rep-cost-mote": "?{Cost ?|3|6}",
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "multiple taste and smell improvement",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1633,7 +1633,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt’s senses of taste and smell are capable of flawless identification of flavors, textures, and scent profiles.",
-            "charm-effect": "This Charm represents an array of mechanical benefits, as well as two distinct functions of the senses taste and smell. The Solar can recognize an individual by scent alone, and she can tell older scents from new ones, enabling her to tell how recently an individual was present. Add +2 successes to Survival rolls to hunt for food, track a character, or find water, using her sense of smell. This Charm automatically extends the range of these actions to [[ @{essence} * 200 ]](Essence * 200) yards. This Charm also creates a library of scents which your character can reference. Upon learning this Charm, the library is populated with the scents of any Major or Defining Intimacy the character may have, but it can also include scents outside the confines of intimacies if the Storyteller deems them reasonable, including any scent the character has encountered in the last 24 hours, the smell of a favorite food or drink, or scents linked to strong memories such as love or pain. Entries in a Solar’s scent library can be used to aid in Investigation and Survival rolls, as well as in the smell-based Awareness Charms further up the tree. This Charm also creates a taste index. Similar to the scent library, the taste index allows the Exalt to immediately recognize any taste she has experienced within the realm of reason. The Solar can identify obscure, complex, or similar flavors and she can deconstruct a meal she has eaten to its basic ingredients, so long as she has experienced most of the flavors at some point in time. The taste index isn’t populated the same way as the scent library; most characters do not have Major or Defining intimacies for flavors. Rather, the Solar may perfectly recognize any flavor the Storyteller considers reasonable. If the charac- ter has been a master chef all of her life, her palate is going to be considerably more robust than that of an islander with little contact with the outside world. Conversely, those who have lived or traveled in remote locations may have had access to rare and exotic food, drink, and poison. This Charm follows the special activation rules of Keen Sight Technique (p. 267).",
+            "charm-effect": "This Charm represents an array of mechanical benefits, as well as two distinct functions of the senses taste and smell.\n The Solar can recognize an individual by scent alone, and she can tell older scents from new ones, enabling her to tell how recently an individual was present.\n Add +2 successes to Survival rolls to hunt for food, track a character, or find water, using her sense of smell. This Charm automatically extends the range of these actions to [[ @{essence} * 200 ]](Essence * 200) yards.\n This Charm also creates a library of scents which your character can reference.\nUpon learning this Charm, the library is populated with the scents of any Major or Defining Intimacy the character may have, but it can also include scents outside the confines of intimacies if the Storyteller deems them reasonable, including any scent the character has encountered in the last 24 hours, the smell of a favorite food or drink, or scents linked to strong memories such as love or pain.\nEntries in a Solar’s scent library can be used to aid in Investigation and Survival rolls, as well as in the smell-based Awareness Charms further up the tree.\n This Charm also creates a taste index. Similar to the scent library, the taste index allows the Exalt to immediately recognize any taste she has experienced within the realm of reason.\nThe Solar can identify obscure, complex, or similar flavors and she can deconstruct a meal she has eaten to its basic ingredients, so long as she has experienced most of the flavors at some point in time.\nThe taste index isn’t populated the same way as the scent library; most characters do not have Major or Defining intimacies for flavors. Rather, the Solar may perfectly recognize any flavor the Storyteller considers reasonable. If the character has been a master chef all of her life, her palate is going to be considerably more robust than that of an islander with little contact with the outside world. Conversely, those who have lived or traveled in remote locations may have had access to rare and exotic food, drink, and poison.\n\nThis Charm follows the special activation rules of Keen Sight Technique (p. 267).",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1649,7 +1649,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "auto success read intention on meal chef",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1657,7 +1657,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar’s sense of taste is so intense that she can analyze the emotions that went into preparing a meal or beverage. In a bit of overcooked meat, she might sense the cook’s turmoil; that his mind is not on his work. In a sip of soup salted with arsenic, she might sense the cool, murderous intent of one who is not her normal chef.",
-            "charm-effect": "This Charm acts as an automatically successful read intentions action to determine the emotional state of the one who prepared a meal or poured a drink. The Solar need only sample a single bite of a meal or take a single sip of a drink to gain this understanding.",
+            "charm-effect": "This Charm acts as an automatically successful read intentions action to determine the emotional state of the one who prepared a meal or poured a drink.\nThe Solar need only sample a single bite of a meal or take a single sip of a drink to gain this understanding.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1673,7 +1673,7 @@
             "rep-cost-mote": "?{Cost ?|0|2}",
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "count and recognize ppl by scent",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1681,7 +1681,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The keen nose of the Iron Wolf seeks out those who would attempt to hide.",
-            "charm-effect": "Before an Awareness roll to detect unseen characters, the Solar’s nose automatically counts heads, telling her how many people are in the room, or are within medium range of her. If any scents belong to a person in her scent library, she automatically identifies him. For any unknown, she can further make generally accurate discernments about what kind of being each scent belongs to. Beasts, for example, smell different than humans, as do the undead and spirits. If a scent is not in her library, she can still form a general idea about the creature it belongs to. At this point, the player can choose to pay two motes to enhance the Lawgiver’s sense of smell, aiding her in scenting the direction and distance of each target. This adds one automatic success to an Awareness roll to uncover hidden targets, and to Join Battle if necessary. At Awareness 5+, Essence 3+, the Solar can detect dematerialized spirits with this Charm.",
+            "charm-effect": "Before an Awareness roll to detect unseen characters, the Solar’s nose automatically counts heads, telling her how many people are in the room, or are within medium range of her.\nIf any scents belong to a person in her scent library, she automatically identifies him.\nFor any unknown, she can further make generally accurate discernments about what kind of being each scent belongs to.\nBeasts, for example, smell different than humans, as do the undead and spirits.\nIf a scent is not in her library, she can still form a general idea about the creature it belongs to.\n\nAt this point, the player can choose to pay two motes to enhance the Lawgiver’s sense of smell, aiding her in scenting the direction and distance of each target. This adds one automatic success to an Awareness roll to uncover hidden targets, and to Join Battle if necessary.\n\nAt Awareness 5+, Essence 3+, the Solar can detect dematerialized spirits with this Charm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1697,7 +1697,7 @@
             "rep-cost-mote": "?{Cost ?|3|6}",
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "multiple hearing and touch improvement",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1705,7 +1705,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Lawgiver listens with the intensity of an owl, and feels movement in the world like a spider feels a touch against its web. The Exalt may identify fabrics and minerals she knows with a cursory touch, and can hear at frequencies several times lower than a human. She can listen clearly to conversations through thick stone walls, hear creatures burrowing in the ground, ants marching on the branches above her head, and other, similar feats.",
-            "charm-effect": "For many actions that would require success on a roll at difficulty 2, the Solar can succeed without a roll. For more difficult actions, the difficulty is lowered by 1, and the Solar gains one automatic success. If she has a specialty that can be logically applied to the roll, the difficulty drops to 1. For example, a Solar who is unfamiliar with art crime will find it more difficult to identify a faked painting by touch than a Solar with an Investigation specialty in detecting forgeries. These benefits do not apply to detecting opponents in stealth. This Charm follows the special activation rules of Keen Sight Technique (p. 267).",
+            "charm-effect": "For many actions that would require success on a roll at difficulty 2, the Solar can succeed without a roll.\nFor more difficult actions, the difficulty is lowered by 1, and the Solar gains one automatic success.\nIf she has a specialty that can be logically applied to the roll, the difficulty drops to 1.\nFor example, a Solar who is unfamiliar with art crime will find it more difficult to identify a faked painting by touch than a Solar with an Investigation specialty in detecting forgeries.\n\nThese benefits do not apply to detecting opponents in stealth. This Charm follows the special activation rules of Keen Sight Technique (p. 267).",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1721,7 +1721,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "bonus vs moving stealth targets",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1745,7 +1745,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "bonus vs stealthed opponent touching same surface",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1753,7 +1753,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar’s sense of touch is attuned to movement in the world around her.",
-            "charm-effect": "When a hidden character attempts to move across a surface connected to one the Solar is touching, he accrues an additional -2 penalty to his Stealth roll, in addition to the regular -3 penalty detailed on page 204. This Charm functions within short range of the Solar. She can touch a tree trunk and feel something moving in the lowest branches, sense footsteps approaching her in a pitch black hallway, and other, similar feats. If the target is within range of the Solar’s extended touch upon rolling Join Battle, the Exalt gains three non-Charm dice to her Join Battle roll so long as she cannot see her opponent. If the Exalt has learned Unsurpassed Hearing and Touch Discipline, she can feel such movements out to medium range, and can determine the size, shape, and velocity of her target. She can feel a siaka circling beneath her ship, and she can differentiate between a gecko or an assassin lizard climbing down a wall she’s leaning against.",
+            "charm-effect": "When a hidden character attempts to move across a surface connected to one the Solar is touching, he accrues an additional -2 penalty to his Stealth roll, in addition to the regular -3 penalty detailed on page 204.\nThis Charm functions within short range of the Solar.\nShe can touch a tree trunk and feel something moving in the lowest branches, sense footsteps approaching her in a pitch black hallway, and other, similar feats.\n\nIf the target is within range of the Solar’s extended touch upon rolling Join Battle, the Exalt gains three non-Charm dice to her Join Battle roll so long as she cannot see her opponent.\n\nIf the Exalt has learned Unsurpassed Hearing and Touch Discipline, she can feel such movements out to medium range, and can determine the size, shape, and velocity of her target.\nShe can feel a siaka circling beneath her ship, and she can differentiate between a gecko or an assassin lizard climbing down a wall she’s leaning against.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1769,7 +1769,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "full exc JB + CR on 10",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1777,8 +1777,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "At the confluence of mastered senses, the Solar feels second sight growing in her heart. In the moment battle begins, her Awakening Eye reads the flow of Initiative and makes her aware of attacks that will happen in the near future.",
-            "charm-effect": "This Charm supplements a Join Battle roll with a free full (Perception + Awareness) Excellency, and by creating a cascading reroll of 10s. For every 10 rolled, reroll one nonsuccess . Non-successes which reroll 10s provoke more rerolls until a 10 fails to appear in the result. In addition, mark down how many non-successes became successes during the reroll process; every rerolled success adds one to a pool of automatic successes the Solar may use to detect hidden opponents until combat ends. These bonus successes are depleted when the Exalt uses them, though she may choose when and how many successes to use, spreading a number of successes over a number of attempts.",
-            "charm-rollexpr": ""
+            "charm-effect": "This Charm supplements a Join Battle roll with a free full (Perception + Awareness) Excellency, and by creating a cascading reroll of 10s. For every 10 rolled, reroll one nonsuccess (cmd:``-Ron10``).\nNon-successes which reroll 10s provoke more rerolls until a 10 fails to appear in the result.\n\nIn addition, mark down how many non-successes became successes during the reroll process; every rerolled success adds one to a pool of automatic successes the Solar may use to detect hidden opponents until combat ends.\nThese bonus successes are depleted when the Exalt uses them, though she may choose when and how many successes to use, spreading a number of successes over a number of attempts.",
+            "charm-rollexpr": "!exr -setOnce -Ron10"
         }, {
             "attr-mins": {
                 "awareness": 5,
@@ -1793,7 +1793,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "help contest stealth or larceny, boost JB",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1801,8 +1801,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "With flawless gaze and unswerving eye, the Exalt’s vision corrects itself, eating away impurities and anomalies to give her the most perfect view.",
-            "charm-effect": "When contesting a Stealth or Larceny action against the character, this Charm can be used to create a cascading reroll, eliminating non-successes from the Awareness roll as the Solar’s vision corrects itself. After an Awareness roll, record successes and reroll [[@{essence}]](Essence) non-successes. For each of these dice that turns up a success, reroll another die until the cascade fails to produce any successes. Dice rerolled by Sensory Acuity Prana are not included in the cascade. This Charm may also be used in Join Battle against an opponent the Lawgiver can see.",
-            "charm-rollexpr": ""
+            "charm-effect": "When contesting a Stealth or Larceny action against the character, this Charm can be used to create a cascading reroll, eliminating non-successes from the Awareness roll as the Solar’s vision corrects itself.\nAfter an Awareness roll, record successes and reroll [[@{essence}]](Essence) non-successes.\nFor each of these dice that turns up a success, reroll another die until the cascade fails to produce any successes.\n\nDice rerolled by Sensory Acuity Prana are not included in the cascade.\n\nThis Charm may also be used in Join Battle against an opponent the Lawgiver can see.",
+            "charm-rollexpr": "!exr -setOnce -CRl@{essence} IGNORETAGS=Sensory Acuity Prana"
         }, {
             "attr-mins": {
                 "awareness": 5,
@@ -1817,7 +1817,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "boost to detect hidden if they have inti toward us",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1825,7 +1825,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Lawgiver knows the scent of her kith with the warmth of a lioness, the smell of her enemies with the familiarity of a shark.",
-            "charm-effect": "This Charm adds automatic successes to an Awareness roll to detect hidden characters based on their level of intimacy with the Solar. Minor Intimacies add 1 success, while Major and Defining Intimacies add 2 and 3 respectively. The Solar need not suspect that one of her Ties is hiding nearby; Scent-Honing Prana automatically lends itself to applicable rolls without the Solar knowing, though the player may always choose to disregard its use.",
+            "charm-effect": "This Charm adds automatic successes to an Awareness roll to detect hidden characters based on their level of intimacy with the Solar.\nMinor Intimacies add 1 success, while Major and Defining Intimacies add 2 and 3 respectively.\nThe Solar need not suspect that one of her Ties is hiding nearby; Scent-Honing Prana automatically lends itself to applicable rolls without the Solar knowing, though the player may always choose to disregard its use.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1841,7 +1841,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "get succ on 1&2 of the hidden char; work for JB",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1849,7 +1849,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Even the least sounds fail to escape the Lawgiver’s notice.",
-            "charm-effect": "When attempting to seek out a hidden character with her Awareness, all 1s rolled by her target act as 10s rolled by the Exalt, and all her target’s 2s act as 9s. These 9s are explicitly doubled by Sensory Acuity Prana. Knowing Beyond Silence can be activated after the hiding character’s dice roll. This Charm can be used to enhance a Join Battle roll against a character whom the Exalt is listening for but cannot see.",
+            "charm-effect": "When attempting to seek out a hidden character with her Awareness, all 1s rolled by her target act as 10s rolled by the Exalt, and all her target’s 2s act as 9s.\nThese 9s are explicitly doubled by Sensory Acuity Prana.\nKnowing Beyond Silence can be activated after the hiding character’s dice roll.\nThis Charm can be used to enhance a Join Battle roll against a character whom the Exalt is listening for but cannot see.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1865,7 +1865,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "add 1 succ when you & hidden are in same enclosed space",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1873,7 +1873,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt feels the air current around her, and senses even the slightest disruption.",
-            "charm-effect": "In an enclosed space, such as a burial chamber, or a place where high walls or dense foliage stifle gusts of wind, the Exalt can feel the presence of a hidden person displacing the air around her. Add one automatic success to an Awareness roll to detect or Join Battle against such a character.",
+            "charm-effect": "In an enclosed space, such as a burial chamber, or a place where high walls or dense foliage stifle gusts of wind, the Exalt can feel the presence of a hidden person displacing the air around her.\nAdd one automatic success to an Awareness roll to detect or Join Battle against such a character.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1889,7 +1889,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "refl atk vs hidden foe",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1897,7 +1897,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "When fighting blind, the Solar’s second sight rises to see through the Essence of the world, momentarily revealing her target’s location and allowing her to strike.",
-            "charm-effect": "During combat, the Exalt may use this Charm on her turn to strike at a hidden foe within range. If this attack is successful , it does not knock her opponent out of stealth unless he’s incapacitated by the blow. Instead, it forces him to change hiding places, making him subject to the penalty for moving in Stealth (p. 204). If the target can find a different hiding place without changing range bands, this does not use up his movement action for the turn.",
+            "charm-effect": "During combat, the Exalt may use this Charm on her turn to strike at a hidden foe within range.\nIf this attack is successful , it does not knock her opponent out of stealth unless he’s incapacitated by the blow.\nInstead, it forces him to change hiding places, making him subject to the penalty for moving in Stealth (p. 204).\nIf the target can find a different hiding place without changing range bands, this does not use up his movement action for the turn.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1913,7 +1913,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "improve vision even more",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1921,7 +1921,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "This Charm permanently upgrades its prerequisite. The Exalt has the eyes of the steeliest raptor. She can spot a field mouse a mile away, read a letter at a hundred yards, and critique the mating habits of insects. In zero visibility environments—such as a silt cloud in the belly of a sunken ship—she sees as if she were in a dense fog, using the rules of Keen Sight Technique. She may pick a face out of a crowd with a casual glance, predict a flash flood by counting distant raindrops, and tell if someone is alive by seeing the blood flow through his skin. Special activation rules: When Keen Sight Technique is active, any sight-based Awareness Charm is reduced in cost by one mote, to a minimum of one. If the character has learned all three Unsurpassed (Sense) Discipline and activates all three Keen (Sense) Techniques, this discount applies to any Awareness Charm.",
+            "charm-effect": "This Charm permanently upgrades its prerequisite.\nThe Exalt has the eyes of the steeliest raptor.\nShe can spot a field mouse a mile away, read a letter at a hundred yards, and critique the mating habits of insects.\nIn zero visibility environments—such as a silt cloud in the belly of a sunken ship—she sees as if she were in a dense fog, using the rules of Keen Sight Technique.\nShe may pick a face out of a crowd with a casual glance, predict a flash flood by counting distant raindrops, and tell if someone is alive by seeing the blood flow through his skin.\n\nSpecial activation rules: When Keen Sight Technique is active, any sight-based Awareness Charm is reduced in cost by one mote, to a minimum of one.\nIf the character has learned all three Unsurpassed (Sense) Discipline and activates all three Keen (Sense) Techniques, this discount applies to any Awareness Charm.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1937,7 +1937,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reroll any awareness roll",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1961,7 +1961,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "improve taste and smell even more",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1969,7 +1969,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "This Charm permanently upgrades its prerequisite. The Solar can track her prey’s scent with the unerring accuracy of a bloodhound, or find her victim’s scent with the methodical sipping of a serpent. The Exalt adds her Perception or a minimum of 2 automatic successes to any Survival-based rolls to track a character or hunt for food or water using her sense of smell, and extends her range for doing so to (half her Essence rounded up) miles. She also gains the ability to scent moods, making an automatically successful scent-based read intentions action to determine a target’s disposition. She can add scentless, tasteless subjects to her scent library and taste index. She can also add items to her taste index by merely smelling them, as well as reference those tastes by smell alone. With a harmless drop on her tongue, she can identify a poison she has tasted, and she can detect a tasteless poison by the way it dilutes a drink or acts as an unknown ingredient in a meal whose flavors are well known to her. In addition, bleeding characters (those with a wound penalty of -1 or greater) and characters who are severely injured (-4 wound penalty) are easier to find. Add 1 or 2 dice to an Awareness roll against the target’s Stealth. This Charm follows the special activation rules of Unsurpassed Sight Discipline (p. 271), discounting the cost of taste and smell effects instead of those which enhance sight.",
+            "charm-effect": "This Charm permanently upgrades its prerequisite.\nThe Solar can track her prey’s scent with the unerring accuracy of a bloodhound, or find her victim’s scent with the methodical sipping of a serpent.\nThe Exalt adds her Perception or a minimum of 2 automatic successes to any Survival-based rolls to track a character or hunt for food or water using her sense of smell, and extends her range for doing so to (half her Essence rounded up) miles.\nShe also gains the ability to scent moods, making an automatically successful scent-based read intentions action to determine a target’s disposition.\nShe can add scentless, tasteless subjects to her scent library and taste index.\nShe can also add items to her taste index by merely smelling them, as well as reference those tastes by smell alone.\nWith a harmless drop on her tongue, she can identify a poison she has tasted, and she can detect a tasteless poison by the way it dilutes a drink or acts as an unknown ingredient in a meal whose flavors are well known to her.\n\nIn addition, bleeding characters (those with a wound penalty of -1 or greater) and characters who are severely injured (-4 wound penalty) are easier to find.\nAdd 1 or 2 dice to an Awareness roll against the target’s Stealth.\n\nThis Charm follows the special activation rules of Unsurpassed Sight Discipline (p. 271), discounting the cost of taste and smell effects instead of those which enhance sight.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -1985,7 +1985,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "improve hearing and touch even more",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -1993,7 +1993,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "This Charm permanently upgrades its prerequisite. The Lawgiver can listen in on a whispered conversation a mile away in still air, or in noisy conditions, such as a raging battlefield, out to long range. She can hear a thunderstorm burgeoning, an army decamping, a tyrant lizard roaring, and other loud noises at [[ @{essence} * 5 ]](Essence * 5) miles. She can read by passing her fingers over a page and feeling the ink beneath her fingertips. This Charm also confers the following techniques to the Solar: Conjure Image: For one mote, the Exalt can visualize an object she is touching, in sections no larger than a horse’s head. She can identify a familiar face in a pitch black crypt, but might need several activations to visualize the fossil skeleton of an ancient behemoth in a lightless cavern. Sense Current: For one mote, the Exalt can feel the lightest motion of air, orienting herself to the exit in even the most lightless of conditions. Read the Web: For five motes committed, the Exalt can listen in on a conversation behind a thick door, just by touching a connecting wall or surface. She feels the vibrations in her fingertips, and her senses translate them to words she can hear. This is a scene length effect, and its range can be extended up to [[ @{essence} * 100 ]](Essence x100) yards by running a wire from the Exalt’s fingertips into a chamber where her targets are speaking. Sound from Stillness Meditation: For six motes, one Willpower, the Solar can take a Simple action lasting five minutes to filter Creation, listening for specific sounds or conversations that have already happened. The Exalt draws audio from the vibrations of sounds stored in her surroundings —usually rocks and trees—and may listen for noises or conversations that happened up to [[ @{essence} * 5 ]](Essence x5) hours prior to her arrival with a difficulty 5 Awareness roll. For the duration of the technique, the Solar must remain still, listening intently as she filters out the garbled static and unwanted sounds to reach the reverberations she’s search- ing for. As this technique only lasts five minutes, the Solar can only glean up to half that amount in useful audio. Unsurpassed Hearing and Touch follows the special activation rules of Unsurpassed Sight Discipline (p. 271), discounting the cost of hearing and touch effects instead of those which enhance sight. This Charm can never discount the cost of its own techniques.",
+            "charm-effect": "This Charm permanently upgrades its prerequisite. The Lawgiver can listen in on a whispered conversation a mile away in still air, or in noisy conditions, such as a raging battlefield, out to long range.\nShe can hear a thunderstorm burgeoning, an army decamping, a tyrant lizard roaring, and other loud noises at [[ @{essence} * 5 ]](Essence * 5) miles.\nShe can read by passing her fingers over a page and feeling the ink beneath her fingertips.\n\nThis Charm also confers the following techniques to the Solar:\n Conjure Image: For one mote, the Exalt can visualize an object she is touching, in sections no larger than a horse’s head. She can identify a familiar face in a pitch black crypt, but might need several activations to visualize the fossil skeleton of an ancient behemoth in a lightless cavern.\n Sense Current: For one mote, the Exalt can feel the lightest motion of air, orienting herself to the exit in even the most lightless of conditions.\n Read the Web: For five motes committed, the Exalt can listen in on a conversation behind a thick door, just by touching a connecting wall or surface. She feels the vibrations in her fingertips, and her senses translate them to words she can hear.\nThis is a scene length effect, and its range can be extended up to [[ @{essence} * 100 ]](Essence x100) yards by running a wire from the Exalt’s fingertips into a chamber where her targets are speaking.\n Sound from Stillness Meditation: For six motes, one Willpower, the Solar can take a Simple action lasting five minutes to filter Creation, listening for specific sounds or conversations that have already happened. The Exalt draws audio from the vibrations of sounds stored in her surroundings —usually rocks and trees—and may listen for noises or conversations that happened up to [[ @{essence} * 5 ]](Essence x5) hours prior to her arrival with a difficulty 5 Awareness roll. For the duration of the technique, the Solar must remain still, listening intently as she filters out the garbled static and unwanted sounds to reach the reverberations she’s searching for. As this technique only lasts five minutes, the Solar can only glean up to half that amount in useful audio.\n\nUnsurpassed Hearing and Touch follows the special activation rules of Unsurpassed Sight Discipline (p. 271), discounting the cost of hearing and touch effects instead of those which enhance sight. This Charm can never discount the cost of its own techniques.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2009,7 +2009,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "hear across infinite distance ppl you have inti for",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2017,7 +2017,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Lawgivers can listen across vast spaces for the sound of a favored voice.",
-            "charm-effect": "The Exalt must have activated Keen Hearing and Touch Technique in order to use this Charm. Upon doing so, the Exalt becomes aware any time she is addressed by someone for whom she holds a Major or Defining positive Intimacy, no matter how far away he is. So long as she’s on the same plane of existence as they are, the Solar can hear the words of her favored people clearly, as if they were in the same room, so long as they are addressing their speech to her. This Charm’s duration is Indefinite : each time a character addresses the Solar, she has an instant in which she feels a tingle in the base of her skull, telling her to tune her hearing and listen. Upon activating the Charm, she can hear everything her compatriot wishes to say to her, until the character has been silent for ten seconds or longer. The cost of this Charm cannot be reduced by its prerequisite.",
+            "charm-effect": "The Exalt must have activated Keen Hearing and Touch Technique in order to use this Charm.\nUpon doing so, the Exalt becomes aware any time she is addressed by someone for whom she holds a Major or Defining positive Intimacy, no matter how far away he is.\nSo long as she’s on the same plane of existence as they are, the Solar can hear the words of her favored people clearly, as if they were in the same room, so long as they are addressing their speech to her.\nThis Charm’s duration is Indefinite: each time a character addresses the Solar, she has an instant in which she feels a tingle in the base of her skull, telling her to tune her hearing and listen.\nUpon activating the Charm, she can hear everything her compatriot wishes to say to her, until the character has been silent for ten seconds or longer.\n\nThe cost of this Charm cannot be reduced by its prerequisite.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2033,7 +2033,7 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reveal everything to everyone at long range (can be dodged)",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2041,11 +2041,11 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Solars are the legacy of the Unconquered Sun. It is their destiny to see the world through this age of darkness.",
-            "charm-effect": "When this Charm is used, the Solar’s Caste Mark blazes like a tiny sun, cancelling any Essence-muting magic the Solar may be using, and removing her from stealth. Eyes blazing white, Caste Mark burning, her gaze shines a wide beam of light across everything she searches, twin lamps moving over the terrain out to long range. Everything caught in her stare is subject to the following effects:\n • All magical and mundane Stealth effects are cancelled. Solid walls and other opaque objects grow transparent as the Lawgiver’s gaze passes over them, rendering all forms of Stealth automatically unsuccessful.\n • Fog lifts, smoke parts, and clouds dissolve under the Solar’s intense focus.\n • Dematerialized spirits are forced to materialize, at full cost of the Materialize Charm, or as much of the cost as they can pay.\n • All disguise magic is stripped. Mundane disguises tatter and melt away.\n • Shapeshifters are forced back into natural form, resplendent destinies are temporarily forced into dormancy, personas (p. 400) are suppressed, and other innate or native transformative magics of the Exalted are similarly deactivated. The only way to avoid Eye of the Unconquered Sun is to successfully dodge the Solar’s gaze by applying Evasion against the Solar’s Awareness roll. The Solar’s Awareness roll is enhanced by [[@{essence}]](Essence) dice, and any 1s rolled are rerolled until 1s fail to appear. Every character within long range of the Solar who fails to dodge when she uses Eye of the Unconquered Sun is subject to the above effects. The range of this Charm is extended to extreme range by Unsurpassed Sight Discipline, however, this Charm does not depend on eyesight and may be learned and employed by a blind Exalt. Anyone spotted by Eye of the Unconquered Sun automatically knows it; a bright white glare piercing through a fortress wall or an airship hull is impossible to miss.",
+            "charm-effect": "When this Charm is used, the Solar’s Caste Mark blazes like a tiny sun, cancelling any Essence-muting magic the Solar may be using, and removing her from stealth.\nEyes blazing white, Caste Mark burning, her gaze shines a wide beam of light across everything she searches, twin lamps moving over the terrain out to long range.\n\nEverything caught in her stare is subject to the following effects:\n • All magical and mundane Stealth effects are cancelled. Solid walls and other opaque objects grow transparent as the Lawgiver’s gaze passes over them, rendering all forms of Stealth automatically unsuccessful.\n • Fog lifts, smoke parts, and clouds dissolve under the Solar’s intense focus.\n • Dematerialized spirits are forced to materialize, at full cost of the Materialize Charm, or as much of the cost as they can pay.\n • All disguise magic is stripped. Mundane disguises tatter and melt away.\n • Shapeshifters are forced back into natural form, resplendent destinies are temporarily forced into dormancy, personas (p. 400) are suppressed, and other innate or native transformative magics of the Exalted are similarly deactivated.\n\nThe only way to avoid Eye of the Unconquered Sun is to successfully dodge the Solar’s gaze by applying Evasion against the Solar’s Awareness roll.\nThe Solar’s Awareness roll is enhanced by [[@{essence}]](Essence) dice, and any 1s rolled are rerolled until 1s fail to appear (cmd:``-R 1``).\nEvery character within long range of the Solar who fails to dodge when she uses Eye of the Unconquered Sun is subject to the above effects.\nThe range of this Charm is extended to extreme range by Unsurpassed Sight Discipline, however, this Charm does not depend on eyesight and may be learned and employed by a blind Exalt.\n\nAnyone spotted by Eye of the Unconquered Sun automatically knows it; a bright white glare piercing through a fortress wall or an airship hull is impossible to miss.",
             "charm-rollexpr": ""
         }
     ],
-    "Brawl": [{
+    "Brawl DONE": [{
             "attr-mins": {
                 "brawl": 1,
                 "essence": 1
@@ -2059,7 +2059,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "can parry lethal and do lethal barehand; ignore soak depending of inti lv",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2067,7 +2067,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Dual",
             "charm-description": "",
-            "charm-effect": "This Charm allows the Exalt to parry lethal damage with her bare hands. In addition, her bare-handed decisive strike does lethal damage and her withering damage ignores (Essence + Intimacy) soak. The Intimacy in this context can be a Tie (as the Solar strikes a hated enemy or defends a beloved friend) or a Principle (as the Solar exults in the thrill of violence).",
+            "charm-effect": "This Charm allows the Exalt to parry lethal damage with her bare hands.\nIn addition, her bare-handed decisive strike does lethal damage and her withering damage ignores (Essence + Intimacy) soak.\nThe Intimacy in this context can be a Tie (as the Solar strikes a hated enemy or defends a beloved friend) or a Principle (as the Solar exults in the thrill of violence).",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2083,7 +2083,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "get immunity to further onslaught",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2107,7 +2107,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "add opponent onslaught to dmg",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2131,7 +2131,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "if init > oppo, can raise def by oppo onslaught",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2155,7 +2155,7 @@
             "rep-cost-mote": 7,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "prone + blow away opponent depending on dmg",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2163,7 +2163,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "At the moment of impact, the Solar sends a surge of Essence up her arm or down her leg, multiplying the force of her blow many times over.",
-            "charm-effect": "This Charm is activated after a successful decisive Brawl attack. If the damage roll generates at least one success, the target is knocked prone by the force of the blow, and loses a point of Initiative, which is added to the Solar’s base value (typically 3) when her Initiative resets. This blow strikes with the force of a hurricane condensed into the Solar’s fist. The more damaging the blow, the more forcefully her opponent will be knocked away from her: For at least three successes, the opponent is lifted and bodily hurled into an object or surface within close range, hitting it with an impact equivalent to falling a short distance (see falling damage, p. 232), destroying any less-obdurate objects he collides with, such as wooden furniture. At four or more successes, the foe is knocked into an object at close range with tremendous force, or is sent sailing a remarkable distance by the force of the blow. If the former, the opponent hits a surface with force sufficient to leave cracks in a stone wall, impacting with a surface as if he had fallen from a medium distance. If the latter, the force of the blow throws him to short range with a short-distance falling impact. At five or more successes, the foe is thrown to short range and suffers an impact like falling from a medium height. The Solar can use Heaven Thunder Hammer to knock her opponent into a high ceiling, forcing him to contend with falling damage on the way down. She might also choose to smash him through a weak point in a nearby wall, causing him to suffer a collapse. She might aim to hurl her opponent into a spike protruding from a surface, turning the damage lethal, or knock her enemy from a rooftop, causing him to suffer a fall from a much greater distance. The player should include the environment in their stunts to enhance this Charm’s effectiveness. At Essence 3+, double the successes for determining the distance the victim is hurled. At 7+, the victim can be hurled to medium range with a medium height impact.",
+            "charm-effect": "This Charm is activated after a successful decisive Brawl attack.\nIf the damage roll generates at least one success, the target is knocked prone by the force of the blow, and loses a point of Initiative, which is added to the Solar’s base value (typically 3) when her Initiative resets.\nThis blow strikes with the force of a hurricane condensed into the Solar’s fist.\n\nThe more damaging the blow, the more forcefully her opponent will be knocked away from her:\n For at least three successes, the opponent is lifted and bodily hurled into an object or surface within close range, hitting it with an impact equivalent to falling a short distance (see falling damage, p. 232), destroying any less-obdurate objects he collides with, such as wooden furniture.\n At four or more successes, the foe is knocked into an object at close range with tremendous force, or is sent sailing a remarkable distance by the force of the blow. If the former, the opponent hits a surface with force sufficient to leave cracks in a stone wall, impacting with a surface as if he had fallen from a medium distance. If the latter, the force of the blow throws him to short range with a short-distance falling impact.\n At five or more successes, the foe is thrown to short range and suffers an impact like falling from a medium height.\nThe Solar can use Heaven Thunder Hammer to knock her opponent into a high ceiling, forcing him to contend with falling damage on the way down. She might also choose to smash him through a weak point in a nearby wall, causing him to suffer a collapse. She might aim to hurl her opponent into a spike protruding from a surface, turning the damage lethal, or knock her enemy from a rooftop, causing him to suffer a fall from a much greater distance.\nThe player should include the environment in their stunts to enhance this Charm’s effectiveness.\n\nAt Essence 3+, double the successes for determining the distance the victim is hurled.\nAt 7+, the victim can be hurled to medium range with a medium height impact.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2179,7 +2179,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "add temp init to grapple gambit roll",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2203,7 +2203,7 @@
             "rep-cost-mote": "[[ ?{Round Preserved ? (2m : round preserved)} * 2 ]]",
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "2m : negate 1turn grapple duration loss on attack or dmg",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2211,7 +2211,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar tightens her Essence around her limbs, making it nearly impossible to pry her off her opponent.",
-            "charm-effect": "The Exalt may use this Charm when her clinch control is threatened by incoming attacks (see p. 200), paying two motes for every round of control preserved. These motes are paid after the opponent’s attack and damage rolls as needed.",
+            "charm-effect": "The Exalt may use this Charm when her clinch control is threatened by incoming attacks (see p. 200), paying two motes for every round of control preserved.\nThese motes are paid after the opponent’s attack and damage rolls as needed.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2227,7 +2227,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "use str+bra to initiate a grapple gambit",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2235,7 +2235,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The fury-driven might of the Lawgiver can crush the life from even the gods.",
-            "charm-effect": "This Charm allows the Solar to roll (Strength + Brawl) to attack with a grapple gambit. At Essence 2+ she may pay three motes to double extra successes on the control roll when using Oak-Curling Clinch.",
+            "charm-effect": "This Charm allows the Solar to roll (Strength + Brawl) to attack with a grapple gambit.\n\nAt Essence 2+ she may pay three motes to double extra successes on the control roll when using Oak-Curling Clinch.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2251,7 +2251,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "grapple throw to short range; can grapple massive w/ DCT",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2259,7 +2259,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Uniform",
             "charm-description": "The Solar concentrates her anima around the arc of a throw, hurling her opponent like a meteor to the ground.",
-            "charm-effect": "When the Exalt aborts control of a grapple to make a withering or decisive throw (see p. 201), the damage pool is boosted by +2 damage per round of control forfeited by the throw. The Exalt can throw her opponent up to short range. If she used Dragon Coil Technique to establish control of a clinch, she can hurl truly massive opponents across the battlefield. At Essence 3+, the Exalt may expend two or four rounds of control, decreasing the throw’s damage in order to increase its length, allowing her to throw a foe to medium or long range, forcing him to contend with short or medium distance falling damage— assuming she didn’t hurl him into an abyss, an empty well, an open cave mouth, or some other deep fissure.",
+            "charm-effect": "When the Exalt aborts control of a grapple to make a withering or decisive throw (see p. 201), the damage pool is boosted by +2 damage per round of control forfeited by the throw.\nThe Exalt can throw her opponent up to short range.\nIf she used Dragon Coil Technique to establish control of a clinch, she can hurl truly massive opponents across the battlefield.\n\nAt Essence 3+, the Exalt may expend two or four rounds of control, decreasing the throw’s damage in order to increase its length, allowing her to throw a foe to medium or long range, forcing him to contend with short or medium distance falling damage— assuming she didn’t hurl him into an abyss, an empty well, an open cave mouth, or some other deep fissure.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2275,7 +2275,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/targ/Sc ignore init, refl atk + free mvt",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2283,7 +2283,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar’s aggression fuels her Essence, quickening her movements, allowing her to blur into combat range of an opponent to make a first strike.",
-            "charm-effect": "This Charm allows the Solar to move a single range band without consuming her movement action, to make an attack regardless of her position in the Initiative order. The attack in this instance must be made the moment the Solar blurs forward, and so this Charm can only be activated at short range. This attack counts as her turn for the round, and doesn’t have to be a Brawl attack. If contested by another character using Thunderclap Rush Attack, the better stunt wins. The target of Thunderclap Rush Attack may not use a Clash (p. 202) to defend against the Solar’s attack unless he’s using a Charm with the Clash keyword. At Brawl 5, Essence 3+, the character may add one Willpower to the cost of this Charm—when she uses it against her opponent, it automatically strips [[ {@{essence},5}kl1 ]](Essence or 5, whichever is lower) Initiative from her target and awards it to her, before the attack is made. This Charm can be used once per target, per scene, but can be refreshed against a single target by crashing that target.",
+            "charm-effect": "This Charm allows the Solar to move a single range band without consuming her movement action, to make an attack regardless of her position in the Initiative order.\nThe attack in this instance must be made the moment the Solar blurs forward, and so this Charm can only be activated at short range.\nThis attack counts as her turn for the round, and doesn’t have to be a Brawl attack. If contested by another character using Thunderclap Rush Attack, the better stunt wins.\n\nThe target of Thunderclap Rush Attack may not use a Clash (p. 202) to defend against the Solar’s attack unless he’s using a Charm with the Clash keyword.\n\nAt Brawl 5, Essence 3+, the character may add one Willpower to the cost of this Charm—when she uses it against her opponent, it automatically strips [[ {@{essence},5}kl1 ]](Essence or 5, whichever is lower) Initiative from her target and awards it to her, before the attack is made.\n\nThis Charm can be used once per target, per scene, but can be refreshed against a single target by crashing that target.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2299,7 +2299,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "prevent oppo onslaught to fade for a turn",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2307,7 +2307,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Uniform",
             "charm-description": "The Solar is as relentless as the coming storm.",
-            "charm-effect": "This Charm supplements a withering or decisive attack, preventing the onslaught penalty to her target’s Defense from fading on his next turn. The Solar’s onslaught can only be abated by escaping her long enough to suffer no attack for at least one round. If the Solar is unable or unwilling to attack her target, the effect ends and the target’s Defense refreshes as normal. Falling Hammer Strike does not maintain onslaught penalties from other characters’ attacks, nor does it supplement grapple attacks.",
+            "charm-effect": "This Charm supplements a withering or decisive attack, preventing the onslaught penalty to her target’s Defense from fading on his next turn.\nThe Solar’s onslaught can only be abated by escaping her long enough to suffer no attack for at least one round.\nIf the Solar is unable or unwilling to attack her target, the effect ends and the target’s Defense refreshes as normal.\n\nFalling Hammer Strike does not maintain onslaught penalties from other characters’ attacks, nor does it supplement grapple attacks.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2323,7 +2323,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 1,
-            "charm-short-desc": "",
+            "charm-short-desc": "oppo 1s raise our def",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2331,7 +2331,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Perilous",
             "charm-description": "Channeling her rage, the Exalt strikes away a blow at the last second, or steps between strikes to get at her target’s throat.",
-            "charm-effect": "This Charm can be activated after an opponent’s attack roll, raising the Solar’s Parry or Evasion by a number equal to the 1s in the attack roll. This Charm takes precedence over those that reroll 1s.",
+            "charm-effect": "This Charm can be activated after an opponent’s attack roll, raising the Solar’s Parry or Evasion by a number equal to the 1s in the attack roll.\n\nThis Charm takes precedence over those that reroll 1s.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2347,7 +2347,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 1,
             "rep-cost-init": 1,
-            "charm-short-desc": "",
+            "charm-short-desc": "counter after withering with init lost; no reset",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2355,7 +2355,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Counterattack, Decisive-only, Perilous",
             "charm-description": "The Solar exploits her opponent’s attack to unload a vicious counterstrike.",
-            "charm-effect": "This Charm may only be used after the Solar has taken withering damage from an opponent at close range. She may use this Charm to launch an immediate decisive attack with a base damage of the number of withering damage she just took, and she may unleash this counterattack even if she has already used her attack action for the round. Damage done by this counterattack does not reset the Solar to base Initiative. At Essence 3+, the Solar may pay an extra Willpower to drop the perilous keyword from this Charm for one instant.",
+            "charm-effect": "This Charm may only be used after the Solar has taken withering damage from an opponent at close range.\nShe may use this Charm to launch an immediate decisive attack with a base damage of the number of withering damage she just took, and she may unleash this counterattack even if she has already used her attack action for the round.\nDamage done by this counterattack does not reset the Solar to base Initiative.\n\nAt Essence 3+, the Solar may pay an extra Willpower to drop the perilous keyword from this Charm for one instant.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2371,7 +2371,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 1,
             "rep-cost-init": 1,
-            "charm-short-desc": "",
+            "charm-short-desc": "convert with. dmg for penalty until onslaught fade",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2379,7 +2379,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Withering-only",
             "charm-description": "The Solar pulls explosive Essence from her extremities, causing them to lance through the point of her strike.",
-            "charm-effect": "Her blow enjoys one automatic success on the attack roll and [[@{essence}]](Essence) bonus dice to damage. Ox-Stunning Blow can only be soaked with the target’s Stamina, but unlike a normal withering attack, the Solar does not reap Initiative from damage successes. Rather, any Initiative she strips is rolled again as dice, and for every two success, the target suffers a -1 penalty to his defenses and dice pools until his onslaught penalty wears off. An Essence 3+ repurchase allows the Solar to gain Initiative in addition to penalizing her opponent with rolled successes.",
+            "charm-effect": "Her blow enjoys one automatic success on the attack roll and [[@{essence}]](Essence) bonus dice to damage.\nOx-Stunning Blow can only be soaked with the target’s Stamina, but unlike a normal withering attack, the Solar does not reap Initiative from damage successes.\nRather, any Initiative she strips is rolled again as dice, and for every two success, the target suffers a -1 penalty to his defenses and dice pools until his onslaught penalty wears off.\n\nAn Essence 3+ repurchase allows the Solar to gain Initiative in addition to penalizing her opponent with rolled successes.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2395,7 +2395,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "add decisive atk threshold to init 1:1m",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2419,7 +2419,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "free clash atk vs decisive atk inc.",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2427,7 +2427,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Clash, Decisive-only",
             "charm-description": "The Exalt glances into the aura of violence before her and knows the course of her opponent’s strike, meeting it with a greater violence of her own.",
-            "charm-effect": "This Charm allows the Solar to make a reflexive Brawl-based clash attack (p. 202) against an incoming decisive attack. This does not count as the Solar’s combat action.",
+            "charm-effect": "This Charm allows the Solar to make a reflexive Brawl-based clash attack (p. 202) against an incoming decisive attack.\nThis does not count as the Solar’s combat action.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2443,7 +2443,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 1,
-            "charm-short-desc": "",
+            "charm-short-desc": "clash atk that disarm; no dmg but send further each 3succ",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2451,7 +2451,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Clash, Uniform",
             "charm-description": "",
-            "charm-effect": "The Lawgiver may clash a withering or decisive attack with such fury that she knocks her foe’s weapon from his hands. This clash attack does no damage, but for every three extra successes on the attack roll, the opponent’s weapon is hurled an extra range band. There is no limit to how far it can be hurled. Using this Charm counts as the Solar’s attack action.",
+            "charm-effect": "The Lawgiver may clash a withering or decisive attack with such fury that she knocks her foe’s weapon from his hands.\nThis clash attack does no damage, but for every three extra successes on the attack roll, the opponent’s weapon is hurled an extra range band.\n\nThere is no limit to how far it can be hurled.\nUsing this Charm counts as the Solar’s attack action.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2467,7 +2467,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "add dice to feat of destruction; can do reflexive FoD",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2475,7 +2475,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt concentrates her anima around her fist, increasing its weight and hardness as she strikes a blow against an object.",
-            "charm-effect": "This attack is neither withering nor decisive and adds [[ @{strength} ]](Strength) automatic successes to the damage roll. This Charm greatly enhances a (Strength + Athletics) based attempt to punch through an object; if the Solar’s totals approach viability for such a feat, this Charm allows her to greatly speed up the demolition, based on the durability of the object she strikes and the stunt she performs. For example, a Strength 3, Athletics 3 character who is properly motivated could use this Charm to dash a heavy iron lock from a coffer with the heel of her boot, where a simpler feat might involve a brawler who draws her fist along the cobbles of a street or the stones of a wall, pulping the stony surface into a fine sand to blind her opponent with a punch. Using Sledgehammer Fist Punch in such a way may be done reflexively (though the character can still only take a reasonable number of such reflexive actions per round, at the Storyteller’s discretion), but using it to cause harm indirectly (by e.g. collapsing a pillar or kicking a stack of barrels down onto someone) requires that it supplement a combat action.",
+            "charm-effect": "This attack is neither withering nor decisive and adds [[ @{strength} ]](Strength) automatic successes to the damage roll.\nThis Charm greatly enhances a (Strength + Athletics) based attempt to punch through an object; if the Solar’s totals approach viability for such a feat, this Charm allows her to greatly speed up the demolition, based on the durability of the object she strikes and the stunt she performs.\nFor example, a Strength 3, Athletics 3 character who is properly motivated could use this Charm to dash a heavy iron lock from a coffer with the heel of her boot, where a simpler feat might involve a brawler who draws her fist along the cobbles of a street or the stones of a wall, pulping the stony surface into a fine sand to blind her opponent with a punch.\n\nUsing Sledgehammer Fist Punch in such a way may be done reflexively (though the character can still only take a reasonable number of such reflexive actions per round, at the Storyteller’s discretion), but using it to cause harm indirectly (by e.g. collapsing a pillar or kicking a stack of barrels down onto someone) requires that it supplement a combat action.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2491,7 +2491,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "on a grapple gambit give atk threshold to the control roll",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2515,7 +2515,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "mark the grapld target+release it; at close range can resume grab when u want",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2523,7 +2523,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "During a clinch the Solar controls with at least two rounds of control remaining, the Lawgiver forces her anima into her hand, gloving it in the scarlet, violet and gold radiance of Solar fire, before driving it into her opponent ’s flesh, branding him with the mark of her dominance . This mark is painless and inflicts no damage, but instigates the immediate release of the captive, knocking him prone. So marked, the victim is subject to the Solar’s immediate grasp—when she is in close range of the mark, she may reflexively release the motes committed to the Charm, pulling the opponent back into the clinch. There is no grapple roll, nor a roll to reestablish control; the Exalt resumes control over the captive with the number of rounds of control she had when she branded him. If the Solar does not invoke this power, the brand fades away at the end of the scene and the motes return to her Essence pool. Removing the brand requires that the marked character succeed at a grapple with the Solar and wins at least as many rounds of control as those associated with the brand.",
+            "charm-effect": "During a clinch the Solar controls with at least two rounds of control remaining, the Lawgiver forces her anima into her hand, gloving it in the scarlet, violet and gold radiance of Solar fire, before driving it into her opponent ’s flesh, branding him with the mark of her dominance.\nThis mark is painless and inflicts no damage, but instigates the immediate release of the captive, knocking him prone.\nSo marked, the victim is subject to the Solar’s immediate grasp—when she is in close range of the mark, she may reflexively release the motes committed to the Charm, pulling the opponent back into the clinch.\nThere is no grapple roll, nor a roll to reestablish control; the Exalt resumes control over the captive with the number of rounds of control she had when she branded him.\n\nIf the Solar does not invoke this power, the brand fades away at the end of the scene and the motes return to her Essence pool.\n\nRemoving the brand requires that the marked character succeed at a grapple with the Solar and wins at least as many rounds of control as those associated with the brand.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2539,7 +2539,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "multi atk vs single oppo.; each 10 on dmg give 1 dmg to next hit",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2547,7 +2547,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "The Lawgiver suffuses her body with Essence, becoming a virtual killing machine, her arms swinging like trip hammers.",
-            "charm-effect": "This Charm creates a series of up to [[ {ceil(@{strength}/2),ceil(@{stamina}/2)}kh1 ]]([half Strength or Stamina, rounded up] + 1) attacks against a single target, dividing the Solar’s Initiative up evenly for each strike, then adding bonus Initiative sufficient to raise the damage of all of them to equal the highest’s. In addition, for every blow that lands, the damage of the next is increased by the number of 10s in the previous damage roll.",
+            "charm-effect": "This Charm creates a series of up to [[ {ceil(@{strength}/2),ceil(@{stamina}/2)}kh1 ]]([half Strength or Stamina, rounded up] + 1) attacks against a single target, dividing the Solar’s Initiative up evenly for each strike, then adding bonus Initiative sufficient to raise the damage of all of them to equal the highest’s.\nIn addition, for every blow that lands, the damage of the next is increased by the number of 10s in the previous damage roll.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2563,7 +2563,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "increase crash bonus init gain",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2587,7 +2587,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Sc gain 1wp if successfully defending",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2595,7 +2595,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Empowered by violence, the Solar exults at the song of death in her ears.",
-            "charm-effect": "Once per scene, if the Exalt successfully defends against an attack that rolls [[ {@{essence},5}kh1 ]](Solar’s Essence or five, whichever is greater) or more successes, she may use this Charm to gain one point of temporary Willpower . This Charm can be reset by defending against a withering attack when the Exalt has only one Initiative.",
+            "charm-effect": "Once per scene, if the Exalt successfully defends against an attack that rolls [[ {@{essence},5}kh1 ]](Solar’s Essence or five, whichever is greater) or more successes, she may use this Charm to gain one point of temporary Willpower.\n\nThis Charm can be reset by defending against a withering attack when the Exalt has only one Initiative.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2610,8 +2610,8 @@
             "charm-cost": "5m, 1wp, +1m, 1i per die",
             "rep-cost-mote": 5,
             "rep-cost-will": 1,
-            "rep-cost-init": 1,
-            "charm-short-desc": "",
+            "rep-cost-init": 0,
+            "charm-short-desc": "1/Cbt 9s on dmg + can pay to add even more after dmg is rolled",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2619,7 +2619,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Withering-only",
             "charm-description": "The Solar sees a perfect opening and strikes a blow, the apex of her attack suffused by battering Essence.",
-            "charm-effect": "This attack is like a normal withering attack, but the damage is bolstered by doubled 9s. In addition, if the Solar drives her opponent into crash with this attack, he is immediately knocked unconscious. The Solar may further enhance the ferocity of this blow, reflexively paying one mote, one Initiative per die to add to the damage of this attack, to a limit of the Initiative gained by the attack. For example, if the Solar rolls four successes on the damage roll, she may spend up to four motes, four Initiative to add four additional dice to the damage roll. Knockout Blow can only be used once per fight, but can be reset by dodging, parrying, or soaking a withering attack with three or fewer Initiative without suffering crash.",
+            "charm-effect": "This attack is like a normal withering attack, but the damage is bolstered by doubled 9s (cmd:``-d 9``).\nIn addition, if the Solar drives her opponent into crash with this attack, he is immediately knocked unconscious.\nThe Solar may further enhance the ferocity of this blow, reflexively paying one mote, one Initiative per die to add to the damage of this attack, to a limit of the Initiative gained by the attack.\nFor example, if the Solar rolls four successes on the damage roll, she may spend up to four motes, four Initiative to add four additional dice to the damage roll.\n\nKnockout Blow can only be used once per fight, but can be reset by dodging, parrying, or soaking a withering attack with three or fewer Initiative without suffering crash.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2635,7 +2635,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "on crash, disable one effect on&chosen by the opponent",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2643,7 +2643,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Tearing at an opponent’s anima, the Solar rips away an enemy’s chance for victory.",
-            "charm-effect": "The Exalt can use this Charm upon driving a target into crash, reaching into his soul to rip away at the Essence suffusing him. This Charm deactivates an ongoing Brawl, Martial Arts, Melee, or combat Attribute Charm of the player’s choosing, but cannot target permanent effects.",
+            "charm-effect": "The Exalt can use this Charm upon driving a target into crash, reaching into his soul to rip away at the Essence suffusing him.\nThis Charm deactivates an ongoing Brawl, Martial Arts, Melee, or combat Attribute Charm of the player’s choosing, but cannot target permanent effects.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2659,7 +2659,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "with. gain STR overwhelming; deci dmg 10s + explode 10s",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2667,7 +2667,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Dual",
             "charm-description": "Hardening her fists until they are unbreakable, the Exalt strikes a shattering blow.",
-            "charm-effect": "When this Charm supplements a withering attack made with the Solar’s bare hands, her strike gains an Overwhelming bonus equal to her Strength. For example, the Overwhelming value of a punch attack is 1. If the Solar’s Strength is 5, then her Overwhelming for this attack is 6. On a decisive attack, her damage is lethal, has double 10s, and rerolls 10s. On the tick she uses this Charm, the Lawgiver can parry lethal attacks with her bare hands without a stunt. A repurchase allows the Solar to use a Simple version of this Charm with a duration of one scene and a cost of five motes, one Willpower. This version may be activated reflexively for two motes, one Willpower if the Solar uses the supplemental version to successfully damage an opponent.",
+            "charm-effect": "When this Charm supplements a withering attack made with the Solar’s bare hands, her strike gains an Overwhelming bonus equal to her Strength. For example, the Overwhelming value of a punch attack is 1. If the Solar’s Strength is 5, then her Overwhelming for this attack is 6.\nOn a decisive attack, her damage is lethal, has double 10s (cmd:``remove -D``), and rerolls 10s (full cmd:``-e 10``).\nOn the tick she uses this Charm, the Lawgiver can parry lethal attacks with her bare hands without a stunt.\n\nA repurchase allows the Solar to use a Simple version of this Charm with a duration of one scene and a cost of five motes, one Willpower.\nThis version may be activated reflexively for two motes, one Willpower if the Solar uses the supplemental version to successfully damage an opponent.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2683,7 +2683,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "using improv. weap reduce cost of refl clash charm to 4m no wp",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2691,7 +2691,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "As violence and destruction goes, the Solar is an artist and a savant.",
-            "charm-effect": "This Charm permanently enhances Force- Rending Strike; so long as she is wielding an improvised weapon for the clash, Force-Rending Strike’s cost is reduced to four motes, and the Willpower cost is dropped. Using Intercepting Fury Smite to succeed at a clash forces the Solar to discard her current weapon; it is either destroyed or dropped, forcing her to retrieve it or choose another.",
+            "charm-effect": "This Charm permanently enhances Force-Rending Strike; so long as she is wielding an improvised weapon for the clash, Force-Rending Strike’s cost is reduced to four motes, and the Willpower cost is dropped.\nUsing Intercepting Fury Smite to succeed at a clash forces the Solar to discard her current weapon; it is either destroyed or dropped, forcing her to retrieve it or choose another.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2707,7 +2707,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "on clash: oppo. 1s give 1succ+can absorb energy from atk for next atk",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2715,7 +2715,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar’s strike is guided by the violence she feels in her foe’s onslaught.",
-            "charm-effect": "This Charm supplements a clash attack. Any 1s rolled by the attacker are converted to automatic successes on the Solar’s clash. If the Solar dissolves an energy attack or burning elemental bolt, her fist becomes wreathed in her attacker’s Essence, enjoying (opponent’s Essence) bonus attack and damage dice on her next attack. Attempting to clash a bolt thrown by an assailant out of range of the Solar’s fist lowers the cost of Force-Rending Strike to four motes, and drops the Willpower cost. Fire-Eating Fist does not create a clash attack on its own, and is expressly permitted to enhance Martial Arts Charms with the Clash keyword. At Essence 4+, this effect becomes stackable to a limit of [[ @{stamina} ]](Stamina) stacks. Therefore, clashing four elemental bolts from an Essence 3 opponent, a Stamina 4 Lawgiver’s fists would be wreathed with twelve bonus damage worth of pain. In addition, the Exalt may clash away ranged attacks in the exact same manner, treating them as if they were elemental bolts. Note that in all instances of Fire- Eating Fist, clashing a projectile attack by an opponent who is out of range does not result in damage to that opponent.",
+            "charm-effect": "This Charm supplements a clash attack.\nAny 1s rolled by the attacker are converted to automatic successes on the Solar’s clash. If the Solar dissolves an energy attack or burning elemental bolt, her fist becomes wreathed in her attacker’s Essence, enjoying (opponent’s Essence) bonus attack and damage dice on her next attack.\nAttempting to clash a bolt thrown by an assailant out of range of the Solar’s fist lowers the cost of Force-Rending Strike to four motes, and drops the Willpower cost.\n\nFire-Eating Fist does not create a clash attack on its own, and is expressly permitted to enhance Martial Arts Charms with the Clash keyword.\n\nAt Essence 4+, this effect becomes stackable to a limit of [[ @{stamina} ]](Stamina) stacks. Therefore, clashing four elemental bolts from an Essence 3 opponent, a Stamina 4 Lawgiver’s fists would be wreathed with twelve bonus damage worth of pain.\nIn addition, the Exalt may clash away ranged attacks in the exact same manner, treating them as if they were elemental bolts.\n\nNote that in all instances of Fire-Eating Fist, clashing a projectile attack by an opponent who is out of range does not result in damage to that opponent.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2731,7 +2731,7 @@
             "rep-cost-mote": "?{Cost ?|2|4}",
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "reroll 5&6 on grapple atk &/or control",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2739,8 +2739,8 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Exalt leaps through her anima like a burning apparition of glorious anger, capturing a foe in her iron grasp.",
-            "charm-effect": "For two motes, this Charm enhances a grapple attempt or the control roll, allowing the Solar to reroll 5s and 6s until 5s and 6s fail to appear. For four motes, it enhances both rolls.",
-            "charm-rollexpr": ""
+            "charm-effect": "For two motes, this Charm enhances a grapple attempt or the control roll, allowing the Solar to reroll 5s and 6s until 5s and 6s fail to appear (cmd:``-R 5,6``).\nFor four motes, it enhances both rolls.",
+            "charm-rollexpr": "!exr -setOnce -R 5,6"
         }, {
             "attr-mins": {
                 "brawl": 5,
@@ -2755,7 +2755,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "refl clash when controlling a grapple, if win, redirect oppo dmg to captive",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2763,7 +2763,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "Feeling the tide of momentum turn against her, the Solar draws a shield against her doom.",
-            "charm-effect": "When in control of a clinch, the Exalt can use Wicked Dissolve Dust to interpose her captive between herself and an incoming decisive attack, enacting a reflexive Dexterity + Brawl clash attack. If her clash succeeds, rather than doing damage to the attacker, all of the damage of the opponent’s decisive attack is transferred to her captive.",
+            "charm-effect": "When in control of a clinch, the Exalt can use Wicked Dissolve Dust to interpose her captive between herself and an incoming decisive attack, enacting a reflexive Dexterity + Brawl clash attack.\nIf her clash succeeds, rather than doing damage to the attacker, all of the damage of the opponent’s decisive attack is transferred to her captive.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2779,7 +2779,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "can resume grab from mark up to long range",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2787,7 +2787,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Lifting her hand, the Solar reaches across the shroud of the heavens to find the one she has marked.",
-            "charm-effect": "Pulling on a brand created by Burning Proof of Authority, she may draw a captive into her grasp from as far away as long range. The target does not travel the distance between himself and the Lawgiver, but blurs into her steel embrace as if he had never left it. Using Rapturous Cradle automatically releases the Solar’s commitment to Burning Proof of Authority, removing the brand and resuming its effects in total.",
+            "charm-effect": "Pulling on a brand created by Burning Proof of Authority, she may draw a captive into her grasp from as far away as long range.\nThe target does not travel the distance between himself and the Lawgiver, but blurs into her steel embrace as if he had never left it.\nUsing Rapturous Cradle automatically releases the Solar’s commitment to Burning Proof of Authority, removing the brand and resuming its effects in total.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2803,7 +2803,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "multiple bonus to grapple; can grapple giant foes",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2811,7 +2811,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Uniform",
             "charm-description": "The Solar wraps her mighty arms around an opponent and attempts to crush the life from him.",
-            "charm-effect": "The Solar gains [[@{essence}]](Essence) automatic successes to land a grapple attack, and on the control roll, she treats the opponent’s 10s as her own single successes. In addition, when the Solar controls a clinch with Dragon Coil Technique, her withering and decisive savaging attacks and slams enjoy [[@{essence}]](Essence) bonus dice of damage. The Exalt can choose whether this damage is bashing or lethal. In addition, if the Exalt uses Dragon Coil Technique to defend herself from a grapple and wins control, she can keep control of the grapple rather than merely escaping. Finally, if the Solar uses her (Strength + Brawl) to land a grapple attack, Dragon Coil Technique expressly allows the Solar to grapple characters of prodigious size—tyrant lizards, river dragons, siaka and other similarly sized beasts are all valid targets for the Solar’s dread grasp. However, creatures of truly titanic proportions such as Juggernaut or Mount Mostath can only be gripped in bits and pieces, with the most likely result being that the Solar tears away a massive chunk of her opponent, rather than being able to exert enough force to hold or throw such a gigantic being.",
+            "charm-effect": "The Solar gains [[@{essence}]](Essence) automatic successes to land a grapple attack, and on the control roll, she treats the opponent’s 10s as her own single successes.\nIn addition, when the Solar controls a clinch with Dragon Coil Technique, her withering and decisive savaging attacks and slams enjoy [[@{essence}]](Essence) bonus dice of damage. The Exalt can choose whether this damage is bashing or lethal.\nIn addition, if the Exalt uses Dragon Coil Technique to defend herself from a grapple and wins control, she can keep control of the grapple rather than merely escaping.\nFinally, if the Solar uses her (Strength + Brawl) to land a grapple attack, Dragon Coil Technique expressly allows the Solar to grapple characters of prodigious size—tyrant lizards, river dragons, siaka and other similarly sized beasts are all valid targets for the Solar’s dread grasp. However, creatures of truly titanic proportions such as Juggernaut or Mount Mostath can only be gripped in bits and pieces, with the most likely result being that the Solar tears away a massive chunk of her opponent, rather than being able to exert enough force to hold or throw such a gigantic being.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2827,7 +2827,7 @@
             "rep-cost-mote": 5,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "grant dmg bonus on grapple each time you savage consecutively",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2835,7 +2835,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Dual",
             "charm-description": "",
-            "charm-effect": "While controlling a clinch, the Solar locks a ruinous hold on her captive in an attempt to force his submission. The player can describe this as any kind of signature joint lock, chokehold, or scenery-assisted torment they can imagine, applying the damage roll normally. Remember, savaging attacks always hit, and serve only to boost the damage result, per the rules described on page 201. Each consecutive round the character inflicts damage with a grapple, her raw damage grows—+2 per round for withering or +1 for decisive. Thus, a character who made three withering attacks and then a decisive attack would enjoy bonuses of +2, +4, +6 and +4 respectively. Decisive attacks made with this Charm ignore hardness. Ten Calamities Technique does not enhance throws or slams.",
+            "charm-effect": "While controlling a clinch, the Solar locks a ruinous hold on her captive in an attempt to force his submission.\nThe player can describe this as any kind of signature joint lock, chokehold, or scenery-assisted torment they can imagine, applying the damage roll normally.\nRemember, savaging attacks always hit, and serve only to boost the damage result, per the rules described on page 201.\nEach consecutive round the character inflicts damage with a grapple, her raw damage grows—+2 per round for withering or +1 for decisive.\nThus, a character who made three withering attacks and then a decisive attack would enjoy bonuses of +2, +4, +6 and +4 respectively.\n\nDecisive attacks made with this Charm ignore hardness.\n\nTen Calamities Technique does not enhance throws or slams.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2851,7 +2851,7 @@
             "rep-cost-mote": 7,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "use remaining control turn as 1:1 atk",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2859,7 +2859,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Withering-only",
             "charm-description": "Channeling primal strength through a surge of Essence, the Lawgiver winnows and thrashes a clinched opponent in an attempt to shake him apart.",
-            "charm-effect": "The Solar immediately expends all remaining turns of control and makes an equal number of withering savaging attacks. Learning Titan-Straightening Method permanently enhances Dragon Coil Technique, allowing the Solar to use it to grapple impossibly huge opponents for the express purpose of using Titan-Straightening Method. This Charm does not confer the power to lift, slam or hurl such opponents.",
+            "charm-effect": "The Solar immediately expends all remaining turns of control and makes an equal number of withering savaging attacks.\nLearning Titan-Straightening Method permanently enhances Dragon Coil Technique, allowing the Solar to use it to grapple impossibly huge opponents for the express purpose of using Titan-Straightening Method.\nThis Charm does not confer the power to lift, slam or hurl such opponents.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2875,7 +2875,7 @@
             "rep-cost-mote": 6,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Cbt increase throw dmg + AoE atk on impact",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2883,7 +2883,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Withering-only",
             "charm-description": "The Solar burns with Essence, launching a captive at a group of foes.",
-            "charm-effect": "When the Solar hurls her captive at a group of foes, the damage roll is enhanced by 4 dice per round of control forfeited by the throw, as described on page 201. The Solar throws her opponent at a target within short range; her captive goes from her like a meteor, blasting through her target and every opponent within short range of him, applying a single Dexterity + Brawl withering attack with a base damage of seven to all additional opponents . Foes struck by this explosive impact are knocked to the ground, and the damage of the throw is applied to each of them separately. If the Solar is crashed when she uses this attack, she still damages each foe, but she only gains Initiative from a single target. When used in combination with Crashing Wave Throw, not only is the damage of this throw enhanced, but also its range, allowing the Solar to strike enemies out to medium range without spending rounds of control per the rules of Crashing Wave Throw. Special activation rules: Shockwave Technique can be used once per combat. In order to reset it, the Solar must deal 10+ health levels of damage on a single decisive Brawl attack.",
+            "charm-effect": "When the Solar hurls her captive at a group of foes, the damage roll is enhanced by 4 dice per round of control forfeited by the throw, as described on page 201.\nThe Solar throws her opponent at a target within short range; her captive goes from her like a meteor, blasting through her target and every opponent within short range of him, applying a single Dexterity + Brawl withering attack with a base damage of seven to all additional opponents.\nFoes struck by this explosive impact are knocked to the ground, and the damage of the throw is applied to each of them separately.\nIf the Solar is crashed when she uses this attack, she still damages each foe, but she only gains Initiative from a single target.\nWhen used in combination with Crashing Wave Throw, not only is the damage of this throw enhanced, but also its range, allowing the Solar to strike enemies out to medium range without spending rounds of control per the rules of Crashing Wave Throw.\n\nSpecial activation rules: Shockwave Technique can be used once per combat. In order to reset it, the Solar must deal 10+ health levels of damage on a single decisive Brawl attack.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2899,7 +2899,7 @@
             "rep-cost-mote": 1,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "second atk, after CWT or HTM dont reset init of previous atk",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2907,7 +2907,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "After launching an opponent with one of the prerequisite Charms, the Solar channels Essence through her arms and legs and rips through the space between, flashing into her opponent to make an additional attack using any Ability and allowing the Exalt to reflexively draw a weapon to do so. When the Exalt uses Lightning Strikes Twice after using one of the prerequisites to unleash a decisive attack, her Initiative does not roll over until after the extra attack has been completed. Making this attack has slightly different effects depending on whether the Charm was triggered with Crashing Wave Throw or Heaven Thunder Hammer: Crashing Wave Throw: The Solar strikes her opponent after he bounces off a hard surface and take damage from Crashing Wave Throw. If the Exalt uses this version of Lightning Strikes Twice, she may meet her falling opponent in the air and make a grapple attack with his Defense set to 0. Succeeding in the roll for clinch control means the Solar must make an immediate throw or slam, hurling her opponent into further hard surfaces or driving him bodily into the ground. Heaven Thunder Hammer: The Solar must knock her foe to short or medium range on the attack in order to use this Charm. Doing so allows her to flash in to range before he impacts, cancelling his impact with scenery to strike him again. In this case, the Solar cannot grapple her opponent , but makes a strike against him as if it were a surprise attack. Using Lightning Strikes Twice counts as the Exalt’s movement action, but note that it’s possible to move several range bands while chaining multiple uses of this Charm. Lightning Strikes Twice can only be used once per combat, but can be reset by gaining 10+ Initiative on a single tick.",
+            "charm-effect": "After launching an opponent with one of the prerequisite Charms, the Solar channels Essence through her arms and legs and rips through the space between, flashing into her opponent to make an additional attack using any Ability and allowing the Exalt to reflexively draw a weapon to do so.\nWhen the Exalt uses Lightning Strikes Twice after using one of the prerequisites to unleash a decisive attack, her Initiative does not roll over until after the extra attack has been completed.\nMaking this attack has slightly different effects depending on whether the Charm was triggered with Crashing Wave Throw or Heaven Thunder Hammer:\n Crashing Wave Throw: The Solar strikes her opponent after he bounces off a hard surface and take damage from Crashing Wave Throw. If the Exalt uses this version of Lightning Strikes Twice, she may meet her falling opponent in the air and make a grapple attack with his Defense set to 0. Succeeding in the roll for clinch control means the Solar must make an immediate throw or slam, hurling her opponent into further hard surfaces or driving him bodily into the ground.\n Heaven Thunder Hammer: The Solar must knock her foe to short or medium range on the attack in order to use this Charm. Doing so allows her to flash in to range before he impacts, cancelling his impact with scenery to strike him again. In this case, the Solar cannot grapple her opponent, but makes a strike against him as if it were a surprise attack.\n\nUsing Lightning Strikes Twice counts as the Exalt’s movement action, but note that it’s possible to move several range bands while chaining multiple uses of this Charm. Lightning Strikes Twice can only be used once per combat, but can be reset by gaining 10+ Initiative on a single tick.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2923,7 +2923,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "increase HoIT atk count + add damage to succesful strikes",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2947,7 +2947,7 @@
             "rep-cost-mote": 2,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "add 2 to base init (on reset)",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2971,7 +2971,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "store STA init for later; then can use it to decisive while crashed",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -2979,7 +2979,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Lawgiver looks beyond her next attack and sees the battle’s course unfold.",
-            "charm-effect": "She may use this Charm at any time to reflexively store up to [[ @{stamina} ]](Stamina) Initiative. Thenceforth, upon making a decisive attack, she may choose to reflexively release her commitment to Superior Violent Knowledge , pouring stored Initiative into her attack’s raw damage to boost it. This Charm expressly allows the Exalt to launch a decisive attack while crashed. Special activation rules: Using Superior Violent Knowledge at the start of her turn does not affect her place in the attack order of the current round but will be reflected in subsequent rounds. Stored Initiative cannot be targeted or stripped by withering attacks. Unless used, this Charm’s effect wears off at the end of combat.",
+            "charm-effect": "She may use this Charm at any time to reflexively store up to [[ @{stamina} ]](Stamina) Initiative.\nThenceforth, upon making a decisive attack, she may choose to reflexively release her commitment to Superior Violent Knowledge, pouring stored Initiative into her attack’s raw damage to boost it.\n\nThis Charm expressly allows the Exalt to launch a decisive attack while crashed.\n\nSpecial activation rules: Using Superior Violent Knowledge at the start of her turn does not affect her place in the attack order of the current round but will be reflected in subsequent rounds.\nStored Initiative cannot be targeted or stripped by withering attacks.\n\nUnless used, this Charm’s effect wears off at the end of combat.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -2995,7 +2995,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 2,
-            "charm-short-desc": "",
+            "charm-short-desc": "store success for brawl/parry/evasion action later",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3003,7 +3003,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "The Solar takes a moment to assess her surroundings in order to determine the most effective channel for violence.",
-            "charm-effect": "Roll (Wits + Brawl) and store the result. The Exalt can reflexively use this result in place of a Brawl roll at any time. Stocked successes can be used to bolster defense at a rate of two successes per Parry or Evasion. These successes fade at the end of the scene. At Essence 4+, the roll gains [[@{essence}]](Essence) automatic successes. Special Activation Rules: This Charm becomes Reflexive if the Solar beats all of her opponents in a Join Battle roll, or if she knocks an opponent prone.",
+            "charm-effect": "Roll (Wits + Brawl) and store the result.\nThe Exalt can reflexively use this result in place of a Brawl roll at any time.\nStocked successes can be used to bolster defense at a rate of two successes per Parry or Evasion.\n\nThese successes fade at the end of the scene.\n\nAt Essence 4+, the roll gains [[@{essence}]](Essence) automatic successes.\n\nSpecial Activation Rules: This Charm becomes Reflexive if the Solar beats all of her opponents in a Join Battle roll, or if she knocks an opponent prone.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3019,15 +3019,15 @@
             "rep-cost-mote": 10,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "unblockable&undodgeable atk vs crashed w/ 7s dmg",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
             "charm-balanced": "",
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Withering-only",
-            "charm-description": "Drawing down on a crashed opponent, the Lawgiver channels all the fury of her anima into her fists and strikes a world-rending blow.",
-            "charm-effect": "This is an unblockable, undodgeable withering attack with double 7s on the damage roll. The Solar’s anima must be at bonfire in order to use this Charm, as she sheds her entire anima into the attack and returns to the dim level.",
+            "charm-description": "",
+            "charm-effect": "Drawing down on a crashed opponent, the Lawgiver channels all the fury of her anima into her fists and strikes a world-rending blow. This is an unblockable, undodgeable withering attack with double 7s on the damage roll.\n\nThe Solar’s anima must be at bonfire in order to use this Charm, as she sheds her entire anima into the attack and returns to the dim level.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3043,7 +3043,7 @@
             "rep-cost-mote": 8,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "deci. atk ignore hardness,",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3051,7 +3051,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "",
-            "charm-effect": "While using the scene-long version of the prerequisite, the Solar may channel the raw fury of her iconic anima down into her fists, suffusing them with blazing Solar Essence. For the rest of the scene, her decisive attacks ignore hardness, and her base Initiative is increased by one. In addition, when she is at base Initiative or lower, her decisive damage gains [[@{essence}]](Essence) bonus dice and rerolls 1s and 10s until 1s and 10s fail to appear, retaining any successes from rerolled 10s. This effect costs one mote per turn to maintain. This Charm requires three levels of anima to use, and use of this Charm returns the Lawgiver’s anima to the dim level. While this Charm is active, the Solar’s fists glow gold-to-white and her Caste Mark shines brightly. These effects cannot be muted.",
+            "charm-effect": "While using the scene-long version of the prerequisite, the Solar may channel the raw fury of her iconic anima down into her fists, suffusing them with blazing Solar Essence.\nFor the rest of the scene, her decisive attacks ignore hardness, and her base Initiative is increased by one.\nIn addition, when she is at base Initiative or lower, her decisive damage gains [[@{essence}]](Essence) bonus dice and rerolls 1s and 10s until 1s and 10s fail to appear, retaining any successes from rerolled 10s (full cmd:``-R 1 -E 10``).\nThis effect costs one mote per turn to maintain.\nThis Charm requires three levels of anima to use, and use of this Charm returns the Lawgiver’s anima to the dim level.\n\nWhile this Charm is active, the Solar’s fists glow gold-to-white and her Caste Mark shines brightly.\nThese effects cannot be muted.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3067,7 +3067,7 @@
             "rep-cost-mote": 4,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "if crashes a clinching: can atk again + restore control round back to start",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3091,7 +3091,7 @@
             "rep-cost-mote": 7,
             "rep-cost-will": 1,
             "rep-cost-init": 3,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/Sc use with. atk threshold as count of dmg roll to do",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3099,7 +3099,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Perilous, Withering-only",
             "charm-description": "The Solar shatters her opponent’s limbs and torso with a barrage of Essence-fueled blows.",
-            "charm-effect": "Roll a normal Brawl based withering attack, but instead of using extra successes for damage, each extra success determines how many times the Solar strikes her opponent and how many times the damage of her attack is repeated. This attack may only be used once per scene, but if can be reset if the Solar incapacitates a powerful or impressive opponent.",
+            "charm-effect": "Roll a normal Brawl based withering attack, but instead of using extra successes for damage, each extra success determines how many times the Solar strikes her opponent and how many times the damage of her attack is repeated.\nThis attack may only be used once per scene, but if can be reset if the Solar incapacitates a powerful or impressive opponent.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3115,7 +3115,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "1/iconic 1free full brawl exc to atk or def",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3123,7 +3123,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "",
-            "charm-effect": "Once per ascent to iconic anima, the Lawgiver may use a free full Brawl Excellency to enhance her attacks or defenses. This Charm is reset each time the Solar returns her iconic anima to the dim level.",
+            "charm-effect": "Once per ascent to iconic anima, the Lawgiver may use a free full Brawl Excellency to enhance her attacks or defenses.\n\nThis Charm is reset each time the Solar returns her iconic anima to the dim level.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3139,7 +3139,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 0,
             "rep-cost-init": 2,
-            "charm-short-desc": "",
+            "charm-short-desc": "dec. atk using stored energy from F-E.F.; do not reset init",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3147,7 +3147,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "",
-            "charm-effect": "The Lawgiver reaches deep into her Essence, drawing forth a mountain-crushing surge of spirit pressure that burns like a small sun between her hands. The Solar then hurls this flare of burning Essence like a comet to strike a foe she can perceive at any range. The base damage for this attack is any damage the Solar has gathered with Fire-Eating Fist. In addition, the Exalt may choose to pour three levels of anima banner into the attack, shedding them to give the attack three automatic successes and [[@{essence}]](Essence) additional damage. This attack does not include the Exalt’s Initiative and does not return her to base value.",
+            "charm-effect": "The Lawgiver reaches deep into her Essence, drawing forth a mountain-crushing surge of spirit pressure that burns like a small sun between her hands. The Solar then hurls this flare of burning Essence like a comet to strike a foe she can perceive at any range.\nThe base damage for this attack is any damage the Solar has gathered with Fire-Eating Fist.\nIn addition, the Exalt may choose to pour three levels of anima banner into the attack, shedding them to give the attack three automatic successes and [[@{essence}]](Essence) additional damage.\n\nThis attack does not include the Exalt’s Initiative and does not return her to base value.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3163,7 +3163,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 0,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "atk again with deci. if crashing oppo",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3171,7 +3171,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "Sensing her opponent is near collapse, the Exalt lashes out with a lightning fast decisive attack.",
-            "charm-effect": "Heaven Fury Smite can be used when the Lawgiver lands an attack that drives her target into crash. It automatically resets her attack action, allowing her to attack again instantly, so long as she launches a decisive attack against the crashed opponent. This attack may be made with any viable Ability—the Solar experiences a burst of speed that allows her to reflexively draw a weapon, be it a sword or a nearby tree branch.",
+            "charm-effect": "Heaven Fury Smite can be used when the Lawgiver lands an attack that drives her target into crash.\nIt automatically resets her attack action, allowing her to attack again instantly, so long as she launches a decisive attack against the crashed opponent.\nThis attack may be made with any viable Ability—the Solar experiences a burst of speed that allows her to reflexively draw a weapon, be it a sword or a nearby tree branch.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3187,7 +3187,7 @@
             "rep-cost-mote": 15,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "dramatic speed increase; can clash any atk with combat action; cannot be crashed unless at close rb",
             "charm-book": "Ex3 Core",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3195,7 +3195,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "",
             "charm-description": "Channeling her anima through her physical form, the Lawgiver merges with her iconic manifestation to become a visage of divine wrath. Her hair may lengthen and change colors while her skin darkens toward the spectrums of Solar anima. Her eyes glow white, her voice echoes and thunders, and her body becomes the blazing imprint of tattoos and markings that represent her iconic form, alive and glowing with inner fire.",
-            "charm-effect": "During this time, her anima licks the air as if it were burning, but will neither rise to iconic or fall to dim so long as this Charm’s mote cost is committed. During this time, the Exalt moves with terrific speed. She may rush with double 7s, and may rush with her Strength instead of Dexterity, flying toward her opponent in great leaps. If her opponent is three or more range bands away, she may move two range bands to approach him until she is within medium or short range. During this time, she may clash any attack as her combat action, without having to delay, and if she successfully clashes a ranged attack she immediately flashes into close range with her opponent, clashing, blurring over the distance and striking her target all in the same instant. Furthermore , Ascendant Battle Visage makes the Solar incredibly resilient. For the duration of the Charm, no amount of withering damage can crash her unless it is delivered from close range. If the Solar knows Orichalcum Fists of Battle, she may activate that Charm and its prerequisite reflexively when she assumes this Charm, paying only six motes and ignoring the anima and Willpower cost to do so. In addition, if she knows the Charm Fire-Eating Fist she may store damage from any attack she clashes, with or without Charms. If she knows the Charm Apocalypse Flare Attack, she may unleash that attack at the iconic level without expending her anima or ending this Charm’s effect.",
+            "charm-effect": "During this time, her anima licks the air as if it were burning, but will neither rise to iconic or fall to dim so long as this Charm’s mote cost is committed.\nDuring this time, the Exalt moves with terrific speed.\nShe may rush with double 7s (cmd:``-d 7,8,9``), and may rush with her Strength instead of Dexterity, flying toward her opponent in great leaps.\nIf her opponent is three or more range bands away, she may move two range bands to approach him until she is within medium or short range.\nDuring this time, she may clash any attack as her combat action, without having to delay, and if she successfully clashes a ranged attack she immediately flashes into close range with her opponent, clashing, blurring over the distance and striking her target all in the same instant.\n\nFurthermore , Ascendant Battle Visage makes the Solar incredibly resilient.\nFor the duration of the Charm, no amount of withering damage can crash her unless it is delivered from close range.\n\nIf the Solar knows Orichalcum Fists of Battle, she may activate that Charm and its prerequisite reflexively when she assumes this Charm, paying only six motes and ignoring the anima and Willpower cost to do so.\n\nIn addition, if she knows the Charm Fire-Eating Fist she may store damage from any attack she clashes, with or without Charms.\nIf she knows the Charm Apocalypse Flare Attack, she may unleash that attack at the iconic level without expending her anima or ending this Charm’s effect.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3211,7 +3211,7 @@
             "rep-cost-mote": 3,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "after disarming can atk again but must be decisive",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3219,7 +3219,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "Sensing an opening, the Solar launches a vicious blow with any part of her body.",
-            "charm-effect": "When the Exalt successfully disarms a close range opponent by any means, then she may use this Charm to launch an immediate decisive attack against them. If the opponent is trivial, ignore the Willpower cost. On Swift Strike Prana This Charm will help those of you who like your disarm gambits, and especially those of you who like to antagonize the entire city guard.",
+            "charm-effect": "When the Exalt successfully disarms a close range opponent by any means, then she may use this Charm to launch an immediate decisive attack against them.\nIf the opponent is trivial, ignore the Willpower cost.\n\nOn Swift Strike Prana This Charm will help those of you who like your disarm gambits, and especially those of you who like to antagonize the entire city guard.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3235,7 +3235,7 @@
             "rep-cost-mote": 0,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "special gambit to insta kill a target; if non-trivial, can trigger prereq freely",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3243,7 +3243,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "Fist swirling with molten fury, the Lawgiver punches her enemy in the heart, rips it out of his chest, and offers it up as a prayer to the divine force that flows through her.",
-            "charm-effect": "This Charm is a decisive gambit with a difficulty of the target’s remaining health levels. If successful, it does exactly enough damage to kill that opponent. The Solar rips her victim’s heart out, then she lifts it to the sky. The last thing they see is their heart going up in a gout of flames as the Solar’s fist closes around it. When the Solar kills a trivial opponent with this Charm, she gains a point of Willpower and automatically terrifies all other trivial opponents. When she kills a non-trivial opponent with Heart-Eating Fist, she gains no Willpower, but is suffused with a sudden surge of storming transformative anima. As the power of the Unconquered Sun flows through her, she automatically heals [[ ceil(@{essence}/2) ]](half Essence rounded up) health levels and may reflexively trigger Ascendant Battle Visage or Burning Sky Apocalypse Strike at no cost. On Heart-Eating Fist The Dragon Kings of old, prehuman worshipers of the Unconquered Sun, used to offer up sacrificial hearts to the Most High. Held aloft against the sunlight, these hearts would burn, signaling the Unconquered Sun’s acceptance of the offering. With this Charm, the Lawgiver offers up the heart to herself. As her fires consume it, she gains a surge of incredible power.",
+            "charm-effect": "This Charm is a decisive gambit with a difficulty of the target’s remaining health levels.\nIf successful, it does exactly enough damage to kill that opponent.\nThe Solar rips her victim’s heart out, then she lifts it to the sky. The last thing they see is their heart going up in a gout of flames as the Solar’s fist closes around it.\n When the Solar kills a trivial opponent with this Charm, she gains a point of Willpower and automatically terrifies all other trivial opponents.\n When she kills a non-trivial opponent with Heart-Eating Fist, she gains no Willpower, but is suffused with a sudden surge of storming transformative anima. As the power of the Unconquered Sun flows through her, she automatically heals [[ ceil(@{essence}/2) ]](half Essence rounded up) health levels and may reflexively trigger Ascendant Battle Visage or Burning Sky Apocalypse Strike at no cost.\n\nOn Heart-Eating Fist The Dragon Kings of old, prehuman worshipers of the Unconquered Sun, used to offer up sacrificial hearts to the Most High. Held aloft against the sunlight, these hearts would burn, signaling the Unconquered Sun’s acceptance of the offering. With this Charm, the Lawgiver offers up the heart to herself. As her fires consume it, she gains a surge of incredible power.",
             "charm-rollexpr": ""
         }, {
             "attr-mins": {
@@ -3259,7 +3259,7 @@
             "rep-cost-mote": 15,
             "rep-cost-will": 1,
             "rep-cost-init": 0,
-            "charm-short-desc": "",
+            "charm-short-desc": "20+INIT: AoE to short range that project everyone upward, then AoE close range at new falling location",
             "charm-book": "Solar : MotSE",
             "charm-aspect": "",
             "charm-mute": "",
@@ -3267,7 +3267,7 @@
             "charm-can-cycle-aspects": 0,
             "charm-keywords": "Decisive-only",
             "charm-description": "Drawing in tremendous spirit energy, the Solar launches an explosive attack that carries her skyward with the force of the rising sun.",
-            "charm-effect": "This Charm can only be triggered at 20+ Initiative. It unleashes a massive decisive attack to everything within short range of the Lawgiver. The Exalt’s form is suffused with burning Solar Essence that fires straight up in a column that can be seen for miles. This is a non-standard decisive attack; roll the Solar’s Dexterity + Brawl once and apply the result to the entire group. This attack can hit allies. Targets struck by this attack are carried upward on a column of destructive force, one range band for every ten Initiative the Solar possesses. For every range band the targets are lifted, they are subject to three dice of hardness-ignoring decisive bashing damage and must then contend with falling damage. This portion of the attack does not reset the Solar’s Initiative. The Solar is also carried up to the same height as her enemies, but at the apex she pauses, Essence and anima swirling around her like a second sun. Then she plummets at an angle in any chosen direction, falling half the range bands she rose (rounded up). There she comes down like a falling star, hammering a crater into the earth and striking all opponents at close range with her explosive fury. This is a normal decisive attack that, if successful, does half her Initiative (rounded up) in hardness -ignoring decisive damage dice to all opponents at close range. This calamitous falling strike does no harm to the Solar. On Burning Sky Apocalypse Strike *John lowers an LP of smooth slow “doo-wop” onto the spindle and swishes his brandy around in a shot glass while staring out the window at the setting sun.*",
+            "charm-effect": "This Charm can only be triggered at 20+ Initiative.\nIt unleashes a massive decisive attack to everything within short range of the Lawgiver.\nThe Exalt’s form is suffused with burning Solar Essence that fires straight up in a column that can be seen for miles.\nThis is a non-standard decisive attack; roll the Solar’s Dexterity + Brawl once and apply the result to the entire group.\n\nThis attack can hit allies.\n\nTargets struck by this attack are carried upward on a column of destructive force, one range band for every ten Initiative the Solar possesses.\nFor every range band the targets are lifted, they are subject to three dice of hardness-ignoring decisive bashing damage and must then contend with falling damage.\nThis portion of the attack does not reset the Solar’s Initiative.\n\nThe Solar is also carried up to the same height as her enemies, but at the apex she pauses, Essence and anima swirling around her like a second sun.\nThen she plummets at an angle in any chosen direction, falling half the range bands she rose (rounded up).\nThere she comes down like a falling star, hammering a crater into the earth and striking all opponents at close range with her explosive fury.\nThis is a normal decisive attack that, if successful, does half her Initiative (rounded up) in hardness-ignoring decisive damage dice to all opponents at close range.\nThis calamitous falling strike does no harm to the Solar.\n\nOn Burning Sky Apocalypse Strike *John lowers an LP of smooth slow “doo-wop” onto the spindle and swishes his brandy around in a shot glass while staring out the window at the setting sun.*",
             "charm-rollexpr": ""
         }
     ],
