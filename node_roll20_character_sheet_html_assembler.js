@@ -111,6 +111,8 @@ function returnOptions(p, array, checked = 0) {
     return retStr;
 }
 
+const filteredAbilities = [...abilities.slice(0,abilities.indexOf('Sorcery')),...abilities.slice(abilities.indexOf('Sorcery')+1)];
+
 outHtml += /*html*/`
                     <div class="sheet-col"><!-- 1.1.1 1st column (Name, Player, SELECT Caste) -->
                         <div class="sheet-flexbox-h"><label>Name: <input type="text" name="attr_character_name" placeholder="Karal Fire Orchid"></label></div>
@@ -132,7 +134,7 @@ outHtml += /*html*/`
                             <label>Supernal Trait:
                             <select name="attr_supattr">
                                 <option value="" selected="selected"></option>\n
-                                ${returnOptions(32, abilities.map(i => typeof i !== 'string' ? i.name : i).map(i => ({val: i, label: i})), -1)}\n
+                                ${returnOptions(32, filteredAbilities.map(i => typeof i !== 'string' ? i.name : i).map(i => ({val: i, label: i})), -1)}\n
                                 <option disabled>-------OTHER------</option>
                                 <option value="Custom">Custom</option>
                             </select></label>
@@ -228,9 +230,9 @@ ${pad(p)}        ${returnDotsRadio(p+8, ability.toLowerCase())}
 ${pad(p)}    </div>
 ${pad(p)}</div>`;
     let ret = '', i = 0;
-    for (const ability of abilities) {
+    for (const ability of filteredAbilities) {
         ret += (typeof ability === 'string') ? getSimpleAbi(ability) : getComplexAbi(ability, p);
-        if (i++ != abilities.length - 1) ret += brPad(p);
+        if (i++ != filteredAbilities.length - 1) ret += brPad(p);
     }
     return ret;
 }
@@ -258,7 +260,7 @@ outHtml += /*html*/`
                                 <input type="text" name="attr_repspecialty" style="margin-top: 3px" placeholder="Pirate Tactics">
                                 <select name="attr_repspecialtyability">
                                     <option value=""></option>\n
-                                    ${returnOptions(36, abilities.map(i => typeof i !== 'string' ? i.name : i).map(i => ({val: i, label: i})), -1)}\n
+                                    ${returnOptions(36, filteredAbilities.map(i => typeof i !== 'string' ? i.name : i).map(i => ({val: i, label: i})), -1)}\n
                                     <option disabled>-------OTHER------</option>
                                     <option value="Custom">Custom</option>\n
                                     <option disabled>----ATTRIBUTES---</option>
@@ -288,7 +290,7 @@ const attributePrompt = buildPrompt('Attribute', {...getHashMapFromArray(attribu
 const abilityPromptBASE = `?{Ability|\n`;
 function buildAbilityPrompt(p = 36) {
     let retStr = `${abilityPromptBASE}`;
-    for (const ability of abilities) {
+    for (const ability of filteredAbilities) {
         if (typeof ability === 'string') {
             retStr += `${pad(p+4)}${ability} (@{${ability.toLowerCase()}}),@{${ability.toLowerCase()}}[${ability}]|\n`;
         } else {
@@ -1391,7 +1393,7 @@ function getRemindersAbi(p = 0, includeHiddenQc = true) {
 ${pad(p)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
 ${pad(p)}    <div class="sheet-layer6">
 ${pad(p)}        <div class="main-abi">
-${pad(p)}            ${getReminderCellsFromArray(p+12, abilities)}
+${pad(p)}            ${getReminderCellsFromArray(p+12, filteredAbilities)}
 ${pad(p)}        </div>
 ${pad(p)}        <input type="hidden" class="rep-enabled-check" name="attr_rep-abi-enabled" />
 ${pad(p)}        <div class="rep-toggle">
@@ -1534,7 +1536,7 @@ ${pad(p)}${returnOptions(p, [...Array(rawCount).keys()].map(i => ({val: i + '[RA
 }
 
 function getAbiOptions(p, includePrompts = false, selected = -1, rawCount = includePrompts ? 11 : 21) {
-    let ret =`${returnOptions(p, abilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}${brPad(p)}`;
+    let ret =`${returnOptions(p, filteredAbilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}${brPad(p)}`;
     if (includePrompts) {
         ret += /*html*/`<option disabled>-------ABILITIES PROMPTS------</option>
 ${pad(p)}<option value="${buildPrompt('Craft', craftAbilities.subSections, '?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]')}">Craft Prompt</option>
