@@ -197,7 +197,7 @@ with 1px grid rework =>
 !token-mod --set scale|[[?{Size ?|Hiroo-100%,1|Frothi-105%,1.05|Tom-65%,0.65|Garde-95%,0.95}*0.014285714285]]un
 
 PageSizeConvert:
-!cmaster --?{Normal or Reverse ?|Normal,togglePageSize|Reverse,togglePageSize&#44;revert}
+!cmaster --?{Normal or Reverse ?|Normal,togglePageSize|Reverse,togglePageSize&#44;revert|Create Abi,createAbilities}
 
 DayNight:
 !token-mod --set currentside|?{Mode ? (face of token, usually 1 for day 2 for night)|1}
@@ -211,7 +211,7 @@ Selenok:
 	Cerf-200%,scale&#124;[[0.014285714285&#42;2]]un currentside&#124;7|
 	Silvor-110%,scale&#124;[[0.014285714285&#42;1.1]]un currentside&#124;11|
 	Yuri-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;13|
-	Marita-100%,scale&#124;[[0.014285714285&#42;1.1]]un currentside&#124;15}
+	Chloé-75%,scale&#124;[[0.014285714285&#42;0.75]]un currentside&#124;15}
 
 Hakim:
 !token-mod --set ?{Form ?|
