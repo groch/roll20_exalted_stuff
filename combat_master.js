@@ -567,6 +567,7 @@ var CombatMaster = CombatMaster || (function() {
                 let imgurl = tokenObj.get('imgsrc');
                 let image  = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px" />` : '';
                 appliedName = tokenObj.get('name');
+                if (!tokenObj.get('showplayers_name') && tokenObj.get('layer') !== 'gmlayer') appliedName = 'Someone';
                 sendStandardScriptMessage(`${appliedName} ${confObj.getMessageFx(turnorder[i].pr)}`, image, 'display:inline-block;vertical-align:middle;', false);
                 appliedCount++;
             }
@@ -595,13 +596,11 @@ var CombatMaster = CombatMaster || (function() {
         let imgurl      = tokenObj.get('imgsrc');
         let image       = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px"  />` : '';
         name            = (state[combatState].config.announcements.handleLongName) ? handleLongString(name) : name;
+        if (!tokenObj.get('showplayers_name') && tokenObj.get('layer') !== 'gmlayer') name = 'Someone';
         let contents    = `<div style="${styles.announcePlayer}">${image}</div>`;
         contents   += `<div style="${styles.announcePlayer}max-width: 67%;">${name} ${confObj.contentString}</div>`;
 
-        if (tokenObj.get('layer') == 'gmlayer')
-            makeAndSendMenu(contents,confObj.title,'gm', false, `background-color:${confObj.bgColor}`);
-        else
-            makeAndSendMenu(contents,confObj.title,'', false, `background-color:${confObj.bgColor}`);
+        makeAndSendMenu(contents,confObj.title, (tokenObj.get('layer') == 'gmlayer') ? 'gm' : '', false, `background-color:${confObj.bgColor}`);
     },
 
     remFullDef = (cmdDetails) => {
@@ -982,7 +981,7 @@ var CombatMaster = CombatMaster || (function() {
                 if (t.get('layer') == 'objects' && !(getObj('character', t.get('represents')).get('name').includes('Vision'))) {
                     let imgurl = t.get('imgsrc');
                     let image  = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px" />` : '';
-                    tokenNameArray.push({name: t.get('name'), image: image});
+                    tokenNameArray.push({name: !t.get('showplayers_name') ? 'Someone' : t.get('name'), image: image});
                 }
             }
         });
@@ -2868,7 +2867,8 @@ var CombatMaster = CombatMaster || (function() {
             if (tokenObj.get('layer') == 'objects' && characterObj) {
                 let imgurl = tokenObj.get('imgsrc');
                 let image  = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px" />` : '';
-                sendStandardScriptMessage(`${tokenObj.get('name')} delays her actions`, image, 'display:inline-block;width:74%;vertical-align:middle;font-weight:bold;', false);
+                let name = (tokenObj.get('showplayers_name')) ? tokenObj.get('name') : 'Someone';
+                sendStandardScriptMessage(`${name} delays her actions`, image, 'display:inline-block;width:74%;vertical-align:middle;font-weight:bold;', false);
             }
         }
 
