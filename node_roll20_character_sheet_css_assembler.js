@@ -1577,6 +1577,7 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
     display: none;
 }
 
+.charsheet .sheet-quick-character[value="1"] ~ .flex.main-page select .qc-hide,
 .charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet > .sheet-attributes,
 .charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-abilities,
 .charsheet .sheet-quick-character[value="1"] ~ .flex.main-page div.sheet-tab-character-sheet .sheet-limit,

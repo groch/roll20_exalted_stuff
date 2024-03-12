@@ -101,8 +101,8 @@ function getSupernalList(p = 0) {
     return ret;
 }
 
-function returnOptions(p, array, checked = 0) {
-    const getOption = (item, selected) => `<option value="${item.val}"${selected ? ' selected' : ''}>${item.label}</option>`;
+function returnOptions(p, array, checked = 0, addedClass = undefined) {
+    const getOption = (item, selected) => `<option value="${item.val}"${addedClass ? ` class=\"${addedClass}\"` : ''}${selected ? ' selected' : ''}>${item.label}</option>`;
     let retStr = '', i = 0;
     for (const item of array) {
         retStr += getOption(item, i === checked);
@@ -1522,41 +1522,41 @@ ${pad(p)}</div>`;
 
 const ATTR_STR_ID = 0, ATTR_DEX_ID = 1, ATTR_WITS_ID = 8, ABI_AWARENESS_ID = 2, ABI_BRAWL_ID = 3;
 function getAttrOptions(p, includePrompts = false, selected = -1, rawCount = includePrompts ? 11 : 21) {
-    let ret =`${returnOptions(p, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}${brPad(p)}`;
+    let ret =`${returnOptions(p, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected, 'qc-hide')}${brPad(p)}`;
     if (includePrompts)
-        ret +=  /*html*/`<option disabled>-------ATTRIBUTES PROMPTS------</option>
-${pad(p)}<option value="${buildPrompt('Physical Attribute ?', {...getHashMapFromArray([attributes[0], attributes[1], attributes[2]])})}">Physical Prompt</option>
-${pad(p)}<option value="${buildPrompt('Social Attribute ?', {...getHashMapFromArray([attributes[3], attributes[4], attributes[5]])})}">Social Prompt</option>
-${pad(p)}<option value="${buildPrompt('Mental Attribute ?', {...getHashMapFromArray([attributes[6], attributes[7], attributes[8]])})}">Mental Prompt</option>
-${pad(p)}<option value="${buildPrompt('Full Attribute ?', getHashMapFromArray(attributes))}">Full Prompt</option>
-${pad(p)}<option value="?{Custom Attribute}[Custom]">Simple Prompt</option>${brPad(p)}`;
+        ret +=  /*html*/`<option class="qc-hide" disabled>-------ATTRIBUTES PROMPTS------</option>
+${pad(p)}<option value="${buildPrompt('Physical Attribute ?', {...getHashMapFromArray([attributes[0], attributes[1], attributes[2]])})}" class="qc-hide">Physical Prompt</option>
+${pad(p)}<option value="${buildPrompt('Social Attribute ?', {...getHashMapFromArray([attributes[3], attributes[4], attributes[5]])})}" class="qc-hide">Social Prompt</option>
+${pad(p)}<option value="${buildPrompt('Mental Attribute ?', {...getHashMapFromArray([attributes[6], attributes[7], attributes[8]])})}" class="qc-hide">Mental Prompt</option>
+${pad(p)}<option value="${buildPrompt('Full Attribute ?', getHashMapFromArray(attributes))}" class="qc-hide">Full Prompt</option>
+${pad(p)}<option value="?{Custom Attribute}[Custom]" class="qc-hide">Simple Prompt</option>${brPad(p)}`;
     ret += /*html*/`<option disabled>-------RAW------</option>
 ${pad(p)}${returnOptions(p, [...Array(rawCount).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}`;
     return ret;
 }
 
 function getAbiOptions(p, includePrompts = false, selected = -1, rawCount = includePrompts ? 11 : 21) {
-    let ret =`${returnOptions(p, filteredAbilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected)}${brPad(p)}`;
+    let ret =`${returnOptions(p, filteredAbilities.filter(i => typeof i === 'string').map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), selected, 'qc-hide')}${brPad(p)}`;
     if (includePrompts) {
-        ret += /*html*/`<option disabled>-------ABILITIES PROMPTS------</option>
-${pad(p)}<option value="${buildPrompt('Craft', craftAbilities.subSections, '?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]')}">Craft Prompt</option>
-${pad(p)}<option value="${buildPrompt('Martial Arts', maAbilities.subSections, '?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]')}">Martial Arts Prompt</option>
-${pad(p)}<option value="${buildAbilityPrompt(p)}">Full Ability Prompt</option>
-${pad(p)}<option value="?{Custom Ability}">Simple Prompt</option>${brPad(p)}`;
+        ret += /*html*/`<option class="qc-hide" disabled>-------ABILITIES PROMPTS------</option>
+${pad(p)}<option value="${buildPrompt('Craft', craftAbilities.subSections, '?{Enter the number of Craft dots&amp;#124;0&amp;#125;[Other-Craft]')}" class="qc-hide">Craft Prompt</option>
+${pad(p)}<option value="${buildPrompt('Martial Arts', maAbilities.subSections, '?{Enter the number of M.A. dots of this style&amp;#124;0&amp;#125;[Other-MA]')}" class="qc-hide">Martial Arts Prompt</option>
+${pad(p)}<option value="${buildAbilityPrompt(p)}" class="qc-hide">Full Ability Prompt</option>
+${pad(p)}<option value="?{Custom Ability}" class="qc-hide">Simple Prompt</option>${brPad(p)}`;
     } else {
-        ret += /*html*/`<option disabled>------CRAFTS-----</option>
-${pad(p)}${returnOptions(p, Object.entries(craftAbilities.subSections).map(([k,v]) => ({val: `${v}[${k}]`, label: k})), -1)}
-${pad(p)}<option disabled>-------M-A------</option>
-${pad(p)}${returnOptions(p, Object.entries(maAbilities.subSections).map(([k,v]) => ({val: `${v}[${k}]`, label: k})), -1)}${brPad(p)}`;
+        ret += /*html*/`<option class="qc-hide" disabled>------CRAFTS-----</option>
+${pad(p)}${returnOptions(p, Object.entries(craftAbilities.subSections).map(([k,v]) => ({val: `${v}[${k}]`, label: k})), -1, 'qc-hide')}
+${pad(p)}<option class="qc-hide" disabled>-------M-A------</option>
+${pad(p)}${returnOptions(p, Object.entries(maAbilities.subSections).map(([k,v]) => ({val: `${v}[${k}]`, label: k})), -1, 'qc-hide')}${brPad(p)}`;
     }
-    ret += /*html*/`<option disabled>-------ATTRIBUTES------</option>
-${pad(p)}${returnOptions(p, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1)}${brPad(p)}`;
+    ret += /*html*/`<option class="qc-hide" disabled>-------ATTRIBUTES------</option>
+${pad(p)}${returnOptions(p, attributes.map(i => ({val: `@{${i.toLowerCase()}}[${i}]`, label: i})), -1, 'qc-hide')}${brPad(p)}`;
     if (includePrompts) {
-    ret += /*html*/`<option disabled>-------ATTRIBUTES PROMPTS------</option>
-${pad(p)}<option value="${buildPrompt('Physical Attribute 2 ?', {...getHashMapFromArray([attributes[0], attributes[1], attributes[2]])})}">Physical Prompt</option>
-${pad(p)}<option value="${buildPrompt('Social Attribute 2 ?', {...getHashMapFromArray([attributes[3], attributes[4], attributes[5]])})}">Social Prompt</option>
-${pad(p)}<option value="${buildPrompt('Mental Attribute 2 ?', {...getHashMapFromArray([attributes[6], attributes[7], attributes[8]])})}">Mental Prompt</option>
-${pad(p)}<option value="${buildPrompt('Full Attribute 2 ?', getHashMapFromArray(attributes))}">Full Attribute Prompt</option>${brPad(p)}`;
+    ret += /*html*/`<option class="qc-hide" disabled>-------ATTRIBUTES PROMPTS------</option>
+${pad(p)}<option value="${buildPrompt('Physical Attribute 2 ?', {...getHashMapFromArray([attributes[0], attributes[1], attributes[2]])})}" class="qc-hide">Physical Prompt</option>
+${pad(p)}<option value="${buildPrompt('Social Attribute 2 ?', {...getHashMapFromArray([attributes[3], attributes[4], attributes[5]])})}" class="qc-hide">Social Prompt</option>
+${pad(p)}<option value="${buildPrompt('Mental Attribute 2 ?', {...getHashMapFromArray([attributes[6], attributes[7], attributes[8]])})}" class="qc-hide">Mental Prompt</option>
+${pad(p)}<option value="${buildPrompt('Full Attribute 2 ?', getHashMapFromArray(attributes))}" class="qc-hide">Full Attribute Prompt</option>${brPad(p)}`;
     }
     ret += /*html*/`<option disabled>-------RAW------</option>
 ${pad(p)}${returnOptions(p, [...Array(rawCount).keys()].map(i => ({val: i + '[RAW]', label: i})), -1)}`;
