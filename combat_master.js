@@ -1641,7 +1641,7 @@ var CombatMaster = CombatMaster || (function() {
 
         if (!state[combatState].config.saveState.saveStates[intSaveSlot]) {
             state[combatState].config.saveState.saveStates[intSaveSlot] = {
-                name:       `${name}` || `Default Save Name ${intSaveSlot}`,
+                name: `Default Save Name ${intSaveSlot}`,
                 initiativepage: Campaign().get('initiativepage'),
                 turnorder: jsonTurnOrder,
                 conditions: jsonConditions,
