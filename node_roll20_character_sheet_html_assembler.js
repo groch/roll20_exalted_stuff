@@ -642,8 +642,8 @@ outHtml += /*html*/
                             </div>
                         </div>\n`;
 
-const dodgeAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty}';
-const parryAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty}';
+const dodgeAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty} + @{sbv-activated}';
+const parryAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty} + @{sbv-activated}';
 function getWeaponsLine(p = 0) {
     return /*html*/`<div class="sheet-gear sheet-table">
 ${pad(p)}    <input type="hidden" name="attr_wound-penalty" value="-4">
