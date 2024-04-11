@@ -37,6 +37,7 @@ let outHtml = /*html*/
         <input name="attr_show_character_name" type="hidden">
         <input name="attr_hide-not-learnt-charms-in-reminders" type="hidden">
         <input name="attr_def-exc-cost-multiplier" type="hidden" value="2">
+        <input class="ride-mode-check" name="attr_ride-for-evasion" type="hidden" value="0">
 
         <input class="sheet-show-combat-tab" type="hidden" name="attr_combattab" value="1">
         <input class="sheet-show-antisocial-tab" type="hidden" name="attr_antisocialtab" value="0">
@@ -729,6 +730,14 @@ outHtml += /*html*/
                                         <div class="sheet-table-cell"><input type="number" name="attr_armor-attune" value="0"></div>
                                         <div class="sheet-table-cell"><input type="text" name="attr_armor-tags" placeholder="Concealable"></div>
                                     </div>
+                                    <div class="sheet-table-row sheet-mount-armor">
+                                        <div class="sheet-table-cell"><input type="text" name="attr_mount-armor-name" placeholder="Mount Barding"></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armorsoak" value="" readonly></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-hardness" value="" readonly></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armor-mobility" value="0"></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armor-attune" value="" readonly></div>
+                                        <div class="sheet-table-cell"><input type="text" name="attr_armor-tags" placeholder="Concealable"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -778,10 +787,11 @@ ${pad(p)}            <span title="Armored Soak, come from your armor">Ar. Soak</
 ${pad(p)}            <input type="number" readonly tabindex="-1" name="attr_armorsoak" title="Come from your armor">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex">
+${pad(p)}            <div style="display: inline-block;"><input type="checkbox" value="1" class="ride-checkbox" name="attr_ride-for-evasion" title="Ride Mode (use Dex+Ride instead of Dex+Dodge)"><span></span></div>
 ${pad(p)}            <span title="Dexterity + Dodge">Evasion</span>:
 ${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(ceil((@{dexterity} + @{dodge}) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(ceil(((@{dexterity} + @{dodge}) + 1) / 2) - abs(@{armor-mobility}) - abs(@{wound-penalty}) + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" value="(@{evasion-base} + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(@{evasion-base-specialty} + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    ${getDefExcDiv(p+4)}

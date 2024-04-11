@@ -117,6 +117,8 @@ input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:hover + spa
 input.onslaught-checkbox[type=checkbox][name="attr_apply-onslaught"]:focus + span::before {
     outline: 2px var(--onslaught-color) solid;
 }
+input.ride-checkbox[type=checkbox][name="attr_ride-for-evasion"]:hover + span::before,
+input.ride-checkbox[type=checkbox][name="attr_ride-for-evasion"]:focus + span::before,
 .charsheet .roll-type-toggler input[type=checkbox]:hover + span::before,
 .charsheet input[type=checkbox].sheet-unnamed-toggle:not(.btn):hover + span::before,
 .sheet-combat-attack:has(textarea.combat-textarea:hover) .desc-toggle input + span:before,
@@ -1616,6 +1618,9 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
 .charsheet .sheet-armor input[type=number],
 .charsheet [data-groupname=repeating_weapon] input[type=text],
 .charsheet [data-groupname=repeating_weapon] input[type=number] { width: 100%; }
+
+.charsheet .sheet-armor .sheet-mount-armor { display: none; }
+.charsheet .ride-mode-check[value="1"] ~ .flex.main-page .sheet-armor .sheet-mount-armor { display: table-row; }
 
 .charsheet [data-groupname=repeating_intimacies-read] input[type=text],
 .charsheet [data-groupname=repeating_intimacies] input[type=text],

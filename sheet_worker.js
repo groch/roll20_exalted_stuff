@@ -279,6 +279,42 @@
         })).execute();
     }
 
+    on('sheet:opened', setDebugWrapper(updateEvasion));
+    on('change:ride change:dodge change:armor-mobility change:mount-armor-mobility', TAS._fn(updateEvasion));
+    on('change:ride-for-evasion', TAS._fn(updateEvasion));
+
+    async function updateEvasion(e) {
+        if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
+            if (debug === 2) TAS.debug(`updateEvasion:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
+        const values = await getAttrsAsync(['wound-penalty', 'qc', 'qc-evasion', 'ride-for-evasion', 'dodge', 'ride', 'dexterity', 'armor-mobility', 'mount-armor-mobility']);
+        const pen = values['wound-penalty'] || 0;
+        var finalAttr = {};
+        if (debug === 2) TAS.debug('updateEvasion:: Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
+
+        const dex = Number(values['dexterity']),
+            ride = Number(values['ride']),
+            dodge = Number(values['dodge']),
+            rideMode = Number(values['ride-for-evasion']),
+            mobiPen = Number(values['armor-mobility']),
+            rideMobiPen = Number(values['mount-armor-mobility']),
+            qcEva = Number(values['qc-evasion']),
+            isQc = Number(values['qc']);
+
+        if (debug === 2) TAS.debug(`updateEvasion:: isQc=${isQc}, qcEvasion=${qcEva}, rideMode=${rideMode}`);
+        if (debug === 2) TAS.debug('updateEvasion:: Evasion calc:', (isQc ? qcEva : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ') / 2)') + ' - ' + pen);
+        var newEva = (isQc ? qcEva : Math.ceil((dex + (rideMode ? ride : dodge)) / 2)) - pen;
+        if (debug === 2) TAS.debug('updateEvasion:: Evasion w/specialty calc:', (isQc ? qcEva+1 : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ' + 1) / 2)') + ' - ' + pen);
+        var newEvaSpe = (isQc ? qcEva+1 : Math.ceil((dex + (rideMode ? ride : dodge) + 1) / 2)) - pen;
+        if (debug === 2) TAS.debug(`updateEvasion:: applying Mobility Penalty:${rideMode ? rideMobiPen : mobiPen}`);
+        newEva -= rideMode ? rideMobiPen : mobiPen;
+        newEvaSpe -= rideMode ? rideMobiPen : mobiPen;
+        if (debug === 2) TAS.debug('updateEvasion:: setAttrs! evasion-base='+newEva+', evasion-base-specialty='+newEvaSpe);
+        finalAttr = {'evasion-base': newEva, 'evasion-base-specialty': newEvaSpe};
+        setAttrs(finalAttr);
+    }
+
     on('change:rollpenalty-input', TAS._fn(updateRollPenalty));
 
     async function updateRollPenalty() {
@@ -2480,6 +2516,7 @@
 
         TAS.debug(`changeSBVActivation:: attrObj=`, attrObj);
         setAttrs(attrObj);
+        updateParry(eventInfo);
     }));
 
     /* Add a new charm to charms-all */
