@@ -2143,7 +2143,7 @@
               written_attr = `${attr_name}repcombat-watk-bonus-dices`,
               mote_attr = `${attr_name}rep-cost-mote`;
         const val = await getAttrsAsync([tested_attr, 'diceex', 'succex']);
-        const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+        const diceExTest = val['diceex'] == '1', succExTest = val['succex'] == '1';
         setAttrs({[mote_attr] : getMoteCostToSet(diceExTest, succExTest)});
         let writtenValue = defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : '');
         if (val[tested_attr].indexOf('@{archery}') === 0)     writtenValue = `?{Range ?|Close,-2|Short,4|Medium,2|Long,0|Extreme,-2}[Archery Range]+${writtenValue}`;
@@ -2160,7 +2160,7 @@
     async function setDefaultsOnDAtkDice(e) {
         const val = await getAttrsAsync(['diceex']);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
-        await setCb(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (val['diceex'] === '1' ? diceExAddedPrompt : ''));
+        await setCb(`${attr_name}repcombat-datk-bonus-dices`, defaultRoll20AddedDicePrompt + (val['diceex'] == '1' ? diceExAddedPrompt : ''));
     }
 
     on('clicked:repeating_combat-attack:default-macro-watk-s', setDebugWrapper(function clickDefaultMacroWAtkDice(e) {
@@ -2174,7 +2174,7 @@
     async function setDefaultsOnAtkSuccType(e, setWill = false) {
         if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
         const val = await getAttrsAsync(['succex']);
-        const succExTest = val['succex'] === '1';
+        const succExTest = val['succex'] == '1';
 
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         if (setWill) setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
@@ -2201,7 +2201,7 @@
         if (values.qc) {
             const id = e.sourceAttribute.split('_')[2];
             const attr_name = `repeating_combat-attack_${id}_`;
-            const diceExTest = values['diceex'] === '1', succExTest = values['succex'] === '1';
+            const diceExTest = values['diceex'] == '1', succExTest = values['succex'] == '1';
             setAttrs({
                 [`${attr_name}repcombat-watk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
                 [`${attr_name}repcombat-datk-bonus-dices`]: defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''),
@@ -2219,7 +2219,7 @@
         if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         const val = await getAttrsAsync(['diceex', 'succex']);
-        const diceExTest = val['diceex'] === '1', succExTest = val['succex'] === '1';
+        const diceExTest = val['diceex'] == '1', succExTest = val['succex'] == '1';
         setAttrs({[`${attr_name}rep-cost-mote`] : getMoteCostToSet(diceExTest, succExTest)});
         const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
         await setCb(`${attr_name}${prefix}bonus-dices`, defaultRoll20AddedDicePrompt + (diceExTest ? diceExAddedPrompt : ''));
@@ -2231,7 +2231,7 @@
         const val = await getAttrsAsync(['succex']);
         setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
         const prefix = repeatingSectionName === 'combat-init' ? 'repinit-' : 'reprolls-';
-        await setCb(`${attr_name}${prefix}bonus-successes`, (repeatingSectionName === "combat-init" ? baseInit : '') + defaultRoll20AddedSuccPrompt + (val['succex'] === '1' ? succExAddedPrompt : ''));
+        await setCb(`${attr_name}${prefix}bonus-successes`, (repeatingSectionName === "combat-init" ? baseInit : '') + defaultRoll20AddedSuccPrompt + (val['succex'] == '1' ? succExAddedPrompt : ''));
     }));
 
     /* replicate withering to decisive */
@@ -2770,7 +2770,7 @@
     }
 
     function setCb(written_attr, writtenValue) {
-        TAS.debug(`setupVarSetCBThenFinaliseCB:: setting ${written_attr} = ${writtenValue}`);
+        TAS.debug(`setCb:: setting ${written_attr} = ${writtenValue}`);
         return setAttrsAsync({[written_attr]: writtenValue});
     }
 
