@@ -6,12 +6,19 @@
      *  FROM https://github.com/onyxring/Roll20Async
      *
      */
+    function isRunningOnServer() { return self.dispatchEvent == undefined; }
     function setActiveCharacterId(charId){
         var oldAcid=getActiveCharacterId();
-        var ev = new CustomEvent("message");
-        ev.data={"id":"0", "type":"setActiveCharacter", "data":charId};
-        self.dispatchEvent(ev);
-        return oldAcid;
+        var msg={"id":"0", "type":"setActiveCharacter", "data":charId};
+
+        if(isRunningOnServer()==false){ //if in a browser, use "dispatchEvent" to process the message
+            var ev = new CustomEvent("message");
+            ev.data=msg;
+            self.dispatchEvent(ev);
+        }else{ //otherwise, use the API (server) message processor, "onmessage"
+            self.onmessage({data:msg});
+        }
+        return oldAcid; //return what the value used to be, so calling code can be a little cleaner
     }
     var _sIn=setInterval;
     setInterval=function(callback, timeout){
@@ -35,67 +42,46 @@
             }
         ,timeout);
     }
-    async function getAttrsAsync(props){
+    function getAttrsAsync(props){
         var acid=getActiveCharacterId(); //save the current activeCharacterID in case it has changed when the promise runs
         var prevAcid=null;               //local variable defined here, because it needs to be shared across the promise callbacks defined below
-        try {
-            return await new Promise((resolve, reject) => {
-                prevAcid = setActiveCharacterId(acid); //in case the activeCharacterId has changed, restore it to what we were expecting and save the current value to restore later
-                try {
-                    getAttrs(props, (values) => { resolve(values); });
+        return new Promise((resolve,reject)=>{
+                prevAcid=setActiveCharacterId(acid);  //in case the activeCharacterId has changed, restore it to what we were expecting and save the current value to restore later
+                try{
+                    getAttrs(props,(values)=>{  resolve(values); });
                 }
-                catch { reject(); }
-            });
-        } finally {
+                catch{ reject(); }
+        }).finally(()=>{
             setActiveCharacterId(prevAcid); //restore activeCharcterId to what it was when the promise first ran
-        }
+        });
     }
     //use the same pattern for each of the following...
-    async function setAttrsAsync(propObj, options){
+    function setAttrsAsync(propObj, options){
         var acid=getActiveCharacterId();
         var prevAcid=null;
-        try {
-            return await new Promise((resolve, reject) => {
-                prevAcid = setActiveCharacterId(acid);
-                try {
-                    setAttrs(propObj, options, (values) => { resolve(values); });
+        return new Promise((resolve,reject)=>{
+                prevAcid=setActiveCharacterId(acid);
+                try{
+                    setAttrs(propObj,options,(values)=>{ resolve(values); });
                 }
-                catch { reject(); }
-            });
-        } finally {
+                catch{ reject(); }
+        }).finally(()=>{
             setActiveCharacterId(prevAcid);
-        }
+        });
     }
 
-    async function getSectionIDsAsync(sectionName){
-        var acid=getActiveCharacterId();
+    function getSectionIDsAsync(sectionName){
+        var acid = getActiveCharacterId();
         var prevAcid=null;
-        try {
-            return await new Promise((resolve, reject) => {
+        return new Promise((resolve,reject)=>{
                 prevAcid = setActiveCharacterId(acid);
-                try {
-                    getSectionIDs(sectionName, (values) => { resolve(values); });
+                try{
+                    getSectionIDs(sectionName,(values)=>{ resolve(values); });
                 }
-                catch { reject(); }
-            });
-        } finally {
+                catch{ reject(); }
+        }).finally(()=>{
             setActiveCharacterId(prevAcid);
-        }
-    }
-    async function getSingleAttrAsync(prop){
-        var acid=getActiveCharacterId();
-        var prevAcid=null;
-        try {
-            return await new Promise((resolve, reject) => {
-                prevAcid = setActiveCharacterId(acid);
-                try {
-                    getAttrs([prop], (values) => { resolve(values[prop]); });
-                }
-                catch { reject(); }
-            });
-        } finally {
-            setActiveCharacterId(prevAcid);
-        }
+        });
     }
     ///////////////////////// from Chris D.(https://app.roll20.net/users/633707) and Jakob (https://app.roll20.net/users/726129)
     // a version of getSectionIDs that returns the IDs in the order that they are displayed.
@@ -643,7 +629,7 @@
             TAS.debug(`updateMotePool:: No settings found, stay as is !`);
             return;
         }
-        
+
         finalObj["exalt-type"] = getExaltType(caste);
 
         if (hasCasteImg(caste))
@@ -726,7 +712,7 @@
             cost:'[[?{Dice Added ?|1}]]', cost_mote:'?{Dice Added ?|1}', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};?{Dice Added ?|1}',
             short_d: 'add Dices', skill:'Exalted Power', duration:'Instant', aspect:aspectStr,
             description: 'The Exalt infuse her essence inside the action to magnify it.', effect:'The Exalt add [[?{Dice Added ?|1}]] dices to the action.'}, old);
-            
+
         addNewCharmToFinalObj(charmObj, generateNewRowId(idNewCharms), {name:'Generic Defense Excellency', type:'Supplemental',
             cost:'[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]', cost_mote:'[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]', cost_macro:'=COST:@{character_id}:peri=?{Spend Peripheral First ?|Yes,1|No,0};[[?{Defense Added ? (1def = @{def-exc-cost-multiplier}mote)}|1} * @{def-exc-cost-multiplier}]]',
             short_d: 'bonus to defensive static values', skill:'Exalted Power', duration:'Instant', aspect:aspectStr,
@@ -906,7 +892,7 @@
             if (valAttrs[`repeating_charms-all_${id}_charm-skill`] === 'Dexterity - Offensive')
                 finalObj[`repeating_charms-all_${id}_charm-skill`] = 'Dexterity - Offense';
         }
-        
+
         TAS.debug(`upgradeto266:: finalObj=`, finalObj);
         setAttrs(finalObj);
     }
@@ -2614,7 +2600,7 @@
     ];
 
     for (const attr of widgetCostAttrs) {
-        on(`change:repeating_rolls-widget:${attr}`, updateRollWidgetForCostAsync);
+        on(`change:repeating_rolls-widget:${attr}`, updateRollWidgetForCost);
     };
 
     function updateRollWidgetForCostAsync(e) {
@@ -2633,6 +2619,7 @@
             return;
         }
 
+        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: CALL getAttrsAsync(COST ATTRS)`);
         const val = await getAttrsAsync(widgetCostAttrs.map(attr => attr_name + attr));
         if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
         const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
@@ -2660,8 +2647,14 @@
             [attr_name+'rep-cost-macro']: finalMacro,
             [attr_name+'rep-cost-total-taint']: moteCost >= 5 ? starting : 0
         };
-        await setAttrsAsync(finalObj);
-        if (cb) cb();
+        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: setting:${JSON.stringify(finalObj)}`);
+        if (cb) {
+            await setAttrsAsync(finalObj);
+            cb();
+        } else {
+            setAttrs(finalObj);
+        }
+        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: OUT`);
     }
 
     /**
@@ -2683,6 +2676,7 @@
         const finalAttr = `repeating_rolls-widget_${id}_${baseAttr}`;
         if (debug === 2) TAS.debug(`resetAttrOnNeg::resetAttrOnNeg e=${JSON.stringify(e)}`);
         if (Number(e.newValue) < 0) setAttrs({[finalAttr]: 0});
+        if (debug === 2) TAS.debug(`resetAttrOnNeg:: OUT`);
     }
 
     /**
