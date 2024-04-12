@@ -1339,7 +1339,7 @@ ${pad(p)}        <select name="attr_charm_sheet" style="flex-grow: 42000;">
 ${pad(p)}            <option>--- SELECT ONE ---</option>
 ${pad(p)}            ${getBlockFromArray([...solarCharmArray, ...lunarCharmArray, ...maCharmArray], 12, item => getHiddenOption(item.replace('charms-', ''), hashCharmName[item]))}
 ${pad(p)}            <option class="reminder-charm opt-charm-evocations" value="Evocation">Evocation</option>
-${pad(p)}            <option class="reminder-charm opt-charm" value="other">Other</option>
+${pad(p)}            <option class="reminder-charm opt-charm" value="Other">Other</option>
 ${pad(p)}        </select>
 ${pad(p)}        <div class="toggle-commit-list">
 ${pad(p)}            <input type="checkbox" class="sheet-unnamed-toggle" name="attr_commit-list-shown" value="1"><span title="Show Commits" class="sheet-layer6"></span>
