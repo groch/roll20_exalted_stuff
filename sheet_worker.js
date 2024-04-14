@@ -83,6 +83,19 @@
             setActiveCharacterId(prevAcid);
         });
     }
+    async function getSingleAttrAsync(prop){
+        var acid=getActiveCharacterId();
+        var prevAcid=null;
+        return new Promise((resolve,reject)=>{
+                prevAcid = setActiveCharacterId(acid);
+                try{
+                    getAttrs([prop], (values) => { resolve(values[prop]); });
+                }
+                catch{ reject(); }
+        }).finally(()=>{
+            setActiveCharacterId(prevAcid);
+        });
+    }
     ///////////////////////// from Chris D.(https://app.roll20.net/users/633707) and Jakob (https://app.roll20.net/users/726129)
     // a version of getSectionIDs that returns the IDs in the order that they are displayed.
 	// getSectionIDs returns in the order the repeating section lines were created. The user has the ability to reorder the lines.
