@@ -23,10 +23,11 @@ The script `node_dice_roller.js` can be used to do some statistical analysis of 
 Example: `node .\node_dice_roller.js "!exr 20#+2 -d 9 -E 10" 4200` which will roll 4200 times the expression `!exr 20#+2 -d 9 -E 10` and display it
 
 ---
-## Assemble the HTML sheet file yourself
+## Assemble the HTML and CSS sheet files yourself
 
 To have UTF8 encoding in powershell console paste this in the console *(for current session)* or in the profile file\
 `$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding`
 
-Then to be sure to have the last version of the HTML file, you can type this command *(i should update the sheet here each time but in case you need it ...)*\
-`node .\node_roll20_character_sheet_assembler.js > .\roll20_character_sheet.html`
+Then to be sure to have the last version of the HTML/CSS file, you can type these commands *(i should update the sheet here each time but in case you need it ...)*\
+HTML: `node .\node_roll20_character_sheet_html_assembler.js > .\roll20_character_sheet.html`\
+CSS: `node .\node_roll20_character_sheet_css_assembler.js > .\roll20_character_sheet.css`
