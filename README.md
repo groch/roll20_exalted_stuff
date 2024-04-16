@@ -17,6 +17,10 @@ So here you can find included :
 - `node_dice_roller.js`: a way to roll on your own computer and do some statistical analysis of the rolls
 
 ---
+## Prerequisites
+
+To use some scripts on your desktop you'll need NodeJS installed.
+
 ## Dice Roller on Desktop & Statistical anaysis
 
 The script `node_dice_roller.js` can be used to do some statistical analysis of some rolls with almost same syntax as the one used in the dice roller.\
