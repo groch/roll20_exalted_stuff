@@ -1938,6 +1938,21 @@
         if (cb) cb();
     }
 
+    function replaceRoll20AttrsAsync(string) {
+        return new Promise((resolve,reject)=>{
+            try  { replaceRoll20Attrs(string,(values)=>{ resolve(values);}); }
+            catch{ reject(); }});
+    }
+
+    async function replaceRoll20Attrs(string, cb) {
+        const val = await getAttrsAsync(attrNAbi);
+        for (const attr_tested of attrNAbi) {
+            const testedAttr = `@{${attr_tested}}`;
+            if (string && string.includes(testedAttr)) string = string.replaceAll(testedAttr, val[attr_tested]);
+        }
+        if (cb) cb(string);
+    }
+
     /* Combat Tab Standard Binds */
     const attrNAbi = [
         'essence',
@@ -2052,6 +2067,7 @@
         computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
     }
 
+    /* "compute" a repeatable roll line and set it to its macro; used in many fx above */
     function computeIdRepeatingRollAsync(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced = false) {
         return new Promise((resolve,reject)=>{
             try  { computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix, setIfReplaced,()=>{ resolve(); }); }
@@ -2090,21 +2106,7 @@
         return ret;
     }
 
-    function replaceRoll20AttrsAsync(string) {
-        return new Promise((resolve,reject)=>{
-            try  { replaceRoll20Attrs(string,(values)=>{ resolve(values);}); }
-            catch{ reject(); }});
-    }
-
-    async function replaceRoll20Attrs(string, cb) {
-        const val = await getAttrsAsync(attrNAbi);
-        for (const attr_tested of attrNAbi) {
-            const testedAttr = `@{${attr_tested}}`;
-            if (string && string.includes(testedAttr)) string = string.replaceAll(testedAttr, val[attr_tested]);
-        }
-        if (cb) cb(string);
-    }
-
+    /* Used in a previous update */
     async function computeAllDamageRolls() {
        TAS.debug('computeAllDamageRolls::computeAllDamageRolls');
 
@@ -2688,7 +2690,10 @@
               baseAttr = sourceAttrSplit[3];
         const finalAttr = `repeating_rolls-widget_${id}_${baseAttr}`;
         if (debug === 2) TAS.debug(`resetAttrOnNeg::resetAttrOnNeg e=${JSON.stringify(e)}`);
-        if (Number(e.newValue) < 0) setAttrs({[finalAttr]: 0});
+        if (Number(e.newValue) < 0) {
+            if (debug === 2) TAS.debug(`resetAttrOnNeg:: RESETING attr=${baseAttr} (full=${finalAttr})`);
+            setAttrs({[finalAttr]: 0});
+        }
         if (debug === 2) TAS.debug(`resetAttrOnNeg:: OUT`);
     }
 
