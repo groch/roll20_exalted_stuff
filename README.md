@@ -3,7 +3,9 @@
 I've started to work on an exalted campain on Roll20 which, for conveniency, i've decided to improve QoL on sheet, and overall
 
 So here you can find included :
-- `node_roll20_character_sheet_assembler.js`: the file used to produce the sheet html
+- `node_roll20_character_sheet_html_assembler.js`: the file used to produce the sheet html
+- `node_roll20_character_sheet_css_assembler.js`: the file used to produce the sheet css
+- `node_roll20_common_include.js`: the file used to produce the sheet css
 - `sheet_worker.js`: the js part of the sheet html called **sheetworker** by Roll20
 - `roll20_character_sheet.html`: the sheet html
 - `roll20_character_sheet.css`: the sheet css
