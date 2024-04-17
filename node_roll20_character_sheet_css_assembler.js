@@ -1828,6 +1828,7 @@ ${[...Array(11).keys()].map(i => i + 5).map(i => /*css*/`.charsheet .wound-penal
 
 .sheet-darkmode .charsheet input[type=number][disabled].rollpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
+.sheet-darkmode .charsheet input[type=number][readonly].woundpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
     background-color: darkred;
 }
@@ -2916,7 +2917,8 @@ ${getTemplateCharmsOptions()},
 
 .charsheet .rolls-area .sheet-rolls-div {
     overflow: auto;
-    padding-right: 2px;
+    /* padding-right: 2px; */
+    scrollbar-width: thin;
 }
 
 .charsheet .rolls-area .rollpad textarea {
@@ -3418,7 +3420,7 @@ ${dicecapArray.slice(4).map(i => /*css*/`.sheet-rolls:has(.${i.excellency}-type-
     display: none;
 }
 
-${dicecapArray.map(i => /*css*/`.charsheet .sheet-rolls-div-widget .excellency-cap-section input.dicecap-type-check[value="${i.dicecap}"]${' '.repeat(13-i.dicecap.length)} ~ div.${i.excellency}-type-excellency`).join(',\n')} {
+${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .excellency-cap-section > div.${i.excellency}-type-excellency`).join(',\n')} {
     display: block;
 }
 
@@ -3427,11 +3429,11 @@ ${dicecapArray.map(i => /*css*/`.charsheet .sheet-rolls-div-widget .excellency-c
 }
 
 /* Warn over cap */
-.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input[name="attr_sign"][value^="-"] ~ input.exc-sum {
+.charsheet .sheet-rolls-div-widget .excellency-cap-section > div input.excellency-cap-sign[value^="-"] ~ input.exc-sum {
     background-color: var(--bs-charm-warning-color-dark);
 }
 
-${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input[name="attr_sign"][value^="-"]) .excellency-box:after`).join(',\n')} {
+${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input.excellency-cap-sign[value^="-"]) .excellency-box:after`).join(',\n')} {
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
 }
@@ -3456,7 +3458,7 @@ ${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.diceca
     transition: opacity 1s ease-in-out;
 }
 
-${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons`).join(',\n')} {
+${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input.excellency-cap-sign[value^="-"]) .sheet-grouped-buttons`).join(',\n')} {
     background: linear-gradient(var(--bs-charm-warning-color), var(--bs-charm-warning-color)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
     box-shadow: var(--bs-default-poffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-warning-color),
                 var(--bs-default-noffsetbig) var(--bs-default-poffsetbig) var(--bs-default-blurbig) var(--bs-charm-warning-color),
@@ -3465,11 +3467,11 @@ ${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.diceca
     transition: box-shadow 0.3s;
 }
 
-${dicecapArray.map(i => /*css*/`.sheet-darkmode .charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons`).join(',\n')} {
+${dicecapArray.map(i => /*css*/`.sheet-darkmode .charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input.excellency-cap-sign[value^="-"]) .sheet-grouped-buttons`).join(',\n')} {
     background: linear-gradient(var(--bs-charm-warning-color-dark), var(--bs-charm-warning-color-dark)) padding-box, linear-gradient(42deg, #ffda12, #C0C0C0,#fdda12) border-box;
 }
 
-${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input[name="attr_sign"][value^="-"]) .sheet-grouped-buttons button`).join(',\n')} {
+${dicecapArray.map(i => /*css*/`.charsheet .dicecap-type-check[value="${i.dicecap}"]${' '.repeat(11-i.dicecap.length)} ~ .flex.main-page .roll-section:has(.${i.excellency}-type-excellency input.excellency-cap-sign[value^="-"]) .sheet-grouped-buttons button`).join(',\n')} {
     cursor: not-allowed;
 }
 
@@ -3592,51 +3594,51 @@ ${sheetCasteTree.OTHER.slice(1, -1).map(i => /*css*/`.charsheet .caste-check[val
     width: 80%;
 }
 
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Zenith"] ~ div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/287863297/KJXoJYat_oCa2WPUJTJx7Q/max.png?1654114629'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Dawn"] ~ div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/289224722/2PTxxCqN9PnIFP-08ji-HA/max.png?1654898555'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Twilight"] ~ div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/289224750/VSxk0-pVumQRb6qKoF326g/max.png?1654898564'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Night"] ~ div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/287863296/-NW0u39GAfwM8nKKKWXXmA/max.png?1654114629'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Eclipse"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/289224731/niPD_rJh1vhKZqa92svF3A/max.png?1654898557'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Casteless"] ~ div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/286517312/wloZbCUcbMz64zExGUq96w/max.png?1653337673'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Changing Moon"] ~ div img.caste-img   { content: url('https://s3.amazonaws.com/files.d20.io/images/289224815/tI6Q_xSvE9VLnjB0PI30Fg/max.png?1654898590'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Full Moon"] ~ div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/289224824/ZDe2d2ovY7UeicCk6tEOvQ/max.png?1654898594'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="No Moon"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/289025253/nUEsxTKOrZBu8AxUXw8f9Q/max.png?1654783243'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Endings"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/297567476/qGNapVpjgvKcY0sjX_4q2A/max.png?1659403697'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Battles"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/297567475/WjcPl0cTNIWFVwlSAJsoDw/max.png?1659403697'); border-radius: 0; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Secrets"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/297567474/lzH22iV-4A29MOdwYEjIXQ/max.png?1659403697'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Serenity"] ~ div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/297567477/1WaIxdJPZXUo3FisSpDqUA/max.png?1659403697'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Journeys"] ~ div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/297567473/lKtXtQG23FvN9qW00gwTAg/max.png?1659403697'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Water"] ~ div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290329797/Xy9MXwjo9o9brGuChOFbpQ/max.png?1655517794'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Earth"] ~ div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290329796/D3dl9vUlnpW6-62YBxOlYA/max.png?1655517794'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Air"] ~ div img.caste-img             { content: url('https://s3.amazonaws.com/files.d20.io/images/290329795/wYZAcE0p3HGpld-My69TLw/max.png?1655517794'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Wood"] ~ div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290329794/2UyfCRr3dIkh5kZNObDbqw/max.png?1655517794'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Fire"] ~ div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290329793/hlr3nMlOBHTIb-v2-2kjtQ/max.png?1655517794'); }
+.charsheet .caste-check[value="Zenith"] ~ .flex.main-page .excellency-cap-section > div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/287863297/KJXoJYat_oCa2WPUJTJx7Q/max.png?1654114629'); }
+.charsheet .caste-check[value="Dawn"] ~ .flex.main-page .excellency-cap-section > div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/289224722/2PTxxCqN9PnIFP-08ji-HA/max.png?1654898555'); }
+.charsheet .caste-check[value="Twilight"] ~ .flex.main-page .excellency-cap-section > div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/289224750/VSxk0-pVumQRb6qKoF326g/max.png?1654898564'); }
+.charsheet .caste-check[value="Night"] ~ .flex.main-page .excellency-cap-section > div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/287863296/-NW0u39GAfwM8nKKKWXXmA/max.png?1654114629'); }
+.charsheet .caste-check[value="Eclipse"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/289224731/niPD_rJh1vhKZqa92svF3A/max.png?1654898557'); }
+.charsheet .caste-check[value="Casteless"] ~ .flex.main-page .excellency-cap-section > div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/286517312/wloZbCUcbMz64zExGUq96w/max.png?1653337673'); }
+.charsheet .caste-check[value="Changing Moon"] ~ .flex.main-page .excellency-cap-section > div img.caste-img   { content: url('https://s3.amazonaws.com/files.d20.io/images/289224815/tI6Q_xSvE9VLnjB0PI30Fg/max.png?1654898590'); }
+.charsheet .caste-check[value="Full Moon"] ~ .flex.main-page .excellency-cap-section > div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/289224824/ZDe2d2ovY7UeicCk6tEOvQ/max.png?1654898594'); }
+.charsheet .caste-check[value="No Moon"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/289025253/nUEsxTKOrZBu8AxUXw8f9Q/max.png?1654783243'); }
+.charsheet .caste-check[value="Endings"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/297567476/qGNapVpjgvKcY0sjX_4q2A/max.png?1659403697'); }
+.charsheet .caste-check[value="Battles"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/297567475/WjcPl0cTNIWFVwlSAJsoDw/max.png?1659403697'); border-radius: 0; }
+.charsheet .caste-check[value="Secrets"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/297567474/lzH22iV-4A29MOdwYEjIXQ/max.png?1659403697'); }
+.charsheet .caste-check[value="Serenity"] ~ .flex.main-page .excellency-cap-section > div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/297567477/1WaIxdJPZXUo3FisSpDqUA/max.png?1659403697'); }
+.charsheet .caste-check[value="Journeys"] ~ .flex.main-page .excellency-cap-section > div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/297567473/lKtXtQG23FvN9qW00gwTAg/max.png?1659403697'); }
+.charsheet .caste-check[value="Water"] ~ .flex.main-page .excellency-cap-section > div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290329797/Xy9MXwjo9o9brGuChOFbpQ/max.png?1655517794'); }
+.charsheet .caste-check[value="Earth"] ~ .flex.main-page .excellency-cap-section > div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290329796/D3dl9vUlnpW6-62YBxOlYA/max.png?1655517794'); }
+.charsheet .caste-check[value="Air"] ~ .flex.main-page .excellency-cap-section > div img.caste-img             { content: url('https://s3.amazonaws.com/files.d20.io/images/290329795/wYZAcE0p3HGpld-My69TLw/max.png?1655517794'); }
+.charsheet .caste-check[value="Wood"] ~ .flex.main-page .excellency-cap-section > div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290329794/2UyfCRr3dIkh5kZNObDbqw/max.png?1655517794'); }
+.charsheet .caste-check[value="Fire"] ~ .flex.main-page .excellency-cap-section > div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290329793/hlr3nMlOBHTIb-v2-2kjtQ/max.png?1655517794'); }
 
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Adamant"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355484/ECiPyO0Uh9HBNru94e2jJQ/max.png?1655534509'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Jade"] ~ div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290355486/76VFhvLhjVCZSQ-KLlsXkw/max.png?1655534509'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Moonsilver"] ~ div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355483/tXC0-EryOTOCP0GplhICCw/max.png?1655534509'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Orichalcum"] ~ div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355485/RTnMnr-wT7MCgK9y09A7QQ/max.png?1655534509'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Soulsteel"] ~ div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/290355487/hG7WKJbWMjZtXnuQdgs0RA/max.png?1655534509'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Starmetal"] ~ div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/290355488/nMrXIRQfzoxosVhL7-vqmw/max.png?1655534509'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Daybreak"] ~ div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/290355493/N4amjrZkvnjLmU99IjHQ5w/max.png?1655534516'); background-color: #8b000080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Day"] ~ div img.caste-img             { content: url('https://s3.amazonaws.com/files.d20.io/images/290355492/AJtOq2-jkbSP4LGG1kEKyA/max.png?1655534516'); background-color: #8b000080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Dusk"] ~ div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290355496/fpMl8yYhjVmWtWNa7ra3pw/max.png?1655534516'); background-color: #8b000080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Midnight"] ~ div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/290355495/Y0LKm5XpoyjGVb9BwZRZ1A/max.png?1655534516'); background-color: #8b000080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Moonshadow"] ~ div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355494/ByEJc864bB1dQkcC5cDFRw/max.png?1655534516'); background-color: #8b000080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Defiler"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355470/xbldGX1-5af-6wrCklSZtg/max.png?1655534499'); background-color: #00640080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Fiend"] ~ div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290355471/O2fhv2kqA7EgLD4MyW717g/max.png?1655534499'); background-color: #00640080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Malefactor"] ~ div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355469/Qzg9YYfn5ie3z3bqhVjuTQ/max.png?1655534499'); background-color: #00640080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Scourge"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355467/Te60NdSOWjf2DE9l6Y3jgg/max.png?1655534499'); background-color: #00640080; }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Slayer"] ~ div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290355468/Yc98p0D9aXwi8trR_3MQbA/max.png?1655534499'); background-color: #00640080; }
+.charsheet .caste-check[value="Adamant"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355484/ECiPyO0Uh9HBNru94e2jJQ/max.png?1655534509'); }
+.charsheet .caste-check[value="Jade"] ~ .flex.main-page .excellency-cap-section > div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290355486/76VFhvLhjVCZSQ-KLlsXkw/max.png?1655534509'); }
+.charsheet .caste-check[value="Moonsilver"] ~ .flex.main-page .excellency-cap-section > div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355483/tXC0-EryOTOCP0GplhICCw/max.png?1655534509'); }
+.charsheet .caste-check[value="Orichalcum"] ~ .flex.main-page .excellency-cap-section > div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355485/RTnMnr-wT7MCgK9y09A7QQ/max.png?1655534509'); }
+.charsheet .caste-check[value="Soulsteel"] ~ .flex.main-page .excellency-cap-section > div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/290355487/hG7WKJbWMjZtXnuQdgs0RA/max.png?1655534509'); }
+.charsheet .caste-check[value="Starmetal"] ~ .flex.main-page .excellency-cap-section > div img.caste-img       { content: url('https://s3.amazonaws.com/files.d20.io/images/290355488/nMrXIRQfzoxosVhL7-vqmw/max.png?1655534509'); }
+.charsheet .caste-check[value="Daybreak"] ~ .flex.main-page .excellency-cap-section > div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/290355493/N4amjrZkvnjLmU99IjHQ5w/max.png?1655534516'); background-color: #8b000080; }
+.charsheet .caste-check[value="Day"] ~ .flex.main-page .excellency-cap-section > div img.caste-img             { content: url('https://s3.amazonaws.com/files.d20.io/images/290355492/AJtOq2-jkbSP4LGG1kEKyA/max.png?1655534516'); background-color: #8b000080; }
+.charsheet .caste-check[value="Dusk"] ~ .flex.main-page .excellency-cap-section > div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290355496/fpMl8yYhjVmWtWNa7ra3pw/max.png?1655534516'); background-color: #8b000080; }
+.charsheet .caste-check[value="Midnight"] ~ .flex.main-page .excellency-cap-section > div img.caste-img        { content: url('https://s3.amazonaws.com/files.d20.io/images/290355495/Y0LKm5XpoyjGVb9BwZRZ1A/max.png?1655534516'); background-color: #8b000080; }
+.charsheet .caste-check[value="Moonshadow"] ~ .flex.main-page .excellency-cap-section > div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355494/ByEJc864bB1dQkcC5cDFRw/max.png?1655534516'); background-color: #8b000080; }
+.charsheet .caste-check[value="Defiler"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355470/xbldGX1-5af-6wrCklSZtg/max.png?1655534499'); background-color: #00640080; }
+.charsheet .caste-check[value="Fiend"] ~ .flex.main-page .excellency-cap-section > div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290355471/O2fhv2kqA7EgLD4MyW717g/max.png?1655534499'); background-color: #00640080; }
+.charsheet .caste-check[value="Malefactor"] ~ .flex.main-page .excellency-cap-section > div img.caste-img      { content: url('https://s3.amazonaws.com/files.d20.io/images/290355469/Qzg9YYfn5ie3z3bqhVjuTQ/max.png?1655534499'); background-color: #00640080; }
+.charsheet .caste-check[value="Scourge"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290355467/Te60NdSOWjf2DE9l6Y3jgg/max.png?1655534499'); background-color: #00640080; }
+.charsheet .caste-check[value="Slayer"] ~ .flex.main-page .excellency-cap-section > div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290355468/Yc98p0D9aXwi8trR_3MQbA/max.png?1655534499'); background-color: #00640080; }
 
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Blood"] ~ div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Breath"] ~ div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Flesh"] ~ div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Marrow"] ~ div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Soil"] ~ div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Blood"] ~ .flex.main-page .excellency-cap-section > div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Breath"] ~ .flex.main-page .excellency-cap-section > div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Flesh"] ~ .flex.main-page .excellency-cap-section > div img.caste-img           { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Marrow"] ~ .flex.main-page .excellency-cap-section > div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Soil"] ~ .flex.main-page .excellency-cap-section > div img.caste-img            { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
 
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Exigent"] ~ div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
-.excellency-cap-section > input.sheet-rolls-caste-val[value="Custom"] ~ div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Exigent"] ~ .flex.main-page .excellency-cap-section > div img.caste-img         { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
+.charsheet .caste-check[value="Custom"] ~ .flex.main-page .excellency-cap-section > div img.caste-img          { content: url('https://s3.amazonaws.com/files.d20.io/images/290361592/-rdnufdzliozAjQTWsnSGA/max.png?1655540279'); }
 
 
 

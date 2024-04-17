@@ -1,4 +1,4 @@
-    const version = 2.66, debug = 1;
+    const version = 2.67, debug = 1;
     var TAS;
 
     /**
@@ -691,6 +691,7 @@
         {version: 2.63, fn: upgradeto264},
         {version: 2.64, fn: upgradeto265},
         {version: 2.65, fn: upgradeto266},
+        {version: 2.66, fn: upgradeto267},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -892,6 +893,11 @@
                 return exaltTypeName;
         }
         return 'None';
+    }
+
+    async function upgradeto267() {
+        await updateAllRollWidgets();
+        setAttrs({'version': 2.67});
     }
 
     async function upgradeto266() {
@@ -2582,7 +2588,10 @@
         if (debug === 2) TAS.debug(`CLICK reset-roll-cap !!! e=${JSON.stringify(e)}`);
         const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
         const finalObj = {}, attrArray = [
-            ...resetOnNegAttrs.slice(0, -1),
+            'reprolls-ycharm-dices',
+            'reprolls-ycharm-paid-dices',
+            'reprolls-ycharm-successes',
+            'reprolls-ycharm-paid-successes',
             'reprolls-attr-lunar-exc',
             'reprolls-attr-puppeteer-exc',
             'reprolls-uphold-ideal',
@@ -2593,108 +2602,199 @@
 
         if (debug === 2) TAS.debug(`clickResetDiceCap:: RESETTING:`, finalObj);
         setAttrs(finalObj);
-        await updateRollWidgetForCostAsync(e);
+        await updateRollWidgetAsync(e);
     }));
 
     /* ***************** */
     /* * Rolls Widgets * */
     /* ***************** */
 
-    /* COST */
-    const widgetCostAttrs = [
+    const widgetAttrs = [
         'rep-cost-mote-offset',
-        'reprolls-willpower-toggle',
+        'reprolls-attr',
+        'reprolls-abi',
+        'reprolls-stunt-dices',
+        'reprolls-specialty',
         'reprolls-ycharm-dices',
-        'reprolls-ycharm-successes',
-        'reprolls-pool-starting',
-        // added to trigger taint
         'reprolls-ycharm-paid-dices',
+        'reprolls-ncharm-dices',
+        'reprolls-willpower-toggle',
+        'reprolls-ycharm-successes',
         'reprolls-ycharm-paid-successes',
+        'reprolls-ncharm-successes',
+        'reprolls-pool-starting',
         'reprolls-attr-lunar-exc',
         'reprolls-anima-flare',
+        'reprolls-inside-city',
+        'reprolls-attr-puppeteer-exc',
+        'reprolls-anima-sovereign',
+        'reprolls-uphold-ideal',
+        'reprolls-intimacy-hearteater',
+    ], widgetBaseAttrs = [
+        'rollpenalty-input',
+        'wound-penalty',
+        'essence',
+        'limit'
     ];
 
-    for (const attr of widgetCostAttrs) {
-        on(`change:repeating_rolls-widget:${attr}`, updateRollWidgetForCost);
+    for (const attr of widgetAttrs) {
+        on(`change:repeating_rolls-widget:${attr}`, updateRollWidget);
     };
+    on(`change:rollpenalty-input`, updateAllRollWidgets);
+    on(`change:wound-penalty`, updateAllRollWidgets);
 
-    function updateRollWidgetForCostAsync(e) {
+    function updateRollWidgetAsync(e) {
         return new Promise((resolve,reject)=>{
-            try  { updateRollWidgetForCost(e,()=>{ resolve(); });}
+            try  { updateRollWidget(e,()=>{ resolve(); });}
             catch{ reject(); }});
     }
-    async function updateRollWidgetForCost(e, cb) {
-        if (debug === 2) TAS.debug('updateWidgetRollForCost::updateWidgetRollForCost e=', JSON.stringify(e));
+    async function updateRollWidget(e, cb) {
+        if (debug === 2) TAS.debug('updateRollWidget::updateRollWidget e=', JSON.stringify(e));
 
         const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
-        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: attr_name=${attr_name}`);
+        if (debug === 2) TAS.debug(`updateRollWidget:: attr_name=${attr_name}`);
 
-        if (e.sourceType === "sheetworker") {
-            if (debug === 2) TAS.debug('updateWidgetRollForCost:: SHEETWORKER TRIGGER ?!?!?!?');
+        if (e.sourceType === "sheetworker") { // && !['wound-penalty','rollpenalty-input'].includes(e.triggerName)
+            if (debug === 2) TAS.debug('updateRollWidget:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
 
-        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: CALL getAttrsAsync(COST ATTRS)`);
-        const val = await getAttrsAsync(widgetCostAttrs.map(attr => attr_name + attr));
-        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
+        if (debug === 2) TAS.debug(`updateRollWidget:: CALL getAttrsAsync(COST ATTRS)`);
+        const val = await getAttrsAsync([...widgetAttrs.map(attr => attr_name + attr), ...widgetBaseAttrs]);
+        if (debug === 2) TAS.debug(`updateRollWidget:: getAttrsAsync(COST ATTRS) val=`,val);
+        await reduceAttrs(val);
+        if (debug === 2) TAS.debug(`updateRollWidget:: getAttrsAsync(COST ATTRS) val=`,val);
         const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
+              attr = Number(val[attr_name + 'reprolls-attr']),
+              abi = Number(val[attr_name + 'reprolls-abi']),
               will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
-              starting = Number(val[attr_name + 'reprolls-pool-starting']);
+              starting = Number(val[attr_name + 'reprolls-pool-starting']),
+              stunt = Number(val[attr_name + 'reprolls-stunt-dices']),
+              spe = Number(val[attr_name + 'reprolls-specialty']),
+              nDices = Number(val[attr_name + 'reprolls-ncharm-dices']),
+              rollPen = Number(val['rollpenalty-input']),
+              woundPen = Number(val['wound-penalty']);
         let moteDices = Number(val[attr_name + 'reprolls-ycharm-dices']),
-            moteSuccs = Number(val[attr_name + 'reprolls-ycharm-successes']),
+            paidD = Number(val[attr_name + 'reprolls-ycharm-paid-dices']),
+            moteSuccs = Number(val[attr_name + 'reprolls-ycharm-successes'])
+            paidS = Number(val[attr_name + 'reprolls-ycharm-paid-successes']),
+            nSucc = Number(val[attr_name + 'reprolls-ncharm-successes']),
             finalMacro = '=COST:@{character_id}',
             finalObj = {};
-        if (moteDices < 0) {
-            moteDices = 0;
-            finalObj = {...finalObj, [attr_name + 'reprolls-ycharm-dices']: 0};
-        }
-        if (moteSuccs < 0) {
-            moteSuccs = 0;
-            finalObj = {...finalObj, [attr_name + 'reprolls-ycharm-successes']: 0};
-        }
-        let moteCost = moteOffset + moteDices + moteSuccs * 2;
-        if (moteCost < 0) moteCost = 0;
+
+        moteDices = resetIfNeg(moteDices, finalObj, attr_name + 'reprolls-ycharm-dices');
+        paidD = resetIfNeg(paidD, finalObj, attr_name + 'reprolls-ycharm-paid-dices');
+        moteSuccs = resetIfNeg(moteSuccs, finalObj, attr_name + 'reprolls-ycharm-successes');
+        paidS = resetIfNeg(paidS, finalObj, attr_name + 'reprolls-ycharm-paid-successes');
+        nSucc = resetIfNeg(nSucc, finalObj, attr_name + 'reprolls-ncharm-successes');
+
+        let moteCost = Math.abs(moteOffset + moteDices + moteSuccs * 2);
         if (moteCost) finalMacro += `:peri=${starting};${moteCost}`;
         if (will) finalMacro += `:will;${will}`;
-        TAS.debug(`updateWidgetRollForCost:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro}`);
+
+        if (debug === 2) TAS.debug(`updateRollWidget:: setting attr=${attr}+abi=${abi}+stunt=${stunt}+spe=${spe}+dices=${moteDices}+paidD=${paidD}+nDices=${nDices}-rollPen=${rollPen}-woundPen=${woundPen}`);
+        const totalDices = Math.max(0, attr+abi+stunt+spe+moteDices+paidD+nDices-rollPen-woundPen);
+        if (debug === 2) TAS.debug(`updateRollWidget:: setting totalDices=${totalDices}`);
+
+        if (debug === 2) TAS.debug(`updateRollWidget:: setting will=${will}+succ=${moteSuccs}+paidD=${paidS}+nSucc=${nSucc}`);
+        const totalSucc = will+moteSuccs+paidS+nSucc;
+        if (debug === 2) TAS.debug(`updateRollWidget:: setting totalSucc=${totalSucc}`);
+
+        if (debug === 2) TAS.debug(`updateRollWidget:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro} TOTAL=${moteCost}`);
         finalObj = {
             ...finalObj,
+            [attr_name+'roll-penalty']: rollPen,
+            [attr_name+'woundpenalty2']: woundPen,
             [attr_name+'rep-cost-macro']: finalMacro,
-            [attr_name+'rep-cost-total-taint']: moteCost >= 5 ? starting : 0
+            [attr_name+'rep-cost-total-taint']: moteCost >= 5 ? starting : 0,
+            [attr_name+'rep-cost-total']: moteCost,
+            [attr_name+'reprolls-dice-total-calc']: totalDices,
+            [attr_name+'reprolls-successes-total-calc']: totalSucc,
         };
-        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: setting:${JSON.stringify(finalObj)}`);
+        setExcellencyCaps(val, attr_name, moteDices + paidD + 2*(moteSuccs + paidS), finalObj);
+        if (debug === 2) TAS.debug(`updateRollWidget:: setting:`,finalObj);
         if (cb) {
             await setAttrsAsync(finalObj);
             cb();
         } else {
             setAttrs(finalObj);
         }
-        if (debug === 2) TAS.debug(`updateWidgetRollForCost:: OUT`);
+        if (debug === 2) TAS.debug(`updateRollWidget:: OUT`);
     }
 
-    /**
-     * Reset negative value that doesnt have sense
-     */
-    const resetOnNegAttrs = [
-        'reprolls-ycharm-dices',
-        'reprolls-ycharm-paid-dices',
-        'reprolls-ycharm-successes',
-        'reprolls-ycharm-paid-successes',
-        'reprolls-ncharm-successes'
-    ];
-    resetOnNegAttrs.forEach(attr => on(`change:repeating_rolls-widget:${attr}`, resetAttrOnNeg));
-    function resetAttrOnNeg(e) {
-        if (e.sourceType !== "player") return;
-        const sourceAttrSplit = e.sourceAttribute.split('_'),
-              id = sourceAttrSplit[2],
-              baseAttr = sourceAttrSplit[3];
-        const finalAttr = `repeating_rolls-widget_${id}_${baseAttr}`;
-        if (debug === 2) TAS.debug(`resetAttrOnNeg::resetAttrOnNeg e=${JSON.stringify(e)}`);
-        if (Number(e.newValue) < 0) {
-            if (debug === 2) TAS.debug(`resetAttrOnNeg:: RESETING attr=${baseAttr} (full=${finalAttr})`);
-            setAttrs({[finalAttr]: 0});
+    function setExcellencyCaps(val, attr_name, totalMotePaid, finalObj) {
+        const config = {
+            'solar': (o) => (Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-abi'])),
+            'lunar': (o) => (Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-attr-lunar-exc'])),
+            'db': (o) => (Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-specialty'])),
+            'liminal': (o) => (Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-anima-flare'])),
+            'sidereal': (o) => (Math.min(5, Math.max(3, Number(o['essence'])))),
+            'architect': (o) => (Math.min(10, Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-inside-city']))),
+            'puppeteer': (o) => (Number(o[attr_name + 'reprolls-attr-puppeteer-exc'])+Number(o[attr_name + 'reprolls-specialty'])),
+            'sovereign': (o) => (4+Number(o[attr_name + 'reprolls-anima-sovereign'])),
+            'dreamsouled': (o) => (Math.min(10, Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-uphold-ideal']))),
+            'hearteater': (o) => (Number(o[attr_name + 'reprolls-attr'])+1+Number(o[attr_name + 'reprolls-intimacy-hearteater'])),
+            'umbral': (o) => (Math.min(10, Number(o[attr_name + 'reprolls-attr'])+Number(o['limit']))),
         }
-        if (debug === 2) TAS.debug(`resetAttrOnNeg:: OUT`);
+        for (const [key, fx] of Object.entries(config)) {
+            const total = fx(val), diff = total - totalMotePaid;
+            if (debug === 2) TAS.debug(`setExcellencyCaps:: key(${key}) total=${total} diff=${diff}`);
+            Object.assign(finalObj, {
+                [attr_name+`reprolls-exc-${key}-sum-calc`]: totalMotePaid,
+                [attr_name+`reprolls-exc-${key}-total-calc`]: total,
+                [attr_name+`reprolls-exc-${key}-diff-sign-calc`]: diff
+            })
+        }
+    }
+
+    function resetIfNeg(tested, finalObj, attr) {
+        if (tested < 0) {
+            if (debug === 2) TAS.debug(`reduceAttr:: Reset Attr ${ret[1]}`);
+            Object.assign(finalObj, {[attr]: 0});
+            return 0;
+        }
+        return tested;
+    }
+
+    async function reduceAttrs(val) {
+        let newGetArray = [], newGetKeysToReplace = [], matchRet;
+        for (const [key, value] of Object.entries(val)) {
+            if (value === undefined) {
+                if (debug === 2) TAS.debug(`reduceAttrs:: UNDEFINED KEY=${key} use 0`);
+                val[key] = 0;
+            } else if (typeof value === 'string' && (matchRet = value.match(/^@\{(.+)\}/))) {
+                if (!newGetArray.includes(matchRet[1])) {
+                    if (debug === 2) TAS.debug(`reduceAttrs:: found an attr to replace:${matchRet[1]} key=${key}`);
+                    newGetArray.push(matchRet[1]);
+                }
+                newGetKeysToReplace.push(key);
+            } else if (typeof value === 'string' && (matchRet = value.match(/^(\d+)/))) {
+                val[key] = matchRet[1];
+            }
+        }
+        if (debug === 2) TAS.debug(`reduceAttrs:: newGetArray=${JSON.stringify(newGetArray)} newGetKeysToReplace=${JSON.stringify(newGetKeysToReplace)}`);
+        const val2 = await getAttrsAsync(newGetArray);
+        Object.assign(val, val2);
+        if (debug === 2) TAS.debug(`reduceAttrs:: val2=${JSON.stringify(val2)}`);
+        for (const key of newGetKeysToReplace) {
+            if ((matchRet = val[key].match(/^@\{(.+)\}/))) {
+                if (Object.keys(val2).includes(matchRet[1])) {
+                    val[key] = val2[matchRet[1]];
+                } else {
+                    if (debug === 2) TAS.debug(`reduceAttrs:: WTF 2 ??? !!! use 0 key=${key}`);
+                    val[key] = 0;
+                }
+            } else {
+                if (debug === 2) TAS.debug(`reduceAttrs:: WTF ??? use 0 key=${key}`);
+                val[key] = 0;
+            }
+        }
+    }
+
+    async function updateAllRollWidgets() {
+        const widgetIds = await getSectionIDsAsync('rolls-widget');
+        for (const id of widgetIds)
+            updateRollWidget({sourceType:"me",sourceAttribute:`repeating_rolls-widget_${id}_DOIT`});
     }
 
     /**
@@ -2708,7 +2808,7 @@
         const id = e.sourceAttribute.split('_')[2];
         const buttonClicked = e.sourceAttribute.split('_')[3];
         const attr_name = `repeating_rolls-widget_${id}_`;
-        await updateRollWidgetForCostAsync(e);
+        await updateRollWidgetAsync(e);
         await computeIdRepeatingRollAsync('rolls-widget', id, 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
         const values = await getAttrsAsync([`${attr_name}reprolls-final-macro-replaced`, `${attr_name}rep-cost-macro`]);
         let queryRoll = buttonClicked === 'roll-widget-cast' ?
@@ -2726,7 +2826,7 @@
 
     //backup for companion
     on(`change:repeating_rolls-widget:reprolls-toggle-desc`, setDebugWrapper((e) => {
-        updateRollWidgetForCost(e);
+        updateRollWidget(e);
         computeIdRepeatingRoll('rolls-widget', e.sourceAttribute.split('_')[2], 'reprolls-', rollWidgetSectionsToBind, defaultRollWidgetFinalExpr, '', false);
     }));
 

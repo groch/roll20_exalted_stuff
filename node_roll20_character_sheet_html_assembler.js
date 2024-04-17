@@ -1645,8 +1645,7 @@ outHtml += /*html*/`
                                                         </span>
                                                         <span class="rounded-box grow-normal inline-flex mote-total" title="Total Cost as Atome of Essence">
                                                             <input type="hidden" name="attr_rep-cost-total-taint" class="sheet-cost-mote-total-taint">
-                                                            <input type="hidden" name="attr_rep-cost-total-base" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})" disabled data-formula="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-successes}*2+@{rep-cost-mote-offset})">
-                                                            =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal mote-hint" value="(((@{rep-cost-total-base}) + abs(@{rep-cost-total-base})) / 2)" disabled data-formula="(((@{rep-cost-total-base}) + abs(@{rep-cost-total-base})) / 2)">
+                                                            =<input type="number" name="attr_rep-cost-total" class="sheet-cost-mote sheet-cost-mote-total grow-normal mote-hint" readonly>
                                                         </span>
                                                     </span>
                                                 </p>
@@ -1683,7 +1682,7 @@ outHtml += /*html*/`
                                                         <div class="inline-flex grow-normal">
                                                             <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll${TITLE_BR}Doesn't cost motes of Essence" value="0" placeholder="0">-
                                                             <label for="rollpen-input-widget"><span name="attr_roll-penalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." class="rollpenalty not-inverted"></span></label>-
-                                                            <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty not-inverted" data-formula="@{wound-penalty}">
+                                                            <input type="number" name="attr_woundpenalty2" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." class="woundpenalty not-inverted" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1692,8 +1691,7 @@ outHtml += /*html*/`
                                                         <input type="checkbox" name="attr_reprolls-separator-mode" class="sheet-rolls-separator-hidden-checkbox" title="Toggle Separator Mode" value="1">
                                                         <span class="sheet-spelleffect" title="Toggle"></span>
                                                     </span>
-                                                    <input type="hidden" name="attr_reprolls-dice-total-calc-base" value="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})" disabled data-formula="(@{reprolls-attr}+@{reprolls-abi}+@{reprolls-stunt-dices}+@{reprolls-specialty}+@{reprolls-ycharm-dices}+@{reprolls-ncharm-dices}-@{roll-penalty}-@{wound-penalty})">
-                                                    =<input type="number" name="attr_reprolls-dice-total-calc" class="dice-total" value="(((@{reprolls-dice-total-calc-base}) + abs(@{reprolls-dice-total-calc-base})) / 2)" disabled data-formula="(((@{reprolls-dice-total-calc-base}) + abs(@{reprolls-dice-total-calc-base})) / 2)">D
+                                                    =<input type="number" name="attr_reprolls-dice-total-calc" class="dice-total" readonly>D
                                                 </div>
                                             </div>
                                             <div class="flex grow-normal success-area">
@@ -1713,7 +1711,7 @@ outHtml += /*html*/`
                                                     </div>
                                                 </div>
                                                 <div class="flex success-area-total">
-                                                    =<input type="number" name="attr_reprolls-successes-total-calc" class="success-total" value="(@{reprolls-willpower-toggle}+@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes}+@{reprolls-ncharm-successes})" disabled data-formula="(@{reprolls-willpower-toggle}+@{reprolls-ycharm-successes}+@{reprolls-ncharm-successes})">S
+                                                    =<input type="number" name="attr_reprolls-successes-total-calc" class="success-total" readonly>S
                                                 </div>
                                             </div>
                                             <div class="flex grow-normal">
@@ -1729,18 +1727,18 @@ outHtml += /*html*/`
                                             </div>
                                         </div>`;
 
-function getExcellencyCap(p, sectionName, totalExpr, totalTitleEnd, appendTopFx, appendBeforeTotalFx) {
+function getExcellencyCap(p, sectionName, totalTitleEnd, appendTopFx, appendBeforeTotalFx) {
     let ret = `<div class="${sectionName}-type-excellency">\n`;
     ret += `${pad(p+4)}<button type="action" name="act_reset-roll-cap" class="stealth-btn" title="Reset Dice and Successes invested in Dice Cap"><img class="caste-img"></button>\n`;
     ret += `${pad(p+4)}CAP\n`;
     if (appendTopFx)
         ret += `${pad(p+4)}${appendTopFx(p+4)}\n`;
-    ret += /*html*/`${pad(p+4)}<input type="hidden" name="attr_sign" value="(@{reprolls-exc-${sectionName}-total-calc} - @{reprolls-exc-${sectionName}-sum-calc})" disabled>
-${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" value="(@{reprolls-ycharm-dices}+@{reprolls-ycharm-paid-dices}+(@{reprolls-ycharm-successes}+@{reprolls-ycharm-paid-successes})*2)" disabled title="Actual use of Excellency Cap" tabindex="-1">
+    ret += /*html*/`${pad(p+4)}<input type="hidden" name="attr_reprolls-exc-${sectionName}-diff-sign-calc" class="excellency-cap-sign" readonly>
+${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-sum-calc" class="exc-sum" title="Actual use of Excellency Cap" readonly tabindex="-1">
 ${pad(p+4)}<hr />\n`;
     if (appendBeforeTotalFx)
         ret += `${pad(p+4)}${appendBeforeTotalFx(p+4)}\n`;
-    ret += /*html*/`${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" value="${totalExpr}" disabled title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}" tabindex="-1">\n`;
+    ret += /*html*/`${pad(p+4)}<input type="number" name="attr_reprolls-exc-${sectionName}-total-calc" class="exc-total" readonly title="Total limit of Excellency Cap${TITLE_BR}${totalTitleEnd}" tabindex="-1">\n`;
     ret += `${pad(p)}</div>`;
     return ret;
 }
@@ -1767,19 +1765,17 @@ const getSiderealEnd = () => /*html*/`<input type="hidden" name="attr_reprolls-e
 
 outHtml += /*html*/`
                                         <div class="excellency-cap-section" title="Limit Detail for the Excellency">
-                                            <input type="hidden" name="attr_reprolls-caste" class="sheet-rolls-caste-val" disabled value="@{caste}">
-                                            <input type="hidden" name="attr_reprolls-dicecap-type" class="dicecap-type-check" disabled value="@{dicecap-type}">
-                                            ${getExcellencyCap(44, 'solar', '(@{reprolls-attr}+@{reprolls-abi})', 'Solar=>ATTR+ABI')}
-                                            ${getExcellencyCap(44, 'lunar', '(@{reprolls-attr}+@{reprolls-attr-lunar-exc})', 'Lunar=>ATTR, +ATTR2 if Stunted accordingly', getLunarTop)}
-                                            ${getExcellencyCap(44, 'db', '(@{reprolls-abi}+@{reprolls-specialty})', 'DB=>ABI+SPE')}
-                                            ${getExcellencyCap(44, 'liminal', '(@{reprolls-abi}+@{reprolls-anima-flare})', 'Liminal=>ABI, +ESSENCE if Anima Flare', getLiminalTop)}
-                                            ${getExcellencyCap(44, 'sidereal', `${getAutoCalcMin('@{reprolls-exc-sidereal-total-calc-max}', 5)}`, 'Sidereal=> Based on ESSENCE, min 3, max 5', undefined, getSiderealEnd)}
-                                            ${getExcellencyCap(44, 'architect', `${getAutoCalcMin('(@{reprolls-attr}+@{reprolls-inside-city})', 10)}`, 'Architect=>ATTR, +ESSENCE if Inside a City', getArchitectTop)}
-                                            ${getExcellencyCap(44, 'puppeteer', '(@{reprolls-attr-puppeteer-exc}+@{reprolls-specialty})', 'Puppeteer=>[Dex, Manip, Wits](depending on action type)+SPE', getPuppeteerTop)}
-                                            ${getExcellencyCap(44, 'sovereign', '(4+@{reprolls-anima-sovereign})', 'Sovereign=> 4, +ANIMA Level', getSovereignTop)}
-                                            ${getExcellencyCap(44, 'dreamsouled', `${getAutoCalcMin('(@{reprolls-abi}+@{reprolls-uphold-ideal})', 10)}`, 'Dream-Souled=>ABI, +ESSENCE if Uphold their Ideal', getDreamSouledTop)}
-                                            ${getExcellencyCap(44, 'hearteater', '(@{reprolls-attr}+1+@{reprolls-intimacy-hearteater})', 'Hearteater=>ATTR+1, +INTIMACY Level', getHearteaterTop)}
-                                            ${getExcellencyCap(44, 'umbral', `${getAutoCalcMin('(@{reprolls-attr}+@{limit})', 10)}`, 'Umbral=>ATTR+PENUMBRA(Limit)')}
+                                            ${getExcellencyCap(44, 'solar', 'Solar=>ATTR+ABI')}
+                                            ${getExcellencyCap(44, 'lunar', 'Lunar=>ATTR, +ATTR2 if Stunted accordingly', getLunarTop)}
+                                            ${getExcellencyCap(44, 'db', 'DB=>ABI+SPE')}
+                                            ${getExcellencyCap(44, 'liminal', 'Liminal=>ABI, +ESSENCE if Anima Flare', getLiminalTop)}
+                                            ${getExcellencyCap(44, 'sidereal', 'Sidereal=> Based on ESSENCE, min 3, max 5')}
+                                            ${getExcellencyCap(44, 'architect', 'Architect=>ATTR, +ESSENCE if Inside a City', getArchitectTop)}
+                                            ${getExcellencyCap(44, 'puppeteer', 'Puppeteer=>[Dex, Manip, Wits](depending on action type)+SPE', getPuppeteerTop)}
+                                            ${getExcellencyCap(44, 'sovereign', 'Sovereign=> 4, +ANIMA Level', getSovereignTop)}
+                                            ${getExcellencyCap(44, 'dreamsouled', 'Dream-Souled=>ABI, +ESSENCE if Uphold their Ideal', getDreamSouledTop)}
+                                            ${getExcellencyCap(44, 'hearteater', 'Hearteater=>ATTR+1, +INTIMACY Level', getHearteaterTop)}
+                                            ${getExcellencyCap(44, 'umbral', 'Umbral=>ATTR+PENUMBRA(Limit)')}
                                         </div>
                                     </div>
                                 </div>
