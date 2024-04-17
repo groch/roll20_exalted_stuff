@@ -19,7 +19,8 @@ So here you can find included :
 ---
 ## Prerequisites
 
-To use some scripts on your desktop you'll need NodeJS installed.
+To use some scripts on your desktop you'll need NodeJS installed.\
+For practical use, i prefixed these scripts with `node_`
 
 ## Dice Roller on Desktop & Statistical anaysis
 
@@ -29,9 +30,10 @@ Example: `node .\node_dice_roller.js "!exr 20#+2 -d 9 -E 10" 4200` which will ro
 ---
 ## Assemble the HTML and CSS sheet files yourself
 
-To have UTF8 encoding in powershell console paste this in the console *(for current session)* or in the profile file\
-`$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding`
-
 Then to be sure to have the last version of the HTML/CSS file, you can type these commands *(i should update the sheet here each time but in case you need it ...)*\
 HTML: `node .\node_roll20_character_sheet_html_assembler.js > .\roll20_character_sheet.html`\
 CSS: `node .\node_roll20_character_sheet_css_assembler.js > .\roll20_character_sheet.css`
+
+### Windows specifics
+To have UTF8 encoding in Windows PowerShell console paste this in the console *(for current session)* or in the profile file\
+`$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding`
