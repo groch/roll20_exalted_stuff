@@ -1349,7 +1349,6 @@ ${pad(p)}        <div class="reminder-charms-main-div">
 ${pad(p)}            <input type="hidden" name="attr_charm_sheet" class="reminder-charm-selector-input" />
 ${pad(p)}            <fieldset class="repeating_charms-all" style="display: none;">
 ${pad(p)}                <input type="hidden" name="attr_isEvoc" class="sheet-tab-charms-inside-check">
-${pad(p)}                <input type="hidden" name="attr_charm-name" class="sheet-tab-charms-name-check">
 ${pad(p)}                <input type="hidden" name="attr_charm-aspect">
 ${pad(p)}                <input type="hidden" name="attr_charm-balanced">
 ${pad(p)}                <div class="db-aspect-quickshow">
@@ -1359,7 +1358,7 @@ ${pad(p)}                    <img class="aspect" />
 ${pad(p)}                    <img class="balanced" src="https://s3.amazonaws.com/files.d20.io/images/290329500/ecMmiM8rUcJ-ziYHX9d18w/max.png?1655517656" title="Balanced"/>
 ${pad(p)}                </div>
 ${pad(p)}                <input type="hidden" name="attr_charm-learnt" class="charm-learnt-check" value="1">
-${pad(p)}                <input type="text" name="attr_charm-name" readonly tabindex="-1">
+${pad(p)}                <input type="text" name="attr_charm-name" class="sheet-tab-charms-name-check" readonly tabindex="-1">
 ${pad(p)}                <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
 ${pad(p)}                <input type="hidden" name="attr_rep-cost-macro">
 ${pad(p)}                <input type="hidden" name="attr_charm-skill" class="sheet-tab-charms-inside-check">
