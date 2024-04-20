@@ -516,7 +516,7 @@ function getMotesBlock(p) {
 ${pad(p)}    <span>${spanLabel}<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:${costPool},setTo:@{character_id}">+</button></span>
 ${pad(p)}    <span><!-- Remove readonly & after in the next line to have manual mote edition -->
 ${pad(p)}        <input type="number" name="attr_${baseAttr}-essence" title="@{${baseAttr}-essence}" readonly tabindex="-1"> /
-${pad(p)}        <input type="number" name="attr_${baseAttr}-essence_max" value="@{${baseAttr}-equation}" disabled="disabled" data-formula="@{${baseAttr}-equation}" title="@{${baseAttr}-essence_max}"> C:
+${pad(p)}        <input type="number" name="attr_${baseAttr}-essence_max" title="@{${baseAttr}-essence_max}" readonly tabindex="-1"> C:
 ${pad(p)}        <input type="number" name="attr_${commitedAttr}" title="@{${commitedAttr}}${TITLE_BR}${spanLabel} Commited" class="free-commit"><input type="number" name="attr_${commitedAttr}" title="@{${commitedAttr}}${TITLE_BR}${spanLabel} Commited" class="commit-system" readonly tabindex="-1">
 ${pad(p)}    </span>
 ${pad(p)}</div>`;
@@ -1252,7 +1252,7 @@ ${pad(p)}    <input type="hidden" name="attr_personal-equation" class="personal-
 ${pad(p)}    <input type="hidden" name="attr_peripheral-equation" class="peripheral-mote-val">
 ${pad(p)}    <div class="flex grow-max personal-mote-toggle">
 ${pad(p)}        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
-${pad(p)}            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" value="@{personal-equation}" disabled="disabled" data-formula="@{personal-equation}" title="@{personal-essence_max}">
+${pad(p)}            Personal:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:1,setTo:@{character_id}">+</button><input type="number" name="attr_personal-essence" class="grow-normal" readonly tabindex="-1" title="@{personal-essence}">/<input type="number" name="attr_personal-essence_max" title="@{personal-essence_max}" readonly tabindex="-1">
 ${pad(p)}        </p>
 ${pad(p)}        <p class="commited-mote-color rounded-box flex personal-mote-toggle" title="Personal motes Commited">
 ${pad(p)}            <label>Com.:<input type="number" name="attr_committedessperso" class="grow-normal free-commit"><input type="number" name="attr_committedessperso" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedessperso}${TITLE_BR}Personal Commited"></label>
@@ -1260,7 +1260,7 @@ ${pad(p)}        </p>
 ${pad(p)}    </div>
 ${pad(p)}    <div class="flex grow-max peripheral-mote-toggle">
 ${pad(p)}        <p class="mote-color rounded-box grow-normal flex"><!-- Remove readonly & after in the next line to have manual mote edition -->
-${pad(p)}            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" value="@{peripheral-equation}" disabled="disabled" data-formula="@{peripheral-equation}" title="@{peripheral-essence_max}">
+${pad(p)}            Peripheral:<button type="roll" class="btn gm-only add-mote" value="!cmaster --moteAdd,qty:?{How many ?|5},perso:0,setTo:@{character_id}">+</button><input type="number" name="attr_peripheral-essence" class="grow-normal" readonly tabindex="-1" title="@{peripheral-essence}">/<input type="number" name="attr_peripheral-essence_max" title="@{peripheral-essence_max}" readonly tabindex="-1">
 ${pad(p)}        </p>
 ${pad(p)}        <p class="commited-mote-color rounded-box" title="Peripheral motes Commited">
 ${pad(p)}            <label>Com.:<input type="number" name="attr_committedesstotal" class="grow-normal free-commit"><input type="number" name="attr_committedesstotal" class="grow-normal commit-system" readonly tabindex="-1" title="@{committedesstotal}${TITLE_BR}Peripheral Commited"></label>

@@ -1310,7 +1310,7 @@
     }
 
     async function upgradeto235() {
-        const caste = await getSingleAttrAsync("personal-equation") || 'Unknown',
+        const caste = await getSingleAttrAsync("caste") || 'Unknown',
               charmObj = {}
 
         if (hasCasteImg(caste))
@@ -1324,7 +1324,7 @@
     }
 
     async function upgradeto233() {
-        const caste = await getSingleAttrAsync("personal-equation") || 'Unknown',
+        const caste = await getSingleAttrAsync("caste") || 'Unknown',
               charmObj = {};
 
         addGenericCharmsToObj(caste, charmObj, true);
@@ -1838,7 +1838,7 @@
     const charmRepeatableSectionArray = ['charms-all'];
     const charmRollExprRegexp = /^!exr (?:(?:\d+|\(.+\))#|-set)/;
     [...charmRepeatableSectionArray, 'spells'].forEach(section => {
-        on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function clickGMCharmCast(e) {
+        on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function changeCharmRollExpr(e) {
             if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=`, e);
             const attr_name = `repeating_${section}_${e.sourceAttribute.split('_')[2]}_charm-buttons-isextended`;
             let test = e.newValue ? e.newValue.match(charmRollExprRegexp) : false;
@@ -2831,7 +2831,7 @@
     }));
 
     charmRepeatableSectionArray.forEach(section => {
-        on(`clicked:repeating_${section}:learn-charm`, TAS._fn(async function clickGMCharmCast(e) {
+        on(`clicked:repeating_${section}:learn-charm`, TAS._fn(async function learnCharm(e) {
             if (debug === 2) TAS.debug(`CLICKED "LEARN!", e=`, e);
             const id = e.sourceAttribute.split('_')[2];
             setAttrs({[`repeating_${section}_${id}_charm-learnt`] : 1});
@@ -2848,7 +2848,7 @@
     });
 
     charmRepeatableSectionArray.forEach(section => {
-        on(`clicked:repeating_${section}:change-aspect`, TAS._fn(async function clickGMCharmCast(e) {
+        on(`clicked:repeating_${section}:change-aspect`, TAS._fn(async function changeAspect(e) {
             if (debug === 2) TAS.debug(`CLICKED ChangeAspect !, e=`, e);
             const id = e.sourceAttribute.split('_')[2];
             const values = await getAttrsAsync([`repeating_${section}_${id}_charm-aspect`]);
