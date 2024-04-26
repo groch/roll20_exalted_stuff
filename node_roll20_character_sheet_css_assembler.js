@@ -437,7 +437,7 @@ body.sheet-darkmode {
 }
 
 .charsheet .sheet-content .sheet-tab-content .woundpenalty-add-input[title],
-.charsheet .sheet-content .sheet-tab-content input[type=number][disabled].woundpenalty-input,
+.charsheet .sheet-content .sheet-tab-content input[type=number][readonly].woundpenalty-input,
 .charsheet .sheet-content .sheet-tab-content .rollpenalty-input[title] {
     width: 27px;
 }
@@ -1509,22 +1509,22 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
 }
 
 /* --- QC Hide/show divs --- */
-.charsheet .sheet-col.stat-col .qc-panel-check[value="1"] ~ .qc-toggle-display,
-.charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display {
+.sheet-quick-character[value="1"] ~ .flex.main-page .sheet-col.stat-col .qc-toggle-display,
+.sheet-quick-character[value="1"] ~ .flex.main-page .qc-toggle-display {
     display: none;
 }
 
-.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .head-line .flex .qc-panel-check[value="1"] ~ .qc-toggle-display-inv.qc-have-exc {
+.charsheet .sheet-quick-character[value="1"] ~ .caste-have-exc-check[value="1"] ~ .flex.main-page .head-line .flex .qc-toggle-display-inv.qc-have-exc {
     display: inline-flex;
     width: 27px;
 }
 
-.charsheet .sheet-defenses .flex-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv,
-.charsheet .sheet-col.stat-col .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
+.sheet-quick-character[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .qc-toggle-display-inv,
+.sheet-quick-character[value="1"] ~ .flex.main-page .sheet-col.stat-col .qc-toggle-display-inv {
     display: flex;
 }
 
-.charsheet .qc-panel-check[value="1"] ~ .qc-toggle-display-inv {
+.sheet-quick-character[value="1"] ~ .flex.main-page .qc-toggle-display-inv {
     display: table-row;
 }
 
@@ -1543,7 +1543,7 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
     display: none;
 }
 
-.charsheet .qc-panel-check[value="1"] ~ .qc-toggle-visibility {
+.sheet-quick-character[value="1"] ~ .flex.main-page .qc-toggle-visibility {
     visibility: hidden;
 }
 
@@ -1682,8 +1682,8 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
     background-image: linear-gradient(-45deg, var(--onslaught-color), transparent, transparent);
 }
  
-.charsheet .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
-.charsheet .flex.main-page .onslaught-check[value="0"] ~ .onslaught-taint.wound-taint {
+.charsheet .apply-onslaught-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
+.charsheet .onslaught-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint {
     background-image: none;
 }
  
@@ -1764,8 +1764,8 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
                 0 var(--loc-prone-size) var(--bs-default-blur) var(--loc-prone-color);
 }
 
-.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .apply-onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
-.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .onslaught-check[value="0"] ~ .onslaught-taint.wound-taint,
+.charsheet .wound-penalty-check[value="0"] ~ .apply-onslaught-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
+.charsheet .wound-penalty-check[value="0"] ~ .onslaught-check[value="0"] ~ .flex.main-page .onslaught-taint.wound-taint,
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .wound-taint {
     --loc-wound-color: rgba(128, 128, 128, 0.25);
     background-color: var(--loc-wound-color);
@@ -1813,12 +1813,12 @@ ${[...Array(10).keys()].map(i => /*css*/`.charsheet .sheet-layer6 input.sheet-do
     font-weight: bold;
 }
 
-.charsheet .flex.main-page .apply-onslaught-check[value="0"] ~ input[type=number].onslaught-input,
-.charsheet .flex.main-page .onslaught-check[value="0"] ~ input[type=number].onslaught-input {
+.charsheet .apply-onslaught-check[value="0"] ~ .flex.main-page input[type=number].onslaught-input,
+.charsheet .onslaught-check[value="0"] ~ .flex.main-page input[type=number].onslaught-input {
     --loc-wound-color: rgba(128, 128, 128, 0.25);
 }
 
-.charsheet .flex.main-page .onslaught-check[value="0"] ~ input[type=number].onslaught-input {
+.charsheet .onslaught-check[value="0"] ~ .flex.main-page input[type=number].onslaught-input {
     font-weight: normal;
 }
 
@@ -1827,6 +1827,7 @@ ${[...Array(11).keys()].map(i => i + 5).map(i => /*css*/`.charsheet .wound-penal
 }
 
 .sheet-darkmode .charsheet input[type=number][disabled].rollpenalty,
+.sheet-darkmode .charsheet input[type=number][readonly].rollpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty,
 .sheet-darkmode .charsheet input[type=number][readonly].woundpenalty,
 .sheet-darkmode .charsheet input[type=number][disabled].woundpenalty-input {
@@ -1879,9 +1880,13 @@ ${[...Array(11).keys()].map(i => i + 5).map(i => /*css*/`.charsheet .wound-penal
 }
 
 .sheet-tab-intimacies-sheet .head-line .sheet-table-cell input[type="number"][disabled],
+.sheet-tab-intimacies-sheet .head-line .sheet-table-cell input[type="number"][readonly],
 .sheet-tab-antisocial-sheet .head-line .sheet-table-cell input[type="number"][disabled],
+.sheet-tab-antisocial-sheet .head-line .sheet-table-cell input[type="number"][readonly],
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled],
+.sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][readonly],
 .sheet-defenses .flex-col .flex:last-child input[type="number"][disabled].wound-taint,
+.sheet-defenses .flex-col .flex:last-child input[type="number"][readonly].wound-taint,
 .sheet-defenses .flex-col .flex:last-child input[type="text"].qc-have-exc {
     width: 27px;
     flex-grow: 1;
@@ -1892,13 +1897,15 @@ ${[...Array(11).keys()].map(i => i + 5).map(i => /*css*/`.charsheet .wound-penal
     display: none;
 }
 
-.sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled].wound-taint,
+input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="number"][disabled].wound-taint,
+input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="number"][readonly].wound-taint,
 .sheet-defenses .flex-col .flex:first-child input[type="number"] {
     width: 56px;
     flex-grow: 1;
 }
 
-.charsheet .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled].wound-taint {
+.charsheet input[type="hidden"].sheet-quick-character[value="1"] ~ .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="number"][readonly].wound-taint,
+.charsheet input[type="hidden"].sheet-quick-character[value="1"] ~ .caste-have-exc-check[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="number"][disabled].wound-taint {
     width: 27px;
 }
 
@@ -1907,9 +1914,12 @@ ${[...Array(11).keys()].map(i => i + 5).map(i => /*css*/`.charsheet .wound-penal
 }
 
 .sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][disabled].wound-taint:last-child,
+.sheet-table-body .sheet-table-row .sheet-table-cell input[type="number"][readonly].wound-taint:last-child,
 .sheet-defenses .flex-col .flex:last-child input[type="number"][disabled].last-visible,
-.sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] + input[type="number"][disabled],
-.sheet-defenses .flex-col .flex:last-child input[type="hidden"].qc-panel-check[value="1"] ~ input[type="text"].qc-have-exc {
+.sheet-defenses .flex-col .flex:last-child input[type="number"][readonly].last-visible,
+input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="number"][disabled],
+input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="number"][readonly],
+input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-defenses .flex-col .flex:last-child input[type="text"].qc-have-exc {
     margin-right:0;
 }
 
@@ -3060,21 +3070,22 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
     cursor: pointer;
 }
 
-.charsheet .rollpenalty,
-.charsheet .woundpenalty,
-.charsheet .woundpenalty-input {
+.charsheet .flex.main-page .rollpenalty,
+.charsheet .flex.main-page .woundpenalty,
+.charsheet .flex.main-page .woundpenalty-input {
     background-color: rgb(255, 128, 128);
     font-weight: bold;
 }
-.sheet-darkmode .charsheet .rollpenalty,
-.sheet-darkmode .charsheet .woundpenalty,
-.sheet-darkmode .charsheet .woundpenalty-input {
+.sheet-darkmode .charsheet .flex.main-page .rollpenalty,
+.sheet-darkmode .charsheet .flex.main-page .woundpenalty,
+.sheet-darkmode .charsheet .flex.main-page .woundpenalty-input {
     background-color: darkred;
 }
 
 .charsheet .wound-penalty-check[value="0"] ~ .flex.main-page .woundpenalty,
 .charsheet .roll-penalty-check[value="0"] ~ .flex.main-page .rollpenalty,
-.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page input[type=number][disabled].woundpenalty-input {
+.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page input[type=number][disabled].woundpenalty-input,
+.charsheet .wound-penalty-check[value="0"] ~ .flex.main-page input[type=number][readonly].woundpenalty-input {
     background-color: rgba(128, 128, 128, 0.25);
     font-weight: normal;
 }

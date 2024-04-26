@@ -587,7 +587,7 @@ var CombatMaster = CombatMaster || (function() {
                 logger(LOGLEVEL.ERROR, `${confObj.name}:: NO CharID FROM CONDITIONS AUTO ACTION ?!`)
             }
             if (confObj.debugMessage) logger(LOGLEVEL.INFO, `${confObj.name}:: charObj.name=${charObj.get('name')} got ${confObj.debugMessage}`);
-            setAttrs(charObj.get('id'), confObj.charAttrToSet);
+            updateDefs(charObj, confObj.charAttrToSet);
         }
 
         let tokenObj    = getObj('graphic', cmdDetails.details['tok']);
@@ -954,6 +954,142 @@ var CombatMaster = CombatMaster || (function() {
         return calculatedMax;
     },
 
+    getBgDefBoost = (drill, might) => (drill === 'Average' ? 1 : drill === 'Elite' ? 2 : 0) + (['1','2'].includes(might) ? 1 : might === '3' ? 2 : 0),
+
+    calcDefAdded = (attrList, updatedObj, isParry = true) => {
+        const getCurrent =               (attrStr) => attrList.filter(i => i?.get('name') === attrStr)[0]?.get('current') || '';
+        const getAttrNumber =            (attrStr) => Number(getCurrent(attrStr)) || 0;
+        const getFromUpdatedOrRetrieve = (attrStr) => (updatedObj && attrStr in updatedObj) ? updatedObj[attrStr] : getAttrNumber(attrStr);
+
+        const pen = getCurrent('wound-penalty') || 0,
+              bgDefBoost = getBgDefBoost(getCurrent('battlegroup-drill'), getCurrent('battlegroup-might')),
+              onslaught = getFromUpdatedOrRetrieve('onslaught'),
+              applyOnslaught = getAttrNumber('apply-onslaught') || 0,
+              onslaughtApplied = onslaught * applyOnslaught,
+              grabDefPen = getFromUpdatedOrRetrieve('grab-def-penalty'),
+              proneDefPen = getFromUpdatedOrRetrieve('prone-def-penalty'),
+              clashDefPen = getFromUpdatedOrRetrieve('clash-def-penalty'),
+              coverDefBonus = getFromUpdatedOrRetrieve('cover-def-bonus'),
+              fullDefBonus = getFromUpdatedOrRetrieve('full-def-bonus'),
+              sbvActivated = getAttrNumber('sbv-activated');
+
+        logger(`calcDefAdded:: PLUS: bgDefBoost=${bgDefBoost}, coverDefBonus=${coverDefBonus}, fullDefBonus=${fullDefBonus}, sbvActivated=${sbvActivated}`);
+        logger(`calcDefAdded:: NEGS: grabDefPen=${grabDefPen}, proneDefPen=${proneDefPen}, clashDefPen=${clashDefPen}, onslaughtApplied=${onslaughtApplied}, pen=${pen}`);
+        const total = (bgDefBoost + coverDefBonus + fullDefBonus + sbvActivated - onslaughtApplied - grabDefPen - ((isParry ? 1 : 2) * proneDefPen) - clashDefPen - pen);
+        logger(`calcDefAdded:: TOTALMODIFIER=${total}`);
+        return total;
+    },
+
+    charmDBMaRepeatableSectionArray = [
+        'charms-ma-airdragon',
+        'charms-ma-earthdragon',
+        'charms-ma-firedragon',
+        'charms-ma-waterdragon',
+        'charms-ma-wooddragon'
+    ],
+    charmMaRepeatableSectionArray = [
+        'charms-ma-snake',
+        'charms-ma-tiger',
+        'charms-ma-spsitv',
+        'charms-ma-whitereaper',
+        'charms-ma-ebonshadow',
+        'charms-ma-crane',
+        'charms-ma-silvervoice',
+        'charms-ma-righteousdevil',
+        'charms-ma-blackclaw',
+        'charms-ma-dreamingpearl',
+        'charms-ma-steeldevil',
+        'charms-ma-centipede',
+        'charms-ma-falcon',
+        'charms-ma-laughingmonster',
+        'charms-ma-swayinggrass',
+        ...charmDBMaRepeatableSectionArray,
+        'charms-ma-goldenjanissary',
+        'charms-ma-mantis',
+        'charms-ma-whiteveil',
+        'charms-ma-other'
+    ],
+    maAttrsArray = charmMaRepeatableSectionArray.slice(0, -1).map(i => i.replace('charms-','')),
+
+    updateParry = (attrList, updatedObj) => {
+        const maList = attrList.filter(i => i.get('name').indexOf('repeating_martialarts_') !== -1);
+        const weaponList = attrList.filter(i => i.get('name').indexOf('repeating_weapon_') !== -1);
+        const uniqMaListIds = [...new Set(maList.map(i => i.get('name').split('_')[2]))];
+        const uniqWeaponListIds = [...new Set(weaponList.map(i => i.get('name').split('_')[2]))];
+
+        const getCurrent = (attrStr) => attrList.filter(i => i?.get('name') === attrStr)[0]?.get('current') || 0;
+
+        let ma = 0;
+        for (const maName of maAttrsArray)
+            ma = Math.max(ma, Number(getCurrent(maName)));
+        const dex = Number(getCurrent('dexterity')),
+              brawl = Number(getCurrent('brawl')),
+              melee = Number(getCurrent('melee')),
+              qcParry = Number(getCurrent('qc-parry')),
+              isQc = Number(getCurrent('qc')),
+              addedDef = calcDefAdded(attrList, updatedObj),
+              correspondingTable = {'brawl': brawl, 'melee': melee};
+        for (const maName of maAttrsArray) correspondingTable[maName] = Number(getCurrent(maName));
+
+        ma = uniqMaListIds.reduce((acc, id) => Math.max(acc, Number(getCurrent(`repeating_martialarts_${id}_repmartialarts`))), ma);
+
+        logger(`getUpdatedParryObj:: Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
+        logger('getUpdatedParryObj:: Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)'));
+        var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2));
+        logger('getUpdatedParryObj:: Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)'));
+        var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2));
+        //apply bonus/pen
+        newParry += addedDef;
+        newParrySpe += addedDef;
+        logger('getUpdatedParryObj:: setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
+        const finalObj = {'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
+
+        logger('getUpdatedParryObj:: Updating Weapon Parry value');
+        for (const id of uniqWeaponListIds) {
+            let def = getCurrent(`repeating_weapon_${id}_repweapondef`) || 0,
+                abi = getCurrent(`repeating_weapon_${id}_repweaponabi`) || 'brawl';
+            finalObj[`repeating_weapon_${id}_repweaponparry`]    = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))    ) / 2) + Number(def) + addedDef;
+            finalObj[`repeating_weapon_${id}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) + addedDef;
+        }
+        return finalObj;
+    },
+
+    updateEvasion = (attrList, updatedObj) => {
+        const getCurrent =    (attrStr) => attrList.filter(i => i?.get('name') === attrStr)[0]?.get('current') || '';
+        const getAttrNumber = (attrStr) => Number(getCurrent(attrStr)) || 0;
+        const dex = getAttrNumber('dexterity'),
+            ride = getAttrNumber('ride'),
+            dodge = getAttrNumber('dodge'),
+            rideMode = getAttrNumber('ride-for-evasion'),
+            mobiPen = getAttrNumber('armor-mobility'),
+            rideMobiPen = getAttrNumber('mount-armor-mobility'),
+            qcEva = getAttrNumber('qc-evasion'),
+            addedDef = calcDefAdded(attrList, updatedObj, false),
+            isQc = getAttrNumber('qc');
+
+        logger(`getUpdatedEvasionObj:: isQc=${isQc}, qcEvasion=${qcEva}, rideMode=${rideMode}`);
+        logger('getUpdatedEvasionObj:: Evasion calc:', (isQc ? qcEva : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ') / 2)'));
+        var newEva = (isQc ? qcEva : Math.ceil((dex + (rideMode ? ride : dodge)) / 2));
+        logger('getUpdatedEvasionObj:: Evasion w/specialty calc:', (isQc ? qcEva+1 : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ' + 1) / 2)'));
+        var newEvaSpe = (isQc ? qcEva+1 : Math.ceil((dex + (rideMode ? ride : dodge) + 1) / 2));
+        logger(`getUpdatedEvasionObj:: applying Mobility Penalty:${rideMode ? rideMobiPen : mobiPen}`);
+        newEva -= rideMode ? rideMobiPen : mobiPen;
+        newEvaSpe -= rideMode ? rideMobiPen : mobiPen;
+        //apply bonus/pen
+        newEva += addedDef;
+        newEvaSpe += addedDef;
+        logger('getUpdatedEvasionObj:: setAttrs! evasion='+newEva+', evasion-specialty='+newEvaSpe);
+        return {'evasion': newEva, 'evasion-specialty': newEvaSpe};
+    },
+
+    updateDefs = (charObj, updatedObj) => {
+        const charId = charObj.get('id'), attrList = findObjs({ _characterid: charId, _type: 'attribute' }), setObj = JSON.parse(JSON.stringify(updatedObj));
+        Object.assign(setObj, updateParry(attrList, updatedObj))
+        Object.assign(setObj, updateEvasion(attrList, updatedObj))
+        logger(LOGLEVEL.INFO, `updateDefs:: setObj=`, setObj);
+        setAttrs(charObj.get('id'), setObj);
+    },
+
     addOnslaughtToPlayer = (cmdDetails, selected) => {
         logger(`addOnslaughtToPlayer::addOnslaughtToPlayer cmdDetails=${JSON.stringify(cmdDetails)}`);
 
@@ -977,7 +1113,7 @@ var CombatMaster = CombatMaster || (function() {
             if (finalcharacterObj) {
                 let currentOnslaught = parseInt(getAttrByName(finalcharacterObj.get('id'), 'onslaught', 'current'));
                 currentOnslaught = isNaN(currentOnslaught) ? 1 : currentOnslaught + 1;
-                setAttrs(finalcharacterObj.get('id'), {'onslaught':currentOnslaught});
+                updateDefs(finalcharacterObj, {'onslaught':currentOnslaught});
                 if (t.get('layer') == 'objects' && !(getObj('character', t.get('represents')).get('name').includes('Vision'))) {
                     let imgurl = t.get('imgsrc');
                     let image  = (imgurl) ? `<img src="${imgurl}" width="50px" height="50px" />` : '';

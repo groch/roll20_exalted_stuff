@@ -1,4 +1,4 @@
-    const version = 2.67, debug = 1;
+    const version = 2.68, debug = 1;
     var TAS;
 
     /**
@@ -162,12 +162,18 @@
         if (debug === 2) TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
 
         const idHealthArray = await getSectionIDsAsync("health");
+        const pu = new ParryUpdater(), eu = new EvasionUpdater(), ru = new ResolveUpdater(), gu = new GuileUpdater();
+
         let finalAttr = {};
         const healthFieldNames = [];
         idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
         sortHealthRepeatableSection(idHealthArray, healthFieldNames);
 
-        const valuesSections = await getAttrsAsync([...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup']);
+        const baseAttrList = [...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'];
+        const attrList = [...baseAttrList, ...await pu.getAttrToBeRetrieved(), ...eu.getAttrToBeRetrieved(), ...ru.getAttrToBeRetrieved(), ...gu.getAttrToBeRetrieved()];
+        const uniqAttrList = [...new Set(attrList)];
+
+        const valuesSections = await getAttrsAsync(uniqAttrList);
         let sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
             return valuesSections[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(valuesSections[`repeating_health_${id}_hl-penalty`]);
         }).value();
@@ -195,132 +201,402 @@
             ? Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
             : Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
         if (disablePen) pen = 0;
-        if (oldPen !== pen) finalAttr = { 'wound-penalty': pen };
+        if (oldPen !== pen) finalAttr = { 'wound-penalty': pen, 'wound-pen-neg': -pen};
         if (!Number(valuesSections['battlegroup'])) {
             if (debug === 2) TAS.debug(`updateWound:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
             if (oldActual !== actualHealth) finalAttr = { ...finalAttr, 'health-displayed': actualHealth};
             if (oldMax !== maxHealth)       finalAttr = { ...finalAttr, 'health-displayed_max': maxHealth };
         }
-        if (Object.keys(finalAttr).length !== 0) {
-            TAS.debug('updateWound:: UPDATE WOUNDPEN & Health Displayed', finalAttr);
-            setAttrs(finalAttr);
-        }
 
         if (oldPen !== pen) {
-            TAS.debug('updateWound:: PEN CHANGED ! calling updateParry');
-            updateParry(e);
+            TAS.debug('updateWound:: PEN CHANGED ! updating Parry/Evasion & Resolve/Guile');
+            finalAttr = eu.updateObj(valuesSections, pu.updateObj(valuesSections, finalAttr));
+            finalAttr = gu.updateObj(valuesSections, ru.updateObj(valuesSections, finalAttr));
+        }
+        if (Object.keys(finalAttr).length !== 0) {
+            TAS.debug('updateWound:: SETTING WOUNDPEN & Health Displayed', finalAttr);
+            setAttrs(finalAttr);
         }
     }
 
-    on('sheet:opened', setDebugWrapper(updateParry));
+    /* COMMON TO COMBAT DEF */
+    const defAddedAttrs = [
+        'wound-penalty',
+        'battlegroup-drill', 'battlegroup-might',
+        'onslaught', 'apply-onslaught',
+        'grab-def-penalty', 'prone-def-penalty', 'clash-def-penalty',
+        'cover-def-bonus', 'full-def-bonus',
+        'sbv-activated'
+    ];
+    function calcDefAddedAndSetOnslaughtApplied(inObj, setObj, isParry = true) {
+        const getFromUpdatedOrRetrieve = (attrStr) => (setObj && attrStr in setObj) ? setObj[attrStr] : inObj[attrStr];
+
+        const pen = getFromUpdatedOrRetrieve('wound-penalty') || 0,
+              bgDefBoost = getBgDefBoost(getFromUpdatedOrRetrieve("battlegroup-drill"), getFromUpdatedOrRetrieve("battlegroup-might")),
+              onslaught = getAndResetIfNaNOrEmpty(inObj, setObj, 'onslaught'),
+              applyOnslaught = Number(getFromUpdatedOrRetrieve('apply-onslaught')) || 0,
+              onslaughtApplied = onslaught * applyOnslaught,
+              grabDefPen = Number(getFromUpdatedOrRetrieve('grab-def-penalty')),
+              proneDefPen = Number(getFromUpdatedOrRetrieve('prone-def-penalty')),
+              clashDefPen = Number(getFromUpdatedOrRetrieve('clash-def-penalty')),
+              coverDefBonus = Number(getFromUpdatedOrRetrieve('cover-def-bonus')),
+              fullDefBonus = Number(getFromUpdatedOrRetrieve('full-def-bonus')),
+              sbvActivated = Number(getFromUpdatedOrRetrieve('sbv-activated'));
+
+        if (!(setObj && setObj['onslaught-applied'] && setObj['onslaught-applied'] === onslaughtApplied)) {
+            if (debug === 2) TAS.debug(`SETTING onslaught-applied=${onslaughtApplied}`);
+            Object.assign(setObj, {'onslaught-applied': onslaughtApplied})
+        }
+        if (debug === 2) TAS.debug(`calcDefAdded:: PLUS: bgDefBoost=${bgDefBoost}, coverDefBonus=${coverDefBonus}, fullDefBonus=${fullDefBonus}, sbvActivated=${sbvActivated}`);
+        if (debug === 2) TAS.debug(`calcDefAdded:: NEGS: grabDefPen=${grabDefPen}, proneDefPen=${proneDefPen}, clashDefPen=${clashDefPen}, onslaughtApplied=${onslaughtApplied}, pen=${pen}`);
+        const total = (bgDefBoost + coverDefBonus + fullDefBonus + sbvActivated - onslaughtApplied - grabDefPen - ((isParry ? 1 : 2) * proneDefPen) - clashDefPen - pen);
+        if (debug === 2) TAS.debug(`calcDefAdded:: TOTALMODIFIER=${total}`);
+        return total;
+    }
+
+    function getAndResetIfNaNOrEmpty(inObj, finalObj, attr) {
+        const tested = Number(inObj[attr]);
+        if (isNaN(Number(tested)) || String(tested).trim() === "") {
+            if (debug === 2) TAS.debug(`getAndResetIfNaNOrEmpty:: Reset Attr ${ret[1]}`);
+            Object.assign(finalObj, {[attr]: 0});
+            return 0;
+        }
+        return tested;
+    }
+
+    // on('sheet:opened', setDebugWrapper(updateParry));
     on('change:dexterity change:brawl change:melee', TAS._fn(updateParry));
-    //maAttrsArray.forEach(ma => on(`change:${ma}`, TAS._fn(updateParry))); //- DONE LATER
+    //maAttrsArray.forEach(ma => on(`change:${ma}`, TAS._fn(updateParry))); //- DONE LATER DOWNWARD, IT NEEDS TO BE INITIALIZED FIRST
     on('change:repeating_martialarts remove:repeating_martialarts change:repeating_weapon:repweapondef change:repeating_weapon:repweaponabi remove:repeating_weapon', TAS._fn(updateParry));
     on('change:qc-parry', TAS._fn(updateParry));
-
     async function updateParry(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
             if (debug === 2) TAS.debug(`updateParry:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        const values = await getAttrsAsync(['wound-penalty', 'qc', 'brawl', 'melee', 'dexterity', 'qc-parry']);
-        const pen = values['wound-penalty'] || 0;
-        var finalAttr = {};
-        if (debug === 2) TAS.debug('updateParry:: Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
-        TAS.repeating('martialarts').fields('repmartialarts').attrs(...maAttrsArray).tap(setDebugWrapper(async function getMaxMaAndApply(rows, attrs) {
-            let ma = 0;
-            for (const maName of maAttrsArray)
-                ma = Math.max(ma, attrs.I[maName]);
-
-            const dex = Number(values['dexterity']),
-                brawl = Number(values['brawl']),
-                melee = Number(values['melee']),
-                qcParry = Number(values['qc-parry']),
-                isQc = Number(values['qc']);
-
-            const correspondingTable = {
-                    'brawl': brawl,
-                    'melee': melee
-                };
-            for (const maName of maAttrsArray)
-                correspondingTable[maName] = attrs.I[maName];
-
-            if (debug === 2) TAS.debug(`updateParry:: values=${JSON.stringify(values)}, attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
-            _.each(rows, function(v, k) {
-                if (debug === 2) TAS.debug(`updateParry:: v=${JSON.stringify(v)}, k=${k}`);
-                ma = Math.max(ma, Number(v.repmartialarts));
-            });
-
-            if (debug === 2) TAS.debug(`updateParry:: Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
-            if (debug === 2) TAS.debug('updateParry:: Parry calc:', (isQc ? qcParry : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ')) / 2)') + ' - ' + pen);
-            var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2)) - pen;
-            if (debug === 2) TAS.debug('updateParry:: Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil((' + dex + ' + Math.max(' + brawl + ', ' + ma + ', ' + melee + ') + 1) / 2)') + ' - ' + pen);
-            var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2)) - pen;
-            if (debug === 2) TAS.debug('updateParry:: setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-            finalAttr = {...finalAttr, 'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma};
-
-            if (debug === 2) TAS.debug('updateParry:: Updating Weapon Parry value');
-            const idarray = await getSectionIDsAsync("weapon");
-            const weaponFieldNames = [];
-            idarray.forEach(id => weaponFieldNames.push(`repeating_weapon_${id}_repweapondef`, `repeating_weapon_${id}_repweaponabi`));
-
-            const valuesSections = await getAttrsAsync(weaponFieldNames);
-            if (debug === 2) TAS.debug(`updateParry:: valuesSections=${JSON.stringify(valuesSections)}`);
-            for (const id of idarray) {
-                let row = 'repeating_weapon_' + id,
-                    def = valuesSections[`${row}_repweapondef`] || 0,
-                    abi = valuesSections[`${row}_repweaponabi`] || 'brawl';
-                finalAttr[`${row}_repweaponparry`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))) / 2) + Number(def) - pen;
-                finalAttr[`${row}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) - pen;
-            }
-            if (debug === 2) TAS.debug('updateParry:: UPDATE WEAPONS PARRY', finalAttr);
-            setAttrs(finalAttr);
-        })).execute();
+        if (debug === 2) TAS.debug('updateParry:: e=' + JSON.stringify(e));
+        const setObj = await ParryUpdater.getUpdatedParryObj();
+        if (debug === 2) TAS.debug('updateParry:: setObj=', setObj);
+        setAttrs(setObj);
     }
 
-    on('sheet:opened', setDebugWrapper(updateEvasion));
-    on('change:ride change:dodge change:armor-mobility change:mount-armor-mobility', TAS._fn(updateEvasion));
-    on('change:ride-for-evasion', TAS._fn(updateEvasion));
+    class ParryUpdater {
+        #maIds;
+        #weaponIds;
 
+        constructor() {}
+
+        async getAttrToBeRetrieved(maIds, weaponIds) {
+            this.#maIds = maIds || await getSectionIDsAsync('martialarts');
+            this.#weaponIds = weaponIds || await getSectionIDsAsync("weapon");
+            const attrList = ['qc', 'brawl', 'melee', 'dexterity', 'qc-parry', ...defAddedAttrs];
+            this.#maIds.forEach(id => attrList.push(`repeating_martialarts_${id}_repmartialarts`));
+            this.#weaponIds.forEach(id => attrList.push(`repeating_weapon_${id}_repweapondef`, `repeating_weapon_${id}_repweaponabi`));
+            maAttrsArray.forEach(attr => attrList.push(attr));
+            return attrList;
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
+            let ma = 0;
+            for (const maName of maAttrsArray)
+                ma = Math.max(ma, Number(getFromUpdatedOrRetrieve(maName)));
+            const dex = Number(getFromUpdatedOrRetrieve('dexterity')),
+                brawl = Number(getFromUpdatedOrRetrieve('brawl')),
+                melee = Number(getFromUpdatedOrRetrieve('melee')),
+                qcParry = Number(getFromUpdatedOrRetrieve('qc-parry')),
+                isQc = Number(getFromUpdatedOrRetrieve('qc')),
+                finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
+                addedDef = calcDefAddedAndSetOnslaughtApplied(values, finalObj),
+                correspondingTable = {'brawl': brawl, 'melee': melee};
+            for (const maName of maAttrsArray) correspondingTable[maName] = Number(getFromUpdatedOrRetrieve(maName));
+
+            if (debug === 2) TAS.debug(`ParryUpdater:updateObj:: values=${JSON.stringify(values)}`);
+            ma = this.#maIds.reduce((acc, id) => Math.max(acc, Number(getFromUpdatedOrRetrieve(`repeating_martialarts_${id}_repmartialarts`))), ma);
+
+            if (debug === 3) TAS.debug(`ParryUpdater:updateObj:: Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
+            if (debug === 3) TAS.debug('ParryUpdater:updateObj:: Unarmed Parry calc:', (isQc ? qcParry : 'Math.ceil(' + dex + ' + ' + brawl + ') / 2)'));
+            var newParry = (isQc ? qcParry : Math.ceil((dex + brawl) / 2));
+            if (debug === 3) TAS.debug('ParryUpdater:updateObj:: Unarmed Parry w/specialty calc:', (isQc ? qcParry+1 : 'Math.ceil(' + dex + ' + ' + brawl + ' + 1) / 2)'));
+            var newParrySpe = (isQc ? qcParry+1 : Math.ceil((dex + brawl + 1) / 2));
+            if (debug === 3) TAS.debug(`ParryUpdater:updateObj:: applying addedDef:${addedDef}`);
+            newParry += addedDef;
+            newParrySpe += addedDef;
+            if (debug === 3) TAS.debug('ParryUpdater:updateObj:: setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
+            Object.assign(finalObj, {'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma});
+
+            if (debug === 3) TAS.debug('ParryUpdater:updateObj:: Updating Weapon Parry value');
+            for (const id of this.#weaponIds) {
+                let def = getFromUpdatedOrRetrieve(`repeating_weapon_${id}_repweapondef`) || 0,
+                    abi = getFromUpdatedOrRetrieve(`repeating_weapon_${id}_repweaponabi`) || 'brawl';
+                finalObj[`repeating_weapon_${id}_repweaponparry`]    = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))    ) / 2) + Number(def) + addedDef;
+                finalObj[`repeating_weapon_${id}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) + addedDef;
+            }
+
+            if (debug === 2) TAS.debug('ParryUpdater:updateObj:: UPDATE WEAPONS PARRY', finalObj);
+            return finalObj;
+        }
+
+        async getUpdatedObj(toBeUpdated = {}) {
+            const values = await getAttrsAsync(await this.getAttrToBeRetrieved());
+            return this.updateObj(values, toBeUpdated);
+        }
+
+        static async getUpdatedParryObj(toBeUpdated = {}) {
+            return await new ParryUpdater().getUpdatedObj(toBeUpdated);
+        }
+    }
+
+    // on('sheet:opened', setDebugWrapper(updateEvasion));
+    on('change:dexterity change:ride change:dodge change:armor-mobility change:mount-armor-mobility', TAS._fn(updateEvasion));
+    on('change:ride-for-evasion', TAS._fn(updateEvasion));
     async function updateEvasion(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
             if (debug === 2) TAS.debug(`updateEvasion:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        const values = await getAttrsAsync(['wound-penalty', 'qc', 'qc-evasion', 'ride-for-evasion', 'dodge', 'ride', 'dexterity', 'armor-mobility', 'mount-armor-mobility']);
-        const pen = values['wound-penalty'] || 0;
-        var finalAttr = {};
-        if (debug === 2) TAS.debug('updateEvasion:: Testing qc=' + values['qc'] + ', values=' + JSON.stringify(values) + ', e=' + JSON.stringify(e));
+        if (debug === 2) TAS.debug('updateEvasion:: e=' + JSON.stringify(e));
+        const setObj = await EvasionUpdater.getUpdatedEvasionObj();
+        if (debug === 2) TAS.debug('updateEvasion:: setObj=', setObj);
+        setAttrs(setObj);
+    }
 
-        const dex = Number(values['dexterity']),
-            ride = Number(values['ride']),
-            dodge = Number(values['dodge']),
-            rideMode = Number(values['ride-for-evasion']),
-            mobiPen = Number(values['armor-mobility']),
-            rideMobiPen = Number(values['mount-armor-mobility']),
-            qcEva = Number(values['qc-evasion']),
-            isQc = Number(values['qc']);
+    class EvasionUpdater {
+        constructor() {}
 
-        if (debug === 2) TAS.debug(`updateEvasion:: isQc=${isQc}, qcEvasion=${qcEva}, rideMode=${rideMode}`);
-        if (debug === 2) TAS.debug('updateEvasion:: Evasion calc:', (isQc ? qcEva : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ') / 2)') + ' - ' + pen);
-        var newEva = (isQc ? qcEva : Math.ceil((dex + (rideMode ? ride : dodge)) / 2)) - pen;
-        if (debug === 2) TAS.debug('updateEvasion:: Evasion w/specialty calc:', (isQc ? qcEva+1 : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ' + 1) / 2)') + ' - ' + pen);
-        var newEvaSpe = (isQc ? qcEva+1 : Math.ceil((dex + (rideMode ? ride : dodge) + 1) / 2)) - pen;
-        if (debug === 2) TAS.debug(`updateEvasion:: applying Mobility Penalty:${rideMode ? rideMobiPen : mobiPen}`);
-        newEva -= rideMode ? rideMobiPen : mobiPen;
-        newEvaSpe -= rideMode ? rideMobiPen : mobiPen;
-        if (debug === 2) TAS.debug('updateEvasion:: setAttrs! evasion-base='+newEva+', evasion-base-specialty='+newEvaSpe);
-        finalAttr = {'evasion-base': newEva, 'evasion-base-specialty': newEvaSpe};
-        setAttrs(finalAttr);
+        getAttrToBeRetrieved() {
+            return ['qc', 'qc-evasion', 'ride-for-evasion', 'dodge', 'ride', 'dexterity', 'armor-mobility', 'mount-armor-mobility', ...defAddedAttrs];
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
+            const dex = Number(getFromUpdatedOrRetrieve('dexterity')),
+                ride = Number(getFromUpdatedOrRetrieve('ride')),
+                dodge = Number(getFromUpdatedOrRetrieve('dodge')),
+                rideMode = Number(getFromUpdatedOrRetrieve('ride-for-evasion')),
+                mobiPen = Number(getFromUpdatedOrRetrieve('armor-mobility')),
+                rideMobiPen = Number(getFromUpdatedOrRetrieve('mount-armor-mobility')),
+                qcEva = Number(getFromUpdatedOrRetrieve('qc-evasion')),
+                isQc = Number(getFromUpdatedOrRetrieve('qc')),
+                finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
+                addedDef = calcDefAddedAndSetOnslaughtApplied(values, finalObj, false);
+    
+            if (debug === 3) TAS.debug(`EvasionUpdater:updateObj:: isQc=${isQc}, qcEvasion=${qcEva}, rideMode=${rideMode}`);
+            if (debug === 3) TAS.debug('EvasionUpdater:updateObj:: Evasion calc:', (isQc ? qcEva : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ') / 2)'));
+            var newEva = (isQc ? qcEva : Math.ceil((dex + (rideMode ? ride : dodge)) / 2));
+            if (debug === 3) TAS.debug('EvasionUpdater:updateObj:: Evasion w/specialty calc:', (isQc ? qcEva+1 : 'Math.ceil((' + dex + ' + ' + (rideMode ? ride : dodge) + ' + 1) / 2)'));
+            var newEvaSpe = (isQc ? qcEva+1 : Math.ceil((dex + (rideMode ? ride : dodge) + 1) / 2));
+            if (debug === 3) TAS.debug(`EvasionUpdater:updateObj:: applying addedDef:${addedDef}, Mobility Penalty:${rideMode ? rideMobiPen : mobiPen}`);
+            newEva += addedDef - (rideMode ? rideMobiPen : mobiPen);
+            newEvaSpe += addedDef - (rideMode ? rideMobiPen : mobiPen);
+            if (debug === 3) TAS.debug('EvasionUpdater:updateObj:: setAttrs! evasion='+newEva+', evasion-specialty='+newEvaSpe);
+            Object.assign(finalObj, {'evasion': newEva, 'evasion-specialty': newEvaSpe});
+            if (debug === 2) TAS.debug('EvasionUpdater:updateObj:: UPDATE EVASION', finalObj);
+            return finalObj;
+        }
+
+        async getUpdatedObj(toBeUpdated = {}) {
+            const values = await getAttrsAsync(this.getAttrToBeRetrieved());
+            return this.updateObj(values, toBeUpdated);
+        }
+
+        static async getUpdatedEvasionObj(toBeUpdated = {}) {
+            return await new EvasionUpdater().getUpdatedObj(toBeUpdated);
+        }
+    }
+
+    on('change:wits change:integrity', TAS._fn(updateResolve));
+    async function updateResolve(e) {
+        if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
+            if (debug === 2) TAS.debug(`updateResolve:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
+        if (debug === 2) TAS.debug('updateResolve:: e=' + JSON.stringify(e));
+        const setObj = await ResolveUpdater.getUpdatedResolveObj();
+        if (debug === 2) TAS.debug('updateResolve:: setObj=', setObj);
+        setAttrs(setObj);
+    }
+
+    class ResolveUpdater {
+        constructor() {}
+
+        getAttrToBeRetrieved() {
+            return ['wits', 'integrity', 'wound-penalty'];
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
+            const wits = Number(getFromUpdatedOrRetrieve('wits')),
+                integrity = Number(getFromUpdatedOrRetrieve('integrity')),
+                finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
+                pen = getFromUpdatedOrRetrieve('wound-penalty') || 0;
+    
+            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: Resolve calc:Math.ceil((' + wits + ' + ' + integrity + ') / 2)');
+            var newRes = Math.ceil((wits + integrity) / 2);
+            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: Resolve w/specialty calc:Math.ceil((' + wits + ' + ' + integrity + ' + 1) / 2)');
+            var newResSpe = Math.ceil((wits + integrity + 1) / 2);
+            if (debug === 2) TAS.debug(`ResolveUpdater:updateObj:: applying pen:${pen}`);
+            newRes -= pen;
+            newResSpe -= pen;
+            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: setAttrs! resolve='+newRes+', resolve-specialty='+newResSpe);
+            Object.assign(finalObj, {'resolve': newRes, 'resolve-specialty': newResSpe});
+            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: UPDATE RESOLVE', finalObj);
+            return finalObj;
+        }
+
+        async getUpdatedObj(toBeUpdated = {}) {
+            const values = await getAttrsAsync(this.getAttrToBeRetrieved());
+            return this.updateObj(values, toBeUpdated);
+        }
+
+        static async getUpdatedResolveObj(toBeUpdated = {}) {
+            return await new ResolveUpdater().getUpdatedObj(toBeUpdated);
+        }
+    }
+
+    on('change:manipulation change:socialize', TAS._fn(updateGuile));
+    async function updateGuile(e) {
+        if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
+            if (debug === 2) TAS.debug(`updateGuile:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
+        if (debug === 2) TAS.debug('updateGuile:: e=' + JSON.stringify(e));
+        const setObj = await GuileUpdater.getUpdatedGuileObj();
+        if (debug === 2) TAS.debug('updateGuile:: setObj=', setObj);
+        setAttrs(setObj);
+    }
+
+    class GuileUpdater {
+        constructor() {}
+
+        getAttrToBeRetrieved() {
+            return ['manipulation', 'socialize', 'wound-penalty'];
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
+            const manipulation = Number(getFromUpdatedOrRetrieve('manipulation')),
+                socialize = Number(getFromUpdatedOrRetrieve('socialize')),
+                finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
+                pen = getFromUpdatedOrRetrieve('wound-penalty') || 0;
+    
+            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: Guile calc:Math.ceil((' + manipulation + ' + ' + socialize + ') / 2)');
+            var newGui = Math.ceil((manipulation + socialize) / 2);
+            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: Guile w/specialty calc:Math.ceil((' + manipulation + ' + ' + socialize + ' + 1) / 2)');
+            var newGuiSpe = Math.ceil((manipulation + socialize + 1) / 2);
+            if (debug === 2) TAS.debug(`GuileUpdater:updateObj:: applying pen:${pen}`);
+            newGui -= pen;
+            newGuiSpe -= pen;
+            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: setAttrs! guile='+newGui+', guile-specialty='+newGuiSpe);
+            Object.assign(finalObj, {'guile': newGui, 'guile-specialty': newGuiSpe});
+            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: UPDATE GUILE', finalObj);
+            return finalObj;
+        }
+
+        async getUpdatedObj(toBeUpdated = {}) {
+            const values = await getAttrsAsync(this.getAttrToBeRetrieved());
+            return this.updateObj(values, toBeUpdated);
+        }
+
+        static async getUpdatedGuileObj(toBeUpdated = {}) {
+            return await new GuileUpdater().getUpdatedObj(toBeUpdated);
+        }
+    }
+
+    on('change:onslaught change:apply-onslaught', TAS._fn(async function updateOnslaught(e) {
+        if (debug === 2) TAS.debug('updateOnslaught:: e=' + JSON.stringify(e));
+        updateCombatDefenses();
+    }));
+    on('change:grab-def-penalty change:prone-def-penalty change:clash-def-penalty change:cover-def-bonus change:full-def-bonus change:sbv-activated change:battlegroup-drill change:battlegroup-might', TAS._fn(async function updateDefAddeds(e) {
+        if (debug === 2) TAS.debug('updateDefAddeds:: e=' + JSON.stringify(e));
+        updateCombatDefenses();
+    }));
+    async function updateCombatDefenses(toBeUpdated = {}) {
+        setAttrs(await getUpdatedCombatDefensesObj(toBeUpdated));
+    }
+
+    async function getUpdatedCombatDefensesObj(toBeUpdated = {}) {
+        const pu = new ParryUpdater(), eu = new EvasionUpdater();
+        const attrList = [...await pu.getAttrToBeRetrieved(), ...eu.getAttrToBeRetrieved()];
+        const uniqAttrList = [...new Set(attrList)];
+        const values = await getAttrsAsync(uniqAttrList);
+        toBeUpdated = eu.updateObj(values, pu.updateObj(values, toBeUpdated));
+        
+        if (debug === 2) TAS.debug('getUpdatedCombatDefensesObj:: finalObj=', toBeUpdated);
+        return toBeUpdated;
+    }
+
+    async function getUpdatedSocialDefensesObj(toBeUpdated = {}) {
+        const ru = new ResolveUpdater(), gu = new GuileUpdater();
+        const attrList = [...await ru.getAttrToBeRetrieved(), ...gu.getAttrToBeRetrieved()];
+        const uniqAttrList = [...new Set(attrList)];
+        const values = await getAttrsAsync(uniqAttrList);
+        toBeUpdated = gu.updateObj(values, ru.updateObj(values, toBeUpdated));
+        
+        if (debug === 2) TAS.debug('getUpdatedSocialDefensesObj:: finalObj=', toBeUpdated);
+        return toBeUpdated;
+    }
+
+    async function getUpdatedDefensesObj(toBeUpdated = {}) {
+        const pu = new ParryUpdater(), eu = new EvasionUpdater(), ru = new ResolveUpdater(), gu = new GuileUpdater();
+        const attrList = [...await pu.getAttrToBeRetrieved(), ...eu.getAttrToBeRetrieved(), ...ru.getAttrToBeRetrieved(), ...gu.getAttrToBeRetrieved()];
+        const uniqAttrList = [...new Set(attrList)];
+        const values = await getAttrsAsync(uniqAttrList);
+        toBeUpdated = eu.updateObj(values, pu.updateObj(values, toBeUpdated));
+        toBeUpdated = gu.updateObj(values, ru.updateObj(values, toBeUpdated));
+        
+        if (debug === 2) TAS.debug('getUpdatedDefensesObj:: finalObj=', toBeUpdated);
+        return toBeUpdated;
+    }
+
+    on('sheet:opened change:showlimit change:qc', TAS._fn(updateShowLimit));
+    async function updateShowLimit(e) {
+        const val = await getAttrsAsync(['qc', 'showlimit']),
+            isQc = Number(val['qc']) || 0,
+            showLimit = Number(val['showlimit']) || 0;
+        setAttrs({'showlimit_final': (isQc+showLimit)});
     }
 
     on('change:rollpenalty-input', TAS._fn(updateRollPenalty));
+    async function updateRollPenalty(e) {
+        const time = new TimeCounter('updateRollPenalty');
+        if (e.sourceType === "sheetworker") {
+            if (debug === 2) TAS.debug('updateRollPenalty:: SHEETWORKER TRIGGER ABORT');
+            return;
+        }
 
-    async function updateRollPenalty() {
-        const rollPenInput = await getSingleAttrAsync('rollpenalty-input');
-        TAS.debug(`updateRollPenalty:: ${JSON.stringify(rollPenInput)}`);
-        const rollPen = isNaN(Number(rollPenInput)) ? 0 : Math.abs(Number(rollPenInput));
-        setAttrs({'roll-penalty': rollPen, ...await repeatGlobalToRepeatableAttrToValue('roll-penalty', rollPen)});
+        const awru = new AllRollWidgetsUpdater(), attrList = await awru.getAttrToBeRetrieved();
+        time.lap('1st await');
+        const uniqAttrs = [...new Set(attrList)];
+        if (debug === 3) TAS.debug(`updateRollPenalty:: uniqAttrs=`,uniqAttrs);
+        const values = await getAttrsAsync(uniqAttrs);
+        time.lap(`2nd await - attrLength=${uniqAttrs.length}`);
+        if (debug === 3) TAS.debug(`updateRollPenalty:: values=`,values);
+
+        const finalObj = {};
+        const rollPen = getAndSetIfNeg(values, finalObj, 'rollpenalty-input');
+        //will be removed
+        finalObj['roll-penalty'] = rollPen;
+        if (debug === 3) TAS.debug(`updateRollPenalty:: rollPen=${rollPen} finalObj=`,finalObj);
+
+        time.lap('before last await');
+        Object.assign(finalObj, await awru.reduceAndUpdateObj(values, finalObj));
+        time.lap('last await');
+
+        TAS.debug('updateRollPenalty:: finalObj=', finalObj);
+        time.lap('debug');
+        setAttrs(finalObj);
+        time.lap('setAttrs');
+    }
+    function getAndSetIfNeg(values, finalObj, attr) {
+        const tested = Number(values[attr]);
+        if (isNaN(tested) || tested < 0) {
+            const ret = Math.abs(tested) || 0;
+            if (debug === 2) TAS.debug(`updateRollPenalty:getAndResetIfNeg:: set RollPen=${ret}`);
+            finalObj[attr] = ret;
+            return ret;
+        }
+        return tested;
     }
 
     var craftAbilitiesHash = {
@@ -455,6 +731,10 @@
         }
     });
 
+    function getBgDefBoost(drill, might) {
+        return (drill === 'Average' ? 1 : drill === 'Elite' ? 2 : 0) + (['1','2'].includes(might) ? 1 : might === '3' ? 2 : 0);
+    }
+
     on('sheet:opened change:battlegroup change:battlegroup-drill change:battlegroup-might', async function setOrDisableBattleGroupSpecialAttrs(e) {
         if (e.sourceType !== "player") {
             if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: TRIGGER FROM SCRIPT => CANCEL`);
@@ -462,23 +742,21 @@
         }
         if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
             if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: setting DEFAULT bg attrs`);
-            setAttrs({
+            setAttrs(await getUpdatedCombatDefensesObj({
                 "battlegroup-size": 0,
                 "battlegroup-drill": 'Poor',
                 "battlegroup-might": 0,
-                "battlegroup-def-boost": 0,
                 "battlegroup-acc-boost": 0,
                 "battlegroup-dmg-boost": 0
-            });
+            }));
         } else {
             const values = await getAttrsAsync(["battlegroup-drill", "battlegroup-might"]);
             if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
             if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: updating special bg attrs`);
-            setAttrs({
-                "battlegroup-def-boost": (values["battlegroup-drill"] === 'Average' ? 1 : values["battlegroup-drill"] === 'Elite' ? 2 : 0) + (['1','2'].includes(values["battlegroup-might"]) ? 1 : values["battlegroup-might"] === '3' ? 2 : 0),
+            setAttrs(await getUpdatedCombatDefensesObj({
                 "battlegroup-acc-boost": Number(values["battlegroup-might"]),
                 "battlegroup-dmg-boost": Number(values["battlegroup-might"])
-            });
+            }));
         }
     });
 
@@ -692,6 +970,7 @@
         {version: 2.64, fn: upgradeto265},
         {version: 2.65, fn: upgradeto266},
         {version: 2.66, fn: upgradeto267},
+        {version: 2.67, fn: upgradeto268},
     ];
 
     on('sheet:opened', async function versionCheck(e) {
@@ -893,6 +1172,12 @@
                 return exaltTypeName;
         }
         return 'None';
+    }
+
+    async function upgradeto268() {
+        const setObj = await getUpdatedDefensesObj({'version': 2.68});
+        TAS.debug(`upgradeto268:: setObj=`, setObj);
+        setAttrs(setObj);
     }
 
     async function upgradeto267() {
@@ -1485,7 +1770,6 @@
             'showsupdiv': 0,
             'showlimit': 0,
             'committedesstotal': 0,
-            'battlegroup-def-boost': 0,
             'battlegroup-acc-boost': 0,
             'battlegroup-dmg-boost': 0,
             'grab-def-penalty': 0,
@@ -1551,16 +1835,16 @@
             valAwareness = valJb - valRes;
         }
         TAS.debug('set wits=' + valWits + ', integrity=' + valIntegrity + ', awareness=' + valAwareness);
-        setAttrs({
+        setAttrs(await ResolveUpdater.getUpdatedResolveObj({
             'wits': valWits,
             'integrity': valIntegrity,
             'awareness': valAwareness
-        });
+        }));
     }
 
     on('change:qc-guile', TAS._fn(async function quickGuileChange(e) {
         const val = Number(await getSingleAttrAsync('qc-guile'));
-        setAttrs({'manipulation': val, 'socialize': val});
+        setAttrs(await GuileUpdater.getUpdatedGuileObj({'manipulation': val, 'socialize': val}));
     }));
 
     on('change:qc-resolve change:qc-join-battle', TAS._fn(function quickResolveChange(e) {
@@ -1569,21 +1853,50 @@
 
     on('change:qc-evasion', TAS._fn(async function quickEvasionChange(e) {
         const val = Number(await getSingleAttrAsync('qc-evasion'));
-        setAttrs({'dexterity': val, 'dodge': val});
+        const finalObj = await EvasionUpdater.getUpdatedEvasionObj({'dexterity': val, 'dodge': val});
+        TAS.debug(`quickEvasionChange:: finalObj=`, finalObj);
+        setAttrs(finalObj);
     }));
 
     on('change:qc-soak', TAS._fn(async function quickSoakChange(e) {
         const val = Number(await getSingleAttrAsync('qc-soak'));
-        setAttrs({'naturalsoak': val > 0 ? val - 1 : 0});
+        const natSoak = val > 0 ? val - 1 : 0,
+            finalObj = {
+            'naturalsoak': natSoak,
+            ...await getUpdatedSoakObj(undefined, natSoak)
+            };
+
+        TAS.debug(`quickSoakChange:: Setting:`, finalObj);
+        setAttrs(finalObj);
     }));
 
+    on('sheet:opened change:stamina change:naturalsoak change:armorsoak change:battlegroup-size', TAS._fn(async function updateSoak(e) {
+        if (e.sourceType !== "player") {
+            if (debug === 2) TAS.debug(`updateParry:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
+        setAttrs(await getUpdatedSoakObj());
+    }));
+
+    async function getUpdatedSoakObj(staUpd = undefined, natSoakUpd = undefined, armSoakUpd = undefined, bgSizeUpd = undefined) {
+        const attrNeeded = ['stamina', 'naturalsoak' ,'armorsoak', 'battlegroup-size'],
+              val = await getAttrsAsync(attrNeeded),
+              stamina = staUpd || Number(val['stamina']),
+              natSoak = natSoakUpd || Number(val['naturalsoak']),
+              armSoak = armSoakUpd || Number(val['armorsoak']),
+              bgSize = bgSizeUpd || Number(val['battlegroup-size']);
+        return {'totalsoak':(stamina+natSoak+armSoak+bgSize), 'totalsoak-detail':`(${stamina}+${natSoak}+${armSoak}+${bgSize})`};
+    }
+
     on('change:repeating_qcattacks remove:repeating_qcattacks', setDebugWrapper(async function qcAttacksChange() {
+        const pu = new ParryUpdater();
         const idSections = await getSectionIDsAsync('qcattacks');
         let idWeaponSections = await getSectionIDsAsync('weapon');
-        const qcFieldNames = [];
-        idSections.forEach(id => qcFieldNames.push(`caste-have-exc`, `repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
+        const qcFieldNames = [`caste-have-exc`, ...await pu.getAttrToBeRetrieved()];
+        idSections.forEach(id => qcFieldNames.push(`repeating_qcattacks_${id}_repqcattackname`, `repeating_qcattacks_${id}_repqcattackdice`, `repeating_qcattacks_${id}_repqcattackdice-exc`, `repeating_qcattacks_${id}_repqcattackdamage`, `repeating_qcattacks_${id}_repqcattackovw`));
 
-        const valuesSections = await getAttrsAsync(qcFieldNames);
+        const uniqAttrList = [...new Set(qcFieldNames)];
+        const valuesSections = await getAttrsAsync(uniqAttrList);
         // remove weapons
         idWeaponSections.forEach(id => removeRepeatingRow(`repeating_weapon_${id}`));
         idWeaponSections = [];
@@ -1608,10 +1921,9 @@
             weaponFieldToSet[weap_ovw_attr] = valuesSections[ovw_attr];
         }
 
-        TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(weaponFieldToSet)}`);
-        setAttrs(weaponFieldToSet);
-
-        updateParry({sourceType: "player", triggerName: "qc-parry"});
+        const finalObj = pu.updateObj(valuesSections, weaponFieldToSet);
+        TAS.debug(`GetQCAttacksFieldsAndUpdateWeaponFields:: Setting:${JSON.stringify(finalObj)}`);
+        setAttrs(finalObj);
     }));
 
     /* ************** */
@@ -1839,7 +2151,7 @@
     const charmRollExprRegexp = /^!exr (?:(?:\d+|\(.+\))#|-set)/;
     [...charmRepeatableSectionArray, 'spells'].forEach(section => {
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function changeCharmRollExpr(e) {
-            if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=`, e);
+            if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=${JSON.stringify(e)}`);
             const attr_name = `repeating_${section}_${e.sourceAttribute.split('_')[2]}_charm-buttons-isextended`;
             let test = e.newValue ? e.newValue.match(charmRollExprRegexp) : false;
             const obj = {[attr_name] : test ? 1 : 0};
@@ -1849,8 +2161,8 @@
 
     charmRepeatableSectionArray.forEach(section => {
         on(`change:repeating_${section}`, setDebugWrapper(async function setAspectAndBalancedDefault(e) {
-            if (debug === 2) TAS.debug(`setAspectAndBalancedDefault::setAspectAndBalancedDefault e=`, e);
             if (e.sourceType !== "player") return;
+            if (debug === 2) TAS.debug(`setAspectAndBalancedDefault::setAspectAndBalancedDefault e=${JSON.stringify(e)}`);
             const id = e.sourceAttribute.split('_')[2];
             const val = await getAttrsAsync([`caste`,`repeating_${section}_${id}_charm-aspect`,`repeating_${section}_${id}_charm-balanced`]);
             let objSet = {};
@@ -2150,7 +2462,7 @@
 
     function defaultInitFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']} ${checkValReturnValidString(val[attr_name+'bonus-dices'], ' ')}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'bonus-successes'])} ${val[attr_name+'final-macro-options']}`; }
     function defaultWAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'watk-attr']} +${val[attr_name+'watk-abi']}${checkValReturnValidString(val[attr_name+'weap-atk'], '', ' +')}[Accuracy] ${checkValReturnValidString(val[attr_name+'watk-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] +@{battlegroup-acc-boost}[BG Acc] ':''}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'watk-bonus-successes'])} ${val[attr_name+'watk-final-macro-options']}`; }
-    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']} -NB`; }
+    function defaultWDamageFinalExpr(val, attr_name)     { return `([[{${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -[[@{target|YOUR_TARGET|totalsoak-detail}]],${val[attr_name+'weap-ovw']}}kh1]])#${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'])} [({${val[attr_name+'wdmg-attr']} +${val[attr_name+'weap-dmg']} ${checkValReturnValidString(val[attr_name+'wdmg-bonus-dices'], ' ')}${val['battlegroup'] && Number(val['battlegroup']) ? `${checkValReturnValidString(val['battlegroup-size'])} ${checkValReturnValidString(val['battlegroup-dmg-boost'])} `:''}+?{Threshold ?|0} -SOAK(@{target|YOUR_TARGET|totalsoak-detail}),${val[attr_name+'weap-ovw']}}kh1)D${checkValReturnValidString(val[attr_name+'wdmg-bonus-successes'], 'S', ' +')}] ${val[attr_name+'wdmg-final-macro-options']} -NB`; }
     function defaultDAttackFinalExpr(val, attr_name)     { return `(${val[attr_name+'datk-attr']} +${val[attr_name+'datk-abi']} ${checkValReturnValidString(val[attr_name+'datk-bonus-dices'], ' ', '+')}${val['battlegroup'] && Number(val['battlegroup']) ? '+@{battlegroup-size}[BG Size] ':''}-@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkValReturnValidString(val[attr_name+'datk-bonus-successes'])} ${val[attr_name+'datk-final-macro-options']}`; }
     function defaultDDamageFinalExpr(val, attr_name)     { return `(${val[attr_name+'ddmg-dices']})#${checkValReturnValidString(val[attr_name+'ddmg-bonus-successes'])} ${val[attr_name+'ddmg-final-macro-options']} -NB`; }
     function defaultInitToResetFinalExpr(val, attr_name) { return `${checkValReturnValidString(val[attr_name+'init-to-set'], ')', '(')}`; }
@@ -2314,15 +2626,6 @@
         setAttrs(healthIndexes);
         updateWound({sourceType: "player", triggerName: "other"});
     }));
-
-    function generateNewRowId(array_existing) {
-        let ret;
-        do {
-            ret = generateRowID();
-        } while (array_existing.includes(ret))
-        array_existing.push(ret);
-        return ret;
-    }
 
     /* heal HL button */
     on('clicked:heal-hl', TAS._fn(async function updateMotePool(eventInfo){
@@ -2609,39 +2912,191 @@
     /* * Rolls Widgets * */
     /* ***************** */
 
-    const widgetAttrs = [
-        'rep-cost-mote-offset',
-        'reprolls-attr',
-        'reprolls-abi',
-        'reprolls-stunt-dices',
-        'reprolls-specialty',
-        'reprolls-ycharm-dices',
-        'reprolls-ycharm-paid-dices',
-        'reprolls-ncharm-dices',
-        'reprolls-willpower-toggle',
-        'reprolls-ycharm-successes',
-        'reprolls-ycharm-paid-successes',
-        'reprolls-ncharm-successes',
-        'reprolls-pool-starting',
-        'reprolls-attr-lunar-exc',
-        'reprolls-anima-flare',
-        'reprolls-inside-city',
-        'reprolls-attr-puppeteer-exc',
-        'reprolls-anima-sovereign',
-        'reprolls-uphold-ideal',
-        'reprolls-intimacy-hearteater',
-    ], widgetBaseAttrs = [
-        'rollpenalty-input',
-        'wound-penalty',
-        'essence',
-        'limit'
-    ];
+    class RollWidgetUpdater {
+        #parsedAttr;
 
-    for (const attr of widgetAttrs) {
+        #setExcellencyCaps(val, totalMotePaid, finalObj) {
+            const attr_name = this.attr;
+            const config = {
+                'solar':        (o) => (Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-abi'])),
+                'lunar':        (o) => (Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-attr-lunar-exc'])),
+                'db':           (o) => (Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-specialty'])),
+                'liminal':      (o) => (Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-anima-flare'])),
+                'sidereal':     (o) => (Math.min(5, Math.max(3, Number(o['essence'])))),
+                'architect':    (o) => (Math.min(10, Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-inside-city']))),
+                'puppeteer':    (o) => (Number(o[attr_name + 'reprolls-attr-puppeteer-exc'])+Number(o[attr_name + 'reprolls-specialty'])),
+                'sovereign':    (o) => (4+Number(o[attr_name + 'reprolls-anima-sovereign'])),
+                'dreamsouled':  (o) => (Math.min(10, Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-uphold-ideal']))),
+                'hearteater':   (o) => (Number(o[attr_name + 'reprolls-attr'])+1+Number(o[attr_name + 'reprolls-intimacy-hearteater'])),
+                'umbral':       (o) => (Math.min(10, Number(o[attr_name + 'reprolls-attr'])+Number(o['limit']))),
+            }
+            for (const [key, fx] of Object.entries(config)) {
+                const total = fx(val), diff = total - totalMotePaid;
+                if (debug === 3) TAS.debug(`RollWidgetUpdater:#setExcellencyCaps:: key(${key}) total=${total} diff=${diff}`);
+                verifyAndSetIfDifferent(val, finalObj, `${attr_name}reprolls-exc-${key}-sum-calc`, totalMotePaid);
+                verifyAndSetIfDifferent(val, finalObj, `${attr_name}reprolls-exc-${key}-total-calc`, total);
+                verifyAndSetIfDifferent(val, finalObj, `${attr_name}reprolls-exc-${key}-diff-sign-calc`, diff);
+            }
+        }
+
+        static get widgetAttrs() { return [
+            'rep-cost-mote-offset',
+            'reprolls-attr',
+            'reprolls-abi',
+            'reprolls-stunt-dices',
+            'reprolls-specialty',
+            'reprolls-ycharm-dices',
+            'reprolls-ycharm-paid-dices',
+            'reprolls-ncharm-dices',
+            'reprolls-willpower-toggle',
+            'reprolls-ycharm-successes',
+            'reprolls-ycharm-paid-successes',
+            'reprolls-ncharm-successes',
+            'reprolls-pool-starting',
+            'reprolls-attr-lunar-exc',
+            'reprolls-anima-flare',
+            'reprolls-inside-city',
+            'reprolls-attr-puppeteer-exc',
+            'reprolls-anima-sovereign',
+            'reprolls-uphold-ideal',
+            'reprolls-intimacy-hearteater',
+        ];}
+        static get widgetBaseAttrs() { return [
+            'rollpenalty-input',
+            'wound-penalty',
+            'essence',
+            'limit'
+        ];}
+        static get splatExcellenciesArray() { return [
+            'solar',
+            'lunar',
+            'db',
+            'liminal',
+            'sidereal',
+            'architect',
+            'puppeteer',
+            'sovereign',
+            'dreamsouled',
+            'hearteater',
+            'umbral'
+        ];}
+        static get widgetVerifyAttrs() { return [
+            'roll-penalty',
+            'woundpenalty2',
+            'reprolls-separator-mode',
+            'rep-cost-macro',
+            'rep-cost-total-taint',
+            'rep-cost-total',
+            'reprolls-dice-total-calc',
+            'reprolls-successes-total-calc',
+            ...RollWidgetUpdater.splatExcellenciesArray.reduce((acc, i) => [
+                ...acc,
+                `reprolls-exc-${i}-sum-calc`,
+                `reprolls-exc-${i}-total-calc`,
+                `reprolls-exc-${i}-diff-sign-calc`
+            ], [])
+        ];}
+
+        constructor(input) {
+            if (input instanceof RepeatingSectionAttrParser)
+                this.#parsedAttr = input;
+            else
+                this.#parsedAttr = new RepeatingSectionAttrParser(input);
+        }
+
+        get id()    { return this.#parsedAttr.id; }
+        get attr()  { return this.#parsedAttr.attrBase; }
+
+        getAttrToBeRetrieved() {
+            return [
+                ...RollWidgetUpdater.widgetAttrs.map(attr => this.attr + attr),
+                ...RollWidgetUpdater.widgetBaseAttrs,
+                ...RollWidgetUpdater.widgetVerifyAttrs.map(attr => this.attr + attr),
+            ];
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
+            const getAndResetIfNeg = (finalObj, attr) => {
+                const tested = Number(getFromUpdatedOrRetrieve(attr));
+                if (tested < 0) {
+                    if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:getAndResetIfNeg:: Reset Attr=${attr}`);
+                    Object.assign(finalObj, {[attr]: 0});
+                    return 0;
+                }
+                return tested;
+            }
+            const attr_name = this.attr;
+            if (debug === 3) TAS.debug(`RollWidgetUpdater:updateObj:: IN attr_name=${attr_name} values=`,values);
+            const separatorMode = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-separator-mode')),
+                  finalObj = JSON.parse(JSON.stringify(toBeUpdated));
+            if (separatorMode) {
+                if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: Separator MODE => ABORT`);
+                return finalObj;
+            }
+            const moteOffset = Number(getFromUpdatedOrRetrieve(attr_name + 'rep-cost-mote-offset')),
+                  attr = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-attr')),
+                  abi = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-abi')),
+                  will = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-willpower-toggle')) || 0,
+                  starting = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-pool-starting')),
+                  stunt = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-stunt-dices')),
+                  spe = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-specialty')),
+                  nDices = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-ncharm-dices')),
+                  rollPen = Number(getFromUpdatedOrRetrieve('rollpenalty-input')),
+                  woundPen = Number(getFromUpdatedOrRetrieve('wound-penalty')),
+                  moteDices = getAndResetIfNeg(finalObj, attr_name + 'reprolls-ycharm-dices'),
+                  paidD = getAndResetIfNeg(finalObj, attr_name + 'reprolls-ycharm-paid-dices'),
+                  moteSuccs = getAndResetIfNeg(finalObj, attr_name + 'reprolls-ycharm-successes'),
+                  paidS = getAndResetIfNeg(finalObj, attr_name + 'reprolls-ycharm-paid-successes'),
+                  nSucc = getAndResetIfNeg(finalObj, attr_name + 'reprolls-ncharm-successes');
+            let finalMacro = '=COST:@{character_id}';
+    
+            const moteCost = Math.abs(moteOffset + moteDices + moteSuccs * 2);
+            if (moteCost)   finalMacro += `:peri=${starting};${moteCost}`;
+            if (will)       finalMacro += `:will;${will}`;
+    
+            const totalDices = Math.max(0, attr+abi+stunt+spe+moteDices+paidD+nDices-rollPen-woundPen);
+            if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting totalDices=${totalDices} (attr=${attr} + abi=${abi} + stunt=${stunt} + spe=${spe} + dices=${moteDices} + paidD=${paidD} + nDices=${nDices} - rollPen=${rollPen} - woundPen=${woundPen})`);
+    
+            const totalSucc = will+moteSuccs+paidS+nSucc;
+            if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting totalSucc=${totalSucc} (will=${will} + succ=${moteSuccs} + paidD=${paidS} + nSucc=${nSucc})`);
+    
+            if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro} TOTAL=${moteCost}`);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'roll-penalty', rollPen);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'woundpenalty2', woundPen);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'rep-cost-macro', finalMacro);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'rep-cost-total-taint', moteCost >= 5 ? starting : 0);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'rep-cost-total', moteCost);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'reprolls-dice-total-calc', totalDices);
+            verifyAndSetIfDifferent(values, finalObj, attr_name+'reprolls-successes-total-calc', totalSucc);
+    
+            this.#setExcellencyCaps(values, moteDices + paidD + 2*(moteSuccs + paidS), finalObj);
+            return finalObj;
+        }
+
+        async getUpdatedObj(toBeUpdated = {}) {
+            const time = new TimeCounter('RollWidgetUpdater:getUpdatedObj');
+            if (debug === 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: CALL getAttrsAsync(COST ATTRS)`);
+            const attrList = this.getAttrToBeRetrieved();
+            const values = await getAttrsAsync(attrList);
+            time.lap(`1st await - attrList.length=${attrList.length}`);
+            if (debug === 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: getAttrsAsync(COST ATTRS) values=`,values);
+            await AttrReplacer.reduceAttrs(values);
+            time.lap(`2nd await`);
+            if (debug === 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: getAttrsAsync(COST ATTRS) values=`,values);
+            const ret = this.updateObj(values, toBeUpdated);
+            time.lap(`out`);
+            return ret;
+        }
+
+        static async getUpdatedRollWidgetObj(e) {
+            return await new RollWidgetUpdater(e).getUpdatedObj();
+        }
+    }
+
+    for (const attr of RollWidgetUpdater.widgetAttrs) {
         on(`change:repeating_rolls-widget:${attr}`, updateRollWidget);
     };
-    on(`change:rollpenalty-input`, updateAllRollWidgets);
-    on(`change:wound-penalty`, updateAllRollWidgets);
 
     function updateRollWidgetAsync(e) {
         return new Promise((resolve,reject)=>{
@@ -2649,69 +3104,17 @@
             catch{ reject(); }});
     }
     async function updateRollWidget(e, cb) {
+        const time = new TimeCounter('updateRollWidget');
         if (debug === 2) TAS.debug('updateRollWidget::updateRollWidget e=', JSON.stringify(e));
-
-        const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
-        if (debug === 2) TAS.debug(`updateRollWidget:: attr_name=${attr_name}`);
 
         if (e.sourceType === "sheetworker") { // && !['wound-penalty','rollpenalty-input'].includes(e.triggerName)
             if (debug === 2) TAS.debug('updateRollWidget:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
 
-        if (debug === 2) TAS.debug(`updateRollWidget:: CALL getAttrsAsync(COST ATTRS)`);
-        const val = await getAttrsAsync([...widgetAttrs.map(attr => attr_name + attr), ...widgetBaseAttrs]);
-        if (debug === 2) TAS.debug(`updateRollWidget:: getAttrsAsync(COST ATTRS) val=`,val);
-        await reduceAttrs(val);
-        if (debug === 2) TAS.debug(`updateRollWidget:: getAttrsAsync(COST ATTRS) val=`,val);
-        const moteOffset = Number(val[attr_name + 'rep-cost-mote-offset']),
-              attr = Number(val[attr_name + 'reprolls-attr']),
-              abi = Number(val[attr_name + 'reprolls-abi']),
-              will = Number(val[attr_name + 'reprolls-willpower-toggle']) || 0,
-              starting = Number(val[attr_name + 'reprolls-pool-starting']),
-              stunt = Number(val[attr_name + 'reprolls-stunt-dices']),
-              spe = Number(val[attr_name + 'reprolls-specialty']),
-              nDices = Number(val[attr_name + 'reprolls-ncharm-dices']),
-              rollPen = Number(val['rollpenalty-input']),
-              woundPen = Number(val['wound-penalty']);
-        let moteDices = Number(val[attr_name + 'reprolls-ycharm-dices']),
-            paidD = Number(val[attr_name + 'reprolls-ycharm-paid-dices']),
-            moteSuccs = Number(val[attr_name + 'reprolls-ycharm-successes'])
-            paidS = Number(val[attr_name + 'reprolls-ycharm-paid-successes']),
-            nSucc = Number(val[attr_name + 'reprolls-ncharm-successes']),
-            finalMacro = '=COST:@{character_id}',
-            finalObj = {};
-
-        moteDices = resetIfNeg(moteDices, finalObj, attr_name + 'reprolls-ycharm-dices');
-        paidD = resetIfNeg(paidD, finalObj, attr_name + 'reprolls-ycharm-paid-dices');
-        moteSuccs = resetIfNeg(moteSuccs, finalObj, attr_name + 'reprolls-ycharm-successes');
-        paidS = resetIfNeg(paidS, finalObj, attr_name + 'reprolls-ycharm-paid-successes');
-        nSucc = resetIfNeg(nSucc, finalObj, attr_name + 'reprolls-ncharm-successes');
-
-        let moteCost = Math.abs(moteOffset + moteDices + moteSuccs * 2);
-        if (moteCost) finalMacro += `:peri=${starting};${moteCost}`;
-        if (will) finalMacro += `:will;${will}`;
-
-        if (debug === 2) TAS.debug(`updateRollWidget:: setting attr=${attr}+abi=${abi}+stunt=${stunt}+spe=${spe}+dices=${moteDices}+paidD=${paidD}+nDices=${nDices}-rollPen=${rollPen}-woundPen=${woundPen}`);
-        const totalDices = Math.max(0, attr+abi+stunt+spe+moteDices+paidD+nDices-rollPen-woundPen);
-        if (debug === 2) TAS.debug(`updateRollWidget:: setting totalDices=${totalDices}`);
-
-        if (debug === 2) TAS.debug(`updateRollWidget:: setting will=${will}+succ=${moteSuccs}+paidD=${paidS}+nSucc=${nSucc}`);
-        const totalSucc = will+moteSuccs+paidS+nSucc;
-        if (debug === 2) TAS.debug(`updateRollWidget:: setting totalSucc=${totalSucc}`);
-
-        if (debug === 2) TAS.debug(`updateRollWidget:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro} TOTAL=${moteCost}`);
-        finalObj = {
-            ...finalObj,
-            [attr_name+'roll-penalty']: rollPen,
-            [attr_name+'woundpenalty2']: woundPen,
-            [attr_name+'rep-cost-macro']: finalMacro,
-            [attr_name+'rep-cost-total-taint']: moteCost >= 5 ? starting : 0,
-            [attr_name+'rep-cost-total']: moteCost,
-            [attr_name+'reprolls-dice-total-calc']: totalDices,
-            [attr_name+'reprolls-successes-total-calc']: totalSucc,
-        };
-        setExcellencyCaps(val, attr_name, moteDices + paidD + 2*(moteSuccs + paidS), finalObj);
+        time.lap(`before 1st await`);
+        const finalObj = await RollWidgetUpdater.getUpdatedRollWidgetObj(e);
+        time.lap(`after 1st await`);
         if (debug === 2) TAS.debug(`updateRollWidget:: setting:`,finalObj);
         if (cb) {
             await setAttrsAsync(finalObj);
@@ -2719,84 +3122,62 @@
         } else {
             setAttrs(finalObj);
         }
-        if (debug === 2) TAS.debug(`updateRollWidget:: OUT`);
+        if (debug === 3) TAS.debug(`updateRollWidget:: OUT`);
+        time.lap(`OUT`);
     }
 
-    function setExcellencyCaps(val, attr_name, totalMotePaid, finalObj) {
-        const config = {
-            'solar': (o) => (Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-abi'])),
-            'lunar': (o) => (Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-attr-lunar-exc'])),
-            'db': (o) => (Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-specialty'])),
-            'liminal': (o) => (Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-anima-flare'])),
-            'sidereal': (o) => (Math.min(5, Math.max(3, Number(o['essence'])))),
-            'architect': (o) => (Math.min(10, Number(o[attr_name + 'reprolls-attr'])+Number(o[attr_name + 'reprolls-inside-city']))),
-            'puppeteer': (o) => (Number(o[attr_name + 'reprolls-attr-puppeteer-exc'])+Number(o[attr_name + 'reprolls-specialty'])),
-            'sovereign': (o) => (4+Number(o[attr_name + 'reprolls-anima-sovereign'])),
-            'dreamsouled': (o) => (Math.min(10, Number(o[attr_name + 'reprolls-abi'])+Number(o[attr_name + 'reprolls-uphold-ideal']))),
-            'hearteater': (o) => (Number(o[attr_name + 'reprolls-attr'])+1+Number(o[attr_name + 'reprolls-intimacy-hearteater'])),
-            'umbral': (o) => (Math.min(10, Number(o[attr_name + 'reprolls-attr'])+Number(o['limit']))),
-        }
-        for (const [key, fx] of Object.entries(config)) {
-            const total = fx(val), diff = total - totalMotePaid;
-            if (debug === 2) TAS.debug(`setExcellencyCaps:: key(${key}) total=${total} diff=${diff}`);
-            Object.assign(finalObj, {
-                [attr_name+`reprolls-exc-${key}-sum-calc`]: totalMotePaid,
-                [attr_name+`reprolls-exc-${key}-total-calc`]: total,
-                [attr_name+`reprolls-exc-${key}-diff-sign-calc`]: diff
-            })
-        }
-    }
+    class AllRollWidgetsUpdater {
+        #rwuArray = [];
 
-    function resetIfNeg(tested, finalObj, attr) {
-        if (tested < 0) {
-            if (debug === 2) TAS.debug(`reduceAttr:: Reset Attr ${ret[1]}`);
-            Object.assign(finalObj, {[attr]: 0});
-            return 0;
-        }
-        return tested;
-    }
+        constructor() {}
 
-    async function reduceAttrs(val) {
-        let newGetArray = [], newGetKeysToReplace = [], matchRet;
-        for (const [key, value] of Object.entries(val)) {
-            if (value === undefined) {
-                if (debug === 2) TAS.debug(`reduceAttrs:: UNDEFINED KEY=${key} use 0`);
-                val[key] = 0;
-            } else if (typeof value === 'string' && (matchRet = value.match(/^@\{(.+)\}/))) {
-                if (!newGetArray.includes(matchRet[1])) {
-                    if (debug === 2) TAS.debug(`reduceAttrs:: found an attr to replace:${matchRet[1]} key=${key}`);
-                    newGetArray.push(matchRet[1]);
-                }
-                newGetKeysToReplace.push(key);
-            } else if (typeof value === 'string' && (matchRet = value.match(/^(\d+)/))) {
-                val[key] = matchRet[1];
+        async getAttrToBeRetrieved(widgetIds) {
+            const widgetIdArray = widgetIds || await getSectionIDsAsync('rolls-widget');
+            const attrList = [];
+            for (const id of widgetIdArray) {
+                const rwu = new RollWidgetUpdater(`repeating_rolls-widget_${id}_FAKE-FOR-UPDATE-ALL`);
+                attrList.push(...rwu.getAttrToBeRetrieved());
+                this.#rwuArray.push(rwu);
             }
+            return attrList;
         }
-        if (debug === 2) TAS.debug(`reduceAttrs:: newGetArray=${JSON.stringify(newGetArray)} newGetKeysToReplace=${JSON.stringify(newGetKeysToReplace)}`);
-        const val2 = await getAttrsAsync(newGetArray);
-        Object.assign(val, val2);
-        if (debug === 2) TAS.debug(`reduceAttrs:: val2=${JSON.stringify(val2)}`);
-        for (const key of newGetKeysToReplace) {
-            if ((matchRet = val[key].match(/^@\{(.+)\}/))) {
-                if (Object.keys(val2).includes(matchRet[1])) {
-                    val[key] = val2[matchRet[1]];
-                } else {
-                    if (debug === 2) TAS.debug(`reduceAttrs:: WTF 2 ??? !!! use 0 key=${key}`);
-                    val[key] = 0;
-                }
-            } else {
-                if (debug === 2) TAS.debug(`reduceAttrs:: WTF ??? use 0 key=${key}`);
-                val[key] = 0;
-            }
+
+        async reduceAndUpdateObj(values, toBeUpdated = {}) {
+            const finalObj = JSON.parse(JSON.stringify(toBeUpdated));
+            await AttrReplacer.reduceAttrs(values);
+            if (debug === 3) TAS.debug(`AllRollWidgetsUpdater:reduceAndUpdateObj:: AFTER reduceAttrs: values=`,values);
+            for (const rwu of this.#rwuArray)
+                Object.assign(finalObj, rwu.updateObj(values, finalObj));
+            return finalObj;
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            const finalObj = JSON.parse(JSON.stringify(toBeUpdated));
+            for (const rwu of this.#rwuArray)
+                Object.assign(finalObj, rwu.updateObj(values, finalObj));
+            return finalObj;
         }
     }
 
-    async function updateAllRollWidgets() {
-        const widgetIds = await getSectionIDsAsync('rolls-widget');
-        for (const id of widgetIds)
-            updateRollWidget({sourceType:"me",sourceAttribute:`repeating_rolls-widget_${id}_DOIT`});
+    // on(`change:rollpenalty-input`, updateAllRollWidgets);
+    on(`change:wound-penalty`, updateAllRollWidgets); // TO BE REMOVED SOON
+    async function updateAllRollWidgets(e) {
+        if (debug >= 2 && e) TAS.debug(`updateAllRollWidgets:: e=`,e);
+        const finalObj = await getUpdatedAllRollWidgetsObj();
+        TAS.debug(`updateAllRollWidgets:: setting:`,finalObj);
+        setAttrs(finalObj);
     }
-
+    async function getUpdatedAllRollWidgetsObj(toBeUpdated = {}) {
+        const awru = new AllRollWidgetsUpdater(), attrList = await awru.getAttrToBeRetrieved();
+        const uniqAttrs = [...new Set(attrList)];
+        if (debug === 3) TAS.debug(`getUpdatedAllRollWidgetsObj:: uniqAttrs=`,uniqAttrs);
+        const values = await getAttrsAsync(uniqAttrs);
+        if (debug === 3) TAS.debug(`getUpdatedAllRollWidgetsObj:: values=`,values);
+        await AttrReplacer.reduceAttrs(values);
+        if (debug === 3) TAS.debug(`getUpdatedAllRollWidgetsObj:: AFTER reduceAttrs: values=`,values);
+        const finalObj = await awru.reduceAndUpdateObj(values, toBeUpdated);
+        return finalObj;
+    }
     /**
      * Roll Widget Compute and startRoll !!!
      */
@@ -2874,14 +3255,15 @@
     //     repeatGlobalToRepeatableAttr(attrName, e);
     // })));
 
-    function repeatGlobalToRepeatableAttr(attrName, e) {
+    // NOT USED ATM
+    function repeatGlobalAttrToRepeatableAttr(attrName, e) {
         if (debug === 2) TAS.debug(`repeatGlobalToRepeatableAttr::repeatGlobalToRepeatableAttr e=${JSON.stringify(e)}`);
         if (isNaN(e.newValue) && isNaN(e.previousValue)) return;
         const value = Number(e.newValue) || 0;
-        setAttrs(repeatGlobalToRepeatableAttrToValue(attrName, value));
+        setAttrs(repeatValueToRepeatableAttr(attrName, value));
     }
 
-    async function repeatGlobalToRepeatableAttrToValue(attrName, value) {
+    async function repeatValueToRepeatableAttr(attrName, value) {
         if (debug === 2) TAS.debug(`repeatGlobalToRepeatableAttrToValue::repeatGlobalToRepeatableAttrToValue`);
         let finalSetObj = {};
         for (const sectionName of allRepeatablesToPush) {
@@ -2896,6 +3278,148 @@
     /* ****************** */
     /* * UTILIY SECTION * */
     /* ****************** */
+
+    function generateNewRowId(array_existing) {
+        let ret;
+        do {
+            ret = generateRowID();
+        } while (array_existing.includes(ret))
+        array_existing.push(ret);
+        return ret;
+    }
+
+    class AttrReplacer {
+        #newGetArray = [];
+        #newGetKeysToReplace = [];
+        #attrRetrieved;
+        #time;
+
+        static #isInternalConstructing = false;
+
+        constructor (val) {
+            if (!AttrReplacer.#isInternalConstructing)
+                throw new Exception(`Cannot construct AttrReplacer`)
+            this.#time = new TimeCounter('AttrReplacer:reduceAttrs');
+            const inKeys = Object.keys(val);
+            let matchRet;
+            for (const [key, value] of Object.entries(val)) {
+                if (value === undefined) {
+                    if (debug === 2) TAS.debug(`AttrReplacer:AttrReplacer:: UNDEFINED KEY=${key} use 0`);
+                    val[key] = 0;
+                } else if (typeof value === 'string' && (matchRet = value.match(/^@\{(.+)\}/))) {
+                    if (debug === 3) TAS.debug(`AttrReplacer:AttrReplacer:: found an attr to replace:${matchRet[1]} key=${key}`);
+                    if (!this.#newGetArray.includes(matchRet[1]) && !inKeys.includes(matchRet[1])) {
+                        this.#newGetArray.push(matchRet[1]);
+                    }
+                    this.#newGetKeysToReplace.push(key);
+                } else if (typeof value === 'string' && (matchRet = value.match(/^(\d+)/))) {
+                    val[key] = matchRet[1];
+                }
+            }
+            this.#attrRetrieved = val;
+            AttrReplacer.#isInternalConstructing = false;
+        }
+
+        #reduceAttrsReplace(val2) {
+            let matchRet;
+            for (const key of this.#newGetKeysToReplace) {
+                if ((matchRet = this.#attrRetrieved[key].match(/^@\{(.+)\}/))) {
+                    if (Object.keys(val2).includes(matchRet[1])) {
+                        this.#attrRetrieved[key] = val2[matchRet[1]];
+                    } else {
+                        if (debug === 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF 2 ??? !!! use 0 key=${key}`);
+                        this.#attrRetrieved[key] = 0;
+                    }
+                } else {
+                    if (debug === 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF ??? use 0 key=${key}`);
+                    this.#attrRetrieved[key] = 0;
+                }
+            }
+        }
+
+        async #reduceAttrs() {
+            this.#time.lap(`before await - attrList.length=${this.#newGetArray.length}`);
+            if (debug === 2) TAS.debug(`AttrReplacer:reduceAttrs:: newGetArray=${JSON.stringify(this.#newGetArray)} newGetKeysToReplace=`,this.#newGetKeysToReplace);
+            const val2 = await getAttrsAsync(this.#newGetArray);
+            this.#time.lap(`after await - val2.length=${Object.keys(val2).length}`);
+            Object.assign(this.#attrRetrieved, val2);
+            this.#time.lap(`after assign`);
+            if (debug === 2) TAS.debug(`AttrReplacer:reduceAttrs:: val2=`, val2);
+            this.#reduceAttrsReplace(val2);
+            this.#time.lap(`after replace - OUT`);
+        }
+
+        static async reduceAttrs(val) {
+            if (val === null || val === undefined || typeof val !== 'object')
+                throw new Exception(`AttrReplacer:reduceAttrs:: Must be called with an object as 1st argument`);
+            AttrReplacer.#isInternalConstructing = true;
+            return await new AttrReplacer(val).#reduceAttrs();
+        }
+    }
+
+    class TimeCounter {
+        #name;
+        #startTime;
+        #lastlap;
+
+        #tcDebug(msg) {
+            if (debug === 3) TAS.debug(`${this.#lastlap}${' '.repeat(14-String(this.#lastlap).length)}TimeCounter(${this.#name}):: ${msg}`);
+        }
+
+        constructor(name = 'NONE') {
+            this.#startTime = Date.now(), this.#lastlap = this.#startTime;
+            this.#name = name;
+            this.#tcDebug(`STARTED${name ? ` "${name}"` : ''}`);
+        }
+
+        lap(msg) {
+            const newlap = Date.now(),
+                  elapsed = newlap - this.#lastlap,
+                  elapsedTotal = newlap - this.#startTime;
+            this.#lastlap = newlap;
+            this.#tcDebug(`ELAPSED=${elapsed} SINCE-START=${elapsedTotal}${msg ? ` "${msg}"` : ''}`);
+        }
+    }
+
+    function verifyAndSetIfDifferent(inObj, outObj, attr, val) {
+        if (debug === 3) TAS.debug(`verifyAndSetIfDifferent:: comparing key=${attr} IN(${inObj[attr]})===TESTED(${val})`);
+        if (!(inObj && attr in inObj && inObj[attr] === val))
+            outObj[attr] = val;
+    }
+
+    class RepeatingSectionAttrParser {
+        #full;
+        #sectionName;
+        #id;
+        #attr;
+
+        #parseAttr(attrStr) {
+            const parsed = attrStr.split('_');
+            if (parsed.length !== 4) throw new Exception('RepeatingSectionAttrParser:: !! Cannot have empty string attr for RepeatingSectionAttrParser');
+            this.#full = attrStr;
+            this.#sectionName = parsed[1];
+            this.#id = parsed[2];
+            this.#attr = parsed[3];
+            if (debug === 3) TAS.debug(`RepeatingSectionAttrParser::RepeatingSectionAttrParser() PARSED=${this.#full}`);
+        }
+
+        constructor (input) {
+            if (input === null || input === undefined) throw new Exception('RepeatingSectionAttrParser:: !! Cannot have empty parameter for RepeatingSectionAttrParser');
+            const type = typeof input;
+            if (type === 'string') {
+                this.#parseAttr(input);
+            } else if (type === 'object' && !Array.isArray(input) && 'sourceAttribute' in input) {
+                this.#parseAttr(input.sourceAttribute);
+            } else {
+                throw new Exception('RepeatingSectionAttrParser:: !! Could not init RepeatingSectionAttrParser');
+            }
+        }
+
+        get attrBase()  { return `repeating_${this.#sectionName}_${this.#id}_`; }
+        get attrName()  { return this.#attr; }
+        get id()        { return this.#id; }
+        get attr()      { return this.#full; }
+    }
 
     on('change:token-size-percent', function changeTokenSizePercent(e) {
         if (debug === 2) TAS.debug(`changeTokenSizePercent::changeTokenSizePercent e=`, e);

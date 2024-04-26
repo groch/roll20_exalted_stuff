@@ -72,6 +72,8 @@ let outHtml = /*html*/
         <input type="hidden" name="attr_commit-list-shown" value="0">
         <input type="hidden" name="attr_roll-penalty" class="roll-penalty-check">
         <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check">
+        <input type="hidden" name="attr_onslaught-applied" class="apply-onslaught-check">
+        <input type="hidden" name="attr_onslaught" class="onslaught-check">
         <input type="hidden" name="attr_full-def-bonus" class="full-def-bonus-check" value="0">
         <input type="hidden" name="attr_cover-def-bonus" class="cover-bonus-check" value="0">
         <input type="hidden" name="attr_clash-def-penalty" class="clash-penalty-check" value="0">
@@ -528,7 +530,7 @@ ${pad(p)}</div>`;
 
 outHtml += /*html*/
 `                        <div><!-- 1.3.3.3 WILLPOWER & ESSENCE & LIMIT AREA; OR QC RIGHT COLUMN -->
-                            <input type="hidden" name="attr_showlimit_final" class="show-limit" value="(@{showlimit}+@{qc})" disabled="disabled" data-formula="(@{showlimit}+@{qc})">
+                            <input type="hidden" name="attr_showlimit_final" class="show-limit">
                             <div class="sheet-2colrow sheet-resize-to-mortal">
                                 <div class="sheet-col"><!-- 1.3.3.3.1 WILLPOWER & ESSENCE -->
                                     <h1><span>Willpower</span></h1>
@@ -643,11 +645,8 @@ outHtml += /*html*/
                             </div>
                         </div>\n`;
 
-const dodgeAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - (@{prone-def-penalty} * 2) + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty} + @{sbv-activated}';
-const parryAddedVariables = '@{battlegroup-def-boost} - (@{apply-onslaught} * @{onslaught}) - @{grab-def-penalty} - @{prone-def-penalty} + @{cover-def-bonus} + @{full-def-bonus} - @{clash-def-penalty} + @{sbv-activated}';
 function getWeaponsLine(p = 0) {
     return /*html*/`<div class="sheet-gear sheet-table">
-${pad(p)}    <input type="hidden" name="attr_wound-penalty" value="-4">
 ${pad(p)}    <div class="sheet-table-header">
 ${pad(p)}        <div class="sheet-table-row">
 ${pad(p)}            <div class="sheet-table-cell" style="width: 25%;">Weapon Name</div>
@@ -679,14 +678,10 @@ ${pad(p)}                <option value="noParry">Can't Parry with this weapon</o
 ${pad(p)}            </select>
 ${pad(p)}        </div>
 ${pad(p)}        <div class="sheet-table-cell">
-${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-${pad(p)}            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-${pad(p)}            <input type="number" value="(@{repweaponparry} + ${parryAddedVariables})" name="attr_repweaponparryfinal" title="Parry without specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
+${pad(p)}            <input type="number" name="attr_repweaponparry" title="Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="sheet-table-cell">
-${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-${pad(p)}            <input type="hidden" name="attr_wound-penalty" class="wound-penalty-check" value="@{wound-penalty}" disabled="disabled">
-${pad(p)}            <input type="number" value="(@{repweaponparryspe} + ${parryAddedVariables})" name="attr_repweaponparryspefinal" title="Parry with specialty" disabled="disabled" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint">
+${pad(p)}            <input type="number" name="attr_repweaponparryspe" title="Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponov" value="1" min="1"></div>
 ${pad(p)}        <div class="sheet-table-cell"><input type="number" name="attr_repweaponatt" value="0"></div>
@@ -762,8 +757,6 @@ ${pad(p)}            <span title="Onslaught is by default penalty to defenses wh
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex grow-normal">
 ${pad(p)}            <div style="display: inline-block;"><input type="checkbox" value="1" class="onslaught-checkbox" name="attr_apply-onslaught"><span></span></div>
-${pad(p)}            <input type="hidden" name="attr_onslaught" class="onslaught-check">
-${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
 ${pad(p)}            <input type="number" value="0" class="onslaught-input" name="attr_onslaught" style="width: 70px; cursor: text;" title="@{onslaught-applied}${TITLE_BR}Onslaught is by default penalty to defenses which reset at your turn, you get 1 each time you get hit">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
@@ -774,36 +767,29 @@ ${pad(p)}            <span name="attr_stamina" style="margin-left: 7px; margin-r
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex">
 ${pad(p)}            <span title="Unarmed Parry= (Dex + Brawl)/2">UnA. Parry</span>:
-${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-${pad(p)}            <input type="hidden" class="onslaught-check" name="attr_onslaught">
-${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(@{parry} + ${parryAddedVariables})" disabled="disabled" name="attr_parryfinal" data-i18n-title="parry-without-specialty" title="@{parryfinal}${TITLE_BR}Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint"><input type="number" value="(@{parry-specialty} + ${parryAddedVariables})" disabled="disabled" name="attr_parryfinal-specialty" data-i18n-title="parry-with-specialty" title="@{parryfinal-specialty}${TITLE_BR}Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" name="attr_parry" data-i18n-title="parry-without-specialty" title="@{parry}${TITLE_BR}Parry without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint" readonly tabindex="-1"><input type="number" name="attr_parry-specialty" data-i18n-title="parry-with-specialty" title="@{parry-specialty}${TITLE_BR}Parry with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint clash-taint qc-toggle-display last-visible" readonly tabindex="-1"><input type="text" name="attr_qc-parry-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    <div class="flex-col">
-${pad(p)}        <input type="hidden" class="qc-panel-check" name="attr_qc">
 ${pad(p)}        <div class="flex qc-toggle-visibility">
 ${pad(p)}            <span title="Armored Soak, come from your armor">Ar. Soak</span>:
 ${pad(p)}            <input type="number" readonly tabindex="-1" name="attr_armorsoak" title="Come from your armor">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex">
 ${pad(p)}            <div style="display: inline-block;"><input type="checkbox" value="1" class="ride-checkbox" name="attr_ride-for-evasion" title="Ride Mode (use Dex+Ride instead of Dex+Dodge)"><span></span></div>
-${pad(p)}            <span title="Dexterity + Dodge">Evasion</span>:
-${pad(p)}            <input type="hidden" name="attr_onslaught-applied" value="(@{onslaught} * @{apply-onslaught})" class="apply-onslaught-check" disabled>
-${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(@{evasion-base} + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" name="attr_evasion" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint"><input type="number" value="(@{evasion-base-specialty} + ${dodgeAddedVariables})" disabled="disabled" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" name="attr_evasion-specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <span title="(Dexterity + Dodge) or (Dexterity + Ride)">Evasion</span>:
+${pad(p)}            <input type="number" name="attr_evasion" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint" readonly tabindex="-1"><input type="number" name="attr_evasion-specialty" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible" readonly tabindex="-1"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    ${getDefExcDiv(p+4)}
 ${pad(p)}    <div class="flex-col">
 ${pad(p)}        <div class="flex">
 ${pad(p)}            <strong><span title="Your capacity to reduce withering damage to you">Total Soak</span>:</strong>
-${pad(p)}            <input type="number" value="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" disabled="disabled" name="attr_totalsoak" data-formula="@{stamina}+@{naturalsoak}+@{armorsoak}+@{battlegroup-size}" title="@{totalsoak}${TITLE_BR}Represent the capacity to reduce withering damage.">
+${pad(p)}            <input type="number" name="attr_totalsoak" title="@{totalsoak}${TITLE_BR}Represent the capacity to reduce withering damage." readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex">
 ${pad(p)}            <span title="Wits + Integrity">Resolve</span>:
-${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}${TITLE_BR}Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}${TITLE_BR}Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" name="attr_resolve" class="wound-taint" title="@{resolve}${TITLE_BR}Resolve without specialty" data-i18n-title="resolve-without-specialty" readonly tabindex="-1"><input type="number" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible" title="@{resolve-specialty}${TITLE_BR}Resolve with specialty" data-i18n-title="resolve-with-specialty" readonly tabindex="-1"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    <div class="flex-col">
@@ -813,16 +799,14 @@ ${pad(p)}            <input type="number" readonly tabindex="-1" name="attr_hard
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex">
 ${pad(p)}            <span title="Manipulation + Socialize">Guile</span>:
-${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}${TITLE_BR}Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}${TITLE_BR}Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" name="attr_guile" class="wound-taint" title="@{guile}${TITLE_BR}Guile without specialty" data-i18n-title="guile-without-specialty" readonly tabindex="-1"><input type="number" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible" title="@{guile-specialty}${TITLE_BR}Guile with specialty" data-i18n-title="guile-with-specialty" readonly tabindex="-1"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}</div>`;
 }
 
 function getHealthLine(p = 0) {
-    return /*html*/`<input type="hidden" name="attr_wound-penalty" value="-4">
-${pad(p)}<fieldset class="repeating_health">
+    return /*html*/`<fieldset class="repeating_health">
 ${pad(p)}    <div class="sheet-health-level">
 ${pad(p)}        <div class="sheet-damage-box">
 ${pad(p)}            <input type="radio" name="attr_hl-damage" value="healthy" class="sheet-dots0" checked="checked"><span>&nbsp;</span>
@@ -1308,8 +1292,7 @@ function getReminderCellsFromHash(p, hash) {
 }
 
 function getRemindersAttr(p = 0) {
-    let ret = /*html*/`<input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}<div class="sheet-box-reminder sheet-attr-reminder qc-toggle-display">
+    let ret = /*html*/`<div class="sheet-box-reminder sheet-attr-reminder qc-toggle-display">
 ${pad(p)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Attr" class="sheet-layer6"></span>
 ${pad(p)}    <div class="sheet-layer5">
 ${pad(p)}        ${getReminderCellsFromArray(p+8, attributes)}
@@ -1396,9 +1379,7 @@ ${pad(p)}</div>`;
 }
 
 function getRemindersAbi(p = 0, includeHiddenQc = true) {
-    let ret = '';
-    if (includeHiddenQc) ret += /*html*/`<input type="hidden" class="qc-panel-check" name="attr_qc">${brPad(p)}`;
-    ret += /*html*/`<div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
+    return /*html*/`<div class="sheet-box-reminder sheet-abi-reminder qc-toggle-display">
 ${pad(p)}    <input type="checkbox" class="sheet-unnamed-toggle"><span title="Show Abi" class="sheet-layer7"></span>
 ${pad(p)}    <div class="sheet-layer6">
 ${pad(p)}        <div class="main-abi">
@@ -1423,7 +1404,6 @@ ${pad(p)}            </div>
 ${pad(p)}        </fieldset>
 ${pad(p)}    </div>
 ${pad(p)}</div>`;
-    return ret;
 }
 
 function getRemindersCraft(p = 0) {
@@ -1601,7 +1581,6 @@ outHtml += /*html*/`
                                 ${getRemindersAttr(32)}
                                 ${getRemindersCharms(32)}
                             </div>
-                            <input type="hidden" class="qc-panel-check" name="attr_qc">
                             <div class="sheet-exroll-container qc-toggle-display">
                                 ${getExRolls(false, 32)}
                             </div>
@@ -1893,15 +1872,13 @@ ${pad(p+4)}${getRemindersCharms(p+4)}`;
 ${pad(p)}    <div class="flex">
 ${pad(p)}        <div class="sheet-table-cell sheet-text-right" title="(Wits + Integrity)/2"><span>Resolve</span>:</div>
 ${pad(p)}        <div class="sheet-table-cell">
-${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(ceil((@{wits} + @{integrity}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-without-specialty" title="@{resolve}${TITLE_BR}Resolve without specialty" name="attr_resolve" class="wound-taint"><input type="number" value="(ceil(((@{wits} + @{integrity}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="resolve-with-specialty" title="@{resolve-specialty}${TITLE_BR}Resolve with specialty" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" name="attr_resolve" class="wound-taint" title="@{resolve}${TITLE_BR}Resolve without specialty" data-i18n-title="resolve-without-specialty" readonly tabindex="-1"><input type="number" name="attr_resolve-specialty" class="wound-taint qc-toggle-display last-visible" title="@{resolve-specialty}${TITLE_BR}Resolve with specialty" data-i18n-title="resolve-with-specialty" readonly tabindex="-1"><input type="text" name="attr_qc-resolve-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}    <div class="flex">
 ${pad(p)}        <div class="sheet-table-cell sheet-text-right" title="(Manipulation + Socialize)/2"><span>Guile</span>:</div>
 ${pad(p)}        <div class="sheet-table-cell">
-${pad(p)}            <input type="hidden" class="qc-panel-check" name="attr_qc">
-${pad(p)}            <input type="number" value="(ceil((@{manipulation} + @{socialize}) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-without-specialty" title="@{guile}${TITLE_BR}Guile without specialty" name="attr_guile" class="wound-taint"><input type="number" value="(ceil(((@{manipulation} + @{socialize}) + 1) / 2) - abs(@{wound-penalty}))" disabled="disabled" data-i18n-title="guile-with-specialty" title="@{guile-specialty}${TITLE_BR}Guile with specialty" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
+${pad(p)}            <input type="number" name="attr_guile" class="wound-taint" title="@{guile}${TITLE_BR}Guile without specialty" data-i18n-title="guile-without-specialty" readonly tabindex="-1"><input type="number" name="attr_guile-specialty" class="wound-taint qc-toggle-display last-visible" title="@{guile-specialty}${TITLE_BR}Guile with specialty" data-i18n-title="guile-with-specialty" readonly tabindex="-1"><input type="text" name="attr_qc-guile-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>`;
     if (includeExc)
@@ -1910,8 +1887,7 @@ ${pad(p)}    </div>`;
 ${pad(p)}    <div class="flex">
 ${pad(p)}        <div class="sheet-table-cell sheet-text-right"><span>Already included wound penalty</span>:</div>
 ${pad(p)}        <div class="sheet-table-cell">
-${pad(p)}            <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-${pad(p)}            <input type="number" value="-@{wound-penalty}" disabled="disabled" style="width: 27px ; margin-right: 2px" title="-@{wound-penalty}${TITLE_BR}Wound penalty" name="attr_woundpenalty2" class="woundpenalty-input" data-formula="-@{wound-penalty}">
+${pad(p)}            <input type="number" name="attr_wound-pen-neg" class="woundpenalty-input" title="-@{wound-penalty}${TITLE_BR}Wound penalty" style="width: 27px ; margin-right: 2px" readonly tabindex="-1">
 ${pad(p)}        </div>
 ${pad(p)}    </div>
 ${pad(p)}</div>`;
@@ -1923,10 +1899,8 @@ function getSocialStatCol(p = 0) {
 ${pad(p)}            <div class="sheet-table-cell"><span>${attr}</span>:</div><div class="sheet-table-cell"><input type="number" name="attr_${attr.toLowerCase()}" style="width: 27px ; margin-right: 3px" title="@{${attr.toLowerCase()}}${TITLE_BR}${attr}" readonly tabindex="-1"></div>
 ${pad(p)}        </div>`;
     return /*html*/`<div class="sheet-col stat-col">
-${pad(p)}    <input type="hidden" class="qc-panel-check" name="attr_qc">
 ${pad(p)}    <h1><span>Attributes</span></h1>
 ${pad(p)}    <div class="sheet-table">
-${pad(p)}        <input type="hidden" class="qc-panel-check" name="attr_qc">
 ${pad(p)}        ${getStatBlock('Perception')}
 ${pad(p)}        ${getStatBlock('Charisma')}
 ${pad(p)}        ${getStatBlock('Manipulation')}
@@ -2049,8 +2023,7 @@ ${pad(p)}        <input type="checkbox" name="attr_combat-crippling-pen" class="
 ${pad(p)}        <span class="sheet-spelleffect" title="Crippling:"></span>
 ${pad(p)}    </div>
 ${pad(p)}    <div class="wound-pen"><!-- WOUND PEN -->
-${pad(p)}        <input type="hidden" class="wound-penalty-check" name="attr_wound-penalty">
-${pad(p)}        <input type="number" value="@{wound-penalty}" disabled="disabled" title="@{wound-penalty}${TITLE_BR}Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty-input" data-formula="@{wound-penalty}">
+${pad(p)}        <input type="number" name="attr_wound-penalty" class="woundpenalty-input" title="@{wound-penalty}${TITLE_BR}Wound penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">
 ${pad(p)}        <input type="number" value="0" title="Wound penalty Additional" name="attr_woundpenalty-add" class="woundpenalty-add-input">
 ${pad(p)}        <input type="number" value="0" title="@{roll-penalty}${TITLE_BR}Roll penalty" name="attr_rollpenalty-input" class="rollpenalty-input">
 ${pad(p)}    </div>
