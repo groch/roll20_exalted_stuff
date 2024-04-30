@@ -161,61 +161,117 @@
         }
         if (debug === 2) TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
 
-        const idHealthArray = await getSectionIDsAsync("health");
-        const pu = new ParryUpdater(), eu = new EvasionUpdater(), ru = new ResolveUpdater(), gu = new GuileUpdater();
-
-        let finalAttr = {};
-        const healthFieldNames = [];
-        idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
-        sortHealthRepeatableSection(idHealthArray, healthFieldNames);
-
-        const baseAttrList = [...healthFieldNames, 'wound-penalty', 'health-displayed', 'health-displayed_max', 'combat-crippling-pen', 'combat-disable-pen', 'woundpenalty-add', 'pain-tolerance', 'battlegroup'];
-        const attrList = [...baseAttrList, ...await pu.getAttrToBeRetrieved(), ...eu.getAttrToBeRetrieved(), ...ru.getAttrToBeRetrieved(), ...gu.getAttrToBeRetrieved()];
-        const uniqAttrList = [...new Set(attrList)];
-
-        const valuesSections = await getAttrsAsync(uniqAttrList);
-        let sortedIdHealthArray = _(idHealthArray).chain().sortBy(function(id) {
-            return valuesSections[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(valuesSections[`repeating_health_${id}_hl-penalty`]);
-        }).value();
-
-        const oldPen = Number(valuesSections['wound-penalty']) || 0,
-              oldActual = Number(valuesSections['health-displayed']) || 0,
-              oldMax = Number(valuesSections['health-displayed_max']) || 0,
-              disablePen = Number(valuesSections['combat-disable-pen']) || 0;
-        let pen = 0, actualHealth = 0, maxHealth = sortedIdHealthArray.length;
-        for (const id of sortedIdHealthArray.reverse()) {
-            let dmg =       valuesSections[`repeating_health_${id}_hl-damage`],
-                localPen =  valuesSections[`repeating_health_${id}_hl-penalty`];
-            if (dmg && (!dmg || dmg !== 'healthy')) {
-                if (localPen)    pen = localPen;
-                else             pen = 0;
-                if (pen === 'I') pen = -4;
-                if (pen === '')  pen = 0;
-                break;
-            } else
-                actualHealth++;
-        }
-        pen = Math.abs(Number(pen));
-        if (pen > 1 && Number(valuesSections['pain-tolerance'])) pen--;
-        pen = Number(valuesSections['combat-crippling-pen'])
-            ? Math.abs(Number(valuesSections['woundpenalty-add'])) + pen * 2
-            : Math.abs(Number(valuesSections['woundpenalty-add'])) + pen;
-        if (disablePen) pen = 0;
-        if (oldPen !== pen) finalAttr = { 'wound-penalty': pen, 'wound-pen-neg': -pen};
-        if (!Number(valuesSections['battlegroup'])) {
-            if (debug === 2) TAS.debug(`updateWound:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
-            if (oldActual !== actualHealth) finalAttr = { ...finalAttr, 'health-displayed': actualHealth};
-            if (oldMax !== maxHealth)       finalAttr = { ...finalAttr, 'health-displayed_max': maxHealth };
-        }
-
-        if (oldPen !== pen) {
-            TAS.debug('updateWound:: PEN CHANGED ! updating Parry/Evasion & Resolve/Guile');
-            finalAttr = eu.updateObj(valuesSections, pu.updateObj(valuesSections, finalAttr));
-            finalAttr = gu.updateObj(valuesSections, ru.updateObj(valuesSections, finalAttr));
-        }
+        const finalAttr = await WoundUpdater.getUpdatedWoundObj();
         if (Object.keys(finalAttr).length !== 0) {
             TAS.debug('updateWound:: SETTING WOUNDPEN & Health Displayed', finalAttr);
             setAttrs(finalAttr);
+        }
+    }
+
+    class WoundUpdater {
+        #pu;
+        #eu;
+        #ru;
+        #gu;
+        #arwu;
+        #idHealthArray;
+        #sortedIdHealthArray;
+
+        constructor(pu, eu, ru, gu, arwu) {
+            this.#pu = pu || new ParryUpdater();
+            this.#eu = eu || new EvasionUpdater();
+            this.#ru = ru || new ResolveUpdater();
+            this.#gu = gu || new GuileUpdater();
+            this.#arwu = arwu || new AllRollWidgetsUpdater();
+        }
+
+        async getAttrToBeRetrieved(idHealthArray, widgetIds) {
+            this.#idHealthArray = idHealthArray || await getSectionIDsAsync("health");
+
+            const healthFieldNames = [];
+            this.#idHealthArray.forEach(id => healthFieldNames.push(`repeating_health_${id}_hl-damage`, `repeating_health_${id}_hl-penalty`));
+            sortHealthRepeatableSection(this.#idHealthArray, healthFieldNames);
+
+            const attrList = [
+                ...healthFieldNames,
+                'wound-penalty', 'woundpenalty-add',
+                'health-displayed', 'health-displayed_max',
+                'combat-crippling-pen', 'combat-disable-pen', 'pain-tolerance', 'battlegroup',
+                ...await this.#pu.getAttrToBeRetrieved(),
+                ...this.#eu.getAttrToBeRetrieved(),
+                ...this.#ru.getAttrToBeRetrieved(),
+                ...this.#gu.getAttrToBeRetrieved(),
+                ...await this.#arwu.getAttrToBeRetrieved(widgetIds)
+            ];
+            return [...new Set(attrList)];
+        }
+
+        #updatePen(values) {
+            const disablePen = Number(values['combat-disable-pen']) || 0;
+            let pen = 0, actualHealth = 0;
+            for (const id of this.#sortedIdHealthArray.reverse()) {
+                let dmg =       values[`repeating_health_${id}_hl-damage`],
+                    localPen =  values[`repeating_health_${id}_hl-penalty`];
+                if (dmg && (!dmg || dmg !== 'healthy')) {
+                    if (localPen)    pen = localPen;
+                    else             pen = 0;
+                    if (pen === 'I') pen = -4;
+                    if (pen === '')  pen = 0;
+                    break;
+                } else
+                    actualHealth++;
+            }
+            pen = Math.abs(Number(pen));
+            if (pen > 1 && Number(values['pain-tolerance'])) pen--;
+            pen = Number(values['combat-crippling-pen'])
+                ? Math.abs(Number(values['woundpenalty-add'])) + pen * 2
+                : Math.abs(Number(values['woundpenalty-add'])) + pen;
+            if (disablePen) pen = 0;
+            return [pen, actualHealth];
+        }
+
+        async reduceAndUpdateObj(values, toBeUpdated = {}) {
+            await AttrReplacer.reduceAttrs(values);
+            if (debug === 3) TAS.debug(`WoundUpdater:reduceAndUpdateObj:: AFTER reduceAttrs: values=`,values);
+            return this.updateObj(values, toBeUpdated);
+        }
+
+        updateObj(values, toBeUpdated = {}) {
+            this.#sortedIdHealthArray = _(this.#idHealthArray).chain().sortBy(function(id) {
+                return values[`repeating_health_${id}_hl-penalty`] === 'I' ? 5 : -1 * Number(values[`repeating_health_${id}_hl-penalty`]);
+            }).value();
+
+            const finalAttr = JSON.parse(JSON.stringify(toBeUpdated)),
+                  oldPen = Number(values['wound-penalty']) || 0,
+                  oldActual = Number(values['health-displayed']) || 0,
+                  oldMax = Number(values['health-displayed_max']) || 0,
+                  maxHealth = this.#sortedIdHealthArray.length;
+            const [pen, actualHealth] = this.#updatePen(values, this.#sortedIdHealthArray);
+
+            if (oldPen !== pen) Object.assign(finalAttr, {'wound-penalty': pen, 'wound-pen-neg': -pen});
+            if (!Number(values['battlegroup'])) {
+                if (debug === 2) TAS.debug(`WoundUpdater:updateObj:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+                if (oldActual !== actualHealth) Object.assign(finalAttr, {'health-displayed': actualHealth});
+                if (oldMax !== maxHealth)       Object.assign(finalAttr, {'health-displayed_max': maxHealth});
+            }
+    
+            if (oldPen !== pen) {
+                TAS.debug('WoundUpdater:updateObj:: PEN CHANGED ! updating Parry/Evasion & Resolve/Guile');
+                Object.assign(finalAttr, this.#eu.updateObj(values, this.#pu.updateObj(values, finalAttr)));
+                Object.assign(finalAttr, this.#gu.updateObj(values, this.#ru.updateObj(values, finalAttr)));
+                TAS.debug('WoundUpdater:updateObj:: PEN CHANGED ! updating All Roll Widgets');
+                Object.assign(finalAttr, this.#arwu.updateObj(values, finalAttr));
+            }
+            return finalAttr;
+        }
+
+        async getUpdatedObj(toBeUpdated = {}) {
+            const values = await getAttrsAsync(await this.getAttrToBeRetrieved());
+            return await this.reduceAndUpdateObj(values, toBeUpdated);
+        }
+
+        static async getUpdatedWoundObj(toBeUpdated = {}) {
+            return await new WoundUpdater().getUpdatedObj(toBeUpdated);
         }
     }
 
@@ -223,7 +279,7 @@
     const defAddedAttrs = [
         'wound-penalty',
         'battlegroup-drill', 'battlegroup-might',
-        'onslaught', 'apply-onslaught',
+        'onslaught', 'apply-onslaught', 'onslaught-applied',
         'grab-def-penalty', 'prone-def-penalty', 'clash-def-penalty',
         'cover-def-bonus', 'full-def-bonus',
         'sbv-activated'
@@ -243,10 +299,7 @@
               fullDefBonus = Number(getFromUpdatedOrRetrieve('full-def-bonus')),
               sbvActivated = Number(getFromUpdatedOrRetrieve('sbv-activated'));
 
-        if (!(setObj && setObj['onslaught-applied'] && setObj['onslaught-applied'] === onslaughtApplied)) {
-            if (debug === 2) TAS.debug(`SETTING onslaught-applied=${onslaughtApplied}`);
-            Object.assign(setObj, {'onslaught-applied': onslaughtApplied})
-        }
+        verifyAndSetIfDifferent(inObj, setObj, 'onslaught-applied', onslaughtApplied);
         if (debug === 2) TAS.debug(`calcDefAdded:: PLUS: bgDefBoost=${bgDefBoost}, coverDefBonus=${coverDefBonus}, fullDefBonus=${fullDefBonus}, sbvActivated=${sbvActivated}`);
         if (debug === 2) TAS.debug(`calcDefAdded:: NEGS: grabDefPen=${grabDefPen}, proneDefPen=${proneDefPen}, clashDefPen=${clashDefPen}, onslaughtApplied=${onslaughtApplied}, pen=${pen}`);
         const total = (bgDefBoost + coverDefBonus + fullDefBonus + sbvActivated - onslaughtApplied - grabDefPen - ((isParry ? 1 : 2) * proneDefPen) - clashDefPen - pen);
@@ -289,7 +342,7 @@
         async getAttrToBeRetrieved(maIds, weaponIds) {
             this.#maIds = maIds || await getSectionIDsAsync('martialarts');
             this.#weaponIds = weaponIds || await getSectionIDsAsync("weapon");
-            const attrList = ['qc', 'brawl', 'melee', 'dexterity', 'qc-parry', ...defAddedAttrs];
+            const attrList = ['qc', 'brawl', 'melee', 'dexterity', 'qc-parry', 'max-ma', ...defAddedAttrs];
             this.#maIds.forEach(id => attrList.push(`repeating_martialarts_${id}_repmartialarts`));
             this.#weaponIds.forEach(id => attrList.push(`repeating_weapon_${id}_repweapondef`, `repeating_weapon_${id}_repweaponabi`));
             maAttrsArray.forEach(attr => attrList.push(attr));
@@ -323,14 +376,18 @@
             newParry += addedDef;
             newParrySpe += addedDef;
             if (debug === 3) TAS.debug('ParryUpdater:updateObj:: setAttrs!parry='+newParry+', parry-specialty='+newParrySpe);
-            Object.assign(finalObj, {'parry': newParry, 'parry-specialty': newParrySpe, 'max-ma': ma});
+            verifyAndSetIfDifferent(values, finalObj, 'parry', newParry);
+            verifyAndSetIfDifferent(values, finalObj, 'parry-specialty', newParrySpe);
+            verifyAndSetIfDifferent(values, finalObj, 'max-ma', ma);
 
             if (debug === 3) TAS.debug('ParryUpdater:updateObj:: Updating Weapon Parry value');
             for (const id of this.#weaponIds) {
                 let def = getFromUpdatedOrRetrieve(`repeating_weapon_${id}_repweapondef`) || 0,
                     abi = getFromUpdatedOrRetrieve(`repeating_weapon_${id}_repweaponabi`) || 'brawl';
-                finalObj[`repeating_weapon_${id}_repweaponparry`]    = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))    ) / 2) + Number(def) + addedDef;
-                finalObj[`repeating_weapon_${id}_repweaponparryspe`] = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) + addedDef;
+                const weapParry    = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi))    ) / 2) + Number(def) + addedDef;
+                const weapParrySpe = abi === 'noParry' ? -420 : Math.ceil((dex + (Object.keys(correspondingTable).includes(abi) ? correspondingTable[abi] : Number(abi)) + 1) / 2) + Number(def) + addedDef;
+                verifyAndSetIfDifferent(values, finalObj, `repeating_weapon_${id}_repweaponparry`, weapParry);
+                verifyAndSetIfDifferent(values, finalObj, `repeating_weapon_${id}_repweaponparryspe`, weapParrySpe);
             }
 
             if (debug === 2) TAS.debug('ParryUpdater:updateObj:: UPDATE WEAPONS PARRY', finalObj);
@@ -390,7 +447,8 @@
             newEva += addedDef - (rideMode ? rideMobiPen : mobiPen);
             newEvaSpe += addedDef - (rideMode ? rideMobiPen : mobiPen);
             if (debug === 3) TAS.debug('EvasionUpdater:updateObj:: setAttrs! evasion='+newEva+', evasion-specialty='+newEvaSpe);
-            Object.assign(finalObj, {'evasion': newEva, 'evasion-specialty': newEvaSpe});
+            verifyAndSetIfDifferent(values, finalObj, 'evasion', newEva);
+            verifyAndSetIfDifferent(values, finalObj, 'evasion-specialty', newEvaSpe);
             if (debug === 2) TAS.debug('EvasionUpdater:updateObj:: UPDATE EVASION', finalObj);
             return finalObj;
         }
@@ -439,7 +497,8 @@
             newRes -= pen;
             newResSpe -= pen;
             if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: setAttrs! resolve='+newRes+', resolve-specialty='+newResSpe);
-            Object.assign(finalObj, {'resolve': newRes, 'resolve-specialty': newResSpe});
+            verifyAndSetIfDifferent(values, finalObj, 'resolve', newRes);
+            verifyAndSetIfDifferent(values, finalObj, 'resolve-specialty', newResSpe);
             if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: UPDATE RESOLVE', finalObj);
             return finalObj;
         }
@@ -488,7 +547,8 @@
             newGui -= pen;
             newGuiSpe -= pen;
             if (debug === 2) TAS.debug('GuileUpdater:updateObj:: setAttrs! guile='+newGui+', guile-specialty='+newGuiSpe);
-            Object.assign(finalObj, {'guile': newGui, 'guile-specialty': newGuiSpe});
+            verifyAndSetIfDifferent(values, finalObj, 'guile', newGui);
+            verifyAndSetIfDifferent(values, finalObj, 'guile-specialty', newGuiSpe);
             if (debug === 2) TAS.debug('GuileUpdater:updateObj:: UPDATE GUILE', finalObj);
             return finalObj;
         }
@@ -3159,8 +3219,6 @@
         }
     }
 
-    // on(`change:rollpenalty-input`, updateAllRollWidgets);
-    on(`change:wound-penalty`, updateAllRollWidgets); // TO BE REMOVED SOON
     async function updateAllRollWidgets(e) {
         if (debug >= 2 && e) TAS.debug(`updateAllRollWidgets:: e=`,e);
         const finalObj = await getUpdatedAllRollWidgetsObj();
