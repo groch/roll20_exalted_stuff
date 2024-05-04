@@ -1874,7 +1874,7 @@
         setAttrs(cleanAttrs(attrs));
     }
 
-    async function initIntimacies() {
+    async function initIntimacies(setObj = {}) {
         TAS.debug(`initIntimacies::initIntimacies Initializing 1st time Intimacies`);
         const idIntimaciesArray = await getSectionIDsAsync("intimacies");
         const values = await getAttrsAsync(['init-intimacies']);
@@ -1883,18 +1883,19 @@
             return;
         }
 
-        var attrs = {}, indexesIntimacies = _.times(4, () => generateNewRowId(idIntimaciesArray));
+        const finalObj = JSON.parse(JSON.stringify(setObj)),
+              indexesIntimacies = _.times(4, () => generateNewRowId(idIntimaciesArray));
         TAS.debug('Creating new intimacies', indexesIntimacies);
         _.each(indexesIntimacies, function(id, k) {
-            attrs[`repeating_intimacies_${id}_intimacyrepeatingtype`] = (k === 0) ? 'Defining' : (k === 1) ? 'Major' : 'Minor';
+            finalObj[`repeating_intimacies_${id}_intimacyrepeatingtype`] = (k === 0) ? 'Defining' : (k === 1) ? 'Major' : 'Minor';
         });
-        attrs['init-intimacies'] = 1;
-        setAttrs(attrs);
+        finalObj['init-intimacies'] = 1;
+        setAttrs(finalObj);
     }
 
     function initCharacterSheet() {
         TAS.debug('Initializing 1st time attributes');
-        setAttrs({
+        const finalObj = {
             'version': version,
             'essence': '1',
             'apply-onslaught': 1,
@@ -1935,9 +1936,9 @@
             'cover-def-bonus': 0,
             'clash-def-penalty': 0,
             'roll-penalty': 0
-        });
+        };
 
-        let healthAttrs = {}, idHealthArray = [], healthIndexes = _.times(7, () => generateNewRowId(idHealthArray));
+        const idHealthArray = [], healthIndexes = _.times(7, () => generateNewRowId(idHealthArray));
         _.each(healthIndexes, function(id, k) {
             var pen;
             if (k === 0) pen = '0';
@@ -1946,30 +1947,25 @@
             else if (k === 5) pen = '-4';
             else pen = 'I';
             TAS.debug(`id=${id}, k=${k}, pen=${pen}`);
-            healthAttrs['repeating_health_' + id + '_hl-damage'] = 'healthy';
-            healthAttrs['repeating_health_' + id + '_hl-penalty'] = pen;
+            finalObj['repeating_health_' + id + '_hl-damage'] = 'healthy';
+            finalObj['repeating_health_' + id + '_hl-penalty'] = pen;
         });
-        TAS.debug(`Setting Health levels :`, healthAttrs);
-        setAttrs(healthAttrs);
 
-        let defaultWeapon = {}, indexeWeapon = generateRowID();
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponname`] = 'Unarmed';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponacc`] = '4';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweapondam`] = '7';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweapondef`] = '0';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponparry`] = '0';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponparryspe`] = '0';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponov`] = '1';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweaponatt`] = '0';
-        defaultWeapon[`repeating_weapon_${indexeWeapon}_repweapontags`] = 'Bashing, Brawl, Grappling, Natural';
-        setAttrs(defaultWeapon);
+        const idNewWeapon = generateRowID();
+        finalObj[`repeating_weapon_${idNewWeapon}_repweaponname`] = 'Unarmed';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweaponacc`] = '4';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweapondam`] = '7';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweapondef`] = '0';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweaponparry`] = '0';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweaponparryspe`] = '0';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweaponov`] = '1';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweaponatt`] = '0';
+        finalObj[`repeating_weapon_${idNewWeapon}_repweapontags`] = 'Bashing, Brawl, Grappling, Natural';
 
-        const charmObj = {};
-        addGenericCharmsToObj('Mortal', charmObj);
-        TAS.debug(`initCharacterSheet:: Setting Default Charms=`, charmObj);
-        setAttrs(charmObj);
+        addGenericCharmsToObj('Mortal', finalObj);
+        TAS.debug(`initCharacterSheet:: Setting=`, finalObj);
 
-        initIntimacies();
+        initIntimacies(finalObj);
     }
 
     /* ********** */
