@@ -4717,12 +4717,12 @@ ${maCharmArray.map(i => /*css*/`.charsheet .sheet-tab-charms-check[value="${hash
     align-items: center;
 }
 
-.charsheet div.sheet-tab-combat-sheet .sheet-bg-show > input[type="number"][disabled] {
+.charsheet div.sheet-tab-combat-sheet .sheet-bg-show > input[type="number"][readonly] {
     padding: 0;
     min-width: 0.5em;
 }
 
-.charsheet div.sheet-tab-combat-sheet div.dmg-section .sheet-bg-show > input[type="number"][disabled] {
+.charsheet div.sheet-tab-combat-sheet div.dmg-section .sheet-bg-show > input[type="number"][readonly] {
     border-radius: 0 13px 13px 0;
     padding-right: 2px;
 }

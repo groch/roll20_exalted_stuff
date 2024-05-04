@@ -1660,7 +1660,7 @@ outHtml += /*html*/`
                                                         <div class="inline-flex grow-normal">
                                                             <input type="number" name="attr_reprolls-ncharm-dices" class="sheet-rolls-ncharm-dices grow-normal" title="Non Charm dices for the Roll${TITLE_BR}Doesn't cost motes of Essence" value="0" placeholder="0">-
                                                             <label for="rollpen-input-widget"><span name="attr_roll-penalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." class="rollpenalty not-inverted"></span></label>-
-                                                            <input type="number" name="attr_woundpenalty2" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." class="woundpenalty not-inverted" readonly>
+                                                            <input type="number" name="attr_wound-penalty" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." class="woundpenalty not-inverted" readonly tabindex="-1">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1736,11 +1736,6 @@ const getSovereignTop = (p) => makeSelectTop(p, 'anima-sovereign', 'Anima Level 
 const getDreamSouledTop = (p) => makeCheckboxTop(p, 'uphold-ideal', 'Toggle Uphold Ideal', '@{essence}', 'dreamsouled-hint', true);
 const getHearteaterTop = (p) => makeSelectTop(p, 'intimacy-hearteater', 'Intimacy Level for the Excellency', 'hearteater-anima-excellency', [{val: '0', label: '---'}, {val: '2', label: 'Min'}, {val: '3', label: 'Maj'}, {val: '4', label: 'Def'}], 0, 'hearteater-hint', true);
 
-const getAutoCalcMax = (a, b) => `(((${a} + ${b}) + abs(${a} - ${b})) / 2)`;
-const getAutoCalcMin = (a, b) => `(((${a} + ${b}) - abs(${a} - ${b})) / 2)`;
-
-const getSiderealEnd = () => /*html*/`<input type="hidden" name="attr_reprolls-exc-sidereal-total-calc-max" value="${getAutoCalcMax('@{essence}', 3)}" disabled>`;
-
 outHtml += /*html*/`
                                         <div class="excellency-cap-section" title="Limit Detail for the Excellency">
                                             ${getExcellencyCap(44, 'solar', 'Solar=>ATTR+ABI')}
@@ -1812,8 +1807,8 @@ outHtml += /*html*/`
                                                 <div class="flex grow-max">
                                                     <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                                     <input type="text" name="attr_reprolls-bonus-dices" class="sheet-rolls-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">-
-                                                    <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                                    <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                                    <input type="number" name="attr_roll-penalty" class="rollpenalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">-
+                                                    <input type="number" name="attr_wound-penalty" class="woundpenalty" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">d)
                                                 </div>
                                             </div>
                                             <div class="flex grow-normal">
@@ -2102,8 +2097,8 @@ outHtml += /*html*/`
                                     <div class="flex grow-max">
                                         <button type="action" name="act_default-macro-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                         <input type="text" name="attr_repinit-bonus-dices" class="sheet-init-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" value="${defaultRoll20AddedDicePrompt}">-
-                                        <input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                        <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                        <input type="number" name="attr_roll-penalty" class="rollpenalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">-
+                                        <input type="number" name="attr_wound-penalty" class="woundpenalty" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">d)
                                     </div>
                                 </div>
                                 <div class="init-section third-line grow-normal flex">
@@ -2179,9 +2174,9 @@ outHtml += /*html*/`
                                             <div class="flex grow-max">
                                                 <button type="action" name="act_default-macro-watk-d" class="stealth-btn" title="Override/Set additional dice Default Macro depending on ability${TITLE_BR}(Special for Archery & Thrown)">+</button>
                                                 <input type="text" name="attr_repcombat-watk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
-                                                <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-acc-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-acc-boost}"></p>
-                                                -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                                <p class="sheet-bg-show">+<input type="number" name="attr_total-bg-boost" title="(Size + Might) of the BattleGroup" readonly tabindex="-1"></p>
+                                                -<input type="number" name="attr_roll-penalty" class="rollpenalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">-
+                                                <input type="number" name="attr_wound-penalty" class="woundpenalty" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">d)
                                             </div>
                                         </div>
                                         <div class="flex grow-normal">
@@ -2206,7 +2201,7 @@ outHtml += /*html*/`
                                             </div>
                                             <div class="flex grow-max">
                                                 <input type="text" name="attr_repcombat-wdmg-bonus-dices" class="sheet-wdmg-bonus-dices grow-normal" title="Bonus dices for the Roll (Threshold & Soak already included)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations">
-                                                <p class="sheet-bg-show">+<input type="number" value="@{battlegroup-size}+@{battlegroup-dmg-boost}" disabled="disabled" name="attr_total-bg-dice" data-formula="@{battlegroup-size}+@{battlegroup-dmg-boost}"></p>d)
+                                                <p class="sheet-bg-show">+<input type="number" name="attr_total-bg-boost" title="(Size + Might) of the BattleGroup" readonly tabindex="-1"></p>d)
                                             </div>
                                         </div>
                                         <div class="flex grow-normal">
@@ -2244,8 +2239,8 @@ outHtml += /*html*/`
                                             <div class="flex grow-max">
                                                 <button type="action" name="act_default-macro-datk-d" class="stealth-btn" title="Override/Set additional dice Default Macro">+</button>
                                                 <input type="text" name="attr_repcombat-datk-bonus-dices" class="sheet-watk-bonus-dices grow-normal" title="Bonus dices for the Roll (Stunt for example, ...)${TITLE_BR}You can include roll20 syntax like @{essence} or [[]] for complex configurations" placeholder="2+?{Added Dices ?|0}">
-                                                -<input type="number" value="@{roll-penalty}" disabled="disabled" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_rollpenalty2" class="rollpenalty" data-formula="@{roll-penalty}">-
-                                                <input type="number" value="@{wound-penalty}" disabled="disabled" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." name="attr_woundpenalty2" class="woundpenalty" data-formula="@{wound-penalty}">d)
+                                                -<input type="number" name="attr_roll-penalty" class="rollpenalty" title="Roll penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">-
+                                                <input type="number" name="attr_wound-penalty" class="woundpenalty" title="Wound penalty, applied to attacks & all standard rolls, not to damage ones." readonly tabindex="-1">d)
                                             </div>
                                         </div>
                                         <div class="flex grow-normal">
