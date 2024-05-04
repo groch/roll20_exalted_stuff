@@ -132,7 +132,7 @@
 
     /////////////////////////
 
-    function setDebugWrapper(fx) { return debug === 2 ? TAS._fn(fx) : fx }
+    function setDebugWrapper(fx) { return debug >= 2 ? TAS._fn(fx) : fx }
     function cleanAttrs(attrs)  { return _.mapObject(attrs, function(e) { return e === undefined ? '' : e; }); };
 
     initTAS();
@@ -156,10 +156,10 @@
 
     async function updateWound(e) {
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`updateWound:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`updateWound:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`Updating wound penalty e=${JSON.stringify(e)}`);
 
         const finalAttr = await WoundUpdater.getUpdatedWoundObj();
         if (Object.keys(finalAttr).length !== 0) {
@@ -253,7 +253,7 @@
 
             if (oldPen !== pen) Object.assign(finalAttr, {'wound-penalty': pen, 'wound-pen-neg': -pen});
             if (!Number(getFromUpdatedOrRetrieve('battlegroup'))) {
-                if (debug === 2) TAS.debug(`WoundUpdater:updateObj:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
+                if (debug >= 2) TAS.debug(`WoundUpdater:updateObj:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
                 if (oldActual !== actualHealth) Object.assign(finalAttr, {'health-displayed': actualHealth});
                 if (oldMax !== maxHealth)       Object.assign(finalAttr, {'health-displayed_max': maxHealth});
             }
@@ -304,10 +304,10 @@
               sbvActivated = Number(getFromUpdatedOrRetrieve('sbv-activated'));
 
         verifyAndSetIfDifferent(inObj, setObj, 'onslaught-applied', onslaughtApplied);
-        if (debug === 2) TAS.debug(`calcDefAdded:: PLUS: bgDefBoost=${bgDefBoost}, coverDefBonus=${coverDefBonus}, fullDefBonus=${fullDefBonus}, sbvActivated=${sbvActivated}`);
-        if (debug === 2) TAS.debug(`calcDefAdded:: NEGS: grabDefPen=${grabDefPen}, proneDefPen=${proneDefPen}, clashDefPen=${clashDefPen}, onslaughtApplied=${onslaughtApplied}, pen=${pen}`);
+        if (debug >= 2) TAS.debug(`calcDefAdded:: PLUS: bgDefBoost=${bgDefBoost}, coverDefBonus=${coverDefBonus}, fullDefBonus=${fullDefBonus}, sbvActivated=${sbvActivated}`);
+        if (debug >= 2) TAS.debug(`calcDefAdded:: NEGS: grabDefPen=${grabDefPen}, proneDefPen=${proneDefPen}, clashDefPen=${clashDefPen}, onslaughtApplied=${onslaughtApplied}, pen=${pen}`);
         const total = (bgDefBoost + coverDefBonus + fullDefBonus + sbvActivated - onslaughtApplied - grabDefPen - ((isParry ? 1 : 2) * proneDefPen) - clashDefPen - pen);
-        if (debug === 2) TAS.debug(`calcDefAdded:: TOTALMODIFIER=${total}`);
+        if (debug >= 2) TAS.debug(`calcDefAdded:: TOTALMODIFIER=${total}`);
         return total;
     }
 
@@ -318,7 +318,7 @@
     function getAndResetIfNaNOrEmpty(inObj, finalObj, attr) {
         const tested = Number(inObj[attr]);
         if (isNaN(Number(tested)) || String(tested).trim() === "") {
-            if (debug === 2) TAS.debug(`getAndResetIfNaNOrEmpty:: Reset Attr ${ret[1]}`);
+            if (debug >= 2) TAS.debug(`getAndResetIfNaNOrEmpty:: Reset Attr ${ret[1]}`);
             Object.assign(finalObj, {[attr]: 0});
             return 0;
         }
@@ -332,12 +332,12 @@
     on('change:qc-parry', TAS._fn(updateParry));
     async function updateParry(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
-            if (debug === 2) TAS.debug(`updateParry:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`updateParry:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug('updateParry:: e=' + JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateParry:: e=' + JSON.stringify(e));
         const setObj = await ParryUpdater.getUpdatedParryObj();
-        if (debug === 2) TAS.debug('updateParry:: setObj=', setObj);
+        if (debug >= 2) TAS.debug('updateParry:: setObj=', setObj);
         setAttrs(setObj);
     }
 
@@ -372,7 +372,7 @@
                 correspondingTable = {'brawl': brawl, 'melee': melee};
             for (const maName of maAttrsArray) correspondingTable[maName] = Number(getFromUpdatedOrRetrieve(maName));
 
-            if (debug === 2) TAS.debug(`ParryUpdater:updateObj:: values=${JSON.stringify(values)}`);
+            if (debug >= 2) TAS.debug(`ParryUpdater:updateObj:: values=${JSON.stringify(values)}`);
             ma = this.#maIds.reduce((acc, id) => Math.max(acc, Number(getFromUpdatedOrRetrieve(`repeating_martialarts_${id}_repmartialarts`))), ma);
 
             if (debug === 3) TAS.debug(`ParryUpdater:updateObj:: Max MA=${ma}, isQc=${isQc}, qcParry=${qcParry}`);
@@ -398,7 +398,7 @@
                 verifyAndSetIfDifferent(values, finalObj, `repeating_weapon_${id}_repweaponparryspe`, weapParrySpe);
             }
 
-            if (debug === 2) TAS.debug('ParryUpdater:updateObj:: UPDATE WEAPONS PARRY', finalObj);
+            if (debug >= 2) TAS.debug('ParryUpdater:updateObj:: UPDATE WEAPONS PARRY', finalObj);
             return finalObj;
         }
 
@@ -417,12 +417,12 @@
     on('change:ride-for-evasion', TAS._fn(updateEvasion));
     async function updateEvasion(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
-            if (debug === 2) TAS.debug(`updateEvasion:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`updateEvasion:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug('updateEvasion:: e=' + JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateEvasion:: e=' + JSON.stringify(e));
         const setObj = await EvasionUpdater.getUpdatedEvasionObj();
-        if (debug === 2) TAS.debug('updateEvasion:: setObj=', setObj);
+        if (debug >= 2) TAS.debug('updateEvasion:: setObj=', setObj);
         setAttrs(setObj);
     }
 
@@ -457,7 +457,7 @@
             if (debug === 3) TAS.debug('EvasionUpdater:updateObj:: setAttrs! evasion='+newEva+', evasion-specialty='+newEvaSpe);
             verifyAndSetIfDifferent(values, finalObj, 'evasion', newEva);
             verifyAndSetIfDifferent(values, finalObj, 'evasion-specialty', newEvaSpe);
-            if (debug === 2) TAS.debug('EvasionUpdater:updateObj:: UPDATE EVASION', finalObj);
+            if (debug >= 2) TAS.debug('EvasionUpdater:updateObj:: UPDATE EVASION', finalObj);
             return finalObj;
         }
 
@@ -474,12 +474,12 @@
     on('change:wits change:integrity', TAS._fn(updateResolve));
     async function updateResolve(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
-            if (debug === 2) TAS.debug(`updateResolve:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`updateResolve:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug('updateResolve:: e=' + JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateResolve:: e=' + JSON.stringify(e));
         const setObj = await ResolveUpdater.getUpdatedResolveObj();
-        if (debug === 2) TAS.debug('updateResolve:: setObj=', setObj);
+        if (debug >= 2) TAS.debug('updateResolve:: setObj=', setObj);
         setAttrs(setObj);
     }
 
@@ -497,17 +497,17 @@
                 finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
                 pen = getFromUpdatedOrRetrieve('wound-penalty') || 0;
     
-            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: Resolve calc:Math.ceil((' + wits + ' + ' + integrity + ') / 2)');
+            if (debug >= 2) TAS.debug('ResolveUpdater:updateObj:: Resolve calc:Math.ceil((' + wits + ' + ' + integrity + ') / 2)');
             var newRes = Math.ceil((wits + integrity) / 2);
-            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: Resolve w/specialty calc:Math.ceil((' + wits + ' + ' + integrity + ' + 1) / 2)');
+            if (debug >= 2) TAS.debug('ResolveUpdater:updateObj:: Resolve w/specialty calc:Math.ceil((' + wits + ' + ' + integrity + ' + 1) / 2)');
             var newResSpe = Math.ceil((wits + integrity + 1) / 2);
-            if (debug === 2) TAS.debug(`ResolveUpdater:updateObj:: applying pen:${pen}`);
+            if (debug >= 2) TAS.debug(`ResolveUpdater:updateObj:: applying pen:${pen}`);
             newRes -= pen;
             newResSpe -= pen;
-            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: setAttrs! resolve='+newRes+', resolve-specialty='+newResSpe);
+            if (debug >= 2) TAS.debug('ResolveUpdater:updateObj:: setAttrs! resolve='+newRes+', resolve-specialty='+newResSpe);
             verifyAndSetIfDifferent(values, finalObj, 'resolve', newRes);
             verifyAndSetIfDifferent(values, finalObj, 'resolve-specialty', newResSpe);
-            if (debug === 2) TAS.debug('ResolveUpdater:updateObj:: UPDATE RESOLVE', finalObj);
+            if (debug >= 2) TAS.debug('ResolveUpdater:updateObj:: UPDATE RESOLVE', finalObj);
             return finalObj;
         }
 
@@ -524,12 +524,12 @@
     on('change:manipulation change:socialize', TAS._fn(updateGuile));
     async function updateGuile(e) {
         if (e.sourceType !== "player" && e.triggerName !== 'wound-penalty') {
-            if (debug === 2) TAS.debug(`updateGuile:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`updateGuile:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug('updateGuile:: e=' + JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateGuile:: e=' + JSON.stringify(e));
         const setObj = await GuileUpdater.getUpdatedGuileObj();
-        if (debug === 2) TAS.debug('updateGuile:: setObj=', setObj);
+        if (debug >= 2) TAS.debug('updateGuile:: setObj=', setObj);
         setAttrs(setObj);
     }
 
@@ -547,17 +547,17 @@
                 finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
                 pen = getFromUpdatedOrRetrieve('wound-penalty') || 0;
     
-            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: Guile calc:Math.ceil((' + manipulation + ' + ' + socialize + ') / 2)');
+            if (debug >= 2) TAS.debug('GuileUpdater:updateObj:: Guile calc:Math.ceil((' + manipulation + ' + ' + socialize + ') / 2)');
             var newGui = Math.ceil((manipulation + socialize) / 2);
-            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: Guile w/specialty calc:Math.ceil((' + manipulation + ' + ' + socialize + ' + 1) / 2)');
+            if (debug >= 2) TAS.debug('GuileUpdater:updateObj:: Guile w/specialty calc:Math.ceil((' + manipulation + ' + ' + socialize + ' + 1) / 2)');
             var newGuiSpe = Math.ceil((manipulation + socialize + 1) / 2);
-            if (debug === 2) TAS.debug(`GuileUpdater:updateObj:: applying pen:${pen}`);
+            if (debug >= 2) TAS.debug(`GuileUpdater:updateObj:: applying pen:${pen}`);
             newGui -= pen;
             newGuiSpe -= pen;
-            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: setAttrs! guile='+newGui+', guile-specialty='+newGuiSpe);
+            if (debug >= 2) TAS.debug('GuileUpdater:updateObj:: setAttrs! guile='+newGui+', guile-specialty='+newGuiSpe);
             verifyAndSetIfDifferent(values, finalObj, 'guile', newGui);
             verifyAndSetIfDifferent(values, finalObj, 'guile-specialty', newGuiSpe);
-            if (debug === 2) TAS.debug('GuileUpdater:updateObj:: UPDATE GUILE', finalObj);
+            if (debug >= 2) TAS.debug('GuileUpdater:updateObj:: UPDATE GUILE', finalObj);
             return finalObj;
         }
 
@@ -572,11 +572,11 @@
     }
 
     on('change:onslaught change:apply-onslaught', TAS._fn(async function updateOnslaught(e) {
-        if (debug === 2) TAS.debug('updateOnslaught:: e=' + JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateOnslaught:: e=' + JSON.stringify(e));
         updateCombatDefenses();
     }));
     on('change:grab-def-penalty change:prone-def-penalty change:clash-def-penalty change:cover-def-bonus change:full-def-bonus change:sbv-activated change:battlegroup-drill change:battlegroup-might', TAS._fn(async function updateDefAddeds(e) {
-        if (debug === 2) TAS.debug('updateDefAddeds:: e=' + JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateDefAddeds:: e=' + JSON.stringify(e));
         updateCombatDefenses();
     }));
     async function updateCombatDefenses(toBeUpdated = {}) {
@@ -590,7 +590,7 @@
         const values = await getAttrsAsync(uniqAttrList);
         toBeUpdated = eu.updateObj(values, pu.updateObj(values, toBeUpdated));
         
-        if (debug === 2) TAS.debug('getUpdatedCombatDefensesObj:: finalObj=', toBeUpdated);
+        if (debug >= 2) TAS.debug('getUpdatedCombatDefensesObj:: finalObj=', toBeUpdated);
         return toBeUpdated;
     }
 
@@ -601,7 +601,7 @@
         const values = await getAttrsAsync(uniqAttrList);
         toBeUpdated = gu.updateObj(values, ru.updateObj(values, toBeUpdated));
         
-        if (debug === 2) TAS.debug('getUpdatedSocialDefensesObj:: finalObj=', toBeUpdated);
+        if (debug >= 2) TAS.debug('getUpdatedSocialDefensesObj:: finalObj=', toBeUpdated);
         return toBeUpdated;
     }
 
@@ -613,7 +613,7 @@
         toBeUpdated = eu.updateObj(values, pu.updateObj(values, toBeUpdated));
         toBeUpdated = gu.updateObj(values, ru.updateObj(values, toBeUpdated));
         
-        if (debug === 2) TAS.debug('getUpdatedDefensesObj:: finalObj=', toBeUpdated);
+        if (debug >= 2) TAS.debug('getUpdatedDefensesObj:: finalObj=', toBeUpdated);
         return toBeUpdated;
     }
 
@@ -629,7 +629,7 @@
     async function updateRollPenalty(e) {
         const time = new TimeCounter('updateRollPenalty');
         if (e.sourceType === "sheetworker") {
-            if (debug === 2) TAS.debug('updateRollPenalty:: SHEETWORKER TRIGGER ABORT');
+            if (debug >= 2) TAS.debug('updateRollPenalty:: SHEETWORKER TRIGGER ABORT');
             return;
         }
 
@@ -662,7 +662,7 @@
         const tested = Number(values[attr]);
         if (isNaN(tested) || tested < 0) {
             const ret = Math.abs(tested) || 0;
-            if (debug === 2) TAS.debug(`updateRollPenalty:getAndResetIfNeg:: set RollPen=${ret}`);
+            if (debug >= 2) TAS.debug(`updateRollPenalty:getAndResetIfNeg:: set RollPen=${ret}`);
             finalObj[attr] = ret;
             return ret;
         }
@@ -691,7 +691,7 @@
         }
 
         repeatObj(toBeRepeated = {}) {
-            if (debug === 2) TAS.debug(`BaseRepeatingSectionRepeater:repeatObj:: toBeRepeated=${JSON.stringify(toBeRepeated)}`);
+            if (debug >= 2) TAS.debug(`BaseRepeatingSectionRepeater:repeatObj:: toBeRepeated=${JSON.stringify(toBeRepeated)}`);
 
             const finalObj = {};
             for (const [key, value] of Object.entries(toBeRepeated)) {
@@ -709,7 +709,7 @@
         }
 
         async repeatObj(toBeRepeated = {}) {
-            if (debug === 2) TAS.debug(`CombatAtkRollRepeater:repeatObj:: toBeRepeated=${JSON.stringify(toBeRepeated)}`);
+            if (debug >= 2) TAS.debug(`CombatAtkRollRepeater:repeatObj:: toBeRepeated=${JSON.stringify(toBeRepeated)}`);
             await this.registerRepeating('combat-attack');
             return super.repeatObj(toBeRepeated);
         }
@@ -725,7 +725,7 @@
         }
 
         async repeatObj(toBeRepeated = {}) {
-            if (debug === 2) TAS.debug(`AllRollRepeater:repeatObj:: toBeRepeated=${JSON.stringify(toBeRepeated)}`);
+            if (debug >= 2) TAS.debug(`AllRollRepeater:repeatObj:: toBeRepeated=${JSON.stringify(toBeRepeated)}`);
             await this.registerRepeating('rolls');
             await this.registerRepeating('combat-init');
             return await super.repeatObj(toBeRepeated);
@@ -759,20 +759,20 @@
     on('change:repeating_crafts remove:repeating_crafts', TAS._fn(onCraftChange));
 
     function onCraftChange(e) {
-        if (debug === 2) TAS.debug(`craft changed, e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`craft changed, e=${JSON.stringify(e)}`);
         TAS.repeating('crafts').fields('repcrafts').attrs('craft-armoring', 'craft-artifact', 'craft-cooking', 'craft-artifice', 'craft-gemcutting', 'craft-geomancy',
             'craft-jewelry', 'craft-tailoring', 'craft-forging').tap(setDebugWrapper(function getMaxCraftAndSet(rows, attrs) {
             var craft = Math.max(0, attrs.I['craft-armoring'], attrs.I['craft-artifact'], attrs.I['craft-cooking'], attrs.I['craft-artifice'],
                                     attrs.I['craft-gemcutting'], attrs.I['craft-geomancy'], attrs.I['craft-jewelry'], attrs.I['craft-tailoring'],
                                     attrs.I['craft-forging']);
 
-            if (debug === 2) TAS.debug(`getMaxCraftAndSet:: attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
+            if (debug >= 2) TAS.debug(`getMaxCraftAndSet:: attrs=${JSON.stringify(attrs)}, rows=${JSON.stringify(rows)}`);
             _.each(rows, function(v, k) {
-                if (debug === 2) TAS.debug(`getMaxCraftAndSet:: v=${JSON.stringify(v)}, k=${k}`);
+                if (debug >= 2) TAS.debug(`getMaxCraftAndSet:: v=${JSON.stringify(v)}, k=${k}`);
                 craft = Math.max(craft, Number(v.repcrafts));
             });
 
-            if (debug === 2) TAS.debug(`getMaxCraftAndSet:: set Max Craft=${craft}`);
+            if (debug >= 2) TAS.debug(`getMaxCraftAndSet:: set Max Craft=${craft}`);
             setAttrs({'max-craft': craft});
         })).execute();
     }
@@ -797,13 +797,13 @@
             await addBGDmgRestrictionIfNeeded(objSet);
         } else if (e.sourceAttribute === 'battlegroup' && e.newValue === '0')
             await removeBGDmgRestriction(objSet);
-        if (debug === 2) TAS.debug('BG:: perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
-        if (debug === 2) TAS.debug(`BG:: Setting=`, objSet);
+        if (debug >= 2) TAS.debug('BG:: perfect-morale=' + JSON.stringify(values["battlegroup-perfect-morale"]));
+        if (debug >= 2) TAS.debug(`BG:: Setting=`, objSet);
         setAttrs(objSet);
     });
 
     async function addBGDmgRestrictionIfNeeded(objSet) {
-        if (debug === 2) TAS.debug(`addBGDmgRestriction::addBGDmgRestriction`);
+        if (debug >= 2) TAS.debug(`addBGDmgRestriction::addBGDmgRestriction`);
         const idCombatAttacks = await getSectionIDsAsync("combat-attack");
         const combatFieldNames = [];
         idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
@@ -819,7 +819,7 @@
     }
 
     async function removeBGDmgRestriction(objSet) {
-        if (debug === 2) TAS.debug(`removeBGDmgRestriction::removeBGDmgRestriction`);
+        if (debug >= 2) TAS.debug(`removeBGDmgRestriction::removeBGDmgRestriction`);
         const idCombatAttacks = await getSectionIDsAsync("combat-attack");
         const combatFieldNames = [];
         idCombatAttacks.forEach(id => combatFieldNames.push(`repeating_combat-attack_${id}_repcombat-wdmg-final-macro-options`));
@@ -870,11 +870,11 @@
 
     on('sheet:opened change:battlegroup change:battlegroup-size change:battlegroup-drill change:battlegroup-might', async function setOrDisableBattleGroupSpecialAttrs(e) {
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         if (e.sourceAttribute === 'battlegroup' && e.newValue === '0') {
-            if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: setting DEFAULT bg attrs`);
+            if (debug >= 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: setting DEFAULT bg attrs`);
             const final = await getUpdatedCombatDefensesObj({
                 "battlegroup-size": 0,
                 "battlegroup-drill": 'Poor',
@@ -886,8 +886,8 @@
             const pu = new ParryUpdater(), eu = new EvasionUpdater();
             const attrList = ["battlegroup-size", "battlegroup-drill", "battlegroup-might", ...await pu.getAttrToBeRetrieved(), ...eu.getAttrToBeRetrieved()];
             const values = await getAttrsAsync([...new Set(attrList)]);
-            if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
-            if (debug === 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: updating special bg attrs`);
+            if (debug >= 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: battlegroup-drill=${JSON.stringify(values["battlegroup-drill"])} battlegroup-might=${JSON.stringify(values["battlegroup-might"])}`);
+            if (debug >= 2) TAS.debug(`setOrDisableBattleGroupSpecialAttrs:: updating special bg attrs`);
             const final = eu.updateObj(values, pu.updateObj(values));
             Object.assign(final, await CombatAtkRollRepeater.getRepeatedObj({
                 'total-bg-boost': (Number(values["battlegroup-size"])+Number(values["battlegroup-might"]))
@@ -898,12 +898,12 @@
 
     on('sheet:opened', async function testEssenceValue(e) {
         const values = await getAttrsAsync(['essence', 'caste']);
-        if (debug === 2) TAS.debug(`testEssenceValue:: essence=${JSON.stringify(values['essence'])}`);
+        if (debug >= 2) TAS.debug(`testEssenceValue:: essence=${JSON.stringify(values['essence'])}`);
         if (!values['essence']) {
             TAS.debug(`testEssenceValue:: SETTING ESSENCE !`);
             setAttrs({'essence': 1});
         }
-        if (debug === 2) TAS.debug(`testEssenceValue:: caste=${JSON.stringify(values['caste'])}`);
+        if (debug >= 2) TAS.debug(`testEssenceValue:: caste=${JSON.stringify(values['caste'])}`);
         if (!values['caste']) {
             TAS.debug(`testEssenceValue:: SETTING DEFAULT CASTE !`);
             setAttrs({
@@ -1113,14 +1113,14 @@
 
     on('sheet:opened', async function versionCheck(e) {
         const values = await getAttrsAsync(['version', 'init-intimacies']);
-        if (debug === 2) TAS.debug(`versionCheck:: values=${JSON.stringify(values)}`);
+        if (debug >= 2) TAS.debug(`versionCheck:: values=${JSON.stringify(values)}`);
         if (!values.version) {
             TAS.debug('versionCheck:: NO VERSION FOUND !!!!!!');
             // TAS.debug('NO VERSION FOUND => INITIALIZING A NEW SHEET');
             // initCharacterSheet();
         } else {
             const v = parseFloat(values.version);
-            if (debug === 2) TAS.debug(`versionCheck:: Actual version v = ${v}`);
+            if (debug >= 2) TAS.debug(`versionCheck:: Actual version v = ${v}`);
 
             if (!values['init-intimacies'] || !Number(values['init-intimacies']))
                 initIntimacies()
@@ -2029,7 +2029,7 @@
 
     on('sheet:opened change:stamina change:naturalsoak change:armorsoak change:battlegroup-size', TAS._fn(async function updateSoak(e) {
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`updateSoak:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`updateSoak:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         setAttrs(await getUpdatedSoakObj());
@@ -2308,7 +2308,7 @@
     const charmRollExprRegexp = /^!exr (?:(?:\d+|\(.+\))#|-set)/;
     [...charmRepeatableSectionArray, 'spells'].forEach(section => {
         on(`change:repeating_${section}:charm-rollexpr`, TAS._fn(function changeCharmRollExpr(e) {
-            if (debug === 2) TAS.debug(`CHANGING charm-rollexpr, e=${JSON.stringify(e)}`);
+            if (debug >= 2) TAS.debug(`CHANGING charm-rollexpr, e=${JSON.stringify(e)}`);
             const attr_name = `repeating_${section}_${e.sourceAttribute.split('_')[2]}_charm-buttons-isextended`;
             let test = e.newValue ? e.newValue.match(charmRollExprRegexp) : false;
             const obj = {[attr_name] : test ? 1 : 0};
@@ -2319,7 +2319,7 @@
     charmRepeatableSectionArray.forEach(section => {
         on(`change:repeating_${section}`, setDebugWrapper(async function setAspectAndBalancedDefault(e) {
             if (e.sourceType !== "player") return;
-            if (debug === 2) TAS.debug(`setAspectAndBalancedDefault::setAspectAndBalancedDefault e=${JSON.stringify(e)}`);
+            if (debug >= 2) TAS.debug(`setAspectAndBalancedDefault::setAspectAndBalancedDefault e=${JSON.stringify(e)}`);
             const id = e.sourceAttribute.split('_')[2];
             const val = await getAttrsAsync([`caste`,`repeating_${section}_${id}_charm-aspect`,`repeating_${section}_${id}_charm-balanced`]);
             let objSet = {};
@@ -2339,11 +2339,11 @@
 
     charmRepeatableSectionArray.forEach(section => {
         on(`change:repeating_${section}:charm-duration`, setDebugWrapper(async function autosetCommitFromDuration(e) {
-            if (debug === 2) TAS.debug(`autosetCommitFromDuration::autosetCommitFromDuration e=`, e);
+            if (debug >= 2) TAS.debug(`autosetCommitFromDuration::autosetCommitFromDuration e=`, e);
             if (e.sourceType !== "player") return;
             const id = e.sourceAttribute.split('_')[2];
             const duration = await getSingleAttrAsync(`repeating_${section}_${id}_charm-duration`);
-            if (debug === 2) TAS.debug(`autosetCommitFromDuration:: duration=`, duration);
+            if (debug >= 2) TAS.debug(`autosetCommitFromDuration:: duration=`, duration);
             if (duration?.trim() && !['instant','permanent'].includes(duration.toLowerCase()))
                 setAttrs({[`repeating_${section}_${id}_rep-cost-mote-commit`]: '1'});
             else
@@ -2352,7 +2352,7 @@
     });
 
     async function setCasteToAllCharms(casteStr) {
-        if (debug === 2) TAS.debug(`setCasteToAllCharms::setCasteToAllCharms casteStr=${casteStr}`);
+        if (debug >= 2) TAS.debug(`setCasteToAllCharms::setCasteToAllCharms casteStr=${casteStr}`);
         var objSet = {};
         for (const section of charmRepeatableSectionArray) {
             const idSections = await getSectionIDsAsync(section);
@@ -2382,15 +2382,15 @@
     }
     async function computeRepeatingRollCost(e, cb) {
         if (e?.newValue === 'FORCE_REFRESH') return;
-        if (debug === 2) TAS.debug('computeRepeatingRollCost::computeRepeatingRollCost e=', JSON.stringify(e));
+        if (debug >= 2) TAS.debug('computeRepeatingRollCost::computeRepeatingRollCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
               repSectionName = sourceAttrSplit[1],
               id = sourceAttrSplit[2];
         const attr_name = `repeating_${repSectionName}_${id}_`;
 
-        if (debug === 2) TAS.debug(`computeRepeatingRollCost:: attr_name=${attr_name}`);
+        if (debug >= 2) TAS.debug(`computeRepeatingRollCost:: attr_name=${attr_name}`);
         const val = await getAttrsAsync([...costAttrs.map(attr => attr_name + attr), attr_name + 'charm-name']);
-        if (debug === 2) TAS.debug(`computeRepeatingRollCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
+        if (debug >= 2) TAS.debug(`computeRepeatingRollCost:: getAttrsAsync(COST ATTRS) val=${JSON.stringify(val)}`);
         const mote = val[attr_name + 'rep-cost-mote'],
             motePool = val[attr_name + 'rep-cost-mote-pool'] || '?{Spend Peripheral First ?|Yes,1|No,0}',
             moteCommit = Number(val[attr_name + 'rep-cost-mote-commit']),
@@ -2459,7 +2459,7 @@
           dDmgInitResetAttrsToBind =           ['init-to-set'];
 
     on('clicked:repeating_rolls:roll-cast clicked:repeating_rolls:roll-gmcast clicked:repeating_combat-init:init-cast clicked:repeating_combat-init:init-gmcast', setDebugWrapper(async function castRoll(e){
-        if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
         const section = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         const buttonClickedIsGm = e.sourceAttribute.split('_')[3].split('-')[1] === 'gmcast';
@@ -2472,7 +2472,7 @@
         if (buttonClickedIsGm) queryRoll += ' -gm';
         if (section !== 'rolls') queryRoll += ' -turn';
         queryRoll += ` ${values[`${attr_name}rep-cost-macro`]}`;
-        if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
+        if (debug >= 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
         finishRoll(results.rollId);
     }));
@@ -2482,7 +2482,7 @@
       +'clicked:repeating_combat-attack:cbt-datk-cast clicked:repeating_combat-attack:cbt-datk-gmcast '
       +'clicked:repeating_combat-attack:cbt-ddmg-cast-std clicked:repeating_combat-attack:cbt-ddmg-gmcast-std '
       +'clicked:repeating_combat-attack:cbt-ddmg-cast-rst clicked:repeating_combat-attack:cbt-ddmg-gmcast-rst', setDebugWrapper(async function combatCastRoll(e){
-        if (debug === 2) TAS.debug(`combatCastRoll::combatCastRoll e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`combatCastRoll::combatCastRoll e=${JSON.stringify(e)}`);
         const section = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         const split = e.sourceAttribute.split('_')[3].split('-');
@@ -2500,14 +2500,14 @@
         if (buttonClickedIsGm) queryRoll += ' -gm';
         if (['watk', 'datk'].includes(subSection)) queryRoll += ` ${await getSingleAttrAsync(`${attr_name}rep-cost-macro`)} ==atk==`;
 
-        if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
+        if (debug >= 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
         finishRoll(results.rollId);
 
         if (doReset) {
             await computeIdRepeatingRollAsync(section, id, `repcombat-${subSection}-`, dDmgInitResetAttrsToBind, defaultInitToResetFinalExpr, 'init-to-set-', false);
             queryRoll = `/${buttonClickedIsGm ? 'g' : ''}r ${await getSingleAttrAsync(`${attr_name}repcombat-ddmg-init-to-set-final-macro-replaced`)} &{tracker}`;
-            if (debug === 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
+            if (debug >= 2) TAS.debug(`combatCastRoll:: queryRoll=${queryRoll}`);
             const resultsReset = await startRoll(queryRoll);
             finishRoll(resultsReset.rollId);
         }
@@ -2536,10 +2536,10 @@
         const repeatingSectionName = e.sourceAttribute.split('_')[1];
         const id = e.sourceAttribute.split('_')[2];
         if (id[0] !== '-') {
-            if (debug === 2) TAS.debug(`computeRepeatingRoll:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
+            if (debug >= 2) TAS.debug(`computeRepeatingRoll:: 3rd slice is not an ID e=${JSON.stringify(e)}`);
             return;
         }
-        if (debug === 2) TAS.debug(`computeRepeatingRoll::computeRepeatingRoll e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`computeRepeatingRoll::computeRepeatingRoll e=${JSON.stringify(e)}`);
         computeIdRepeatingRoll(repeatingSectionName, id, attributePrefix, sectionToBind, finalExprCb, finalAttrNameAttrPrefix);
     }
 
@@ -2553,11 +2553,11 @@
         const attr_name = `repeating_${repeatingSectionName}_${id}_${attributePrefix}`;
 
         const val = await getAttrsAsync([...attrNAbi, ...sectionToBind.map(i => `${attr_name}${i}`)]);
-        if (debug === 2) TAS.debug(`computeIdRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
+        if (debug >= 2) TAS.debug(`computeIdRepeatingRoll::getAllValuesForRoll val=${JSON.stringify(val)}`);
         const replaced = replaceRoll20AttrInArray(attr_name, sectionToBind, val);
 
         if (!setIfReplaced || replaced) {
-            if (debug === 2) TAS.debug(`computeIdRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
+            if (debug >= 2) TAS.debug(`computeIdRepeatingRoll:: OUT val=${JSON.stringify(val)}`);
             let finalExpr = finalExprCb(val, attr_name);
             let finalAttrName = attr_name + finalAttrNameAttrPrefix + 'final-macro-replaced';
             TAS.debug(`computeIdRepeatingRoll:: finalAttrName=${finalAttrName} finalExpr=${finalExpr}`);
@@ -2586,7 +2586,7 @@
     async function computeAllDamageRolls() {
        TAS.debug('computeAllDamageRolls::computeAllDamageRolls');
 
-        if (debug === 2) TAS.debug('computeAllDamageRolls:: UPDATING DAMAGE ROLLS');
+        if (debug >= 2) TAS.debug('computeAllDamageRolls:: UPDATING DAMAGE ROLLS');
         const arrayIdCharmSection = await getSectionIDsAsync('combat-attack');
         for (const id of arrayIdCharmSection) {
             const fakeEvent = {sourceAttribute:`repeating_combat-attack_${id}_fake-attr`};
@@ -2598,7 +2598,7 @@
     async function computeSection(section) {
        TAS.debug(`computeSection::computeSection section=${section}`);
 
-        if (debug === 2) TAS.debug(`computeSection:: UPDATING SECTION=${section}`);
+        if (debug >= 2) TAS.debug(`computeSection:: UPDATING SECTION=${section}`);
         const arrayIdSection = await getSectionIDsAsync(section);
         for (const id of arrayIdSection) {
             const fakeEvent = {sourceAttribute:`repeating_${section}_${id}_fake-attr`};
@@ -2624,7 +2624,7 @@
         }
         TAS.debug('verifyAllCharmsRollExpr::verifyAllCharmsRollExpr e=', JSON.stringify(e));
 
-        if (debug === 2) TAS.debug('verifyAllCharmsRollExpr:: UPDATING CHARMS');
+        if (debug >= 2) TAS.debug('verifyAllCharmsRollExpr:: UPDATING CHARMS');
         for (const repeatableCharmSection of charmRepeatableSectionArray) {
             const arrayIdCharmSection = await getSectionIDsAsync(repeatableCharmSection);
             for (const id of arrayIdCharmSection) {
@@ -2669,7 +2669,7 @@
 
     /* Combat Tab Roll Section '+' Triggers */
     on('clicked:repeating_combat-attack:default-macro-watk-d', setDebugWrapper(async function clickPlusWAtkDice(e) {
-        if (debug === 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK watk-d !!! e=${JSON.stringify(e)}`);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         const tested_attr = `${attr_name}repcombat-watk-abi`,
               written_attr = `${attr_name}repcombat-watk-bonus-dices`,
@@ -2685,7 +2685,7 @@
     }));
 
     on('clicked:repeating_combat-attack:default-macro-datk-d', setDebugWrapper(function clickDefaultMacroDAtkDice(e) {
-        if (debug === 2) TAS.debug(`CLICK datk-d !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK datk-d !!! e=${JSON.stringify(e)}`);
         setDefaultsOnDAtkDice(e);
     }));
 
@@ -2704,7 +2704,7 @@
     }));
 
     async function setDefaultsOnAtkSuccType(e, setWill = false) {
-        if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
         const val = await getAttrsAsync(['succex']);
         const succExTest = val['succex'] == '1';
 
@@ -2719,7 +2719,7 @@
     }
 
     on('clicked:repeating_combat-attack:default-macro-datk-set-name', setDebugWrapper(async function clickDefaultMacroSetName(e) {
-        if (debug === 2) TAS.debug(`CLICK roll-set-name !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK roll-set-name !!! e=${JSON.stringify(e)}`);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         const values = await getAttrsAsync(["character_name"]);
         await setCb(`${attr_name}repcombat-ddmg-dices`, `@{tracker|${values["character_name"]}}`);
@@ -2727,7 +2727,7 @@
 
     /* QC special trigger when changing attr for withering damage => simulate all '+' pressed to gain time */
     on('change:repeating_combat-attack:repcombat-wdmg-attr', setDebugWrapper(async function testQCSetup(e) {
-        if (debug === 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK watk-s & datk-s !!! e=${JSON.stringify(e)}`);
         const values = await getAttrsAsync(['qc', 'diceex', 'succex']);
         TAS.debug(`ifQCSetupAll:: values=${JSON.stringify(values)} values.qc=${values.qc}`);
         if (values.qc) {
@@ -2748,7 +2748,7 @@
 
     /* Roll Section & Init '+' Triggers */
     on('clicked:repeating_rolls:default-macro-d clicked:repeating_combat-init:default-macro-d', setDebugWrapper(async function clickDefaultMacroRollsDice(e) {
-        if (debug === 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK roll-d !!! e=${JSON.stringify(e)}`);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         const val = await getAttrsAsync(['diceex', 'succex']);
         const diceExTest = val['diceex'] == '1', succExTest = val['succex'] == '1';
@@ -2758,7 +2758,7 @@
     }));
 
     on('clicked:repeating_rolls:default-macro-s clicked:repeating_combat-init:default-macro-s', setDebugWrapper(async function clickDefaultMacroRollsDice(e) {
-        if (debug === 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK roll-s !!! e=${JSON.stringify(e)}`);
         const {attr_name, repeatingSectionName, id, section} = setupVar(e);
         const val = await getAttrsAsync(['succex']);
         setAttrs({[`${attr_name}rep-cost-will`] : '?{Willpower ?|No,0|Yes,1}'});
@@ -2909,7 +2909,7 @@
         charmObj[`repeating_charms-all_${idNewCharm}_charm-learnt`] = 1;
         charmObj[`repeating_charms-all_${idNewCharm}_charm-buttons-isextended`] = charmObj[`repeating_charms-all_${idNewCharm}_charm-rollexpr`] !== '' ? 1 : 0;
 
-        // if (debug === 2)
+        // if (debug >= 2)
             TAS.debug(`addTemplateCharm:: charmObj=`, charmObj);
         setAttrs(charmObj);
     }));
@@ -2979,12 +2979,12 @@
 
     function cleanAndEval(val, setObj, keyName) {
         const cleanerReg = /[^\d\+]+/g;
-        if (debug === 2) TAS.debug(`cleanAndEval:: val="${val}" key=${keyName}`);
+        if (debug >= 2) TAS.debug(`cleanAndEval:: val="${val}" key=${keyName}`);
         let str = String(val).replaceAll(cleanerReg, '');
-        if (debug === 2) TAS.debug(`cleanAndEval:: str="${str}"`);
+        if (debug >= 2) TAS.debug(`cleanAndEval:: str="${str}"`);
         if (str !== val) setObj[keyName] = str;
         let final = Number(eval(str));
-        if (debug === 2) TAS.debug(`cleanAndEval:: final=${final}`);
+        if (debug >= 2) TAS.debug(`cleanAndEval:: final=${final}`);
         return final;
     }
 
@@ -3029,42 +3029,42 @@
         if (name)
             charmObj[`repeating_charms-all_${idNewCharm}_charm-name`] = name;
 
-        if (debug === 2) TAS.debug(`addGenericCharm:: charmObj=`, charmObj);
+        if (debug >= 2) TAS.debug(`addGenericCharm:: charmObj=`, charmObj);
         setAttrs(charmObj);
     }
     on('clicked:add-charm-to-all', () => setDebugWrapper(addGenericCharm)());
 
     on('sheet:opened change:charm_sheet', setDebugWrapper(function clearTemplateCharmSelected(e){
-        if (debug === 2) TAS.debug(`clearTemplateCharmSelected:: e=`,e);
+        if (debug >= 2) TAS.debug(`clearTemplateCharmSelected:: e=`,e);
         setAttrs({'template-charm-name-selected':''});
     }));
 
     on('change:_reporder:charms-all', setDebugWrapper(async function forceTriggerRefresh(e){
-        if (debug === 2) TAS.debug(`forceTriggerRefresh:: e.sourceType=${e.sourceType}`);
+        if (debug >= 2) TAS.debug(`forceTriggerRefresh:: e.sourceType=${e.sourceType}`);
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`forceTriggerRefresh:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`forceTriggerRefresh:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug(`forceTriggerRefresh:: FORCE_REFRESH`);
+        if (debug >= 2) TAS.debug(`forceTriggerRefresh:: FORCE_REFRESH`);
         await addGenericCharm('FORCE_REFRESH');
     }));
 
     on('change:repeating_charms-all:charm-name', setDebugWrapper(function detectTriggerRefresh(eventInfo){
-        if (debug === 2) TAS.debug(`detectTriggerRefresh::detectTriggerRefresh`);
+        if (debug >= 2) TAS.debug(`detectTriggerRefresh::detectTriggerRefresh`);
         if (eventInfo.sourceType === "player") {
-            if (debug === 2) TAS.debug(`detectTriggerRefresh:: TRIGGER FROM PLAYER => CANCEL`);
+            if (debug >= 2) TAS.debug(`detectTriggerRefresh:: TRIGGER FROM PLAYER => CANCEL`);
             return;
         }
         if (eventInfo.newValue === 'FORCE_REFRESH') {
             const id = eventInfo.sourceAttribute.split('_')[2];
-            if (debug === 2) TAS.debug(`detectTriggerRefresh:: FORCE_REFRESH => DELETE ROW id=${id}`);
+            if (debug >= 2) TAS.debug(`detectTriggerRefresh:: FORCE_REFRESH => DELETE ROW id=${id}`);
             removeRepeatingRow(`repeating_charms-all_${id}`);
         }
     }));
 
     /* Reset Dice Cap in roll through caste image hidden Triggers */
     on('clicked:repeating_rolls-widget:reset-roll-cap', setDebugWrapper(async function clickResetDiceCap(e) {
-        if (debug === 2) TAS.debug(`CLICK reset-roll-cap !!! e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`CLICK reset-roll-cap !!! e=${JSON.stringify(e)}`);
         const attr_name = `repeating_rolls-widget_${e.sourceAttribute.split('_')[2]}_`;
         const finalObj = {}, attrArray = [
             'reprolls-ycharm-dices',
@@ -3079,7 +3079,7 @@
         for (const key of attrArray)
             finalObj[`${attr_name}${key}`] = 0;
 
-        if (debug === 2) TAS.debug(`clickResetDiceCap:: RESETTING:`, finalObj);
+        if (debug >= 2) TAS.debug(`clickResetDiceCap:: RESETTING:`, finalObj);
         setAttrs(finalObj);
         await updateRollWidgetAsync(e);
     }));
@@ -3196,7 +3196,7 @@
             const getAndResetIfNeg = (finalObj, attr) => {
                 const tested = Number(getFromUpdatedOrRetrieve(attr));
                 if (tested < 0) {
-                    if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:getAndResetIfNeg:: Reset Attr=${attr}`);
+                    if (debug >= 2) TAS.debug(`RollWidgetUpdater:updateObj:getAndResetIfNeg:: Reset Attr=${attr}`);
                     Object.assign(finalObj, {[attr]: 0});
                     return 0;
                 }
@@ -3207,7 +3207,7 @@
             const separatorMode = Number(getFromUpdatedOrRetrieve(attr_name + 'reprolls-separator-mode')),
                   finalObj = JSON.parse(JSON.stringify(toBeUpdated));
             if (separatorMode) {
-                if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: Separator MODE => ABORT`);
+                if (debug >= 2) TAS.debug(`RollWidgetUpdater:updateObj:: Separator MODE => ABORT`);
                 return finalObj;
             }
             const moteOffset = Number(getFromUpdatedOrRetrieve(attr_name + 'rep-cost-mote-offset')),
@@ -3232,12 +3232,12 @@
             if (will)       finalMacro += `:will;${will}`;
     
             const totalDices = Math.max(0, attr+abi+stunt+spe+moteDices+paidD+nDices-rollPen-woundPen);
-            if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting totalDices=${totalDices} (attr=${attr} + abi=${abi} + stunt=${stunt} + spe=${spe} + dices=${moteDices} + paidD=${paidD} + nDices=${nDices} - rollPen=${rollPen} - woundPen=${woundPen})`);
+            if (debug >= 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting totalDices=${totalDices} (attr=${attr} + abi=${abi} + stunt=${stunt} + spe=${spe} + dices=${moteDices} + paidD=${paidD} + nDices=${nDices} - rollPen=${rollPen} - woundPen=${woundPen})`);
     
             const totalSucc = will+moteSuccs+paidS+nSucc;
-            if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting totalSucc=${totalSucc} (will=${will} + succ=${moteSuccs} + paidD=${paidS} + nSucc=${nSucc})`);
+            if (debug >= 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting totalSucc=${totalSucc} (will=${will} + succ=${moteSuccs} + paidD=${paidS} + nSucc=${nSucc})`);
     
-            if (debug === 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro} TOTAL=${moteCost}`);
+            if (debug >= 2) TAS.debug(`RollWidgetUpdater:updateObj:: setting ATTR='${attr_name+'rep-cost-macro'}'=${finalMacro} TOTAL=${moteCost}`);
             verifyAndSetIfDifferent(values, finalObj, attr_name+'roll-penalty', rollPen);
             verifyAndSetIfDifferent(values, finalObj, attr_name+'wound-penalty', woundPen);
             verifyAndSetIfDifferent(values, finalObj, attr_name+'rep-cost-macro', finalMacro);
@@ -3252,14 +3252,14 @@
 
         async getUpdatedObj(toBeUpdated = {}) {
             const time = new TimeCounter('RollWidgetUpdater:getUpdatedObj');
-            if (debug === 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: CALL getAttrsAsync(COST ATTRS)`);
+            if (debug >= 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: CALL getAttrsAsync(COST ATTRS)`);
             const attrList = this.getAttrToBeRetrieved();
             const values = await getAttrsAsync(attrList);
             time.lap(`1st await - attrList.length=${attrList.length}`);
-            if (debug === 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: getAttrsAsync(COST ATTRS) values=`,values);
+            if (debug >= 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: getAttrsAsync(COST ATTRS) values=`,values);
             await AttrReplacer.reduceAttrs(values);
             time.lap(`2nd await`);
-            if (debug === 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: getAttrsAsync(COST ATTRS) values=`,values);
+            if (debug >= 2) TAS.debug(`RollWidgetUpdater:getUpdatedObj:: getAttrsAsync(COST ATTRS) values=`,values);
             const ret = this.updateObj(values, toBeUpdated);
             time.lap(`out`);
             return ret;
@@ -3281,17 +3281,17 @@
     }
     async function updateRollWidget(e, cb) {
         const time = new TimeCounter('updateRollWidget');
-        if (debug === 2) TAS.debug('updateRollWidget::updateRollWidget e=', JSON.stringify(e));
+        if (debug >= 2) TAS.debug('updateRollWidget::updateRollWidget e=', JSON.stringify(e));
 
         if (e.sourceType === "sheetworker") { // && !['wound-penalty','rollpenalty-input'].includes(e.triggerName)
-            if (debug === 2) TAS.debug('updateRollWidget:: SHEETWORKER TRIGGER ?!?!?!?');
+            if (debug >= 2) TAS.debug('updateRollWidget:: SHEETWORKER TRIGGER ?!?!?!?');
             return;
         }
 
         time.lap(`before 1st await`);
         const finalObj = await RollWidgetUpdater.getUpdatedRollWidgetObj(e);
         time.lap(`after 1st await`);
-        if (debug === 2) TAS.debug(`updateRollWidget:: setting:`,finalObj);
+        if (debug >= 2) TAS.debug(`updateRollWidget:: setting:`,finalObj);
         if (cb) {
             await setAttrsAsync(finalObj);
             cb();
@@ -3359,7 +3359,7 @@
     function defaultRollWidgetFinalExpr(val, attr_name)        { return `(${val[attr_name+'attr']}+ ${val[attr_name+'abi']}${checkNumberReturnValidString(val[attr_name+'stunt-dices'], '[Stunt]', '+ ')}${checkNumberReturnValidString(val[attr_name+'specialty'], '[Specialty]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-dices'], '[Charm Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-dices'], '[Paid Dices]', '+ ')}${checkNumberReturnValidString(val[attr_name+'ncharm-dices'], '[Non-Charm Dices]', '+ ')} -@{roll-penalty}[RollPen] -@{wound-penalty}[Wound Pen])#${checkNumberReturnValidString(val[attr_name+'willpower-toggle'], '[WP]')}${checkNumberReturnValidString(val[attr_name+'ycharm-successes'], '[Charm Successes]')}${checkNumberReturnValidString(val[attr_name+'ycharm-paid-successes'], '[Paid Successes]')}${checkNumberReturnValidString(val[attr_name+'ncharm-successes'], '[Non-Charm Successes]')} ${val[attr_name+'final-macro-options']}`; }
 
     on('clicked:repeating_rolls-widget:roll-widget-cast clicked:repeating_rolls-widget:roll-widget-gmcast', setDebugWrapper(async function castRoll(e){
-        if (debug === 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`castRoll::castRoll e=${JSON.stringify(e)}`);
         const id = e.sourceAttribute.split('_')[2];
         const buttonClicked = e.sourceAttribute.split('_')[3];
         const attr_name = `repeating_rolls-widget_${id}_`;
@@ -3369,7 +3369,7 @@
         let queryRoll = buttonClicked === 'roll-widget-cast' ?
             `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} ${values[`${attr_name}rep-cost-macro`]}` :
             `!exr ${values[`${attr_name}reprolls-final-macro-replaced`]} -gm ${values[`${attr_name}rep-cost-macro`]}`;
-        if (debug === 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
+        if (debug >= 2) TAS.debug(`castRoll:: queryRoll=${queryRoll}`);
         const results = await startRoll(queryRoll);
         const resetObj = {
             [`${attr_name}reprolls-stunt-dices`]: 0,
@@ -3387,13 +3387,13 @@
 
     charmRepeatableSectionArray.forEach(section => {
         on(`clicked:repeating_${section}:learn-charm`, TAS._fn(async function learnCharm(e) {
-            if (debug === 2) TAS.debug(`CLICKED "LEARN!", e=`, e);
+            if (debug >= 2) TAS.debug(`CLICKED "LEARN!", e=`, e);
             const id = e.sourceAttribute.split('_')[2];
             setAttrs({[`repeating_${section}_${id}_charm-learnt`] : 1});
         }));
 
         on(`change:repeating_${section}:charm-learnt`, TAS._fn(async function changedCharmLearnt(e) {
-            if (debug === 2) TAS.debug(`CHANGED "LEARN!", e=`, e);
+            if (debug >= 2) TAS.debug(`CHANGED "LEARN!", e=`, e);
             if (e.newValue === '0' || !Object.keys(e).includes('previousValue')) return;
             const id = e.sourceAttribute.split('_')[2];
             const values = await getAttrsAsync(["character_name", `repeating_${section}_${id}_charm-name`, `repeating_${section}_${id}_charm-skill`]);
@@ -3404,7 +3404,7 @@
 
     charmRepeatableSectionArray.forEach(section => {
         on(`clicked:repeating_${section}:change-aspect`, TAS._fn(async function changeAspect(e) {
-            if (debug === 2) TAS.debug(`CLICKED ChangeAspect !, e=`, e);
+            if (debug >= 2) TAS.debug(`CLICKED ChangeAspect !, e=`, e);
             const id = e.sourceAttribute.split('_')[2];
             const values = await getAttrsAsync([`repeating_${section}_${id}_charm-aspect`]);
             const aspectList = ['air', 'earth', 'fire', 'water', 'wood'];
@@ -3447,7 +3447,7 @@
             let matchRet;
             for (const [key, value] of Object.entries(val)) {
                 if (value === undefined) {
-                    if (debug === 2) TAS.debug(`AttrReplacer:AttrReplacer:: UNDEFINED KEY=${key} use 0`);
+                    if (debug >= 2) TAS.debug(`AttrReplacer:AttrReplacer:: UNDEFINED KEY=${key} use 0`);
                     val[key] = 0;
                 } else if (typeof value === 'string' && (matchRet = value.match(/^@\{(.+)\}/))) {
                     if (debug === 3) TAS.debug(`AttrReplacer:AttrReplacer:: found an attr to replace:${matchRet[1]} key=${key}`);
@@ -3470,11 +3470,11 @@
                     if (Object.keys(val2).includes(matchRet[1])) {
                         this.#attrRetrieved[key] = val2[matchRet[1]];
                     } else {
-                        if (debug === 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF 2 ??? !!! use 0 key=${key}`);
+                        if (debug >= 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF 2 ??? !!! use 0 key=${key}`);
                         this.#attrRetrieved[key] = 0;
                     }
                 } else {
-                    if (debug === 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF ??? use 0 key=${key}`);
+                    if (debug >= 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF ??? use 0 key=${key}`);
                     this.#attrRetrieved[key] = 0;
                 }
             }
@@ -3482,12 +3482,12 @@
 
         async #reduceAttrs() {
             this.#time.lap(`before await - attrList.length=${this.#newGetArray.length}`);
-            if (debug === 2) TAS.debug(`AttrReplacer:reduceAttrs:: newGetArray=${JSON.stringify(this.#newGetArray)} newGetKeysToReplace=`,this.#newGetKeysToReplace);
+            if (debug >= 2) TAS.debug(`AttrReplacer:reduceAttrs:: newGetArray=${JSON.stringify(this.#newGetArray)} newGetKeysToReplace=`,this.#newGetKeysToReplace);
             const val2 = await getAttrsAsync(this.#newGetArray);
             this.#time.lap(`after await - val2.length=${Object.keys(val2).length}`);
             Object.assign(this.#attrRetrieved, val2);
             this.#time.lap(`after assign`);
-            if (debug === 2) TAS.debug(`AttrReplacer:reduceAttrs:: val2=`, val2);
+            if (debug >= 2) TAS.debug(`AttrReplacer:reduceAttrs:: val2=`, val2);
             this.#reduceAttrsReplace(val2);
             this.#time.lap(`after replace - OUT`);
         }
@@ -3566,10 +3566,10 @@
 
     on('change:token-size-percent', function changeTokenSizePercent(e) {
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`changeTokenSizePercent:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug >= 2) TAS.debug(`changeTokenSizePercent:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
-        if (debug === 2) TAS.debug(`changeTokenSizePercent::changeTokenSizePercent e=`, e);
+        if (debug >= 2) TAS.debug(`changeTokenSizePercent::changeTokenSizePercent e=`, e);
         const value = Number(e.newValue) || 100;
         const finalObj = {'token-size': value / 100};
         if (isNaN(e.newValue)) finalObj['token-size-percent'] = 100;
@@ -3581,7 +3581,7 @@
      */
 
     function setupVar(e) {
-        if (debug === 2) TAS.debug(`setupVar::setupVar e=${JSON.stringify(e)}`);
+        if (debug >= 2) TAS.debug(`setupVar::setupVar e=${JSON.stringify(e)}`);
         const split = e.sourceAttribute.split('_'),
               repeatingSectionName = split[1], id = split[2],
               section = split[3].split('-')[2];
@@ -3600,20 +3600,20 @@
 
     on('sheet:opened', saveAllRepeatableSectionSize);
     async function saveAllRepeatableSectionSize(e) {
-        if (debug === 2) TAS.debug(`saveAllRepeatableSectionSize::saveAllRepeatableSectionSize e=`, e);
+        if (debug >= 2) TAS.debug(`saveAllRepeatableSectionSize::saveAllRepeatableSectionSize e=`, e);
         const finalObj = {
             ...await getMeritsRepeatableSectionSize(),
             ...await getAbilitiesRepeatableSectionSize(),
             ...await getCraftsRepeatableSectionSize(),
             ...await getMARepeatableSectionSize(),
         };
-        if (debug === 2) TAS.debug(`saveAllRepeatableSectionSize:: set=`, finalObj);
+        if (debug >= 2) TAS.debug(`saveAllRepeatableSectionSize:: set=`, finalObj);
         setAttrs(finalObj);
     }
 
     on('change:repeating_merits remove:repeating_merits', saveMeritsRepeatableSectionSize);
     async function saveMeritsRepeatableSectionSize(e) {
-        if (debug === 2) TAS.debug(`saveMeritsRepeatableSectionSize::saveMeritsRepeatableSectionSize e=`, e);
+        if (debug >= 2) TAS.debug(`saveMeritsRepeatableSectionSize::saveMeritsRepeatableSectionSize e=`, e);
         const oldVal = await getAttrsAsync(['merits-length']);
         const finalObj = {...await getMeritsRepeatableSectionSize()};
         if (finalObj['merits-length'] === oldVal) return;
@@ -3627,7 +3627,7 @@
 
     on('change:repeating_abilities remove:repeating_abilities', saveAbilitiesRepeatableSectionSize);
     async function saveAbilitiesRepeatableSectionSize(e) {
-        if (debug === 2) TAS.debug(`saveMeritsRepeatableSectionSize::saveMeritsRepeatableSectionSize e=`, e);
+        if (debug >= 2) TAS.debug(`saveMeritsRepeatableSectionSize::saveMeritsRepeatableSectionSize e=`, e);
         const oldVal = await getAttrsAsync(['rep-abi-enabled']);
         const finalObj = {...await getAbilitiesRepeatableSectionSize()};
         if (finalObj['rep-abi-enabled'] === oldVal) return;
@@ -3641,7 +3641,7 @@
 
     on('change:repeating_crafts remove:repeating_crafts', saveCraftsRepeatableSectionSize);
     async function saveCraftsRepeatableSectionSize(e) {
-        if (debug === 2) TAS.debug(`saveCraftsRepeatableSectionSize::saveCraftsRepeatableSectionSize e=`, e);
+        if (debug >= 2) TAS.debug(`saveCraftsRepeatableSectionSize::saveCraftsRepeatableSectionSize e=`, e);
         const oldVal = await getAttrsAsync(['rep-crafts-enabled']);
         const finalObj = {...await getCraftsRepeatableSectionSize()};
         if (finalObj['rep-crafts-enabled'] === oldVal) return;
@@ -3655,7 +3655,7 @@
 
     on('change:repeating_martialarts remove:repeating_martialarts', saveMARepeatableSectionSize);
     async function saveMARepeatableSectionSize(e) {
-        if (debug === 2) TAS.debug(`saveMARepeatableSectionSize::saveMARepeatableSectionSize e=`, e);
+        if (debug >= 2) TAS.debug(`saveMARepeatableSectionSize::saveMARepeatableSectionSize e=`, e);
         const oldVal = await getAttrsAsync(['rep-ma-enabled']);
         const finalObj = {...await getMARepeatableSectionSize()};
         if (finalObj['rep-ma-enabled'] === oldVal) return;
@@ -3670,20 +3670,20 @@
     /* Not used, but help if i want to used button[type="action"] instead of button[type="roll"] + start playing with async */
     [...charmRepeatableSectionArray, 'spells'].forEach(section => {
         on(`clicked:repeating_${section}:charmcast-show`, TAS._fn(async function clickShowCharm(e) {
-            if (debug === 2) TAS.debug(`clickShowCharm::clickShowCharm e=${JSON.stringify(e)}`);
+            if (debug >= 2) TAS.debug(`clickShowCharm::clickShowCharm e=${JSON.stringify(e)}`);
             const split = e.sourceAttribute.split('_'), section = split[1], id = split[2], buttonClicked = split[3];
             const attr_name = `repeating_${section}_${id}_`;
             const orig_roll = e.htmlAttributes.value, regexp = /@\{([^\}]+)\}/g;
             const roll20Attrs = [...orig_roll.matchAll(regexp)].map(i => i[1]).filter(i => i.includes('charm-'));
             const finalRoll20Attrs = roll20Attrs.map(i => `${attr_name}${i}`);
-            if (debug === 2) TAS.debug(`clickShowCharm:: roll20Attrs=${JSON.stringify(finalRoll20Attrs)}`);
+            if (debug >= 2) TAS.debug(`clickShowCharm:: roll20Attrs=${JSON.stringify(finalRoll20Attrs)}`);
 
             let final_roll = orig_roll;
             roll20Attrs.forEach((attr, index) => { final_roll = final_roll.replaceAll(`@{${attr}}`, `@{${finalRoll20Attrs[index]}}`); });
-            if (debug === 2) TAS.debug(`clickShowCharm:: final_roll=${final_roll}`);
+            if (debug >= 2) TAS.debug(`clickShowCharm:: final_roll=${final_roll}`);
 
             const results = await startRoll(final_roll);
-            if (debug === 2) TAS.debug(`clickShowCharm:: results=${JSON.stringify(results)}`, results);
+            if (debug >= 2) TAS.debug(`clickShowCharm:: results=${JSON.stringify(results)}`, results);
             finishRoll(results.rollId);
         }));
     });
