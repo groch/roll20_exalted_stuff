@@ -2029,7 +2029,7 @@
 
     on('sheet:opened change:stamina change:naturalsoak change:armorsoak change:battlegroup-size', TAS._fn(async function updateSoak(e) {
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`updateParry:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug === 2) TAS.debug(`updateSoak:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         setAttrs(await getUpdatedSoakObj());
@@ -2619,7 +2619,7 @@
 
     async function verifyAllCharmsRollExpr(e, setIfReplaced = true) {
         if (e.sourceType !== "player") {
-            TAS.debug(`TRIGGER FROM SCRIPT => CANCEL`);
+            TAS.debug(`verifyAllCharmsRollExpr::TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         TAS.debug('verifyAllCharmsRollExpr::verifyAllCharmsRollExpr e=', JSON.stringify(e));
@@ -3042,7 +3042,7 @@
     on('change:_reporder:charms-all', setDebugWrapper(async function forceTriggerRefresh(e){
         if (debug === 2) TAS.debug(`forceTriggerRefresh:: e.sourceType=${e.sourceType}`);
         if (e.sourceType !== "player") {
-            if (debug === 2) TAS.debug(`clicked:add-charm-to-all:: TRIGGER FROM SCRIPT => CANCEL`);
+            if (debug === 2) TAS.debug(`forceTriggerRefresh:: TRIGGER FROM SCRIPT => CANCEL`);
             return;
         }
         if (debug === 2) TAS.debug(`forceTriggerRefresh:: FORCE_REFRESH`);
@@ -3565,10 +3565,14 @@
     }
 
     on('change:token-size-percent', function changeTokenSizePercent(e) {
+        if (e.sourceType !== "player") {
+            if (debug === 2) TAS.debug(`changeTokenSizePercent:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
         if (debug === 2) TAS.debug(`changeTokenSizePercent::changeTokenSizePercent e=`, e);
-        if (isNaN(e.newValue)) setAttrs({'token-size-percent':100})
         const value = Number(e.newValue) || 100;
         const finalObj = {'token-size': value / 100};
+        if (isNaN(e.newValue)) finalObj['token-size-percent'] = 100;
         setAttrs(finalObj);
     });
 
