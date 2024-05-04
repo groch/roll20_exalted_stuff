@@ -2381,6 +2381,7 @@
             catch{ reject(); }});
     }
     async function computeRepeatingRollCost(e, cb) {
+        if (e?.newValue === 'FORCE_REFRESH') return;
         if (debug === 2) TAS.debug('computeRepeatingRollCost::computeRepeatingRollCost e=', JSON.stringify(e));
         const sourceAttrSplit = e.sourceAttribute.split('_'),
               repSectionName = sourceAttrSplit[1],
@@ -3495,7 +3496,7 @@
             if (val === null || val === undefined || typeof val !== 'object')
                 throw new Exception(`AttrReplacer:reduceAttrs:: Must be called with an object as 1st argument`);
             AttrReplacer.#isInternalConstructing = true;
-            return await new AttrReplacer(val).#reduceAttrs();
+            await new AttrReplacer(val).#reduceAttrs();
         }
     }
 
