@@ -439,8 +439,8 @@
                 ride = Number(getFromUpdatedOrRetrieve('ride')),
                 dodge = Number(getFromUpdatedOrRetrieve('dodge')),
                 rideMode = Number(getFromUpdatedOrRetrieve('ride-for-evasion')),
-                mobiPen = Number(getFromUpdatedOrRetrieve('armor-mobility')),
-                rideMobiPen = Number(getFromUpdatedOrRetrieve('mount-armor-mobility')),
+                mobiPen = Math.abs(Number(getFromUpdatedOrRetrieve('armor-mobility'))),
+                rideMobiPen = Math.abs(Number(getFromUpdatedOrRetrieve('mount-armor-mobility'))),
                 qcEva = Number(getFromUpdatedOrRetrieve('qc-evasion')),
                 isQc = Number(getFromUpdatedOrRetrieve('qc')),
                 finalObj = JSON.parse(JSON.stringify(toBeUpdated)),
@@ -2415,7 +2415,6 @@
             try  { replaceRoll20Attrs(string,(values)=>{ resolve(values);}); }
             catch{ reject(); }});
     }
-
     async function replaceRoll20Attrs(string, cb) {
         const val = await getAttrsAsync(attrNAbi);
         for (const attr_tested of attrNAbi) {
