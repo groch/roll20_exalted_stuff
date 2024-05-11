@@ -194,7 +194,7 @@
 
             const attrList = [
                 ...healthFieldNames,
-                'wound-penalty', 'woundpenalty-add',
+                'wound-penalty', 'woundpenalty-add', 'wound-pen-neg',
                 'health-displayed', 'health-displayed_max',
                 'combat-crippling-pen', 'combat-disable-pen', 'pain-tolerance', 'battlegroup',
                 ...await this.#pu.getAttrToBeRetrieved(),
@@ -237,6 +237,13 @@
             return await this.updateObj(values, toBeUpdated);
         }
 
+        #determineForce(woundPenRaw, woundPenNegRaw) {
+            if (isNaN(Number(woundPenRaw)) || isNaN(Number(woundPenNegRaw)) ||
+                woundPenRaw === '' || woundPenNegRaw === '')
+                return true;
+            return false;
+        }
+
         async updateObj(values, toBeUpdated = {}) {
             const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
             this.#sortedIdHealthArray = _(this.#idHealthArray).chain().sortBy(function(id) {
@@ -244,21 +251,24 @@
                 return val === 'I' ? 5 : -1 * Number(val);
             }).value();
 
+            const woundPenRaw = getFromUpdatedOrRetrieve('wound-penalty'),
+                  woundPenNegRaw = getFromUpdatedOrRetrieve('wound-pen-neg');
             const finalAttr = JSON.parse(JSON.stringify(toBeUpdated)),
-                  oldPen = Number(getFromUpdatedOrRetrieve('wound-penalty')) || 0,
+                  oldPen = Number(woundPenRaw) || 0,
                   oldActual = Number(getFromUpdatedOrRetrieve('health-displayed')) || 0,
                   oldMax = Number(getFromUpdatedOrRetrieve('health-displayed_max')) || 0,
                   maxHealth = this.#sortedIdHealthArray.length;
             const [pen, actualHealth] = this.#updatePen(values, toBeUpdated);
+            const force = this.#determineForce(woundPenRaw, woundPenNegRaw);
 
-            if (oldPen !== pen) Object.assign(finalAttr, {'wound-penalty': pen, 'wound-pen-neg': -pen});
+            if (oldPen !== pen || force) Object.assign(finalAttr, {'wound-penalty': pen, 'wound-pen-neg': -pen});
             if (!Number(getFromUpdatedOrRetrieve('battlegroup'))) {
                 if (debug >= 2) TAS.debug(`WoundUpdater:updateObj:: maxHealth=${maxHealth} actualHealth=${actualHealth}`);
                 if (oldActual !== actualHealth) Object.assign(finalAttr, {'health-displayed': actualHealth});
                 if (oldMax !== maxHealth)       Object.assign(finalAttr, {'health-displayed_max': maxHealth});
             }
     
-            if (oldPen !== pen) {
+            if (oldPen !== pen || force) {
                 TAS.debug('WoundUpdater:updateObj:: PEN CHANGED ! updating Parry/Evasion & Resolve/Guile');
                 Object.assign(finalAttr, this.#eu.updateObj(values, this.#pu.updateObj(values, finalAttr)));
                 Object.assign(finalAttr, this.#gu.updateObj(values, this.#ru.updateObj(values, finalAttr)));
@@ -1067,7 +1077,11 @@
         setAttrs(finalObj);
     }));
 
-    on('change:diceex change:succex', TAS._fn(async function updateCasteHaveExc(eventInfo){
+    on('change:diceex change:succex', TAS._fn(async function updateCasteHaveExc(e){
+        if (e.sourceType !== "player") {
+            if (debug >= 2) TAS.debug(`updateGuile:: TRIGGER FROM SCRIPT => CANCEL`);
+            return;
+        }
         const finalObj = {"caste-have-exc": Number(await getSingleAttrAsync('diceex')) || Number(await getSingleAttrAsync('succex'))};
         TAS.debug(`updateCasteHaveExc:: Setting=`, finalObj);
         setAttrs(finalObj);
