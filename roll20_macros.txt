@@ -77,10 +77,12 @@ RESET-BAR:
 
 Anima:
 !token-mod --set ?{Change Anima state to |
-	Dim,emits_bright&#124;0 emits_low&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; --off playersedit_aura1 aura1_square|
-	Glow,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;0.8 bright_distance&#124;0.3 showplayers_aura1&#124;1 aura1_radius&#124;0.2 --off playersedit_aura1 aura1_square|
-	Burn,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;8 bright_distance&#124;3 showplayers_aura1&#124;1 aura1_radius&#124;2.8 --off playersedit_aura1 aura1_square|
-	Bonfire,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;35 bright_distance&#124;10.5 showplayers_aura1&#124;1 aura1_radius&#124;10 --off playersedit_aura1 aura1_square|
+	Dim,emits_bright&#124;0 emits_low&#124;0 showplayers_aura1&#124;0 aura1_radius&#124; statusmarkers&#124;-yellow --off playersedit_aura1 aura1_square|
+	Glow,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;0.8 bright_distance&#124;0.3 showplayers_aura1&#124;1 aura1_radius&#124;0.2 statusmarkers&#124;yellow;1 --off playersedit_aura1 aura1_square|
+	Burn,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;8 bright_distance&#124;3 showplayers_aura1&#124;1 aura1_radius&#124;2.8 statusmarkers&#124;yellow;2 --off playersedit_aura1 aura1_square|
+	BurnHIDE,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;8 bright_distance&#124;3 showplayers_aura1&#124;1 aura1_radius&#124; statusmarkers&#124;yellow;2 --off playersedit_aura1 aura1_square|
+	Bonfire,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;35 bright_distance&#124;10.5 showplayers_aura1&#124;1 aura1_radius&#124;10 statusmarkers&#124;yellow;3 --off playersedit_aura1 aura1_square|
+	BonfireHIDE,emits_bright&#124;1 emits_low&#124;1 low_distance&#124;35 bright_distance&#124;10.5 showplayers_aura1&#124;1 aura1_radius&#124; statusmarkers&#124;yellow;3 --off playersedit_aura1 aura1_square|
 	HIDE_AURA_KEEP_LIGHT,aura1_radius&#124;|
 	Solar,aura1_color&#124;#ff0 lightColor&#124;#ff0 --off playersedit_aura1 aura1_square|
 	Lunar,aura1_color&#124;#bbb lightColor&#124;#bbb --off playersedit_aura1 aura1_square|
