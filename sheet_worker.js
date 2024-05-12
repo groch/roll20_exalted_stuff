@@ -244,6 +244,15 @@
             return false;
         }
 
+        async #updateLinked(finalAttr, values, pen) {
+            TAS.debug('WoundUpdater:updateLinked:: PEN CHANGED ! updating Parry/Evasion & Resolve/Guile');
+            Object.assign(finalAttr, this.#eu.updateObj(values, this.#pu.updateObj(values, finalAttr)));
+            Object.assign(finalAttr, this.#gu.updateObj(values, this.#ru.updateObj(values, finalAttr)));
+            TAS.debug('WoundUpdater:updateLinked:: PEN CHANGED ! updating All Roll Widgets');
+            Object.assign(finalAttr, this.#arwu.updateObj(values, finalAttr));
+            Object.assign(finalAttr, await AllRollRepeater.getRepeatedObj({'wound-penalty': pen}));
+        }
+
         async updateObj(values, toBeUpdated = {}) {
             const getFromUpdatedOrRetrieve = (attrStr) => (toBeUpdated && attrStr in toBeUpdated) ? toBeUpdated[attrStr] : values[attrStr];
             this.#sortedIdHealthArray = _(this.#idHealthArray).chain().sortBy(function(id) {
@@ -268,14 +277,7 @@
                 if (oldMax !== maxHealth)       Object.assign(finalAttr, {'health-displayed_max': maxHealth});
             }
     
-            if (oldPen !== pen || force) {
-                TAS.debug('WoundUpdater:updateObj:: PEN CHANGED ! updating Parry/Evasion & Resolve/Guile');
-                Object.assign(finalAttr, this.#eu.updateObj(values, this.#pu.updateObj(values, finalAttr)));
-                Object.assign(finalAttr, this.#gu.updateObj(values, this.#ru.updateObj(values, finalAttr)));
-                TAS.debug('WoundUpdater:updateObj:: PEN CHANGED ! updating All Roll Widgets');
-                Object.assign(finalAttr, this.#arwu.updateObj(values, finalAttr));
-                Object.assign(finalAttr, await AllRollRepeater.getRepeatedObj({'wound-penalty': pen}));
-            }
+            if (oldPen !== pen || force) await this.#updateLinked(finalAttr, values, pen);
             return finalAttr;
         }
 
@@ -3459,11 +3461,17 @@
                     if (debug >= 2) TAS.debug(`AttrReplacer:AttrReplacer:: UNDEFINED KEY=${key} use 0`);
                     val[key] = 0;
                 } else if (typeof value === 'string' && (matchRet = value.match(/^@\{(.+)\}/))) {
-                    if (debug === 3) TAS.debug(`AttrReplacer:AttrReplacer:: found an attr to replace:${matchRet[1]} key=${key}`);
-                    if (!this.#newGetArray.includes(matchRet[1]) && !inKeys.includes(matchRet[1])) {
+                    if (debug === 3) TAS.debug(`AttrReplacer:AttrReplacer:: found an attr to replace:"${matchRet[1]}" key="${key}"`);
+                    if (inKeys.includes(matchRet[1])) {
+                        if (debug === 3) TAS.debug(`AttrReplacer:AttrReplacer:: direct replace:"${key}"="${val[matchRet[1]]}"`);
+                        val[key] = val[matchRet[1]];
+                    } else if (!this.#newGetArray.includes(matchRet[1]) && !inKeys.includes(matchRet[1])) {
+                        if (debug === 3) TAS.debug(`AttrReplacer:AttrReplacer:: prepare replace:"${key}", #newGetArray=${JSON.stringify}`);
                         this.#newGetArray.push(matchRet[1]);
+                        this.#newGetKeysToReplace.push(key);
+                    } else {
+                        if (debug >= 2) TAS.debug(`AttrReplacer:#reduceAttrsReplace:: WTF 3 ???!!! !?!?!?!`);
                     }
-                    this.#newGetKeysToReplace.push(key);
                 } else if (typeof value === 'string' && (matchRet = value.match(/^(\d+)/))) {
                     val[key] = matchRet[1];
                 }
