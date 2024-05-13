@@ -776,7 +776,7 @@ ${pad(p)}            <span title="Armored Soak, come from your armor">Ar. Soak</
 ${pad(p)}            <input type="number" readonly tabindex="-1" name="attr_armorsoak" title="Come from your armor">
 ${pad(p)}        </div>
 ${pad(p)}        <div class="flex">
-${pad(p)}            <div style="display: inline-block;"><input type="checkbox" value="1" class="ride-checkbox" name="attr_ride-for-evasion" title="Ride Mode (use Dex+Ride instead of Dex+Dodge)"><span></span></div>
+${pad(p)}            <div style="display: inline-block;" class="qc-toggle-visibility"><input type="checkbox" value="1" class="ride-checkbox" name="attr_ride-for-evasion" title="Ride Mode (use Dex+Ride instead of Dex+Dodge)"><span></span></div>
 ${pad(p)}            <span title="(Dexterity + Dodge) or (Dexterity + Ride)">Evasion</span>:
 ${pad(p)}            <input type="number" name="attr_evasion" data-i18n-title="evasion-without-specialty" title="@{evasion}${TITLE_BR}Evasion without specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint" readonly tabindex="-1"><input type="number" name="attr_evasion-specialty" data-i18n-title="evasion-with-specialty" title="@{evasion-specialty}${TITLE_BR}Evasion with specialty" class="wound-taint onslaught-taint cover-taint grab-taint prone-taint-doubled clash-taint qc-toggle-display last-visible" readonly tabindex="-1"><input type="text" name="attr_qc-evasion-exc" class="qc-have-exc qc-toggle-display-inv" title="Excellency cap" readonly tabindex="-1">
 ${pad(p)}        </div>
