@@ -1,0 +1,1 @@
+node .\json_reprocessor.js .\Lunaire.json "Lunars" && node .\json_reprocessor.js .\Lunaire_add.json "Lunar : Many-Faced Strangers" && node .\json_merger.js '.\Lunaire.out.json' '.\Lunaire_add.out.json' 'Lunaire_full.json'

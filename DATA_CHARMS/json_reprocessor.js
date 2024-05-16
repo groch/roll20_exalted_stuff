@@ -33,6 +33,7 @@ function forgeCharm(abi, item) {
         } else if (i.match(/^\d+wp or \d+i/)) {
         } else if (i.match(/^\dlhl per \dm/)) {
         } else if (i.match(/^\dm per -0 health level/)) {
+        } else if (i.match(/^\dahl per temporary health level/)) {
         } else if (i.match(/^\dhl per three successes/)) {
         } else if (i.match(/^\dhl per three levels$/)) {
         } else if (i.match(/^\dhls per \dhul/)) {
@@ -51,7 +52,8 @@ function forgeCharm(abi, item) {
         } else if (i.match(/^—\(\+(\d)m or \1i\)$/)) {
         } else if (i.match(/^—\(\dm per turn\)$/)) {
         } else if (i.match(/^—\(\dm per language\)$/)) {
-        } else if (i.match(/^—\(\+\dm per familiar\)$/)) {
+        } else if (i.match(/^—\s?\(\+\dm per familiar\)$/)) {
+        } else if (i.match(/^(\d+)m per familiar dot$/)) {
         } else if (i.match(/^—\(\+\dm or \+\dm\)$/)) {
         } else if (i.match(/^—\(\+\dgxp per dot\)$/)) {
         } else if (i.match(/^—\(\dm per ghost$/)) {
@@ -108,6 +110,8 @@ function forgeCharm(abi, item) {
                 mote = `[[ ?{Dots of Mutations ? (${Number(ret[1])}m : dot of mutation)} * ${Number(ret[1])} ]]`;
             } else if (i.match(/^(\d+)m per dot$/)) {
                 mote = `[[ ?{Dots of Strength ? (${Number(ret[1])}m : dot of strength)} * ${Number(ret[1])} ]]`;
+            } else if (i.match(/^(\d+)m per familiar dot$/)) {
+                mote = `[[ ?{Familiar Dots ? (${Number(ret[1])}m : dot)} * ${Number(ret[1])} ]]`;
             } else if (i.match(/^(\d+)m per point of penalty\/die$/)) {
                 mote = `[[ ?{Point of Penalty/Die ? (${Number(ret[1])}m : 1)} * ${Number(ret[1])} ]]`;
             } else if (i.match(/^(\d+)m per point of penalty$/)) {
@@ -174,7 +178,7 @@ function forgeCharm(abi, item) {
             mote = `[[ ${mote} + ?{Added rounds ?} * ${Number(ret[1])} ]]`;
         } else if ((ret = i.match(/^—\((\d)m per language\)/))) {
             mote = `[[ ?{Number of Languages ?} * ${Number(ret[1])} ]]`;
-        } else if ((ret = i.match(/^—\(\+(\d)m per familiar\)$/))) {
+        } else if ((ret = i.match(/^—\s?\(\+(\d)m per familiar\)$/))) {
             mote = `[[ ?{Number of Familiar ?} * ${Number(ret[1])} ]]`;
         } else if ((ret = i.match(/^—\(\+(\d)m or \1i\)$/))) {
             const prompt = `?{Ressource Spent Type ?|Motes,1|Initiative,2}`;
