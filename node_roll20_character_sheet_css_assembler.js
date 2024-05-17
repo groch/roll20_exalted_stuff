@@ -2329,10 +2329,14 @@ ${maCharmArray.map(i => /*css*/`.charsheet .flex.main-page .sheet-tab-charm-shee
     height: 26px;
 }
 .charm-special-add-div .select-add-template-charms select {
+    display: none;
     width: auto;
     max-width: calc(103vw - 20em);
     height: 26px;
     flex-shrink: 1;
+}
+${getSelectTemplateCharms()} {
+    display: inline-block;
 }
 .charm-special-add-div .select-add-template-charms button {
     margin-top: 1px;
@@ -2341,6 +2345,21 @@ ${maCharmArray.map(i => /*css*/`.charsheet .flex.main-page .sheet-tab-charm-shee
 .charm-special-add-div .select-add-template-charms .template-charm-name-selected-check[value=""] ~ button {
     display: none;
 }\n`
+
+function getSelectTemplateCharms() {
+    let abiList = [];
+    for (const exalt of Object.keys(charmCompendiumPerExalt)) {
+        for (const abi of Object.keys(charmCompendiumPerExalt[exalt])) {
+            abiList.push(abi);
+        }
+    }
+    const uniqAbi = [...new Set(abiList)];
+    let ret = ``, i = 0;
+    for (const abi of uniqAbi) {
+        ret += `${i++ > 0 ? ',\n' : ''}.charsheet .sheet-tab-charms-check[value="${abi}"] ~ .charm-sheet-all .select-add-template-charms select[data-ability="${abi}"]`;
+    }
+    return ret;
+}
 
 function getTemplateCharmsOptions() {
     let ret = ``, i = 0;

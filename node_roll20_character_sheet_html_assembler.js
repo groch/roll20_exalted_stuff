@@ -903,15 +903,30 @@ function generateCastButtons(p, rollStr, includeShow = true) {
     return ret;
 }
 
-function getTemplateCharmsOptions(p) {
+function getTemplateCharmsOptions(p, abi) {
     let ret = /*html*/`<option value=""></option>`, i = 0;
     for (const exalt of Object.keys(charmCompendiumPerExalt)) {
-        for (const abi of Object.keys(charmCompendiumPerExalt[exalt])) {
-            for (const [id, charm] of charmCompendiumPerExalt[exalt][abi].entries()) {
-                ret += /*html*/`${brPad(p)}<option value="${id}" class="${exalt}-charm" title="${abi}">${charm['charm-name']}</option>`;
-                // if (i++ >= 42) return ret;
-            }
+        if (!(abi in charmCompendiumPerExalt[exalt])) continue;
+        for (const [id, charm] of charmCompendiumPerExalt[exalt][abi].entries()) {
+            ret += /*html*/`${brPad(p)}<option value="${id}" class="${exalt}-charm" title="${abi}">${charm['charm-name']}</option>`;
+            // if (i++ >= 42) return ret;
         }
+    }
+    return ret;
+}
+
+function getSelectsTemplateCharms(p) {
+    let ret = '', abiList = [], i = 0;
+    for (const exalt of Object.keys(charmCompendiumPerExalt)) {
+        for (const abi of Object.keys(charmCompendiumPerExalt[exalt])) {
+            abiList.push(abi);
+        }
+    }
+    const uniqAbi = [...new Set(abiList)];
+    for (const abi of uniqAbi) {
+        ret += /*html*/`${i++ ? brPad(p) : ''}<select name="attr_template-charm-name-selected" data-ability="${abi}">
+${pad(p)}    ${getTemplateCharmsOptions(p+4, abi)}
+${pad(p)}</select>`;
     }
     return ret;
 }
@@ -984,9 +999,7 @@ outHtml += /*html*/`
                         <div class="charm-special-add-div">
                             <button type="action" name="act_add-charm-to-all" class="btn repcontrol_add">+Add</button>
                             <div class="select-add-template-charms">
-                                <select name="attr_template-charm-name-selected">
-                                    ${getTemplateCharmsOptions(36)}
-                                </select>
+                                ${getSelectsTemplateCharms(32)}
                                 <input type="hidden" name="attr_template-charm-name-selected" class="template-charm-name-selected-check" value="">
                                 <button type="action" name="act_add-template-charm-to-all" class="btn repcontrol_add">Add Selected</button>
                             </div>
