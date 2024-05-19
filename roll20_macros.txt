@@ -204,6 +204,20 @@ PageSizeConvert:
 DayNight:
 !token-mod --set currentside|?{Mode ? (face of token, usually 1 for day 2 for night)|1}
 
+DiceRoller Options:
+!exr ?{Option|
+	---CLEARS---, |
+	Normal Clear,-clearStored|
+	Full Clear,-clearAllStored|
+	Global Normal Clear,-clearStoredGlobal|
+	Global Full Clear (GM),-clearAllStoredGlobal|
+	Reset ALL (GM),-fullResetStoredGlobal|
+	---LIST---, |
+	List Command,-listAllStored|
+	---OTHER---, |
+	Store Verbose,-setGlobal -V|
+	Clear&Store Verbose,-setGlobal -V -clearStoredGlobal}
+
 Selenok:
 !token-mod --set ?{Form ?|
 	Selenok-100%,scale&#124;[[0.014285714285&#42;1]]un currentside&#124;1|
