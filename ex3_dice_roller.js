@@ -1244,20 +1244,21 @@ var EX3Dice = EX3Dice || (function () {//let scriptStart = new Error;//Generates
         logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: player stored cmds='${JSON.stringify(state[ex3DiceState].playerIdCommandHash)}'`);
         logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: stored once cmds='${JSON.stringify(state[ex3DiceState].commandStoredOnce)}'`);
         logger(LOGLEVEL.INFO, `listAllStoredCommandCallback:: stored lingering cmds='${JSON.stringify(state[ex3DiceState].commandStored)}'`);
-        var html = "";
+        let html = "", lineCount = 0;
+        const addBr = () => (lineCount++ ? '<br />' : '');
         html += "<div style=\"" + outerStyleNoBack + "\"><div style=\"" + innerStyle + "\">";
         html +=     "<div class=\"formula\" style=\"" + formulaStyle + "\">";
         for (const playerId in state[ex3DiceState].playerIdCommandHash) {
             const playerObj = getObj('player', playerId) || {get: () => 'UNKNOWN_PLAYER'};
             if (state[ex3DiceState].playerIdCommandHash[playerId].commandStored.length)
-                html +=     playerObj.get('displayname') + " stored cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].playerIdCommandHash[playerId].commandStored.map(i => i.origCmd).join(' ') + "</code><br>";
+                html += addBr() + playerObj.get('displayname') + " stored cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].playerIdCommandHash[playerId].commandStored.map(i => i.origCmd).join(' ') + "</code>";
             if (state[ex3DiceState].playerIdCommandHash[playerId].commandStoredOnce.length)
-                html +=     playerObj.get('displayname') + " storedOnce cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].playerIdCommandHash[playerId].commandStoredOnce.map(i => i.origCmd).join(' ') + "</code>";
+                html += addBr() + playerObj.get('displayname') + " storedOnce cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].playerIdCommandHash[playerId].commandStoredOnce.map(i => i.origCmd).join(' ') + "</code>";
         }
         if (state[ex3DiceState].commandStored.length)
-            html +=     "globally stored cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].commandStored.map(i => i.origCmd).join(' ') + "</code><br>";
+            html +=     addBr() + "Globally stored cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].commandStored.map(i => i.origCmd).join(' ') + "</code></p>";
         if (state[ex3DiceState].commandStoredOnce.length)
-            html +=     "globally storedOnce cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].commandStoredOnce.map(i => i.origCmd).join(' ') + "</code>";
+            html +=     addBr() + "Globally storedOnce cmd: <code style=\"font-size:0.8em;\">" + state[ex3DiceState].commandStoredOnce.map(i => i.origCmd).join(' ') + "</code></p>";
         if (!state[ex3DiceState].commandStored.length && !state[ex3DiceState].commandStoredOnce.length)
             html +=     "No global command has been stored yet.";
         html +=     "</div>";
