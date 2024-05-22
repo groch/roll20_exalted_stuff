@@ -96,6 +96,7 @@ Anima:
 	Mars/Battles,aura1_color&#124;#b00 lightColor&#124;#b00 --off playersedit_aura1 aura1_square|
 	Jupiter/Secrets,aura1_color&#124;#274e13 lightColor&#124;#274e13 --off playersedit_aura1 aura1_square|
 	Saturn/Endings,aura1_color&#124;#90f lightColor&#124;#90f --off playersedit_aura1 aura1_square|
+	Custom Color,aura1_color&#124;#?{Hex Color ?&#125; lightColor&#124;#?{Hex Color ?&#125;|
 	Undefined,aura1_color&#124;#fff lightColor&#124;#fff --off playersedit_aura1 aura1_square
 }
 
