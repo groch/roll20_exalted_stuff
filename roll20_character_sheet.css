@@ -1,7 +1,7 @@
 @font-face {
     font-family: Cimiez;
-    src: local('Cimiez Roman PDF.ttf'),
-         url('https://imgsrv.roll20.net/?src=http%3A//lithl.info/cimiez.ttf') format('truetype');
+    src: local('Cimiez Roman'), local('Cimiez Roman PDF.ttf'),
+    url('https://raw.githubusercontent.com/groch/roll20_exalted_stuff/main/cimiez.ttf') format('truetype');
 }
 
 /* --- Quick fix removing input showing +/- on Firefox --- */
@@ -6606,18 +6606,14 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 .sheet-rolltemplate-exalted3e_cast .sheet-charm-name{
     color:#0095c6;
     font-size:20px;
-    font-family: Cimiez;
-    src: local('Cimiez Roman PDF.ttf'),
-         url('https://imgsrv.roll20.net/?src=http%3A//lithl.info/cimiez.ttf') format('truetype');
+    font-family: Cimiez, Arial;
     font-weight:bold;
 }
 
 .sheet-rolltemplate-exalted3e_cast .sheet-spell-name{
     color:purple;
     font-size:20px;
-    font-family: Cimiez;
-    src: local('Cimiez Roman PDF.ttf'),
-         url('https://imgsrv.roll20.net/?src=http%3A//lithl.info/cimiez.ttf') format('truetype');
+    font-family: Cimiez, Arial;
     font-weight:bold;
 }
 
@@ -6644,9 +6640,7 @@ div[data-groupname="repeating_roll-commands"] button.repcontrol_add {
 }
 
 .sheet-rolltemplate-exalted3e_cast .sheet-subheader {
-    font-family: Cimiez;
-    src: local('Cimiez Roman PDF.ttf'),
-         url('https://imgsrv.roll20.net/?src=http%3A//lithl.info/cimiez.ttf') format('truetype');
+    font-family: Cimiez, Arial;
     font-size:18px;
     padding-top:5px;
 }
