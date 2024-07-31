@@ -113,6 +113,24 @@ var MultiTwins = MultiTwins || (function() {
                     log('addTwin:: ?!?! Error, v is not array !?!?!?!');
                 }
             });
+        // final consolidate: add to all linked token a link to each other if 2 group of twin existed
+        _.chain(linkedTo1)
+            .reject(id => id === id2)
+            .each(id => {
+                _.chain(linkedTo1).each(idd => {
+                    if (id !== idd && !state.MTwins.twins[id].includes(idd))
+                        state.MTwins.twins[id].push(idd);
+                })
+            })
+        // not needed ?
+        // _.chain(linkedTo2)
+        //     .reject(id => id === id1)
+        //     .each(id => {
+        //         _.chain(linkedTo2).each(idd => {
+        //             if (id !== idd && !state.MTwins.twins[id].includes(idd))
+        //                 state.MTwins.twins[id].push(idd);
+        //         })
+        //     })
     },
 
     handleInput = function(msg) {
@@ -176,12 +194,13 @@ var MultiTwins = MultiTwins || (function() {
     handleTwinChange = function(obj) {
         const id = obj.id;
         if (id in state.MTwins.twins) {
+            let setObj = _.reduce(props,function(m,p){
+                m[p]=obj.get(p);
+                return m;
+            },{});
             _.chain(state.MTwins.twins[id]).each(id => {
                 let twin = getObj('graphic', id);
-                twin.set(_.reduce(props,function(m,p){
-                    m[p]=obj.get(p);
-                    return m;
-                },{}));
+                twin.set(setObj);
             });
         }
     },
