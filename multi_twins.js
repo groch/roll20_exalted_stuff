@@ -194,7 +194,7 @@ var MultiTwins = MultiTwins || (function() {
     handleTwinChange = function(obj) {
         const id = obj.id;
         if (id in state.MTwins.twins) {
-            let setObj = _.reduce(props,function(m,p){
+            let setObj = props.reduce(function(m,p){
                 m[p]=obj.get(p);
                 return m;
             },{});
