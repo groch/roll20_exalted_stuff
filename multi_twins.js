@@ -44,7 +44,7 @@ var MultiTwins = MultiTwins || (function() {
     removeTwins = function(id) {
         _.chain(state.MTwins.twins)
             .map(function(v,k){
-                if(id === k || id === v || Array.isArray(v) && v.includes(id)) {
+                if(id === k || Array.isArray(v) && v.includes(id)) {
                     return k;
                 }
                 return undefined;
@@ -52,7 +52,7 @@ var MultiTwins = MultiTwins || (function() {
             .reject(_.isUndefined)
             .each(function(k){
                 let v = state.MTwins.twins[k];
-                if (typeof v === 'string' || k === id) {
+                if (id === k) {
                     sendChat(script_name, '/w gm Removing twins : '+v);
                     delete state.MTwins.twins[k];
                 } else if (Array.isArray(v)) {
@@ -70,7 +70,7 @@ var MultiTwins = MultiTwins || (function() {
 
     createOrPushTwin = function(id1, id2) {
         let storedTwinArray = state.MTwins.twins[id1];
-        if (!storedTwinArray || typeof storedTwinArray === 'string') {
+        if (!storedTwinArray) {
             sendChat(script_name, '/w gm Created new Twins.');
             state.MTwins.twins[id1] = [id2];
         } else {
@@ -85,12 +85,6 @@ var MultiTwins = MultiTwins || (function() {
 
         let linkedTo1 = createOrPushTwin(id1, id2);
         let linkedTo2 = createOrPushTwin(id2, id1);
-        _.chain(linkedTo2)
-            .reject(i => i === id1)
-            .each(id => {
-                sendChat(script_name, `/w gm Added other Twins from ${id2} to ${id1}.:${id}`);
-                linkedTo1.push(id)
-            });
         // update & add to existing twins if include 1 or 2 & add backward
         _.chain(state.MTwins.twins)
             .map(function(v,k){
@@ -102,25 +96,21 @@ var MultiTwins = MultiTwins || (function() {
             .reject(_.isUndefined)
             .each(function(k){
                 const v = state.MTwins.twins[k];
-                if (typeof v === 'string') {
-                    sendChat(script_name, '/w gm Updating twin : '+k);
-                    state.MTwins.twins[k] = [state.MTwins.twins[k]];
-                }
                 if (Array.isArray(v)) {
-                    if (!v.includes(id1) && k !== id1) {
+                    if (k !== id1 && !v.includes(id1)) {
                         sendChat(script_name, '/w gm Adding twin 1 for : '+v);
                         state.MTwins.twins[k].push(id1);
                         if (!linkedTo1.includes(k))
                             linkedTo1.push(k);
                     }
-                    if (!v.includes(id2) && k !== id2) {
+                    if (k !== id2 && !v.includes(id2)) {
                         sendChat(script_name, '/w gm Adding twin 2 for : '+v);
                         state.MTwins.twins[k].push(id2);
                         if (!linkedTo2.includes(k))
                             linkedTo2.push(k);
                     }
                 } else {
-                    log('addTwin:: ?!?! Error, v is not string nor array !?!?!?!');
+                    log('addTwin:: ?!?! Error, v is not array !?!?!?!');
                 }
             });
     },
