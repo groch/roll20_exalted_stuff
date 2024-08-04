@@ -1982,6 +1982,9 @@ input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-d
 .charsheet [data-groupname=repeating_health] .repitem .itemcontrol .repcontrol_move {
     display: none;
 }
+.charsheet [data-groupname=repeating_health] .repcontrol_add {
+    display: none !important;
+}
 
 .charsheet .heal-hl-div {
     display: inline-block;
@@ -2150,7 +2153,7 @@ and (min-resolution:.001dpcm) {
     height: calc(100% - 2.4em);
 }
 
-@media only screen and (max-width: 563px) {
+@media only screen and (max-width: 507px) {
     .charsheet > .sheet-content > div > div.flex.main-page {
         height: calc(100% - 4.6em);
     }
