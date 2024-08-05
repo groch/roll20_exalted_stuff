@@ -239,7 +239,7 @@ var CombatMaster = CombatMaster || (function() {
         logger(`cmdExtract::Tokens:${tokens}`);
 
         //find the action and set the cmdSep Action
-        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState|clrState|createAbilities/);
+        cmdSep.action = String(tokens).match(/turn|show|config|back|reset|main|remove|add|new|delete|import|export|help|spell|ignore|clear|onslaught|moteAdd|togglePageSize|announceCrashAndSendInitGainButton|applyInitBonusToCrasherSelected|announceCrashOff|rstInitToSelected|applyGrabDefPen|remGrabDefPen|applyProneDefPen|remProneDefPen|applyLightCoverDefBonus|applyHeavyCoverDefBonus|remCoverDefBonus|applyClashDefPen|remClashDefPen|getHandoutMenu|applyFullDef|remFullDef|saveState|loadState|clrState|createAbilities|createTransform/);
         //the ./ is an escape within the URL so the hyperlink works.  Remove it
         cmd.replace('./', '');
 
@@ -441,6 +441,7 @@ var CombatMaster = CombatMaster || (function() {
                 {key:'applyInitBonusToCrasherSelected',    fx: applyInitBonusToCrasherSelected},
                 {key:'rstInitToSelected',                  fx: rstInitToSelected},
                 {key:'createAbilities',                    fx: createTokenAbilities},
+                {key:'createTransform',                    fx: createTranformingAbility},
             ];
 
         for (const fxObj of checkedCastList) {
@@ -476,6 +477,42 @@ var CombatMaster = CombatMaster || (function() {
     //*************************************************************************************************************
     //NEW ACTIONS
     //*************************************************************************************************************
+
+    createTranformingAbility = function(cmdDetails, selected) {
+        logger(`createTranformingAbility:: cmdDetails=${JSON.stringify(cmdDetails)}`);
+
+        _.chain(selected).map(function(o){
+            return getObj('graphic',o._id);
+        }).compact()
+        .each(function(t){
+            const finalcharacterObj = getObj('character',t.get('represents'));
+            const finalcharacterId = finalcharacterObj.get('id');
+            const abilities = findObjs({type:'ability',characterid:finalcharacterId});
+            const expectedAbilities = {
+                    trans:false
+            };
+            const abilityTemplates = {
+                    trans:{
+                        name:'Transform',
+                        description:'Exalted HLP Abilities:trans',
+                        characterid:finalcharacterId,
+                        action:`!token-mod --set currentside|?{Mode ?|Material,1|Spirit,2}`,
+                        istokenaction:true
+                    }
+                };
+            _.each(abilities,(abi)=>{
+                abi.get('description').replace(/^Exalted HLP Abilities:(.+)/,(match,keyword)=>{
+                    expectedAbilities[keyword]=true;
+                });
+            });
+            _.each(_.keys(expectedAbilities),(key)=>{
+                if(!expectedAbilities[key]){
+                    logger(`createTranformingAbility:: Creating Ability:"${abilityTemplates[key].name}" for token named "${t.get('name')}"`);
+                    createObj('ability',abilityTemplates[key]);
+                }
+            });
+        });
+    },
 
     createTokenAbilities = function(cmdDetails, selected) {
         logger(`createTokenAbilities:: cmdDetails=${JSON.stringify(cmdDetails)}`);
