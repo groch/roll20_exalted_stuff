@@ -814,7 +814,7 @@ ${pad(p)}            <input type="radio" name="attr_hl-damage" value="bashing" c
 ${pad(p)}            <input type="radio" name="attr_hl-damage" value="lethal" class="sheet-dots2"><span>&nbsp;</span>
 ${pad(p)}            <input type="radio" name="attr_hl-damage" value="aggravated" class="sheet-dots3"><span>&nbsp;</span>
 ${pad(p)}        </div>
-${pad(p)}        <select class="sheet-wound-penalty" name="attr_hl-penalty">
+${pad(p)}        <select name="attr_hl-penalty" class="sheet-wound-penalty disabled-select" tabindex="-1">
 ${pad(p)}            ${returnOptions(p+12, [{val: '', label: ''}, ...[0,-1,-2,-4].map(i => ({val: i, label: `-${Math.abs(i)}`})),{val: 'I', label: 'Incapacitated'}], 0)}
 ${pad(p)}        </select>
 ${pad(p)}    </div>

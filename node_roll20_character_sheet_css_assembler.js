@@ -1945,6 +1945,10 @@ input[type="hidden"].sheet-quick-character[value="1"] ~ .flex.main-page .sheet-d
     width: 23.6px;
 }
 
+.charsheet .sheet-health-track .sheet-health-level select.disabled-select {
+    pointer-events: none;
+}
+
 .charsheet [data-groupname=repeating_health] {
     display: inline-flex;
     flex-wrap: wrap;
