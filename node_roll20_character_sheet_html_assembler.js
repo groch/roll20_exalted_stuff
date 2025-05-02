@@ -620,6 +620,14 @@ ${pad(p)}</div>`;
         ret += `${i !== 0 ? brPad(p) : ''}${getProjectBlock(i+1)}`;
     return ret;
 }
+function getRepeatableProjectsBlock(p) {
+    return /*html*/ `<div class="sheet-flexbox-h sheet-flexbox0">
+${pad(p)}    <input type="text" name="attr_project-name" placeholder="Longsword">
+${pad(p)}    <select name="attr_project-type">
+${pad(p)}        ${returnOptions(p+8, ['','Major','Superior','Legendary'].map(i => ({val: i, label: i})), -1)}
+${pad(p)}    </select>
+${pad(p)}</div>`;
+}
 
 outHtml += /*html*/
 `                        <div><!-- 1.3.3.4 EXPERIENCE & CRAFTING -->
@@ -634,12 +642,7 @@ outHtml += /*html*/
                                 <div class="sheet-crafting-projects sheet-col">
                                     ${getDefaultProjectsBlock(36)}
                                     <fieldset class="repeating_crafting-projects" style="display: none;">
-                                        <div class="sheet-flexbox-h sheet-flexbox0">
-                                            <input type="text" name="attr_project-name" placeholder="Longsword">
-                                            <select name="attr_project-type">
-                                                ${returnOptions(48, ['','Major','Superior','Legendary'].map(i => ({val: i, label: i})), -1)}
-                                            </select>
-                                        </div>
+                                        ${getRepeatableProjectsBlock(40)}
                                     </fieldset>
                                 </div>
                             </div>
@@ -727,10 +730,10 @@ outHtml += /*html*/
                                     </div>
                                     <div class="sheet-table-row sheet-mount-armor">
                                         <div class="sheet-table-cell"><input type="text" name="attr_mount-armor-name" placeholder="Mount Barding"></div>
-                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armorsoak" value="" readonly></div>
-                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-hardness" value="" readonly></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armorsoak" value="" readonly tabindex="-1"></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-hardness" value="" readonly tabindex="-1"></div>
                                         <div class="sheet-table-cell"><input type="number" name="attr_mount-armor-mobility" value="0"></div>
-                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armor-attune" value="" readonly></div>
+                                        <div class="sheet-table-cell"><input type="number" name="attr_mount-armor-attune" value="" readonly tabindex="-1"></div>
                                         <div class="sheet-table-cell"><input type="text" name="attr_armor-tags" placeholder="Concealable"></div>
                                     </div>
                                 </div>
@@ -948,6 +951,7 @@ outHtml += /*html*/`
                                 <div class="flex flex-wrap">
                                     <input type="hidden" name="attr_charm-learnt" class="charm-learnt-check" value="1">
                                     <input type="text" name="attr_charm-name" class="sheet-charms-spells-trait-name" placeholder="Excellent Solar Larceny"><span> </span>
+                                    <input type="text" name="attr_charm-skill" class="sheet-tab-charms-inside-check" value="" style="display: none;">
                                     <select name="attr_charm-type" style="width: 109px">
                                         ${returnOptions(40, [...['','Simple','Supplemental','Reflexive'].map(i => ({val: i, label: i})), {val: 'Double', label: 'Suppl. ou Reflex.'}, ...['Permanent','Enchantment'].map(i => ({val: i, label: i}))], -1)}
                                     </select>
@@ -969,7 +973,7 @@ outHtml += /*html*/`
                                         <label title="Mute"><span>Mute: </span><div class="flex"><input type="checkbox" name="attr_charm-mute" class="sheet-charms-spells-trait" value="1"></div></label>
                                         <div class="flex grow-normal"><label><span class="show-to-db-only">Aspect: </span><select name="attr_charm-aspect" class="show-to-db-only sheet-charms-spells-trait grow-normal"><option value="unknown" hidden>Unknown</option><option value="none">None</option><option value="air">Air</option><option value="earth">Earth</option><option value="fire">Fire</option><option value="water">Water</option><option value="wood">Wood</option><option value="dawn" hidden>Dawn</option><option value="zenith" hidden>Zenith</option><option value="twilight" hidden>Twilight</option><option value="night" hidden>Night</option><option value="eclipse" hidden>Eclipse</option><option value="full moon" hidden>Full Moon</option><option value="changing moon" hidden>Changing Moon</option><option value="no moon" hidden>No Moon</option><option value="casteless" hidden>Casteless</option><option value="journeys" hidden>Journeys</option><option value="serenity" hidden>Serenity</option><option value="battles" hidden>Battles</option><option value="secrets" hidden>Secrets</option><option value="endings" hidden>Endings</option><option value="adamant" hidden>Adamant</option><option value="jade" hidden>Jade</option><option value="moonsilver" hidden>Moonsilver</option><option value="orichalcum" hidden>Orichalcum</option><option value="soulsteel" hidden>Soulsteel</option><option value="starmetal" hidden>Starmetal</option><option value="daybreak" hidden>Daybreak</option><option value="day" hidden>Day</option><option value="dusk" hidden>Dusk</option><option value="midnight" hidden>Midnight</option><option value="moonshadow" hidden>Moonshadow</option><option value="defiler" hidden>Defiler</option><option value="fiend" hidden>Fiend</option><option value="malefactor" hidden>Malefactor</option><option value="scourge" hidden>Scourge</option><option value="slayer" hidden>Slayer</option><option value="blood" hidden>Blood</option><option value="breath" hidden>Breath</option><option value="flesh" hidden>Flesh</option><option value="marrow" hidden>Marrow</option><option value="soil" hidden>Soil</option><option value="sorceries" hidden>Sorceries</option></select></label></div>
                                         <label title="Balanced"><span class="show-to-db-only">Balanced: </span><div class="flex"><input type="checkbox" name="attr_charm-balanced" class="show-to-db-only sheet-charms-spells-trait"></div></label>
-                                        <label title="Can Change Aspect"><span class="show-to-db-only">Multi: </span><div class="flex"><input type="checkbox" name="attr_charm-can-cycle-aspects" class="show-to-db-only sheet-charms-spells-trait"></div></label>
+                                        <label title="Can Change Aspect${TITLE_BR}In 'Show Charms' section, you can hover the aspect icon and click on it to change the aspect"><span class="show-to-db-only">Multi: </span><div class="flex"><input type="checkbox" name="attr_charm-can-cycle-aspects" class="show-to-db-only sheet-charms-spells-trait"></div></label>
                                         <div class="cost-section grow-max flex flex-wrap">
                                             <p class="mote-color-down rounded-box grow-double flex caste-have-exc-toggle">
                                                 ${getCostLine(costArray['Mote'])}
