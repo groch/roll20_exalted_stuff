@@ -1018,7 +1018,7 @@ outHtml += /*html*/`
             <!-- 3 SORCERIES PAGE -->
 
             <div class="sheet-body sheet-tab-content sheet-tab-spell-sheet">
-                <h1><span>Sorceries</span></h1>
+                <h1><span>Sorcery &amp; Necromancy</span></h1>
                 <fieldset class="repeating_spells" style="display: none;">
                     <div class="flex flex-col sheet-body">
                         <input type="hidden" name="attr_charm-shaping-ritual" class="shaping-ritual-check">
@@ -1026,7 +1026,7 @@ outHtml += /*html*/`
                             <input type="text" name="attr_repspell-name" style="width: 32% ; color: #9f0b10 ; font-weight: bold ; margin-right: 2px;" placeholder="Cirrus Skiff" class="grow-normal"><span> </span>
                             <input type="checkbox" name="attr_charm-shaping-ritual" class="sheet-charms-spells-trait sheet-charms-spells-trait-shaping-ritual" title="is a Shaping Ritual" value="1">
                             <select name="attr_repspell-circle" style="width: 109px">
-                                ${returnOptions(32, ['','Terrestrial','Celestial','Solar'].map(i => ({val: i, label: i})), -1)}
+                                ${returnOptions(32, ['','Terrestrial','Celestial','Solar','Ivory','Shadow','Void'].map(i => ({val: i, label: i})), -1)}
                             </select>
                             <input type="hidden" name="attr_charm-buttons-isextended" class="charm-buttons-include-check" value="0">
                             <input type="hidden" name="attr_rep-cost-macro">

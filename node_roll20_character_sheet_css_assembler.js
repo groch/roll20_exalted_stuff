@@ -249,6 +249,7 @@ input.sheet-rolls-separator-hidden-checkbox[type=checkbox]:focus + span::before,
     --bs-clash-color: cyan;
     --bs-rolls-color: gray;
     --bs-spell-color: purple;
+    --bs-spell-necro-color: gray;
     --bs-background-spell-color: #80008040;
     --bs-charm-color: gold;
     --bs-charm-reset-color: orange;
@@ -3974,6 +3975,11 @@ ${maCharmArray.map(i => /*css*/`.charsheet .sheet-tab-charms-check[value="${hash
 
 .sheet-tab-spell-sheet .repcontainer .repitem {
     --bs-section-color: var(--bs-spell-color);
+}
+.sheet-tab-spell-sheet .repcontainer .repitem:has(select[name="attr_repspell-circle"] option[value="Ivory"]:checked),
+.sheet-tab-spell-sheet .repcontainer .repitem:has(select[name="attr_repspell-circle"] option[value="Shadow"]:checked),
+.sheet-tab-spell-sheet .repcontainer .repitem:has(select[name="attr_repspell-circle"] option[value="Void"]:checked) {
+    --bs-section-color: var(--bs-spell-necro-color);
 }
 
 .sheet-tab-spell-sheet .repcontainer .repitem:has(.shaping-ritual-check[value="1"]) {
